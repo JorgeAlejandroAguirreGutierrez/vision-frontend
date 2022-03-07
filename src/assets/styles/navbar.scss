@@ -1,0 +1,467 @@
+/*
+Template Name: Admin Stylos
+Author: Jorge Hidalgo
+Email: gatosohidalgo@gmail.com
+File: navbar.scss
+*/
+
+/******************* 
+Clase de main.component que hace que todo el contenido de la aplicación sea flex con el navbar
+*******************/
+
+//Clase de para el control del navbar toogle sidebar para todas las paginas
+
+.nav-fijo {
+  position: fixed;
+  top: 120px;
+  right: 15px;
+  z-index: 900;
+  height: 120px!important;
+  margin: 3px!important;
+  padding: 2px!important;
+  background-color: transparent;
+  .nav-link{
+    padding: 0.2rem 0;
+  }
+}
+
+.wrapper.default-theme {
+
+  background: $bg-color;
+
+  nav.navbar {
+    background: $navbar-bg-color;
+    border-color: rgba($navbar-color, .3);
+
+    .navbar-brand {
+      color: lighten($navbar-color, 25%);
+    }
+
+    .left-nav {
+      input.navbar-search {
+        background: #3d4465; //#282f48;
+        color:$navbar-color;
+        &::placeholder{
+          color:rgba($navbar-color, .6);
+        }
+      }
+    }
+
+    .right-nav {
+      background: $navbar-bg-color;
+    }
+
+    .nav-link {
+      color: $navbar-color;
+
+      i {
+        border-color: $navbar-color;
+        background: #3d4465; //#282f48;
+      }
+
+      &:hover {
+        color: lighten($navbar-color, 15%);
+      }
+    }
+
+    .nav-alert {
+      border-color: #2f3546;
+
+      &.notifications {
+        background-color: #ff61c5;
+        box-shadow: 0px 0px 4px #ff61c5;
+
+      }
+
+      &.messages {
+        background-color: #61b8ff;
+        box-shadow: 0px 0px 4px #61b8ff;
+
+      }
+    }
+  }
+
+  main {
+    .overlay {
+      background: #242939;
+    }
+
+    .sidebar {
+      background: $sidebar-bg-color;
+
+      >div {
+        border-color: rgba($sidebar-color, .1);
+      }
+
+      a.sidebar-link {
+        color: $sidebar-color;
+
+      }
+
+      .sidebar-profile {
+        .name {
+          color: $sidebar-color;
+        }
+
+        .role {
+          color: rgba($sidebar-color, .8);
+        }
+      }
+
+      .sidebar-menu {
+        .menu-header {
+          color: rgba($sidebar-color, .5);
+        }
+
+        .menu-items {
+          a {
+            color: rgba($sidebar-color, .7);
+
+            i {
+              color: $sidebar-icon-color;
+              color: #abb7da;
+              color: rgba(140, 165, 239, 0.6);
+              border: none;
+              width: auto;
+              font-size: 1rem;
+            }
+
+            &:hover,
+            &.active {
+              background: #f5f5f9;
+              color: rgba($sidebar-color, .9);
+
+              i {
+                color: #95b0ff;
+              }
+            }
+          }
+        }
+        
+      }
+    }
+  }
+
+  .card {
+    box-shadow: 1px 1px 2px rgba(#5b6582, .1);
+
+    .card-title {
+      color: rgba($sidebar-color, .8);
+    }
+
+    .card-icon {
+      i {
+        color: #98a4c7;
+      }
+    }
+
+    .card-footer {
+      border-top: 1px solid $border-color;
+      background: none;
+    }
+
+    .card-title {
+      border-bottom: 0px solid $border-color;
+    }
+  }
+
+  .table {
+    th,
+    td {
+      border-top: 1px solid darken($border-color,2%);
+    }
+
+    thead th {
+      border-bottom: 2px solid darken($border-color,2%);
+    }
+
+    &.table-striped tbody tr:nth-of-type(odd) {
+      background-color: lighten($border-color,1%);
+    }
+
+    &.table-hover tbody tr:hover {
+      background-color: lighten($border-color, 1%);
+    }
+  }
+
+  .btn {
+    font-size: .9rem;
+
+    &.btn-lightning {
+      color: #f0f3ff;
+      background-color: #5b6582;
+      border-color: #5b6582;
+
+      &:hover {
+        background-color: #4c5671;
+      }
+    }
+
+    &.btn-outline-lightning {
+      color: #5b6582;
+      background-color: transparent;
+      border-color: #5b6582;
+
+      &:hover {
+        color: #f0f3ff;
+        background-color: #5b6582;
+        border-color: #5b6582;
+      }
+    }
+  }
+
+  .form-control {
+    font-size: .9rem;
+  }
+
+  .text-lightning {
+    color: #98a4c7;
+  }
+}
+
+// NavBar para cuando el tamaño de pantalla es < 768px
+
+.wrapper {
+  main {
+    display: flex;
+    height: 100%;
+
+    .pages {
+      overflow: auto;
+    }
+
+    .overlay {
+      position: fixed;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      z-index: 100;  
+      opacity: .7;
+      display: none;
+
+      &.show {
+
+        display: block;
+
+        @media (min-width: 768px) {
+          display: none;
+        }
+      }
+    }
+  }
+
+  &.toggeled-sidebar {
+    main {
+      .overlay {
+        display: block;
+
+        @media (min-width: 768px) {
+          display: none;
+        }
+      }
+    }
+  }
+
+  nav.navbar {
+    height: $navbar-height;
+    padding: 0;
+    border-bottom: 1px solid;
+
+    .navbar-header {
+
+      .navbar-brand {
+        font-size: 1rem;
+        font-weight: normal;
+        letter-spacing: 1px;
+
+        span {
+          display: none;
+        }
+      }
+    }
+
+    .nav-toggler-right {
+      position: relative;
+
+
+      button {
+
+        width: 35px;
+        height: 35px;
+        padding: 0;
+        border: none;
+        overflow: hidden;
+        border-radius: 50%;
+        border: 1px solid #fff;
+
+        img {
+
+          height: 100%;
+          width: 100%;
+          object-fit: cover;
+          object-position: center;
+
+        }
+      }
+
+      .nav-alert {
+        right: 0px;
+        border-width: 1px;
+        width: 9px;
+        height: 9px;
+      }
+
+    }
+
+    .nav-alert {
+      display: inline-block;
+      width: 11px;
+      height: 11px;
+      border-radius: 50%;
+      position: absolute;
+      top: 0;
+      border: 3px solid #1c1e21;
+      transform: translateX(13px);
+
+      @media (min-width: 768px) {
+        right: 20px;
+        transform: translateX(0);
+      }
+
+      &.user-profile {
+        transform: translateX(2px);
+      }
+    }
+
+
+    .navbar-header {
+      height: 100%;
+      display: flex;
+      align-items: center;
+
+    }
+
+    .user-profile {
+      span {
+        display: none;
+      }
+    }
+
+    .right-nav {
+      border-top: 1px solid;
+      padding-top: 1rem;
+      padding-bottom: 1rem;
+      height: calc(100vh - #{$navbar-height} + 1px) !important;
+
+      ul {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        flex-wrap: wrap;
+
+        li {
+          flex: 1 1 0;
+          max-width: 110px;
+          padding: 1rem;
+
+          .nav-link {
+            position: relative;
+            display: flex;
+            align-items: center;
+            flex-direction: column;
+            justify-content: center;
+
+            .link-text {
+              margin-top: 10px;
+              font-size: .9rem;
+              text-transform: uppercase;
+            }
+          }
+        }
+
+      }
+    }
+
+    .nav-link {
+      padding: 0;
+
+      i {
+        font-size: 1.1rem;
+        width: 40px;
+        height: 40px;
+        line-height: 40px;    
+        border-radius: 0;
+      }
+    }
+
+    .left-nav {
+      display: none;
+
+
+      input.navbar-search {
+        max-width: 500px;
+        border-radius: 0;
+        border: none;
+        height: 40px;
+        font-size: .9rem;
+      }
+
+    }
+
+    @media (min-width: 768px) {
+
+      .sidebar-toggler {
+        display: none;
+      }
+
+      .navbar-header {
+        width: $sidebar-width;
+        margin-left: 0!important;
+        .navbar-brand span {
+          display: inline-block;
+        }
+      }
+
+
+      .left-nav {
+        display: flex;
+      }
+
+      .nav-link {
+        padding-left: .3rem;
+        padding-right: .3rem;
+      }
+
+      .nav-alert {
+        right: 12px;
+      }
+
+      .right-nav {
+        height: 100% !important;
+        border-top: none;
+        background: none !important;
+
+        ul {
+
+          margin-left: auto;
+          flex-wrap: nowrap;
+
+          li {
+            padding: 0;
+
+            .nav-link {
+
+              .link-text {
+                display: none;
+              }
+            }
+          }
+        }
+
+      }
+    }
+
+  }
+}
+

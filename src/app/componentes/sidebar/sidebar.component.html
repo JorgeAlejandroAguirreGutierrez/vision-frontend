@@ -1,0 +1,31 @@
+<aside class="sidebar shadow-sm">
+  <nav class="sidebar-menu pt-5 pb-2">
+    <div class="menu-header mt-1 mb-1">
+      <span>OPCIONES:</span>
+    </div>
+    <div class="menu-header-min mt-1 mb-1">
+      <a>OPC:</a>
+    </div>
+    <ul class="menu-items puntero">
+      <li *ngFor="let opcion of mainComponent.opciones">
+        <a (click)="abrirItem(opcion.componente, opcion.tabTitulo)">
+          <i title="{{opcion.itemNombre}}" class="{{opcion.icoItem}}"></i>
+          <span>{{opcion.itemNombre}}</span>
+        </a>
+      </li>
+    </ul>
+    <!--div class="menu-header mt-1 mb-2">
+      <ul class="menu-items">
+        <li class="nav-item flex-fill">
+          <input class="form-control navbar-search" type="text" placeholder="Buscar . . .">
+        </li>
+      </ul>
+    </div-->
+    <div class="menu-header mt-4 mb-4">
+      Pagina Web
+    </div>
+    <div class="view-source mb-3">
+      <a href="https://www.siice.com.ec" target="_blank" class="btn btn-block btn-lightning rounded-0">SIICE Web</a>
+    </div>
+  </nav>
+</aside>

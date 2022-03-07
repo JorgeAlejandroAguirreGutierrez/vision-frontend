@@ -1,0 +1,27 @@
+
+.expandir{
+    flex:auto;
+}
+
+table {
+  width: 100%;
+  td, th {
+    overflow: hidden;
+//    with:200px;
+    text-overflow: Ellipsis;
+//    white-space: nowrap;
+//    Word-wrap: break-Word !important;
+    white-space: unset !important;
+    overflow-wrap: break-Word;
+//    Word-wrap: break-Word;
+    Word-break: break-Word;
+//    -ms-hyphens: auto;
+    -moz-hyphens: auto;
+//    -webkit-hyphens: auto;
+    hyphens: auto;
+  }
+}
+
+.tablaRetencion .mat-column-descripcion {
+    width: 20% !important;
+}

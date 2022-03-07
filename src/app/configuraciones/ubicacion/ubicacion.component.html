@@ -1,0 +1,64 @@
+<nav class="navbar-light nav-fijo">
+    <ul class="navbar-nav">
+        <li class="nav-item">
+            <ng-container *ngIf="ubicacion.id==0">
+                <a class="nav-link" href="#" role="button" (click)="crear($event)">
+                    <mat-icon>save</mat-icon>
+                </a>
+            </ng-container>
+            <ng-container *ngIf="ubicacion.id!=0">
+                <a class="nav-link" href="#" role="button" (click)="actualizar($event)">
+                    <mat-icon>update</mat-icon>
+                </a>
+            </ng-container>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="#" role="button" (click)="nuevo($event)">
+                <mat-icon>note_add</mat-icon>
+            </a>
+        </li>
+    </ul>
+</nav>
+<div class="contenedor">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    &nbsp;&nbsp;&nbsp;&nbsp;<i><u>CREAR UBICACION</u></i>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="form-row">
+                                <div class="form-group col-3">
+                                    <mat-form-field appearance="standard">
+                                        <mat-label>Codigo Norma</mat-label>
+                                        <input matInput type="text" [(ngModel)]="ubicacion.codigoNorma" oninput="this.value = this.value.toUpperCase()" class="form-control-sm">
+                                    </mat-form-field>
+                                </div>
+                                <div class="form-group col-3">
+                                    <mat-form-field appearance="standard">
+                                        <mat-label>Provincia</mat-label>
+                                        <input matInput type="text" [(ngModel)]="ubicacion.provincia" oninput="this.value = this.value.toUpperCase()" class="form-control-sm">
+                                    </mat-form-field>
+                                </div>
+                                <div class="form-group col-3">
+                                    <mat-form-field appearance="standard">
+                                        <mat-label>Canton</mat-label>
+                                        <input matInput type="text" [(ngModel)]="ubicacion.canton" oninput="this.value = this.value.toUpperCase()" class="form-control-sm">
+                                    </mat-form-field>
+                                </div>
+                                <div class="form-group col-3">
+                                    <mat-form-field appearance="standard">
+                                        <mat-label>Parroquia</mat-label>
+                                        <input matInput type="text" [(ngModel)]="ubicacion.parroquia" oninput="this.value = this.value.toUpperCase()" class="form-control-sm">
+                                    </mat-form-field>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

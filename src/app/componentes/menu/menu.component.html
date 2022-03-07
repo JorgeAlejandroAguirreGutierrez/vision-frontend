@@ -1,0 +1,174 @@
+<div class="contenedor-menu">
+    <div class="card">
+        <div class="card-header azul">
+            GESTIÓN
+        </div>
+        <div class="card-body">
+            <div fxLayout="row wrap" fxLayoutGap="13px grid">
+                <div [fxFlex]="(100/gridColumns) + '%'" fxFlex.xs="100%" fxFlex.sm="33%" *ngIf="permiso_clientes">
+                    <mat-card class="mat-elevation-z4 text-center" (click)="abrirOpcion('CLIENTES')">
+                        <img mat-card-image class="efecto" src="{{ico_cliente}}" alt="">
+                        <mat-card-content>
+                            <h6><a class="card-title">CLIENTES</a></h6>
+                        </mat-card-content>
+                    </mat-card> 
+                </div>
+                <div [fxFlex]="(100/gridColumns) + '%'" fxFlex.xs="100%" fxFlex.sm="33%" *ngIf="permiso_proveedores">
+                    <mat-card class="mat-elevation-z4 text-center" (click)="abrirOpcion('COMPRAS')">
+                        <img mat-card-image class="efecto" src="{{ico_proveedor}}" alt="">
+                        <mat-card-content>
+                            <h6><a class="card-title">COMPRAS</a></h6>
+                        </mat-card-content>
+                    </mat-card>
+                </div>
+                <div [fxFlex]="(100/gridColumns) + '%'" fxFlex.xs="100%" fxFlex.sm="33%" *ngIf="permiso_facturacion">
+                    <mat-card class="mat-elevation-z4 text-center" (click)="abrirOpcion('VENTAS')">
+                        <img mat-card-image class="efecto" src="{{ico_facturacion}}" alt="">
+                        <mat-card-content>
+                            <h6><a class="card-title">VENTAS</a></h6>
+                        </mat-card-content>
+                    </mat-card>
+                </div>
+                <div [fxFlex]="(100/gridColumns) + '%'" fxFlex.xs="100%" fxFlex.sm="33%" *ngIf="permiso_inventarios">
+                    <mat-card class="mat-elevation-z4 text-center" (click)="abrirOpcion('INVENTARIOS')">
+                        <img mat-card-image class="efecto" src="{{ico_inventario}}" alt="">
+                        <mat-card-content>
+                            <h6><a class="card-title">INVENTARIOS</a></h6>
+                        </mat-card-content>
+                    </mat-card>
+                </div>
+                <div [fxFlex]="(100/gridColumns) + '%'" fxFlex.xs="100%" fxFlex.sm="33%" *ngIf="permiso_caja_bancos">
+                    <mat-card class="mat-elevation-z4 text-center" (click)="abrirOpcion('CAJA BANCOS')">
+                        <img mat-card-image class="efecto" src="{{ico_caja_bancos}}" alt="">
+                        <mat-card-content>
+                            <h6><a class="card-title">CAJA BANCOS</a></h6>
+                        </mat-card-content>
+                    </mat-card>
+                </div>
+                <div [fxFlex]="(100/gridColumns) + '%'" fxFlex.xs="100%" fxFlex.sm="33%" *ngIf="permiso_cuentasxcobrar">
+                    <mat-card class="mat-elevation-z4 text-center" (click)="abrirOpcion('CUENTAS COBRAR')">
+                        <img mat-card-image class="efecto" src="{{ico_cuentasxcobrar}}" alt="">
+                        <mat-card-content>
+                            <h6><a class="card-title">CUENTAS POR COBRAR</a></h6>
+                        </mat-card-content>
+                    </mat-card>
+                </div>
+                <div [fxFlex]="(100/gridColumns) + '%'" fxFlex.xs="100%" fxFlex.sm="33%" *ngIf="permiso_cuentasxpagar">
+                    <mat-card class="mat-elevation-z4 text-center" (click)="abrirOpcion('CUENTAS PAGAR')">
+                        <img mat-card-image class="efecto" src="{{ico_cuentasxpagar}}" alt="">
+                        <mat-card-content>
+                            <h6><a class="card-title">CUENTAS POR PAGAR</a></h6>
+                        </mat-card-content>
+                    </mat-card>
+                </div>
+                <div [fxFlex]="(100/gridColumns) + '%'" fxFlex.xs="100%" fxFlex.sm="33%" *ngIf="permiso_activos_fijos">
+                    <mat-card class="mat-elevation-z4 text-center" (click)="abrirOpcion('ACTIVOS FIJOS')">
+                        <img mat-card-image class="efecto" src="{{ico_activosfijos}}" alt="">
+                        <mat-card-content>
+                            <h6><a class="card-title">ACTIVOS FIJOS</a></h6>
+                        </mat-card-content>
+                    </mat-card>
+                </div>
+                <div [fxFlex]="(100/gridColumns) + '%'" fxFlex.xs="100%" fxFlex.sm="33%" *ngIf="permiso_produccion">
+                    <mat-card class="mat-elevation-z4 text-center" (click)="abrirOpcion('PRODUCCION')">
+                        <img mat-card-image class="efecto" src="{{ico_produccion}}" alt="">
+                        <mat-card-content>
+                            <h6><a class="card-title">PRODUCCION</a></h6>
+                        </mat-card-content>
+                    </mat-card>
+                </div>
+                <div [fxFlex]="(100/gridColumns) + '%'" fxFlex.xs="100%" fxFlex.sm="33%" *ngIf="permiso_contabilidad">
+                    <mat-card class="mat-elevation-z4 text-center" (click)="abrirOpcion('CONTABILIDAD')">
+                        <img mat-card-image class="efecto" src="{{ico_contabilidad}}" alt="">
+                        <mat-card-content>
+                            <h6><a class="card-title">CONTABILIDAD</a></h6>
+                        </mat-card-content>
+                    </mat-card>
+                </div>
+                <div [fxFlex]="(100/gridColumns) + '%'" fxFlex.xs="100%" fxFlex.sm="33%" *ngIf="permiso_talento_humano">
+                    <mat-card class="mat-elevation-z4 text-center" (click)="abrirOpcion('TALENTO HUMANO')">
+                        <img mat-card-image class="efecto" src="{{ico_talentohumano}}" alt="">
+                        <mat-card-content>
+                            <h6><a class="card-title">TALENTO HUMANO</a></h6>
+                        </mat-card-content>
+                    </mat-card>
+                </div>
+                <div [fxFlex]="(100/gridColumns) + '%'" fxFlex.xs="100%" fxFlex.sm="33%" *ngIf="permiso_financiero">
+                    <mat-card class="mat-elevation-z4 text-center" (click)="abrirOpcion('FINANCIERO')">
+                        <img mat-card-image class="efecto" src="{{ico_financiero}}" alt="">
+                        <mat-card-content>
+                            <h6><a class="card-title">FINANCIERO</a></h6>
+                        </mat-card-content>
+                    </mat-card>
+                </div>
+                <div [fxFlex]="(100/gridColumns) + '%'" fxFlex.xs="100%" fxFlex.sm="33%" *ngIf="permiso_importacion">
+                    <mat-card class="mat-elevation-z4 text-center" (click)="abrirOpcion('IMPORTACION')">
+                        <img mat-card-image class="efecto" src="{{ico_importacion}}" alt="">
+                        <mat-card-content>
+                            <h6><a class="card-title">IMPORTACION</a></h6>
+                        </mat-card-content>
+                    </mat-card>
+                </div>
+                <div [fxFlex]="(100/gridColumns) + '%'" fxFlex.xs="100%" fxFlex.sm="33%" *ngIf="permiso_reportes">
+                    <mat-card class="mat-elevation-z4 text-center" (click)="abrirOpcion('REPORTES')">
+                        <img mat-card-image class="efecto" src="{{ico_reportes}}" alt="">
+                        <mat-card-content>
+                            <h6><a class="card-title">REPORTES</a></h6>
+                        </mat-card-content>
+                    </mat-card>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-header azul">
+            ADMINISTRACIÓN
+        </div>
+        <div class="card-body">
+            <div fxLayout="row wrap" fxLayoutGap="13px grid">
+                <div [fxFlex]="(100/gridColumns) + '%'" fxFlex.xs="100%" fxFlex.sm="33%"
+                    *ngIf="permiso_configuraciones">
+                    <mat-card class="mat-elevation-z4 text-center" (click)="abrirOpcion('CONFIGURACION')">
+                        <img mat-card-image class="efecto" src="{{ico_configuracion}}" alt="">
+                        <mat-card-content>
+                            <h6><a class="card-title">CONFIGURACION</a></h6>
+                        </mat-card-content>
+                    </mat-card>
+                </div>
+                <div [fxFlex]="(100/gridColumns) + '%'" fxFlex.xs="100%" fxFlex.sm="33%" *ngIf="permiso_estadisticas">
+                    <mat-card class="mat-elevation-z4 text-center" (click)="abrirOpcion('ESTADISTICAS')">
+                        <img mat-card-image class="efecto" src="{{ico_estadistica}}" alt="">
+                        <mat-card-content>
+                            <h6><a class="card-title">INDICADORES</a></h6>
+                        </mat-card-content>
+                    </mat-card>
+                </div>
+                <div [fxFlex]="(100/gridColumns) + '%'" fxFlex.xs="100%" fxFlex.sm="33%" *ngIf="permiso_control">
+                    <mat-card class="mat-elevation-z4 text-center" (click)="abrirOpcion('CONTROL')">
+                        <img mat-card-image class="efecto" src="{{ico_organismoscontrol}}" alt="">
+                        <mat-card-content>
+                            <h6><a class="card-title">ORGANISMOS DE CONTROL</a></h6>
+                        </mat-card-content>
+                    </mat-card>
+                </div>
+                <div [fxFlex]="(100/gridColumns) + '%'" fxFlex.xs="100%" fxFlex.sm="33%" *ngIf="permiso_auditorias">
+                    <mat-card class="mat-elevation-z4 text-center" (click)="abrirOpcion('AUDITORIA')">
+                        <img mat-card-image class="efecto" src="{{ico_auditoria}}" alt="">
+                        <mat-card-content>
+                            <h6><a class="card-title">AUDITORIA</a></h6>
+                        </mat-card-content>
+                    </mat-card>
+                </div>
+                <div [fxFlex]="(100/gridColumns) + '%'" fxFlex.xs="100%" fxFlex.sm="33%" *ngIf="permiso_usuarios">
+                    <mat-card class="mat-elevation-z4 text-center" (click)="abrirOpcion('USUARIOS')">
+                        <img mat-card-image class="efecto" src="{{ico_usuarios}}" alt="">
+                        <mat-card-content>
+                            <h6><a class="card-title">TUTORIALES</a></h6>
+                        </mat-card-content>
+                    </mat-card>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

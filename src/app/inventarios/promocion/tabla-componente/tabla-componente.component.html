@@ -1,0 +1,60 @@
+<br>
+<div class="centrar-titulo col-12">
+    <mat-label>COMPONENTES</mat-label>
+</div>
+<!--mat-table class="mat-elevation-z8" [dataSource]="dataSourceComponente">
+    <ng-container matColumnDef="producto_id">
+        <mat-header-cell *matHeaderCellDef> Producto </mat-header-cell>
+        <mat-cell *matCellDef="let row">
+            <mat-form-field floatLabel="{{ row.editing ? 'float' : 'never'}}">
+                <input matInput [formControl]="row.validator.controls['producto_id']"
+                    [readonly]="!row.editing" placeholder="Producto">
+            </mat-form-field>
+        </mat-cell>
+    </ng-container>
+    <ng-container matColumnDef="medida_id">
+        <mat-header-cell *matHeaderCellDef> Medida </mat-header-cell>
+        <mat-cell *matCellDef="let row">
+            <mat-form-field floatLabel="{{ row.editing ? 'float' : 'never'}}">
+                <input matInput [formControl]="row.validator.controls['medida_id']" [readonly]="!row.editing"
+                    placeholder="Medida">
+            </mat-form-field>
+        </mat-cell>
+    </ng-container>
+    <ng-container matColumnDef="cantidad">
+        <mat-header-cell *matHeaderCellDef> Cantidad </mat-header-cell>
+        <mat-cell *matCellDef="let row">
+            <mat-form-field floatLabel="{{ row.editing ? 'float' : 'never'}}">
+                <input matInput [formControl]="row.validator.controls['cantidad']" type="number" placeholder="Cantidad">
+            </mat-form-field>
+        </mat-cell>
+    </ng-container>
+    <ng-container matColumnDef="valor">
+        <mat-header-cell *matHeaderCellDef> Valor </mat-header-cell>
+        <mat-cell *matCellDef="let row">
+            <mat-form-field floatLabel="{{ row.editing ? 'float' : 'never'}}">
+                <input matInput [formControl]="row.validator.controls['valor']" placeholder="Valor">
+            </mat-form-field>
+        </mat-cell>
+    </ng-container>
+    <ng-container matColumnDef="actionsColumn">
+        <mat-header-cell *matHeaderCellDef>
+            <button mat-icon-button color="accent" (click)="dataSourceComponente.createNew()"><i
+                    class="fa fa-plus mat-icon"></i></button>
+        </mat-header-cell>
+        <mat-cell *matCellDef="let row">
+            <button *ngIf="!row.editing" mat-icon-button color="primary" focusable="false" (click)="row.startEdit()">
+                <i class="fa fa-pencil mat-icon"></i>
+            </button>
+            <button *ngIf="row.editing" mat-icon-button color="primary" focusable="false"
+                (click)="row.confirmEditCreate()">
+                <i class="fa fa-check mat-icon"></i>
+            </button>
+            <button mat-icon-button color="primary" focusable="false" (click)="row.cancelOrDelete()">
+                <i class="fa fa-times mat-icon"></i>
+            </button>
+        </mat-cell>
+    </ng-container>
+    <mat-header-row *matHeaderRowDef="displayedColumnsComponente"></mat-header-row>
+    <mat-row *matRowDef="let row; columns: displayedColumnsComponente;"></mat-row>
+</mat-table-->

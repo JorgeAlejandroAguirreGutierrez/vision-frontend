@@ -1,0 +1,40 @@
+<div class="wrapper default-theme" [ngClass]="getClasses()">
+  <app-navbar [istabMenu]="istabMenu"></app-navbar>
+  <main>
+    <div class="container-fluid">
+      <mat-tab-group class="tab-group-main mtab-main" [selectedIndex]="selectedTab1"
+        (selectedTabChange)="tabChanged1($event)">
+        <mat-tab *ngFor="let tab1 of tabs1; let tabIndexMain = index">
+          <ng-template mat-tab-label>
+            {{ tab1.title }}&nbsp;&nbsp;&nbsp;&nbsp;
+            <i *ngIf="tabIndexMain != 0" class="material-icons" (click)="removeTab1(tabIndexMain)">close</i>
+          </ng-template>
+          <div *ngIf="tabIndexMain != 0">
+            <main [class]="claseExpandirTabSec">
+              <div>
+                <app-sidebar></app-sidebar>
+              </div>
+              <mat-tab-group class="tab-group-sec mtab-sec" [selectedIndex]="selectedTabGroup[tabIndexMain-1]"
+                (selectedTabChange)="tabChanged($event)">
+                <mat-tab *ngFor="let tab of tabsGroup[tabIndexMain-1]; let tabIndexSec = index">
+                  <ng-template mat-tab-label>
+                    {{ tab.title }}&nbsp;&nbsp;&nbsp;&nbsp;
+                    <i class="material-icons" (click)="removeTab(tabIndexSec)">close</i>
+                  </ng-template>
+                  <div>
+                    <app-tab-content [tab]="tab"></app-tab-content>
+                  </div>
+                </mat-tab>
+              </mat-tab-group>
+            </main>
+          </div>
+          <div *ngIf="tabIndexMain == 0">
+            <app-tab-content [tab]="tab1"></app-tab-content>
+          </div>
+        </mat-tab>
+      </mat-tab-group>
+      <hr>
+      <app-footer></app-footer>
+    </div>
+  </main>
+</div>

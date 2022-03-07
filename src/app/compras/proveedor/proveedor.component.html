@@ -1,0 +1,559 @@
+<nav class="navbar-light nav-fijo">
+    <ul class="navbar-nav">
+        <li class="nav-item">
+            <a class="nav-link" title="Nuevo" role="button" (click)="nuevoCliente($event)">
+                <mat-icon>note_add</mat-icon>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" title="Borrar" role="button" (click)="$event.preventDefault()">
+                <mat-icon>backspace</mat-icon>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" title="Guardar" role="button" (click)="crearCliente($event)"
+                *ngIf="cliente.id==0; else block_actualizar">
+                <mat-icon>save</mat-icon>
+            </a>
+            <ng-template #block_actualizar>
+                <a class="nav-link" title="Actualizar" role="button" (click)="actualizar($event)">
+                    <mat-icon>save</mat-icon>
+                </a>
+            </ng-template>
+        </li>
+    </ul>
+</nav>
+<div class="contenedor">
+    <mat-accordion class="headers-align">
+        <mat-expansion-panel (opened)="abrirPanelAdminProveedor = false" (closed)="abrirPanelAdminProveedor = true"
+            [expanded]="!abrirPanelAdminProveedor">
+            <mat-expansion-panel-header>
+                <mat-panel-title>
+                    <i><u>PROVEEDOR</u></i>
+                </mat-panel-title>
+                <mat-panel-description>
+                    {{abrirPanelAdminProveedor ? 'Ocultar crear proveedor' : 'Crear nuevo proveedor'}}
+                    <mat-icon>assignment_ind</mat-icon>
+                </mat-panel-description>
+            </mat-expansion-panel-header>
+            <hr>
+            <div class="form-group form-row">
+                <div class="col-2">
+                    <mat-form-field appearance="standard">
+                        <mat-label>Identificación</mat-label>
+                        <input matInput type="text" [(ngModel)]="cliente.identificacion"
+                            oninput="this.value = this.value.toUpperCase()" class="form-control-sm"
+                            (change)="validarIdentificacion()">
+                    </mat-form-field>
+                </div>
+                <div class="col-1">
+                    <mat-form-field appearance="standard">
+                        <mat-label>Documento</mat-label>
+                        <input matInput type="text" class="form-control-sm" [(ngModel)]="cliente.tipoIdentificacion"
+                            disabled>
+                    </mat-form-field>
+                </div>
+                <div class="col-2">
+                    <mat-form-field appearance="standard">
+                        <mat-label>Contribuyente</mat-label>
+                        <mat-select [ngModel]="cliente.tipoContribuyente?.id"
+                            oninput="this.value = this.value.toUpperCase()" [disabled]="!habilitarTipoContribuyente"
+                            (selectionChange)="validarTipoContribuyente()" class="form-control-sm">
+                            <mat-option *ngFor="let tipoContribuyente of tiposContribuyentes"
+                                [value]="tipoContribuyente.id">
+                                {{tipoContribuyente.subtipo}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+                <div class="col-2">
+                </div>
+                <div class="col-3">
+                    <mat-form-field appearance="standard">
+                        <mat-label>Grupo Proveedor</mat-label>
+                        <mat-select [(ngModel)]="cliente.grupoCliente.id" class="form-control-sm">
+                            <mat-option *ngFor="let grupoCliente of gruposClientes" [value]="grupoCliente.id">
+                                {{grupoCliente.descripcion}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+                <div class="col-2">
+                    <mat-form-field appearance="standard">
+                        <mat-label>Código</mat-label>
+                        <input matInput type="text" disabled [(ngModel)]="cliente.codigo" class="form-control-sm">
+                    </mat-form-field>
+                </div>
+                <div class="col-10">
+                    <mat-form-field appearance="standard">
+                        <mat-label>Razón Social</mat-label>
+                        <input matInput type="text" [(ngModel)]="cliente.razonSocial"
+                            oninput="this.value = this.value.toUpperCase()" class="form-control-sm">
+                        <button mat-button *ngIf="cliente.razonSocial" matSuffix mat-icon-button
+                            (click)="cliente.razonSocial=''">
+                            <mat-icon>close</mat-icon>
+                        </button>
+                    </mat-form-field>
+                </div>
+                <div class="col-1">
+                    <mat-checkbox [(ngModel)]="cliente.tipoContribuyente.obligadoContabilidad" class="form-control-sm"
+                        color="primary">Oblig.</mat-checkbox>
+                </div>
+                <div class="col-1">
+                    <mat-checkbox [(ngModel)]="cliente.especial" class="form-control-sm" color="primary">
+                        Espec.</mat-checkbox>
+                </div>
+                <div class="col-8">
+                    <mat-form-field appearance="standard">
+                        <mat-label>Nombre Comercial</mat-label>
+                        <input matInput type="text" [(ngModel)]="cliente.razonSocial"
+                            oninput="this.value = this.value.toUpperCase()" class="form-control-sm">
+                        <button mat-button *ngIf="cliente.razonSocial" matSuffix mat-icon-button
+                            (click)="cliente.razonSocial=''">
+                            <mat-icon>close</mat-icon>
+                        </button>
+                    </mat-form-field>
+                </div>
+                <div class="col-2">
+                    <mat-checkbox [(ngModel)]="cliente.especial" class="form-control-sm" color="primary">
+                        Relacionado</mat-checkbox>
+                </div>
+                <div class="col-2">
+                    <mat-slide-toggle [checked]="estadoProveedor">Estado</mat-slide-toggle>
+                </div>
+            </div>
+        </mat-expansion-panel>
+    </mat-accordion>
+    <mat-accordion class="headers-align">
+        <mat-expansion-panel (opened)="abrirPanelUbicacion = true" (closed)="abrirPanelUbicacion = false"
+            [expanded]="abrirPanelUbicacion">
+            <mat-expansion-panel-header>
+                <mat-panel-title>
+                    <i><u>UBICACIONES</u></i>
+                </mat-panel-title>
+                <mat-panel-description>
+                    {{abrirPanelUbicacion ? 'Ocultar crear direcciones' : 'Crear direcciones del proveedor'}}
+                    <mat-icon>map</mat-icon>
+                </mat-panel-description>
+            </mat-expansion-panel-header>
+            <hr>
+            <div class="form-group form-row">
+                <div class="form-row col-9">
+                    <div class="col-10">
+                        <mat-form-field appearance="standard">
+                            <mat-label>Direccion</mat-label>
+                            <input matInput type="text" [(ngModel)]="cliente.direccion.direccion"
+                                oninput="this.value = this.value.toUpperCase()" class="form-control-sm">
+                            <button mat-button *ngIf="cliente.direccion.direccion" matSuffix mat-icon-button
+                                (click)="cliente.direccion.direccion=''">
+                                <mat-icon>close</mat-icon>
+                            </button>
+                        </mat-form-field>
+                        <div class="form-row">
+                            <div class="col-4">
+                                <mat-form-field appearance="standard">
+                                    <mat-label>Provincia</mat-label>
+                                    <mat-select type="text" [(ngModel)]="clienteProvincia"
+                                        (selectionChange)="provincia($event.value)" class="form-control-sm">
+                                        <mat-option *ngFor="let provincia of provincias" [value]="provincia.provincia">
+                                            {{provincia.provincia}}
+                                        </mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+                            <div class="col-4">
+                                <mat-form-field appearance="standard">
+                                    <mat-label>Canton</mat-label>
+                                    <mat-select type="text" [(ngModel)]="clienteCanton"
+                                        (selectionChange)="canton($event.value)" class="form-control-sm">
+                                        <mat-option *ngFor="let canton of cantones" [value]="canton.canton">
+                                            {{canton.canton}}
+                                        </mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+                            <div class="col-4">
+                                <mat-form-field appearance="standard">
+                                    <mat-label>Parroquia</mat-label>
+                                    <mat-select type="text" [(ngModel)]="clienteParroquia" class="form-control-sm"
+                                        (selectionChange)="parroquia($event.value)">
+                                        <mat-option *ngFor="let parroquia of parroquias" [value]="parroquia.parroquia">
+                                            {{parroquia.parroquia}}
+                                        </mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-2 linea-vertical">
+                        <div class="form-row derecha">
+                            <mat-form-field appearance="standard" class="peque">
+                                <mat-label>Longitud</mat-label>
+                                <input matInput type="text" class="form-control-sm" disabled>
+                            </mat-form-field>
+                        </div>
+                        <div class="form-row derecha">
+                            <mat-form-field appearance="standard" class="peque">
+                                <mat-label>Latitud</mat-label>
+                                <input matInput type="text" class="form-control-sm" disabled>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <div class="form-row col-4">
+                        <div class="col-9">
+                            <mat-form-field appearance="standard">
+                                <mat-label>Teléfono</mat-label>
+                                <b matPrefix>+593 &nbsp;</b>
+                                <input matInput type="tel" [(ngModel)]="telefono.numero" class="form-control-sm"
+                                    (change)="validarTelefono()" placeholder="03-2999-123" oninput="this.value = this.value.replace
+                                        ( /^(\d{2})(\d{4})(\d{3})$/, '$1-$2-$3')">
+                            </mat-form-field>
+                        </div>
+                        <div class="col-3 iconos">
+                            <button mat-icon-button>
+                                <mat-icon (click)="crearTelefono()">add</mat-icon>
+                            </button>
+                        </div>
+                        <ng-container *ngFor="let telefono of cliente.telefonos; let i=index ">
+                            <div class="col-9">
+                                <mat-form-field appearance="standard">
+                                    <mat-label>Teléfono</mat-label>
+                                    <b matPrefix>+593 &nbsp;</b>
+                                    <input matInput type="tel" [value]="telefono.numero" class="form-control-sm"
+                                        disabled (change)="validarTelefono()" placeholder="03-2999-123" oninput="this.value = this.value.replace
+                                        ( /^(\d{2})(\d{4})(\d{3})$/, '$1-$2-$3')">
+                                </mat-form-field>
+                            </div>
+                            <div class="col-3 iconos">
+                                <button mat-icon-button>
+                                    <mat-icon class="iconos-peque">edit</mat-icon>
+                                </button>
+                                <button mat-icon-button>
+                                    <mat-icon class="iconos-peque" (click)="eliminarTelefono(i)">close</mat-icon>
+                                </button>
+                            </div>
+                        </ng-container>
+                    </div>
+                    <div class="form-row col-4">
+                        <div class="col-9">
+                            <mat-form-field appearance="standard">
+                                <mat-label>Celular</mat-label>
+                                <b matPrefix>+593 </b>
+                                <input matInput type="tel" [(ngModel)]="celular.numero" class="form-control-sm"
+                                    (change)="validarCelular()" placeholder="09-9999-1234" oninput="this.value = this.value.replace
+                                            ( /^(\d{2})(\d{4})(\d{4})$/, '$1-$2-$3')">
+                            </mat-form-field>
+                        </div>
+                        <div class="col-3 iconos">
+                            <button mat-icon-button>
+                                <mat-icon (click)="crearCelular()">add</mat-icon>
+                            </button>
+                        </div>
+                        <ng-container *ngFor="let celular of cliente.celulares; let i=index ">
+                            <div class="col-9">
+                                <mat-form-field appearance="standard">
+                                    <mat-label>Celular</mat-label>
+                                    <b matPrefix>+593 &nbsp;</b>
+                                    <input matInput type="tel" [value]="celular.numero" class="form-control-sm" disabled
+                                        (change)="validarCelular()" placeholder="09-9999-1234" oninput="this.value = this.value.replace
+                                        ( /^(\d{2})(\d{4})(\d{4})$/, '$1-$2-$3')">
+                                </mat-form-field>
+                            </div>
+                            <div class="col-3 iconos">
+                                <button mat-icon-button>
+                                    <mat-icon class="iconos-peque">edit</mat-icon>
+                                </button>
+                                <button mat-icon-button>
+                                    <mat-icon class="iconos-peque" (click)="eliminarCelular(i)">close</mat-icon>
+                                </button>
+                            </div>
+                        </ng-container>
+                    </div>
+                    <div class="form-row col-4">
+                        <div class="col-9">
+                            <mat-form-field appearance="standard">
+                                <mat-label>Correo electrónico</mat-label>
+                                <input matInput type="text " [(ngModel)]="correo.email"
+                                    oninput="this.value = this.value.toLowerCase()" class="form-control-sm "
+                                    (change)="validarCorreo()" placeholder="ejemplo@siice.com">
+                            </mat-form-field>
+                        </div>
+                        <div class="col-3 iconos">
+                            <button mat-icon-button>
+                                <mat-icon (click)="crearCorreo()">add</mat-icon>
+                            </button>
+                        </div>
+                        <ng-container *ngFor="let correo of cliente.correos; let i=index ">
+                            <div class="col-9">
+                                <mat-form-field appearance="standard">
+                                    <mat-label>Correo electrónico</mat-label>
+                                    <input matInput type="text " [value]="correo.email"
+                                        oninput="this.value = this.value.toLowerCase()" class="form-control-sm "
+                                        (change)="validarCorreo()" placeholder="ejemplo@siice.com">
+                                </mat-form-field>
+                            </div>
+                            <div class="col-3 iconos">
+                                <button mat-icon-button>
+                                    <mat-icon class="iconos-peque">edit</mat-icon>
+                                </button>
+                                <button mat-icon-button>
+                                    <mat-icon class="iconos-peque" (click)="eliminarCorreo(i)">close</mat-icon>
+                                </button>
+                            </div>
+                        </ng-container>
+                    </div>
+                </div>
+                <div class="col-3 text-center">
+                    <mat-label>Georeferencia</mat-label>
+                    <iframe class="img-responsive"
+                        src="https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d26828.783791134218!2d-78.64974203645144!3d-1.6705413480437092!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1ses-419!2sec!4v1582431206351!5m2!1ses-419!2sec"
+                        frameborder="0" style="border:0;" allowfullscreen="">
+                    </iframe>
+                </div>
+            </div>
+        </mat-expansion-panel>
+        <mat-expansion-panel (opened)="abrirPanelDatoAdicional = true" (closed)="abrirPanelDatoAdicional = false"
+            [expanded]="abrirPanelDatoAdicional">
+            <mat-expansion-panel-header>
+                <mat-panel-title>
+                    <i><u>DATOS ADICIONALES</u></i>
+                </mat-panel-title>
+                <mat-panel-description>
+                    {{abrirPanelDatoAdicional ? 'Ocultar crear datos adicionales' : 'Crear datos adicionales del
+                    proveedor'}}
+                    <mat-icon>date_range</mat-icon>
+                </mat-panel-description>
+            </mat-expansion-panel-header>
+            <div class="form-group form-row">
+                <div class="card col-4">
+                    <div class="card-header text-center">
+                        COMERCIALIZACION
+                    </div>
+                    <div class="card-body">
+                        <div class="form-row">
+                            <div class="col-12">
+                                <mat-form-field appearance="standard">
+                                    <mat-label>Forma de pago</mat-label>
+                                    <mat-select [(ngModel)]="cliente.financiamiento.formaPago.id"
+                                        [compareWith]="compareFn" (selectionChange)="cambiarFormaPago()"
+                                        class="form-control-sm">
+                                        <mat-option *ngFor="let formaPago of formasPagos" [value]="formaPago.id">
+                                            {{formaPago.descripcion}}
+                                        </mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+                            <div class="col-6">
+                                <mat-form-field appearance="standard">
+                                    <mat-label>Plazo/días</mat-label>
+                                    <mat-select [disabled]="activacionPlazoCredito"
+                                        [(ngModel)]="cliente.financiamiento.plazoCredito" [compareWith]="compareFn"
+                                        class="form-control-sm">
+                                        <mat-option *ngFor="let plazoCredito of plazosCreditos" [value]="plazoCredito">
+                                            {{plazoCredito.plazo}}
+                                        </mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+                            <div class="col-6">
+                                <mat-form-field appearance="standard">
+                                    <mat-label>Monto</mat-label>
+                                    <input matInput [(ngModel)]="cliente.financiamiento.monto" class="form-control-sm "
+                                        [disabled]="activacionPlazoCredito">
+                                </mat-form-field>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card col-4">
+                    <div class="card-header text-center">
+                        RETENCIÓN DE IVA
+                    </div>
+                    <div class="form-row ">
+                        <div class="col-2">
+                            <br>
+                            <b>BIEN</b>
+                        </div>
+                        <div class="col-5">
+                            <mat-form-field appearance="standard">
+                                <mat-label>Código</mat-label>
+                                <mat-select type="text" [(ngModel)]="cliente.retencionesCliente[0].tipoRetencion"
+                                    [compareWith]="compareFn" class="form-control-sm ">
+                                    <mat-option *ngFor="let tipoRetencionIvaBien of tiposRetencionesIvaBien "
+                                        [value]="tipoRetencionIvaBien ">
+                                        {{tipoRetencionIvaBien.codigoNorma}}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+                        <div class="col-5">
+                            <mat-form-field appearance="standard">
+                                <mat-label>%</mat-label>
+                                <mat-select type="text " [(ngModel)]="cliente.retencionesCliente[0].tipoRetencion"
+                                    [compareWith]="compareFn" class="form-control-sm ">
+                                    <mat-option [value]="tipoRetencionIvaBien"
+                                        *ngFor="let tipoRetencionIvaBien of tiposRetencionesIvaBien">
+                                        {{tipoRetencionIvaBien.porcentaje}}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+                        <div class="col-2">
+                            <br>
+                            <b>SRV</b>
+                        </div>
+                        <div class="col-5">
+                            <mat-form-field appearance="standard">
+                                <mat-label>Código</mat-label>
+                                <mat-select type="text" [(ngModel)]="cliente.retencionesCliente[2].tipoRetencion"
+                                    [compareWith]="compareFn" class="form-control-sm ">
+                                    <mat-option [value]="tipoRetencionIvaServicio"
+                                        *ngFor="let tipoRetencionIvaServicio of tiposRetencionesIvaServicio">
+                                        {{tipoRetencionIvaServicio.codigoNorma}}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+                        <div class="col-5">
+                            <mat-form-field appearance="standard">
+                                <mat-label>%</mat-label>
+                                <mat-select type="text" [(ngModel)]="cliente.retencionesCliente[2].tipoRetencion"
+                                    [compareWith]="compareFn" class="form-control-sm ">
+                                    <mat-option [value]="tipoRetencionIvaServicio"
+                                        *ngFor="let tipoRetencionIvaServicio of tiposRetencionesIvaServicio">
+                                        {{tipoRetencionIvaServicio.porcentaje}}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                </div>
+                <div class="card col-4">
+                    <div class="card-header text-center">
+                        RETENCIÓN DE FUENTE
+                    </div>
+                    <div class="form-row ">
+                        <div class="col-2">
+                            <br>
+                            <b>BIEN</b>
+                        </div>
+                        <div class="col-5">
+                            <mat-form-field appearance="standard">
+                                <mat-label>Código</mat-label>
+                                <mat-select type="text " [(ngModel)]="cliente.retencionesCliente[1].tipoRetencion"
+                                    [compareWith]="compareFn" class="form-control-sm ">
+                                    <mat-option [value]="tipoRetencionRentaBien"
+                                        *ngFor="let tipoRetencionRentaBien of tiposRetencionesRentaBien ">
+                                        {{tipoRetencionRentaBien.codigoNorma}}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+                        <div class="col-5">
+                            <mat-form-field appearance="standard">
+                                <mat-label>%</mat-label>
+                                <mat-select type="text " [(ngModel)]="cliente.retencionesCliente[1].tipoRetencion"
+                                    [compareWith]="compareFn" class="form-control-sm ">
+                                    <mat-option [value]="tipoRetencionRentaBien"
+                                        *ngFor="let tipoRetencionRentaBien of tiposRetencionesRentaBien ">
+                                        {{tipoRetencionRentaBien.porcentaje}}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+                        <div class="col-2">
+                            <br>
+                            <b>SRV</b>
+                        </div>
+                        <div class="col-5">
+                            <mat-form-field appearance="standard">
+                                <mat-label>Código</mat-label>
+                                <mat-select type="text " [(ngModel)]="cliente.retencionesCliente[3].tipoRetencion"
+                                    [compareWith]="compareFn" class="form-control-sm ">
+                                    <mat-option [value]="tipoRetencionesRentaServicio"
+                                        *ngFor="let tipoRetencionesRentaServicio of tiposRetencionesRentaServicio ">
+                                        {{tipoRetencionesRentaServicio.codigoNorma}}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+                        <div class="col-5">
+                            <mat-form-field appearance="standard">
+                                <mat-label>%</mat-label>
+                                <mat-select type="text " [(ngModel)]="cliente.retencionesCliente[3].tipoRetencion"
+                                    [compareWith]="compareFn" class="form-control-sm ">
+                                    <mat-option [value]="tipoRetencionRentaServicio"
+                                        *ngFor="let tipoRetencionRentaServicio of tiposRetencionesRentaServicio ">
+                                        {{tipoRetencionRentaServicio.porcentaje}}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </mat-expansion-panel>
+        <mat-expansion-panel (opened)="abrirPanelAdminProveedor = true" (closed)="abrirPanelAdminProveedor = false"
+            [expanded]="abrirPanelAdminProveedor">
+            <mat-expansion-panel-header>
+                <mat-panel-title>
+                    <i><u>GESTIONAR PROVEEDORES</u></i>
+                </mat-panel-title>
+                <mat-panel-description>
+                    {{abrirPanelAdminProveedor ? 'Ocultar administrador de clientes' : 'Editar cliente existente'}}
+                    <mat-icon>settings_brightness</mat-icon>
+                </mat-panel-description>
+            </mat-expansion-panel-header>
+            <hr>
+            <mat-form-field appearance="standard">
+                <mat-label>Buscar proveedores</mat-label>
+                <input matInput (keyup)="filtroProveedor($event)" placeholder="Ej. BA" #input>
+            </mat-form-field>
+            <div class="mat-elevation-z8">
+                <table mat-table [dataSource]="dataSourceProveedor" matSort>
+                    <!-- Columnas Dinamicas -->
+                    <ng-container *ngFor="let columna of columnasProveedor" [matColumnDef]="columna.nombreColumna">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> {{ columna.cabecera }} </th>
+                        <td mat-cell *matCellDef="let row"> {{ columna.celda(row) }} </td>
+                    </ng-container>
+
+                    <tr mat-header-row *matHeaderRowDef="cabeceraProveedor"></tr>
+                    <tr mat-row (click)="seleccion(row)" [class.selected-row]="clickedRows.has(row)"
+                        *matRowDef="let row; columns: cabeceraProveedor;"></tr>
+
+                    <!-- Row shown when there is no matching data. -->
+                    <tr class="mat-row" *matNoDataRow>
+                        <td class="mat-cell" colspan="5">No hay datos que coincidan con el proveedor "{{input.value}}"
+                        </td>
+                    </tr>
+                </table>
+                <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
+            </div>
+            <div class="azul" *ngIf="!clickedRows.size">
+                Seleccione una fila para editar
+            </div>
+            <div class="azul" *ngFor="let clickedRow of clickedRows">
+                Id: {{clickedRow.id}} seleccionado
+            </div>
+        </mat-expansion-panel>
+    </mat-accordion>
+</div>
+<ng-template #modal_importar let-modal>
+    <div class="modal-header ">
+        <h5 class="modal-title ">Importar un Cliente</h5>
+        <button type="button " class="close " aria-label="Close " (click)="modal.dismiss( 'Cross click') ">
+            <span aria-hidden="true ">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body ">
+        <div class="form-row ">
+            <div class="form-group col-12 ">
+                <label>Cargar Archivo</label>
+                <!--input type="file" id="file" (change)="importar($event.target.files)"-->
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer ">
+        <button type="button " class="btn btn-outline-dark " (click)="modal.close('close') ">Cerrar</button>
+    </div>
+</ng-template>

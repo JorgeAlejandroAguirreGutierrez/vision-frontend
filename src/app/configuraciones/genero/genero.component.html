@@ -1,0 +1,147 @@
+<nav class="navbar-light nav-fijo">
+    <ul class="navbar-nav">
+        <ng-container *ngIf="abrirPanelNuevoGenero">
+            <li class="nav-item">
+                <a class="nav-link" title="Nuevo" role="button" (click)="nuevo($event)">
+                    <mat-icon>note_add</mat-icon>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" title="Borrar" role="button" (click)="borrar($event)">
+                    <mat-icon>backspace</mat-icon>
+                </a>
+            </li>
+            <li class="nav-item" *ngIf="genero.id==0">
+                <a class="nav-link" title="Guardar" role="button" (click)="crear($event)">
+                    <mat-icon>save</mat-icon>
+                </a>
+            </li>
+            <li class="nav-item" *ngIf="genero.id!=0">
+                <a class="nav-link" title="Actualizar" role="button" (click)="actualizar($event)">
+                    <mat-icon>update</mat-icon>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" title="Eliminar" role="button" (click)="eliminarLeer($event)">
+                    <mat-icon>delete</mat-icon>
+                </a>
+            </li>
+        </ng-container>
+        <ng-container *ngIf="abrirPanelAdminGenero">
+            <li class="nav-item">
+                <a class="nav-link" title="Buscar" role="button" (click)="buscar($event)">
+                    <mat-icon>search</mat-icon>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" title="Editar" role="button" (click)="actualizarLeer($event)">
+                    <mat-icon>edit</mat-icon>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" title="Eliminar" role="button" (click)="eliminarLeer($event)">
+                    <mat-icon>delete</mat-icon>
+                </a>
+            </li>
+        </ng-container>
+    </ul>
+</nav>
+<div class="contenedor">
+    <mat-accordion class="headers-align">
+        <mat-expansion-panel (opened)="abrirPanelNuevoGenero = true" (closed)="abrirPanelNuevoGenero = false"
+            [expanded]="abrirPanelNuevoGenero">
+            <mat-expansion-panel-header>
+                <mat-panel-title>
+                    <i><u>NUEVO GENERO</u></i>
+                </mat-panel-title>
+                <mat-panel-description>
+                    {{abrirPanelNuevoGenero ? 'Ocultar crear genero' : 'Crear nuevo genero'}}
+                    <mat-icon>playlist_add</mat-icon>
+                </mat-panel-description>
+            </mat-expansion-panel-header>
+            <hr>
+            <div class="form-group form-row">
+                <div class="col-3">
+                    <mat-form-field appearance="standard">
+                        <mat-label>Código</mat-label>
+                        <input matInput type="text" [(ngModel)]="genero.codigo" class="form-control-sm"
+                            [disabled]="true">
+                    </mat-form-field>
+                </div>
+                <div class="col-6">
+                    <mat-form-field appearance="standard">
+                        <mat-label>Descripcion</mat-label>
+                        <input matInput type="text" [(ngModel)]="genero.descripcion"
+                            oninput="this.value = this.value.toUpperCase()" class="form-control-sm">
+                    </mat-form-field>
+                </div>
+                <div class="col-3">
+                    <mat-form-field appearance="standard">
+                        <mat-label>Abreviatura</mat-label>
+                        <input matInput type="text" [(ngModel)]="genero.abreviatura"
+                            oninput="this.value = this.value.toUpperCase()" class="form-control-sm">
+                    </mat-form-field>
+                </div>
+            </div>
+        </mat-expansion-panel>
+        <mat-expansion-panel (opened)="abrirPanelAdminGenero = true" (closed)="abrirPanelAdminGenero = false">
+            <mat-expansion-panel-header>
+                <mat-panel-title>
+                    <i><u>ADMINISTRAR GENEROS</u></i>
+                </mat-panel-title>
+                <mat-panel-description>
+                    {{abrirPanelAdminGenero ? 'Ocultar administrador de generos' : 'Gestionar
+                    generos existentes'}}
+                    <mat-icon>playlist_add_check</mat-icon>
+                </mat-panel-description>
+            </mat-expansion-panel-header>
+            <hr>
+            <div class="form-group form-row">
+                <div class="col-3">
+                    <mat-form-field appearance="standard">
+                        <mat-label>Código</mat-label>
+                        <input matInput type="text" [(ngModel)]="generoBuscar.codigo"
+                            (change)="cambiarBuscarCodigo()" oninput="this.value = this.value.toUpperCase()"
+                            class="form-control-sm">
+                    </mat-form-field>
+                </div>
+                <div class="col-6">
+                    <mat-form-field appearance="standard">
+                        <mat-label>Descripcion</mat-label>
+                        <input matInput type="text" [(ngModel)]="generoBuscar.descripcion"
+                            (change)="cambiarBuscarDescripcion()" oninput="this.value = this.value.toUpperCase()"
+                            class="form-control-sm">
+                    </mat-form-field>
+                </div>
+                <div class="col-3">
+                    <mat-form-field appearance="standard">
+                        <mat-label>Abreviatura</mat-label>
+                        <input matInput type="text" [(ngModel)]="generoBuscar.abreviatura"
+                            (change)="cambiarBuscarAbreviatura()" oninput="this.value = this.value.toUpperCase()"
+                            class="form-control-sm">
+                    </mat-form-field>
+                </div>
+            </div>
+            <table class="table table-hover table-bordered" style="font-size: 0.7rem">
+                <thead class="table-active text-center">
+                    <tr>
+                        <th>OPCION</th>
+                        <th>CODIGO</th>
+                        <th>DESCRIPCION</th>
+                        <th>ABREVIATURA</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let genero of generos">
+                        <td>
+                            <input type="radio" name="seleccion" (click)="seleccion(genero)">
+                        </td>
+                        <td>{{genero.codigo}}</td>
+                        <td>{{genero.descripcion}}</td>
+                        <td>{{genero.abreviatura}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </mat-expansion-panel>
+    </mat-accordion>
+</div>

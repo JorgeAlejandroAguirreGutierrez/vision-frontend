@@ -1,0 +1,464 @@
+<nav class="navbar-light nav-fijo">
+    <ul class="navbar-nav">
+        <li class="nav-item">
+            <a class="nav-link" href="#" role="button" (click)="crear($event)">
+                <!-- *ngIf="cliente.id==0; else block_actualizar"> -->
+                <mat-icon>save</mat-icon>
+            </a>
+            <ng-template #block_actualizar>
+                <a class="nav-link" href="#" role="button" (click)="actualizar($event)">
+                    <mat-icon>update</mat-icon>
+                </a>
+            </ng-template>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="#" role="button" (click)="nuevo($event)">
+                <mat-icon>note_add</mat-icon>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="#" role="button" (click)="$event.preventDefault()">
+                <mat-icon>archive</mat-icon>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="#" role="button" (click)="$event.preventDefault()">
+                <mat-icon>publish</mat-icon>
+            </a>
+        </li>
+    </ul>
+</nav>
+<div class="contenedor">
+    <mat-accordion class="headers-align">
+        <mat-expansion-panel (opened)="panelPromocion = true" (closed)="panelPromocion = false" [expanded]="true">
+            <mat-expansion-panel-header>
+                <mat-panel-title>
+                    <i><u>PROMOCIÓN</u></i>
+                </mat-panel-title>
+                <mat-panel-description>
+                    Ingresar las promociones por producto individual
+                    <mat-icon>account_circle</mat-icon>
+                </mat-panel-description>
+            </mat-expansion-panel-header>
+            <mat-divider></mat-divider>
+            <div class="form-group form-row">
+                <div class="col-2">
+                    <mat-form-field appearance="standard">
+                        <mat-label>Aplicable</mat-label>
+                        <mat-select [(ngModel)]="aplicable" class="form-control-sm">
+                            <mat-option [value]="true">INDIVIDUAL</mat-option>
+                            <mat-option [value]="false">GRUPAL</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+                <ng-container *ngIf="aplicable">
+                    <div class="col-6">
+                        <mat-form-field appearance="standard">
+                            <mat-label>Producto</mat-label>
+                            <mat-select type="text" (selectionChange)="seleccionar_auxiliar_provincia($event.value)"
+                                class="form-control-sm">
+                                <mat-option *ngFor="let provincia of auxiliar_provincias" [value]="provincia.provincia">
+                                    {{provincia.provincia}}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                    <div class="col-2">
+                        <mat-form-field appearance="standard">
+                            <mat-label>Unidad</mat-label>
+                            <mat-select type="text" class="form-control-sm"
+                                (selectionChange)="seleccionar_auxiliar_parroquia($event.value)">
+                                <mat-option *ngFor="let parroquia of auxiliar_parroquias" [value]="parroquia.parroquia">
+                                    {{parroquia.parroquia}}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                </ng-container>
+                <ng-container *ngIf="!aplicable">
+                    <div class="col-1"></div>
+                    <div class="col-2">
+                        <mat-form-field appearance="standard">
+                            <mat-label>Grupo</mat-label>
+                            <mat-select type="text" (selectionChange)="seleccionar_auxiliar_provincia($event.value)"
+                                class="form-control-sm">
+                                <mat-option *ngFor="let provincia of auxiliar_provincias" [value]="provincia.provincia">
+                                    {{provincia.provincia}}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                    <div class="col-2">
+                        <mat-form-field appearance="standard">
+                            <mat-label>Subgrupo</mat-label>
+                            <mat-select type="text" class="form-control-sm"
+                                (selectionChange)="seleccionar_auxiliar_parroquia($event.value)">
+                                <mat-option *ngFor="let parroquia of auxiliar_parroquias" [value]="parroquia.parroquia">
+                                    {{parroquia.parroquia}}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                    <div class="col-2">
+                        <mat-form-field appearance="standard">
+                            <mat-label>Sección</mat-label>
+                            <mat-select type="text" class="form-control-sm"
+                                (selectionChange)="seleccionar_auxiliar_parroquia($event.value)">
+                                <mat-option *ngFor="let parroquia of auxiliar_parroquias" [value]="parroquia.parroquia">
+                                    {{parroquia.parroquia}}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                    <div class="col-1"></div>
+                </ng-container>
+                <div class="col-2">
+                    <mat-form-field appearance="standard">
+                        <mat-label>Código</mat-label>
+                        <input matInput type="text" disabled class="form-control-sm"
+                            (change)="validar_identificacion()">
+                    </mat-form-field>
+                </div>
+                <div class="col-3">
+                    <mat-card class="mat-elevation-z8">
+                        <div class="form-row">
+                            <div class="centrar-titulo col-1 fondo">
+                                <mat-checkbox class="sin-padding" color="primary"></mat-checkbox>
+                            </div>
+                            <div class="centrar-titulo col-11 fondo">
+                                <mat-label>PROMOCION LIMITADA</mat-label>
+                            </div>
+                            <div class="col-12">
+                                <mat-form-field appearance="standard">
+                                    <mat-label>Rango promoción</mat-label>
+                                    <mat-date-range-input [formGroup]="rango_promocion" [rangePicker]="picker">
+                                        <input matStartDate formControlName="inicio" placeholder="Fecha Inicio"
+                                            (dateChange)="seleccionarFecha('inicio', $event)">
+                                        <input matEndDate formControlName="fin" placeholder="Fecha Final"
+                                            (dateChange)="seleccionarFecha('fin', $event)">
+                                    </mat-date-range-input>
+                                    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                                    <mat-date-range-picker #picker></mat-date-range-picker>
+
+                                    <!--mat-error *ngIf="rango_promocion.controls.inicio.hasError('matStartDateInvalid')">
+                                        Fecha inicio
+                                        inválida</mat-error>
+                                    <mat-error *ngIf="rango_promocion.controls.fin.hasError('matEndDateInvalid')">
+                                        Fecha final
+                                        inválida</mat-error-->
+                                </mat-form-field>
+                            </div>
+                        </div>
+                    </mat-card>
+                </div>
+                <div class="col-3">
+                    <mat-card class="mat-elevation-z8">
+                        <div class="form-row">
+                            <div class="centrar-titulo col-1 fondo">
+                                <mat-checkbox class="sin-padding" color="primary"></mat-checkbox>
+                            </div>
+                            <div class="centrar-titulo col-11 fondo">
+                                <mat-label>PROMOCIÓN X CANTIDAD</mat-label>
+                            </div>
+                            <div class="form-row">
+                                <div class="col-6">
+                                    <mat-form-field appearance="standard">
+                                        <mat-label>Rango Ini</mat-label>
+                                        <input matInput type="text" oninput="this.value = this.value.toUpperCase()"
+                                            class="form-control-sm" (change)="validar_identificacion()">
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-6">
+                                    <mat-form-field appearance="standard">
+                                        <mat-label>Rango Fin</mat-label>
+                                        <input matInput type="text" oninput="this.value = this.value.toUpperCase()"
+                                            class="form-control-sm" (change)="validar_identificacion()">
+                                    </mat-form-field>
+                                </div>
+                            </div>
+                        </div>
+                    </mat-card>
+                </div>
+                <div class="col-6">
+                    <mat-card class="mat-elevation-z8">
+                        <div class="form-row">
+                            <div class="centrar-titulo col-1 fondo">
+                                <mat-checkbox class="sin-padding" color="primary"></mat-checkbox>
+                            </div>
+                            <div class="centrar-titulo col-11 fondo">
+                                <mat-label>PROMOCIÓN X PRECIO</mat-label>
+                            </div>
+                            <div class="form-row col-12">
+                                <div class="col-4">
+                                    <mat-form-field appearance="standard">
+                                        <mat-label>Segmento</mat-label>
+                                        <mat-select type="text"
+                                            (selectionChange)="seleccionar_auxiliar_provincia($event.value)"
+                                            class="form-control-sm">
+                                            <mat-option *ngFor="let provincia of auxiliar_provincias"
+                                                [value]="provincia.provincia">
+                                                {{provincia.provincia}}
+                                            </mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-3">
+                                    <mat-form-field appearance="standard">
+                                        <mat-label>Precio Act.</mat-label>
+                                        <input matInput type="text" disabled class="form-control-sm">
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-2">
+                                    <mat-form-field appearance="standard">
+                                        <mat-label>Descuento%</mat-label>
+                                        <input matInput type="text" oninput="this.value = this.value.toUpperCase()"
+                                            class="form-control-sm" (change)="validar_identificacion()">
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-3">
+                                    <mat-form-field appearance="standard">
+                                        <mat-label>Precio Promo</mat-label>
+                                        <input matInput type="text" oninput="this.value = this.value.toUpperCase()"
+                                            class="form-control-sm" (change)="validar_identificacion()">
+                                    </mat-form-field>
+                                </div>
+                            </div>
+                        </div>
+                    </mat-card>
+                </div>
+                <div class="col-11">
+                    <mat-card class="mat-elevation-z8">
+                        <div class="form-row">
+                            <div class="centrar-titulo col-1 fondo">
+                                <mat-checkbox class="sin-padding" color="primary"></mat-checkbox>
+                            </div>
+                            <div class="centrar-titulo col-11 fondo">
+                                <mat-label>AÑADIR PRODUCTOS A LA PROMOCIÓN</mat-label>
+                            </div>
+                            <div class="form-row col-12">
+                                <div class="col-7">
+                                    <mat-form-field appearance="standard">
+                                        <mat-label>Producto Adicional</mat-label>
+                                        <mat-select type="text"
+                                            (selectionChange)="seleccionar_auxiliar_provincia($event.value)"
+                                            class="form-control-sm">
+                                            <mat-option *ngFor="let provincia of auxiliar_provincias"
+                                                [value]="provincia.provincia">
+                                                {{provincia.provincia}}
+                                            </mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-2">
+                                    <mat-form-field appearance="standard">
+                                        <mat-label>Unidad</mat-label>
+                                        <input matInput type="text" class="form-control-sm">
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-1">
+                                    <mat-form-field appearance="standard">
+                                        <mat-label>Cantidad</mat-label>
+                                        <input matInput type="text" oninput="this.value = this.value.toUpperCase()"
+                                            class="form-control-sm" (change)="validar_identificacion()">
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-1">
+                                    <mat-form-field appearance="standard">
+                                        <mat-label>V. adicional</mat-label>
+                                        <input matInput type="text" oninput="this.value = this.value.toUpperCase()"
+                                            class="form-control-sm" (change)="validar_identificacion()">
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-1">
+                                    <mat-checkbox class="form-control-sm" color="primary">
+                                        En fact.</mat-checkbox>
+                                </div>
+                            </div>
+                        </div>
+                    </mat-card>
+                </div>
+                <div class="linea-vertical centrar-vertical col-1 iconos">
+                    <button mat-icon-button mat-button [disabled]="false">
+                        <mat-icon (click)="agregar_factura_detalle()">add</mat-icon>
+                    </button>
+                </div>
+            </div>
+            <div class="centrar-titulo col-12">
+                <mat-label>PROMOCIONES AGREGADAS X PRODUCTO</mat-label>
+            </div>
+            <div class="form-row col-12">
+                <table mat-table
+                [dataSource]="dataSource" multiTemplateDataRows
+                class="mat-elevation-z8">
+           <ng-container matColumnDef="{{column}}" *ngFor="let column of columnsToDisplay">
+             <th mat-header-cell *matHeaderCellDef> {{column}} </th>
+             <td mat-cell *matCellDef="let element"> {{element[column]}} </td>
+           </ng-container>
+         
+           <!-- Expanded Content Column - The detail row is made up of this one column that spans across all columns -->
+           <ng-container matColumnDef="expandedDetail">
+             <td mat-cell *matCellDef="let element" [attr.colspan]="columnsToDisplay.length">
+               <div class="example-element-detail"
+                    [@detailExpand]="element == expandedElement ? 'expanded' : 'collapsed'">
+                 <div class="example-element-diagram">
+                   <div class="example-element-position"> {{element.position}} </div>
+                   <div class="example-element-symbol"> {{element.symbol}} </div>
+                   <div class="example-element-name"> {{element.name}} </div>
+                   <div class="example-element-weight"> {{element.weight}} </div>
+                 </div>
+                 <div class="example-element-description">
+                   {{element.description}}
+                   <span class="example-element-description-attribution"> -- Wikipedia </span>
+                 </div>
+               </div>
+             </td>
+           </ng-container>
+         
+           <tr mat-header-row *matHeaderRowDef="columnsToDisplay"></tr>
+           <tr mat-row *matRowDef="let element; columns: columnsToDisplay;"
+               class="example-element-row"
+               [class.example-expanded-row]="expandedElement === element"
+               (click)="expandedElement = expandedElement === element ? null : element">
+           </tr>
+           <tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class="example-detail-row"></tr>
+         </table>
+            </div>
+        </mat-expansion-panel>
+
+        <mat-expansion-panel (opened)="panelCombo = true" (closed)="panelCombo = false" [expanded]="false">
+            <mat-expansion-panel-header>
+                <mat-panel-title>
+                    <i><u>COMBOS PROMOCIONALES</u></i>
+                </mat-panel-title>
+                <mat-panel-description>
+                    Define los combos promocionales
+                    <mat-icon>account_circle</mat-icon>
+                </mat-panel-description>
+            </mat-expansion-panel-header>
+            <hr>
+            <div class="col-12">
+                <div class="row">
+                    <div class="form-row col-12">
+                        <div class="col-8">
+                            <div class="form-row">
+                                <div class="form-group col-4">
+                                    <mat-form-field appearance="standard">
+                                        <mat-label>Grupo</mat-label>
+                                        <mat-select type="text"
+                                            (selectionChange)="seleccionar_auxiliar_provincia($event.value)"
+                                            class="form-control-sm">
+                                            <mat-option *ngFor="let provincia of auxiliar_provincias"
+                                                [value]="provincia.provincia">
+                                                {{provincia.provincia}}
+                                            </mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                </div>
+                                <div class="form-group col-4">
+                                    <mat-form-field appearance="standard">
+                                        <mat-label>Subrupo</mat-label>
+                                        <mat-select type="text"
+                                            (selectionChange)="seleccionar_auxiliar_provincia($event.value)"
+                                            class="form-control-sm">
+                                            <mat-option *ngFor="let provincia of auxiliar_provincias"
+                                                [value]="provincia.provincia">
+                                                {{provincia.provincia}}
+                                            </mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                </div>
+                                <div class="form-group col-4">
+                                    <mat-form-field appearance="standard">
+                                        <mat-label>Sección</mat-label>
+                                        <mat-select type="text" class="form-control-sm"
+                                            (selectionChange)="seleccionar_auxiliar_parroquia($event.value)">
+                                            <mat-option *ngFor="let parroquia of auxiliar_parroquias"
+                                                [value]="parroquia.parroquia">
+                                                {{parroquia.parroquia}}
+                                            </mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group col-5">
+                                    <mat-form-field appearance="standard">
+                                        <mat-label>Nombre Combo</mat-label>
+                                        <input matInput type="text" oninput="this.value = this.value.toUpperCase()"
+                                            class="form-control-sm" (change)="validar_identificacion()">
+                                    </mat-form-field>
+                                </div>
+                                <div class="form-group col-5">
+                                    <mat-form-field appearance="standard">
+                                        <mat-label>Descripción</mat-label>
+                                        <input matInput type="text" oninput="this.value = this.value.toUpperCase()"
+                                            class="form-control-sm" (change)="validar_identificacion()">
+                                    </mat-form-field>
+                                </div>
+                                <div class="form-group col-2">
+                                    <br>
+                                    <button mat-button mat-raised-button color="primary" focusable="false"
+                                        (click)="openDialog()">
+                                        Compon.</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="linea-vertical col-4">
+                            <div class="form-row col-12">
+                                <div class="form-group col-6">
+                                    <mat-form-field appearance="standard">
+                                        <mat-label>Precio Individual</mat-label>
+                                        <input matInput type="text" disabled class="form-control-sm">
+                                    </mat-form-field>
+                                </div>
+                                <div class="form-group col-6">
+                                    <mat-form-field appearance="standard">
+                                        <mat-label>Precio Combo</mat-label>
+                                        <input matInput type="text" class="form-control-sm">
+                                    </mat-form-field>
+                                </div>
+                                <div class="form-group col-6">
+                                    <br>
+                                    <mat-checkbox class="form-control-sm" color="primary" labelPosition="before">
+                                        Comp. en Factura</mat-checkbox>
+                                </div>
+                                <div class="form-group col-6">
+                                    <br>
+                                    <button mat-raised-button color="primary" focusable="false" (click)="guardar()">
+                                        Guardar Combo
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <hr>
+            <div class="form-row col-12 centrar">
+                <div class="form-group col-7">
+                    <!-- Aqui las Tablas-->
+                    <!-- <app-tabla-combo></app-tabla-combo> -->
+                </div>
+                <div class="form-group col-5">
+                    <!-- <app-tabla-componente></app-tabla-componente> -->
+                </div>
+            </div>
+        </mat-expansion-panel>
+    </mat-accordion>
+</div>
+<ng-template #modal_componente let-modal>
+    <div class="modal-header ">
+        <h5 class="modal-title ">Registrar componentes del combo</h5>
+        <button type="button " class="close " aria-label="Close " (click)="modal.dismiss( 'Cross click') ">
+            <span aria-hidden="true ">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body ">
+        <div class="form-group form-row ">
+
+        </div>
+    </div>
+    <div class="modal-footer ">
+        <button type="button " class="btn btn-outline-dark " (click)="modal.close( 'close') ">Cerrar</button>
+    </div>
+</ng-template>

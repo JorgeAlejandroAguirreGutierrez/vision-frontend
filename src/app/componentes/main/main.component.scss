@@ -1,0 +1,79 @@
+// Contenedor de toda la aplicación
+.container-fluid {
+  width: 100%;
+  padding: 0 4px;
+  margin: 0 auto;
+}
+
+.mtab-main {
+  width: 100%;
+  margin: 0 auto;
+  padding: 0;
+}
+
+.mtab-sec {
+  width: 100%;
+  padding-right: 10px; // Para el espacio de la barra de acciones
+  padding-left: 5px;
+  margin: 0 auto; //auto para centrar izq y der con el slide
+}
+
+::ng-deep .tab-group-main{
+  .mat-tab-header {
+    position: sticky;
+    top: 42px; // Posición fijada desde el margen superior para el tab principal.
+    z-index:990;
+    background-color: white;
+  }
+}
+
+::ng-deep .tab-group-sec{
+  .mat-tab-header {
+    position: fixed;
+    width: 100%;
+    top: 72px; // Posición fijada desde el margen superior para el tab secundario.
+    z-index:990;
+    background-color: white;
+    max-width: calc(100% - 290px); // Para iniciar
+    @media (max-width: 768px) {
+      max-width: calc(100% - 30px);
+    }
+  }
+}
+
+::ng-deep .tam-lg{
+  .tab-group-sec{
+    .mat-tab-header {
+      max-width: calc(100% - 100px); // Poner -100px cuando el sideBar esta pequeño
+      @media (max-width: 768px) {
+        max-width: calc(100% - 30px);
+      }
+    }
+  }
+}
+
+::ng-deep .tam-sm{
+  .tab-group-sec{
+    .mat-tab-header {
+      max-width: calc(100% - 290px); // Poner -290px cuando el sideBar esta abierto
+      @media (max-width: 768px) {
+        max-width: calc(100% - 30px);
+      }
+    }
+  }
+}
+
+::ng-deep.mat-tab-label, ::ng-deep.mat-tab-label-active{
+  margin-top: 1px!important;
+  height: 30px!important; 
+  padding-right: 10px!important;
+  padding-left: 10px!important;
+  min-width: 100px!important;
+  color:  #5b6582!important;
+  //display: inline-block;
+}
+
+::ng-deep.mat-tab-group.mat-primary .mat-ink-bar, .mat-tab-nav-bar.mat-primary .mat-ink-bar{
+  background: #5b6582;
+  height: 3px;
+} 

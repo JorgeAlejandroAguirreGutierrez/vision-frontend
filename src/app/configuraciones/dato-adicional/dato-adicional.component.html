@@ -1,0 +1,187 @@
+<div class="container">
+    <div class="row">
+        <div class="col-3">
+            <h4>Almacenamiento</h4>
+            <nav class="nav flex-column">
+                <a class="nav-link" href="#">
+                    <font color="black">SHIFT + G</font> Grabar
+                    <mat-icon class="float-right">save</mat-icon>
+                </a>
+                <a class="nav-link" href="#">
+                    <font color="black">SHIFT + N</font> Nuevo Registro
+                    <mat-icon class="float-right">note_add</mat-icon>
+                </a>
+                <a class="nav-link" href="#">
+                    <font color="black">SHIFT + E</font> Editar Registro
+                    <mat-icon class="float-right">create</mat-icon>
+                </a>
+                <a class="nav-link" href="#">
+                    <font color="black">SHIFT + B</font> Buscar
+                    <mat-icon class="float-right">search</mat-icon>
+                </a>
+                <a class="nav-link" href="#">
+                    <font color="black">SHIFT + A</font> Anular Registro
+                    <mat-icon class="float-right">delete</mat-icon>
+                </a>
+                <a class="nav-link" href="#">Salir 
+                    <mat-icon class="float-right">exit_to_app</mat-icon>
+                </a>
+            </nav>
+            <hr>
+            <h4>Procesamiento</h4>
+            <nav class="nav flex-column">
+                <a class="nav-link" href="#">Importar 
+                    <mat-icon>archive</mat-icon>
+                </a>
+                <a class="nav-link" href="#">Exportar 
+                    <mat-icon>publish</mat-icon>
+                </a>
+            </nav>
+        </div>
+        <div class="col-9">
+            <h2>Crear Dato Adicional</h2>
+            <hr>
+            <div id="formulario">
+                <div class="form-group form-row">
+                    <label for="codigo" class="col-4 col-form-label">Codigo</label>
+                    <div class="col-8">
+                        <input type="text" [(ngModel)]="datoAdicional.codigo" class="form-control" disabled>
+                    </div>
+                </div>
+                <div class="form-group form-row">
+                    <label for="plazo" class="col-4 col-form-label">Tipo</label>
+                    <div class="col-8">
+                        <input type="number" [(ngModel)]="datoAdicional.tipo" class="form-control">
+                    </div>
+                </div>
+                <div class="form-group form-row">
+                    <label for="plazo" class="col-4 col-form-label">Nombre</label>
+                    <div class="col-8">
+                        <input type="number" [(ngModel)]="datoAdicional.nombre" class="form-control">
+                    </div>
+                </div>
+                <div class="form-group form-row">
+                    <label for="plazo" class="col-4 col-form-label">Abreviatura</label>
+                    <div class="col-8">
+                        <input type="file" [(ngModel)]="datoAdicional.abreviatura" class="form-control">
+                    </div>
+                </div>
+            </div>
+            <h2>Dato Adicionales</h2>
+            <hr>
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th>CODIGO</th>
+                        <th>TIPO</th>
+                        <th>NOMBRE</th>
+                        <th>ABREVIATURA</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let datoAdicional of datosAdicionales">
+                        <td>
+                            <input type="radio" name="seleccion" (click)="seleccion(datoAdicional)">
+                        </td>
+                        <td>
+                            {{datoAdicional.codigo}}
+                        </td>
+                        <td>
+                            {{datoAdicional.tipo}}
+                        </td>
+                        <td>
+                            {{datoAdicional.nombre}}
+                        </td>
+                        <td>
+                            {{datoAdicional.abreviatura}}
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<ng-template #actualizar let-modal>
+    <div class="modal-header">
+        <h5 class="modal-title">Dato Adicional</h5>
+        <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <div class="col-2"></div>
+        <div class="col-8">
+            <h3>Actualizar Dato Adicional</h3>
+            <hr>
+            <div class="form-group form-row">
+                <label class="col-2 col-form-label">Codigo</label>
+                <div class="col-10">
+                    <input type="text" class="form-control" disabled [(ngModel)]="pDatoAdicional.codigo">
+                </div>
+            </div>
+            <div class="form-group form-row">
+                <label class="col-2 col-form-label">Tipo</label>
+                <div class="col-10">
+                    <input type="text" class="form-control" [(ngModel)]="pDatoAdicional.tipo">
+                </div>
+            </div>
+            <div class="form-group form-row">
+                <label class="col-2 col-form-label">Nombre</label>
+                <div class="col-10">
+                    <input type="text" class="form-control" [(ngModel)]="pDatoAdicional.nombre">
+                </div>
+            </div>
+            <div class="form-group form-row">
+                <label class="col-2 col-form-label">Abreviatura</label>
+                <div class="col-10">
+                    <input type="text" class="form-control" [(ngModel)]="pDatoAdicional.abreviatura">
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-success" (click)="modal.close('actualizar')">Aceptar</button>
+        <button type="button" class="btn btn-outline-dark" (click)="modal.close('close')">Cerrar</button>
+    </div>
+</ng-template>
+<ng-template #eliminar let-modal>
+    <div class="modal-header">
+        <h5 class="modal-title">Eliminar</h5>
+        <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        ¿Esta seguro de eliminar el dato adicional?
+        <br>
+        <div class="form-group form-row">
+            <label class="col-2 col-form-label">Codigo</label>
+            <div class="col-10">
+                <input type="text" class="form-control" disabled [(ngModel)]="pDatoAdicional.codigo">
+            </div>
+        </div>
+        <div class="form-group form-row">
+            <label class="col-2 col-form-label">Tipo</label>
+            <div class="col-10">
+                <input type="text" class="form-control" [(ngModel)]="pDatoAdicional.tipo">
+            </div>
+        </div>
+        <div class="form-group form-row">
+            <label class="col-2 col-form-label">Nombre</label>
+            <div class="col-10">
+                <input type="text" class="form-control" [(ngModel)]="pDatoAdicional.nombre">
+            </div>
+        </div>
+        <div class="form-group form-row">
+            <label class="col-2 col-form-label">Abreviatura</label>
+            <div class="col-10">
+                <input type="text" class="form-control" [(ngModel)]="pDatoAdicional.abreviatura">
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-success" (click)="modal.close('eliminar')">Aceptar</button>
+        <button type="button" class="btn btn-outline-dark" (click)="modal.close('close')">Cerrar</button>
+    </div>
+</ng-template>

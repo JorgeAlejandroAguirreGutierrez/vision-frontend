@@ -1,0 +1,67 @@
+<nav class="navbar-light nav-fijo">
+    <ul class="navbar-nav">
+        <li class="nav-item">
+            <a class="nav-link" href="#" role="button" (click)="nuevo($event)">
+                <fa-icon [icon]="['fas', 'search']"></fa-icon>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="#" role="button" (click)="actualizar($event)">
+                <fa-icon [icon]="['fas', 'edit']"></fa-icon>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="#" role="button" (click)="eliminar($event)">
+                <fa-icon [icon]="['fas', 'trash']"></fa-icon>
+            </a>
+        </li>
+    </ul>
+</nav>
+<div class="contenedor">
+    <div class="form-row">
+        <div class="form-group col-4">
+            <mat-form-field appearance="standard" class="grande">
+                <mat-label>Codigo</mat-label>
+                <input matInput type="text" [(ngModel)]="empresa_buscar.codigo" (change)="cambiarBuscarCodigo()" oninput="this.value = this.value.toUpperCase()" class="form-control-sm">
+            </mat-form-field>
+        </div>
+        <div class="form-group col-4">
+            <mat-form-field appearance="standard" class="grande">
+                <mat-label>Identificacion</mat-label>
+                <input matInput type="text" [(ngModel)]="empresa_buscar.identificacion" (change)="cambiarBuscarIdentificacion()" oninput="this.value = this.value.toUpperCase()" class="form-control-sm">
+            </mat-form-field>
+        </div>
+        <div class="form-group col-4">
+            <mat-form-field appearance="standard" class="grande">
+                <mat-label>Razon Social</mat-label>
+                <input matInput type="text" [(ngModel)]="empresa_buscar.razon_social" (change)="cambiarBuscarRazonSocial()" oninput="this.value = this.value.toUpperCase()" class="form-control-sm">
+            </mat-form-field>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <h2>EMPRESAS</h2>
+            <hr>
+            <table class="table table-hover table-bordered" style="font-size: 0.7rem">
+                <thead class="table-active">
+                    <tr>
+                        <th>SEL</th>
+                        <th>COD</th>
+                        <th>IDENTIFICACION</th>
+                        <th>RAZON SOCIAL</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let empresa of empresas">
+                        <td>
+                            <input type="radio" name="seleccion" (click)="seleccion(empresa)">
+                        </td>
+                        <td>{{empresa.codigo}}</td>
+                        <td>{{empresa.identificacion}}</td>
+                        <td>{{empresa.razonSocial}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

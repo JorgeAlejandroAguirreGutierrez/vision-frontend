@@ -1,0 +1,8 @@
+<h1 mat-dialog-title>MOVIMIENTOS CONTABLES {{data.usuario}}</h1>
+<div mat-dialog-content>
+  <app-tabla-movimiento-contable></app-tabla-movimiento-contable>
+</div>
+<div mat-dialog-actions>
+  <button mat-button (click)="onNoClick()">Cancelar</button>
+  <button mat-button [mat-dialog-close]="data.clave" cdkFocusInitial>Guardar</button>
+</div>

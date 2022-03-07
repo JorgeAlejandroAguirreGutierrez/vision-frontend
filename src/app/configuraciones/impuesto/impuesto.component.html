@@ -1,0 +1,166 @@
+<div class="container">
+    <div class="row">
+        <div class="col-3">
+            <h4>Almacenamiento</h4>
+            <nav class="nav flex-column">
+                <a class="nav-link" href="#">
+                    <font color="black">SHIFT + G</font> Grabar
+                    <mat-icon class="float-right">save</mat-icon>
+                </a>
+                <a class="nav-link" href="#">
+                    <font color="black">SHIFT + N</font> Nuevo Registro
+                    <mat-icon class="float-right">note_add</mat-icon>
+                </a>
+                <a class="nav-link" href="#">
+                    <font color="black">SHIFT + E</font> Editar Registro
+                    <mat-icon class="float-right">create</mat-icon>
+                </a>
+                <a class="nav-link" href="#">
+                    <font color="black">SHIFT + B</font> Buscar
+                    <mat-icon class="float-right">search</mat-icon>
+                </a>
+                <a class="nav-link" href="#">
+                    <font color="black">SHIFT + A</font> Anular Registro
+                    <mat-icon class="float-right">delete</mat-icon>
+                </a>
+                <a class="nav-link" href="#">Salir 
+                    <mat-icon class="float-right">exit_to_app</mat-icon>
+                </a>
+            </nav>
+            <hr>
+            <h4>Procesamiento</h4>
+            <nav class="nav flex-column">
+                <a class="nav-link" href="#">Importar 
+                    <mat-icon>archive</mat-icon>
+                </a>
+                <a class="nav-link" href="#">Exportar 
+                    <mat-icon>publish</mat-icon>
+                </a>
+            </nav>
+        </div>
+        <div class="col-9">
+            <h2>Crear Impuesto</h2>
+            <hr>
+            <div id="formulario">
+                <div class="form-group form-row">
+                    <label for="codigo" class="col-4 col-form-label">Codigo</label>
+                    <div class="col-8">
+                        <input type="text" [(ngModel)]="impuesto.codigo" class="form-control" disabled>
+                    </div>
+                </div>
+                <div class="form-group form-row">
+                    <label for="plazo" class="col-4 col-form-label">Codigo Norma</label>
+                    <div class="col-8">
+                        <input type="text" [(ngModel)]="impuesto.codigoNorma" class="form-control">
+                    </div>
+                </div>
+                <div class="form-group form-row">
+                    <label for="plazo" class="col-4 col-form-label">Porcentaje</label>
+                    <div class="col-8">
+                        <input type="number" [(ngModel)]="impuesto.porcentaje" class="form-control">
+                    </div>
+                </div>
+            </div>
+            <h2>Empresas</h2>
+            <hr>
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th>CODIGO</th>
+                        <th>IDENTIFICACION</th>
+                        <th>RAZON SOCIAL</th>
+                        <th>LOGO</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let impuesto of impuestos">
+                        <td>
+                            <input type="radio" name="seleccion" (click)="seleccion(impuesto)">
+                        </td>
+                        <td>
+                            {{impuesto.codigo}}
+                        </td>
+                        <td>
+                            {{impuesto.codigoNorma}}
+                        </td>
+                        <td>
+                            {{impuesto.porcentaje}}
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<ng-template #actualizar let-modal>
+    <div class="modal-header">
+        <h5 class="modal-title">Impuesto</h5>
+        <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <div class="col-2"></div>
+        <div class="col-8">
+            <h3>Actualizar Impuesto</h3>
+            <hr>
+            <div class="form-group form-row">
+                <label class="col-2 col-form-label">Codigo</label>
+                <div class="col-10">
+                    <input type="text" class="form-control" disabled [(ngModel)]="pImpuesto.codigo">
+                </div>
+            </div>
+            <div class="form-group form-row">
+                <label for="plazoM" class="col-2 col-form-label">Codigo Norma</label>
+                <div class="col-10">
+                    <input type="number" class="form-control" [(ngModel)]="pImpuesto.codigoNorma">
+                </div>
+            </div>
+            <div class="form-group form-row">
+                <label class="col-2 col-form-label">Porcentaje</label>
+                <div class="col-10">
+                    <input type="number" class="form-control" [(ngModel)]="pImpuesto.porcentaje">
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-success" (click)="modal.close('actualizar')">Aceptar</button>
+        <button type="button" class="btn btn-outline-dark" (click)="modal.close('close')">Cerrar</button>
+    </div>
+</ng-template>
+<ng-template #eliminar let-modal>
+    <div class="modal-header">
+        <h5 class="modal-title">Eliminar</h5>
+        <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        ¿Esta seguro de eliminar el impuesto?
+        <br>
+        <div class="form-group form-row">
+            <label class="col-2 col-form-label">Codigo</label>
+            <div class="col-10">
+                <input type="text" class="form-control" disabled [(ngModel)]="pImpuesto.codigo">
+            </div>
+        </div>
+        <div class="form-group form-row">
+            <label for="plazoM" class="col-2 col-form-label">Codigo Norma</label>
+            <div class="col-10">
+                <input type="number" class="form-control" [(ngModel)]="pImpuesto.codigoNorma">
+            </div>
+        </div>
+        <div class="form-group form-row">
+            <label for="plazoM" class="col-2 col-form-label">Porcentaje</label>
+            <div class="col-10">
+                <input type="text" class="form-control" [(ngModel)]="pImpuesto.porcentaje">
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-success" (click)="modal.close('eliminar')">Aceptar</button>
+        <button type="button" class="btn btn-outline-dark" (click)="modal.close('close')">Cerrar</button>
+    </div>
+</ng-template>

@@ -1,0 +1,50 @@
+<h2 mat-dialog-title>Agregar componentes al combo</h2>
+<hr>
+<mat-dialog-content class="mat-typography centrar-titulo">
+  <div class="form-row col-12">
+    <div class="form-group col-1"></div>
+      <div class="form-group col-6">
+          <mat-form-field appearance="standard">
+              <mat-label>Producto</mat-label>
+              <mat-select type="text" (selectionChange)="seleccionar_auxiliar_provincia($event.value)"
+                  class="form-control-sm">
+                  <mat-option *ngFor="let provincia of auxiliar_provincias" [value]="provincia.provincia">
+                      {{provincia.provincia}}
+                  </mat-option>
+              </mat-select>
+          </mat-form-field>
+      </div>
+      <div class="form-group col-2">
+          <mat-form-field appearance="standard">
+              <mat-label>Unidad</mat-label>
+              <mat-select type="text" class="form-control-sm"
+                  (selectionChange)="seleccionar_auxiliar_parroquia($event.value)">
+                  <mat-option *ngFor="let parroquia of auxiliar_parroquias" [value]="parroquia.parroquia">
+                      {{parroquia.parroquia}}
+                  </mat-option>
+              </mat-select>
+          </mat-form-field>
+      </div>
+      <div class="form-group col-2">
+          <mat-form-field appearance="standard">
+              <mat-label>Cantidad</mat-label>
+              <input matInput type="text" oninput="this.value = this.value.toUpperCase()"
+                  class="form-control-sm" (change)="validar_identificacion()">
+          </mat-form-field>
+      </div>
+      <div class="form-group col-1">
+          <br>
+          <button class="btn btn-primary btn-circle" (click)="agregar_factura_detalle()">
+            <mat-icon>add</mat-icon>
+          </button>
+      </div>
+  </div>
+  <mat-divider></mat-divider>
+  <div class="form-row col-12">
+    <app-tabla-componente></app-tabla-componente>
+  </div>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>Cancelar</button>
+  <button mat-button [mat-dialog-close]="true" cdkFocusInitial>Guardar</button>
+</mat-dialog-actions>

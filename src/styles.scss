@@ -1,1 +1,21 @@
-/* You can add global styles to this file, and also import other style files */
+// Importa el tipo de letra Roboto
+@import "~roboto-fontface/css/roboto/roboto-fontface.css";
+
+//Importa los componentes de boostrap, eliminé de angular json para que no se dupliquen
+//@import '~bootstrap/scss/bootstrap.scss';
+//@import '~bootstrap/dist/css/bootstrap.css';
+
+// Para los iconos, fortawersome (fa) tiene mas de 400 iconos
+@import '~@fortawesome/fontawesome-free/scss/fontawesome';
+@import '~@fortawesome/fontawesome-free/scss/solid';
+@import '~@fortawesome/fontawesome-free/scss/regular';
+@import '~@fortawesome/fontawesome-free/scss/brands'; 
+
+// Para los iconos de angular material
+@import '~material-design-icons/iconfont/material-icons.css';
+
+// Sirve para enviar mensajes flotantes a la pantalla ej: https://ngx-toastr.vercel.app/
+//@import '~ngx-toastr/toastr-bs4-alert';
+
+// Mis estilos personalizados
+@import './assets/styles/style.scss';

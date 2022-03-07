@@ -1,0 +1,426 @@
+/*
+Template Name: Material Pro Admin
+Author: Jorge Hidalgo
+Email: gatosohidalgo@gmail.com
+File: sidebar.scss
+*/
+
+/*******************
+Main sidebar
+******************/
+
+mat-sidenav {
+  width: 240px;
+  padding-top: 0px;
+}
+
+.icon-style {
+  width: 35px;
+  height: 35px;
+  text-align: center;
+  line-height: 35px;
+  border-radius: 50%;
+  border: 1px solid;
+  font-size: .9rem;
+}
+
+#snav{
+    box-shadow: 1px 0px 20px rgba(0, 0, 0, 0.08);
+    .mat-list-item {
+        height: auto;
+        &:hover{
+            background: none;
+        }
+        
+        .mat-list-item-content{
+            display: block;
+            padding: 0px 15px;
+            &:hover{
+                background: none;
+                > a{
+                  color:$themecolor;
+                }
+            }
+        }
+        
+        a{
+            height: 45px;
+            padding: 0 10px;
+            margin-bottom: 0px;
+            align-items: center;
+            display: flex;
+            font-size: 15px;
+            white-space: nowrap;
+            color:$sidebar-text;
+            mat-icon:not(.dd-icon){
+                margin-right: 8px;
+            }
+            mat-icon{
+                color:$sidebar-icons;
+            }
+            .dd-icon{
+                font-size: 16px;
+                width: 16px;
+                transition: 0.2s ease-in;
+                margin: 5px 0 5px 5px;
+                height: 16px;
+            }
+            &:hover{
+                background: $themecolor-alt;
+                > a{
+                  color:$themecolor;
+                }
+            }
+        }
+        &.selected > .mat-list-item-content > a{
+            background: $themecolor-alt;
+            border-radius: $radius;
+            color:$white;
+            
+            mat-icon{
+                color:$white;
+            }
+            .dd-icon{
+                -webkit-transform: rotate(-180deg);
+                transform: rotate(-180deg);
+            }
+            
+        }
+
+        &.selected .sub-item .mat-list-item-content a.selected{
+            background: transparent;
+            color:$inverse;
+            font-weight: 500;               
+        }
+    }
+
+    .mat-expansion-panel {
+        height: auto;
+        &:hover{
+            background: none;
+        }  
+        .mat-expansion-panel-header{
+            display: block;
+            padding: 0px 5px;
+            height: 48px!important;
+            &:hover{
+                background: $themecolor-alt;
+                > a{
+                  color:$themecolor;
+                }
+            }
+        }
+
+        .mat-expansion-panel-body{
+            display: block;
+            padding: 0px 3px;
+            height: auto;
+            &:hover{
+                background: none;
+                > a{
+                  color:$themecolor;
+                }
+            }
+        }
+
+        a{
+            height: 45px;
+            padding: 0 3px;
+            margin-bottom: 0px;
+            align-items: center;
+            display: flex;
+            font-size: 15px;
+            white-space: nowrap;
+            color:$sidebar-text;
+            mat-icon:not(.dd-icon){
+                margin-right: 8px;
+            }
+            mat-icon{
+                color:$sidebar-icons;
+            }
+            .dd-icon{
+                font-size: 16px;
+                width: 16px;
+                transition: 0.2s ease-in;
+                margin: 5px 0 5px 5px;
+                height: 16px;
+            }
+        }
+
+    }
+}
+
+/*******************
+use profile section
+******************/
+
+.user-profile {  
+    position: relative;
+    background-size:cover;
+    
+    .profile-img {
+        width: 50px;
+        margin-left: 30px;
+        padding: 31px 0;
+        border-radius: 100%;
+        &::before {
+            -webkit-animation: 2.5s blow 0s linear infinite;
+            animation: 2.5s blow 0s linear infinite;
+            position: absolute;
+            content: '';
+            width: 50px;
+            height: 50px;
+            top: 31px;
+            margin: 0 auto;
+            border-radius: 50%;
+            z-index: 0;
+        }
+        @-webkit-keyframes blow {
+            0% {
+                box-shadow: 0 0 0 0px rgba(0, 0, 0, 0.1);
+                opacity: 1;
+                -webkit-transform: scale3d(1, 1, 0.5);
+                transform: scale3d(1, 1, 0.5);
+            }
+            50% {
+                box-shadow: 0 0 0 10px rgba(0, 0, 0, 0.1);
+                opacity: 1;
+                -webkit-transform: scale3d(1, 1, 0.5);
+                transform: scale3d(1, 1, 0.5);
+            }
+            100% {
+                box-shadow: 0 0 0 20px rgba(0, 0, 0, 0.1);
+                opacity: 0;
+                -webkit-transform: scale3d(1, 1, 0.5);
+                transform: scale3d(1, 1, 0.5);
+            }
+        }
+        @keyframes blow {
+            0% {
+                box-shadow: 0 0 0 0px rgba(0, 0, 0, 0.1);
+                opacity: 1;
+                -webkit-transform: scale3d(1, 1, 0.5);
+                transform: scale3d(1, 1, 0.5);
+            }
+            50% {
+                box-shadow: 0 0 0 10px rgba(0, 0, 0, 0.1);
+                opacity: 1;
+                -webkit-transform: scale3d(1, 1, 0.5);
+                transform: scale3d(1, 1, 0.5);
+            }
+            100% {
+                box-shadow: 0 0 0 20px rgba(0, 0, 0, 0.1);
+                opacity: 0;
+                -webkit-transform: scale3d(1, 1, 0.5);
+                transform: scale3d(1, 1, 0.5);
+            }
+        }
+        img {
+            width: 100%;
+            border-radius: 100%;
+        }
+    }
+    .profile-text {
+        padding: 5px 0px;
+        position: relative;
+        cursor: pointer;
+        white-space: nowrap;
+        > a {
+            color: $white!important;
+            width: 100%;
+            padding: 6px 30px;
+            background: rgba(0, 0, 0, 0.5);
+            display: block;
+            white-space: nowrap;
+            &:after{
+                position: absolute;
+                right: 20px;
+                top:20px;
+            }
+        }
+    }
+    
+}
+
+
+.sidebar-closed #snav{
+    &.mat-sidenav ~ .mat-drawer-content {
+          margin-left: 0px!important;
+        }
+}
+
+//Otro Sidebar
+.wrapper {
+    main {
+      position: relative;
+  
+      .sidebar {
+        height: 100%;
+        width: $sidebar-width;
+        position: absolute;
+        transition: left .3s ease;
+        left: -$sidebar-width;
+        top: 0;
+        z-index: 111;
+        overflow: auto;
+  
+        >div {
+          border-bottom: 1px solid;
+  
+          &:last-child {
+            border-bottom: none;
+          }
+        }
+  
+        .sidebar-profile {
+  
+          .user-picture {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            overflow: hidden;
+  
+            img {
+              width: 100%;
+              height: 100%;
+              object-fit: cover;
+              object-position: center;
+            }
+          }
+  
+          .profile-details {
+            .name {
+              font-size: .9rem;
+              font-weight: 800;
+            }
+  
+            .role {
+              font-size: .7rem;
+              letter-spacing: 1px;
+              font-weight: 700;
+            }
+          }
+        }
+  
+        .sidebar-search {
+          display: none;
+        }
+  
+        .sidebar-menu {
+          >div {
+            padding: 0 1.5rem;
+          }
+  
+          .menu-header {
+            padding: 0 1.5rem;
+            font-size: .75rem;
+            text-transform: uppercase;
+            font-weight: 700;
+          }
+
+          .menu-header-min{
+            display:none;
+          }
+  
+          ul {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+  
+            li {
+              display: block;
+  
+              a {
+                text-decoration: none;
+                display: flex;
+                align-items: center;
+                width: 100%;
+                height: 45px;
+                line-height: 45px;
+                padding: 0 1.5rem;
+                font-size: 0.8rem;
+                letter-spacing: 0px;
+                font-weight: 600;
+  
+                i {
+                  @extend .icon-style;
+                  font-size: 1rem;
+                }
+  
+                span {
+                  color: inherit;
+                  margin-left: 1rem;
+                }
+              }
+            }
+          }
+         
+        }
+      }
+  
+      @media (min-width: 768px) {
+        .sidebar {
+          position: static;
+          height: 100%;
+        }
+      }
+    }
+  
+    // Código css para transformar el sideBar en mas pequeño cuando el conmutador cambia
+    &.pinned-sidebar {
+      @media (min-width: 768px) {
+        .navbar-header{
+          width: $sidebar-pinned-wdth!important;
+          span{
+            display: none!important;
+          }
+        }
+  
+        .sidebar {
+          width: $sidebar-pinned-wdth;
+  
+          .sidebar-profile {
+  
+            .user-picture {
+              width: 40px;
+              height: 40px;
+            }
+  
+          }
+  
+          .profile-details,
+          .menu-header,
+          .view-source {
+            display: none;
+          }
+
+          .menu-header-min{
+            display:block!important;
+            padding: 0 1.5rem;
+            font-size: .75rem;
+            text-transform: uppercase;
+            font-weight: 700;
+            color: rgba($sidebar-color, .5);
+          }
+  
+          .sidebar-menu {
+            ul a {
+              padding: .5rem;
+              justify-content: center;
+  
+              span {
+                display: none;
+              }
+            }
+          }
+        }
+  
+      }
+    }
+  
+    &.toggeled-sidebar {
+      .sidebar {
+        left: 0;
+      }
+    }
+  }

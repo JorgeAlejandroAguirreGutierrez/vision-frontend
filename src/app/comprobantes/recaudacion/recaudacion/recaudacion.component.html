@@ -1,0 +1,1346 @@
+<div class="container">
+    <nav class="navbar-light nav-fijo">
+        <ul class="navbar-nav">
+            <li class="nav-item">
+                <a class="nav-link" href="#" role="button" (click)="crear($event)">
+                    <mat-icon>save</mat-icon>
+                </a>
+            </li>
+            <li class="nav-item">
+                <ng-container *ngIf="recaudacion.id==0">
+                    <a class="nav-link" href="#" role="button" (click)="nuevo($event)">
+                        <mat-icon>note_add</mat-icon>
+                    </a>
+                </ng-container>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#" role="button" (click)="$event.preventDefault()">
+                    <mat-icon>archive</mat-icon>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#" role="button" (click)="$event.preventDefault()">
+                    <mat-icon>publish</mat-icon>
+                </a>
+            </li>
+        </ul>
+    </nav>
+    <div class="form-row col-12">
+        <div class="form-row col-9">
+            <div class="form-group col-3">
+                <mat-form-field appearance="standard">
+                    <mat-label>Fecha</mat-label>
+                    <input matInput type="text" value="{{factura.fecha | date:'dd-MM-yyyy'}}" class="form-control-sm" disabled>
+                </mat-form-field>
+            </div>
+            <div class="form-group col-3">
+                <mat-form-field appearance="standard">
+                    <mat-label>Tipo</mat-label>
+                    <input matInput type="text" class="form-control-sm" [(ngModel)]="factura.vendedor.puntoVenta.codigo" [ngModelOptions]="{standalone: true}" disabled>
+                </mat-form-field>
+            </div>
+            <div class="form-group col-4">
+                <mat-form-field appearance="standard">
+                    <mat-label>Factura</mat-label>
+                    <input matInput type="text" class="form-control-sm" [(ngModel)]="factura.secuencia" [ngModelOptions]="{standalone: true}" disabled>
+                </mat-form-field>
+            </div>
+            <div class="form-group col-2">
+                <mat-form-field appearance="standard">
+                    <mat-label>Estado</mat-label>
+                    <mat-select class="form-control-sm" [(ngModel)]="estado" [ngModelOptions]="{standalone: true}" [disabled]="true">
+                        <mat-option value="RECAUDADO">RECAUDADO</mat-option>
+                        <mat-option value="NORECAUDADO">NO RECAUDADO</mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+            <div class="form-group col-8">
+                <mat-form-field appearance="standard">
+                    <mat-label>Cliente</mat-label>
+                    <input matInput type="text" [value]="factura.cliente?.razonSocial" oninput="this.value = this.value.toUpperCase()" class="form-control-sm" disabled>
+                </mat-form-field>
+            </div>
+            <div class="form-group col-4">
+                <mat-form-field appearance="standard">
+                    <mat-label>Forma de Pago</mat-label>
+                    <mat-select [formControl]="formasPago" [(value)]="formasPagoSelecionadas" multiple>
+                        <mat-option *ngFor="let formaPago of formasPagoLista" [value]="formaPago" (click)="habilitarSeccionPago(formaPago)">
+                            {{formaPago}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+        </div>
+        <div class="form-row col-3">
+            <mat-card>
+                <div class="form-row">
+                    <div class="form-group col-6">
+                        <mat-form-field appearance="standard">
+                            <mat-label>Cobro</mat-label>
+                            <input matInput type="text" [(ngModel)]="factura.totalConDescuento" class="form-control-sm" disabled>
+                        </mat-form-field>
+                    </div>
+                    <div class="form-group col-6">
+                        <mat-form-field appearance="standard">
+                            <mat-label>Valor Pagado</mat-label>
+                            <input matInput type="text" [(ngModel)]="recaudacion.total" class="form-control-sm" disabled>
+                        </mat-form-field>
+                    </div>
+                    <div class="form-group col-6">
+                        <mat-form-field appearance="standard">
+                            <mat-label>Efectivo</mat-label>
+                            <input matInput type="text" [(ngModel)]="recaudacion.efectivo" (change)="seleccionarEfectivo()" class="form-control-sm">
+                        </mat-form-field>
+                    </div>
+                    <div class="form-group col-6">
+                        <mat-form-field appearance="standard">
+                            <mat-label>Cambio</mat-label>
+                            <input matInput type="text" class="form-control-sm" [(ngModel)]="recaudacion.cambio" disabled>
+                        </mat-form-field>
+                    </div>
+                </div>
+            </mat-card>
+        </div>
+    </div>
+    <mat-divider *ngIf="habilitarCheques"></mat-divider>
+    <div class="card" *ngIf="habilitarCheques">
+        <div class="card-header">
+            <div class="form-row col-12">
+                <div class="form-group col-8 izquierda">
+                    CHEQUES
+                </div>
+                <div class="form-group col-3 derecha">
+                    Total en cheques es:
+                </div>
+                <div class="form-group col-1">{{recaudacion.totalCheques | currency}}</div>
+            </div>
+        </div>
+        <div class="card-body form-row col-12">
+            <div class="form-group col-2">
+                <mat-form-field appearance="standard">
+                    <mat-label>Fecha Cheque</mat-label>
+                    <input matInput [matDatepicker]="picker1" class="form-control-sm" [(ngModel)]="cheque.fecha">
+                    <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                    <mat-datepicker #picker1></mat-datepicker>
+                </mat-form-field>
+            </div>
+            <div class="form-group col-2">
+                <mat-form-field appearance="standard">
+                    <mat-label>Tipo Cheque</mat-label>
+                    <mat-select class="form-control-sm" [(ngModel)]="cheque.tipo">
+                        <mat-option value="VISTA">A LA VISTA</mat-option>
+                        <mat-option value="POSTFECHADO">POSTFECHADO</mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+            <div class="form-group col-2">
+                <mat-form-field appearance="standard">
+                    <mat-label>Número cheq</mat-label>
+                    <input matInput type="text" class="form-control-sm" [(ngModel)]="cheque.numero" (blur)="rellenarNumeroCheque()">
+                </mat-form-field>
+            </div>
+            <div class="form-group col-3">
+                <mat-form-field appearance="standard">
+                    <mat-label>Banco</mat-label>
+                    <mat-autocomplete #bancoCheque="matAutocomplete" [displayWith]="verBancoCheque" (optionSelected)="seleccionarBancoCheque()">
+                        <mat-option *ngFor="let banco of filtroBancosCheques | async" [value]="banco">
+                            {{banco.nombre}}
+                        </mat-option>
+                    </mat-autocomplete>
+                    <input matInput type="text" class="form-control-sm" [formControl]="seleccionBancoCheque" [matAutocomplete]="bancoCheque">
+                </mat-form-field>
+            </div>
+            <div class="form-group col-2">
+                <mat-form-field appearance="standard">
+                    <mat-label>Valor cheq.</mat-label>
+                    <input matInput type="text" class="form-control-sm" [(ngModel)]="cheque.valor">
+                </mat-form-field>
+            </div>
+            <div class="form-group col-1">
+                <br>
+                <ng-container *ngIf="!habilitarEditarCheque">
+                    <button class="btn btn-primary btn-circle " (click)="agregarCheque()">
+                        <mat-icon>add</mat-icon>
+                    </button>
+                </ng-container>
+                <ng-container *ngIf="habilitarEditarCheque">
+                    <button class="btn btn-primary btn-circle " (click)="confirmarEditarCheque()">
+                        <mat-icon>create</mat-icon>
+                    </button>
+                </ng-container>
+            </div>
+        </div>
+        <mat-divider></mat-divider>
+        <div class="form-row">
+            <div class="mat-elevation-z8 col-12">
+                <table mat-table [dataSource]="dataCheques" matSort>
+                    <!-- Posicion Columna -->
+                    <ng-container matColumnDef="id">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> No. </th>
+                        <td mat-cell *matCellDef="let j=index"> {{j+1}} </td>
+                        <td mat-footer-cell *matFooterCellDef> Total </td>
+                    </ng-container>
+                    <!-- Fecha Columna -->
+                    <ng-container matColumnDef="fecha">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Fecha </th>
+                        <td mat-cell *matCellDef="let cheque"> {{cheque.fecha | date: 'dd/MM/yyyy'}} </td>
+                        <td mat-footer-cell *matFooterCellDef></td>
+                    </ng-container>
+                    <!-- Tipo Columna -->
+                    <ng-container matColumnDef="tipo">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Tipo </th>
+                        <td mat-cell *matCellDef="let cheque"> {{cheque.tipo}} </td>
+                        <td mat-footer-cell *matFooterCellDef></td>
+                    </ng-container>
+                    <!-- Numero Columna -->
+                    <ng-container matColumnDef="numero">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Numero </th>
+                        <td mat-cell *matCellDef="let cheque"> {{cheque.numero}} </td>
+                        <td mat-footer-cell *matFooterCellDef></td>
+                    </ng-container>
+                    <!-- Banco Columna -->
+                    <ng-container matColumnDef="banco">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Banco </th>
+                        <td mat-cell *matCellDef="let cheque"> {{cheque.banco.nombre}} </td>
+                        <td mat-footer-cell *matFooterCellDef></td>
+                    </ng-container>
+                    <!-- Valor Columna -->
+                    <ng-container matColumnDef="valor">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Valor </th>
+                        <td mat-cell *matCellDef="let cheque"> {{cheque.valor | currency}} </td>
+                        <td mat-footer-cell *matFooterCellDef> {{recaudacion.totalCheques | currency}} </td>
+                    </ng-container>
+                    <ng-container matColumnDef="acciones">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Acciones </th>
+                        <td mat-cell *matCellDef="let i=index">
+                            <button mat-raised-button color="primary" focusable="false" (click)="editarCheque(i)">
+                                Editar
+                            </button>&nbsp;
+                            <button mat-raised-button color="warn" focusable="false" (click)="eliminarCheque(i)">
+                                Eliminar
+                            </button>
+                        </td>
+                        <td mat-footer-cell *matFooterCellDef></td>
+                    </ng-container>
+                    <tr mat-header-row *matHeaderRowDef="columnasCheques"></tr>
+                    <tr mat-row *matRowDef="let row; columns: columnasCheques;"></tr>
+                    <tr mat-footer-row *matFooterRowDef="columnasCheques"></tr>
+                </table>
+                <ng-container>
+                    <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+                </ng-container>
+            </div>
+        </div>
+    </div>
+    <!-- Sección DEPOSITOS -->
+    <mat-divider *ngIf="habilitarDepositos"></mat-divider>
+    <div class="card" *ngIf="habilitarDepositos">
+        <div class="card-header">
+            <div class="form-row col-12">
+                <div class="form-group col-8 izquierda">
+                    DEPOSITOS
+                </div>
+                <div class="form-group col-3 derecha">
+                    Total depósitos:
+                </div>
+                <div class="form-group col-1">{{recaudacion.totalDepositos | currency}}</div>
+            </div>
+        </div>
+        <div class="card-body form-row col-12">
+            <div class="form-group col-2">
+                <mat-form-field appearance="standard">
+                    <mat-label>Fecha</mat-label>
+                    <input matInput [matDatepicker]="picker2" class="form-control-sm" [(ngModel)]="deposito.fecha">
+                    <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+                    <mat-datepicker #picker2></mat-datepicker>
+                </mat-form-field>
+            </div>
+            <div class="form-group col-2">
+                <mat-form-field appearance="standard">
+                    <mat-label>Cuenta</mat-label>
+                    <mat-select class="form-control-sm" [(ngModel)]="deposito.cuentaPropia">
+                        <mat-option *ngFor="let cuentaPropia of cuentasPropias" [value]="cuentaPropia">
+                            {{cuentaPropia.numero}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+            <div class="form-group col-3">
+                <mat-form-field appearance="standard">
+                    <mat-label>Banco</mat-label>
+                    <mat-autocomplete #bancoDeposito="matAutocomplete" [displayWith]="verBancoDeposito" (optionSelected)="seleccionarBancoDeposito()">
+                        <mat-option *ngFor="let banco of filtroBancosDepositos | async" [value]="banco">
+                            {{banco.nombre}}
+                        </mat-option>
+                    </mat-autocomplete>
+                    <input matInput type="text" class="form-control-sm" [formControl]="seleccionBancoDeposito" [matAutocomplete]="bancoDeposito">
+                </mat-form-field>
+            </div>
+            <div class="form-group col-2">
+                <mat-form-field appearance="standard">
+                    <mat-label>No. Comprobante</mat-label>
+                    <input matInput type="text" class="form-control-sm" [(ngModel)]="deposito.comprobante" (blur)="rellenarNumeroDeposito()">
+                </mat-form-field>
+            </div>
+            <div class="form-group col-2">
+                <mat-form-field appearance="standard">
+                    <mat-label>Valor</mat-label>
+                    <input matInput type="text" class="form-control-sm" [(ngModel)]="deposito.valor">
+                </mat-form-field>
+            </div>
+            <div class="form-group col-1">
+                <br>
+                <ng-container *ngIf="!habilitarEditarDeposito">
+                    <button class="btn btn-primary btn-circle " (click)="agregarDeposito()">
+                        <mat-icon>add</mat-icon>
+                    </button>
+                </ng-container>
+                <ng-container *ngIf="habilitarEditarDeposito">
+                    <button class="btn btn-primary btn-circle " (click)="confirmarEditarDeposito()">
+                        <mat-icon>create</mat-icon>
+                    </button>
+                </ng-container>
+            </div>
+        </div>
+        <mat-divider></mat-divider>
+        <div class="form-row">
+            <div class="mat-elevation-z8 col-12">
+                <table mat-table [dataSource]="dataDepositos" matSort>
+                    <!-- Posicion Columna -->
+                    <ng-container matColumnDef="id">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> No. </th>
+                        <td mat-cell *matCellDef="let i=index"> {{i+1}} </td>
+                        <td mat-footer-cell *matFooterCellDef> Total </td>
+                    </ng-container>
+                    <!-- Fecha Columna -->
+                    <ng-container matColumnDef="fecha">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Fecha </th>
+                        <td mat-cell *matCellDef="let deposito"> {{deposito.fecha | date: 'dd/MM/yyyy'}} </td>
+                        <td mat-footer-cell *matFooterCellDef></td>
+                    </ng-container>
+                    <!-- Tipo Columna -->
+                    <ng-container matColumnDef="cuenta">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Cuenta </th>
+                        <td mat-cell *matCellDef="let deposito"> {{deposito.cuentaPropia.numero}} </td>
+                        <td mat-footer-cell *matFooterCellDef></td>
+                    </ng-container>
+                    <!-- Banco Columna -->
+                    <ng-container matColumnDef="banco">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Banco </th>
+                        <td mat-cell *matCellDef="let deposito"> {{deposito.banco.nombre}} </td>
+                        <td mat-footer-cell *matFooterCellDef></td>
+                    </ng-container>
+                    <!-- Numero Columna -->
+                    <ng-container matColumnDef="comprobante">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Comprobante </th>
+                        <td mat-cell *matCellDef="let deposito"> {{deposito.comprobante}} </td>
+                        <td mat-footer-cell *matFooterCellDef></td>
+                    </ng-container>
+                    <!-- Valor Columna -->
+                    <ng-container matColumnDef="valor">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Valor </th>
+                        <td mat-cell *matCellDef="let deposito"> {{deposito.valor | currency}} </td>
+                        <td mat-footer-cell *matFooterCellDef> {{recaudacion.totalDepositos | currency}} </td>
+                    </ng-container>
+                    <ng-container matColumnDef="acciones">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Acciones </th>
+                        <td mat-cell *matCellDef="let i=index">
+                            <button mat-raised-button color="primary" focusable="false" (click)="editarDeposito(i)">
+                                Editar
+                            </button>&nbsp;
+                            <button mat-raised-button color="warn" focusable="false" (click)="eliminarDeposito(i)">
+                                Eliminar
+                            </button>
+                        </td>
+                        <td mat-footer-cell *matFooterCellDef></td>
+                    </ng-container>
+                    <tr mat-header-row *matHeaderRowDef="columnasDepositos"></tr>
+                    <tr mat-row *matRowDef="let row; columns: columnasDepositos;"></tr>
+                    <tr mat-footer-row *matFooterRowDef="columnasDepositos"></tr>
+                </table>
+                <ng-container>
+                    <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+                </ng-container>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sección TRANSFERENCIAS -->
+    <mat-divider *ngIf="habilitarTransferencias"></mat-divider>
+    <div class="card" *ngIf="habilitarTransferencias">
+        <div class="card-header">
+            <div class="form-row col-12">
+                <div class="form-group col-8 izquierda">
+                    TRANSFERENCIAS
+                </div>
+                <div class="form-group col-3 derecha">
+                    Total transferencias:
+                </div>
+                <div class="form-group col-1">{{recaudacion.totalTransferencias | currency}}</div>
+            </div>
+        </div>
+        <div class="card-body form-row col-12">
+            <div class="form-group col-2">
+                <mat-form-field appearance="standard">
+                    <mat-label>Fecha</mat-label>
+                    <input matInput [matDatepicker]="picker3" class="form-control-sm" [(ngModel)]="transferencia.fecha">
+                    <mat-datepicker-toggle matSuffix [for]="picker3"></mat-datepicker-toggle>
+                    <mat-datepicker #picker3></mat-datepicker>
+                </mat-form-field>
+            </div>
+            <div class="form-group col-2">
+                <mat-form-field appearance="standard">
+                    <mat-label>Cuenta</mat-label>
+                    <mat-select class="form-control-sm" [(ngModel)]="transferencia.cuentaPropia">
+                        <mat-option *ngFor="let cuentaPropia of cuentasPropias" [value]="cuentaPropia">
+                            {{cuentaPropia.numero}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+            <div class="form-group col-3">
+                <mat-form-field appearance="standard">
+                    <mat-label>Banco</mat-label>
+                    <mat-autocomplete #bancoTransferencia="matAutocomplete" [displayWith]="verBancoTransferencia" (optionSelected)="seleccionarBancoTransferencia()">
+                        <mat-option *ngFor="let banco of filtroBancosTransferencias | async" [value]="banco">
+                            {{banco.nombre}}
+                        </mat-option>
+                    </mat-autocomplete>
+                    <input matInput type="text" class="form-control-sm" [formControl]="seleccionBancoTransferencia" [matAutocomplete]="bancoTransferencia">
+                </mat-form-field>
+            </div>
+            <div class="form-group col-2">
+                <mat-form-field appearance="standard">
+                    <mat-label>No. Comprobante</mat-label>
+                    <input matInput type="text" class="form-control-sm" [(ngModel)]="transferencia.comprobante" (blur)="rellenarNumeroTransferencia()">
+                </mat-form-field>
+            </div>
+            <div class="form-group col-2">
+                <mat-form-field appearance="standard">
+                    <mat-label>Valor</mat-label>
+                    <input matInput type="text" class="form-control-sm" [(ngModel)]="transferencia.valor">
+                </mat-form-field>
+            </div>
+            <div class="form-group col-1">
+                <br>
+                <ng-container *ngIf="!habilitarEditarTransferencia">
+                    <button class="btn btn-primary btn-circle " (click)="agregarTransferencia()">
+                        <mat-icon>add</mat-icon>
+                    </button>
+                </ng-container>
+                <ng-container *ngIf="habilitarEditarTransferencia">
+                    <button class="btn btn-primary btn-circle " (click)="confirmarEditarTransferencia()">
+                        <mat-icon>create</mat-icon>
+                    </button>
+                </ng-container>
+            </div>
+        </div>
+        <mat-divider></mat-divider>
+        <div class="form-row">
+            <div class="mat-elevation-z8 col-12">
+                <table mat-table [dataSource]="dataTransferencias" matSort>
+                    <!-- Posicion Columna -->
+                    <ng-container matColumnDef="id">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> No. </th>
+                        <td mat-cell *matCellDef="let i=index"> {{i+1}} </td>
+                        <td mat-footer-cell *matFooterCellDef> Total </td>
+                    </ng-container>
+                    <!-- Fecha Columna -->
+                    <ng-container matColumnDef="fecha">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Fecha </th>
+                        <td mat-cell *matCellDef="let transferencia"> {{transferencia.fecha | date: 'dd/MM/yyyy'}} </td>
+                        <td mat-footer-cell *matFooterCellDef></td>
+                    </ng-container>
+                    <!-- Tipo Columna -->
+                    <ng-container matColumnDef="cuenta">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Cuenta </th>
+                        <td mat-cell *matCellDef="let transferencia"> {{transferencia.cuentaPropia.numero}} </td>
+                        <td mat-footer-cell *matFooterCellDef></td>
+                    </ng-container>
+                    <!-- Banco Columna -->
+                    <ng-container matColumnDef="banco">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Banco </th>
+                        <td mat-cell *matCellDef="let transferencia"> {{transferencia.banco.nombre}} </td>
+                        <td mat-footer-cell *matFooterCellDef></td>
+                    </ng-container>
+                    <!-- Numero Columna -->
+                    <ng-container matColumnDef="comprobante">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Comprobante </th>
+                        <td mat-cell *matCellDef="let transferencia"> {{transferencia.comprobante}} </td>
+                        <td mat-footer-cell *matFooterCellDef></td>
+                    </ng-container>
+                    <!-- Valor Columna -->
+                    <ng-container matColumnDef="valor">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Valor </th>
+                        <td mat-cell *matCellDef="let transferencia"> {{transferencia.valor | currency}} </td>
+                        <td mat-footer-cell *matFooterCellDef> {{recaudacion.totalTransferencias | currency}} </td>
+                    </ng-container>
+                    <ng-container matColumnDef="acciones">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Acciones </th>
+                        <td mat-cell *matCellDef="let i=index">
+                            <button mat-raised-button color="primary" focusable="false" (click)="editarTransferencia(i)">
+                                Editar
+                            </button>&nbsp;
+                            <button mat-raised-button color="warn" focusable="false" (click)="eliminarTransferencia(i)">
+                                Eliminar
+                            </button>
+                        </td>
+                        <td mat-footer-cell *matFooterCellDef></td>
+                    </ng-container>
+                    <tr mat-header-row *matHeaderRowDef="columnasTransferencias"></tr>
+                    <tr mat-row *matRowDef="let row; columns: columnasTransferencias;"></tr>
+                    <tr mat-footer-row *matFooterRowDef="columnasTransferencias"></tr>
+                </table>
+                <ng-container>
+                    <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+                </ng-container>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sección TARJETA DE CRÉDITO -->
+    <mat-divider *ngIf="habilitarTarjetasCreditos"></mat-divider>
+    <div class="card" *ngIf="habilitarTarjetasCreditos">
+        <div class="card-header">
+            <div class="form-row col-12">
+                <div class="form-group col-8 izquierda">
+                    TARJETAS DE CRÉDITO
+                </div>
+                <div class="form-group col-3 derecha">
+                    Total tarjetas de crédito:
+                </div>
+                <div class="form-group col-1">{{recaudacion.totalTarjetasCreditos | currency}}</div>
+            </div>
+        </div>
+        <div class="card-body form-row col-12">
+            <div class="form-group col-2">
+                <mat-form-field appearance="standard">
+                    <mat-label>Franquicia</mat-label>
+                    <mat-select class="form-control-sm" [(ngModel)]="tarjetaCredito.franquiciaTarjeta">
+                        <mat-option *ngFor="let franquiciaTarjeta of franquiciasTarjetasCreditos" [value]="franquiciaTarjeta">
+                            {{franquiciaTarjeta.nombre}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+            <div class="form-group col-3">
+                <mat-form-field appearance="standard">
+                    <mat-label>Banco</mat-label>
+                    <mat-autocomplete #bancoTarjetaCredito="matAutocomplete" [displayWith]="verBancoTarjetaCredito" (optionSelected)="seleccionarBancoTarjetaCredito()">
+                        <mat-option *ngFor="let banco of filtroBancosTarjetasCreditos | async" [value]="banco">
+                            {{banco.nombre}}
+                        </mat-option>
+                    </mat-autocomplete>
+                    <input matInput type="text" class="form-control-sm" [formControl]="seleccionBancoTarjetaCredito" [matAutocomplete]="bancoTarjetaCredito">
+                </mat-form-field>
+            </div>
+            <div class="form-group col-2">
+                <mat-form-field appearance="standard">
+                    <mat-label>Cédula</mat-label>
+                    <input matInput type="text" class="form-control-sm" [(ngModel)]="tarjetaCredito.identificacion" (change)="validarIdentificacionTarjetaCredito()" [disabled]="habilitarTitularTarjetaCredito">
+                </mat-form-field>
+            </div>
+            <div class="form-group col-3">
+                <mat-form-field appearance="standard">
+                    <mat-label>Nombre</mat-label>
+                    <input matInput type="text" [(ngModel)]="tarjetaCredito.nombre" [disabled]="habilitarTitularTarjetaCredito" oninput="this.value = this.value.toUpperCase()" class="form-control-sm">
+                </mat-form-field>
+            </div>
+            <div class="form-group col-1">
+                <br>
+                <mat-checkbox [(ngModel)]="tarjetaCredito.titular" (change)="asignarTitularTarjetaCredito()" class="form-control-sm" color="primary">
+                    Titular</mat-checkbox>
+            </div>
+            <div class="form-group col-1">
+                <br>
+                <mat-checkbox [(ngModel)]="tarjetaCredito.diferido" class="form-control-sm" color="primary">Diferido
+                </mat-checkbox>
+            </div>
+            <div class="form-group col-2">
+                <mat-form-field appearance="standard">
+                    <mat-label>Operador</mat-label>
+                    <mat-select class="form-control-sm" [(ngModel)]="tarjetaCredito.operadorTarjeta">
+                        <mat-option *ngFor="let operadorTarjeta of operadoresTarjetasCreditos" [value]="operadorTarjeta">
+                            {{operadorTarjeta.nombre}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+            <div class="form-group col-2">
+                <mat-form-field appearance="standard">
+                    <mat-label>Lote</mat-label>
+                    <input matInput type="text" class="form-control-sm" [(ngModel)]="tarjetaCredito.lote">
+                </mat-form-field>
+            </div>
+            <div class="form-group col-2">
+                <mat-form-field appearance="standard">
+                    <mat-label>Valor</mat-label>
+                    <input matInput type="text" class="form-control-sm" [(ngModel)]="tarjetaCredito.valor">
+                </mat-form-field>
+            </div>
+            <div class="form-group col-1">
+                <br>
+                <ng-container *ngIf="!habilitarEditarTarjetaCredito">
+                    <button class="btn btn-primary btn-circle " (click)="agregarTarjetaCredito()">
+                        <mat-icon>add</mat-icon>
+                    </button>
+                </ng-container>
+                <ng-container *ngIf="habilitarEditarTarjetaCredito">
+                    <button class="btn btn-primary btn-circle" (click)="confirmarEditarTarjetaCredito()">
+                        <mat-icon>create</mat-icon>
+                    </button>
+                </ng-container>
+            </div>
+        </div>
+        <mat-divider></mat-divider>
+        <div class="form-row">
+            <div class="mat-elevation-z8 col-12">
+                <table mat-table [dataSource]="dataTarjetasCreditos" matSort>
+                    <!-- Posicion Columna -->
+                    <ng-container matColumnDef="id">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>No.</th>
+                        <td mat-cell *matCellDef="let i=index"> {{i+1}} </td>
+                        <td mat-footer-cell *matFooterCellDef> Total </td>
+                    </ng-container>
+                    <!-- Fecha Columna -->
+                    <ng-container matColumnDef="franquicia">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Franquicia</th>
+                        <td mat-cell *matCellDef="let tarjetaCredito"> {{tarjetaCredito.franquiciaTarjeta.nombre}} </td>
+                        <td mat-footer-cell *matFooterCellDef></td>
+                    </ng-container>
+                    <!-- Banco Columna -->
+                    <ng-container matColumnDef="banco">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Banco</th>
+                        <td mat-cell *matCellDef="let tarjetaCredito"> {{tarjetaCredito.banco.nombre}} </td>
+                        <td mat-footer-cell *matFooterCellDef></td>
+                    </ng-container>
+                    <!-- Tipo Columna -->
+                    <ng-container matColumnDef="identificacion">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Cédula </th>
+                        <td mat-cell *matCellDef="let tarjetaCredito"> {{tarjetaCredito.identificacion}} </td>
+                        <td mat-footer-cell *matFooterCellDef></td>
+                    </ng-container>
+                    <!-- Numero Columna -->
+                    <ng-container matColumnDef="nombre">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Propietario </th>
+                        <td mat-cell *matCellDef="let tarjetaCredito"> {{tarjetaCredito.nombre}} </td>
+                        <td mat-footer-cell *matFooterCellDef></td>
+                    </ng-container>
+                    <!-- Numero Columna -->
+                    <ng-container matColumnDef="titular">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Titular </th>
+                        <td mat-cell *matCellDef="let tarjetaCredito">
+                            <ng-container *ngIf="tarjetaCredito.titular">
+                                SI
+                            </ng-container>
+                            <ng-container *ngIf="!tarjetaCredito.titular">
+                                NO
+                            </ng-container>
+                        </td>
+                        <td mat-footer-cell *matFooterCellDef></td>
+                    </ng-container>
+                    <!-- Numero Columna -->
+                    <ng-container matColumnDef="diferido">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Diferido </th>
+                        <td mat-cell *matCellDef="let tarjetaCredito">
+                            <ng-container *ngIf="tarjetaCredito.diferido">
+                                SI
+                            </ng-container>
+                            <ng-container *ngIf="!tarjetaCredito.diferido">
+                                NO
+                            </ng-container>
+                        </td>
+                        <td mat-footer-cell *matFooterCellDef></td>
+                    </ng-container>
+                    <!-- Numero Columna -->
+                    <ng-container matColumnDef="operador">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Operador</th>
+                        <td mat-cell *matCellDef="let tarjetaCredito"> {{tarjetaCredito.operadorTarjeta.nombre}} </td>
+                        <td mat-footer-cell *matFooterCellDef></td>
+                    </ng-container>
+                    <!-- Numero Columna -->
+                    <ng-container matColumnDef="lote">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Lote</th>
+                        <td mat-cell *matCellDef="let tarjetaCredito"> {{tarjetaCredito.lote}} </td>
+                        <td mat-footer-cell *matFooterCellDef></td>
+                    </ng-container>
+                    <!-- Valor Columna -->
+                    <ng-container matColumnDef="valor">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Valor </th>
+                        <td mat-cell *matCellDef="let tarjetaCredito"> {{tarjetaCredito.valor | currency}} </td>
+                        <td mat-footer-cell *matFooterCellDef> {{recaudacion.totalTarjetasCreditos | currency}} </td>
+                    </ng-container>
+                    <ng-container matColumnDef="acciones">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Acciones </th>
+                        <td mat-cell *matCellDef="let i=index">
+                            <button mat-raised-button color="primary" focusable="false" (click)="editarTarjetaCredito(i)">
+                                Editar
+                            </button>&nbsp;
+                            <button mat-raised-button color="warn" focusable="false" (click)="eliminarTarjetaCredito(i)">
+                                Eliminar
+                            </button>
+                        </td>
+                        <td mat-footer-cell *matFooterCellDef></td>
+                    </ng-container>
+                    <tr mat-header-row *matHeaderRowDef="columnasTarjetasCredito"></tr>
+                    <tr mat-row *matRowDef="let row; columns: columnasTarjetasCredito;"></tr>
+                    <tr mat-footer-row *matFooterRowDef="columnasTarjetasCredito"></tr>
+                </table>
+                <ng-container>
+                    <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+                </ng-container>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sección TARJETA DE DEBITO -->
+    <mat-divider *ngIf="habilitarTarjetasDebitos"></mat-divider>
+    <div class="card" *ngIf="habilitarTarjetasDebitos">
+        <div class="card-header">
+            <div class="form-row col-12">
+                <div class="form-group col-8 izquierda">
+                    TARJETAS DE DÉBITO
+                </div>
+                <div class="form-group col-3 derecha">
+                    Total tarjetas de debito:
+                </div>
+                <div class="form-group col-1">{{recaudacion.totalTarjetasDebitos | currency}}</div>
+            </div>
+        </div>
+        <div class="card-body form-row col-12">
+            <div class="form-group col-2">
+                <mat-form-field appearance="standard">
+                    <mat-label>Franquicia</mat-label>
+                    <mat-select class="form-control-sm" [(ngModel)]="tarjetaDebito.franquiciaTarjeta">
+                        <mat-option *ngFor="let franquiciaTarjeta of franquiciasTarjetasDebitos" [value]="franquiciaTarjeta">
+                            {{franquiciaTarjeta.nombre}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+            <div class="form-group col-4">
+                <mat-form-field appearance="standard">
+                    <mat-label>Banco</mat-label>
+                    <mat-autocomplete #bancoTarjetaDebito="matAutocomplete" [displayWith]="verBancoTarjetaDebito" (optionSelected)="seleccionarBancoTarjetaDebito()">
+                        <mat-option *ngFor="let banco of filtroBancosTarjetasDebitos | async" [value]="banco">
+                            {{banco.nombre}}
+                        </mat-option>
+                    </mat-autocomplete>
+                    <input matInput type="text" class="form-control-sm" [formControl]="seleccionBancoTarjetaDebito" [matAutocomplete]="bancoTarjetaDebito">
+                </mat-form-field>
+            </div>
+            <div class="form-group col-2">
+                <mat-form-field appearance="standard">
+                    <mat-label>Cédula</mat-label>
+                    <input matInput type="text" class="form-control-sm" [(ngModel)]="tarjetaDebito.identificacion" (change)="validarIdentificacionTarjetaDebito()" [disabled]="habilitarTitularTarjetaDebito">
+                </mat-form-field>
+            </div>
+            <div class="form-group col-3">
+                <mat-form-field appearance="standard">
+                    <mat-label>Nombre</mat-label>
+                    <input matInput type="text" [(ngModel)]="tarjetaDebito.nombre" oninput="this.value = this.value.toUpperCase()" [disabled]="habilitarTitularTarjetaDebito" class="form-control-sm">
+                </mat-form-field>
+            </div>
+            <div class="form-group col-1">
+                <br>
+                <mat-checkbox [(ngModel)]="tarjetaDebito.titular" (change)="asignarTitularTarjetaCredito()" class="form-control-sm" color="primary">
+                    Titular</mat-checkbox>
+            </div>
+            <div class="form-group col-2">
+                <mat-form-field appearance="standard">
+                    <mat-label>Operador</mat-label>
+                    <mat-select class="form-control-sm" [(ngModel)]="tarjetaDebito.operadorTarjeta">
+                        <mat-option *ngFor="let operadorTarjeta of operadoresTarjetasDebitos" [value]="operadorTarjeta">
+                            {{operadorTarjeta.nombre}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+            <div class="form-group col-2">
+                <mat-form-field appearance="standard">
+                    <mat-label>Lote</mat-label>
+                    <input matInput type="text" class="form-control-sm" [(ngModel)]="tarjetaDebito.lote">
+                </mat-form-field>
+            </div>
+            <div class="form-group col-2">
+                <mat-form-field appearance="standard">
+                    <mat-label>Valor</mat-label>
+                    <input matInput type="text" class="form-control-sm" [(ngModel)]="tarjetaDebito.valor">
+                </mat-form-field>
+            </div>
+            <div class="form-group col-1">
+                <br>
+                <ng-container *ngIf="!habilitarEditarTarjetaDebito">
+                    <button class="btn btn-primary btn-circle " (click)="agregarTarjetaDebito()">
+                        <mat-icon>add</mat-icon>
+                    </button>
+                </ng-container>
+                <ng-container *ngIf="habilitarEditarTarjetaDebito">
+                    <button class="btn btn-primary btn-circle" (click)="confirmarEditarTarjetaDebito()">
+                        <mat-icon>create</mat-icon>
+                    </button>
+                </ng-container>
+            </div>
+        </div>
+        <mat-divider></mat-divider>
+        <div class="form-row">
+            <div class="mat-elevation-z8 col-12">
+                <table mat-table [dataSource]="dataTarjetasDebitos" matSort>
+                    <!-- Posicion Columna -->
+                    <ng-container matColumnDef="id">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>No.</th>
+                        <td mat-cell *matCellDef="let i=index"> {{i+1}} </td>
+                        <td mat-footer-cell *matFooterCellDef> Total </td>
+                    </ng-container>
+                    <!-- Fecha Columna -->
+                    <ng-container matColumnDef="franquicia">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Franquicia</th>
+                        <td mat-cell *matCellDef="let tarjetaDebito"> {{tarjetaDebito.franquiciaTarjeta.nombre}} </td>
+                        <td mat-footer-cell *matFooterCellDef></td>
+                    </ng-container>
+                    <!-- Banco Columna -->
+                    <ng-container matColumnDef="banco">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Banco</th>
+                        <td mat-cell *matCellDef="let tarjetaDebito"> {{tarjetaDebito.banco.nombre}} </td>
+                        <td mat-footer-cell *matFooterCellDef></td>
+                    </ng-container>
+                    <!-- Tipo Columna -->
+                    <ng-container matColumnDef="identificacion">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Cédula </th>
+                        <td mat-cell *matCellDef="let tarjetaDebito"> {{tarjetaDebito.identificacion}} </td>
+                        <td mat-footer-cell *matFooterCellDef></td>
+                    </ng-container>
+                    <!-- Numero Columna -->
+                    <ng-container matColumnDef="nombre">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Propietario </th>
+                        <td mat-cell *matCellDef="let tarjetaDebito"> {{tarjetaDebito.nombre}} </td>
+                        <td mat-footer-cell *matFooterCellDef></td>
+                    </ng-container>
+                    <!-- Numero Columna -->
+                    <ng-container matColumnDef="operador">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Operador</th>
+                        <td mat-cell *matCellDef="let tarjetaDebito"> {{tarjetaDebito.operadorTarjeta.nombre}} </td>
+                        <td mat-footer-cell *matFooterCellDef></td>
+                    </ng-container>
+                    <!-- Numero Columna -->
+                    <ng-container matColumnDef="lote">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Lote</th>
+                        <td mat-cell *matCellDef="let tarjetaDebito"> {{tarjetaDebito.lote}} </td>
+                        <td mat-footer-cell *matFooterCellDef></td>
+                    </ng-container>
+                    <!-- Valor Columna -->
+                    <ng-container matColumnDef="valor">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Valor </th>
+                        <td mat-cell *matCellDef="let tarjetaDebito"> {{tarjetaDebito.valor | currency}} </td>
+                        <td mat-footer-cell *matFooterCellDef> {{recaudacion.totalTarjetasDebitos | currency}} </td>
+                    </ng-container>
+                    <ng-container matColumnDef="acciones">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Acciones </th>
+                        <td mat-cell *matCellDef="let i=index">
+                            <button mat-raised-button color="primary" focusable="false" (click)="editarTarjetaDebito(i)">
+                                Editar
+                            </button>&nbsp;
+                            <button mat-raised-button color="warn" focusable="false" (click)="eliminarTarjetaDebito(i)">
+                                Eliminar
+                            </button>
+                        </td>
+                        <td mat-footer-cell *matFooterCellDef></td>
+                    </ng-container>
+                    <tr mat-header-row *matHeaderRowDef="columnasTarjetasDebito"></tr>
+                    <tr mat-row *matRowDef="let row; columns: columnasTarjetasDebito;"></tr>
+                    <tr mat-footer-row *matFooterRowDef="columnasTarjetasDebito"></tr>
+                </table>
+                <ng-container>
+                    <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+                </ng-container>
+            </div>
+        </div>
+    </div>
+    <!--SECCION RETENCIONES VENTAS-->
+    <mat-divider *ngIf="habilitarRetencionesVentas"></mat-divider>
+    <div class="card" *ngIf="habilitarRetencionesVentas">
+        <div class="card-header">
+            <div class="form-row col-12">
+                <div class="form-group col-8 izquierda">
+                    RETENCIONES VENTAS
+                </div>
+                <div class="form-group col-3 derecha">
+                    Total retenciones ventas:
+                </div>
+                <div class="form-group col-1">{{recaudacion.totalRetencionesVentas | currency}}</div>
+            </div>
+        </div>
+        <div class="card-body form-row col-12">
+            <div class="form-group col-2">
+                <mat-form-field appearance="standard">
+                    <mat-label>Establecimiento</mat-label>
+                    <mat-select class="form-control-sm" [(ngModel)]="retencionVenta.establecimiento" (selectionChange)="consultarPuntosVentas()">
+                        <mat-option *ngFor="let establecimiento of establecimientos" [value]="establecimiento">
+                            {{establecimiento.codigo}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+            <div class="form-group col-4">
+                <mat-form-field appearance="standard">
+                    <mat-label>Punto Venta</mat-label>
+                    <mat-select class="form-control-sm" [(ngModel)]="retencionVenta.puntoVenta">
+                        <mat-option *ngFor="let puntoVenta of puntosVentas" [value]="puntoVenta">
+                            {{puntoVenta.codigo}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+            <div class="form-group col-2">
+                <mat-form-field appearance="standard">
+                    <mat-label>Secuencia</mat-label>
+                    <input matInput type="text" [(ngModel)]="retencionVenta.secuencia" class="form-control-sm">
+                </mat-form-field>
+            </div>
+            <div class="form-group col-4">
+                <mat-form-field appearance="standard">
+                    <mat-label>Autorizacion</mat-label>
+                    <input matInput type="text" [(ngModel)]="retencionVenta.autorizacion" oninput="this.value = this.value.toUpperCase()" class="form-control-sm">
+                </mat-form-field>
+            </div>
+            <div class="form-group col-2">
+                <mat-form-field appearance="standard">
+                    <mat-label>Cod Ret</mat-label>
+                    <mat-select class="form-control-sm">
+                        <mat-option>
+                            codigo
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+            <div class="form-group col-2">
+                <mat-form-field appearance="standard">
+                    <mat-label>Denominacion</mat-label>
+                    <mat-select class="form-control-sm">
+                        <mat-option>
+                            Denominacion
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+            <div class="form-group col-2">
+                <mat-form-field appearance="standard">
+                    <mat-label>Base Imp</mat-label>
+                    <input matInput type="text" class="form-control-sm" [(ngModel)]="retencionVenta.baseImponible">
+                </mat-form-field>
+            </div>
+            <div class="form-group col-1">
+                <mat-form-field appearance="standard">
+                    <mat-label>%</mat-label>
+                    <input matInput type="text" class="form-control-sm" [(ngModel)]="retencionVenta.porcentaje">
+                </mat-form-field>
+            </div>
+            <div class="form-group col-1">
+                <mat-form-field appearance="standard">
+                    <mat-label>Valor</mat-label>
+                    <input matInput type="text" class="form-control-sm" [(ngModel)]="retencionVenta.valor">
+                </mat-form-field>
+            </div>
+            <div class="form-group col-1">
+                <br>
+                <ng-container *ngIf="!habilitarEditarTarjetaDebito">
+                    <button class="btn btn-primary btn-circle " (click)="agregarRetencionVenta()">
+                        <mat-icon>add</mat-icon>
+                    </button>
+                </ng-container>
+                <ng-container *ngIf="habilitarEditarTarjetaDebito">
+                    <button class="btn btn-primary btn-circle" (click)="confirmarEditarTarjetaCredito()">
+                        <mat-icon>create</mat-icon>
+                    </button>
+                </ng-container>
+            </div>
+        </div>
+        <mat-divider></mat-divider>
+        <div class="form-row">
+            <div class="mat-elevation-z8 col-12">
+                <table mat-table [dataSource]="dataTarjetasDebitos" matSort>
+                    <!-- Posicion Columna -->
+                    <ng-container matColumnDef="id">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>No.</th>
+                        <td mat-cell *matCellDef="let i=index"> {{i+1}} </td>
+                        <td mat-footer-cell *matFooterCellDef> Total </td>
+                    </ng-container>
+                    <!-- Fecha Columna -->
+                    <ng-container matColumnDef="franquicia">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Franquicia</th>
+                        <td mat-cell *matCellDef="let tarjetaDebito"> {{tarjetaDebito.franquiciaTarjeta.nombre}} </td>
+                        <td mat-footer-cell *matFooterCellDef></td>
+                    </ng-container>
+                    <!-- Banco Columna -->
+                    <ng-container matColumnDef="banco">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Banco</th>
+                        <td mat-cell *matCellDef="let tarjetaDebito"> {{tarjetaDebito.banco.nombre}} </td>
+                        <td mat-footer-cell *matFooterCellDef></td>
+                    </ng-container>
+                    <!-- Tipo Columna -->
+                    <ng-container matColumnDef="identificacion">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Cédula </th>
+                        <td mat-cell *matCellDef="let tarjetaDebito"> {{tarjetaDebito.identificacion}} </td>
+                        <td mat-footer-cell *matFooterCellDef></td>
+                    </ng-container>
+                    <!-- Numero Columna -->
+                    <ng-container matColumnDef="nombre">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Propietario </th>
+                        <td mat-cell *matCellDef="let tarjetaDebito"> {{tarjetaDebito.nombre}} </td>
+                        <td mat-footer-cell *matFooterCellDef></td>
+                    </ng-container>
+                    <!-- Numero Columna -->
+                    <ng-container matColumnDef="operador">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Operador</th>
+                        <td mat-cell *matCellDef="let tarjetaDebito"> {{tarjetaDebito.operadorTarjeta.nombre}} </td>
+                        <td mat-footer-cell *matFooterCellDef></td>
+                    </ng-container>
+                    <!-- Numero Columna -->
+                    <ng-container matColumnDef="lote">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Lote</th>
+                        <td mat-cell *matCellDef="let tarjetaDebito"> {{tarjetaDebito.lote}} </td>
+                        <td mat-footer-cell *matFooterCellDef></td>
+                    </ng-container>
+                    <!-- Valor Columna -->
+                    <ng-container matColumnDef="valor">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Valor </th>
+                        <td mat-cell *matCellDef="let tarjetaDebito"> {{tarjetaDebito.valor | currency}} </td>
+                        <td mat-footer-cell *matFooterCellDef> {{recaudacion.totalTarjetasDebitos | currency}} </td>
+                    </ng-container>
+                    <ng-container matColumnDef="acciones">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Acciones </th>
+                        <td mat-cell *matCellDef="let i=index">
+                            <button mat-raised-button color="primary" focusable="false" (click)="editarTarjetaDebito(i)">
+                                Editar
+                            </button>&nbsp;
+                            <button mat-raised-button color="warn" focusable="false" (click)="eliminarTarjetaDebito(i)">
+                                Eliminar
+                            </button>
+                        </td>
+                        <td mat-footer-cell *matFooterCellDef></td>
+                    </ng-container>
+                    <tr mat-header-row *matHeaderRowDef="columnasTarjetasDebito"></tr>
+                    <tr mat-row *matRowDef="let row; columns: columnasTarjetasDebito;"></tr>
+                    <tr mat-footer-row *matFooterRowDef="columnasTarjetasDebito"></tr>
+                </table>
+                <ng-container>
+                    <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+                </ng-container>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sección COMPENSACIONES -->
+    <mat-divider *ngIf="habilitarCompensaciones"></mat-divider>
+    <div class="card" *ngIf="habilitarCompensaciones">
+        <div class="card-header">
+            <div class="form-row col-12">
+                <div class="form-group col-8 izquierda">
+                    COMPENSACIONES
+                </div>
+                <div class="form-group col-3 derecha">
+                    Total compensaciones:
+                </div>
+                <div class="form-group col-1">{{recaudacion.totalCompensaciones | currency}}</div>
+            </div>
+        </div>
+        <div class="card-body form-row col-12">
+            <div class="form-group col-2">
+                <mat-form-field appearance="standard">
+                    <mat-label>Compensar</mat-label>
+                    <mat-select class="form-control-sm" [(ngModel)]="compensacion.comprobante">
+                        <mat-option *ngFor="let comprobante of comprobantes">
+                            {{comprobante.tipo}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+            <div class="form-group col-2">
+                <mat-form-field appearance="standard">
+                    <mat-label>Comprobante</mat-label>
+                    <mat-select class="form-control-sm" [(ngModel)]="compensacion.tipoComprobante">
+                        <mat-option *ngFor="let tipoComprobante of tiposComprobantes" [value]="tipoComprobante">
+                            {{tipoComprobante.nombre}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+            <div class="form-group col-2">
+                <mat-form-field appearance="standard">
+                    <mat-label>Fecha</mat-label>
+                    <input matInput [matDatepicker]="picker4" class="form-control-sm">
+                    <mat-datepicker-toggle matSuffix [for]="picker4"></mat-datepicker-toggle>
+                    <mat-datepicker #picker4></mat-datepicker>
+                </mat-form-field>
+            </div>
+            <div class="form-group col-2">
+                <mat-form-field appearance="standard">
+                    <mat-label>Origen</mat-label>
+                    <input matInput type="text" class="form-control-sm" [(ngModel)]="compensacion.origen">
+                </mat-form-field>
+            </div>
+            <div class="form-group col-2">
+                <mat-form-field appearance="standard">
+                    <mat-label>Motivo</mat-label>
+                    <input matInput type="text" class="form-control-sm" [(ngModel)]="compensacion.motivo">
+                </mat-form-field>
+            </div>
+            <div class="form-group col-2">
+                <mat-form-field appearance="standard">
+                    <mat-label>Vencimiento</mat-label>
+                    <input matInput [matDatepicker]="picker5" class="form-control-sm" [(ngModel)]="compensacion.fechaVencimiento">
+                    <mat-datepicker-toggle matSuffix [for]="picker5"></mat-datepicker-toggle>
+                    <mat-datepicker #picker5></mat-datepicker>
+                </mat-form-field>
+            </div>
+            <div class="form-group col-2">
+                <mat-form-field appearance="standard">
+                    <mat-label>Valor Comprobante</mat-label>
+                    <input matInput type="text" class="form-control-sm" [(ngModel)]="compensacion.valorInicial">
+                </mat-form-field>
+            </div>
+            <div class="form-group col-2">
+                <mat-form-field appearance="standard">
+                    <mat-label>Valor a Compensar</mat-label>
+                    <input matInput type="text" class="form-control-sm" [(ngModel)]="compensacion.valorCompensado">
+                </mat-form-field>
+            </div>
+            <div class="form-group col-1">
+                <br>
+                <ng-container *ngIf="!habilitarEditarTarjetaDebito">
+                    <button class="btn btn-primary btn-circle " (click)="agregarCompensacion()">
+                        <mat-icon>add</mat-icon>
+                    </button>
+                </ng-container>
+                <ng-container *ngIf="habilitarEditarTarjetaDebito">
+                    <button class="btn btn-primary btn-circle" (click)="confirmarEditarCompensacion()">
+                        <mat-icon>create</mat-icon>
+                    </button>
+                </ng-container>
+            </div>
+        </div>
+        <mat-divider></mat-divider>
+        <div class="form-row">
+            <div class="mat-elevation-z8 col-12">
+                <table mat-table [dataSource]="dataCompensaciones" matSort>
+                    <!-- Posicion Columna -->
+                    <ng-container matColumnDef="id">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>No.</th>
+                        <td mat-cell *matCellDef="let compensacion"> {{compensacion.id}} </td>
+                        <td mat-footer-cell *matFooterCellDef> Total </td>
+                    </ng-container>
+                    <!-- Fecha Columna -->
+                    <ng-container matColumnDef="tipo">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Tipo Comprobante</th>
+                        <td mat-cell *matCellDef="let compensacion"> {{compensacion.tipoComprobante}} </td>
+                        <td mat-footer-cell *matFooterCellDef></td>
+                    </ng-container>
+                    <!-- Banco Columna -->
+                    <ng-container matColumnDef="comprobante">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>No. Comprobante</th>
+                        <td mat-cell *matCellDef="let compensacion"> {{compensacion.comprobante}} </td>
+                        <td mat-footer-cell *matFooterCellDef></td>
+                    </ng-container>
+                    <!-- Tipo Columna -->
+                    <ng-container matColumnDef="fecha">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Fecha Comp. </th>
+                        <td mat-cell *matCellDef="let compensacion">
+                            {{compensacion.fechaComprobante | date: 'dd/MM/yyyy'}} </td>
+                        <td mat-footer-cell *matFooterCellDef></td>
+                    </ng-container>
+                    <!-- Numero Columna -->
+                    <ng-container matColumnDef="origen">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Origem </th>
+                        <td mat-cell *matCellDef="let compensacion"> {{compensacion.origen}} </td>
+                        <td mat-footer-cell *matFooterCellDef></td>
+                    </ng-container>
+                    <!-- Numero Columna -->
+                    <ng-container matColumnDef="motivo">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Motivo </th>
+                        <td mat-cell *matCellDef="let compensacion"> {{compensacion.motivo}} </td>
+                        <td mat-footer-cell *matFooterCellDef></td>
+                    </ng-container>
+                    <!-- Numero Columna -->
+                    <ng-container matColumnDef="fechaVencimiento">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Fecha Vencimiento </th>
+                        <td mat-cell *matCellDef="let compensacion">
+                            {{compensacion.fechaVencimiento | date: 'dd/MM/yyyy'}} </td>
+                        <td mat-footer-cell *matFooterCellDef></td>
+                    </ng-container>
+                    <!-- Numero Columna -->
+                    <ng-container matColumnDef="valorInicial">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Valor Compr. </th>
+                        <td mat-cell *matCellDef="let compensacion"> {{compensacion.valorInicial}} </td>
+                        <td mat-footer-cell *matFooterCellDef></td>
+                    </ng-container>
+                    <!-- Valor Columna -->
+                    <ng-container matColumnDef="valorCompensado">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> valor Compensado </th>
+                        <td mat-cell *matCellDef="let compensacion"> {{compensacion.valorCompensado | currency}} </td>
+                        <td mat-footer-cell *matFooterCellDef> {{recaudacion.totalCompensaciones | currency}} </td>
+                    </ng-container>
+                    <ng-container matColumnDef="acciones">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Acciones </th>
+                        <td mat-cell *matCellDef="let i=index">
+                            <button mat-raised-button color="primary" focusable="false" (click)="editarCompensacion(i)">
+                                Editar
+                            </button>&nbsp;
+                            <button mat-raised-button color="warn" focusable="false" (click)="eliminarCompensacion(i)">
+                                Eliminar
+                            </button>
+                        </td>
+                        <td mat-footer-cell *matFooterCellDef></td>
+                    </ng-container>
+                    <tr mat-header-row *matHeaderRowDef="columnasCompensaciones"></tr>
+                    <tr mat-row *matRowDef="let row; columns: columnasCompensaciones;"></tr>
+                    <tr mat-footer-row *matFooterRowDef="columnasCompensaciones"></tr>
+                </table>
+                <ng-container>
+                    <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+                </ng-container>
+            </div>
+        </div>
+    </div>
+    <mat-divider></mat-divider>
+    <div class="card">
+        <div class="card-header">
+            <div class="form-row col-12">
+                <div class="form-group col-8 izquierda">
+                    CRÉDITO
+                </div>
+                <div class="form-group col-3 derecha">
+                    Total a crédito:
+                </div>
+                <div class="form-group col-1">{{recaudacion.totalCredito | currency}}</div>
+            </div>
+        </div>
+        <div class="card-body form-row col-12">
+            <div class="form-row col-7">
+                <div class="form-group col-2">
+                    <mat-form-field appearance="standard">
+                        <mat-label>Saldo</mat-label>
+                        <input matInput type="text" class="form-control-sm" [value]="factura.totalConDescuento-recaudacion.total" disabled>
+                    </mat-form-field>
+                </div>
+                <div class="form-group col-3">
+                    <mat-form-field appearance="standard">
+                        <mat-label>Modelo</mat-label>
+                        <mat-select class="form-control-sm" [(ngModel)]="recaudacion.credito.tipo" [disabled]="recaudacion.credito.sinIntereses">
+                            <mat-option *ngFor="let modeloAmortizacion of modelosAmortizaciones" [value]="modeloAmortizacion.nombre">
+                                {{modeloAmortizacion.nombre}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+                <div class="form-group col-4">
+                    <mat-form-field appearance="standard">
+                        <mat-label>Tipo de Periodicidad</mat-label>
+                        <mat-select class="form-control-sm" [(ngModel)]="recaudacion.credito.periodicidad" (selectionChange)="cambiarTipoPeriodicidad()">
+                            <mat-option *ngFor="let periodicidad of periodicidades" [value]="periodicidad.nombre">
+                                {{periodicidad.nombre}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+                <div class="form-group col-2">
+                    <mat-checkbox [(ngModel)]="recaudacion.credito.sinIntereses" (change)="sinIntereses()" class="form-control-sm" color="primary">
+                        Sin Intereses</mat-checkbox>
+                </div>
+                <div class="form-group col-2">
+                    <mat-form-field appearance="standard">
+                        <mat-label>Periodicidad.</mat-label>
+                        <input matInput type="text" class="form-control-sm" [(ngModel)]="recaudacion.credito.periodicidadTotal" disabled>
+                    </mat-form-field>
+                </div>
+                <div class="form-group col-2">
+                    <mat-form-field appearance="standard">
+                        <mat-label>Cuotas</mat-label>
+                        <input matInput type="text" class="form-control-sm" [(ngModel)]="recaudacion.credito.cuotas">
+                    </mat-form-field>
+                </div>
+                <div class="form-group col-4">
+                    <mat-form-field appearance="standard">
+                        <mat-label>Fecha Prim Cuot.</mat-label>
+                        <input matInput [matDatepicker]="picker6" class="form-control-sm" [(ngModel)]="recaudacion.credito.fechaPrimeraCuota">
+                        <mat-datepicker-toggle matSuffix [for]="picker6"></mat-datepicker-toggle>
+                        <mat-datepicker #picker6></mat-datepicker>
+                    </mat-form-field>
+                </div>
+                <div class="form-group col-2">
+                    <mat-form-field appearance="standard">
+                        <mat-label>Dividendo</mat-label>
+                        <input matInput type="text" class="form-control-sm" [(ngModel)]="recaudacion.credito.dividendo" disabled>
+                    </mat-form-field>
+                </div>
+                <div class="form-group col-1">
+                    <button class="btn btn-primary btn-circle " (click)="amortizacion(modalAmortizacion)">
+                        <mat-icon>table_view</mat-icon>
+                    </button>
+                </div>
+            </div>
+            <div class="form-row col-5">
+                <mat-form-field appearance="outline" class="grande">
+                    <mat-label>Comentario</mat-label>
+                    <textarea matInput [(ngModel)]="recaudacion.comentario" placeholder="Descripción del pago..." class="form-control form-control-sm" rows="5"></textarea>
+                </mat-form-field>
+            </div>
+        </div>
+    </div>
+</div>
+<ng-template #modalAmortizacion let-modal>
+    <div class="modal-header ">
+        <h5 class="modal-title ">AMORTIZACION {{recaudacion.credito.tipo}}</h5>
+        <button type="button " class="close " aria-label="Close " (click)="modal.dismiss( 'Cross click') ">
+            <span aria-hidden="true ">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body ">
+        <div class="form-group form-row table-responsive">
+            <table class="table table-bordered table-hover">
+                <thead>
+                    <tr>
+                        <th>CUOTA</th>
+                        <th>FECHA PAGO</th>
+                        <th>NO. DIAS</th>
+                        <th>CAPITAL INICIO PERIODO</th>
+                        <th>CAPITAL</th>
+                        <th>INTERESES PERIODO</th>
+                        <th>CUOTA</th>
+                        <th>SALDO CAPITAL</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let amortizacion of recaudacion.credito.amortizaciones">
+                        <td>
+                            {{amortizacion.numeroCuota}}
+                        </td>
+                        <td>
+                            {{amortizacion.fechaPago | date:'yyyy-MM-dd'}}
+                        </td>
+                        <td>
+                            {{amortizacion.numeroDias}}
+                        </td>
+                        <td>
+                            {{amortizacion.capitalInicioPeriodo}}
+                        </td>
+                        <td>
+                            {{amortizacion.capital}}
+                        </td>
+                        <td>
+                            {{amortizacion.interesesPeriodo}}
+                        </td>
+                        <td>
+                            {{amortizacion.valorCuota}}
+                        </td>
+                        <td>
+                            {{amortizacion.saldoCapital}}
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="modal-footer ">
+        <button type="button " class="btn btn-outline-dark " (click)="modal.close('close') ">Cerrar</button>
+    </div>
+</ng-template>

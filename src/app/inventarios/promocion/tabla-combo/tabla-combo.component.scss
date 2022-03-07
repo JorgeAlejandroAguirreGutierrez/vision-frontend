@@ -1,0 +1,24 @@
+.mat-table {
+    width: 100%;
+    align-content: center;
+  }
+
+// Para poner color negro en el texto desabilitado
+.mat-input-element:disabled {
+    color: rgba(0, 0, 0, 1);
+  }
+  
+// Para poner color negro en el texto desabilitado
+::ng-deep .mat-table .mat-select-disabled .mat-select-value-text {
+    color: rgba(0, 0, 0, 1) !important;
+}
+  
+::ng-deep .mat-table .mat-form-field-disabled .mat-form-field-underline {
+    background-image: none !important;
+}
+//Por defecto cada celda es 180px, así se ajusta el 95% de la tabla 
+::ng-deep .mat-table .mat-form-field-infix { width: 95% !important;}
+
+// Para que no se choquen las sublineas entre celdas
+::ng-deep .mat-table .mat-form-field-underline{ width: 90% !important;}
+::ng-deep .mat-table .mat-form-field-flex { width: 90% !important; }

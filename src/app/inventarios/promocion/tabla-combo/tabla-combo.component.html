@@ -1,0 +1,71 @@
+<br>
+<div class="centrar-titulo col-12">
+    <mat-label>COMBOS PROMOCIONALES</mat-label>
+</div>
+
+<!--mat-table class="mat-elevation-z8" [dataSource]="dataSourceCombo">
+    <ng-container matColumnDef="nombre">
+        <mat-header-cell *matHeaderCellDef> Nombre </mat-header-cell>
+        <mat-cell *matCellDef="let row">
+            <mat-form-field floatLabel="{{ row.editing ? 'float' : 'never'}}">
+                <input matInput [formControl]="row.validator.controls['nombre']" placeholder="Nombre">
+            </mat-form-field>
+        </mat-cell>
+    </ng-container>
+    <ng-container matColumnDef="descripcion">
+        <mat-header-cell *matHeaderCellDef> Descripcion </mat-header-cell>
+        <mat-cell *matCellDef="let row">
+            <mat-form-field floatLabel="{{ row.editing ? 'float' : 'never'}}">
+                <input matInput [formControl]="row.validator.controls['descripcion']" [readonly]="!row.editing"
+                    placeholder="Descripcion">
+            </mat-form-field>
+        </mat-cell>
+    </ng-container>
+    <ng-container matColumnDef="facturable">
+        <mat-header-cell *matHeaderCellDef> Mostrar </mat-header-cell>
+        <mat-cell *matCellDef="let row">
+            <mat-form-field floatLabel="{{ row.editing ? 'float' : 'never'}}">
+                <input matInput [formControl]="row.validator.controls['facturable']" [readonly]="!row.editing"
+                    placeholder="Facturable">
+            </mat-form-field>
+        </mat-cell>
+    </ng-container>
+    <ng-container matColumnDef="precio_real">
+        <mat-header-cell *matHeaderCellDef> Precio Real</mat-header-cell>
+        <mat-cell *matCellDef="let row">
+            <mat-form-field floatLabel="{{ row.editing ? 'float' : 'never'}}">
+                <input matInput [formControl]="row.validator.controls['precio_real']" type="number"
+                    placeholder="Precio Real">
+            </mat-form-field>
+        </mat-cell>
+    </ng-container>
+    <ng-container matColumnDef="precio_combo">
+        <mat-header-cell *matHeaderCellDef> Precio Combo</mat-header-cell>
+        <mat-cell *matCellDef="let row">
+            <mat-form-field floatLabel="{{ row.editing ? 'float' : 'never'}}">
+                <input matInput [formControl]="row.validator.controls['precio_combo']" type="number"
+                    placeholder="Precio Combo">
+            </mat-form-field>
+        </mat-cell>
+    </ng-container>
+    <ng-container matColumnDef="actionsColumn">
+        <mat-header-cell *matHeaderCellDef>
+            <button mat-icon-button color="accent" (click)="dataSourceCombo.createNew()"><i
+                    class="fa fa-plus mat-icon"></i></button>
+        </mat-header-cell>
+        <mat-cell *matCellDef="let row">
+            <button *ngIf="!row.editing" mat-icon-button color="primary" focusable="false" (click)="row.startEdit()">
+                <i class="fa fa-pencil mat-icon"></i>
+            </button>
+            <button *ngIf="row.editing" mat-icon-button color="primary" focusable="false"
+                (click)="row.confirmEditCreate()">
+                <i class="fa fa-check mat-icon"></i>
+            </button>
+            <button mat-icon-button color="primary" focusable="false" (click)="row.cancelOrDelete()">
+                <i class="fa fa-times mat-icon"></i>
+            </button>
+        </mat-cell>
+    </ng-container>
+    <mat-header-row *matHeaderRowDef="displayedColumnsCombo"></mat-header-row>
+    <mat-row *matRowDef="let row; columns: displayedColumnsCombo;"></mat-row>
+</mat-table-->
