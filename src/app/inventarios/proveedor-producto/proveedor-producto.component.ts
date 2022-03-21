@@ -1,7 +1,7 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, Renderer2 } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { Observable } from 'rxjs';
-import { startWith, map } from 'rxjs/operators';
+import { startWith, map, debounceTime } from 'rxjs/operators';
 import Swal from 'sweetalert2';
 import * as constantes from '../../constantes';
 
@@ -10,6 +10,7 @@ import { ProductoService } from '../../servicios/producto.service';
 import { Proveedor } from '../../modelos/proveedor';
 import { ProveedorService } from '../../servicios/proveedor.service';
 import { ProductoProveedor } from '../../modelos/producto-proveedor';
+import { ProductoProveedorService } from '../../servicios/producto-proveedor.service';
 
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
@@ -24,6 +25,7 @@ export class ProveedorProductoComponent implements OnInit {
 
   verPanelAsignarProveedor: boolean = false;
   abrirPanelAsignarProveedor: boolean = true;
+  deshabilitarEditarProveedor: boolean = false;
   deshabilitarFiltroProveedores: boolean = false;
 
   producto: Producto = new Producto();
@@ -36,13 +38,14 @@ export class ProveedorProductoComponent implements OnInit {
 
   //Variables para los autocomplete
   productos: Producto[]=[];
-  seleccionProducto = new FormControl();
+  controlProducto = new FormControl();
   filtroProductos: Observable<Producto[]> = new Observable<Producto[]>();
 
   proveedores: Proveedor[] = [];
-  seleccionProveedor = new FormControl();
+  controlProveedor = new FormControl();
   filtroProveedores: Observable<Proveedor[]> = new Observable<Proveedor[]>();
 
+  @ViewChild("inputFiltroProductoProveedor") inputFiltroProductoProveedor: ElementRef;
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
@@ -58,19 +61,21 @@ export class ProveedorProductoComponent implements OnInit {
   dataSourceProductoProveedor: MatTableDataSource<ProductoProveedor>;
   clickedRowsProductoProveedor = new Set<ProductoProveedor>();
   
-  constructor(private productoService: ProductoService, private proveedorService: ProveedorService) { }
+  constructor(private renderer: Renderer2, private productoService: ProductoService, private proveedorService: ProveedorService,
+              private productoProveedorService: ProductoProveedorService) { }
 
   ngOnInit() {
     this.consultarProductos();
     this.consultarProveedores();
-    this.filtroProductos = this.seleccionProducto.valueChanges
+    this.filtroProductos = this.controlProducto.valueChanges
       .pipe(
+        //debounceTime(300),
         startWith(''),
         map(value => typeof value === 'string' || value==null ? value : value.id),
         map(producto => typeof producto === 'string' ? this.filtroProducto(producto) : this.productos.slice())
       );
 
-    this.filtroProveedores = this.seleccionProveedor.valueChanges
+    this.filtroProveedores = this.controlProveedor.valueChanges
       .pipe(
         startWith(''),
         map(value => typeof value === 'string' || value==null ? value : value.id),
@@ -83,6 +88,12 @@ export class ProveedorProductoComponent implements OnInit {
     this.producto = new Producto();
     this.abrirPanelAsignarProveedor = true;
     this.deshabilitarFiltroProveedores = false;
+    this.controlProducto.patchValue('');
+    this.productoProveedor = new ProductoProveedor();
+    this.productoProveedores = [];
+    this.dataSourceProductoProveedor = new MatTableDataSource();
+    this.clickedRowsProductoProveedor = new Set<ProductoProveedor>();
+    this.borrarFiltroProductoProveedor();
   };
 
   actualizarProducto(event: any){
@@ -92,25 +103,27 @@ export class ProveedorProductoComponent implements OnInit {
         Swal.fire(constantes.error, constantes.error_nombre_producto, constantes.error_swal);
         return;
     }
-    this.productoService.actualizar(this.producto).subscribe(
-      res => {
+    console.log(this.producto);
+    this.producto.kardexs[0].proveedor = new Proveedor;
+    this.productoService.actualizar(this.producto).subscribe({
+      next: (res) => {
         Swal.fire(constantes.exito, res.mensaje, constantes.exito_swal);
         this.limpiar();
         //this.consultar();
       },
-      err => {
+      error: (err) => {
         Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.message });
       }
-    );
+    });
   }
 
   consultarProductos() {
-    this.productoService.consultar().subscribe(
-    res => {
+    this.productoService.consultar().subscribe({
+    next: (res) => {
       this.productos = res.resultado as Producto[]
     },
-    err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.message })
-    );
+    error: err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.message })
+    });
   }
   private filtroProducto(value: string): Producto[] {
     if(this.productos.length>0) {
@@ -123,7 +136,7 @@ export class ProveedorProductoComponent implements OnInit {
     return producto && producto.nombre ? producto.nombre : '';
   }
   seleccionarProducto(){
-    this.producto = this.seleccionProducto.value as Producto;
+    this.producto = this.controlProducto.value as Producto;
     this.verPanelAsignarProveedor = true;
     this.productoProveedores = this.producto.productosProveedores;
     this.llenarDataSourceProductoProveedor(this.productoProveedores);
@@ -132,11 +145,18 @@ export class ProveedorProductoComponent implements OnInit {
   // CODIGO PARA PROVEEDOR
   limpiarProveedor(){
     this.proveedor = new Proveedor();
-    this.seleccionProveedor.patchValue("");
+    this.controlProveedor.patchValue("");
     this.codigoEquivalente = "";
+    this.clickedRowsProductoProveedor.clear();
   }
 
   agregarProductoProveedor(){
+    let existe: boolean;
+    existe = this.validarProductoProveedor();
+    if (existe) {
+      Swal.fire(constantes.error, constantes.error_grupo_producto, constantes.error_swal);
+      return;
+    }
     this.productoProveedor = new ProductoProveedor();
     this.productoProveedor.producto.id = this.producto.id
     this.productoProveedor.proveedor = this.proveedor;
@@ -151,7 +171,7 @@ export class ProveedorProductoComponent implements OnInit {
   llenarDataSourceProductoProveedor(productoProveedores : ProductoProveedor[]){
     this.dataSourceProductoProveedor = new MatTableDataSource(productoProveedores);
     this.dataSourceProductoProveedor.filterPredicate = (data: ProductoProveedor, filter: string): boolean =>
-      data.codigo.toUpperCase().includes(filter) || data.proveedor.razonSocial.toUpperCase().includes(filter) || data.producto.codigo.toUpperCase().includes(filter) ||
+      data.codigo.toUpperCase().includes(filter) || data.proveedor.razonSocial.toUpperCase().includes(filter) || data.proveedor.codigo.toUpperCase().includes(filter) ||
       data.codigoEquivalente.toUpperCase().includes(filter);
     this.dataSourceProductoProveedor.paginator = this.paginator;
     this.dataSourceProductoProveedor.sort = this.sort;
@@ -164,46 +184,67 @@ export class ProveedorProductoComponent implements OnInit {
       this.dataSourceProductoProveedor.paginator.firstPage();
     }
   }
+  borrarFiltroProductoProveedor(){
+    this.renderer.setProperty(this.inputFiltroProductoProveedor.nativeElement, 'value', '');
+    //Funciona, pero es mala práctica
+    //this.inputFiltroProductoProveedor.nativeElement.value = '';
+    this.dataSourceProductoProveedor.filter = '';
+  }
 
   seleccionProductoProveedor(productoProveedorSeleccionado: ProductoProveedor) {
-    this.productoProveedor=productoProveedorSeleccionado;
+    //this.productoProveedor=productoProveedorSeleccionado;
     if (!this.clickedRowsProductoProveedor.has(productoProveedorSeleccionado)){
-      this.clickedRowsProductoProveedor.clear();
-      this.clickedRowsProductoProveedor.add(productoProveedorSeleccionado);
-      this.productoProveedor = productoProveedorSeleccionado;
+      this.limpiarProveedor();
+      this.construirProductoProveedor(productoProveedorSeleccionado);
     } else {
-      this.clickedRowsProductoProveedor.clear();
-      this.productoProveedor = new ProductoProveedor();
+      this.limpiarProveedor();
     }
   }
 
-  buscarProveedor(){
-
+  construirProductoProveedor(productoProveedorSeleccionado: ProductoProveedor) {
+    let productoProveedorId = 0;
+    //this.productoProveedorService.currentMessage.subscribe(message => productoProveedorId = message);
+    if (productoProveedorSeleccionado.id != 0) {
+      this.clickedRowsProductoProveedor.add(productoProveedorSeleccionado);
+      this.productoProveedor = productoProveedorSeleccionado;
+      this.proveedor = this.productoProveedor.proveedor;
+      //this.controlProveedor.patchValue(this.proveedor.razonSocial);
+      this.controlProveedor.patchValue({razonSocial: this.proveedor.razonSocial});
+      this.codigoEquivalente = this.productoProveedor.codigoEquivalente;
+      this.deshabilitarEditarProveedor = true;
+      //this.actualizar_precios();
+    }
   }
 
+  validarProductoProveedor():boolean{
+    for (let i = 0; i < this.producto.productosProveedores.length; i++) {
+      if (this.proveedor.id = this.producto.productosProveedores[i].id){
+        return true;
+      } else {
+        return false;
+      }
+    }
+  }
+
+  editarProductoProveedor(){
+    this.deshabilitarEditarProveedor = false;
+  }
   
-  editarProveedor(i: number){
-    /*this.indiceEditar=i;
-    this.deposito= {... this.recaudacion.depositos [this.indiceEditar] };
-    this.seleccionBancoDeposito.setValue(this.deposito.banco);
-    this.habilitarEditarDeposito=true;*/
-  }
-  confirmarEditarProveedor(){
-   /* this.recaudacion.depositos[this.indiceEditar]=this.deposito;
-    this.deposito=new Deposito();
-    this.seleccionBancoDeposito.setValue(null);
-    this.habilitarEditarDeposito=false;
-    this.dataDepositos = new MatTableDataSource<Deposito>(this.recaudacion.depositos);
-    this.dataDepositos.sort = this.sort;
-    this.dataDepositos.paginator = this.paginator;
-    this.recaudacion.calcularTotales();
-    this.seleccionarValorPagado();
-    this.defectoRecaudacion();*/
+  actualizarProductoProveedor(){
+
   }
 
-  eliminarProveedor(i: number) {
+  eliminarProveedor(event: any) {
+    if (event != null)
+    event.preventDefault();
     if (confirm("Realmente quiere eliminar el proveedor?")) {
-      console.log('i es: '+i);
+    this.productoProveedorService.eliminar(this.productoProveedor).subscribe({
+      next: (res) => {
+        Swal.fire(constantes.exito, res.mensaje, constantes.exito_swal);
+        //this.consultar();
+      },
+      error: (err) => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.message })
+    });
   /*    this.recaudacion.depositos.splice(i, 1);
       this.dataDepositos = new MatTableDataSource<Deposito>(this.recaudacion.depositos);
       this.dataDepositos.sort = this.sort;
@@ -212,6 +253,7 @@ export class ProveedorProductoComponent implements OnInit {
       this.seleccionarValorPagado();
       this.defectoRecaudacion();*/
     }
+
   }
 
   // Metodos para los autocomplete
@@ -236,7 +278,7 @@ export class ProveedorProductoComponent implements OnInit {
     return proveedor && proveedor.razonSocial ? proveedor.razonSocial : '';
   } 
   seleccionarProveedor(){
-    this.proveedor = this.seleccionProveedor.value as Proveedor;
+    this.proveedor = this.controlProveedor.value as Proveedor;
     //console.log(this.proveedor.codigo);
   }
 

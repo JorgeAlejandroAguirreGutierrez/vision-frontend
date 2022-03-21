@@ -1,4 +1,4 @@
-import { Component, OnInit, HostListener, ElementRef, Type } from '@angular/core';
+import { Component, OnInit, HostListener, ElementRef, Renderer2  } from '@angular/core';
 import * as constantes from '../../constantes';
 import Swal from 'sweetalert2';
 
@@ -23,7 +23,6 @@ export class SegmentoComponent implements OnInit {
   sesion: Sesion;
   estadoActivo: string = constantes.estadoActivo;
   estadoInactivo: string = constantes.estadoInactivo;
-  textoFiltroSegmento:string;
 
   abrirPanelNuevoSegmento: boolean = true;
   abrirPanelAdminSegmento: boolean = false;
@@ -43,11 +42,11 @@ export class SegmentoComponent implements OnInit {
   dataSourceSegmento: MatTableDataSource<Segmento>;
   clickedSegmento = new Set<Segmento>();
 
-  //@ViewChild('inputFiltroSegmento') inputFiltroSegmento: ElementRef;
+  @ViewChild('inputFiltroSegmento') inputFiltroSegmento: ElementRef;
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
-  constructor(private segmentoService: SegmentoService, private sesionService: SesionService) { }
+  constructor(private renderer: Renderer2, private segmentoService: SegmentoService, private sesionService: SesionService) { }
 
   ngOnInit() {
     this.sesion = this.sesionService.getSesion();
@@ -143,7 +142,8 @@ export class SegmentoComponent implements OnInit {
   }
 
   borrarFiltroSegmento(){
-    this.textoFiltroSegmento = '';
+    //this.textoFiltroSegmento = '';
+    this.renderer.setProperty(this.inputFiltroSegmento.nativeElement, 'value', '');
     //this.inputFiltroSegmento.nativeElement.value = '';
     this.dataSourceSegmento.filter = '';
   }

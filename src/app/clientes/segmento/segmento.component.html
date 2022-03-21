@@ -98,7 +98,7 @@
             <mat-form-field appearance="standard">
                 <mat-label>Buscar segmento</mat-label>
                 <input matInput (keyup)="filtroSegmento($event)" placeholder="Ej. SEG" #inputFiltroSegmento
-                    [(ngModel)]="textoFiltroSegmento" oninput="this.value = this.value.toUpperCase()">
+                    oninput="this.value = this.value.toUpperCase()">
                 <button mat-button *ngIf="inputFiltroSegmento.value" matSuffix mat-icon-button
                     (click)="borrarFiltroSegmento()">
                     <mat-icon>close</mat-icon>

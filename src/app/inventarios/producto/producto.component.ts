@@ -224,17 +224,17 @@ export class ProductoComponent implements OnInit {
     this.bodega.id 
     this.producto.productosBodegas.push(); 
     console.log(this.producto);
-    this.productoService.crear(this.producto).subscribe(
-      res => {
+    this.productoService.crear(this.producto).subscribe({
+      next: (res) => {
         this.producto = res.resultado as Producto;
         Swal.fire(constantes.exito, res.mensaje, constantes.exito_swal);
         this.limpiar();
         this.consultar();
       },
-      err => {
+      error: (err) => {
         Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.message });
       }
-    );
+    });
   }
 
   limpiar() {
@@ -289,16 +289,16 @@ export class ProductoComponent implements OnInit {
     }
     this.producto.precios = this.tablaPrecios;
     console.log(this.producto);
-    this.productoService.actualizar(this.producto).subscribe(
-      res => {
+    this.productoService.actualizar(this.producto).subscribe({
+      next: (res) => {
         Swal.fire(constantes.exito, res.mensaje, constantes.exito_swal);
         this.limpiar();
         this.consultar();
       },
-      err => {
+      error: (err) => {
         Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.message });
       }
-    );
+    });
   }
 
   eliminar(event: any) {
@@ -367,14 +367,14 @@ export class ProductoComponent implements OnInit {
   }
 
   construirInfoKardex(kardex: Kardex[]) {
-    this.medidaService.consultar().subscribe(
-      res => {
+    this.medidaService.consultar().subscribe({
+      next: (res) => {
         this.medidas = res.resultado as Medida[];
       },
-      err => {
+      error: (err) => {
         Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.message });
       }
-    );
+    });
     this.kardexInicial.cantidad = kardex[0].cantidad;
     this.kardexInicial.costoPromedio = kardex[0].costoPromedio;
     this.deshabilitarMedidaKardex();
@@ -382,6 +382,7 @@ export class ProductoComponent implements OnInit {
     this.kardexFinal.cantidad = kardex[ultimoKardex].cantidad;
     this.kardexFinal.costoPromedio = kardex[ultimoKardex].costoPromedio;
     this.kardexFinal.costoTotal = kardex[ultimoKardex].costoTotal;
+    // Esta linea da problemas, hay que eliminar proveedor de kardex
     this.producto.kardexs[0].proveedor = new Proveedor;
   }
 
@@ -437,14 +438,14 @@ export class ProductoComponent implements OnInit {
 
   medidaSeleccionada(event: number) {
     //console.log(event);
-    this.medidaService.obtener(event).subscribe(
-      res => {
+    this.medidaService.obtener(event).subscribe({
+      next: (res) => {
         this.producto.medidaKardex = res.resultado as Medida;
       },
-      err => {
+      error: (err) => {
         Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.message });
       }
-    );
+  });
   }
 
   impuestoSeleccionado(event: number) {

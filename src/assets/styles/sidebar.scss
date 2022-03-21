@@ -249,13 +249,14 @@ use profile section
         }
 }
 
-//Otro Sidebar
+//Sidebar Principal
 .wrapper {
     main {
       position: relative;
   
       .sidebar {
         height: 100%;
+        min-height: 500px;
         width: $sidebar-width;
         position: absolute;
         transition: left .3s ease;
