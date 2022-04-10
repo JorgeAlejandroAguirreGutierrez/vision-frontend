@@ -23,10 +23,11 @@ import { MatTableDataSource } from '@angular/material/table';
 })
 export class ProveedorProductoComponent implements OnInit {
 
-  verPanelAsignarProveedor: boolean = false;
   abrirPanelAsignarProveedor: boolean = true;
   deshabilitarEditarProveedor: boolean = false;
-  deshabilitarFiltroProveedores: boolean = false;
+  deshabilitarFiltroProveedores: boolean = true;
+  verActualizarProveedor: boolean = false;
+  verActualizarProducto: boolean = false;
 
   producto: Producto = new Producto();
   proveedor: Proveedor = new Proveedor();
@@ -50,10 +51,10 @@ export class ProveedorProductoComponent implements OnInit {
   @ViewChild(MatSort) sort: MatSort;
 
   columnasProductoProveedor: any[] = [
-    { nombreColumna: 'id', cabecera: 'ID', celda: (row: ProductoProveedor) => `${row.id}`},
-    { nombreColumna: 'codigo', cabecera: 'Código', celda: (row: ProductoProveedor) => `${row.codigo}`},
+    { nombreColumna: 'id', cabecera: 'ID', celda: (row: ProductoProveedor) => `${row.proveedor.id}`},
+    { nombreColumna: 'codigo_propio', cabecera: 'Código propio', celda: (row: ProductoProveedor) => `${row.proveedor.codigo}`},
     { nombreColumna: 'proveedor', cabecera: 'Proveedor', celda: (row: ProductoProveedor) => `${row.proveedor.razonSocial}`},
-    { nombreColumna: 'codigo_local', cabecera: 'Código local', celda: (row: ProductoProveedor) => `${row.proveedor.codigo}`},
+    //{ nombreColumna: 'codigo_local', cabecera: 'Código local', celda: (row: ProductoProveedor) => `${row.proveedor.codigo}`},
     { nombreColumna: 'codigo_proveedor', cabecera: 'Código proveedor', celda: (row: ProductoProveedor) => `${row.codigoEquivalente}`},
     { nombreColumna: 'acciones', cabecera: 'Acciones', celda: (row: any) => ''}
   ];
@@ -83,14 +84,15 @@ export class ProveedorProductoComponent implements OnInit {
       );
   }
 
-  // CÓDIGO EN COMÚN
   limpiar(){
     this.producto = new Producto();
     this.abrirPanelAsignarProveedor = true;
-    this.deshabilitarFiltroProveedores = false;
+    this.deshabilitarFiltroProveedores = true;
+    this.verActualizarProducto = false;
     this.controlProducto.patchValue('');
     this.productoProveedor = new ProductoProveedor();
     this.productoProveedores = [];
+    this.limpiarProveedor();
     this.dataSourceProductoProveedor = new MatTableDataSource();
     this.clickedRowsProductoProveedor = new Set<ProductoProveedor>();
     this.borrarFiltroProductoProveedor();
@@ -137,24 +139,33 @@ export class ProveedorProductoComponent implements OnInit {
   }
   seleccionarProducto(){
     this.producto = this.controlProducto.value as Producto;
-    this.verPanelAsignarProveedor = true;
     this.productoProveedores = this.producto.productosProveedores;
-    this.llenarDataSourceProductoProveedor(this.productoProveedores);
+    if (this.productoProveedores.length > 0) {
+      this.llenarDataSourceProductoProveedor(this.productoProveedores);
+    }
+  }
+
+  habilitarAsignarProveedor(){
+    this.deshabilitarFiltroProveedores = false;
   }
 
   // CODIGO PARA PROVEEDOR
   limpiarProveedor(){
     this.proveedor = new Proveedor();
     this.controlProveedor.patchValue("");
+    this.controlProveedor.enable();
     this.codigoEquivalente = "";
+    this.deshabilitarEditarProveedor = false;
+    this.verActualizarProveedor = false;
     this.clickedRowsProductoProveedor.clear();
   }
 
   agregarProductoProveedor(){
     let existe: boolean;
-    existe = this.validarProductoProveedor();
+    existe = this.existeProductoProveedor();
+    //console.log("existe:" + existe)
     if (existe) {
-      Swal.fire(constantes.error, constantes.error_grupo_producto, constantes.error_swal);
+      Swal.fire(constantes.error, constantes.error_producto_proveedor, constantes.error_swal);
       return;
     }
     this.productoProveedor = new ProductoProveedor();
@@ -164,6 +175,7 @@ export class ProveedorProductoComponent implements OnInit {
     this.productoProveedores.push(this.productoProveedor);
     this.producto.productosProveedores = this.productoProveedores;
     this.llenarDataSourceProductoProveedor(this.productoProveedores);
+    this.verActualizarProducto = true;
     this.limpiarProveedor();
     //console.log(this.producto); 
   }
@@ -171,7 +183,7 @@ export class ProveedorProductoComponent implements OnInit {
   llenarDataSourceProductoProveedor(productoProveedores : ProductoProveedor[]){
     this.dataSourceProductoProveedor = new MatTableDataSource(productoProveedores);
     this.dataSourceProductoProveedor.filterPredicate = (data: ProductoProveedor, filter: string): boolean =>
-      data.codigo.toUpperCase().includes(filter) || data.proveedor.razonSocial.toUpperCase().includes(filter) || data.proveedor.codigo.toUpperCase().includes(filter) ||
+      data.proveedor.codigo.toUpperCase().includes(filter) || data.proveedor.razonSocial.toUpperCase().includes(filter) ||
       data.codigoEquivalente.toUpperCase().includes(filter);
     this.dataSourceProductoProveedor.paginator = this.paginator;
     this.dataSourceProductoProveedor.sort = this.sort;
@@ -192,7 +204,6 @@ export class ProveedorProductoComponent implements OnInit {
   }
 
   seleccionProductoProveedor(productoProveedorSeleccionado: ProductoProveedor) {
-    //this.productoProveedor=productoProveedorSeleccionado;
     if (!this.clickedRowsProductoProveedor.has(productoProveedorSeleccionado)){
       this.limpiarProveedor();
       this.construirProductoProveedor(productoProveedorSeleccionado);
@@ -202,58 +213,48 @@ export class ProveedorProductoComponent implements OnInit {
   }
 
   construirProductoProveedor(productoProveedorSeleccionado: ProductoProveedor) {
-    let productoProveedorId = 0;
     //this.productoProveedorService.currentMessage.subscribe(message => productoProveedorId = message);
-    if (productoProveedorSeleccionado.id != 0) {
+    if (productoProveedorSeleccionado.proveedor.id != 0) {
       this.clickedRowsProductoProveedor.add(productoProveedorSeleccionado);
       this.productoProveedor = productoProveedorSeleccionado;
       this.proveedor = this.productoProveedor.proveedor;
       //this.controlProveedor.patchValue(this.proveedor.razonSocial);
       this.controlProveedor.patchValue({razonSocial: this.proveedor.razonSocial});
+      this.controlProveedor.disable();
       this.codigoEquivalente = this.productoProveedor.codigoEquivalente;
       this.deshabilitarEditarProveedor = true;
       //this.actualizar_precios();
     }
   }
 
-  validarProductoProveedor():boolean{
+  existeProductoProveedor():boolean{
     for (let i = 0; i < this.producto.productosProveedores.length; i++) {
-      if (this.proveedor.id = this.producto.productosProveedores[i].id){
+      if (this.proveedor.id == this.producto.productosProveedores[i].proveedor.id){
         return true;
-      } else {
-        return false;
       }
     }
+    return false;
   }
 
   editarProductoProveedor(){
+    this.verActualizarProveedor = true;
     this.deshabilitarEditarProveedor = false;
   }
   
   actualizarProductoProveedor(){
-
+    this.productoProveedor.codigoEquivalente = this.codigoEquivalente;
+    this.verActualizarProducto = true;
+    this.limpiarProveedor();
+    //console.log(this.productoProveedores);
+    //console.log(this.producto.productosProveedores);
   }
 
-  eliminarProveedor(event: any) {
+  eliminarProveedor(event: any, i:number) {
     if (event != null)
     event.preventDefault();
-    if (confirm("Realmente quiere eliminar el proveedor?")) {
-    this.productoProveedorService.eliminar(this.productoProveedor).subscribe({
-      next: (res) => {
-        Swal.fire(constantes.exito, res.mensaje, constantes.exito_swal);
-        //this.consultar();
-      },
-      error: (err) => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.message })
-    });
-  /*    this.recaudacion.depositos.splice(i, 1);
-      this.dataDepositos = new MatTableDataSource<Deposito>(this.recaudacion.depositos);
-      this.dataDepositos.sort = this.sort;
-      this.dataDepositos.paginator = this.paginator;
-      this.recaudacion.calcularTotales();
-      this.seleccionarValorPagado();
-      this.defectoRecaudacion();*/
-    }
-
+    this.productoProveedores.splice(i, 1);
+    this.llenarDataSourceProductoProveedor(this.productoProveedores);
+    this.producto.productosProveedores = this.productoProveedores;
   }
 
   // Metodos para los autocomplete
@@ -279,7 +280,7 @@ export class ProveedorProductoComponent implements OnInit {
   } 
   seleccionarProveedor(){
     this.proveedor = this.controlProveedor.value as Proveedor;
-    //console.log(this.proveedor.codigo);
+    //console.log(this.proveedor.razonSocial);
   }
 
 }

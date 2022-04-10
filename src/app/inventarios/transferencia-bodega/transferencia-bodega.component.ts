@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, Renderer2 } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { startWith, map } from 'rxjs/operators';
@@ -10,6 +10,8 @@ import { ProductoService } from '../../servicios/producto.service';
 import { Bodega } from '../../modelos/bodega';
 import { BodegaService } from '../../servicios/bodega.service';
 import { ProductoBodega } from '../../modelos/producto-bodega';
+//Solo por el error
+import { Proveedor } from '../../modelos/proveedor';
 
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
@@ -22,100 +24,113 @@ import { MatTableDataSource } from '@angular/material/table';
 })
 export class TransferenciaBodegaComponent implements OnInit {
 
-  verPanelAsignarBodega: boolean = false;
-  abrirPanelAsignarBodega:boolean = true;
-  deshabilitarFiltroBodega: boolean = false;
+  abrirPanelAsignarBodega: boolean = true;
+  deshabilitarBodegaDestino: boolean = true;
+  deshabilitarFiltroBodega: boolean = true;
+  verActualizarProducto = false;
 
   producto: Producto = new Producto();
+  bodegaOrigen: Bodega = new Bodega();
   bodegaDestino: Bodega = new Bodega();
   productoBodega: ProductoBodega = new ProductoBodega();
 
   //cantidadBodegaOrigen:number = 0;
-  cantidadBodegaDestino:number = 0;
+  cantidadBodegaDestino: number = 0;
 
   productosBodegas: ProductoBodega[] = [];
 
   //Variables para los autocomplete
-  productos: Producto[]=[];
-  seleccionProducto = new FormControl();
+  productos: Producto[] = [];
+  controlProducto = new FormControl();
   filtroProductos: Observable<Producto[]> = new Observable<Producto[]>();
 
-  bodegasDestinoTodas: Bodega[] = [];
+  bodegas: Bodega[] = [];
   bodegasDestino: Bodega[] = [];
-  seleccionBodegaDestino = new FormControl();
+  controlBodegaDestino = new FormControl();
   filtroBodegasDestino: Observable<Bodega[]> = new Observable<Bodega[]>();
 
+  @ViewChild("inputFiltroProductoBodega") inputFiltroProductoBodega: ElementRef;
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
-  
-  columnasProductoBodega: any[] = [
-    { nombreColumna: 'id', cabecera: 'ID', celda: (row: ProductoBodega) => `${row.id}`},
-    { nombreColumna: 'codigo', cabecera: 'Código', celda: (row: ProductoBodega) => `${row.codigo}`},
-    { nombreColumna: 'codigo_bodega', cabecera: 'Código bodega', celda: (row: ProductoBodega) => `${row.bodega.codigo}`},
-    { nombreColumna: 'nombre_bodega', cabecera: 'Nombre Bodega', celda: (row: ProductoBodega) => `${row.bodega.nombre}`},
-    { nombreColumna: 'cantidad', cabecera: 'Cantidad', celda: (row: ProductoBodega) => `${row.cantidad}`},
-    { nombreColumna: 'acciones', cabecera: 'Acciones', celda: (row: any) => ''}
-  ];
-  cabeceraProductoBodega: string[]  = this.columnasProductoBodega.map(titulo => titulo.nombreColumna);
-  dataSourceProductoBodega: MatTableDataSource<ProductoBodega>;
-  clickedRowsBodega = new Set<ProductoBodega>();
 
-  constructor(private productoService: ProductoService, private bodegaService: BodegaService) { }
+  columnasProductoBodega: any[] = [
+    { nombreColumna: 'id', cabecera: 'ID', celda: (row: ProductoBodega) => `${row.id}` },
+    { nombreColumna: 'codigo', cabecera: 'Código', celda: (row: ProductoBodega) => `${row.codigo}` },
+    { nombreColumna: 'codigo_bodega', cabecera: 'Código bodega', celda: (row: ProductoBodega) => `${row.bodega.codigo}` },
+    { nombreColumna: 'nombre_bodega', cabecera: 'Nombre Bodega', celda: (row: ProductoBodega) => `${row.bodega.nombre}` },
+    { nombreColumna: 'cantidad', cabecera: 'Cantidad', celda: (row: ProductoBodega) => `${row.cantidad}` },
+    { nombreColumna: 'acciones', cabecera: 'Acciones', celda: (row: any) => '' }
+  ];
+  cabeceraProductoBodega: string[] = this.columnasProductoBodega.map(titulo => titulo.nombreColumna);
+  dataSourceProductoBodega: MatTableDataSource<ProductoBodega>;
+  clickedRowsProductoBodega = new Set<ProductoBodega>();
+
+  constructor(private renderer: Renderer2, private productoService: ProductoService, private bodegaService: BodegaService) { }
 
   ngOnInit() {
     this.consultarProductos();
     this.consultarBodegasDestino();
-    this.filtroProductos = this.seleccionProducto.valueChanges
+    this.filtroProductos = this.controlProducto.valueChanges
       .pipe(
         startWith(''),
-        map(value => typeof value === 'string' || value==null ? value : value.id),
+        map(value => typeof value === 'string' || value == null ? value : value.id),
         map(producto => typeof producto === 'string' ? this.filtroProducto(producto) : this.productos.slice())
       );
 
-      this.filtroBodegasDestino = this.seleccionBodegaDestino.valueChanges
+    this.filtroBodegasDestino = this.controlBodegaDestino.valueChanges
       .pipe(
         startWith(''),
-        map(value => typeof value === 'string' || value==null ? value : value.id),
+        map(value => typeof value === 'string' || value == null ? value : value.id),
         map(bodegaDestino => typeof bodegaDestino === 'string' ? this.filtroBodegaDestino(bodegaDestino) : this.bodegasDestino.slice())
       );
   }
 
   // CÓDIGO EN COMÚN
-  limpiar(){
+  limpiar() {
     this.producto = new Producto();
-    this.verPanelAsignarBodega = false;
-    this.abrirPanelAsignarBodega = false;
+    this.abrirPanelAsignarBodega = true;
+    this.verActualizarProducto = false;
+    this.deshabilitarFiltroBodega = true;
+    this.controlProducto.patchValue('');
+    this.productoBodega = new ProductoBodega();
+    this.productosBodegas = [];
+    this.limpiarBodega();
+    this.dataSourceProductoBodega = new MatTableDataSource();
+    this.clickedRowsProductoBodega = new Set<ProductoBodega>();
+    this.borrarFiltroProductoBodega();
   };
 
-  actualizarProducto(event: any){
-    if (event!=null)
+  actualizarProducto(event: any) {
+    if (event != null)
       event.preventDefault();
     if (this.producto.nombre == '') {
-        Swal.fire(constantes.error, constantes.error_nombre_producto, constantes.error_swal);
-        return;
+      Swal.fire(constantes.error, constantes.error_nombre_producto, constantes.error_swal);
+      return;
     }
-    this.productoService.actualizar(this.producto).subscribe(
-      res => {
+    console.log(this.producto);
+    // Corregir este error
+    this.producto.kardexs[0].proveedor = new Proveedor;
+    this.productoService.actualizar(this.producto).subscribe({
+      next: (res) => {
         Swal.fire(constantes.exito, res.mensaje, constantes.exito_swal);
         this.limpiar();
-        //this.consultar();
       },
-      err => {
+      error: (err) => {
         Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.message });
       }
-    );
+    });
   }
 
   consultarProductos() {
-    this.productoService.consultar().subscribe(
-    res => {
-      this.productos = res.resultado as Producto[]
-    },
-    err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.message })
-    );
+    this.productoService.consultar().subscribe({
+      next: (res) => {
+        this.productos = res.resultado as Producto[]
+      },
+      error: (err) => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.message })
+    });
   }
   private filtroProducto(value: string): Producto[] {
-    if(this.productos.length>0) {
+    if (this.productos.length > 0) {
       const filterValue = value.toLowerCase();
       return this.productos.filter(producto => producto.nombre.toLowerCase().includes(filterValue));
     }
@@ -124,45 +139,69 @@ export class TransferenciaBodegaComponent implements OnInit {
   verProducto(producto: Producto): string {
     return producto && producto.nombre ? producto.nombre : '';
   }
-  seleccionarProducto(){
-    this.producto = this.seleccionProducto.value as Producto;
-    this.verPanelAsignarBodega = true;
+  seleccionarProducto() {
+    this.producto = this.controlProducto.value as Producto;
     this.productosBodegas = this.producto.productosBodegas;
     this.llenarDataSourceProductoBodega(this.productosBodegas);
   }
 
   // CODIGO PARA BODEGA
-  limpiarBodega(){
+  limpiarBodega() {
     this.productoBodega = new ProductoBodega();
     this.bodegaDestino = new Bodega();
-    this.clickedRowsBodega.clear();
-    this.seleccionBodegaDestino.patchValue("");
+    this.bodegasDestino = this.bodegas;
+    this.clickedRowsProductoBodega.clear();
+    this.controlBodegaDestino.patchValue("");
+    this.controlBodegaDestino.disable();
     this.cantidadBodegaDestino = 0;
+    this.deshabilitarBodegaDestino = true;
   }
 
-  agregarProductoBodega(){
-    this.calcularCantidadBodegaOrigen(this.productoBodega);
-    this.productoBodega = new ProductoBodega();
-    this.productoBodega.producto.id = this.producto.id
-    this.productoBodega.bodega = this.bodegaDestino;
-    this.productoBodega.cantidad = this.cantidadBodegaDestino;
-    this.productosBodegas.push(this.productoBodega);
-    this.producto.productosBodegas = this.productosBodegas;
-    this.llenarDataSourceProductoBodega(this.productosBodegas);
-    this.limpiarBodega();
-    console.log(this.producto);
-  }
-
-  calcularCantidadBodegaOrigen(productoBodegaModificar: ProductoBodega){
+  agregarProductoBodega() {
     for (let i = 0; i < this.productosBodegas.length; i++) {
-      if (this.productosBodegas[i].bodega.id == productoBodegaModificar.bodega.id) {
-        this.productosBodegas[i].cantidad = this.productosBodegas[i].cantidad-this.cantidadBodegaDestino;
-        //console.log('elim', this.medidas_equivalentes);
+      if (this.productosBodegas[i].bodega.id == this.productoBodega.bodega.id) {
+        if (this.cantidadBodegaDestino <= this.productosBodegas[i].cantidad) {
+          this.productosBodegas[i].cantidad = this.productosBodegas[i].cantidad - this.cantidadBodegaDestino;
+          this.calcularCantidadBodegaDestino(this.bodegaDestino);
+          this.llenarDataSourceProductoBodega(this.productosBodegas);
+          this.verActualizarProducto = true;
+          this.limpiarBodega();
+        } else {
+          Swal.fire(constantes.error, constantes.error_bodega_cantidad, constantes.error_swal);
+          return;
+        }
+
       }
     }
   }
 
-  llenarDataSourceProductoBodega(productosBodegas : ProductoBodega[]){
+  calcularCantidadBodegaDestino(bodegaModificar: Bodega) {
+    if (this.existeBodega(bodegaModificar)) {
+      for (let i = 0; i < this.productosBodegas.length; i++) {
+        if (this.productosBodegas[i].bodega.id == bodegaModificar.id) {
+          this.productosBodegas[i].cantidad = Number(this.productosBodegas[i].cantidad) + Number(this.cantidadBodegaDestino);
+        }
+      }
+    } else {
+      this.productoBodega = new ProductoBodega();
+      this.productoBodega.producto.id = this.producto.id
+      this.productoBodega.bodega = bodegaModificar;
+      this.productoBodega.cantidad = this.cantidadBodegaDestino;
+      this.productosBodegas.push(this.productoBodega);
+      this.producto.productosBodegas = this.productosBodegas;
+    }
+  }
+
+  existeBodega(bodega: Bodega): boolean {
+    for (let i = 0; i < this.productosBodegas.length; i++) {
+      if (bodega.id == this.productosBodegas[i].bodega.id) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  llenarDataSourceProductoBodega(productosBodegas: ProductoBodega[]) {
     this.dataSourceProductoBodega = new MatTableDataSource(productosBodegas);
     this.dataSourceProductoBodega.filterPredicate = (data: ProductoBodega, filter: string): boolean =>
       data.codigo.toUpperCase().includes(filter) || data.bodega.codigo.toUpperCase().includes(filter) || data.bodega.nombre.toUpperCase().includes(filter);
@@ -177,80 +216,71 @@ export class TransferenciaBodegaComponent implements OnInit {
       this.dataSourceProductoBodega.paginator.firstPage();
     }
   }
+  borrarFiltroProductoBodega(){
+    this.renderer.setProperty(this.inputFiltroProductoBodega.nativeElement, 'value', '');
+    this.dataSourceProductoBodega.filter = '';
+  }
 
   seleccionProductoBodega(productoBodegaSeleccionado: ProductoBodega) {
-    this.productoBodega=productoBodegaSeleccionado;
-    if (!this.clickedRowsBodega.has(productoBodegaSeleccionado)){
-      this.clickedRowsBodega.clear();
-      this.clickedRowsBodega.add(productoBodegaSeleccionado);
-      this.productoBodega = productoBodegaSeleccionado;
-      this.eliminarBodegaDestinoSeleccionada(productoBodegaSeleccionado.bodega);
+    if (!this.clickedRowsProductoBodega.has(productoBodegaSeleccionado)) {
+      this.limpiarBodega();
+      this.construirProductoBodega(productoBodegaSeleccionado);
     } else {
-      //this.clickedRowsBodega.clear();
-      //this.productoBodega = new ProductoBodega();
       this.limpiarBodega();
     }
   }
 
-  eliminarBodegaDestinoSeleccionada(bodegaSeleccionada: Bodega){
-    this.bodegasDestino = this.bodegasDestinoTodas;
+  construirProductoBodega(productoBodegaSeleccionado: ProductoBodega) {
+    //this.productoProveedorService.currentMessage.subscribe(message => productoProveedorId = message);
+    if (productoBodegaSeleccionado.bodega.id != 0) {
+      this.clickedRowsProductoBodega.add(productoBodegaSeleccionado);
+      this.productoBodega = productoBodegaSeleccionado;
+      this.bodegaOrigen = this.productoBodega.bodega;
+      this.consultarBodegasDestino();
+      this.eliminarBodegaDestino(this.bodegaOrigen);
+      this.controlBodegaDestino.enable();
+      this.deshabilitarBodegaDestino = false;
+      //this.actualizar_precios();
+    }
+  }
+
+  eliminarBodegaDestino(bodegaSeleccionada: Bodega) {
+    this.bodegasDestino = this.bodegas;
     for (let i = 0; i < this.bodegasDestino.length; i++) {
       if (this.bodegasDestino[i].id == bodegaSeleccionada.id) {
         this.bodegasDestino.splice(i, 1);
-        //console.log('elim', this.medidas_equivalentes);
+        //console.log('elim', this.bodegas);
       }
     }
   }
 
-  buscarBodega(){
-
-  }
-  
-  editarBodega(i: number){
-    /*this.indiceEditar=i;
-    this.deposito= {... this.recaudacion.depositos [this.indiceEditar] };
-    this.seleccionBancoDeposito.setValue(this.deposito.banco);
-    this.habilitarEditarDeposito=true;*/
-  }
-  confirmarEditarBodega(){
-   /* this.recaudacion.depositos[this.indiceEditar]=this.deposito;
-    this.deposito=new Deposito();
-    this.seleccionBancoDeposito.setValue(null);
-    this.habilitarEditarDeposito=false;
-    this.dataDepositos = new MatTableDataSource<Deposito>(this.recaudacion.depositos);
-    this.dataDepositos.sort = this.sort;
-    this.dataDepositos.paginator = this.paginator;
-    this.recaudacion.calcularTotales();
-    this.seleccionarValorPagado();
-    this.defectoRecaudacion();*/
-  }
-
-  eliminarBodega(i: number) {
-    if (confirm("Realmente quiere eliminar la bodega?")) {
-      console.log('i es: '+i);
-  /*    this.recaudacion.depositos.splice(i, 1);
-      this.dataDepositos = new MatTableDataSource<Deposito>(this.recaudacion.depositos);
-      this.dataDepositos.sort = this.sort;
-      this.dataDepositos.paginator = this.paginator;
-      this.recaudacion.calcularTotales();
-      this.seleccionarValorPagado();
-      this.defectoRecaudacion();*/
+  eliminarBodega(i:number) {
+    if (this.productosBodegas[i].cantidad == 0){ 
+      if (confirm("Realmente quiere eliminar la bodega?")) {
+        this.productosBodegas.splice(i, 1);
+        this.llenarDataSourceProductoBodega(this.productosBodegas);
+        this.producto.productosBodegas = this.productosBodegas;
+      }
+    } else {
+      Swal.fire(constantes.error, constantes.error_eliminar_bodega, constantes.error_swal);
+      return;
     }
   }
 
   // Metodos para los autocomplete
-  consultarBodegasDestino(){
-    this.bodegaService.consultar().subscribe(
-      res => {
-        this.bodegasDestinoTodas = res.resultado as Bodega[];
+  consultarBodegasDestino() {
+    this.bodegaService.consultar().subscribe({
+      next: (res) => {
+        this.bodegas = res.resultado as Bodega[];
+        //this.controlBodegaDestino.disable();
       },
-      err => {
+      error: (err) => {
         Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.message });
       }
-    );
+    });
   }
   private filtroBodegaDestino(value: string): Bodega[] {
-    if(this.productos.length>0) {
+    if (this.productos.length > 0) {
       const filterValue = value.toLowerCase();
       return this.bodegasDestino.filter(bodegaDestino => bodegaDestino.nombre.toLowerCase().includes(filterValue));
     }
@@ -258,9 +288,9 @@ export class TransferenciaBodegaComponent implements OnInit {
   }
   verBodegaDestino(bodegaDestino: Bodega): string {
     return bodegaDestino && bodegaDestino.nombre ? bodegaDestino.nombre : '';
-  } 
-  seleccionarBodegaDestino(){
-    this.bodegaDestino = this.seleccionBodegaDestino.value as Bodega;
+  }
+  seleccionarBodegaDestino() {
+    this.bodegaDestino = this.controlBodegaDestino.value as Bodega;
     //console.log(this.proveedor.codigo);
   }
 
