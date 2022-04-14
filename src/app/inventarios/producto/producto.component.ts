@@ -1,8 +1,9 @@
 import { Component, OnInit, Type, Inject } from '@angular/core';
 import { FormControl, FormArray, FormGroup, Validators } from '@angular/forms';
-import { BehaviorSubject, EmptyError, Observable } from 'rxjs';
+import { BehaviorSubject } from 'rxjs';
 import Swal from 'sweetalert2';
 import * as constantes from '../../constantes';
+import * as util from '../../util';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 import { Sesion } from '../../modelos/sesion';
@@ -23,8 +24,6 @@ import { CategoriaProductoService } from '../../servicios/categoria-producto.ser
 import { CategoriaProducto } from '../../modelos/categoria-producto';
 import { Router } from '@angular/router';
 import { Kardex } from '../../modelos/kardex';
-import { KardexService } from '../../servicios/kardex.service';
-import { TabService } from '../../componentes/services/tab.service';
 import { MedidaPrecio } from '../../modelos/medida-precio';
 import { EquivalenciaMedidaService } from '../../servicios/equivalencia-medida.service';
 import { EquivalenciaMedida } from '../../modelos/equivalencia-medida'
@@ -58,7 +57,7 @@ export class ProductoComponent implements OnInit {
   deshabilitarOtrasMedidas: boolean = true;
   deshabilitarSaldoInicial: boolean = false;
 
-  sesion: Sesion;
+  sesion: Sesion = null;
   bodega: Bodega = new Bodega();
   productoBodega: ProductoBodega = new ProductoBodega();
   producto: Producto = new Producto();
@@ -144,7 +143,7 @@ export class ProductoComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.sesion = this.sesionService.getSesion();
+    util.validarSesion(this.sesion, this.sesionService, this.router);
     this.consultar();
     this.categoriaProductoService.consultar().subscribe(
       res => {

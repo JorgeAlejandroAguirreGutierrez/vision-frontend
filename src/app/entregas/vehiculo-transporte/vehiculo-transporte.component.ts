@@ -4,6 +4,10 @@ import { VehiculoTransporte } from '../../modelos/vehiculo-transporte';
 import {NgbModal, ModalDismissReasons} from '@ng-bootstrap/ng-bootstrap';
 import Swal from 'sweetalert2';
 import * as constantes from '../../constantes';
+import * as util from '../../util';
+import { SesionService } from 'src/app/servicios/sesion.service';
+import { Router } from '@angular/router';
+import { Sesion } from 'src/app/modelos/sesion';
 
 @Component({
   selector: 'app-vehiculo-transporte',
@@ -15,10 +19,12 @@ export class VehiculoTransporteComponent implements OnInit {
   vehiculoTransporte= new VehiculoTransporte();
   vehicuylosTransportes: VehiculoTransporte[];
   pVehiculoTransporte= new VehiculoTransporte();
+  sesion: Sesion=null;
 
-  constructor(private vehiculoTransporteService: VehiculoTransporteService, private modalService: NgbModal) { }
+  constructor(private sesionService: SesionService, private router: Router, private vehiculoTransporteService: VehiculoTransporteService, private modalService: NgbModal) { }
 
   ngOnInit() {
+    util.validarSesion(this.sesion, this.sesionService, this.router);
     this.vehiculoTransporteService.consultar().subscribe(
       res=>{
         this.vehicuylosTransportes= res.resultado as VehiculoTransporte[]

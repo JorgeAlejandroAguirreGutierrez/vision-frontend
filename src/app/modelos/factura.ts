@@ -50,7 +50,7 @@ export class Factura {
     this.eliminado=false;
     this.cliente=new Cliente();
     this.clienteFactura=new Cliente();
-    this.auxiliar=new Auxiliar();
+    this.auxiliar=null;
     this.vendedor=new Usuario();
     this.facturaDetalles=[];
     this.comentario="";
@@ -68,7 +68,7 @@ export class Factura {
     this.totalConDescuento=0;
   }
 
-  construir(){
+  normalizar(){
     if (this.cliente==null) this.cliente=new Cliente();
     if (this.clienteFactura==null) this.clienteFactura=new Cliente();
     if (this.vendedor==null) this.vendedor=new Usuario();

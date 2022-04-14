@@ -58,4 +58,30 @@ export class RecaudacionService {
       })
     );
   }
+
+  obtenerPorFactura(facturaId: number): Observable<Respuesta> {
+    return this.http.get(environment.host + util.ruta + util.recaudacion+util.factura+"/"+facturaId, util.options).pipe(
+      map(response => response as Respuesta),
+      catchError(err => {
+        return throwError(err);
+      }));
+  }
+
+  calcular(recaudacion: Recaudacion): Observable<Respuesta> {
+    return this.http.post(environment.host+util.ruta+util.recaudacion+util.calcular, recaudacion, util.options).pipe(
+      map(response => response as Respuesta),
+      catchError(err => {
+        return throwError(err);
+      })
+    );
+  }
+
+  calcularTotales(recaudacion: Recaudacion): Observable<Respuesta> {
+    return this.http.post(environment.host+util.ruta+util.recaudacion+util.calcularTotales, recaudacion, util.options).pipe(
+      map(response => response as Respuesta),
+      catchError(err => {
+        return throwError(err);
+      })
+    );
+  }
 }

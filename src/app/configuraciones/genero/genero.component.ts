@@ -1,5 +1,6 @@
-import { Component, OnInit, HostListener, Type } from '@angular/core';
+import { Component, OnInit, HostListener } from '@angular/core';
 import * as constantes from '../../constantes';
+import * as util from '../../util';
 import Swal from 'sweetalert2';
 import { Router } from '@angular/router';
 import { Sesion } from '../../modelos/sesion';
@@ -30,7 +31,7 @@ export class GeneroComponent implements OnInit {
     private sesionService: SesionService,private router: Router) { }
 
   ngOnInit() {
-    this.sesion = this.sesionService.getSesion();
+    util.validarSesion(this.sesion, this.sesionService, this.router);
     this.construirGenero();
     this.consultar();
   }

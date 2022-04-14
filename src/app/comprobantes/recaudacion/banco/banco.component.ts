@@ -2,8 +2,12 @@ import { Component, OnInit, HostListener } from '@angular/core';
 import { TabService } from '../../../componentes/services/tab.service';
 import Swal from 'sweetalert2';
 import * as constantes from '../../../constantes';
+import * as util from '../../../util';
 import { Banco } from '../../../modelos/banco';
 import { BancoService } from '../../../servicios/banco.service';
+import { Sesion } from 'src/app/modelos/sesion';
+import { Router } from '@angular/router';
+import { SesionService } from 'src/app/servicios/sesion.service';
 
 @Component({
   selector: 'app-banco',
@@ -13,10 +17,12 @@ import { BancoService } from '../../../servicios/banco.service';
 export class BancoComponent implements OnInit {
 
   banco= new Banco();
+  sesion: Sesion=null;
 
-  constructor(private tabService: TabService,private bancoService: BancoService) { }
+  constructor(private sesionService: SesionService, private router: Router, private tabService: TabService,private bancoService: BancoService) { }
 
   ngOnInit() {
+    util.validarSesion(this.sesion, this.sesionService, this.router);
     this.construirBanco();
   }
 

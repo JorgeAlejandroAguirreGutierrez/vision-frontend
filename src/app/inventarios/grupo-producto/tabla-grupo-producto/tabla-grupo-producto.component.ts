@@ -1,12 +1,16 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import Swal from 'sweetalert2';
 import * as constantes from '../../../constantes';
+import * as util from '../../../util';
 import { GrupoProducto } from '../../../modelos/grupo-producto';
 import { GrupoProductoService } from '../../../servicios/grupo-producto.service';
 import { ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
+import { SesionService } from 'src/app/servicios/sesion.service';
+import { Router } from '@angular/router';
+import { Sesion } from 'src/app/modelos/sesion';
 
 @Component({
   selector: 'app-tabla-grupo-producto',
@@ -15,6 +19,7 @@ import { MatTableDataSource } from '@angular/material/table';
 })
 export class TablaGrupoProductoComponent implements OnInit {
 
+  sesion: Sesion=null;
   @Output() grupo_producto_seleccionado = new EventEmitter();
   gruposProductos: GrupoProducto[];
 
@@ -35,9 +40,10 @@ export class TablaGrupoProductoComponent implements OnInit {
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
-  constructor(private grupoProductoService: GrupoProductoService) { }
+  constructor(private sesionService: SesionService, private router: Router, private grupoProductoService: GrupoProductoService) { }
 
   ngOnInit() {
+    util.validarSesion(this.sesion, this.sesionService, this.router);
     this.consultar();
   }
 

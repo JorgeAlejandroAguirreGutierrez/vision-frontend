@@ -12,6 +12,7 @@ import { ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
+import * as util from '../../util';
 
 @Component({
   selector: 'app-calificacion-cliente',
@@ -26,7 +27,7 @@ export class CalificacionClienteComponent implements OnInit {
 
   ComponenteCalificacionCliente: Type<any> = CalificacionClienteComponent;
 
-  sesion: Sesion;
+  sesion: Sesion=null;
   calificacionCliente= new CalificacionCliente();
 
   columnasCalificacion: string[] = ['id', 'codigo', 'descripcion', 'abreviatura', 'estado'];
@@ -44,7 +45,7 @@ export class CalificacionClienteComponent implements OnInit {
     calificacionClienteBuscar: CalificacionCliente=new CalificacionCliente();
 
   ngOnInit() {
-    this.sesion= this.sesionService.getSesion();
+    util.validarSesion(this.sesion, this.sesionService, this.router);
     this.construirCalificacionCliente();
     this.consultar();
   }

@@ -2,13 +2,6 @@
 
 import { TabService } from './componentes/services/tab.service';
 
-export const tabla_amortizacion_francesa: string='FRANCESA';
-export const tabla_amortizacion_alemana: string='ALEMANA';
-export const modelo_amortizacion: string='MODELO_AMORTIZACION';
-export const periodicidad: string='PERIODICIDAD';
-export const periodo: string='PERIODO';
-export const operacion_inicial_kardex: string='INVENTARIO INICIAL';
-
 export const exito_agregar_detalle_factura='SE AGREGO EL DETALLE';
 export const exito_crear_factura='SE CREO LA FACTURA';
 export const exito_actualizar_factura='SE ACTUALIZO LA FACTURA';
@@ -37,6 +30,7 @@ export const error_kardex: string='ERROR KARDEX EXISTENTE';
 export const error_kardex_VACIO: string='ERROR KARDEX VACIO';
 export const error_kardex_VACIO_MENSAJE: string='INGRESA UN KARDEX';
 export const error_bodega: string='ERROR EN BODEGA';
+export const error_agregar_recaudacion="VALOR SUPERA EL MONTO DE COBRO DE LA FACTURA";
 export const error_swal='error';
 export const error='Error';
 export const mensaje_kardex_inicial: string='Está seguro que quiere inicializar el kardex con saldo 0';
@@ -52,6 +46,34 @@ export const espacio=" ";
 export const estadoActivo = "ACTIVO";
 export const estadoInactivo = "INACTIVO";
 export const estadoEliminado = "ELIMINADO";
+export const recaudado="RECAUDADO";
+export const norecaudado="NORECAUDADO";
+export const identificacion_consumidor_final="9999999999999";
+export const tipo_contribuyente_natural="NATURAL";
+export const tipo_contribuyente_juridica="JURIDICA";
+export const tipo_contribuyente_publica="PUBLICA";
+export const tabla_amortizacion_francesa: string='FRANCESA';
+export const tabla_amortizacion_alemana: string='ALEMANA';
+export const modelo_amortizacion: string='MODELO_AMORTIZACION';
+export const periodicidad: string='PERIODICIDAD';
+export const periodo: string='PERIODO';
+export const operacion_inicial_kardex: string='INVENTARIO INICIAL';
+export const formas_pago: string[]=["CHEQUES", "DEPOSITOS", "TRANSFERENCIAS", "TARJETA DE CREDITO", "TARJETA DE DEBITO", "COMPENSACIONES", "RETENCION VENTAS"];
+export const pregunta_eliminar_cheque="Realmente quiere eliminar el cheque?";
+export const pregunta_eliminar_deposito="Realmente quiere eliminar el deposito?";
+export const pregunta_eliminar_transferencia="Realmente quiere eliminar la transferencia?";
+export const pregunta_eliminar_tarjeta_credito="Realmente quiere eliminar la tarjeta de crédito?";
+export const pregunta_eliminar_tarjeta_debito="Realmente quiere eliminar la tarjeta de debito?";
+export const pregunta_eliminar_compensacion="Realmente quiere eliminar la compensacion?";
+export const pregunta_eliminar_retencion_venta="Realmente quiere eliminar la retencion en la venta?";
+
+//CODIGOS DE ERROR
+export const error_codigo_modelo_existente="4001";
+export const error_codigo_modelo_no_existente="4002";
+export const error_codigo_suscripcion_invalida="4003";
+export const error_codigo_sesion_invalida="4004";
+export const error_codigo_datos_invalidos="4005";
+export const error_codigo_generico="4000";
 
 
 //CAMPOS PARA CONSULTAS DINAMICAS
@@ -84,13 +106,12 @@ export const tab_crear_tipo_retencion='Crear Tipo de Retencion';
 export const tab_crear_factura_compra='Crear Factura de Compra';
 export const tab_crear_pago_compra='Crear Pago de Compra';
 export const tab_crear_proveedor='Proveedores';
+export const tab_crear_proveedor_bodega='Proveedor-Bodega';
 export const tab_crear_proveedor_producto='Proveedor-Producto';
-export const tab_crear_transferencia_bodega='Transferencia-bodega';
+export const tab_crear_egreso='Crear Egreso';
 export const tab_crear_factura='Facturar';
-export const tab_crear_pedido='Pedidos';
-export const tab_crear_proforma='Proformar';
-export const tab_crear_egreso='Egreso';
-export const tab_crear_recaudacion='Recaudacion';
+export const tab_crear_pedido='Crear Pedido';
+export const tab_crear_proforma='Crear Proforma';
 export const tab_crear_dato_adicional='Crear Dato Adicional';
 export const tab_crear_empresa='Crear Empresa';
 export const tab_crear_exportacion='Crear Exportacion';
@@ -116,7 +137,11 @@ export const tab_crear_punto_venta='Crear Punto de Venta';
 export const tab_crear_grupo_producto='Configurar Grupos';
 export const tab_crear_segmento='Segmentos';
 export const tab_crear_movimiento_contable="Movimientos contables";
-export const tab_crear_cuenta_contable='Cuentas contables'
+export const tab_crear_cuenta_contable='Cuentas contables';
+export const tab_crear_recaudacion='Recaudacion';
+export const tab_crear_transferencia_bodega='Transferencia-bodega';
+
+
 
 /**********************************
  * CONSTANTES PARA NOMBRAR LOS ITEMS DEL SIDEBAR
@@ -143,13 +168,11 @@ export const item_crear_tipo_retencion='Crear Tipo de Retencion';
 export const item_crear_factura_compra='Crear Factura de Compra';
 export const item_crear_pago_compra='Crear Pago de Compra';
 export const item_crear_proveedor='Proveedores';
-export const item_crear_proveedor_producto='Proveedor del producto';
-export const item_crear_transferencia_bodega='Transferencia Bodegas';
+export const item_crear_proveedor_bodega='Proveedores y Bodegas';
+export const item_crear_egreso='Crear Egreso';
 export const item_crear_factura='Facturar';
-export const item_crear_pedido='Registrar Pedido';
-export const item_crear_proforma='Proformar';
-export const item_crear_egreso='Egresos';
-export const item_crear_recaudacion='Recaudación';
+export const item_crear_pedido='Crear Pedido';
+export const item_crear_proforma='Crear Proforma';
 export const item_crear_dato_adicional='Crear Dato Adicional';
 export const item_crear_empresa='Crear Empresa';
 export const item_crear_exportacion='Crear Exportacion';
@@ -177,6 +200,9 @@ export const item_crear_grupo_servicio='Configurar Servicios';
 export const item_crear_segmento='Segmentos';
 export const item_crear_movimiento_contable='Movimientos Contables';
 export const item_crear_cuenta_contable='Plan de cuentas';
+export const item_crear_proveedor_producto='Proveedor del producto';
+export const item_crear_recaudacion='Recaudación';
+export const item_crear_transferencia_bodega='Transferencia Bodegas';
 
 /**********************************
  * CONSTANTES CON NOMBRES DE LOS ICONOS DEL SIDEBAR
@@ -203,11 +229,10 @@ export const ico_crear_tipo_retencion=  'fa fa-file-text-o';
 export const ico_crear_factura_compra=  'fa fa-file-text-o';
 export const ico_crear_pago_compra=     'fa fa-file-text-o';
 export const ico_crear_proveedor=       'fa fa-truck';
+export const ico_crear_egreso=          'fa fa-file-text-o';
 export const ico_crear_factura=         'fa fa-clipboard';
 export const ico_crear_pedido=          'fa fa-file-text-o';
 export const ico_crear_proforma=        'fa fa-file-text-o';
-export const ico_crear_egreso=          'fa fa-file-text-o';
-export const ico_crear_recaudacion=     'fa fa-file-text-o';
 export const ico_crear_dato_adicional=  'fa fa-file-text-o';
 export const ico_crear_empresa=         'fa fa-file-text-o';
 export const ico_crear_exportacion=     'fa fa-file-text-o';
@@ -219,14 +244,13 @@ export const ico_crear_entrega=         'fa fa-file-text-o';
 export const ico_crear_transportista=   'fa fa-file-text-o';
 export const ico_crear_vehiculo_transporte='fa fa-file-text-o';
 export const ico_crear_activo_fijo=     'fa fa-file-text-o';
+export const ico_crear_bodega=          'fa fa-archive';
 export const ico_crear_kardex=          'fa fa-file-text-o';
 export const ico_crear_medida=          'fa fa-medium';
 export const ico_crear_producto=        'fa fa-shopping-basket';
 export const ico_crear_servicio=        'fa fa-child';
 export const ico_crear_promocion=       'fa fa-product-hunt';
-export const ico_crear_proveedor_producto='fa fa-bus';
-export const ico_crear_transferencia_bodega='fa fa-handshake-o';
-export const ico_crear_bodega=          'fa fa-archive';
+export const ico_crear_proveedor_bodega='fa fa-bus';
 export const ico_crear_tabla_equivalencia_medida='fa fa-exchange';
 export const ico_crear_usuario=         'fa fa-file-text-o';
 export const ico_crear_establecimiento= 'fa fa-file-text-o';
@@ -235,105 +259,9 @@ export const ico_crear_grupo_producto=  'fa fa-object-group';
 export const ico_crear_segmento=        'fa fa-th-list';
 export const ico_crear_movimiento_contable='fa fa-retweet';
 export const ico_crear_cuenta_contable= 'fa fa-sort-amount-asc';
-
-//TABS DE BUSCAR
-/*export const ico_buscar_auxiliar=       'fa fa-file-text-o';
-export const ico_buscar_calificacion_cliente='fa fa-file-text-o';
-export const ico_buscar_celular=        'fa fa-file-text-o';
-export const ico_buscar_cliente=        'fa fa-user-secret';
-export const ico_buscar_correo=         'fa fa-file-text-o';
-export const ico_buscar_direccion=      'fa fa-file-text-o';
-export const ico_buscar_estado_civil=   'fa fa-file-text-o';
-export const ico_buscar_forma_pago=     'fa fa-file-text-o';
-export const ico_buscar_genero=         'fa fa-file-text-o';
-export const ico_buscar_grupo_cliente=  'fa fa-file-text-o';
-export const ico_buscar_impuesto=       'fa fa-file-text-o';
-export const ico_buscar_origen_ingreso= 'fa fa-file-text-o';
-export const ico_buscar_plazo_credito=  'fa fa-file-text-o';
-export const ico_buscar_retencion_cliente='fa fa-file-text-o';
-export const ico_buscar_telefono=       'fa fa-file-text-o';
-export const ico_buscar_tipo_contribuyente='fa fa-file-text-o';
-export const ico_buscar_tipo_pago=      'fa fa-file-text-o';
-export const ico_buscar_tipo_retencion= 'fa fa-file-text-o';
-export const ico_buscar_factura_compra= 'fa fa-file-text-o';
-export const ico_buscar_pago_compra=    'fa fa-file-text-o';
-export const ico_buscar_proveedor=      'fa fa-file-text-o';
-export const ico_buscar_egreso=         'fa fa-file-text-o';
-export const ico_buscar_factura=        'fa fa-file-text-o';
-export const ico_buscar_pedido=         'fa fa-file-text-o';
-export const ico_buscar_proforma=       'fa fa-file-text-o';
-export const ico_buscar_dato_adicional= 'fa fa-file-text-o';
-export const ico_buscar_empresa=        'fa fa-file-text-o';
-export const ico_buscar_exportar=       'fa fa-file-text-o';
-export const ico_buscar_importar=       'fa fa-file-text-o';
-export const ico_buscar_ubicacion=      'fa fa-file-text-o';
-export const ico_buscar_contabilizacion='fa fa-file-text-o';
-export const ico_buscar_cuenta=         'fa fa-file-text-o';
-export const ico_buscar_entrega=        'fa fa-file-text-o';
-export const ico_buscar_transportista=  'fa fa-file-text-o';
-export const ico_buscar_vehiculo_transporte='fa fa-file-text-o';
-export const ico_buscar_activo_fijo=    'fa fa-file-text-o';;
-export const ico_buscar_bodega=         'fa fa-file-text-o';
-export const ico_buscar_kardex=         'fa fa-file-text-o';
-export const ico_buscar_medida=         'fa fa-file-text-o';
-export const ico_buscar_producto=       'fa fa-shopping-bag';   
-export const ico_buscar_promocion=      'fa fa-file-text-o';
-export const ico_buscar_saldo_inicial_inventario='fa fa-file-text-o';
-export const ico_buscar_tabla_equivalencia_medida='fa fa-file-text-o';
-export const ico_buscar_usuario=        'fa fa-file-text-o';
-export const ico_buscar_establecimiento='fa fa-file-text-o';
-export const ico_buscar_punto_venta=    'fa fa-file-text-o';
-export const ico_buscar_grupo_producto= 'fa fa-file-text-o';
-export const ico_buscar_presentacion_producto='fa fa-file-text-o';*/
-
-//TABS PARA ACTUALIZAR
-/*export const ico_actualizar_auxiliar=   'fa fa-file-text-o';
-export const ico_actualizar_calificacion_cliente='fa fa-file-text-o';
-export const ico_actualizar_celular=    'fa fa-file-text-o';
-export const ico_actualizar_cliente=    'fa fa-file-text-o';
-export const ico_actualizar_correo=     'fa fa-file-text-o';
-export const ico_actualizar_direccion=  'fa fa-file-text-o';
-export const ico_actualizar_estado_civil='fa fa-file-text-o';
-export const ico_actualizar_forma_pago= 'fa fa-file-text-o';
-export const ico_actualizar_genero=     'fa fa-file-text-o';
-export const ico_actualizar_grupo_cliente='fa fa-file-text-o';
-export const ico_actualizar_impuesto=   'fa fa-file-text-o';
-export const ico_actualizar_origen_ingreso='fa fa-file-text-o';
-export const ico_actualizar_plazo_credito='fa fa-file-text-o';
-export const ico_actualizar_retencion_cliente='fa fa-file-text-o';
-export const ico_actualizar_telefono=   'fa fa-file-text-o';
-export const ico_actualizar_tipo_contribuyente='fa fa-file-text-o';
-export const ico_actualizar_tipo_pago=  'fa fa-file-text-o';
-export const ico_actualizar_tipo_retencion='fa fa-file-text-o';
-export const ico_actualizar_factura_compra='fa fa-file-text-o';
-export const ico_actualizar_pago_compra='fa fa-file-text-o';
-export const ico_actualizar_proveedor=  'fa fa-file-text-o';
-export const ico_actualizar_egreso=     'fa fa-file-text-o';
-export const ico_actualizar_factura=    'fa fa-file-text-o';
-export const ico_actualizar_pedido=     'fa fa-file-text-o';
-export const ico_actualizar_proforma=   'fa fa-file-text-o';
-export const ico_actualizar_dato_adicional='fa fa-file-text-o';
-export const ico_actualizar_empresa=    'fa fa-file-text-o';
-export const ico_actualizar_exportacion='fa fa-file-text-o';
-export const ico_actualizar_importacion='fa fa-file-text-o';
-export const ico_actualizar_ubicacion=  'fa fa-file-text-o';
-export const ico_actualizar_contabilizacion='fa fa-file-text-o';
-export const ico_actualizar_cuenta=     'fa fa-file-text-o';
-export const ico_actualizar_entrega=    'fa fa-file-text-o';
-export const ico_actualizar_transportista='fa fa-file-text-o';
-export const ico_actualizar_vehiculo_transporte='fa fa-file-text-o';
-export const ico_actualizar_activo_fijo='fa fa-file-text-o';
-export const ico_actualizar_bodega=     'fa fa-file-text-o';
-export const ico_actualizar_kardex=     'fa fa-file-text-o';
-export const ico_actualizar_medida=     'fa fa-file-text-o';
-export const ico_actualizar_producto=   'fa fa-file-text-o';
-export const ico_actualizar_promocion=  'fa fa-file-text-o';
-export const ico_actualizar_saldo_inicial_inventario='fa fa-file-text-o';
-export const ico_actualizar_tabla_equivalencia_medida='fa fa-file-text-o';
-export const ico_actualizar_usuario=    'fa fa-file-text-o';
-export const ico_actualizar_establecimiento='fa fa-file-text-o';
-export const ico_actualizar_punto_venta='fa fa-file-text-o';
-export const ico_actualizar_presentacion_producto='fa fa-file-text-o';*/
+export const ico_crear_recaudacion=     'fa fa-file-text-o';
+export const ico_crear_proveedor_producto='fa fa-bus';
+export const ico_crear_transferencia_bodega='fa fa-handshake-o';
 
 /*********************************
  * CONSTANTES PARA OTROS COMPONENTES
@@ -369,11 +297,6 @@ export function tab_activo(tabService: TabService){
         }
     }
 }
-
-export const identificacion_consumidor_final="9999999999999";
-export const tipo_contribuyente_natural="NATURAL";
-export const tipo_contribuyente_juridica="JURIDICA";
-export const tipo_contribuyente_publica="PUBLICA";
 
 
 

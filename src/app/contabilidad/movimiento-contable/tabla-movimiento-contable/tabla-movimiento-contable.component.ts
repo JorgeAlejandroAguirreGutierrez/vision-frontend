@@ -1,6 +1,7 @@
 import { Component, OnInit, Type } from '@angular/core';
 import Swal from 'sweetalert2';
 import * as constantes from '../../../constantes';
+import * as util from '../../../util';
 import { MovimientoContableService } from '../../../servicios/movimiento-contable.service';
 import { MovimientoContable } from '../../../modelos/movimiento-contable';
 
@@ -8,6 +9,9 @@ import { ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
+import { Sesion } from 'src/app/modelos/sesion';
+import { SesionService } from 'src/app/servicios/sesion.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-tabla-movimiento-contable',
@@ -18,6 +22,7 @@ export class TablaMovimientoContableComponent implements OnInit {
 
   movimientoContable: MovimientoContable= new MovimientoContable();
   movimientosContables: MovimientoContable[];
+  sesion: Sesion=null;
 
   columnas: any[] = [
     { nombreColumna: 'id', cabecera: 'ID', celda: (row: MovimientoContable) => `${row.id}`},
@@ -37,9 +42,10 @@ export class TablaMovimientoContableComponent implements OnInit {
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
-  constructor(private movimientoContableService: MovimientoContableService) { }
+  constructor(private sesionService: SesionService, private router: Router, private movimientoContableService: MovimientoContableService) { }
 
   ngOnInit() {
+    util.validarSesion(this.sesion, this.sesionService, this.router);
     this.consultar();
   }
 

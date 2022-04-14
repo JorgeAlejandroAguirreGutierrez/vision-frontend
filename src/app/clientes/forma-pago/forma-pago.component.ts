@@ -2,6 +2,7 @@ import { Component, OnInit, HostListener, Type } from '@angular/core';
 import { Router } from '@angular/router';
 import Swal from 'sweetalert2';
 import * as constantes from '../../constantes';
+import * as util from '../../util';
 
 import { TabService } from '../../componentes/services/tab.service';
 import { Sesion } from '../../modelos/sesion';
@@ -44,7 +45,7 @@ export class FormaPagoComponent implements OnInit {
     private sesionService: SesionService,private router: Router) { }
 
   ngOnInit() {
-    this.sesion= this.sesionService.getSesion();
+    util.validarSesion(this.sesion, this.sesionService, this.router);
     this.construirFormaPago();
     this.consultar();
   }

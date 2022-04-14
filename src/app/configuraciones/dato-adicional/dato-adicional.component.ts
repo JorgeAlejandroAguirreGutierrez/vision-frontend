@@ -1,8 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import {NgbModal, ModalDismissReasons} from '@ng-bootstrap/ng-bootstrap';
+import * as util from '../../util';
 import Swal from 'sweetalert2';
 import { DatoAdicionalService } from '../../servicios/dato-adicional.service';
 import { DatoAdicional } from '../../modelos/dato-adicional';
+import { Sesion } from 'src/app/modelos/sesion';
+import { SesionService } from 'src/app/servicios/sesion.service';
+import { Router } from '@angular/router';
 
 
 @Component({
@@ -15,10 +19,12 @@ export class DatoAdicionalComponent implements OnInit {
   datoAdicional= new DatoAdicional();
   datosAdicionales: DatoAdicional[];
   pDatoAdicional= new DatoAdicional();
+  sesion: Sesion=null;
 
-  constructor(private datoAdicionalService: DatoAdicionalService, private modalService: NgbModal) { }
+  constructor(private sesionService: SesionService, private router: Router, private datoAdicionalService: DatoAdicionalService, private modalService: NgbModal) { }
 
   ngOnInit() {
+    util.validarSesion(this.sesion, this.sesionService, this.router);
     this.datoAdicionalService.obtener().subscribe(
       res=>this.datosAdicionales=res.resultado as DatoAdicional[]
     );

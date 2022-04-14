@@ -6,9 +6,6 @@ import { CommonModule, DatePipe } from '@angular/common';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
-//import { CollapseModule } from 'ngx-bootstrap/collapse'; // Es para el colapse a la derecha
-//import { ToastrModule } from 'ngx-toastr';
-
 // Componentes de Angular Material
 import { MaterialModule } from './componentes/material-module';
 
@@ -77,9 +74,7 @@ import { RoutingComponents } from './app-routing.module';
     NgbModule,
     FlexLayoutModule,
     MaterialModule,
-    AppRoutingModule,
-    //CollapseModule.forRoot(),
-    //ToastrModule.forRoot()
+    AppRoutingModule
   ],
   providers: [DatoAdicionalService, PlazoCreditoService, ImpuestoService, RetencionService, ModeloService,
               TransportistaService, UbicacionService, TipoContribuyenteService, VehiculoTransporteService,

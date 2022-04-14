@@ -4,6 +4,10 @@ import Swal from 'sweetalert2';
 import { TipoPago } from '../../modelos/tipo-pago';
 import { TipoPagoService } from '../../servicios/tipo-pago.service';
 import * as constantes from '../../constantes';
+import * as util from '../../util';
+import { SesionService } from 'src/app/servicios/sesion.service';
+import { Sesion } from 'src/app/modelos/sesion';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-tipo-pago',
@@ -13,10 +17,12 @@ import * as constantes from '../../constantes';
 export class TipoPagoComponent implements OnInit {
 
   tipoPago= new TipoPago();
+  sesion: Sesion=null;
 
-  constructor(private tabService: TabService,private tipoPagoService: TipoPagoService) { }
+  constructor(private sesionService: SesionService, private router: Router, private tabService: TabService,private tipoPagoService: TipoPagoService) { }
 
   ngOnInit() {
+    util.validarSesion(this.sesion, this.sesionService, this.router);
     this.construirTipoPago();
   }
 

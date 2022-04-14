@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { EventEmitter, Injectable, Output } from '@angular/core';
 import { Factura } from '../modelos/factura';
 import { BehaviorSubject } from 'rxjs';
 import { Respuesta } from '../respuesta';
@@ -15,13 +15,18 @@ import { FacturaDetalle } from '../modelos/factura-detalle';
 })
 export class FacturaService {
 
-  private messageSource = new BehaviorSubject(0);
-  currentMessage = this.messageSource.asObservable();
-
   constructor(private http: HttpClient, private router: Router) { }
 
-  enviar(facturaId: number) {
-    this.messageSource.next(facturaId);
+  @Output() eventoRecaudacion= new EventEmitter<Factura>();
+
+  enviarEventoRecaudacion(msg: Factura) {
+    this.eventoRecaudacion.emit(msg);
+  }
+
+  @Output() eventoEntrega= new EventEmitter<Factura>();
+
+  enviarEventoEntrega(msg: Factura) {
+    this.eventoEntrega.emit(msg);
   }
 
   crear(factura: Factura): Observable<Respuesta> {

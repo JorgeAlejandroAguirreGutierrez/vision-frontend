@@ -1,91 +1,96 @@
 'use strict';
 import {HttpHeaders} from '@angular/common/http';
+import { SesionService } from './servicios/sesion.service';
+import * as constantes from './constantes';
+import { Router } from '@angular/router';
+import { Sesion } from './modelos/sesion';
 
 export const host='http://localhost:8000/api';
 export const ruta: string='/sicecuador';
 export const auxiliar: string='/auxiliar';
-export const plazoCredito: string='/plazocredito';
-export const datoAdicional: string='/datoadicional';
+export const plazoCredito: string='/plazoCredito';
+export const datoAdicional: string='/datoAdicional';
 export const impuesto: string='/impuesto';
-export const retencionCliente: string='/retencioncliente';
-export const grupoCliente: string='/grupocliente';
-export const tipoContribuyente: string='/tipocontribuyente';
+export const retencionCliente: string='/retencionCliente';
+export const grupoCliente: string='/grupoCliente';
+export const tipoContribuyente: string='/tipoContribuyente';
 export const transportista: string='/transportista';
 export const ubicacion: string='/ubicacion';
-export const vehiculoTransporte: string='/vehiculotransporte';
+export const vehiculoTransporte: string='/vehiculoTransporte';
 export const empresa: string='/empresa';
 export const parametro: string='/parametro';
 export const usuario: string = '/usuario';
 export const perfil: string = '/perfil';
 export const sesion: string = '/sesion';
+export const validar: string = '/validar';
 export const establecimiento: string = '/establecimiento';
-export const puntoVenta: string = '/puntoventa';
-export const origenIngreso: string = '/origeningreso';
+export const puntoVenta: string = '/puntoVenta';
+export const origenIngreso: string = '/origenIngreso';
 export const genero: string = '/genero';
-export const estadoCivil: string = '/estadocivil';
-export const calificacionCliente: string = '/calificacioncliente';
-export const tipoPago: string = '/tipopago';
-export const formaPago: string = '/formapago';
+export const estadoCivil: string = '/estadoCivil';
+export const calificacionCliente: string = '/calificacionCliente';
+export const tipoPago: string = '/tipoPago';
+export const formaPago: string = '/formaPago';
 export const cliente: string = '/cliente';
 export const factura: string = '/factura';
-export const facturaDetalle: string = '/facturadetalle';
-export const tipoRetencion: string = '/tiporetencion';
+export const facturaDetalle: string = '/facturaDetalle';
+export const tipoRetencion: string = '/tipoRetencion';
 export const servicio: string='/servicio';
 export const caracteristica: string='/caracteristica';
 export const bien: string = '/bien';
-export const activoFijo: string = '/activofijo';
+export const activoFijo: string = '/activoFijo';
 export const tipo: string = '/tipo';
-export const consultarTipo: string = '/consultartipo';
+export const consultarTipo: string = '/consultarTipo';
 export const producto: string = '/producto';
 export const medida: string = '/medida';
 export const buscar: string = '/buscar';
 export const calcular: string = '/calcular';
-export const calcularFacturaDetalleTemp: string = '/calcularfacturadetalletemp';
+export const calcularTotales: string = '/calcularTotales';
+export const calcularFacturaDetalleTemp: string = '/calcularFacturaDetalleTemp';
 export const identificacion: string = '/identificacion';
-export const razonSocial: string = '/razonsocial';
+export const razonSocial: string = '/razonSocial';
 export const codigo: string = '/codigo';
 export const importar: string = '/importar';
 export const impuestoPorcentaje: string = '/porcentaje';
 export const secuencia: string = '/secuencia';
 export const nombre: string = '/nombre';
 export const banco: string= '/banco';
-export const cuentaPropia: string= '/cuentapropia';
-export const franquiciaTarjeta: string= '/franquiciatarjeta';
+export const cuentaPropia: string= '/cuentaPropia';
+export const franquiciaTarjeta: string= '/franquiciaTarjeta';
 export const existencias: string= '/existencias';
 export const bodega: string= '/bodega';
-export const operadorTarjeta: string= '/operadortarjeta';
-export const tipoComprobante: string= "/tipocomprobante";
+export const operadorTarjeta: string= '/operadorTarjeta';
+export const tipoComprobante: string= "/tipoComprobante";
 export const recaudacion: string= "/recaudacion";
 export const credito: string= "/credito";
 export const amortizacion: string= "/amortizacion";
 export const entrega: string= "/entrega";
-export const guiaRemision: string= "/guiaremision";
-export const grupoProducto: string = "/grupoproducto";
+export const grupoProducto: string = "/grupoProducto";
 export const proveedor: string = "/proveedor";
-export const productoProveedor: string = "/productoproveedor";
-export const consultarGrupos: string = "/consultargrupos";
-export const consultarSubgrupos: string = "/consultarsubgrupos";
-export const consultarSecciones: string = "/consultarsecciones";
+export const productoProveedor: string = "/productoProveedor";
+export const consultarGrupos: string = "/consultarGrupos";
+export const consultarSubgrupos: string = "/consultarSubgrupos";
+export const consultarSecciones: string = "/consultarSecciones";
 export const consultarLineas: string = "/consultarlineas";
-export const consultarSublineas: string = "/consultarsublineas";
-export const consultarPresentaciones: string = "/consultarpresentaciones";
-export const consultarMovimientoContable: string = "/consultarmovimientocontable";
-export const consultarProveedor: string = "/consultarproveedor";
-export const cuentaContable:string= "/cuentacontable";
-export const presentacionProducto: string = "/presentacionproducto";
-export const obtenerGrupoProducto: string = "/obtenergrupoproducto";
-export const categoriaProducto: string = "/categoriaproducto";
-export const afectacionContable: string = "/afectacioncontable";
-export const tipoGasto: string = "/tipogasto";
+export const consultarSublineas: string = "/consultarSublineas";
+export const consultarPresentaciones: string = "/consultarPresentaciones";
+export const consultarMovimientoContable: string = "/consultarMovimientoContable";
+export const consultarProveedor: string = "/consultarProveedor";
+export const cuentaContable:string= "/cuentaContable";
+export const presentacionProducto: string = "/presentacionProducto";
+export const obtenerGrupoProducto: string = "/obtenerGrupoProducto";
+export const categoriaProducto: string = "/categoriaProducto";
+export const afectacionContable: string = "/afectacionContable";
+export const tipoGasto: string = "/tipoGasto";
 export const modelo: string= "/modelo";
-export const medidaPrecio: string= "/medidaprecio";
-export const movimientoContable: string= "/movimientocontable";
+export const medidaPrecio: string= "/medidaPrecio";
+export const movimientoContable: string= "/movimientoContable";
 export const precio: string= "/precio";
 export const segmento: string= "/segmento";
-export const saldoInicialInventario: string= "/saldoinicialinventario";
+export const saldoInicialInventario: string= "/saldoInicialInventario";
 export const kardex: string= "/kardex";
-export const equivalenciaMedida: string= "/tablaequivalenciamedida";
-export const buscarEquivalenciaMedida:string="/buscarmedidasequivalentes"
+export const equivalenciaMedida: string= "/tablaEquivalenciaMedida";
+export const buscarEquivalenciaMedida:string="/buscarMedidasEquivalentes"
 export const generar: string= "/generar";
 export const pdf: string= "/pdf";
 
@@ -97,3 +102,22 @@ export const options = {headers: headers};
 export const headersCargarArchivo= new HttpHeaders({'Authorization': 'Basic '+btoa(credencial)});
 export const optionsCargarArchivo = {headers: headersCargarArchivo};
 export const optionsGenerarArchivo = {headers: headers, responseType: 'blob' as 'json' };
+
+export function validarSesion(sesion: Sesion, sesionService: SesionService, router: Router){
+    sesion=sesionService.getSesion();
+    sesionService.validar(sesion).subscribe(
+        res => {
+            sesion=res.resultado as Sesion;
+        },
+        err => {
+            if(err.error.codigo==constantes.error_codigo_sesion_invalida){
+                sesionService.cerrarSesion();
+                this.router.navigate(['/index']);
+            }
+            if(err.error.codigo==constantes.error_codigo_modelo_no_existente){
+                sesionService.cerrarSesion();
+                this.router.navigate(['/index']);
+            }
+        }
+    );
+}

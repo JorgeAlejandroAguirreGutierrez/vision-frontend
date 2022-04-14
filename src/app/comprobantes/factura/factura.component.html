@@ -1,5 +1,5 @@
 <div class="contenedor">
-    <mat-stepper linear #stepper>
+    <mat-stepper [linear]="isLinear" #stepper>
         <!-- Paso Facturación -->
         <mat-step [stepControl]="firstFormGroup" [editable]="isEditable" >
             <nav class="navbar-light nav-fijo">
@@ -97,10 +97,6 @@
                                     <input type="text" class="form-control-sm" placeholder="Clientes" matInput
                                         [formControl]="seleccionRazonSocialCliente"
                                         [matAutocomplete]="razonSocialCliente">
-                                    <!--button mat-button *ngIf="factura.cliente?.razonSocial" matSuffix
-                                        mat-icon-button (click)="factura.cliente?.razonSocial=''">
-                                        <mat-icon>close</mat-icon>
-                                    </button-->
                                 </mat-form-field>
                             </div>
                             <div class="col-1 centrar iconos">
@@ -312,8 +308,7 @@
                         </div>
                     </div>
                 </mat-expansion-panel>
-                <mat-expansion-panel (opened)="panelOpenState = true" (closed)="panelOpenState = false"
-                    *ngIf="verAcordeonFacturaDetalle">
+                <mat-expansion-panel (opened)="panelOpenState = true" (closed)="panelOpenState = false" *ngIf="verAcordeonFacturaDetalle">
                     <mat-expansion-panel-header>
                         <mat-panel-title>
                             <i><u>DETALLE FACTURA</u></i>
@@ -529,31 +524,6 @@
                                     <td mat-cell *matCellDef="let facturaDetalle" class="text-center">
                                         {{facturaDetalle.porcentajeDescuentoLinea}} </td>
                                 </ng-container>
-                                <!-- Descuento SubTotal Columna -->
-                                <!--ng-container matColumnDef="desc_sub">
-                                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Desc. ST. </th>
-                                    <td mat-cell *matCellDef="let facturaDetalle" class="text-center">
-                                        {{facturaDetalle.valorDescuentoLinea}} </td>
-                                </ng-container-->
-                                <!-- Descuento SubTotal% Columna -->
-                                <!--ng-container matColumnDef="desc_por_sub">
-                                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Desc. ST% </th>
-                                    <td mat-cell *matCellDef="let facturaDetalle" class="text-center">
-                                        {{facturaDetalle.porcentajeDescuentoLinea}} </td>
-                                </ng-container-->
-                                <!-- Descuento al Total Columna -->
-                                <!--ng-container matColumnDef="desc_tot">
-                                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Desc. T </th>
-                                    <td mat-cell *matCellDef="let facturaDetalle" class="text-center">
-                                        {{facturaDetalle.valorDescuentoTotalLinea}} </td>
-                                </ng-container-->
-                                <!-- Descuento al Total % Columna -->
-                                <!--ng-container matColumnDef="desc_por_tot">
-                                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Desc. T% </th>
-                                    <td mat-cell *matCellDef="let facturaDetalle" class="text-center">
-                                        {{facturaDetalle.porcentajeDescuentoTotalLinea}} </td>
-                                </ng-container-->
-                                <!-- Impuesto Columna -->
                                 <ng-container matColumnDef="impuesto">
                                     <th mat-header-cell *matHeaderCellDef mat-sort-header> IVA </th>
                                     <td mat-cell *matCellDef="let facturaDetalle" class="text-center">
@@ -579,16 +549,6 @@
                                         <ng-container *ngIf="!facturaDetalle.entregado">NO</ng-container>
                                     </td>
                                 </ng-container>
-                                <!-- Serie Columna -->
-                                <!--ng-container matColumnDef="serie">
-                                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Serie </th>
-                                    <td mat-cell *matCellDef="let i=index">
-                                        <button mat-icon-button color="primary" focusable="false"
-                                            (click)="asignarSeries(modalSeries, i)">
-                                            <i class="fa fa-plus mat-icon"></i>
-                                        </button>
-                                    </td>
-                                </ng-container-->
                                 <ng-container matColumnDef="acciones">
                                     <th mat-header-cell *matHeaderCellDef mat-sort-header> Acciones </th>
                                     <td mat-cell *matCellDef="let i=index" class="text-center">
@@ -768,7 +728,7 @@
         <!-- Paso Recaudación -->
         <mat-step [stepControl]="secondFormGroup" [editable]="isEditable">
             <ng-template matStepLabel>Recaudación</ng-template>
-            <app-recaudacion [factura]="facturaCrear" (propagar)="procesaPropagar($event)"></app-recaudacion>
+            <app-recaudacion [stepper]="stepper"></app-recaudacion>
             <mat-divider></mat-divider>
             <div>
                 <button mat-button matStepperPrevious>Atras</button>
@@ -778,7 +738,7 @@
         <!-- Pasos Entrega -->
         <mat-step [stepControl]="thirdFormGroup"  [editable]="isEditable">
             <ng-template matStepLabel>Entrega</ng-template>
-            <app-entrega [factura]="facturaCrear"></app-entrega>
+            <app-entrega></app-entrega>
             <mat-divider></mat-divider>
             <div>
                 <button mat-button matStepperPrevious>Atras</button>

@@ -2,7 +2,7 @@ import { Direccion } from './direccion';
 import { Transportista } from './transportista';
 import { Factura } from './factura';
 
-export class GuiaRemision {
+export class Entrega {
     id: number;
     codigo: string;
     fecha: Date;

@@ -1,10 +1,10 @@
 import { Component, OnInit, ViewChild, ElementRef, Renderer2 } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { Observable } from 'rxjs';
-import { startWith, map, debounceTime } from 'rxjs/operators';
+import { startWith, map } from 'rxjs/operators';
 import Swal from 'sweetalert2';
 import * as constantes from '../../constantes';
-
+import * as util from '../../util';
 import { Producto } from '../../modelos/producto';
 import { ProductoService } from '../../servicios/producto.service';
 import { Proveedor } from '../../modelos/proveedor';
@@ -15,6 +15,9 @@ import { ProductoProveedorService } from '../../servicios/producto-proveedor.ser
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
+import { Sesion } from 'src/app/modelos/sesion';
+import { SesionService } from 'src/app/servicios/sesion.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-proveedor-producto',
@@ -23,6 +26,7 @@ import { MatTableDataSource } from '@angular/material/table';
 })
 export class ProveedorProductoComponent implements OnInit {
 
+  sesion: Sesion=null;
   verPanelAsignarProveedor: boolean = false;
   abrirPanelAsignarProveedor: boolean = true;
   deshabilitarEditarProveedor: boolean = false;
@@ -62,9 +66,10 @@ export class ProveedorProductoComponent implements OnInit {
   clickedRowsProductoProveedor = new Set<ProductoProveedor>();
   
   constructor(private renderer: Renderer2, private productoService: ProductoService, private proveedorService: ProveedorService,
-              private productoProveedorService: ProductoProveedorService) { }
+              private productoProveedorService: ProductoProveedorService, private sesionService: SesionService, private router: Router) { }
 
   ngOnInit() {
+    util.validarSesion(this.sesion, this.sesionService, this.router);
     this.consultarProductos();
     this.consultarProveedores();
     this.filtroProductos = this.controlProducto.valueChanges

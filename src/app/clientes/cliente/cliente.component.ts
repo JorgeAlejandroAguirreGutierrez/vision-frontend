@@ -3,6 +3,7 @@ import { Component, OnInit, HostListener, Input, Type, ViewChild, ɵConsole } fr
 import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
 import Swal from 'sweetalert2';
 import * as constantes from '../../constantes';
+import * as util from '../../util';
 
 import { environment } from '../../../environments/environment';
 import { Empresa } from '../../modelos/empresa';
@@ -159,15 +160,9 @@ export class ClienteComponent implements OnInit {
     private sesionService: SesionService, private empresaService: EmpresaService, private segmentoService: SegmentoService,
     private tipoContribuyenteService: TipoContribuyenteService, private modalService: NgbModal) { }
 
-  validarSesion() {
-    this.sesion = this.sesionService.getSesion();
-    if (this.sesion == undefined)
-      this.router.navigate(['/iniciosesion']);
-  }
-
   ngOnInit() {
+    util.validarSesion(this.sesion, this.sesionService, this.router);
     this.cliente = new Cliente();
-    this.validarSesion();
     this.construirCliente();
     this.obtenerEmpresa();
     this.obtenerSesion();

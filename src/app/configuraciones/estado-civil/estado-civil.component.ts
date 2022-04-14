@@ -3,6 +3,7 @@ import { TabService } from '../../componentes/services/tab.service';
 import { EstadoCivil } from '../../modelos/estado-civil';
 import { EstadoCivilService } from '../../servicios/estado-civil.service';
 import * as constantes from '../../constantes';
+import * as util from '../../util';
 import Swal from 'sweetalert2';
 import { Router } from '@angular/router';
 import { Sesion } from '../../modelos/sesion';
@@ -31,6 +32,7 @@ export class EstadoCivilComponent implements OnInit {
     private sesionService: SesionService,private router: Router) { }
 
   ngOnInit() {
+    util.validarSesion(this.sesion, this.sesionService, this.router);
     this.construirEstadoCivil();
     this.consultar();
     this.sesion= this.sesionService.getSesion();

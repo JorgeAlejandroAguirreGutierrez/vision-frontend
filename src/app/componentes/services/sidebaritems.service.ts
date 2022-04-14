@@ -24,7 +24,6 @@ import { FacturaComponent } from "../../comprobantes/factura/factura.component";
 import { PedidoComponent } from "../../comprobantes/pedido/pedido.component";
 import { ProformaComponent } from "../../comprobantes/proforma/proforma.component";
 import { EgresoComponent } from "../../comprobantes/egreso/egreso.component";
-import { FacturaLeerComponent } from '../../comprobantes/factura/factura-leer/factura-leer.component';
 
 import { ProductoComponent } from "../../inventarios/producto/producto.component";
 import { PromocionComponent } from "../../inventarios/promocion/promocion.component";
@@ -41,7 +40,6 @@ import { GrupoProductoComponent } from '../../inventarios/grupo-producto/grupo-p
 import { GeneroComponent } from '../../configuraciones/genero/genero.component';
 import { UbicacionComponent } from '../../configuraciones/ubicacion/ubicacion.component';
 import { TipoPagoComponent } from '../../configuraciones/tipo-pago/tipo-pago.component';
-import { TipoPagoLeerComponent } from '../../configuraciones/tipo-pago/tipo-pago-leer/tipo-pago-leer.component';
 import { EstadoCivilComponent } from '../../configuraciones/estado-civil/estado-civil.component';
 import { ImportarComponent } from '../../configuraciones/importar/importar.component';
 import { ExportarComponent } from '../../configuraciones/exportar/exportar.component';
@@ -79,7 +77,6 @@ export class SidebarItemsService {
 
     if (tabNombre == constantes.modulo_compras) {
       this.llenarOpciones(ProveedorComponent, constantes.tab_crear_proveedor, constantes.item_crear_proveedor, constantes.ico_crear_proveedor);
-      //this.llenarOpciones(FacturaLeerComponent, constantes.tab_buscar_proveedor, constantes.item_buscar_proveedor, constantes.ico_buscar_proveedor);
       this.llenarOpciones(FacturaCompraComponent, constantes.tab_crear_factura_compra, constantes.item_crear_factura_compra, constantes.ico_crear_factura_compra);
     }
 
@@ -89,7 +86,6 @@ export class SidebarItemsService {
       this.llenarOpciones(ProformaComponent, constantes.tab_crear_proforma, constantes.item_crear_proforma, constantes.ico_crear_proforma);
       this.llenarOpciones(EgresoComponent, constantes.tab_crear_egreso, constantes.item_crear_egreso, constantes.ico_crear_egreso);
       this.llenarOpciones(EgresoComponent, constantes.tab_crear_recaudacion, constantes.item_crear_recaudacion, constantes.ico_crear_recaudacion);
-      //this.llenarOpciones(FacturaLeerComponent, constantes.tab_buscar_factura, constantes.item_buscar_factura, constantes.ico_buscar_factura);
     }
 
     if (tabNombre == constantes.modulo_inventarios) {
@@ -110,12 +106,10 @@ export class SidebarItemsService {
 
     if (tabNombre == constantes.modulo_financiero) {
       this.llenarOpciones(FacturaComponent, constantes.tab_crear_factura, constantes.item_crear_factura, constantes.ico_crear_factura);
-      //this.llenarOpciones(FacturaLeerComponent, constantes.tab_buscar_factura, constantes.item_buscar_factura, constantes.ico_buscar_factura);
     }
 
     if (tabNombre == constantes.modulo_activos_fijos) {
       this.llenarOpciones(FacturaComponent, constantes.tab_crear_factura, constantes.item_crear_factura, constantes.ico_crear_factura);
-      //this.llenarOpciones(FacturaLeerComponent, constantes.tab_buscar_factura, constantes.item_buscar_factura, constantes.ico_buscar_factura);
     }
 
     if (tabNombre == constantes.modulo_talento_humano) {
@@ -124,41 +118,33 @@ export class SidebarItemsService {
 
     if (tabNombre == constantes.modulo_produccion) {
       this.llenarOpciones(FacturaComponent, constantes.tab_crear_factura, constantes.item_crear_factura, constantes.ico_crear_factura);
-      //this.llenarOpciones(FacturaLeerComponent, constantes.tab_buscar_factura, constantes.item_buscar_factura, constantes.ico_buscar_factura);
     }
 
     if (tabNombre == constantes.modulo_importacion) {
       this.llenarOpciones(FacturaComponent, constantes.tab_crear_factura, constantes.item_crear_factura, constantes.ico_crear_factura);
-      //this.llenarOpciones(FacturaLeerComponent, constantes.tab_buscar_factura, constantes.item_buscar_factura, constantes.ico_buscar_factura);
     }
 
     if (tabNombre == constantes.modulo_configuracion) {
       this.llenarOpciones(EstadoCivilComponent,constantes.tab_crear_estado_civil, constantes.item_crear_estado_civil, constantes.ico_crear_estado_civil);
-      //this.llenarOpciones(EstadoCivilLeerComponent, constantes.tab_buscar_estado_civil, constantes.item_buscar_estado_civil, constantes.ico_buscar_estado_civil);
       this.llenarOpciones(GeneroComponent, constantes.tab_crear_genero, constantes.item_crear_genero, constantes.ico_crear_genero);
       this.llenarOpciones(TipoPagoComponent,constantes.tab_crear_tipo_pago, constantes.item_crear_tipo_pago, constantes.ico_crear_tipo_pago);
       //Integrar con TipoPago
-      this.llenarOpciones(TipoPagoLeerComponent,constantes.tab_crear_tipo_pago, constantes.item_crear_tipo_pago, constantes.ico_crear_tipo_pago);
       this.llenarOpciones(TransportistaComponent, constantes.tab_crear_transportista, constantes.item_crear_transportista, constantes.ico_crear_transportista);
       this.llenarOpciones(UbicacionComponent,constantes.tab_crear_ubicacion, constantes.item_crear_ubicacion, constantes.ico_crear_ubicacion);
-      //this.llenarOpciones(UbicacionLeerComponent, constantes.tab_buscar_ubicacion, constantes.item_buscar_ubicacion, constantes.ico_buscar_ubicacion);
       this.llenarOpciones(ImportarComponent, constantes.tab_crear_importacion, constantes.item_crear_importacion, constantes.ico_crear_importacion);
       this.llenarOpciones(ExportarComponent, constantes.tab_crear_exportacion, constantes.item_crear_exportacion, constantes.ico_crear_exportacion);
     }
     
     if (tabNombre == constantes.modulo_estadisticas) {
       this.llenarOpciones(FacturaComponent, constantes.tab_crear_factura, constantes.item_crear_factura, constantes.ico_crear_factura);
-      //this.llenarOpciones(FacturaLeerComponent, constantes.tab_buscar_factura, constantes.item_buscar_factura, constantes.ico_buscar_factura);
     }
 
     if (tabNombre == constantes.modulo_control) {
       this.llenarOpciones(FacturaComponent, constantes.tab_crear_factura, constantes.item_crear_factura, constantes.ico_crear_factura);
-      //this.llenarOpciones(FacturaLeerComponent, constantes.tab_buscar_factura, constantes.item_buscar_factura, constantes.ico_buscar_factura);
     }
 
     if (tabNombre == constantes.modulo_auditoria) {
       this.llenarOpciones(FacturaComponent, constantes.tab_crear_factura, constantes.item_crear_factura, constantes.ico_crear_factura);
-      //this.llenarOpciones(FacturaLeerComponent, constantes.tab_buscar_factura, constantes.item_buscar_factura, constantes.ico_buscar_factura);
     }
 
     if (tabNombre == constantes.modulo_usuarios) {

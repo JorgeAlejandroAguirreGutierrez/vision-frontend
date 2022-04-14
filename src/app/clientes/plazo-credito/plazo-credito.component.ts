@@ -1,6 +1,7 @@
-import { Component, OnInit, HostListener, Type} from '@angular/core';
+import { Component, OnInit, HostListener} from '@angular/core';
 import Swal from 'sweetalert2';
 import * as constantes from '../../constantes';
+import * as util from '../../util';
 
 import { ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
@@ -12,6 +13,7 @@ import { Sesion } from '../../modelos/sesion';
 import { SesionService } from '../../servicios/sesion.service';
 import { PlazoCreditoService } from '../../servicios/plazo-credito.service';
 import { PlazoCredito } from '../../modelos/plazo-credito';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-plazo-credito',
@@ -38,10 +40,10 @@ export class PlazoCreditoComponent implements OnInit {
   @ViewChild(MatSort) sort: MatSort;
 
   constructor(private tabService: TabService,private plazoCreditoService: PlazoCreditoService,
-    private sesionService: SesionService) { }
+    private sesionService: SesionService, private router: Router) { }
 
   ngOnInit() {
-    this.sesion= this.sesionService.getSesion();
+    util.validarSesion(this.sesion, this.sesionService, this.router);
     this.construirPlazoCredito();
     this.consultar();
   }

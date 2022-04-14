@@ -18,7 +18,6 @@ import { MenuComponent } from './componentes/menu/menu.component';
 import { DatoAdicionalComponent } from './configuraciones/dato-adicional/dato-adicional.component';
 import { EmpresaComponent } from './configuraciones/empresa/empresa.component';
 import { UbicacionComponent } from './configuraciones/ubicacion/ubicacion.component';
-import { UbicacionLeerComponent } from './configuraciones/ubicacion/ubicacion-leer/ubicacion-leer.component';
 
 // Módulo de Usuarios
 import { SesionComponent } from './usuarios/sesion/sesion.component';
@@ -38,17 +37,14 @@ import { GrupoClienteComponent } from './clientes/grupo-cliente/grupo-cliente.co
 import { OrigenIngresoComponent } from './clientes/origen-ingreso/origen-ingreso.component';
 import { CalificacionClienteComponent } from './clientes/calificacion-cliente/calificacion-cliente.component';
 import { EstadoCivilComponent } from './configuraciones/estado-civil/estado-civil.component';
-import { EstadoCivilLeerComponent } from './configuraciones/estado-civil/estado-civil-leer/estado-civil-leer.component';
 import { GeneroComponent } from './configuraciones/genero/genero.component';
 import { PlazoCreditoComponent } from './clientes/plazo-credito/plazo-credito.component';
 import { ImpuestoComponent } from './configuraciones/impuesto/impuesto.component';
 import { FormaPagoComponent } from './clientes/forma-pago/forma-pago.component';
 import { TipoPagoComponent } from './configuraciones/tipo-pago/tipo-pago.component';
-import { TipoPagoLeerComponent } from './configuraciones/tipo-pago/tipo-pago-leer/tipo-pago-leer.component';
 
 //Módulo de Inventarios
 import { BodegaComponent } from './inventarios/bodega/bodega.component';
-import { BodegaLeerComponent } from './inventarios/bodega/bodega-leer/bodega-leer.component';
 import { MedidaComponent } from './inventarios/medida/medida.component';
 import { GrupoProductoComponent, DialogoMovimientoContableComponent } from './inventarios/grupo-producto/grupo-producto.component';
 import { TablaGrupoProductoComponent } from './inventarios/grupo-producto/tabla-grupo-producto/tabla-grupo-producto.component';
@@ -81,7 +77,6 @@ import { ChequeComponent } from './comprobantes/recaudacion/cheque/cheque.compon
 
 // Módulo de Comprobantes
 import { FacturaComponent } from './comprobantes/factura/factura.component';
-import { FacturaLeerComponent } from './comprobantes/factura/factura-leer/factura-leer.component';
 import { EgresoComponent } from './comprobantes/egreso/egreso.component';
 import { PedidoComponent } from './comprobantes/pedido/pedido.component';
 import { ProformaComponent } from './comprobantes/proforma/proforma.component';
@@ -103,7 +98,6 @@ import { TablesComponent } from './componentes/pages/tables/tables.component';
 import { FormsComponent } from './componentes/pages/forms/forms.component';
 import { TypographyComponent } from './componentes/pages/typography/typography.component';
 import { MapsComponent } from './componentes/pages/maps/maps.component';
-import { NotificationsComponent } from './componentes/pages/notifications/notifications.component';
 
 
 const routes: Routes = [
@@ -114,7 +108,6 @@ const routes: Routes = [
   {path: 'menu', component: MenuComponent},
   // Rutas del Modulo de configuración
   {path: 'cliente/ubicacion', component: UbicacionComponent},
-  {path: 'cliente/ubicacion-mostrar', component: UbicacionLeerComponent},
   {path: 'cliente/empresa', component: EmpresaComponent},
   {path: 'cliente/datoadicional', component: DatoAdicionalComponent},
   // Rutas para el modulo de usuarios
@@ -131,12 +124,10 @@ const routes: Routes = [
   {path: 'cliente/grupocliente', component: GrupoClienteComponent},
   {path: 'cliente/genero', component: GeneroComponent},
   {path: 'cliente/estadocivil', component: EstadoCivilComponent},
-  {path: 'cliente/estadocivil-leer', component: EstadoCivilLeerComponent},
   {path: 'cliente/calificacioncliente', component: CalificacionClienteComponent},
   {path: 'cliente/origeningreso', component: OrigenIngresoComponent},
   {path: 'cliente/formapago', component: FormaPagoComponent},
   {path: 'cliente/tipopago', component: TipoPagoComponent},
-  {path: 'cliente/tipopago-leer', component: TipoPagoLeerComponent},
   // Rutas para el Modulo de inventarios
   {path: 'producto', component: ProductoComponent},
   {path: 'inventario/medida', component: MedidaComponent},
@@ -153,16 +144,13 @@ const routes: Routes = [
   {path: 'factura-compra', component: FacturaCompraComponent},
   // Rutas para el módulo de comprobantes
   {path: 'factura', component: FacturaComponent},
-  {path: 'factura-leer', component: FacturaLeerComponent},
   // Estos no se usa, borrar al final
   {path: 'dashboard', component: DashboardComponent},
   {path: 'forms', component: FormsComponent},
   {path: 'tables', component: TablesComponent},
   {path: 'typography', component: TypographyComponent},
   {path: 'maps', component: MapsComponent},
-  //{path: 'notifications', component: NotificationsComponent},
   {path: 'proforma', component: ProformaComponent},
-  //{path: '**',   redirectTo: '/iniciosesion', pathMatch: 'full'},
 ];
 
 @NgModule({
@@ -191,7 +179,6 @@ export const RoutingComponents = [
   CambioCredencialesComponent,
   // configuración
   UbicacionComponent,
-  UbicacionLeerComponent,
   EmpresaComponent,
   DatoAdicionalComponent,
   //Usuarios
@@ -213,11 +200,9 @@ export const RoutingComponents = [
   OrigenIngresoComponent,
   CalificacionClienteComponent,
   EstadoCivilComponent,
-  EstadoCivilLeerComponent,
   GeneroComponent,
   FormaPagoComponent,
   TipoPagoComponent,
-  TipoPagoLeerComponent,
   // Inventarios
   ProductoComponent,
   DialogoGrupoProductoComponent,
@@ -225,7 +210,6 @@ export const RoutingComponents = [
   DialogoMovimientoContableComponent,
   TablaGrupoProductoComponent,
   BodegaComponent,
-  BodegaLeerComponent,
   MedidaComponent,
   KardexComponent,
   ProveedorProductoComponent,
@@ -253,7 +237,6 @@ export const RoutingComponents = [
   ChequeComponent,
   //Comprobantes
   FacturaComponent,
-  FacturaLeerComponent,
   EgresoComponent,
   PedidoComponent,
   ProformaComponent,
@@ -271,6 +254,5 @@ export const RoutingComponents = [
   TablesComponent,
   FormsComponent,
   TypographyComponent,
-  MapsComponent,
-  //NotificationsComponent
+  MapsComponent
 ];

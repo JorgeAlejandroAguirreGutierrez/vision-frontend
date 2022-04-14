@@ -1,10 +1,13 @@
-import { Component, OnInit,ViewChild, HostListener, Input } from '@angular/core';
-import {NgbModal, ModalDismissReasons} from '@ng-bootstrap/ng-bootstrap';
+import { Component, OnInit, HostListener } from '@angular/core';
 import Swal from 'sweetalert2';
 import { UbicacionService } from '../../servicios/ubicacion.service';
 import { Ubicacion } from '../../modelos/ubicacion';
 import { TabService } from '../../componentes/services/tab.service';
 import * as constantes from '../../constantes';
+import * as util from '../../util';
+import { Sesion } from 'src/app/modelos/sesion';
+import { SesionService } from 'src/app/servicios/sesion.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-ubicacion',
@@ -14,10 +17,12 @@ import * as constantes from '../../constantes';
 export class UbicacionComponent implements OnInit {
 
   ubicacion= new Ubicacion();
+  sesion: Sesion;
 
-  constructor(private tabService: TabService,private ubicacionService: UbicacionService) { }
+  constructor(private sesionService: SesionService, private router: Router, private tabService: TabService,private ubicacionService: UbicacionService) { }
 
   ngOnInit() {
+    util.validarSesion(this.sesion, this.sesionService, this.router);
     this.construirUbicacion();
   }
 

@@ -1,5 +1,6 @@
 import { Component, OnInit, HostListener  } from '@angular/core';
 import * as constantes from '../../constantes';
+import * as util from '../../util';
 import Swal from 'sweetalert2';
 
 import { Sesion } from '../../modelos/sesion';
@@ -11,6 +12,7 @@ import { ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-grupo-cliente',
@@ -46,10 +48,10 @@ export class GrupoClienteComponent implements OnInit {
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
-  constructor(private grupoClienteService: GrupoClienteService, private sesionService: SesionService) { }
+  constructor(private grupoClienteService: GrupoClienteService, private sesionService: SesionService, private router: Router) { }
 
   ngOnInit() {
-    this.sesion = this.sesionService.getSesion();
+    util.validarSesion(this.sesion, this.sesionService, this.router);
     this.consultar();
   }
 

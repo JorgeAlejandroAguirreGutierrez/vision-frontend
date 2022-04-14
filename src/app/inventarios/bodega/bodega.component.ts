@@ -1,17 +1,16 @@
 import { Component, HostListener, OnInit } from '@angular/core';
 import * as constantes from '../../constantes';
+import * as util from '../../util';
 import Swal from 'sweetalert2';
-
 import { Sesion } from '../../modelos/sesion';
 import { SesionService } from '../../servicios/sesion.service';
 import { BodegaService } from '../../servicios/bodega.service';
-import { TabService } from '../../componentes/services/tab.service';
 import { Bodega } from '../../modelos/bodega';
-
 import { ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-bodega',
@@ -21,7 +20,7 @@ import { MatTableDataSource } from '@angular/material/table';
 export class BodegaComponent implements OnInit {
 
 
-  sesion: Sesion;
+  sesion: Sesion=null;
   abrirPanelNuevaBodega = true;
   abrirPanelAdminBodega = false;
 
@@ -44,10 +43,10 @@ export class BodegaComponent implements OnInit {
   @ViewChild(MatSort) sort: MatSort;
 
   constructor(private bodegaService: BodegaService, 
-    private sesionService: SesionService) { }
+    private sesionService: SesionService, private router: Router) { }
 
   ngOnInit() {
-    this.sesion= this.sesionService.getSesion();
+    util.validarSesion(this.sesion, this.sesionService, this.router);
     this.construir_bodega();
     this.bodega.estado='ACTIVO';
     this.consultar();

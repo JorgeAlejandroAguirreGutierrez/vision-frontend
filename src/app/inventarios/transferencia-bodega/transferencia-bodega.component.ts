@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 import { startWith, map } from 'rxjs/operators';
 import Swal from 'sweetalert2';
 import * as constantes from '../../constantes';
-
+import * as util from '../../util';
 import { Producto } from '../../modelos/producto';
 import { ProductoService } from '../../servicios/producto.service';
 import { Bodega } from '../../modelos/bodega';
@@ -14,6 +14,9 @@ import { ProductoBodega } from '../../modelos/producto-bodega';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
+import { Router } from '@angular/router';
+import { SesionService } from 'src/app/servicios/sesion.service';
+import { Sesion } from 'src/app/modelos/sesion';
 
 @Component({
   selector: 'app-transferencia-bodega',
@@ -22,6 +25,7 @@ import { MatTableDataSource } from '@angular/material/table';
 })
 export class TransferenciaBodegaComponent implements OnInit {
 
+  sesion: Sesion=null;
   verPanelAsignarBodega: boolean = false;
   abrirPanelAsignarBodega:boolean = true;
   deshabilitarFiltroBodega: boolean = false;
@@ -60,9 +64,10 @@ export class TransferenciaBodegaComponent implements OnInit {
   dataSourceProductoBodega: MatTableDataSource<ProductoBodega>;
   clickedRowsBodega = new Set<ProductoBodega>();
 
-  constructor(private productoService: ProductoService, private bodegaService: BodegaService) { }
+  constructor(private productoService: ProductoService, private bodegaService: BodegaService, private sesionService: SesionService, private router: Router) { }
 
   ngOnInit() {
+    util.validarSesion(this.sesion, this.sesionService, this.router);
     this.consultarProductos();
     this.consultarBodegasDestino();
     this.filtroProductos = this.seleccionProducto.valueChanges

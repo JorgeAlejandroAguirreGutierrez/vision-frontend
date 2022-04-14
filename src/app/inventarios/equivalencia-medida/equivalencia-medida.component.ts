@@ -1,9 +1,9 @@
 import { Component, OnInit, HostListener, Type } from '@angular/core';
 import { TabService } from '../../componentes/services/tab.service';
 import Swal from 'sweetalert2';
+import * as util from '../../util';
 import { EquivalenciaMedida } from '../../modelos/equivalencia-medida';
 import { EquivalenciaMedidaService } from '../../servicios/equivalencia-medida.service';
-import { Medida } from '../../modelos/medida';
 import { MedidaService } from '../../servicios/medida.service';
 import * as constantes from '../../constantes';
 import { Router } from '@angular/router';
@@ -51,7 +51,7 @@ export class EquivalenciaMedidaComponent implements OnInit {
     private sesionService: SesionService,private router: Router) { }
 
   ngOnInit() {
-    this.sesion= this.sesionService.getSesion();
+    util.validarSesion(this.sesion, this.sesionService, this.router);
     this.construirEquivalenciaMedida();
     this.consultar();
   }

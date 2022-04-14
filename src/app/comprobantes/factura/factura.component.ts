@@ -1,14 +1,14 @@
 import { Router } from '@angular/router';
 import { Component, HostListener, OnInit, ViewChild } from '@angular/core';
 import { FormControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import * as constantes from '../../constantes';
+import * as util from '../../util';
 import { MatTableDataSource } from '@angular/material/table';
+import { MatPaginator } from '@angular/material/paginator';
 import { MatStepper } from '@angular/material/stepper';
 import {Observable} from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
 import Swal from 'sweetalert2';
-import { TabService } from '../../componentes/services/tab.service';
 import { Factura } from '../../modelos/factura';
 import { ClienteService } from '../../servicios/cliente.service';
 import { Cliente } from '../../modelos/cliente';
@@ -26,10 +26,10 @@ import { Caracteristica } from '../../modelos/caracteristica';
 import { Bodega } from '../../modelos/bodega';
 import { BodegaService } from '../../servicios/bodega.service';
 import { Precio } from '../../modelos/precio';
-
+import * as constantes from '../../constantes';
 import { FacturaDetalleService } from '../../servicios/factura-detalle.service';
 import { MatSort } from '@angular/material/sort';
-import { MatPaginator } from '@angular/material/paginator';
+import { TabService } from 'src/app/componentes/services/tab.service';
 
 @Component({
   selector: 'app-factura',
@@ -42,9 +42,9 @@ export class FacturaComponent implements OnInit {
   @ViewChild('paginatorFactura') paginatorFactura: MatPaginator;
 
   collapsed = true;
-  isLinear = true;
-  isEditable=true;
-  completed=true;
+  isLinear = false;
+  isEditable=false;
+  completed=false;
   categoriaProducto="B";
   estado="EMITIDA";
   facturaDetalleIndice=0;
@@ -83,6 +83,8 @@ export class FacturaComponent implements OnInit {
   abrirPanelNuevoFactura = true;
   abrirPanelAdminFactura = false;
   facturas: Factura[];
+  deshabilitarAgregarFacturaDetalle: boolean=false;
+  verAcordeonFacturaDetalle: boolean = false;
   
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild('paginatorFacturas') paginatorFacturas: MatPaginator;
@@ -90,15 +92,14 @@ export class FacturaComponent implements OnInit {
 
   constructor(private clienteService: ClienteService, private auxiliarService: AuxiliarService, private sesionService: SesionService, 
     private impuestoService: ImpuestoService, private facturaDetalleService: FacturaDetalleService, private router: Router,
-    private facturaService: FacturaService, private productoService: ProductoService, private bodegaService: BodegaService,
-    private modalService: NgbModal, private _formBuilder: FormBuilder, private tabService: TabService) { }
+    private facturaService: FacturaService, private productoService: ProductoService, private bodegaService: BodegaService, private tabService: TabService,
+    private modalService: NgbModal, private _formBuilder: FormBuilder) { }
 
-  facturaCrear: Factura=new Factura();
   factura: Factura = new Factura();
   auxiliarBuscar: Auxiliar=new Auxiliar();
 
-  columnasDetalleFactura: string[] = ['nombre', 'medida', 'cantidad', 'valor', 'descuento', 'desc_por',
-     'impuesto', 'desc_iva', 'total', 'entregado', 'acciones'];
+  columnasDetalleFactura: string[] = ['nombre', 'entregado', 'Medida', 'cantidad', 'valor', 'descuento'
+    , 'desc_por', 'desc_sub', 'desc_por_sub', 'desc_tot', 'desc_por_tot', 'impuesto', 'total', 'serie','acciones'];
   dataFacturaDetalle = new MatTableDataSource<FacturaDetalle>(this.factura.facturaDetalles);
 
   clientes: Cliente[]=[];
@@ -111,8 +112,6 @@ export class FacturaComponent implements OnInit {
   habilitar: boolean = true;
   habilitarClienteTce: boolean =true;
   habilitarClienteFacturaTce: boolean =true;
-  deshabilitarAgregarFacturaDetalle: boolean = true;
-  verAcordeonFacturaDetalle: boolean = false;
   impuestos: Impuesto[];
 
   //VARIABLES MUESTRA
@@ -157,28 +156,40 @@ export class FacturaComponent implements OnInit {
   }
 
   async ngOnInit() {
-    this.validarSesion();
+    util.validarSesion(this.sesion, this.sesionService, this.router);
     this.consultar();
     this.consultarClientes();
     this.construirFactura();
     this.consultarProductos();
     this.consultarImpuestos();
     this.consultarBodegas();
-    this.factura.sesion=this.sesionService.getSesion();
 
     this.dataFacturaDetalle.paginator = this.paginator;
 
-    this.firstFormGroup = this._formBuilder.group({
-      firstCtrl: ['', [Validators.required, Validators.min(0.01)]],
-    });
-    this.secondFormGroup = this._formBuilder.group({
-      secondCtrl: ['', Validators.required],
-    });
-    this.thirdFormGroup = this._formBuilder.group({
-      secondCtrl: ['', Validators.required],
+    this.firstFormGroup = new FormGroup({
+      firstCtrl: new FormControl()
     });
 
-    this.factura.vendedor = this.sesion.usuario;
+    this.firstFormGroup = this._formBuilder.group({
+      firstCtrl: ['', Validators.required]
+    });
+
+    this.secondFormGroup = new FormGroup({
+      secondCtrl: new FormControl()
+    });
+
+    this.secondFormGroup = this._formBuilder.group({
+      secondCtrl: ['', Validators.required]
+    });
+
+    this.thirdFormGroup = new FormGroup({
+      thirdCtrl: new FormControl()
+    });
+
+    this.thirdFormGroup = this._formBuilder.group({
+      thirdCtrl: ['', Validators.required]
+    });
+
     this.filtroProductos = this.seleccionProducto.valueChanges
       .pipe(
         startWith(''),
@@ -273,48 +284,31 @@ export class FacturaComponent implements OnInit {
     this.factura=new Factura();
   }
 
-  validarSesion(){
-    this.sesion = this.sesionService.getSesion();
-    if (this.sesion == undefined)
-      this.router.navigate(['/iniciosesion']);
-  }
   construirFactura() {
-    let facturaId=0;
-    this.facturaService.currentMessage.subscribe(message => facturaId = message);
-    if (facturaId!= 0) {
-      this.facturaService.obtener(facturaId).subscribe(
-        res => {
-          Object.assign(this.factura, res.resultado as Factura);
-          this.factura.construir();
-          this.estado = this.factura.estado? "EMITIDA": "ANULADA";
-          this.seleccionIdentificacionCliente.patchValue(this.factura.cliente);
-          this.seleccionRazonSocialCliente.patchValue(this.factura.cliente);
-          this.primerTelefonoCliente= this.factura.cliente.telefonos.length>0? this.factura.cliente.telefonos[0].numero: "";
-          this.primerCelularCliente= this.factura.cliente.celulares.length>0? this.factura.cliente.celulares[0].numero: "";
-          this.primerCorreoCliente= this.factura.cliente.correos.length>0? this.factura.cliente.correos[0].email: "";
-          this.habilitarClienteTce=false;
-          if (this.factura.clienteFactura.id!=0){
-            this.seleccionIdentificacionClienteFactura.patchValue(this.factura.clienteFactura);
-            this.seleccionRazonSocialClienteFactura.patchValue(this.factura.clienteFactura);
-            this.seleccionFacturar= true;
-            this.habilitarFacturar= false;
-            this.asignarFacturar();
-            this.habilitarClienteFacturaTce=false;
-            this.primerTelefonoClienteFactura= this.factura.clienteFactura.telefonos.length>0? this.factura.clienteFactura.telefonos[0].numero: "";
-            this.primerCelularClienteFactura= this.factura.clienteFactura.celulares.length>0? this.factura.clienteFactura.celulares[0].numero: "";
-            this.primerCorreoClienteFactura= this.factura.clienteFactura.correos.length>0? this.factura.clienteFactura.correos[0].email: "";
-          } else{
-            this.seleccionFacturar=false;
-            this.habilitarFacturar=true;
-          }
-          this.dataFacturaDetalle = new MatTableDataSource<FacturaDetalle>(this.factura.facturaDetalles);
-          this.facturaCrear=this.factura;
-          this.facturaService.enviar(0);
-        },
-        err => {
-          Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.message });
+    if (this.factura.id != 0) {
+        this.factura.normalizar();
+        this.estado = this.factura.estado? "EMITIDA": "ANULADA";
+        this.seleccionIdentificacionCliente.patchValue(this.factura.cliente);
+        this.seleccionRazonSocialCliente.patchValue(this.factura.cliente);
+        this.primerTelefonoCliente= this.factura.cliente.telefonos.length>0? this.factura.cliente.telefonos[0].numero: "";
+        this.primerCelularCliente= this.factura.cliente.celulares.length>0? this.factura.cliente.celulares[0].numero: "";
+        this.primerCorreoCliente= this.factura.cliente.correos.length>0? this.factura.cliente.correos[0].email: "";
+        this.habilitarClienteTce=false;
+        if (this.factura.clienteFactura.id!=0){
+          this.seleccionIdentificacionClienteFactura.patchValue(this.factura.clienteFactura);
+          this.seleccionRazonSocialClienteFactura.patchValue(this.factura.clienteFactura);
+          this.seleccionFacturar= true;
+          this.habilitarFacturar= false;
+          this.asignarFacturar();
+          this.habilitarClienteFacturaTce=false;
+          this.primerTelefonoClienteFactura= this.factura.clienteFactura.telefonos.length>0? this.factura.clienteFactura.telefonos[0].numero: "";
+          this.primerCelularClienteFactura= this.factura.clienteFactura.celulares.length>0? this.factura.clienteFactura.celulares[0].numero: "";
+          this.primerCorreoClienteFactura= this.factura.clienteFactura.correos.length>0? this.factura.clienteFactura.correos[0].email: "";
+        } else{
+          this.seleccionFacturar=false;
+          this.habilitarFacturar=true;
         }
-      )
+        this.dataFacturaDetalle = new MatTableDataSource<FacturaDetalle>(this.factura.facturaDetalles);
     }
   }
 
@@ -399,7 +393,7 @@ export class FacturaComponent implements OnInit {
     this.auxiliarBuscar.cliente.id=cliente_id;
     this.clienteService.obtenerAsync(cliente_id).then(
       res => {
-        this.factura.cliente = Object.assign(new Cliente(),res.resultado);
+        Object.assign(this.factura.cliente, res.resultado as Cliente);
         this.factura.cliente.construir();
         this.seleccionIdentificacionCliente.patchValue(this.factura.cliente);
         this.seleccionRazonSocialCliente.patchValue(this.factura.cliente);
@@ -439,7 +433,7 @@ export class FacturaComponent implements OnInit {
     this.auxiliarBuscar.cliente.id=cliente_id;
     this.clienteService.obtenerAsync(cliente_id).then(
       res => {
-        this.factura.cliente =Object.assign(new Cliente(),res.resultado);
+        Object.assign(this.factura.cliente,res.resultado as Cliente);
         this.factura.cliente.construir();
           this.seleccionIdentificacionCliente.patchValue(this.factura.cliente);
           this.seleccionRazonSocialCliente.patchValue(this.factura.cliente);     
@@ -476,7 +470,7 @@ export class FacturaComponent implements OnInit {
     let clienteId=this.seleccionIdentificacionClienteFactura.value.id;
     this.clienteService.obtener(clienteId).subscribe(
       res => {
-        this.factura.clienteFactura =Object.assign(new Cliente(),res.resultado);
+        Object.assign(this.factura.clienteFactura, res.resultado as Cliente);
         this.factura.clienteFactura.construir();
         this.seleccionIdentificacionClienteFactura.patchValue(this.factura.clienteFactura);
         this.seleccionRazonSocialClienteFactura.patchValue(this.factura.clienteFactura);
@@ -496,7 +490,7 @@ export class FacturaComponent implements OnInit {
     let cliente_id=this.seleccionRazonSocialClienteFactura.value.id;
     this.clienteService.obtener(cliente_id).subscribe(
       res => {
-        this.factura.clienteFactura =Object.assign(new Cliente(),res.resultado);
+        Object.assign(this.factura.clienteFactura, res.resultado as Cliente);
         this.factura.clienteFactura.construir();
         this.seleccionIdentificacionClienteFactura.patchValue(this.factura.clienteFactura);
         this.seleccionRazonSocialClienteFactura.patchValue(this.factura.clienteFactura);   
@@ -513,7 +507,6 @@ export class FacturaComponent implements OnInit {
   }
 
   asignarAuxiliar(content: any){
-    console.log("entro");
     if (this.factura.cliente.id!=undefined){
       this.modalService.open(content, { size: 'lg' }).result.then((result) => {
         if (result == "confirmar") {
@@ -583,7 +576,6 @@ export class FacturaComponent implements OnInit {
     this.facturaDetalleService.calcular(this.facturaDetalle).subscribe(
       res => {
         this.facturaDetalle = res.resultado as FacturaDetalle;
-        console.log(this.facturaDetalle);
       },
       err => {
         Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.message });
@@ -721,7 +713,6 @@ export class FacturaComponent implements OnInit {
     this.facturaService.calcular(this.factura).subscribe(
       res => {
         this.factura = res.resultado as Factura;
-        console.log(this.factura);
         this.limpiarProducto();
         this.dataFacturaDetalle = new MatTableDataSource<FacturaDetalle>(this.factura.facturaDetalles);
         Swal.fire(constantes.exito, constantes.exito_agregar_detalle_factura, constantes.exito_swal);
@@ -737,10 +728,10 @@ export class FacturaComponent implements OnInit {
       event.preventDefault();
     this.factura.sesion=this.sesion;
     this.factura.estado= this.estado=="EMITIDA"? true: false;
-    console.log(this.factura);
     this.facturaService.crear(this.factura).subscribe(
       res => {
-        this.facturaCrear = res.resultado as Factura
+        this.factura = res.resultado as Factura;
+        this.facturaService.enviarEventoRecaudacion(this.factura);
         this.stepper.next();
         Swal.fire(constantes.exito, constantes.exito_crear_factura, constantes.exito_swal);
       },
@@ -753,10 +744,10 @@ export class FacturaComponent implements OnInit {
   actualizar(event){
     if (event!=null)
       event.preventDefault();
-    console.log(this.factura);
     this.facturaService.actualizar(this.factura).subscribe(
       res => {
-        this.facturaCrear = res.resultado as Factura;
+        this.factura = res.resultado as Factura;
+        this.facturaService.enviarEventoRecaudacion(this.factura);
         this.stepper.next();
         Swal.fire(constantes.exito, constantes.exito_actualizar_factura, constantes.exito_swal);
       },
@@ -765,7 +756,6 @@ export class FacturaComponent implements OnInit {
   }
 
   consultarProductos(){
-    console.log("consultarProductos");
     if (this.categoriaProducto== "B"){
       this.consultarBienes(null);
     }
@@ -894,11 +884,12 @@ export class FacturaComponent implements OnInit {
     this.calcular();
   }
 
-  seleccionActualizar(facturaSeleccionado: Factura) {
-    if (!this.clickedRows.has(facturaSeleccionado)){
+  seleccionActualizar(factura: any) {
+    if (!this.clickedRows.has(factura)){
       this.clickedRows.clear();
-      this.clickedRows.add(facturaSeleccionado);
-      this.factura = facturaSeleccionado;
+      this.clickedRows.add(factura);
+      Object.assign(this.factura, factura as Factura);
+      this.construirFactura();
     } else {
       this.clickedRows.clear();
       this.factura = new Factura();
@@ -909,7 +900,6 @@ export class FacturaComponent implements OnInit {
     this.facturaService.calcular(this.factura).subscribe(
       res => {
         this.factura = res.resultado as Factura;
-        console.log(this.factura);
         this.dataFacturaDetalle = new MatTableDataSource<FacturaDetalle>(this.factura.facturaDetalles);
 
       },
@@ -949,12 +939,6 @@ export class FacturaComponent implements OnInit {
     this.dataSourceFactura.filter = filterValue.trim().toUpperCase();
     if (this.dataSourceFactura.paginator) {
       this.dataSourceFactura.paginator.firstPage();
-    }
-  }
-
-  procesaPropagar(mensaje: boolean){
-    if (mensaje){
-      this.stepper.next();
     }
   }
 

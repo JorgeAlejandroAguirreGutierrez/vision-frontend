@@ -34,6 +34,15 @@ export class SesionService {
     );
   }
 
+  validar(sesion: Sesion): Observable<Respuesta> {
+    return this.http.post<Respuesta>(environment.host + util.ruta + util.sesion+util.validar, sesion, util.options).pipe(
+      map(response => response as Respuesta),
+      catchError(err => {
+        return throwError(()=>err);
+      })
+    );
+  }
+
   setSesion(sesion: Sesion) {
     sessionStorage.setItem('sesion', JSON.stringify(sesion));
 
@@ -41,5 +50,9 @@ export class SesionService {
 
   getSesion(): Sesion {
     return JSON.parse(sessionStorage.getItem('sesion'));
+  }
+
+  cerrarSesion(){
+    sessionStorage.removeItem('sesion');
   }
 }

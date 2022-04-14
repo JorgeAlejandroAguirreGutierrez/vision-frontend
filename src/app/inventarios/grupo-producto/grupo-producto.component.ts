@@ -1,6 +1,6 @@
 import { Component, OnInit, HostListener, Type, Inject } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { Observable } from 'rxjs';
 import { startWith, map } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { Sesion } from '../../modelos/sesion';
@@ -8,6 +8,7 @@ import { SesionService } from '../../servicios/sesion.service';
 import { TabService } from '../../componentes/services/tab.service';
 import Swal from 'sweetalert2';
 import * as constantes from '../../constantes';
+import * as util from '../../util';
 import { GrupoProducto } from '../../modelos/grupo-producto';
 import { GrupoProductoService } from '../../servicios/grupo-producto.service';
 import { CategoriaProductoService } from '../../servicios/categoria-producto.service';
@@ -91,7 +92,7 @@ export class GrupoProductoComponent implements OnInit {
     private movimientoContableService: MovimientoContableService) { }
 
   async ngOnInit() {
-    this.sesion = this.sesionService.getSesion();
+    util.validarSesion(this.sesion, this.sesionService, this.router);
     this.construirGrupoProducto();
     this.consultar();
     console.log(this.gruposProductos);

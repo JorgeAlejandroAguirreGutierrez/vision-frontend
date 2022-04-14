@@ -4,6 +4,10 @@ import { Impuesto } from '../../modelos/impuesto';
 import {NgbModal, ModalDismissReasons} from '@ng-bootstrap/ng-bootstrap';
 import Swal from 'sweetalert2';
 import * as constantes from '../../constantes';
+import * as util from '../../util';
+import { SesionService } from 'src/app/servicios/sesion.service';
+import { Router } from '@angular/router';
+import { Sesion } from 'src/app/modelos/sesion';
 
 @Component({
   selector: 'app-impuesto',
@@ -15,10 +19,12 @@ export class ImpuestoComponent implements OnInit {
   impuesto= new Impuesto();
   impuestos: Impuesto[];
   pImpuesto= new Impuesto();
+  sesion: Sesion=null;
 
-  constructor(private impuestoService: ImpuestoService, private modalService: NgbModal) { }
+  constructor(private sesionService: SesionService, private router: Router, private impuestoService: ImpuestoService, private modalService: NgbModal) { }
 
   ngOnInit() {
+    util.validarSesion(this.sesion, this.sesionService, this.router);
     this.impuestoService.consultar().subscribe(
       res=>{
         this.impuestos= res.resultado as Impuesto[]

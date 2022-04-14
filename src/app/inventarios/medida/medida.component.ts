@@ -2,6 +2,7 @@ import { Component, HostListener, OnInit, Type } from '@angular/core';
 import { Router } from '@angular/router';
 import Swal from 'sweetalert2';
 import * as constantes from '../../constantes';
+import * as util from '../../util';
 
 import { ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
@@ -21,7 +22,7 @@ import { MedidaService } from '../../servicios/medida.service';
 })
 export class MedidaComponent implements OnInit {
 
-  sesion: Sesion;
+  sesion: Sesion=null;
   medida= new Medida();
   medidas: Medida[];
   ComponenteMedida: Type<any> = MedidaComponent;
@@ -44,7 +45,7 @@ export class MedidaComponent implements OnInit {
     private sesionService: SesionService,private router: Router) { }
 
   ngOnInit() {
-    this.sesion= this.sesionService.getSesion();
+    util.validarSesion(this.sesion, this.sesionService, this.router);
     this.construirMedida();
     this.consultar();
   }
