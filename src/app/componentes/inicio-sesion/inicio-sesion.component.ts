@@ -9,6 +9,7 @@ import { EmpresaService } from '../../servicios/empresa.service';
 import { ParametroService } from '../../servicios/parametro.service';
 import { environment } from '../../../environments/environment';
 import * as constantes from '../../constantes';
+import * as util from '../../util';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 export interface DialogData {
@@ -55,17 +56,24 @@ export class InicioSesionComponent implements OnInit {
             this.sesion=res.resultado as Sesion;
             this.sesionService.setSesion(this.sesion);
             Swal.fire(constantes.exito, res.mensaje, constantes.exito_swal);
+            this.navegarExito();
           },
-          error => Swal.fire(constantes.error, error.error.mensaje, constantes.error_swal),
-          () => this.navigate()
+          error => {
+            console.log(error);
+            Swal.fire(constantes.error, error.error.mensaje, constantes.error_swal);
+            this.navegarError();
+          }
         );
       },
       error => Swal.fire(constantes.error, error.error.mensaje, constantes.error_swal),
     );
   }
 
-  navigate() {
+  navegarExito() {
     this.router.navigateByUrl('/main');
+  }
+  navegarError() {
+    this.router.navigateByUrl('/index');
   }
 
   activarSesion() {

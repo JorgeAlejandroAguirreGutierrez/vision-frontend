@@ -27,8 +27,6 @@ import { FacturaDetalle } from '../../modelos/factura-detalle';
 })
 export class EntregaComponent implements OnInit {
 
-  estado: string="";
-  propio: string="";
   transportistas: Transportista[];
   vehiculosTransportes: VehiculoTransporte[];
   entrega: Entrega=new Entrega();
@@ -36,8 +34,7 @@ export class EntregaComponent implements OnInit {
   provincias: Ubicacion[];
   cantones: Ubicacion[];
   parroquias: Ubicacion[];
-  banderaOpcion: boolean=false;
-  ubicacion: Ubicacion=new Ubicacion();
+  deshabilitar: boolean=false;
 
   columnasFacturaDetalle: string[] = ['nombre', 'cantidad', 'precio_unitario', 'iva', 'total'];
   dataFacturaDetalle = new MatTableDataSource<FacturaDetalle>(this.entrega.factura.facturaDetalles);
@@ -64,7 +61,15 @@ export class EntregaComponent implements OnInit {
         res => {
           if (res.resultado!= null){
             Object.assign(this.entrega, res.resultado as Entrega);
-            console.log(this.entrega);
+          } else{
+            this.entrega.direccion.direccion=this.entrega.factura.cliente.direccion.direccion;
+            this.entrega.direccion.ubicacion=this.entrega.factura.cliente.direccion.ubicacion;
+            this.provincia();
+            this.canton();
+            this.entrega.telefono=this.entrega.factura.cliente.telefonos[0].numero;
+            this.entrega.celular=this.entrega.factura.cliente.celulares[0].numero;
+            this.entrega.correo=this.entrega.factura.cliente.correos[0].email;
+            this.deshabilitar=true;
           }
           this.dataFacturaDetalle = new MatTableDataSource<FacturaDetalle>(this.entrega.factura.facturaDetalles);
         },
@@ -108,7 +113,6 @@ export class EntregaComponent implements OnInit {
   crear(event: any) {
     if (event!=null)
       event.preventDefault();
-    this.entrega.estado=true;
     this.entrega.normalizar();
     console.log(this.entrega);
     this.entregaService.crear(this.entrega).subscribe(
@@ -127,7 +131,6 @@ export class EntregaComponent implements OnInit {
   actualizar(event: any) {
     if (event!=null)
       event.preventDefault();
-    this.entrega.estado=true;
     this.entrega.normalizar();
     console.log(this.entrega);
     this.entregaService.actualizar(this.entrega).subscribe(
@@ -212,15 +215,30 @@ export class EntregaComponent implements OnInit {
 
   seleccionarOpcion(event: any){
     if (event.value=="0"){
-      this.banderaOpcion=false;
-      this.entrega.direccion={... this.entrega.factura.cliente.direccion};
+      this.entrega.direccion.direccion=this.entrega.factura.cliente.direccion.direccion;
+      this.entrega.direccion.ubicacion=this.entrega.factura.cliente.direccion.ubicacion;
+      this.provincia();
+      this.canton();
+      this.entrega.telefono=this.entrega.factura.cliente.telefonos[0].numero;
+      this.entrega.celular=this.entrega.factura.cliente.celulares[0].numero;
+      this.entrega.correo=this.entrega.factura.cliente.correos[0].email;
+      this.entrega.inhabilitar=false;
+      this.deshabilitar=true;
     } else if (event.value=="1") {
-      this.banderaOpcion=true;
       this.entrega.direccion=new Direccion();
+      this.entrega.telefono="";
+      this.entrega.celular="";
+      this.entrega.correo="";
+      this.entrega.inhabilitar=false;
+      this.deshabilitar=false
     } else if (event.value=="2"){
-      this.entrega=new Entrega();
-      this.banderaOpcion=true;
+      this.entrega.transportista=new Transportista();
+      this.entrega.direccion=new Direccion();
+      this.entrega.telefono="";
+      this.entrega.celular="";
+      this.entrega.correo="";
       this.entrega.inhabilitar=true;
+      this.deshabilitar=true
     }
   }
 

@@ -23,9 +23,7 @@ import { UbicacionComponent } from './configuraciones/ubicacion/ubicacion.compon
 import { SesionComponent } from './usuarios/sesion/sesion.component';
 import { PermisoComponent } from './usuarios/permiso/permiso.component';
 import { UsuarioComponent } from './usuarios/usuario/usuario.component';
-import { UsuarioMostrarComponent } from './usuarios/usuario/usuario-leer/usuario-leer.component';
 import { EstablecimientoComponent } from './usuarios/establecimiento/establecimiento.component';
-import { EstablecimientoMostrarComponent } from './usuarios/establecimiento/establecimiento-leer/establecimiento-leer.component';
 import { PuntoVentaComponent } from './usuarios/punto-venta/punto-venta.component';
 import { PuntoVentaLeerComponent } from './usuarios/punto-venta/punto-.venta-leer/punto-venta-leer.component';
 import { PerfilComponent } from './usuarios/perfil/perfil.component';
@@ -112,9 +110,7 @@ const routes: Routes = [
   {path: 'cliente/datoadicional', component: DatoAdicionalComponent},
   // Rutas para el modulo de usuarios
   {path: 'usuario', component: UsuarioComponent},
-  {path: 'usuario-mostrar', component: UsuarioMostrarComponent},
   {path: 'usuario/establecimiento', component: EstablecimientoComponent},
-  {path: 'usuario/establecimiento-mostrar', component: EstablecimientoMostrarComponent},
   {path: 'usuario/puntoventa', component: PuntoVentaComponent},
   {path: 'usuario/puntoventa-mostrar', component: PuntoVentaLeerComponent},
   // Rutas para el modulo de clientes
@@ -185,9 +181,7 @@ export const RoutingComponents = [
   SesionComponent,
   PermisoComponent,
   UsuarioComponent,
-  UsuarioMostrarComponent,
   EstablecimientoComponent,
-  EstablecimientoMostrarComponent,
   PuntoVentaComponent,
   PuntoVentaLeerComponent,
   PerfilComponent,

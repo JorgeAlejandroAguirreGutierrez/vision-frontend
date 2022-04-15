@@ -4,9 +4,7 @@ import { SidebarItem } from "../../modelos/sidebar-item.model";
 import { MapsComponent } from '../pages/maps/maps.component';
 
 import { UsuarioComponent } from '../../usuarios/usuario/usuario.component';
-import { UsuarioMostrarComponent } from '../../usuarios/usuario/usuario-leer/usuario-leer.component';
 import { EstablecimientoComponent } from '../../usuarios/establecimiento/establecimiento.component';
-import { EstablecimientoMostrarComponent } from '../../usuarios/establecimiento/establecimiento-leer/establecimiento-leer.component';
 import { PuntoVentaComponent } from '../../usuarios/punto-venta/punto-venta.component';
 import { PuntoVentaLeerComponent } from '../../usuarios/punto-venta/punto-.venta-leer/punto-venta-leer.component';
 
@@ -150,10 +148,8 @@ export class SidebarItemsService {
     if (tabNombre == constantes.modulo_usuarios) {
       this.llenarOpciones(UsuarioComponent, constantes.tab_crear_usuario, constantes.item_crear_usuario, constantes.ico_crear_usuario);
       // Integrar
-      this.llenarOpciones(UsuarioMostrarComponent, constantes.tab_crear_usuario, constantes.item_crear_usuario, constantes.ico_crear_usuario);
       this.llenarOpciones(EstablecimientoComponent, constantes.tab_crear_establecimiento, constantes.item_crear_establecimiento, constantes.ico_crear_establecimiento);
       // Integrar
-      this.llenarOpciones(EstablecimientoMostrarComponent,constantes.tab_crear_establecimiento, constantes.item_crear_establecimiento, constantes.ico_crear_establecimiento);
       this.llenarOpciones(PuntoVentaComponent,constantes.tab_crear_punto_venta, constantes.item_crear_punto_venta, constantes.ico_crear_punto_venta);
       // Integrar
       this.llenarOpciones(PuntoVentaLeerComponent,constantes.tab_crear_punto_venta, constantes.item_crear_punto_venta, constantes.ico_crear_punto_venta);

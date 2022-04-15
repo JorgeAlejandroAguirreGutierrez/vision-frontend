@@ -1,5 +1,5 @@
 import { Router } from '@angular/router';
-import { Component, OnInit, HostListener, Input, Type, ViewChild, ɵConsole } from '@angular/core';
+import { Component, OnInit, HostListener, Input, Type, ViewChild } from '@angular/core';
 import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
 import Swal from 'sweetalert2';
 import * as constantes from '../../constantes';

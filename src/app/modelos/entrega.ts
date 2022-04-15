@@ -12,7 +12,7 @@ export class Entrega {
     celular: string;
     correo: string;
     referencia: string;
-    estado: boolean;
+    estado: string;
     transportista: Transportista;
     factura: Factura;
     inhabilitar: boolean;
@@ -26,7 +26,7 @@ export class Entrega {
         this.telefono="";
         this.celular="";
         this.correo="";
-        this.estado=false;
+        this.estado="PENDIENTE";
         this.transportista=new Transportista();
         this.factura=new Factura();
         this.inhabilitar=false;
