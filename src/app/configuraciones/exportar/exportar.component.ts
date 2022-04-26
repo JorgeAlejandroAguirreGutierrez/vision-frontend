@@ -3,6 +3,10 @@ import { Modelo } from '../../modelos/modelo';
 import { ModeloService } from '../../servicios/modelo.service';
 import Swal from 'sweetalert2';
 import * as constantes from '../../constantes';
+import { Sesion } from 'src/app/modelos/sesion';
+import * as util from '../../util';
+import { SesionService } from 'src/app/servicios/sesion.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-exportar',
@@ -13,9 +17,11 @@ export class ExportarComponent implements OnInit {
 
   modelos: Modelo[]=[];
   modelo: Modelo= new Modelo();
-  constructor(private modeloService: ModeloService) { }
+  sesion: Sesion;
+  constructor(private modeloService: ModeloService, private sesionService: SesionService, private router: Router) { }
 
   ngOnInit() {
+    this.sesion=util.validarSesion(this.sesionService, this.router);
     this.consultaModelos();
   }
   consultaModelos(){

@@ -69,12 +69,11 @@ export class ProveedorProductoComponent implements OnInit {
               private productoProveedorService: ProductoProveedorService, private sesionService: SesionService, private router: Router) { }
 
   ngOnInit() {
-    util.validarSesion(this.sesion, this.sesionService, this.router);
+    this.sesion=util.validarSesion(this.sesionService, this.router);
     this.consultarProductos();
     this.consultarProveedores();
     this.filtroProductos = this.controlProducto.valueChanges
       .pipe(
-        //debounceTime(300),
         startWith(''),
         map(value => typeof value === 'string' || value==null ? value : value.id),
         map(producto => typeof producto === 'string' ? this.filtroProducto(producto) : this.productos.slice())

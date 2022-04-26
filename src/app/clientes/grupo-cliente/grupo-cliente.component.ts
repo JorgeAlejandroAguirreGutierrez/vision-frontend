@@ -51,7 +51,7 @@ export class GrupoClienteComponent implements OnInit {
   constructor(private grupoClienteService: GrupoClienteService, private sesionService: SesionService, private router: Router) { }
 
   ngOnInit() {
-    util.validarSesion(this.sesion, this.sesionService, this.router);
+    this.sesion=util.validarSesion(this.sesionService, this.router);
     this.consultar();
   }
 

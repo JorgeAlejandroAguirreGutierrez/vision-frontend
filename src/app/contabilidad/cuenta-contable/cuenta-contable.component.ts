@@ -42,7 +42,7 @@ export class CuentaContableComponent implements OnInit {
         private cuentaContableService: CuentaContableService) { }
 
   ngOnInit() {
-    util.validarSesion(this.sesion, this.sesionService, this.router);
+    this.sesion=util.validarSesion(this.sesionService, this.router);
     this.construirCuentaContable();
     this.consultar();
   }

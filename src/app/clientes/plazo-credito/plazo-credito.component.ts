@@ -43,7 +43,7 @@ export class PlazoCreditoComponent implements OnInit {
     private sesionService: SesionService, private router: Router) { }
 
   ngOnInit() {
-    util.validarSesion(this.sesion, this.sesionService, this.router);
+    this.sesion=util.validarSesion( this.sesionService, this.router);
     this.construirPlazoCredito();
     this.consultar();
   }

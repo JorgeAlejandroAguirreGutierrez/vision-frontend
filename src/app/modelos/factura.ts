@@ -9,7 +9,7 @@ export class Factura {
   codigo: string;
   secuencia: string;
   fecha: Date;
-  estado: boolean;
+  estado: string;
   eliminado: boolean;
 
   subtotalSinDescuento: number;
@@ -46,7 +46,7 @@ export class Factura {
     this.id=0;
     this.secuencia="";
     this.fecha=new Date();
-    this.estado=true;
+    this.estado="";
     this.eliminado=false;
     this.cliente=new Cliente();
     this.clienteFactura=new Cliente();

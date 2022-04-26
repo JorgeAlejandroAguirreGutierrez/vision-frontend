@@ -92,7 +92,7 @@ export class GrupoProductoComponent implements OnInit {
     private movimientoContableService: MovimientoContableService) { }
 
   async ngOnInit() {
-    util.validarSesion(this.sesion, this.sesionService, this.router);
+    this.sesion=util.validarSesion(this.sesionService, this.router);
     this.construirGrupoProducto();
     this.consultar();
     console.log(this.gruposProductos);

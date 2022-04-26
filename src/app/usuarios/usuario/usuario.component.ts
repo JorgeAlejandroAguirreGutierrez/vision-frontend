@@ -4,9 +4,13 @@ import { Usuario } from '../../modelos/usuario';
 import Swal from 'sweetalert2';
 import { TabService } from '../../componentes/services/tab.service';
 import * as constantes from '../../constantes';
+import * as util from '../../util';
 import { Perfil } from '../../modelos/perfil';
 import { PerfilService } from '../../servicios/perfil-service.service';
 import { PuntoVenta } from '../../modelos/punto-venta';
+import { SesionService } from 'src/app/servicios/sesion.service';
+import { Router } from '@angular/router';
+import { Sesion } from 'src/app/modelos/sesion';
 
 @Component({
   selector: 'app-usuario',
@@ -18,10 +22,12 @@ export class UsuarioComponent implements OnInit {
   usuario= new Usuario();
   perfiles: Perfil[]=[];
   puntosVentas: PuntoVenta[]=[];
+  sesion: Sesion;
 
-  constructor(private tabService: TabService,private usuarioService: UsuarioService, private perfilService: PerfilService) { }
+  constructor(private tabService: TabService,private usuarioService: UsuarioService, private perfilService: PerfilService, private sesionService: SesionService, private router: Router) { }
 
   ngOnInit() {
+    this.sesion=util.validarSesion(this.sesionService, this.router);
     this.consultarPerfiles();
     this.consultarPuntosVentas();
     this.construirUsuario();

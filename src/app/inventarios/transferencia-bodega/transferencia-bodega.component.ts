@@ -67,7 +67,7 @@ export class TransferenciaBodegaComponent implements OnInit {
   constructor(private productoService: ProductoService, private bodegaService: BodegaService, private sesionService: SesionService, private router: Router) { }
 
   ngOnInit() {
-    util.validarSesion(this.sesion, this.sesionService, this.router);
+    this.sesion=util.validarSesion(this.sesionService, this.router);
     this.consultarProductos();
     this.consultarBodegasDestino();
     this.filtroProductos = this.seleccionProducto.valueChanges

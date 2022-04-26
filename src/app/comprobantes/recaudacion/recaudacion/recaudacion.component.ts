@@ -167,7 +167,7 @@ export class RecaudacionComponent implements OnInit {
   
 
   ngOnInit() {
-    util.validarSesion(this.sesion, this.sesionService, this.router);
+    this.sesion=util.validarSesion(this.sesionService, this.router);
     this.consultarEstablecimientos();
     this.consultarCuentasPropias();
     this.consultarFranquiciasTarjetas();
@@ -894,8 +894,10 @@ export class RecaudacionComponent implements OnInit {
     }
     this.recaudacionService.crear(this.recaudacion).subscribe(
       res => {
-        this.recaudacion = res.resultado as Recaudacion;
-        Swal.fire(constantes.error, "Se creo la recaudacion", constantes.error_swal);
+        let recaudacion = res.resultado as Recaudacion;
+        recaudacion.normalizar();
+        this.recaudacion=recaudacion;
+        Swal.fire(constantes.exito, "Se creo la recaudacion", constantes.exito_swal);
         this.facturaService.enviarEventoEntrega(this.factura);
         this.stepper.next();
       }, err => Swal.fire(constantes.error, err.error.mensaje, constantes.error_swal)
@@ -907,7 +909,9 @@ export class RecaudacionComponent implements OnInit {
       event.preventDefault();
     this.recaudacionService.actualizar(this.recaudacion).subscribe(
       res => {
-        this.recaudacion = res.resultado as Recaudacion;
+        let recaudacion= new Recaudacion();
+        Object.assign(recaudacion, res.resultado as Recaudacion);
+        this.recaudacion=recaudacion;
         Swal.fire(constantes.exito, 'Se actualizo la Recaudacion', constantes.exito_swal);
         this.facturaService.enviarEventoEntrega(this.factura)
         this.stepper.next();

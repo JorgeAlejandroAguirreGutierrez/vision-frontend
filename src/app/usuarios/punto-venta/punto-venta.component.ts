@@ -3,9 +3,13 @@ import { PuntoVentaService } from '../../servicios/punto-venta.service';
 import { PuntoVenta } from '../../modelos/punto-venta';
 import Swal from 'sweetalert2';
 import * as constantes from '../../constantes';
+import * as util from '../../util';
 import { TabService } from '../../componentes/services/tab.service';
 import { Establecimiento } from '../../modelos/establecimiento';
 import { EstablecimientoService } from '../../servicios/establecimiento.service';
+import { Sesion } from 'src/app/modelos/sesion';
+import { SesionService } from 'src/app/servicios/sesion.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-punto-venta',
@@ -16,10 +20,12 @@ export class PuntoVentaComponent implements OnInit {
 
   puntoVenta= new PuntoVenta();
   establecimientos: Establecimiento[]=[];
+  sesion: Sesion;
 
-  constructor(private tabService: TabService,private puntoVentaService: PuntoVentaService, private establecimientoService: EstablecimientoService) { }
+  constructor(private tabService: TabService,private puntoVentaService: PuntoVentaService, private establecimientoService: EstablecimientoService, private sesionService: SesionService, private router: Router) { }
 
   ngOnInit() {
+    this.sesion=util.validarSesion(this.sesionService, this.router);
     this.consultarEstablecimientos();
     this.construirPuntoVenta();
     

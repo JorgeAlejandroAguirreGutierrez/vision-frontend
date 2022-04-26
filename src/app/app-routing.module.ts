@@ -25,7 +25,6 @@ import { PermisoComponent } from './usuarios/permiso/permiso.component';
 import { UsuarioComponent } from './usuarios/usuario/usuario.component';
 import { EstablecimientoComponent } from './usuarios/establecimiento/establecimiento.component';
 import { PuntoVentaComponent } from './usuarios/punto-venta/punto-venta.component';
-import { PuntoVentaLeerComponent } from './usuarios/punto-venta/punto-.venta-leer/punto-venta-leer.component';
 import { PerfilComponent } from './usuarios/perfil/perfil.component';
 
 // Molulo de Clientes
@@ -112,7 +111,6 @@ const routes: Routes = [
   {path: 'usuario', component: UsuarioComponent},
   {path: 'usuario/establecimiento', component: EstablecimientoComponent},
   {path: 'usuario/puntoventa', component: PuntoVentaComponent},
-  {path: 'usuario/puntoventa-mostrar', component: PuntoVentaLeerComponent},
   // Rutas para el modulo de clientes
   {path: 'cliente', component: ClienteComponent},
   {path: 'cliente/plazocredito', component: PlazoCreditoComponent},
@@ -183,7 +181,6 @@ export const RoutingComponents = [
   UsuarioComponent,
   EstablecimientoComponent,
   PuntoVentaComponent,
-  PuntoVentaLeerComponent,
   PerfilComponent,
   // Clientes
   ClienteComponent,

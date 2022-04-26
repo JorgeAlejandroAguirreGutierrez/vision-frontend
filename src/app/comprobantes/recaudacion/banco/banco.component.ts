@@ -22,7 +22,7 @@ export class BancoComponent implements OnInit {
   constructor(private sesionService: SesionService, private router: Router, private tabService: TabService,private bancoService: BancoService) { }
 
   ngOnInit() {
-    util.validarSesion(this.sesion, this.sesionService, this.router);
+    this.sesion=util.validarSesion(this.sesionService, this.router);
     this.construirBanco();
   }
 

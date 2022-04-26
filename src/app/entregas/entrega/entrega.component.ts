@@ -28,7 +28,6 @@ import { FacturaDetalle } from '../../modelos/factura-detalle';
 export class EntregaComponent implements OnInit {
 
   transportistas: Transportista[];
-  vehiculosTransportes: VehiculoTransporte[];
   entrega: Entrega=new Entrega();
   sesion: Sesion;
   provincias: Ubicacion[];
@@ -44,9 +43,8 @@ export class EntregaComponent implements OnInit {
     private ubicacionService: UbicacionService, private entregaService: EntregaService) { }
 
   ngOnInit() {
-    util.validarSesion(this.sesion, this.sesionService, this.router);
+    this.sesion=util.validarSesion(this.sesionService, this.router);
     this.consultarTransportistas();
-    this.consultarVehiculosTransportes();
     this.consultarUbicaciones();
 
     this.facturaService.eventoEntrega.subscribe((data:Factura) => {
@@ -61,6 +59,8 @@ export class EntregaComponent implements OnInit {
         res => {
           if (res.resultado!= null){
             Object.assign(this.entrega, res.resultado as Entrega);
+            this.provincia();
+            this.canton();
           } else{
             this.entrega.direccion.direccion=this.entrega.factura.cliente.direccion.direccion;
             this.entrega.direccion.ubicacion=this.entrega.factura.cliente.direccion.ubicacion;
@@ -93,16 +93,6 @@ export class EntregaComponent implements OnInit {
     this.transportistaService.consultar().subscribe(
       res => {
         this.transportistas = res.resultado as Transportista[]
-      },
-      err => {
-        Swal.fire(constantes.error, err.error.mensaje, constantes.error_swal);
-      }
-    );
-  }
-  consultarVehiculosTransportes(){
-    this.vehiculoTransporteService.consultar().subscribe(
-      res => {
-        this.vehiculosTransportes = res.resultado as VehiculoTransporte[]
       },
       err => {
         Swal.fire(constantes.error, err.error.mensaje, constantes.error_swal);

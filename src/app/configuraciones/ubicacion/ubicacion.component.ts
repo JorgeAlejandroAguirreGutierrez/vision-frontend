@@ -22,7 +22,7 @@ export class UbicacionComponent implements OnInit {
   constructor(private sesionService: SesionService, private router: Router, private tabService: TabService,private ubicacionService: UbicacionService) { }
 
   ngOnInit() {
-    util.validarSesion(this.sesion, this.sesionService, this.router);
+    this.sesion=util.validarSesion(this.sesionService, this.router);
     this.construirUbicacion();
   }
 

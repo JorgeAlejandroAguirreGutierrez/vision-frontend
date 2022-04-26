@@ -161,7 +161,7 @@ export class ClienteComponent implements OnInit {
     private tipoContribuyenteService: TipoContribuyenteService, private modalService: NgbModal) { }
 
   ngOnInit() {
-    util.validarSesion(this.sesion, this.sesionService, this.router);
+    this.sesion=util.validarSesion(this.sesionService, this.router);
     this.cliente = new Cliente();
     this.construirCliente();
     this.obtenerEmpresa();

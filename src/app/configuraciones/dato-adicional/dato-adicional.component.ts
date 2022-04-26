@@ -24,7 +24,7 @@ export class DatoAdicionalComponent implements OnInit {
   constructor(private sesionService: SesionService, private router: Router, private datoAdicionalService: DatoAdicionalService, private modalService: NgbModal) { }
 
   ngOnInit() {
-    util.validarSesion(this.sesion, this.sesionService, this.router);
+    this.sesion=util.validarSesion(this.sesionService, this.router);
     this.datoAdicionalService.obtener().subscribe(
       res=>this.datosAdicionales=res.resultado as DatoAdicional[]
     );

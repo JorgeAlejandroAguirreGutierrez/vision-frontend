@@ -24,7 +24,7 @@ export class VehiculoTransporteComponent implements OnInit {
   constructor(private sesionService: SesionService, private router: Router, private vehiculoTransporteService: VehiculoTransporteService, private modalService: NgbModal) { }
 
   ngOnInit() {
-    util.validarSesion(this.sesion, this.sesionService, this.router);
+    this.sesion=util.validarSesion( this.sesionService, this.router);
     this.vehiculoTransporteService.consultar().subscribe(
       res=>{
         this.vehicuylosTransportes= res.resultado as VehiculoTransporte[]

@@ -497,61 +497,56 @@
                                 <!-- Descripcion Columna -->
                                 <ng-container matColumnDef="medida">
                                     <th mat-header-cell *matHeaderCellDef mat-sort-header> Med </th>
-                                    <td mat-cell *matCellDef="let facturaDetalle" class="text-center">
+                                    <td mat-cell *matCellDef="let facturaDetalle">
                                         {{facturaDetalle.precio.medida.abreviatura}} </td>
                                 </ng-container>
                                 <!-- Cantidad Columna -->
                                 <ng-container matColumnDef="cantidad">
                                     <th mat-header-cell *matHeaderCellDef mat-sort-header>Cant </th>
-                                    <td mat-cell *matCellDef="let facturaDetalle" class="text-center"> 
+                                    <td mat-cell *matCellDef="let facturaDetalle"> 
                                         {{facturaDetalle.cantidad}} </td>
                                 </ng-container>
                                 <!-- Valor Columna -->
                                 <ng-container matColumnDef="valor">
                                     <th mat-header-cell *matHeaderCellDef mat-sort-header>Valor </th>
-                                    <td mat-cell *matCellDef="let facturaDetalle" class="text-center">
+                                    <td mat-cell *matCellDef="let facturaDetalle">
                                         ${{facturaDetalle.precio.precioVentaPublicoManual }} </td>
                                 </ng-container>
                                 <!-- Descuento Columna -->
                                 <ng-container matColumnDef="descuento">
                                     <th mat-header-cell *matHeaderCellDef mat-sort-header> Desc. </th>
-                                    <td mat-cell *matCellDef="let facturaDetalle" class="text-center">
+                                    <td mat-cell *matCellDef="let facturaDetalle">
                                         {{facturaDetalle.valorDescuentoLinea}} </td>
                                 </ng-container>
                                 <!-- Descuento% Columna -->
-                                <ng-container matColumnDef="desc_por">
+                                <ng-container matColumnDef="descuentoPorcentaje">
                                     <th mat-header-cell *matHeaderCellDef mat-sort-header> Desc% </th>
-                                    <td mat-cell *matCellDef="let facturaDetalle" class="text-center">
+                                    <td mat-cell *matCellDef="let facturaDetalle">
                                         {{facturaDetalle.porcentajeDescuentoLinea}} </td>
                                 </ng-container>
+                                <!-- Impuesto Columna -->
                                 <ng-container matColumnDef="impuesto">
                                     <th mat-header-cell *matHeaderCellDef mat-sort-header> IVA </th>
-                                    <td mat-cell *matCellDef="let facturaDetalle" class="text-center">
+                                    <td mat-cell *matCellDef="let facturaDetalle">
                                         {{facturaDetalle.impuesto.porcentaje}} </td>
                                 </ng-container>
-                                <!-- Decuento Impuesto Columna -->
-                                <ng-container matColumnDef="desc_iva">
-                                    <th mat-header-cell *matHeaderCellDef mat-sort-header>DESC IVA</th>
-                                    <td mat-cell *matCellDef="let facturaDetalle" class="text-center">
-                                        {{facturaDetalle.impuesto.porcentaje}} </td>
-                                </ng-container>
-                                <!-- Descuento Columna -->
+                                <!-- Total Columna -->
                                 <ng-container matColumnDef="total">
                                     <th mat-header-cell *matHeaderCellDef mat-sort-header> Total </th>
-                                    <td mat-cell *matCellDef="let facturaDetalle" class="text-center">
+                                    <td mat-cell *matCellDef="let facturaDetalle">
                                         ${{facturaDetalle.totalConDescuentoLinea}} </td>
                                 </ng-container>
                                 <!-- Entregado Columna -->
                                 <ng-container matColumnDef="entregado">
                                     <th mat-header-cell *matHeaderCellDef mat-sort-header> Entreg </th>
-                                    <td mat-cell *matCellDef="let facturaDetalle" class="text-center">
+                                    <td mat-cell *matCellDef="let facturaDetalle">
                                         <ng-container *ngIf="facturaDetalle.entregado">SI</ng-container>
                                         <ng-container *ngIf="!facturaDetalle.entregado">NO</ng-container>
                                     </td>
                                 </ng-container>
                                 <ng-container matColumnDef="acciones">
                                     <th mat-header-cell *matHeaderCellDef mat-sort-header> Acciones </th>
-                                    <td mat-cell *matCellDef="let i=index" class="text-center">
+                                    <td mat-cell *matCellDef="let i=index">
                                         <button mat-icon-button color="primary" focusable="false"
                                             (click)="eliminarFacturaDetalle(i)">
                                             <i class="fa fa-times mat-icon"></i>

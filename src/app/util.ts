@@ -103,21 +103,23 @@ export const headersCargarArchivo= new HttpHeaders({'Authorization': 'Basic '+bt
 export const optionsCargarArchivo = {headers: headersCargarArchivo};
 export const optionsGenerarArchivo = {headers: headers, responseType: 'blob' as 'json' };
 
-export function validarSesion(sesion: Sesion, sesionService: SesionService, router: Router){
-    sesion=sesionService.getSesion();
+export function validarSesion(sesionService: SesionService, router: Router): Sesion{
+    let sesion: Sesion=sesionService.getSesion();
     sesionService.validar(sesion).subscribe(
         res => {
             sesion=res.resultado as Sesion;
+            return sesion;
         },
         err => {
             if(err.error.codigo==constantes.error_codigo_sesion_invalida){
                 sesionService.cerrarSesion();
-                this.router.navigate(['/index']);
+                router.navigate(['/index']);
             }
             if(err.error.codigo==constantes.error_codigo_modelo_no_existente){
                 sesionService.cerrarSesion();
-                this.router.navigate(['/index']);
+                router.navigate(['/index']);
             }
         }
     );
+    return sesion;
 }

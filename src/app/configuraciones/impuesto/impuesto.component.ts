@@ -24,7 +24,7 @@ export class ImpuestoComponent implements OnInit {
   constructor(private sesionService: SesionService, private router: Router, private impuestoService: ImpuestoService, private modalService: NgbModal) { }
 
   ngOnInit() {
-    util.validarSesion(this.sesion, this.sesionService, this.router);
+    this.sesion=util.validarSesion(this.sesionService, this.router);
     this.impuestoService.consultar().subscribe(
       res=>{
         this.impuestos= res.resultado as Impuesto[]

@@ -22,7 +22,7 @@ export class TipoPagoComponent implements OnInit {
   constructor(private sesionService: SesionService, private router: Router, private tabService: TabService,private tipoPagoService: TipoPagoService) { }
 
   ngOnInit() {
-    util.validarSesion(this.sesion, this.sesionService, this.router);
+    this.sesion=util.validarSesion(this.sesionService, this.router);
     this.construirTipoPago();
   }
 

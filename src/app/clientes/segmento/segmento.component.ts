@@ -51,7 +51,7 @@ export class SegmentoComponent implements OnInit {
   constructor(private renderer: Renderer2, private segmentoService: SegmentoService, private sesionService: SesionService, private router: Router) { }
 
   ngOnInit() {
-    util.validarSesion(this.sesion, this.sesionService, this.router);
+    this.sesion=util.validarSesion(this.sesionService, this.router);
     this.consultar();
   }
 

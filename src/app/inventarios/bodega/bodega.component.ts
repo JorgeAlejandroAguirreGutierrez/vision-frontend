@@ -46,7 +46,7 @@ export class BodegaComponent implements OnInit {
     private sesionService: SesionService, private router: Router) { }
 
   ngOnInit() {
-    util.validarSesion(this.sesion, this.sesionService, this.router);
+    this.sesion=util.validarSesion(this.sesionService, this.router);
     this.construir_bodega();
     this.bodega.estado='ACTIVO';
     this.consultar();

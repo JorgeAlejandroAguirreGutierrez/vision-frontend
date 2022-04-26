@@ -143,7 +143,7 @@ export class ProductoComponent implements OnInit {
   }
 
   ngOnInit() {
-    util.validarSesion(this.sesion, this.sesionService, this.router);
+    this.sesion=util.validarSesion(this.sesionService, this.router);
     this.consultar();
     this.categoriaProductoService.consultar().subscribe(
       res => {

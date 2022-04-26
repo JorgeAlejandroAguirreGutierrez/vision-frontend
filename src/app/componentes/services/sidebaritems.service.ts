@@ -6,7 +6,6 @@ import { MapsComponent } from '../pages/maps/maps.component';
 import { UsuarioComponent } from '../../usuarios/usuario/usuario.component';
 import { EstablecimientoComponent } from '../../usuarios/establecimiento/establecimiento.component';
 import { PuntoVentaComponent } from '../../usuarios/punto-venta/punto-venta.component';
-import { PuntoVentaLeerComponent } from '../../usuarios/punto-venta/punto-.venta-leer/punto-venta-leer.component';
 
 import { ClienteComponent } from "../../clientes/cliente/cliente.component";
 import { GrupoClienteComponent } from '../../clientes/grupo-cliente/grupo-cliente.component';
@@ -151,8 +150,6 @@ export class SidebarItemsService {
       this.llenarOpciones(EstablecimientoComponent, constantes.tab_crear_establecimiento, constantes.item_crear_establecimiento, constantes.ico_crear_establecimiento);
       // Integrar
       this.llenarOpciones(PuntoVentaComponent,constantes.tab_crear_punto_venta, constantes.item_crear_punto_venta, constantes.ico_crear_punto_venta);
-      // Integrar
-      this.llenarOpciones(PuntoVentaLeerComponent,constantes.tab_crear_punto_venta, constantes.item_crear_punto_venta, constantes.ico_crear_punto_venta);
     }
     return this.opciones;
   }  

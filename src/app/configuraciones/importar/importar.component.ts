@@ -3,6 +3,10 @@ import { ModeloService } from '../../servicios/modelo.service';
 import { Modelo } from '../../modelos/modelo';
 import Swal from 'sweetalert2';
 import * as constantes from '../../constantes';
+import { SesionService } from 'src/app/servicios/sesion.service';
+import { Router } from '@angular/router';
+import { Sesion } from 'src/app/modelos/sesion';
+import * as util from '../../util';
 
 @Component({
   selector: 'app-importar',
@@ -11,15 +15,16 @@ import * as constantes from '../../constantes';
 })
 export class ImportarComponent implements OnInit {
 
-  constructor(private modeloService: ModeloService) { }
-
   modelos: Modelo[]=[];
   modelo: Modelo= new Modelo();
   archivo: File= null;
-
   cargando: boolean=false;
+  sesion: Sesion;
+
+  constructor(private modeloService: ModeloService, private sesionService: SesionService,private router: Router) { }
 
   ngOnInit() {
+    this.sesion=util.validarSesion(this.sesionService, this.router);
     this.consultaModelos();
   }
 

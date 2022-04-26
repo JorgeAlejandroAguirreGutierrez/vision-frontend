@@ -98,8 +98,7 @@ export class FacturaComponent implements OnInit {
   factura: Factura = new Factura();
   auxiliarBuscar: Auxiliar=new Auxiliar();
 
-  columnasDetalleFactura: string[] = ['nombre', 'entregado', 'Medida', 'cantidad', 'valor', 'descuento'
-    , 'desc_por', 'desc_sub', 'desc_por_sub', 'desc_tot', 'desc_por_tot', 'impuesto', 'total', 'serie','acciones'];
+  columnasDetalleFactura: string[] = ['nombre', 'medida', 'cantidad', 'valor', 'descuento', 'descuentoPorcentaje', 'impuesto', 'total', 'entregado', 'acciones'];
   dataFacturaDetalle = new MatTableDataSource<FacturaDetalle>(this.factura.facturaDetalles);
 
   clientes: Cliente[]=[];
@@ -156,7 +155,7 @@ export class FacturaComponent implements OnInit {
   }
 
   async ngOnInit() {
-    util.validarSesion(this.sesion, this.sesionService, this.router);
+    this.sesion=util.validarSesion(this.sesionService, this.router);
     this.consultar();
     this.consultarClientes();
     this.construirFactura();
@@ -709,7 +708,9 @@ export class FacturaComponent implements OnInit {
     if (this.facturaDetalle.impuesto.id==0){
       return;
     }
+    this.factura.sesion=this.sesion;
     this.factura.facturaDetalles.push(this.facturaDetalle);
+    console.log(this.factura);
     this.facturaService.calcular(this.factura).subscribe(
       res => {
         this.factura = res.resultado as Factura;
@@ -727,7 +728,7 @@ export class FacturaComponent implements OnInit {
     if (event!=null)
       event.preventDefault();
     this.factura.sesion=this.sesion;
-    this.factura.estado= this.estado=="EMITIDA"? true: false;
+    this.factura.vendedor=this.sesion.usuario;
     this.facturaService.crear(this.factura).subscribe(
       res => {
         this.factura = res.resultado as Factura;

@@ -23,7 +23,7 @@ export class EmpresaComponent implements OnInit {
   constructor(private sesionService: SesionService, private router: Router, private empresaService: EmpresaService) { }
 
   ngOnInit() {
-    util.validarSesion(this.sesion, this.sesionService, this.router);
+    this.sesion=util.validarSesion(this.sesionService, this.router);
     this.empresaService.consultar().subscribe(
       res=>this.empresas=res.resultado as Empresa[]
     );

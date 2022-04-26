@@ -4,8 +4,12 @@ import { Establecimiento } from '../../modelos/establecimiento';
 import Swal from 'sweetalert2';
 import { TabService } from '../../componentes/services/tab.service';
 import * as constantes from '../../constantes';
+import * as util from '../../util';
 import { Empresa } from '../../modelos/empresa';
 import { EmpresaService } from '../../servicios/empresa.service';
+import { Sesion } from 'src/app/modelos/sesion';
+import { SesionService } from 'src/app/servicios/sesion.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-establecimiento',
@@ -16,10 +20,12 @@ export class EstablecimientoComponent implements OnInit {
 
   establecimiento= new Establecimiento();
   empresas: Empresa[]=[];
+  sesion: Sesion;
 
-  constructor(private tabService: TabService,private establecimientoService: EstablecimientoService, private empresaService: EmpresaService) { }
+  constructor(private tabService: TabService,private establecimientoService: EstablecimientoService, private empresaService: EmpresaService, private sesionService: SesionService, private router: Router) { }
 
   ngOnInit() {
+    this.sesion=util.validarSesion(this.sesionService, this.router);
     this.construirEstablecimiento();
     this.consultarEmpresas();
   }

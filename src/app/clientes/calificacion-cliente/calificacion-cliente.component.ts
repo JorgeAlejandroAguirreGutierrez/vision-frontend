@@ -45,7 +45,7 @@ export class CalificacionClienteComponent implements OnInit {
     calificacionClienteBuscar: CalificacionCliente=new CalificacionCliente();
 
   ngOnInit() {
-    util.validarSesion(this.sesion, this.sesionService, this.router);
+    this.sesion=util.validarSesion(this.sesionService, this.router);
     this.construirCalificacionCliente();
     this.consultar();
   }
