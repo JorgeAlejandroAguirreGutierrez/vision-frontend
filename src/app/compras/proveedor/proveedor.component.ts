@@ -314,7 +314,7 @@ export class ProveedorComponent implements OnInit {
       this.clienteService.obtener(clienteId).subscribe(
         res => {
           Object.assign(this.cliente, res.resultado as Cliente);
-          this.cliente.construir();
+          this.cliente.normalizar();
           this.validarSexoEstadoCivilOrigenIngreso();
           this.ubicacionNormalizarActualizar();
           console.log(this.cliente);

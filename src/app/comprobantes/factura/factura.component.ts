@@ -393,7 +393,7 @@ export class FacturaComponent implements OnInit {
     this.clienteService.obtenerAsync(cliente_id).then(
       res => {
         Object.assign(this.factura.cliente, res.resultado as Cliente);
-        this.factura.cliente.construir();
+        this.factura.cliente.normalizar();
         this.seleccionIdentificacionCliente.patchValue(this.factura.cliente);
         this.seleccionRazonSocialCliente.patchValue(this.factura.cliente);
         if (this.factura.cliente.telefonos.length>0)
@@ -433,7 +433,7 @@ export class FacturaComponent implements OnInit {
     this.clienteService.obtenerAsync(cliente_id).then(
       res => {
         Object.assign(this.factura.cliente,res.resultado as Cliente);
-        this.factura.cliente.construir();
+        this.factura.cliente.normalizar();
           this.seleccionIdentificacionCliente.patchValue(this.factura.cliente);
           this.seleccionRazonSocialCliente.patchValue(this.factura.cliente);     
         if (this.factura.cliente.telefonos.length>0)
@@ -470,7 +470,7 @@ export class FacturaComponent implements OnInit {
     this.clienteService.obtener(clienteId).subscribe(
       res => {
         Object.assign(this.factura.clienteFactura, res.resultado as Cliente);
-        this.factura.clienteFactura.construir();
+        this.factura.clienteFactura.normalizar();
         this.seleccionIdentificacionClienteFactura.patchValue(this.factura.clienteFactura);
         this.seleccionRazonSocialClienteFactura.patchValue(this.factura.clienteFactura);
         if (this.factura.clienteFactura.telefonos.length>0)
@@ -490,7 +490,7 @@ export class FacturaComponent implements OnInit {
     this.clienteService.obtener(cliente_id).subscribe(
       res => {
         Object.assign(this.factura.clienteFactura, res.resultado as Cliente);
-        this.factura.clienteFactura.construir();
+        this.factura.clienteFactura.normalizar();
         this.seleccionIdentificacionClienteFactura.patchValue(this.factura.clienteFactura);
         this.seleccionRazonSocialClienteFactura.patchValue(this.factura.clienteFactura);   
         if (this.factura.clienteFactura.telefonos.length>0)
@@ -858,7 +858,6 @@ export class FacturaComponent implements OnInit {
     this.primerCelularCliente="";
     this.primerCorreoCliente="";
     this.factura.cliente.financiamiento.formaPago.abreviatura="";
-    this.factura.cliente.financiamiento.tipoPago.abreviatura="";
     this.factura.cliente.financiamiento.monto=0;
   }
   limpiarIdentificacionClienteFactura(){
@@ -877,7 +876,6 @@ export class FacturaComponent implements OnInit {
     this.primerCelularClienteFactura="";
     this.primerCorreoClienteFactura="";
     this.factura.clienteFactura.financiamiento.formaPago.abreviatura="";
-    this.factura.clienteFactura.financiamiento.tipoPago.abreviatura="";
     this.factura.clienteFactura.financiamiento.monto=0;
   }
   eliminarFacturaDetalle(i: number){

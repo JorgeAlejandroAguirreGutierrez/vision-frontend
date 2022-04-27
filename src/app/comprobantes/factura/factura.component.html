@@ -821,21 +821,11 @@
             </div>
             <div class="col-3">
                 <div class="form-row">
-                    <div class="form-group col-12">
+                    <div class="form-group col-6">
                         <mat-form-field appearance="standard">
                             <mat-label>Forma de Pago</mat-label>
                             <input matInput type="text"
                                 [(ngModel)]="factura.cliente?.financiamiento.formaPago.abreviatura"
-                                class="form-control-sm" [disabled]="true">
-                        </mat-form-field>
-                    </div>
-                </div>
-                <div class="form-row">
-                    <div class="form-group col-6">
-                        <mat-form-field appearance="standard">
-                            <mat-label>Tipo</mat-label>
-                            <input matInput type="text"
-                                [(ngModel)]="factura.cliente?.financiamiento.tipoPago.abreviatura"
                                 class="form-control-sm" [disabled]="true">
                         </mat-form-field>
                     </div>

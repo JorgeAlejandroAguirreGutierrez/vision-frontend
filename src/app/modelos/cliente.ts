@@ -74,14 +74,13 @@ export class Cliente {
         this.retencionesCliente.push(new RetencionCliente());
      }
 
-     construir(){
+     normalizar(){
         if (this.tipoContribuyente==null) this.tipoContribuyente=new TipoContribuyente();
         if (this.segmento==null) this.segmento=new Segmento();
         if (this.grupoCliente==null) this.grupoCliente=new GrupoCliente();
         if (this.calificacionCliente==null) this.calificacionCliente=new CalificacionCliente();
         if (this.origenIngreso==null) this.origenIngreso=new OrigenIngreso();
         if (this.financiamiento==null) this.financiamiento=new Financiamiento();
-        if (this.financiamiento.tipoPago==null) this.financiamiento.tipoPago=new TipoPago();
         if (this.financiamiento.formaPago==null) this.financiamiento.formaPago=new FormaPago();
         if (this.financiamiento.plazoCredito==null) this.financiamiento.plazoCredito=new PlazoCredito();
         if (this.direccion==null) this.direccion=new Direccion();

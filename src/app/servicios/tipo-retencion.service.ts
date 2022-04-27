@@ -15,7 +15,7 @@ export class TipoRetencionService {
   constructor(private http: HttpClient, private router: Router) { }
 
   obtenerIvaBien(): Observable<Respuesta> {
-    return this.http.get<Respuesta>(environment.host + util.ruta + util.tipoRetencion + '/ivabien', util.options).pipe(
+    return this.http.get<Respuesta>(environment.host + util.ruta + util.tipoRetencion + '/ivaBien', util.options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(err);
@@ -24,7 +24,7 @@ export class TipoRetencionService {
   }
 
   obtenerIvaServicio(): Observable<Respuesta> {
-    return this.http.get<Respuesta>(environment.host + util.ruta + util.tipoRetencion + '/ivaservicio', util.options).pipe(
+    return this.http.get<Respuesta>(environment.host + util.ruta + util.tipoRetencion + '/ivaServicio', util.options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(err);
@@ -32,7 +32,7 @@ export class TipoRetencionService {
     );
   }
   obtenerRentaBien(): Observable<Respuesta> {
-    return this.http.get<Respuesta>(environment.host + util.ruta + util.tipoRetencion + '/rentabien', util.options).pipe(
+    return this.http.get<Respuesta>(environment.host + util.ruta + util.tipoRetencion + '/rentaBien', util.options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(err);
@@ -40,7 +40,7 @@ export class TipoRetencionService {
     );
   }
   obtenerRentaServicio(): Observable<Respuesta> {
-    return this.http.get<Respuesta>(environment.host + util.ruta + util.tipoRetencion + '/rentaservicio', util.options).pipe(
+    return this.http.get<Respuesta>(environment.host + util.ruta + util.tipoRetencion + '/rentaServicio', util.options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(err);

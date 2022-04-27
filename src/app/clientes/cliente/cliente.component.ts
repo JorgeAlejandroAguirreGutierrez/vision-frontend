@@ -71,10 +71,7 @@ export class ClienteComponent implements OnInit {
   estadoCliente:boolean = true;
   editing:boolean = false;
 
-  cliente: Cliente;
-  clienteCrear: Cliente;
-  clienteBuscar = new Cliente();
-  clienteActualizar: Cliente;
+  cliente: Cliente= new Cliente();
   clientes: Cliente[];
   segmento: Segmento = new Segmento();
   segmentos: Segmento[] = [];
@@ -162,8 +159,6 @@ export class ClienteComponent implements OnInit {
 
   ngOnInit() {
     this.sesion=util.validarSesion(this.sesionService, this.router);
-    this.cliente = new Cliente();
-    this.construirCliente();
     this.obtenerEmpresa();
     this.obtenerSesion();
     this.consultar();
@@ -172,7 +167,7 @@ export class ClienteComponent implements OnInit {
         this.tiposContribuyentes = res.resultado as TipoContribuyente[];
       },
       error: (err) => {
-        Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.message });
+        Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje });
       }
     });
     this.segmentoService.consultar().subscribe({
@@ -180,7 +175,7 @@ export class ClienteComponent implements OnInit {
         this.segmentos = res.resultado as Segmento[];
       },
       error: (err) => {
-        Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.message });
+        Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje });
       }
     });
     this.grupoClienteService.consultar().subscribe({
@@ -188,7 +183,7 @@ export class ClienteComponent implements OnInit {
         this.gruposClientes = res.resultado as GrupoCliente[]
       },
       error: (err) => {
-        Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.message });
+        Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje });
       }
     });
     this.generoService.consultar().subscribe({
@@ -196,7 +191,7 @@ export class ClienteComponent implements OnInit {
         this.generos = res.resultado as Genero[]
       },
       error: (err) => {
-        Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.message });
+        Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje });
       }
     });
     this.estadoCivilService.consultar().subscribe({
@@ -204,7 +199,7 @@ export class ClienteComponent implements OnInit {
         this.estadosCiviles = res.resultado as EstadoCivil[]
       },
       error: (err) => {
-        Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.message });
+        Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje });
       }
     });
     this.origenIngresoService.consultar().subscribe({
@@ -212,7 +207,7 @@ export class ClienteComponent implements OnInit {
         this.origenesIngresos = res.resultado as OrigenIngreso[];
       },
       error: (err) => {
-        Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.message });
+        Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje });
       }
     });
     this.calificacionClienteService.consultar().subscribe(
@@ -220,7 +215,7 @@ export class ClienteComponent implements OnInit {
         this.calificacionesClientes = res.resultado as CalificacionCliente[]
       },
       err => {
-        Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.message });
+        Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje });
       }
     );
     this.plazoCreditoService.consultar().subscribe(
@@ -228,7 +223,7 @@ export class ClienteComponent implements OnInit {
         this.plazosCreditos = res.resultado as PlazoCredito[]
       },
       err => {
-        Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.message });
+        Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje });
       }
     );
     this.tipoPagoService.consultar().subscribe(
@@ -236,7 +231,7 @@ export class ClienteComponent implements OnInit {
         this.tiposPagos = res.resultado as TipoPago[]
       },
       err => {
-        Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.message });
+        Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje });
       }
     );
     this.formaPagoService.consultar().subscribe(
@@ -244,7 +239,7 @@ export class ClienteComponent implements OnInit {
         this.formasPagos = res.resultado as FormaPago[]
       },
       err => {
-        Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.message });
+        Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje });
       }
     );
     this.ubicacionService.obtenerProvincias().subscribe(
@@ -253,7 +248,7 @@ export class ClienteComponent implements OnInit {
         this.auxiliarProvincias = res.resultado as Ubicacion[]
       },
       err => {
-        Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.message });
+        Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje });
       }
     );
     this.tipoRetencionService.obtenerIvaBien().subscribe(
@@ -261,7 +256,7 @@ export class ClienteComponent implements OnInit {
         this.tiposRetencionesIvaBien = res.resultado as TipoRetencion[]
       },
       err => {
-        Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.message });
+        Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje });
       }
     );
     this.tipoRetencionService.obtenerIvaServicio().subscribe(
@@ -269,7 +264,7 @@ export class ClienteComponent implements OnInit {
         this.tiposRetencionesIvaServicio = res.resultado as TipoRetencion[]
       },
       err => {
-        Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.message });
+        Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje });
       }
     );
     this.tipoRetencionService.obtenerRentaBien().subscribe(
@@ -277,7 +272,7 @@ export class ClienteComponent implements OnInit {
         this.tiposRetencionesRentaBien = res.resultado as TipoRetencion[]
       },
       err => {
-        Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.message });
+        Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje });
       }
     );
     this.tipoRetencionService.obtenerRentaServicio().subscribe(
@@ -285,7 +280,7 @@ export class ClienteComponent implements OnInit {
         this.tiposRetencionesRentaServicio = res.resultado as TipoRetencion[]
       },
       err => {
-        Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.message });
+        Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje });
       }
     );
   }
@@ -293,9 +288,9 @@ export class ClienteComponent implements OnInit {
   @HostListener('window:keypress', ['$event'])
   keyEvent($event: KeyboardEvent) {
     if (($event.shiftKey || $event.metaKey) && $event.key == "G")
-      this.crearCliente(null);
+      this.crear(null);
     if (($event.shiftKey || $event.metaKey) && $event.key == "N")
-      this.nuevoCliente(null);
+      this.nuevo(null);
     if (($event.shiftKey || $event.metaKey) && $event.key == "E")
       console.log('SHIFT + E');
     if (($event.shiftKey || $event.metaKey) && $event.key == "B")
@@ -306,26 +301,6 @@ export class ClienteComponent implements OnInit {
 
   obtenerSesion() {
     this.sesion = this.sesionService.getSesion();
-  }
-
-  construirCliente() {
-    let clienteId = 0;
-    this.clienteService.currentMessage.subscribe(message => clienteId = message);
-    if (clienteId != 0) {
-      this.clienteService.obtener(clienteId).subscribe(
-        res => {
-          Object.assign(this.cliente, res.resultado as Cliente);
-          this.cliente.construir();
-          this.validarSexoEstadoCivilOrigenIngreso();
-          this.ubicacionNormalizarActualizar();
-          console.log(this.cliente);
-          this.clienteService.enviar(0);
-        },
-        err => {
-          Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.message });
-        }
-      )
-    }
   }
 
   obtenerEmpresa() {
@@ -343,7 +318,7 @@ export class ClienteComponent implements OnInit {
     );
   }
 
-  nuevoCliente(event: any) {
+  nuevo(event: any) {
     if (event != null)
       event.preventDefault();
     this.tabService.addNewTab(ClienteComponent, constantes.tab_crear_cliente);
@@ -358,7 +333,7 @@ export class ClienteComponent implements OnInit {
     });
   }
 
-  async crearCliente(event: any) {
+  async crear(event: any) {
     if (event != null)
       event.preventDefault();
     //AGREGAR AUXILIAR
@@ -406,7 +381,7 @@ export class ClienteComponent implements OnInit {
         this.cliente = res.resultado as Cliente;
         Swal.fire(constantes.exito, res.mensaje, constantes.exito_swal);
         let indiceTabActivo = constantes.tab_activo(this.tabService);
-        //this.tabService.removeTab(indiceTabActivo);
+        this.tabService.removeTab(indiceTabActivo);
         this.tabService.addNewTab(ClienteComponent, constantes.tab_crear_cliente);
       },
       err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.message })
@@ -505,7 +480,6 @@ export class ClienteComponent implements OnInit {
           this.cliente = res.resultado as Cliente;
           this.auxiliarCantones = [];
           this.auxiliarParroquias = [];
-
           this.auxiliarProvincia = "";
           this.auxiliarCanton = "";
           this.auxiliarParroquia = "";
@@ -583,13 +557,21 @@ export class ClienteComponent implements OnInit {
     this.dataSourceCliente.sort = this.sort;
   }
 
-  seleccion(clienteSeleccionado: Cliente) {
-    console.log(clienteSeleccionado);
-    this.cliente=clienteSeleccionado;
+  seleccion(clienteSeleccionado: any) {
     if (!this.clickedRows.has(clienteSeleccionado)){
       this.clickedRows.clear();
       this.clickedRows.add(clienteSeleccionado);
-      this.cliente = clienteSeleccionado;
+      let cliente=new Cliente();
+      Object.assign(cliente, clienteSeleccionado as Cliente);
+      cliente.normalizar();
+      this.cliente=cliente;
+      console.log(this.cliente);
+      this.clienteProvincia=this.cliente.direccion.ubicacion.provincia;
+      this.provincia(this.clienteProvincia);
+      this.clienteCanton=this.cliente.direccion.ubicacion.canton;
+      this.canton(this.clienteCanton);
+      this.clienteParroquia=this.cliente.direccion.ubicacion.parroquia;
+      this.cambiarFormaPago();
     } else {
       this.clickedRows.clear();
       this.cliente = new Cliente();
@@ -626,24 +608,6 @@ export class ClienteComponent implements OnInit {
     }
   }
 
-  buscar(event: any) {
-    if (event!=null)
-      event.preventDefault();
-    this.clienteService.buscar(this.clienteBuscar).subscribe(
-      res => {
-        this.clientes = res.resultado as Cliente[]
-      },
-      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.message })
-    );
-  }
-
-  cambiarBuscarIdentificacion(){
-    this.buscar(null);
-  }
-  cambiarBuscarRazonSocial(){
-    this.buscar(null);
-  }
-
   cambiarEstado(){
     if (this.estadoCliente){
       this.cliente.estado = 'ACTIVO';
@@ -667,8 +631,9 @@ export class ClienteComponent implements OnInit {
       next: (res) => {
         this.clienteService.validarIdentificacion(this.cliente.identificacion).subscribe({
           next: (res) => {
-            this.cliente.tipoIdentificacion = res.resultado.tipo_identificacion;
-            this.cliente.tipoContribuyente = res.resultado.tipo_contribuyente as TipoContribuyente;
+            console.log(res);
+            this.cliente.tipoIdentificacion = res.resultado.tipoIdentificacion;
+            this.cliente.tipoContribuyente = res.resultado.tipoContribuyente as TipoContribuyente;
             if (this.cliente.tipoContribuyente == null) {
               this.habilitarTipoContribuyente = true;
             } else {
@@ -683,14 +648,14 @@ export class ClienteComponent implements OnInit {
           error: (err) => {
             this.cliente.tipoIdentificacion = '';
             this.cliente.tipoContribuyente = new TipoContribuyente();
-            Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.message });
+            Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje });
           }
         });
       },
       error: (err) => {
         this.cliente.tipoIdentificacion = '';
         this.cliente.tipoContribuyente = new TipoContribuyente();
-        Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.message });
+        Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje });
       }
     });
   }
