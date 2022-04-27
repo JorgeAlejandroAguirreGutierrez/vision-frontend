@@ -28,6 +28,7 @@
     "@popperjs/core": "^2.11.2",
     "bootstrap": "^4.6.1",
     "font-awesome": "^4.7.0",
+    "express": "^4.17.2",
     "jquery": "^3.6.0",
     "material-design-icons": "^3.0.1",
     "ngx-take-until-destroy": "^5.4.0",
