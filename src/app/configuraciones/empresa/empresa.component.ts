@@ -40,33 +40,33 @@ export class EmpresaComponent implements OnInit {
     this.empresaService.crear(this.empresa).subscribe(
       res => {
         console.log(res);
-        Swal.fire(constantes.exito, res.mensaje, constantes.exito_swal);
+        Swal.fire({ icon: constantes.exito_swal, title: constantes.exito, text: res.mensaje });
         this.empresa=res.resultado as Empresa;
         this.ngOnInit();
       },
-      err => Swal.fire(constantes.error, err.error.mensaje, constantes.error_swal)
+      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
 
   actualizar(empresa: Empresa) {
     this.empresaService.actualizar(empresa).subscribe(
       res => {
-        Swal.fire(constantes.exito, res.mensaje, constantes.exito_swal);
+        Swal.fire({ icon: constantes.exito_swal, title: constantes.exito, text: res.mensaje });
         this.empresa=res.resultado as Empresa;
         this.ngOnInit();
       },
-      err => Swal.fire(constantes.error, err.error.mensaje, constantes.error_swal)
+      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
 
   eliminar(empresa: Empresa) {
     this.empresaService.eliminar(empresa).subscribe(
       res => {
-        Swal.fire(constantes.exito, res.mensaje, constantes.exito_swal);
+        Swal.fire({ icon: constantes.exito_swal, title: constantes.exito, text: res.mensaje });
         this.empresa=res.resultado as Empresa;
         this.ngOnInit();
       },
-      err => Swal.fire(constantes.error, err.error.mensaje, constantes.error_swal)
+      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
 

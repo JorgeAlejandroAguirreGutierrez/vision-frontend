@@ -101,12 +101,11 @@ export class TransferenciaBodegaComponent implements OnInit {
     }
     this.productoService.actualizar(this.producto).subscribe(
       res => {
-        Swal.fire(constantes.exito, res.mensaje, constantes.exito_swal);
+        Swal.fire({ icon: constantes.exito_swal, title: constantes.exito, text: res.mensaje });
         this.limpiar();
-        //this.consultar();
       },
       err => {
-        Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.message });
+        Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
       }
     );
   }
@@ -116,7 +115,7 @@ export class TransferenciaBodegaComponent implements OnInit {
     res => {
       this.productos = res.resultado as Producto[]
     },
-    err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.message })
+    err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
   private filtroProducto(value: string): Producto[] {
@@ -250,7 +249,7 @@ export class TransferenciaBodegaComponent implements OnInit {
         this.bodegasDestinoTodas = res.resultado as Bodega[];
       },
       err => {
-        Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.message });
+        Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
       }
     );
   }

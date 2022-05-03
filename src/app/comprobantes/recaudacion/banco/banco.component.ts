@@ -37,10 +37,10 @@ export class BancoComponent implements OnInit {
       event.preventDefault();
     this.bancoService.crear(this.banco).subscribe(
       res => {
-        Swal.fire(constantes.exito, res.mensaje, constantes.exito_swal);
+        Swal.fire({ icon: constantes.exito_swal, title: constantes.exito, text: res.mensaje });
         this.banco=res.resultado as Banco;
       },
-      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.message })
+      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
 
@@ -49,20 +49,20 @@ export class BancoComponent implements OnInit {
       event.preventDefault();
     this.bancoService.actualizar(this.banco).subscribe(
       res => {
-        Swal.fire(constantes.exito, res.mensaje, constantes.exito_swal);
+        Swal.fire({ icon: constantes.exito_swal, title: constantes.exito, text: res.mensaje });
         this.banco=res.resultado as Banco;
       },
-      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.message })
+      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
 
   eliminar(banco: Banco) {
     this.bancoService.eliminar(banco).subscribe(
       res => {
-        Swal.fire(constantes.exito, res.mensaje, constantes.exito_swal);
+        Swal.fire({ icon: constantes.exito_swal, title: constantes.exito, text: res.mensaje });
         this.banco=res.resultado as Banco
       },
-      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.message })
+      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
 
@@ -75,7 +75,7 @@ export class BancoComponent implements OnInit {
           this.banco=res.resultado as Banco
           this.bancoService.enviar(0);
         },
-        err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.message })
+        err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
       );
     }
   }

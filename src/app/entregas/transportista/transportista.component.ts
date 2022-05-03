@@ -29,7 +29,7 @@ export class TransportistaComponent implements OnInit {
       res=>{
         this.transportistas= res.resultado as Transportista[]
       },
-      err => Swal.fire(constantes.error, err.error.mensaje, constantes.error_swal)
+      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
 
@@ -60,33 +60,33 @@ export class TransportistaComponent implements OnInit {
   crear() {
     this.transportistaService.crear(this.transportista).subscribe(
       res => {
-        Swal.fire(constantes.exito, res.mensaje, constantes.exito_swal);
+        Swal.fire({ icon: constantes.exito_swal, title: constantes.exito, text: res.mensaje });
         this.transportista=res.resultado as Transportista;
         this.ngOnInit();
       },
-      err => Swal.fire(constantes.error, err.error.mensaje, constantes.error_swal)
+      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
 
   actualizar(transportista: Transportista) {
     this.transportistaService.actualizar(transportista).subscribe(
       res => {
-        Swal.fire(constantes.exito, res.mensaje, constantes.exito_swal);
+        Swal.fire({ icon: constantes.exito_swal, title: constantes.exito, text: res.mensaje });
         this.transportista=res.resultado as Transportista;
         this.ngOnInit();
       },
-      err => Swal.fire(constantes.error, err.error.mensaje, constantes.error_swal)
+      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
 
   eliminar(transportista: Transportista) {
     this.transportistaService.eliminar(transportista).subscribe(
       res => {
-        Swal.fire(constantes.exito, res.mensaje, constantes.exito_swal);
+        Swal.fire({ icon: constantes.exito_swal, title: constantes.exito, text: res.mensaje });
         this.transportista=res.resultado as Transportista
         this.ngOnInit();
       },
-      err => Swal.fire(constantes.error, err.error.mensaje, constantes.error_swal)
+      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
 

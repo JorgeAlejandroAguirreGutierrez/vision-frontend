@@ -42,11 +42,11 @@ export class PuntoVentaComponent implements OnInit {
       event.preventDefault();
     this.puntoVentaService.crear(this.puntoVenta).subscribe(
       res => {
-        Swal.fire(constantes.exito, res.mensaje, constantes.exito_swal);
+        Swal.fire({ icon: constantes.exito_swal, title: constantes.exito, text: res.mensaje });
         this.nuevo(null);
 
       },
-      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.message })
+      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
 
@@ -55,10 +55,10 @@ export class PuntoVentaComponent implements OnInit {
       event.preventDefault();
     this.puntoVentaService.actualizar(this.puntoVenta).subscribe(
       res => {
-        Swal.fire(constantes.exito, res.mensaje, constantes.exito_swal);
+        Swal.fire({ icon: constantes.exito_swal, title: constantes.exito, text: res.mensaje });
         this.puntoVenta=res.resultado as PuntoVenta;
       },
-      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.message })
+      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
 
@@ -71,7 +71,7 @@ export class PuntoVentaComponent implements OnInit {
           Object.assign(this.puntoVenta, res.resultado as PuntoVenta);
           this.puntoVentaService.enviar(0);
         },
-        err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.message })
+        err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
       );
     }
   }
@@ -79,10 +79,10 @@ export class PuntoVentaComponent implements OnInit {
   consultarEstablecimientos(){
     this.establecimientoService.consultar().subscribe(
       res => {
-        Swal.fire(constantes.exito, res.mensaje, constantes.exito_swal);
+        Swal.fire({ icon: constantes.exito_swal, title: constantes.exito, text: res.mensaje });
         this.establecimientos=res.resultado as Establecimiento[]
       },
-      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.message })
+      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
 

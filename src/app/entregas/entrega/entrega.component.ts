@@ -9,7 +9,6 @@ import { Ubicacion } from '../../modelos/ubicacion';
 import { UbicacionService } from '../../servicios/ubicacion.service';
 import { TransportistaService } from '../../servicios/transportista.service';
 import { Transportista } from '../../modelos/transportista';
-import { VehiculoTransporte } from '../../modelos/vehiculo-transporte';
 import { VehiculoTransporteService } from '../../servicios/vehiculo-transporte.service';
 import { Entrega } from '../../modelos/entrega';
 import { Direccion } from '../../modelos/direccion';
@@ -73,7 +72,7 @@ export class EntregaComponent implements OnInit {
           }
           this.dataFacturaDetalle = new MatTableDataSource<FacturaDetalle>(this.entrega.factura.facturaDetalles);
         },
-        err => Swal.fire(constantes.error, err.error.mensaje, constantes.error_swal)
+        err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
       );
     }
   }
@@ -83,9 +82,7 @@ export class EntregaComponent implements OnInit {
       res => {
         this.provincias = res.resultado as Ubicacion[];
       },
-      err => {
-        Swal.fire(constantes.error, err.error.mensaje, constantes.error_swal)
-      }
+      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
 
@@ -94,9 +91,7 @@ export class EntregaComponent implements OnInit {
       res => {
         this.transportistas = res.resultado as Transportista[]
       },
-      err => {
-        Swal.fire(constantes.error, err.error.mensaje, constantes.error_swal);
-      }
+      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
 
@@ -108,13 +103,9 @@ export class EntregaComponent implements OnInit {
     this.entregaService.crear(this.entrega).subscribe(
       res => {
         this.entrega = res.resultado as Entrega;
-        if (res.mensaje){
-          Swal.fire(constantes.exito, 'Se creo la guia de remision', constantes.exito_swal);
-        }
+        Swal.fire({ icon: constantes.exito_swal, title: constantes.exito, text: res.mensaje });
       },
-      err => {
-        Swal.fire(constantes.error, err.error.mensaje, constantes.error_swal);
-      }
+      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
 
@@ -125,14 +116,10 @@ export class EntregaComponent implements OnInit {
     console.log(this.entrega);
     this.entregaService.actualizar(this.entrega).subscribe(
       res => {
+        Swal.fire({ icon: constantes.exito_swal, title: constantes.exito, text: res.mensaje });
         this.entrega = res.resultado as Entrega;
-        if (res.mensaje){
-          Swal.fire(constantes.exito, 'Se creo la guia de remision', constantes.exito_swal);
-        }
       },
-      err => {
-        Swal.fire(constantes.error, err.error.mensaje, constantes.error_swal);
-      }
+      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
 
@@ -141,9 +128,7 @@ export class EntregaComponent implements OnInit {
       res => {
           this.cantones = res.resultado as Ubicacion[];
       },
-      err => {
-        Swal.fire(constantes.error, err.error.mensaje, constantes.error_swal);
-      }
+      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
 
@@ -152,9 +137,7 @@ export class EntregaComponent implements OnInit {
       res => {
           this.parroquias = res.resultado as Ubicacion[];
       },
-      err => {
-        Swal.fire(constantes.error, err.error.mensaje, constantes.error_swal);
-      }
+      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
   parroquia(){
@@ -163,9 +146,7 @@ export class EntregaComponent implements OnInit {
         res => {
           this.entrega.direccion.ubicacion=res.resultado as Ubicacion;
         },
-        err => {
-          Swal.fire(constantes.error, err.error.mensaje, constantes.error_swal);
-        }
+        err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
       );
     }
   }
@@ -249,9 +230,7 @@ export class EntregaComponent implements OnInit {
         var fileURL = URL.createObjectURL(file);
         window.open(fileURL);
       },
-      err => {
-        Swal.fire(constantes.error, err.error.mensaje, constantes.error_swal);
-      }
+      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
 }

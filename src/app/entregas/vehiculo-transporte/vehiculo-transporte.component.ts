@@ -17,7 +17,7 @@ import { Sesion } from 'src/app/modelos/sesion';
 export class VehiculoTransporteComponent implements OnInit {
 
   vehiculoTransporte= new VehiculoTransporte();
-  vehicuylosTransportes: VehiculoTransporte[];
+  vehiculosTransportes: VehiculoTransporte[];
   pVehiculoTransporte= new VehiculoTransporte();
   sesion: Sesion=null;
 
@@ -27,9 +27,9 @@ export class VehiculoTransporteComponent implements OnInit {
     this.sesion=util.validarSesion( this.sesionService, this.router);
     this.vehiculoTransporteService.consultar().subscribe(
       res=>{
-        this.vehicuylosTransportes= res.resultado as VehiculoTransporte[]
+        this.vehiculosTransportes= res.resultado as VehiculoTransporte[]
       },
-      err => Swal.fire(constantes.error, err.error.mensaje, constantes.error_swal)
+      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
 
@@ -60,33 +60,33 @@ export class VehiculoTransporteComponent implements OnInit {
   crear() {
     this.vehiculoTransporteService.crear(this.vehiculoTransporte).subscribe(
       res => {
-        Swal.fire(constantes.exito, res.mensaje, constantes.exito_swal);
+        Swal.fire({ icon: constantes.exito_swal, title: constantes.exito, text: res.mensaje });
         this.vehiculoTransporte=res.resultado as VehiculoTransporte;
         this.ngOnInit();
       },
-      err => Swal.fire(constantes.error, err.error.mensaje, constantes.error_swal)
+      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
 
   actualizar(vehiculoTransporte: VehiculoTransporte) {
     this.vehiculoTransporteService.actualizar(vehiculoTransporte).subscribe(
       res => {
-        Swal.fire(constantes.exito, res.mensaje, constantes.exito_swal);
+        Swal.fire({ icon: constantes.exito_swal, title: constantes.exito, text: res.mensaje });
         this.vehiculoTransporte=res.resultado as VehiculoTransporte;
         this.ngOnInit();
       },
-      err => Swal.fire(constantes.error, err.error.mensaje, constantes.error_swal)
+      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
 
   eliminar(vehiculoTransporte: VehiculoTransporte) {
     this.vehiculoTransporteService.eliminar(vehiculoTransporte).subscribe(
       res => {
-        Swal.fire('Exito', res.mensaje, 'success');
+        Swal.fire({ icon: constantes.exito_swal, title: constantes.exito, text: res.mensaje });
         this.vehiculoTransporte=res.resultado as VehiculoTransporte
         this.ngOnInit();
       },
-      err => Swal.fire(constantes.error, err.error.mensaje, constantes.error_swal)
+      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
 

@@ -35,7 +35,7 @@ export class ImportarComponent implements OnInit {
           this.modelos = res.resultado as Modelo[]
         }
       },
-      err => Swal.fire(constantes.error, err.error.mensaje, constantes.error_swal)
+      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
   cargarArchivo(archivos: FileList){
@@ -46,14 +46,14 @@ export class ImportarComponent implements OnInit {
     this.modeloService.importar(this.archivo, this.modelo).subscribe(
       res => {
         if (res.resultado!=null && res.resultado) {
-            Swal.fire(constantes.exito, res.mensaje, constantes.exito_swal);
+          Swal.fire({ icon: constantes.exito_swal, title: constantes.exito, text: res.mensaje });
         } else{
-          Swal.fire(constantes.error, res.mensaje, constantes.error_swal)
+          Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: res.mensaje });
         }
         this.cargando=false;
       },
       err => {
-        Swal.fire(constantes.error, err.error.mensaje, constantes.error_swal);
+        Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
         this.cargando=false;
       }
     );

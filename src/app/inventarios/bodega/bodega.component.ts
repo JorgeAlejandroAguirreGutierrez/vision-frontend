@@ -56,10 +56,14 @@ export class BodegaComponent implements OnInit {
   keyEvent($event: KeyboardEvent) {
     if (($event.shiftKey || $event.metaKey) && $event.key == 'G') //SHIFT + G
       this.crear(null);
-    //if (($event.shiftKey || $event.metaKey) && $event.key == 'N') //ASHIFT + N
-      //this.nuevo(null);
+    if (($event.shiftKey || $event.metaKey) && $event.key == 'N') //ASHIFT + N
+      this.nuevo(null);
     if (($event.shiftKey || $event.metaKey) && $event.key == 'E') // SHIFT + E
       this.eliminarLeer(null);
+  }
+
+  nuevo(event){
+
   }
 
 
@@ -83,10 +87,10 @@ export class BodegaComponent implements OnInit {
       event.preventDefault();
     this.bodegaService.crear(this.bodega).subscribe(
       res => {
-        Swal.fire(constantes.exito, res.mensaje, constantes.exito_swal);
+        Swal.fire({ icon: constantes.exito_swal, title: constantes.exito, text: res.mensaje });
         this.consultar();
       },
-      err => Swal.fire(constantes.error, err.error.mensaje, constantes.error_swal)
+      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
 
@@ -95,11 +99,11 @@ export class BodegaComponent implements OnInit {
       event.preventDefault();
     this.bodegaService.actualizar(this.bodega).subscribe(
       res => {
-        Swal.fire(constantes.exito, res.mensaje, constantes.exito_swal);
+        Swal.fire({ icon: constantes.exito_swal, title: constantes.exito, text: res.mensaje });
         this.bodega=res.resultado as Bodega;
         this.consultar();
       },
-      err => Swal.fire(constantes.error, err.error.mensaje, constantes.error_swal)
+      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
 
@@ -117,10 +121,10 @@ export class BodegaComponent implements OnInit {
   eliminar(bodega: Bodega) {
     this.bodegaService.eliminar(bodega).subscribe(
       res => {
-        Swal.fire(constantes.exito, res.mensaje, constantes.exito_swal);
+        Swal.fire({ icon: constantes.exito_swal, title: constantes.exito, text: res.mensaje });
         this.bodega=res.resultado as Bodega
       },
-      err => Swal.fire(constantes.error, err.error.mensaje, constantes.error_swal)
+      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
 
@@ -129,10 +133,10 @@ export class BodegaComponent implements OnInit {
       event.preventDefault();
     this.bodegaService.eliminar(this.bodega).subscribe(
       res => {
-          Swal.fire(constantes.exito, res.mensaje, constantes.exito_swal);
-          this.consultar();
+        Swal.fire({ icon: constantes.exito_swal, title: constantes.exito, text: res.mensaje });
+        this.consultar();
       },
-      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.message })
+      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
 
@@ -145,7 +149,7 @@ export class BodegaComponent implements OnInit {
           Object.assign(this.bodega, res.resultado as Bodega);
           this.bodegaService.enviar(0);
         },
-        err => Swal.fire(constantes.error, err.error.mensaje, constantes.error_swal)
+        err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
       );
     }
   }
@@ -158,19 +162,13 @@ export class BodegaComponent implements OnInit {
         this.dataSourceBodega.paginator = this.paginator;
         this.dataSourceBodega.sort = this.sort;
       },
-      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.message })
+      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
 
   buscar(event: any) {
     if (event!=null)
       event.preventDefault();
-  /*    this.bodegaService.buscar(this.bodegaBuscar).subscribe(
-        res => {
-          this.bodegas = res.resultado as Bodega[]
-        },
-        err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.message })
-      );*/
   }
 
   seleccion(bodegaSeleccionada: Bodega) {

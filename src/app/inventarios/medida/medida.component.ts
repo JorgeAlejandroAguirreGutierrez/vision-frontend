@@ -69,7 +69,7 @@ export class MedidaComponent implements OnInit {
           Object.assign(this.medida, res.resultado as Medida);
           this.medidaService.enviar(0);
         },
-        err => Swal.fire(constantes.error, err.error.mensaje, constantes.error_swal)
+        err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
       );
     }
   }
@@ -100,10 +100,10 @@ export class MedidaComponent implements OnInit {
       event.preventDefault();
     this.medidaService.crear(this.medida).subscribe(
       res => {
-        Swal.fire(constantes.exito, res.mensaje, constantes.exito_swal);
+        Swal.fire({ icon: constantes.exito_swal, title: constantes.exito, text: res.mensaje });
         this.consultar();
       },
-      err => Swal.fire(constantes.error, err.error.mensaje, constantes.error_swal)
+      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
 
@@ -112,11 +112,11 @@ export class MedidaComponent implements OnInit {
       event.preventDefault();
     this.medidaService.actualizar(this.medida).subscribe(
       res => {
+        Swal.fire({ icon: constantes.exito_swal, title: constantes.exito, text: res.mensaje });
         this.medida=res.resultado as Medida;
         this.consultar();
-        Swal.fire(constantes.exito, res.mensaje, constantes.exito_swal);
       },
-      err => Swal.fire(constantes.error, err.error.mensaje, constantes.error_swal)
+      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
 
@@ -134,10 +134,10 @@ export class MedidaComponent implements OnInit {
   eliminar(medida: Medida) {
     this.medidaService.eliminar(medida).subscribe(
       res => {
-        Swal.fire(constantes.exito, res.mensaje, constantes.exito_swal);
+        Swal.fire({ icon: constantes.exito_swal, title: constantes.exito, text: res.mensaje });
         this.medida=res.resultado as Medida
       },
-      err => Swal.fire(constantes.error, err.error.mensaje, constantes.error_swal)
+      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
   
@@ -146,10 +146,10 @@ export class MedidaComponent implements OnInit {
       event.preventDefault();
     this.medidaService.eliminar(this.medida).subscribe(
       res => {
-        Swal.fire(constantes.exito, res.mensaje, constantes.exito_swal);
+        Swal.fire({ icon: constantes.exito_swal, title: constantes.exito, text: res.mensaje });
         this.consultar();  
       },
-      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.message })
+      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
 
@@ -161,7 +161,7 @@ export class MedidaComponent implements OnInit {
         this.dataSourceMedida.paginator = this.paginator;
         this.dataSourceMedida.sort = this.sort;
       },
-      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.message })
+      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
 
@@ -172,7 +172,7 @@ export class MedidaComponent implements OnInit {
         res => {
           this.medidas = res.resultado as Medida[]
         },
-        err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.message })
+        err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
       );
   }
 

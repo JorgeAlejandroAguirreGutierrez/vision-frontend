@@ -268,7 +268,7 @@ export class RecaudacionComponent implements OnInit {
           }
           this.calcular();
         },
-        err => Swal.fire(constantes.error, err.error.mensaje, constantes.error_swal)
+        err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
       );
     }
   }
@@ -278,7 +278,7 @@ export class RecaudacionComponent implements OnInit {
       res => {
         this.establecimientos = res.resultado as Establecimiento[]
       },
-      err => Swal.fire(constantes.error, err.error.mensaje, constantes.error_swal)
+      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
 
@@ -287,7 +287,7 @@ export class RecaudacionComponent implements OnInit {
       res => {
         this.puntosVentas = res.resultado as PuntoVenta[]
       },
-      err => Swal.fire(constantes.error, err.error.mensaje, constantes.error_swal)
+      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
 
@@ -296,7 +296,7 @@ export class RecaudacionComponent implements OnInit {
       res => {
         this.cuentasPropias = res.resultado as CuentaPropia[]
       },
-      err => Swal.fire(constantes.error, err.error.mensaje, constantes.error_swal)
+      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
   consultarFranquiciasTarjetas(){
@@ -305,7 +305,7 @@ export class RecaudacionComponent implements OnInit {
         this.franquiciasTarjetasCreditos = res.resultado as FranquiciaTarjeta[]
         this.franquiciasTarjetasDebitos = res.resultado as FranquiciaTarjeta[]
       },
-      err => Swal.fire(constantes.error, err.error.mensaje, constantes.error_swal)
+      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
   consultarOperadoresTarjetasCreditos(){
@@ -313,7 +313,7 @@ export class RecaudacionComponent implements OnInit {
       res => {
         this.operadoresTarjetasCreditos = res.resultado as OperadorTarjeta[]
       },
-      err => Swal.fire(constantes.error, err.error.mensaje, constantes.error_swal)
+      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
   consultarOperadoresTarjetasDebitos(){
@@ -321,7 +321,7 @@ export class RecaudacionComponent implements OnInit {
       res => {
         this.operadoresTarjetasDebitos = res.resultado as OperadorTarjeta[]
       },
-      err => Swal.fire(constantes.error, err.error.mensaje, constantes.error_swal)
+      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
   consultarModelosAmortizaciones(){
@@ -331,7 +331,7 @@ export class RecaudacionComponent implements OnInit {
       res => {
         this.modelosAmortizaciones = res.resultado as Parametro[]
       },
-      err => Swal.fire(constantes.error, err.error.mensaje, constantes.error_swal)
+      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
   consultarPeriodicidades(){
@@ -341,7 +341,7 @@ export class RecaudacionComponent implements OnInit {
       res => {
         this.periodicidades = res.resultado as Parametro[]
       },
-      err => Swal.fire(constantes.error, err.error.mensaje, constantes.error_swal)
+      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
   consultarTiposComprobantes(){
@@ -349,7 +349,7 @@ export class RecaudacionComponent implements OnInit {
       res => {
         this.tiposComprobantes = res.resultado as TipoComprobante[]
       },
-      err => Swal.fire(constantes.error, err.error.mensaje, constantes.error_swal)
+      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
   consultarClientes() {
@@ -357,7 +357,7 @@ export class RecaudacionComponent implements OnInit {
      res => {
        this.clientes = res.resultado as Cliente[]
      },
-     err => Swal.fire(constantes.error, err.error.mensaje, constantes.error_swal)
+     err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
    );
   }
   consultarBancosCheques() {
@@ -365,42 +365,48 @@ export class RecaudacionComponent implements OnInit {
     res => {
       this.bancosCheques = res.resultado as Banco[]
     },
-    err => Swal.fire(constantes.error, err.error.mensaje, constantes.error_swal));
+    err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
+    );
   }
   consultarBancosDepositos() {
     this.bancoService.consultar().subscribe(
     res => {
       this.bancosDepositos = res.resultado as Banco[]
     },
-    err => Swal.fire(constantes.error, err.error.mensaje, constantes.error_swal));
+    err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
+    );
   }  
   consultarBancosTransferencias() {
     this.bancoService.consultar().subscribe(
     res => {
       this.bancosTransferencias = res.resultado as Banco[]
     },
-    err => Swal.fire(constantes.error, err.error.mensaje, constantes.error_swal));
+    err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
+    );
   } 
   consultarBancosTarjetasCreditos() {
     this.bancoService.consultar().subscribe(
     res => {
       this.bancosTarjetasCreditos = res.resultado as Banco[]
     },
-    err => Swal.fire(constantes.error, err.error.mensaje, constantes.error_swal));
+    err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
+    );
   }
   consultarBancosTarjetasDebitos() {
     this.bancoService.consultar().subscribe(
     res => {
       this.bancosTarjetasDebitos = res.resultado as Banco[]
     },
-    err => Swal.fire(constantes.error, err.error.mensaje, constantes.error_swal));
+    err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
+    );
   }
   consultarFormasPagos() {
     this.formaPagoService.consultar().subscribe(
     res => {
       this.formasPagos = res.resultado as FormaPago[]
     },
-    err => Swal.fire(constantes.error, err.error.mensaje, constantes.error_swal));
+    err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
+    );
   }  
 
   private filtroRazonSocialCliente(value: string): Cliente[] {
@@ -704,10 +710,10 @@ export class RecaudacionComponent implements OnInit {
     this.clienteService.validarIdentificacion(this.tarjetaCredito.identificacion).subscribe(
       res => {
         if (res.resultado!=null){
-          Swal.fire(constantes.exito, 'Identificacion verificada', constantes.exito_swal);
+          Swal.fire({ icon: constantes.exito_swal, title: constantes.exito, text: res.mensaje });
         } else {
           this.tarjetaCredito.identificacion='';
-          Swal.fire(constantes.error, "Error al validar la identificacion", constantes.error_swal);
+          Swal.fire({ icon: constantes.error_swal, title: constantes.exito, text: res.mensaje });
         } 
       },
       err => Swal.fire(constantes.error, err.error.mensaje, constantes.error_swal)
@@ -765,13 +771,13 @@ export class RecaudacionComponent implements OnInit {
     this.clienteService.validarIdentificacion(this.tarjetaDebito.identificacion).subscribe(
       res => {
         if (res.resultado!=null){
-          Swal.fire(constantes.exito, 'Identificacion verificada', constantes.exito_swal);
+          Swal.fire({ icon: constantes.exito_swal, title: constantes.exito, text: res.mensaje });
         } else {
           this.tarjetaDebito.identificacion='';
-          Swal.fire(constantes.error, "Error al validar la identificacion", constantes.error_swal);
+          Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: res.mensaje });
         } 
       },
-      err => Swal.fire(constantes.error, err.error.mensaje, constantes.error_swal)
+      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
 
@@ -897,10 +903,11 @@ export class RecaudacionComponent implements OnInit {
         let recaudacion = res.resultado as Recaudacion;
         recaudacion.normalizar();
         this.recaudacion=recaudacion;
-        Swal.fire(constantes.exito, "Se creo la recaudacion", constantes.exito_swal);
+        Swal.fire({ icon: constantes.exito_swal, title: constantes.exito, text: res.mensaje });
         this.facturaService.enviarEventoEntrega(this.factura);
         this.stepper.next();
-      }, err => Swal.fire(constantes.error, err.error.mensaje, constantes.error_swal)
+      }, 
+      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
 
@@ -912,10 +919,11 @@ export class RecaudacionComponent implements OnInit {
         let recaudacion= new Recaudacion();
         Object.assign(recaudacion, res.resultado as Recaudacion);
         this.recaudacion=recaudacion;
-        Swal.fire(constantes.exito, 'Se actualizo la Recaudacion', constantes.exito_swal);
+        Swal.fire({ icon: constantes.exito_swal, title: constantes.exito, text: res.mensaje });
         this.facturaService.enviarEventoEntrega(this.factura)
         this.stepper.next();
-      }, err => Swal.fire(constantes.error, err.error.mensaje, constantes.error_swal)
+      }, 
+      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
 
@@ -979,7 +987,7 @@ export class RecaudacionComponent implements OnInit {
         parametro = res.resultado as Parametro
         this.recaudacion.credito.periodicidadNumero=Number(parametro.nombre);
       },
-      err => Swal.fire(constantes.error, err.error.mensaje, constantes.error_swal)
+      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
     );
     parametro.tipo=constantes.periodo+"_"+this.recaudacion.credito.periodicidad;
     this.parametroService.obtenerTipo(parametro).subscribe(
@@ -987,7 +995,7 @@ export class RecaudacionComponent implements OnInit {
         parametro = res.resultado as Parametro
         this.recaudacion.credito.periodicidadTotal=Number(parametro.nombre);
       },
-      err => Swal.fire(constantes.error, err.error.mensaje, constantes.error_swal)
+      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
 
@@ -1003,7 +1011,7 @@ export class RecaudacionComponent implements OnInit {
           console.log(`Dismissed ${this.getDismissReason(reason)}`);
         });
       },
-      err => Swal.fire(constantes.error, err.error.mensaje, constantes.error_swal)
+      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
 

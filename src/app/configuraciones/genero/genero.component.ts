@@ -72,10 +72,9 @@ export class GeneroComponent implements OnInit {
       event.preventDefault();
     this.generoService.crear(this.genero).subscribe(
       res => {
-        Swal.fire(constantes.exito, res.mensaje, constantes.exito_swal);
-
+        Swal.fire({ icon: constantes.exito_swal, title: constantes.exito, text: res.mensaje });
       },
-      err => Swal.fire(constantes.error, err.error.mensaje, constantes.error_swal)
+      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
 
@@ -84,10 +83,10 @@ export class GeneroComponent implements OnInit {
       event.preventDefault();
     this.generoService.actualizar(this.genero).subscribe(
       res => {
-        Swal.fire(constantes.exito, res.mensaje, constantes.exito_swal);
+        Swal.fire({ icon: constantes.exito_swal, title: constantes.exito, text: res.mensaje });
         this.genero=res.resultado as Genero;
       },
-      err => Swal.fire(constantes.error, err.error.mensaje, constantes.error_swal)
+      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
 
@@ -105,10 +104,10 @@ export class GeneroComponent implements OnInit {
   eliminar(genero: Genero) {
     this.generoService.eliminar(genero).subscribe(
       res => {
-        Swal.fire(constantes.exito, res.mensaje, constantes.exito_swal);
+        Swal.fire({ icon: constantes.exito_swal, title: constantes.exito, text: res.mensaje });
         this.genero=res.resultado as Genero
       },
-      err => Swal.fire(constantes.error, err.error.mensaje, constantes.error_swal)
+      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
 
@@ -117,10 +116,10 @@ export class GeneroComponent implements OnInit {
       event.preventDefault();
     this.generoService.eliminar(this.genero).subscribe(
       res => {
-          Swal.fire('Exito', res.mensaje, 'success');
-          this.consultar();   
+        Swal.fire({ icon: constantes.exito_swal, title: constantes.exito, text: res.mensaje });
+        this.consultar();   
       },
-      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.message })
+      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
   
@@ -133,7 +132,7 @@ export class GeneroComponent implements OnInit {
           Object.assign(this.genero, res.resultado as Genero);
           this.generoService.enviar(0);
         },
-        err => Swal.fire(constantes.error, err.error.mensaje, constantes.error_swal)
+        err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
       );
     }
   }
@@ -143,7 +142,7 @@ export class GeneroComponent implements OnInit {
       res => {
         this.generos = res.resultado as Genero[]
       },
-      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.message })
+      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
 
@@ -154,7 +153,7 @@ export class GeneroComponent implements OnInit {
       res => {
         this.generos = res.resultado as Genero[]
       },
-      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.message })
+      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
 

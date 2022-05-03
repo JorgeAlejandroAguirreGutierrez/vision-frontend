@@ -319,7 +319,7 @@ export class FacturaComponent implements OnInit {
         this.dataSourceFactura.paginator = this.paginator;
         this.dataSourceFactura.sort = this.sort;
       },
-      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.message })
+      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
 
@@ -328,9 +328,7 @@ export class FacturaComponent implements OnInit {
       res => {
         this.clientes = res.resultado as Cliente[]
       },
-      err => {
-        Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.message });
-      }
+      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
 
@@ -339,9 +337,7 @@ export class FacturaComponent implements OnInit {
       res => {
         this.impuestos = res.resultado as Impuesto[]
       },
-      err => {
-        Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.message });
-      }
+      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
   consultarBodegas(){
@@ -349,9 +345,7 @@ export class FacturaComponent implements OnInit {
       res => {
         this.bodegas = res.resultado as Bodega[]
       },
-      err => {
-        Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.message });
-      }
+      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
 
@@ -362,7 +356,7 @@ export class FacturaComponent implements OnInit {
       res => {
         this.productos = res.resultado as Producto[]
       },
-      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.message })
+      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
   consultarServicios(event) {
@@ -372,7 +366,7 @@ export class FacturaComponent implements OnInit {
       res => {
         this.productos = res.resultado as Producto[]
       },
-      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.message })
+      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
   consultarActivosFijos(event) {
@@ -382,7 +376,7 @@ export class FacturaComponent implements OnInit {
       res => {
         this.productos = res.resultado as Producto[]
       },
-      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.message })
+      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
 
@@ -416,13 +410,13 @@ export class FacturaComponent implements OnInit {
         this.habilitarClienteTce=false;
         this.verAcordeonFacturaDetalle=true;
       },
-      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.message })
+      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
     );
     this.auxiliarService.consultarClienteID(this.auxiliarBuscar).subscribe(
       res => {
         this.auxiliares = res.resultado as Auxiliar[]
       },
-      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.message })
+      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
 
@@ -455,13 +449,13 @@ export class FacturaComponent implements OnInit {
         }
         this.habilitarClienteTce=false;
       },
-      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.message })
+      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
     );
     this.auxiliarService.consultarClienteID(this.auxiliarBuscar).subscribe(
       res => {
         this.auxiliares = res.resultado as Auxiliar[]
       },
-      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.message })
+      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
 
@@ -481,7 +475,7 @@ export class FacturaComponent implements OnInit {
           this.primerCorreoClienteFactura= this.factura.clienteFactura.correos[0].email;
         this.habilitarClienteFacturaTce=false;
       },
-      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.message })
+      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
 
@@ -501,7 +495,7 @@ export class FacturaComponent implements OnInit {
           this.primerCorreoClienteFactura= this.factura.clienteFactura.correos[0].email;
         this.habilitarClienteFacturaTce=false;
       },
-      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.message })
+      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
 
@@ -576,9 +570,7 @@ export class FacturaComponent implements OnInit {
       res => {
         this.facturaDetalle = res.resultado as FacturaDetalle;
       },
-      err => {
-        Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.message });
-      }
+      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
 
@@ -716,11 +708,9 @@ export class FacturaComponent implements OnInit {
         this.factura = res.resultado as Factura;
         this.limpiarProducto();
         this.dataFacturaDetalle = new MatTableDataSource<FacturaDetalle>(this.factura.facturaDetalles);
-        Swal.fire(constantes.exito, constantes.exito_agregar_detalle_factura, constantes.exito_swal);
+        Swal.fire({ icon: constantes.exito_swal, title: constantes.exito, text: res.mensaje });
       },
-      err => {
-        Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.message });
-      }
+      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
 
@@ -734,11 +724,9 @@ export class FacturaComponent implements OnInit {
         this.factura = res.resultado as Factura;
         this.facturaService.enviarEventoRecaudacion(this.factura);
         this.stepper.next();
-        Swal.fire(constantes.exito, constantes.exito_crear_factura, constantes.exito_swal);
+        Swal.fire({ icon: constantes.exito_swal, title: constantes.exito, text: res.mensaje });
       },
-      err => {
-        Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.message });
-      }
+      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
 
@@ -750,9 +738,9 @@ export class FacturaComponent implements OnInit {
         this.factura = res.resultado as Factura;
         this.facturaService.enviarEventoRecaudacion(this.factura);
         this.stepper.next();
-        Swal.fire(constantes.exito, constantes.exito_actualizar_factura, constantes.exito_swal);
+        Swal.fire({ icon: constantes.exito_swal, title: constantes.exito, text: res.mensaje });
       },
-      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.message })
+      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
 
@@ -902,9 +890,7 @@ export class FacturaComponent implements OnInit {
         this.dataFacturaDetalle = new MatTableDataSource<FacturaDetalle>(this.factura.facturaDetalles);
 
       },
-      err => {
-        Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.message });
-      }
+      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.message })
     );
   }
 
@@ -928,9 +914,8 @@ export class FacturaComponent implements OnInit {
   abrirTabProducto(event){
     if (event != null)
       event.preventDefault();
-    let indice_tab_activo //= this.tab_activo();
+    let indice_tab_activo
     this.tabService.removeTab(indice_tab_activo);
-    //this.tabService.addNewTab(ProductoComponent, constantes.tab_crear_producto);
   }
 
   filtroFactura(event: Event) {

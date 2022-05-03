@@ -73,11 +73,11 @@ export class EstadoCivilComponent implements OnInit {
       event.preventDefault();
     this.estadoCivilService.crear(this.estadoCivil).subscribe(
       res => {
-        Swal.fire(constantes.exito, res.mensaje, constantes.exito_swal);
+        Swal.fire({ icon: constantes.exito_swal, title: constantes.exito, text: res.mensaje });
         this.nuevo(null);
         this.consultar();
       },
-      err => Swal.fire(constantes.error, err.error.mensaje, constantes.exito_swal)
+      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
 
@@ -86,11 +86,11 @@ export class EstadoCivilComponent implements OnInit {
       event.preventDefault();
     this.estadoCivilService.actualizar(this.estadoCivil).subscribe(
       res => {
-        Swal.fire(constantes.exito, res.mensaje, constantes.exito_swal);
+        Swal.fire({ icon: constantes.exito_swal, title: constantes.exito, text: res.mensaje });
         this.estadoCivil=res.resultado as EstadoCivil;
         this.consultar();
       },
-      err => Swal.fire(constantes.error, err.error.mensaje, constantes.error_swal)
+      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
 
@@ -108,11 +108,11 @@ export class EstadoCivilComponent implements OnInit {
   eliminar(estadoCivil: EstadoCivil) {
     this.estadoCivilService.eliminar(estadoCivil).subscribe(
       res => {
-        Swal.fire(constantes.exito, res.mensaje, constantes.error_swal);
+        Swal.fire({ icon: constantes.exito_swal, title: constantes.exito, text: res.mensaje });
         this.estadoCivil=res.resultado as EstadoCivil
         this.consultar(); 
       },
-      err => Swal.fire(constantes.exito, err.error.mensaje, constantes.exito_swal)
+      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
 
@@ -122,14 +122,14 @@ export class EstadoCivilComponent implements OnInit {
     this.estadoCivilService.eliminar(this.estadoCivil).subscribe(
       res => {
         if (res.resultado!=null){
-          Swal.fire(constantes.exito, res.mensaje, constantes.exito_swal);
+          Swal.fire({ icon: constantes.exito_swal, title: constantes.exito, text: res.mensaje });
           this.estadoCivil = res.resultado as EstadoCivil
           this.consultar(); 
         } else {
-          Swal.fire(constantes.error, res.mensaje, constantes.error_swal);
+          Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: res.mensaje });
         }        
       },
-      err => Swal.fire(constantes.error, err.error.mensaje, constantes.error_swal)
+      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
 
@@ -142,7 +142,7 @@ export class EstadoCivilComponent implements OnInit {
           Object.assign(this.estadoCivil, res.resultado as EstadoCivil);
           this.estadoCivilService.enviar(0);
         },
-        err => Swal.fire(constantes.exito, err.error.mensaje, constantes.exito_swal)
+        err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
       );
     }
   }
@@ -152,7 +152,7 @@ export class EstadoCivilComponent implements OnInit {
       res => {
         this.estadosCiviles = res.resultado as EstadoCivil[]
       },
-      err => Swal.fire(constantes.error, err.error.mensaje, constantes.error_swal)
+      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
 
@@ -164,10 +164,10 @@ export class EstadoCivilComponent implements OnInit {
         if (res.resultado!=null) {
           this.estadosCiviles = res.resultado as EstadoCivil[]
         } else {
-          Swal.fire(constantes.error, res.mensaje, constantes.error_swal);
+          Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: res.mensaje });
         }
       },
-      err => Swal.fire(constantes.error, err.error.mensaje, constantes.error_swal)
+      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
 

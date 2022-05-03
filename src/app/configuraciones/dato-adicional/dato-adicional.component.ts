@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {NgbModal, ModalDismissReasons} from '@ng-bootstrap/ng-bootstrap';
 import * as util from '../../util';
+import * as constantes from '../../constantes';
 import Swal from 'sweetalert2';
 import { DatoAdicionalService } from '../../servicios/dato-adicional.service';
 import { DatoAdicional } from '../../modelos/dato-adicional';
@@ -58,33 +59,33 @@ export class DatoAdicionalComponent implements OnInit {
     this.datoAdicionalService.crear(this.datoAdicional).subscribe(
       res => {
         console.log(res);
-        Swal.fire('Exito', res.mensaje, 'success');
+        Swal.fire({ icon: constantes.exito_swal, title: constantes.exito, text: res.mensaje });
         this.datoAdicional=res.resultado as DatoAdicional;
         this.ngOnInit();
       },
-      err => Swal.fire('Error', err.error.mensaje, 'error')
+      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
 
   actualizar(datoAdicional: DatoAdicional) {
     this.datoAdicionalService.actualizar(datoAdicional).subscribe(
       res => {
-        Swal.fire('Exito', res.mensaje, 'success');
+        Swal.fire({ icon: constantes.exito_swal, title: constantes.exito, text: res.mensaje });
         this.datoAdicional=res.resultado as DatoAdicional;
         this.ngOnInit();
       },
-      err => Swal.fire('Error', err.error.mensaje, 'error')
+      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
 
   eliminar(datoAdicional: DatoAdicional) {
     this.datoAdicionalService.eliminar(datoAdicional).subscribe(
       res => {
-        Swal.fire('Exito', res.mensaje, 'success');
+        Swal.fire({ icon: constantes.exito_swal, title: constantes.exito, text: res.mensaje });
         this.datoAdicional=res.resultado as DatoAdicional;
         this.ngOnInit();
       },
-      err => Swal.fire('Error', err.error.mensaje, 'error')
+      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
 

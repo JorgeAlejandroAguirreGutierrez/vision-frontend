@@ -313,7 +313,7 @@ export class ClienteComponent implements OnInit {
         this.nombreEmpresa = empresa.razonSocial;
       },
       err => {
-        Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.message });
+        Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje });
       }
     );
   }
@@ -353,7 +353,7 @@ export class ClienteComponent implements OnInit {
           res => {
             this.auxiliar.direccion.ubicacion = res.resultado as Ubicacion;
           },
-          err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.message })
+          err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
         );
       }
       this.cliente.auxiliares.push(this.auxiliar);
@@ -365,7 +365,7 @@ export class ClienteComponent implements OnInit {
         res => {
           this.cliente.direccion.ubicacion = res.resultado as Ubicacion;
         },
-        err => Swal.fire(constantes.error, err.error.mensaje, constantes.error_swal)
+        err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
       );
     }
     this.cliente.puntoVenta = this.sesion.usuario.puntoVenta;
@@ -384,7 +384,7 @@ export class ClienteComponent implements OnInit {
         this.tabService.removeTab(indiceTabActivo);
         this.tabService.addNewTab(ClienteComponent, constantes.tab_crear_cliente);
       },
-      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.message })
+      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
   
@@ -404,7 +404,7 @@ export class ClienteComponent implements OnInit {
         res => {
           this.auxiliar.direccion.ubicacion = res.resultado as Ubicacion;
         },
-        err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.message })
+        err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
       );
     }
     this.cliente.auxiliares.push(this.auxiliar);
@@ -457,7 +457,7 @@ export class ClienteComponent implements OnInit {
           res => {
             this.auxiliar.direccion.ubicacion = res.resultado as Ubicacion;
           },
-          err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.message })
+          err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
         );
       }
       this.cliente.auxiliares.push(this.auxiliar);
@@ -469,7 +469,7 @@ export class ClienteComponent implements OnInit {
         res => {
           this.cliente.direccion.ubicacion = res.resultado as Ubicacion;
         },
-        err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.message })
+        err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
       );
     }
 
@@ -492,7 +492,7 @@ export class ClienteComponent implements OnInit {
           Swal.fire(constantes.error, res.mensaje, constantes.error_swal);
         }
       },
-      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.message })
+      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
 
@@ -511,10 +511,10 @@ export class ClienteComponent implements OnInit {
           this.cliente = res.resultado as Cliente
           this.ngOnInit();
         } else {
-          Swal.fire(constantes.error, res.mensaje, constantes.error_swal);
+          Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: res.mensaje, })
         }
       },
-      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.message })
+      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
 
@@ -526,7 +526,7 @@ export class ClienteComponent implements OnInit {
         Swal.fire(constantes.exito, res.mensaje, constantes.exito_swal);
         this.consultar();
       },
-      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.message })
+      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
 
@@ -536,7 +536,7 @@ export class ClienteComponent implements OnInit {
         this.clientes = res.resultado as Cliente[]
         this.llenarDataSourceCliente(this.clientes);
       },
-      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.message })
+      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
 
@@ -821,7 +821,7 @@ export class ClienteComponent implements OnInit {
           Swal.fire(constantes.error, res.mensaje, constantes.error_swal);
         }
       },
-      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.message })
+      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
 
@@ -835,7 +835,7 @@ export class ClienteComponent implements OnInit {
           Swal.fire(constantes.error, res.mensaje, constantes.error_swal);
         }
       },
-      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.message })
+      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
 
@@ -846,10 +846,10 @@ export class ClienteComponent implements OnInit {
         if (res.resultado != null) {
           this.parroquias = res.resultado as Ubicacion[];
         } else {
-          Swal.fire(constantes.error, res.mensaje, constantes.error_swal);
+          Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: res.mensaje})
         }
       },
-      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.message })
+      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
 
@@ -860,10 +860,10 @@ export class ClienteComponent implements OnInit {
         if (res.resultado != null) {
           this.auxiliarParroquias = res.resultado as Ubicacion[];
         } else {
-          Swal.fire(constantes.error, res.mensaje, constantes.error_swal);
+          Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: res.mensaje })
         }
       },
-      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.message })
+      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
 
@@ -895,17 +895,16 @@ export class ClienteComponent implements OnInit {
 
   importar(archivos: FileList) {
     let archivoImportar = archivos.item(0);
-    /*
     this.clienteService.importar(archivoImportar).subscribe(
       res => {
         if (res.resultado != null) {
           this.auxiliarCantones = res.resultado as Ubicacion[];
         } else {
-          Swal.fire(constantes.error, res.mensaje, constantes.error_swal);
+          Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: res.mensaje })
         }
       },
-      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.message })
-    );*/
+      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
+    );
   }
 
 }

@@ -89,7 +89,7 @@ export class FormaPagoComponent implements OnInit {
         this.nuevo(null);
         this.consultar();
       },
-      err => Swal.fire(constantes.error, err.error.mensaje, constantes.error_swal)
+      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
 
@@ -98,11 +98,11 @@ export class FormaPagoComponent implements OnInit {
       event.preventDefault();
     this.formaPagoService.actualizar(this.formaPago).subscribe(
       res => {
-        Swal.fire(constantes.exito, res.mensaje, constantes.exito_swal);
+        Swal.fire({ icon: constantes.exito_swal, title: constantes.exito, text: res.mensaje });
         this.formaPago=res.resultado as FormaPago;
         this.consultar();
       },
-      err => Swal.fire(constantes.error, err.error.mensaje, constantes.error_swal)
+      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
 
@@ -120,11 +120,11 @@ export class FormaPagoComponent implements OnInit {
   eliminar(forma_pago: FormaPago) {
     this.formaPagoService.eliminar(forma_pago).subscribe(
       res => {
-        Swal.fire(constantes.exito, res.mensaje, constantes.exito_swal);
+        Swal.fire({ icon: constantes.exito_swal, title: constantes.exito, text: res.mensaje });
         this.formaPago=res.resultado as FormaPago
         this.consultar();
       },
-      err => Swal.fire(constantes.error, err.error.mensaje, constantes.error_swal)
+      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
 
@@ -133,11 +133,11 @@ export class FormaPagoComponent implements OnInit {
       event.preventDefault();
     this.formaPagoService.eliminar(this.formaPago).subscribe(
       res => {
-        Swal.fire(constantes.exito, res.mensaje, constantes.exito_swal);
+        Swal.fire({ icon: constantes.exito_swal, title: constantes.exito, text: res.mensaje });
         this.formaPago = res.resultado as FormaPago
         this.consultar();
       },
-      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.message })
+      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
 
@@ -150,7 +150,7 @@ export class FormaPagoComponent implements OnInit {
           Object.assign(this.formaPago, res.resultado as FormaPago);
           this.formaPagoService.enviar(0);
         },
-        err => Swal.fire(constantes.error, err.error.mensaje, constantes.error_swal)
+        err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
       );
     }
   }
@@ -163,7 +163,7 @@ export class FormaPagoComponent implements OnInit {
         this.dataSourceFormaPago.paginator = this.paginator;
         this.dataSourceFormaPago.sort = this.sort;
       },
-      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.message })
+      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
 
@@ -174,7 +174,7 @@ export class FormaPagoComponent implements OnInit {
       res => {
         this.formas_pagos = res.resultado as FormaPago[]
       },
-      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.message })
+      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
 

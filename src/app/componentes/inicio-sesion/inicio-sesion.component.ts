@@ -9,7 +9,6 @@ import { EmpresaService } from '../../servicios/empresa.service';
 import { ParametroService } from '../../servicios/parametro.service';
 import { environment } from '../../../environments/environment';
 import * as constantes from '../../constantes';
-import * as util from '../../util';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 export interface DialogData {
@@ -55,17 +54,16 @@ export class InicioSesionComponent implements OnInit {
           res => {
             this.sesion=res.resultado as Sesion;
             this.sesionService.setSesion(this.sesion);
-            Swal.fire(constantes.exito, res.mensaje, constantes.exito_swal);
+            Swal.fire({ icon: constantes.exito_swal, title: constantes.exito, text: res.mensaje });
             this.navegarExito();
           },
-          error => {
-            console.log(error);
-            Swal.fire(constantes.error, error.error.mensaje, constantes.error_swal);
+          err => {
+            Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
             this.navegarError();
           }
         );
       },
-      error => Swal.fire(constantes.error, error.error.mensaje, constantes.error_swal),
+      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
 
@@ -85,7 +83,7 @@ export class InicioSesionComponent implements OnInit {
       res => {
         this.empresas = res.resultado as Empresa[]
       },
-      error => Swal.fire(constantes.error, error.error.mensaje, constantes.error_swal)
+      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
 
@@ -97,7 +95,7 @@ export class InicioSesionComponent implements OnInit {
         empresa= res.resultado as Empresa
         this.urlEmpresa=environment.prefijo_url_imagenes+"logos/"+empresa.logo;
       },
-      error => Swal.fire(constantes.error, error.error.mensaje, constantes.error_swal)
+      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
 
@@ -109,7 +107,7 @@ export class InicioSesionComponent implements OnInit {
         parametro= res.resultado as Parametro;
         this.urlLogo=environment.prefijo_url_imagenes+parametro.nombre;
       },
-      error => Swal.fire(constantes.error, error.error.mensaje, constantes.error_swal)
+      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
 

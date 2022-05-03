@@ -84,10 +84,10 @@ export class PlazoCreditoComponent implements OnInit {
       event.preventDefault();
     this.plazoCreditoService.crear(this.plazoCredito).subscribe(
       res => {
-        Swal.fire(constantes.exito, res.mensaje, constantes.exito_swal);
+        Swal.fire({ icon: constantes.exito_swal, title: constantes.exito, text: res.mensaje });
         this.consultar();
       },
-      err => Swal.fire(constantes.error, err.error.mensaje, constantes.error_swal)
+      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
 
@@ -96,11 +96,11 @@ export class PlazoCreditoComponent implements OnInit {
       event.preventDefault();
     this.plazoCreditoService.actualizar(this.plazoCredito).subscribe(
       res => {
-        Swal.fire(constantes.exito, res.mensaje, constantes.exito_swal);
+        Swal.fire({ icon: constantes.exito_swal, title: constantes.exito, text: res.mensaje });
         this.plazoCredito=res.resultado as PlazoCredito;
         this.consultar();
       },
-      err => Swal.fire(constantes.error, err.error.mensaje, constantes.error_swal)
+      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
 
@@ -118,10 +118,10 @@ export class PlazoCreditoComponent implements OnInit {
   eliminar(plazo_credito: PlazoCredito) {
     this.plazoCreditoService.eliminar(plazo_credito).subscribe(
       res => {
-        Swal.fire(constantes.exito, res.mensaje, constantes.exito_swal);
+        Swal.fire({ icon: constantes.exito_swal, title: constantes.exito, text: res.mensaje });
         this.plazoCredito=res.resultado as PlazoCredito
       },
-      err => Swal.fire(constantes.error, err.error.mensaje, constantes.error_swal)
+      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
 
@@ -130,10 +130,10 @@ export class PlazoCreditoComponent implements OnInit {
       event.preventDefault();
     this.plazoCreditoService.eliminar(this.plazoCredito).subscribe(
       res => {
-          Swal.fire(constantes.exito, res.mensaje, constantes.exito_swal);
+        Swal.fire({ icon: constantes.exito_swal, title: constantes.exito, text: res.mensaje });
           this.consultar();
       },
-      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.message })
+      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
 
@@ -146,7 +146,7 @@ export class PlazoCreditoComponent implements OnInit {
           Object.assign(this.plazoCredito, res.resultado as PlazoCredito);
           this.plazoCreditoService.enviar(0);
         },
-        err => Swal.fire(constantes.error, err.error.mensaje, constantes.error_swal)
+        err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
       );
     }
   }
@@ -159,7 +159,7 @@ export class PlazoCreditoComponent implements OnInit {
         this.dataSourcePlazoCredito.paginator = this.paginator;
         this.dataSourcePlazoCredito.sort = this.sort;
       },
-      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.message })
+      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
 
@@ -170,7 +170,7 @@ export class PlazoCreditoComponent implements OnInit {
         res => {
           this.plazosCreditos = res.resultado as PlazoCredito[]
         },
-        err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.message })
+        err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
       );
   }
 

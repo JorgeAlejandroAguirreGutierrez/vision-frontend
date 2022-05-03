@@ -80,40 +80,39 @@ export class SegmentoComponent implements OnInit {
       event.preventDefault();
     this.segmentoService.crear(this.segmento).subscribe(
       res => {
-        Swal.fire(constantes.exito, res.mensaje, constantes.exito_swal);
+        Swal.fire({ icon: constantes.exito_swal, title: constantes.exito, text: res.mensaje });
         this.consultar();
         this.limpiar();
         this.abrirPanelAdminSegmento = true;
       },
-      err => Swal.fire(constantes.error, err.error.mensaje, constantes.error_swal)
+      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
 
   actualizar() {
     this.segmentoService.actualizar(this.segmento).subscribe(
       res => {
-        Swal.fire(constantes.exito, res.mensaje, constantes.exito_swal);
+        Swal.fire({ icon: constantes.exito_swal, title: constantes.exito, text: res.mensaje });
         this.segmento = res.resultado as Segmento;
         this.limpiar();
         this.llenarDataSourceSegmento(this.segmentos);
       },
-      err => Swal.fire(constantes.error, err.error.mensaje, constantes.error_swal)
+      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
 
   eliminar(segmento: Segmento) {
     this.segmentoService.eliminar(segmento).subscribe(
       res => {
-        Swal.fire(constantes.exito, res.mensaje, constantes.exito_swal);
+        Swal.fire({ icon: constantes.exito_swal, title: constantes.exito, text: res.mensaje });
         this.segmento = res.resultado as Segmento
       },
-      err => Swal.fire(constantes.error, err.error.mensaje, constantes.error_swal)
+      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
 
   eliminarEstado() {
     this.segmento.estado = constantes.estadoEliminado;
-    //console.log(this.segmento);
     this.actualizar();
   }
 
@@ -144,9 +143,7 @@ export class SegmentoComponent implements OnInit {
   }
 
   borrarFiltroSegmento(){
-    //this.textoFiltroSegmento = '';
     this.renderer.setProperty(this.inputFiltroSegmento.nativeElement, 'value', '');
-    //this.inputFiltroSegmento.nativeElement.value = '';
     this.dataSourceSegmento.filter = '';
   }
 

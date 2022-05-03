@@ -111,23 +111,24 @@ export class ProveedorProductoComponent implements OnInit {
     this.producto.kardexs[0].proveedor = new Proveedor;
     this.productoService.actualizar(this.producto).subscribe({
       next: (res) => {
-        Swal.fire(constantes.exito, res.mensaje, constantes.exito_swal);
+        Swal.fire({ icon: constantes.exito_swal, title: constantes.exito, text: res.mensaje });
         this.limpiar();
         //this.consultar();
       },
       error: (err) => {
-        Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.message });
+        Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
       }
     });
   }
 
   consultarProductos() {
     this.productoService.consultar().subscribe({
-    next: (res) => {
-      this.productos = res.resultado as Producto[]
-    },
-    error: err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.message })
-    });
+      next: (res) => {
+        this.productos = res.resultado as Producto[]
+      },
+      error: err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
+      }
+    );
   }
   private filtroProducto(value: string): Producto[] {
     if(this.productos.length>0) {
@@ -244,10 +245,10 @@ export class ProveedorProductoComponent implements OnInit {
     if (confirm("Realmente quiere eliminar el proveedor?")) {
     this.productoProveedorService.eliminar(this.productoProveedor).subscribe({
       next: (res) => {
-        Swal.fire(constantes.exito, res.mensaje, constantes.exito_swal);
+        Swal.fire({ icon: constantes.exito_swal, title: constantes.exito, text: res.mensaje });
         //this.consultar();
       },
-      error: (err) => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.message })
+      error: (err) => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
     });
   /*    this.recaudacion.depositos.splice(i, 1);
       this.dataDepositos = new MatTableDataSource<Deposito>(this.recaudacion.depositos);
@@ -267,7 +268,7 @@ export class ProveedorProductoComponent implements OnInit {
         this.proveedores = res.resultado as Proveedor[];
       },
       err => {
-        Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.message });
+        Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
       }
     );
   }

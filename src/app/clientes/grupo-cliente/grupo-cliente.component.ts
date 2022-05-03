@@ -80,34 +80,34 @@ export class GrupoClienteComponent implements OnInit {
       event.preventDefault();
     this.grupoClienteService.crear(this.grupoCliente).subscribe(
       res => {
-        Swal.fire(constantes.exito, res.mensaje, constantes.exito_swal);
+        Swal.fire({ icon: constantes.exito_swal, title: constantes.exito, text: res.mensaje });
         this.consultar();
         this.limpiar();
         this.abrirPanelAdminGrupoCliente = true;
       },
-      err => Swal.fire(constantes.error, err.error.mensaje, constantes.error_swal)
+      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
 
   actualizar() {
     this.grupoClienteService.actualizar(this.grupoCliente).subscribe(
       res => {
-        Swal.fire(constantes.exito, res.mensaje, constantes.exito_swal);
+        Swal.fire({ icon: constantes.exito_swal, title: constantes.exito, text: res.mensaje });
         this.grupoCliente = res.resultado as GrupoCliente;
         this.limpiar();
         this.llenarDataSourceGrupoCliente(this.grupoClientes);
       },
-      err => Swal.fire(constantes.error, err.error.mensaje, constantes.error_swal)
+      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
 
   eliminar(grupoCliente: GrupoCliente) {
     this.grupoClienteService.eliminar(grupoCliente).subscribe(
       res => {
-        Swal.fire(constantes.exito, res.mensaje, constantes.exito_swal);
+        Swal.fire({ icon: constantes.exito_swal, title: constantes.exito, text: res.mensaje });
         this.grupoCliente = res.resultado as GrupoCliente
       },
-      err => Swal.fire(constantes.error, err.error.mensaje, constantes.error_swal)
+      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
 
@@ -122,7 +122,7 @@ export class GrupoClienteComponent implements OnInit {
         this.grupoClientes = res.resultado as GrupoCliente[];
         this.llenarDataSourceGrupoCliente(this.grupoClientes);
       },
-      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.message })
+      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
 

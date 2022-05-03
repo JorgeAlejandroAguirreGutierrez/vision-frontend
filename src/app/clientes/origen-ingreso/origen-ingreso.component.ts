@@ -85,10 +85,10 @@ export class OrigenIngresoComponent implements OnInit {
       event.preventDefault();
     this.origenIngresoService.crear(this.origenIngreso).subscribe(
       res => {
-        Swal.fire(constantes.exito, res.mensaje, constantes.exito_swal);
+        Swal.fire({ icon: constantes.exito_swal, title: constantes.exito, text: res.mensaje });
         this.consultar();
       },
-      err => Swal.fire(constantes.error, err.error.mensaje, constantes.error_swal)
+      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
 
@@ -97,11 +97,11 @@ export class OrigenIngresoComponent implements OnInit {
       event.preventDefault();
     this.origenIngresoService.actualizar(this.origenIngreso).subscribe(
       res => {
-        Swal.fire(constantes.exito, res.mensaje, constantes.exito_swal);
+        Swal.fire({ icon: constantes.exito_swal, title: constantes.exito, text: res.mensaje });
         this.origenIngreso=res.resultado as OrigenIngreso;
         this.consultar();
       },
-      err => Swal.fire(constantes.error, err.error.mensaje, constantes.error_swal)
+      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
 
@@ -119,11 +119,11 @@ export class OrigenIngresoComponent implements OnInit {
   eliminar(origen_ingreso: OrigenIngreso) {
     this.origenIngresoService.eliminar(origen_ingreso).subscribe(
       res => {
-        Swal.fire(constantes.exito, res.mensaje, constantes.exito_swal);
+        Swal.fire({ icon: constantes.exito_swal, title: constantes.exito, text: res.mensaje });
         this.origenIngreso=res.resultado as OrigenIngreso
         this.consultar();
       },
-      err => Swal.fire(constantes.error, err.error.mensaje, constantes.error_swal)
+      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
 
@@ -132,10 +132,10 @@ export class OrigenIngresoComponent implements OnInit {
       event.preventDefault();
     this.origenIngresoService.eliminar(this.origenIngreso).subscribe(
       res => {
-        Swal.fire(constantes.exito, res.mensaje, constantes.exito_swal);
+        Swal.fire({ icon: constantes.exito_swal, title: constantes.exito, text: res.mensaje });
         this.consultar();  
       },
-      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.message })
+      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
 
@@ -148,7 +148,7 @@ export class OrigenIngresoComponent implements OnInit {
           Object.assign(this.origenIngreso, res.resultado as OrigenIngreso);
           this.origenIngresoService.enviar(0);
         },
-        err => Swal.fire(constantes.error, err.error.mensaje, constantes.error_swal)
+        err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
       );
     }
   }
@@ -161,7 +161,7 @@ export class OrigenIngresoComponent implements OnInit {
         this.dataSourceOrigenIngreso.paginator = this.paginator;
         this.dataSourceOrigenIngreso.sort = this.sort;
       },
-      err => Swal.fire(constantes.error, err.error.mensaje, constantes.error_swal)
+      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
 
@@ -172,7 +172,7 @@ export class OrigenIngresoComponent implements OnInit {
       res => {
         this.origenes_ingresos = res.resultado as OrigenIngreso[]
       },
-      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.message })
+      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
 

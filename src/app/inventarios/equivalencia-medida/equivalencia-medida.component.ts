@@ -75,7 +75,7 @@ export class EquivalenciaMedidaComponent implements OnInit {
           Object.assign(this.equivalenciaMedida, res.resultado as EquivalenciaMedida);
           this.equivalenciaMedidaService.enviar(0);
         },
-        err => Swal.fire(constantes.error, err.error.message, constantes.error_swal)
+        err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
       );
     }
   }
@@ -106,9 +106,9 @@ export class EquivalenciaMedidaComponent implements OnInit {
       event.preventDefault();
     this.equivalenciaMedidaService.crear(this.equivalenciaMedida).subscribe(
       res => {
-        Swal.fire(constantes.exito, res.mensaje, constantes.exito_swal);
+        Swal.fire({ icon: constantes.exito_swal, title: constantes.exito, text: res.mensaje });
       },
-      err => Swal.fire(constantes.error, err.error.message, constantes.error_swal)
+      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
 
@@ -117,10 +117,10 @@ export class EquivalenciaMedidaComponent implements OnInit {
       event.preventDefault();
     this.equivalenciaMedidaService.actualizar(this.equivalenciaMedida).subscribe(
       res => {
-        Swal.fire(constantes.exito, res.mensaje, constantes.exito_swal);
+        Swal.fire({ icon: constantes.exito_swal, title: constantes.exito, text: res.mensaje });
         this.equivalenciaMedida=res.resultado as EquivalenciaMedida;
       },
-      err => Swal.fire(constantes.error, err.error.message, constantes.error_swal)
+      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
 
@@ -138,10 +138,10 @@ export class EquivalenciaMedidaComponent implements OnInit {
   eliminar(equivalencia_medida: EquivalenciaMedida) {
     this.equivalenciaMedidaService.eliminar(equivalencia_medida).subscribe(
       res => {
-        Swal.fire(constantes.exito, res.mensaje, constantes.exito_swal);
+        Swal.fire({ icon: constantes.exito_swal, title: constantes.exito, text: res.mensaje });
         this.equivalenciaMedida=res.resultado as EquivalenciaMedida
       },
-      err => Swal.fire(constantes.error, err.error.message, constantes.error_swal)
+      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
 
@@ -150,10 +150,10 @@ export class EquivalenciaMedidaComponent implements OnInit {
       event.preventDefault();
     this.equivalenciaMedidaService.eliminar(this.equivalenciaMedida).subscribe(
       res => {
-          Swal.fire(constantes.exito, res.mensaje, constantes.exito_swal);
-          this.consultar();
+        Swal.fire({ icon: constantes.exito_swal, title: constantes.exito, text: res.mensaje });
+        this.consultar();
       },
-      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.message })
+      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
 
@@ -167,7 +167,7 @@ export class EquivalenciaMedidaComponent implements OnInit {
         this.equivalenciasMedidas = res.resultado as EquivalenciaMedida[];
         this.llenarDataSourceEquivalenciaMedida(this.equivalenciasMedidas);
       },
-      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.message })
+      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
 
@@ -178,7 +178,7 @@ export class EquivalenciaMedidaComponent implements OnInit {
       res => {
           this.equivalenciasMedidas = res.resultado as EquivalenciaMedida[]
       },
-      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.message })
+      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
 

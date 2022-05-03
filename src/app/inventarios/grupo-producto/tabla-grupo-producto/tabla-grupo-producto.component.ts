@@ -61,7 +61,7 @@ export class TablaGrupoProductoComponent implements OnInit {
         this.gruposProductos = res.resultado as GrupoProducto[];
         this.llenarDataSourceGrupoProducto(this.gruposProductos);
       },
-      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.message })
+      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
 

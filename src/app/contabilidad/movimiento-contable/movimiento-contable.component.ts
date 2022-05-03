@@ -91,7 +91,7 @@ export class MovimientoContableComponent implements OnInit {
           Object.assign(this.movimientoContable, res.resultado as MovimientoContable);
           this.movimientoContableService.enviar(0);
         },
-        err => Swal.fire(constantes.error, err.error.mensaje, constantes.error_swal)
+        err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
       );
     }
   }
@@ -122,12 +122,12 @@ export class MovimientoContableComponent implements OnInit {
       event.preventDefault();
     this.movimientoContableService.crear(this.movimientoContable).subscribe(
       res => {
-        Swal.fire(constantes.exito, res.mensaje, constantes.exito_swal);
+        Swal.fire({ icon: constantes.exito_swal, title: constantes.exito, text: res.mensaje });
         this.movimientoContable=new MovimientoContable();
         this.nuevo(null);
         this.consultar();
       },
-      err => Swal.fire(constantes.error, err.error.mensaje, constantes.error_swal)
+      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
 
@@ -136,11 +136,11 @@ export class MovimientoContableComponent implements OnInit {
       event.preventDefault();
     this.movimientoContableService.actualizar(this.movimientoContable).subscribe(
       res => {
-        Swal.fire(constantes.exito, res.mensaje, constantes.exito_swal);
+        Swal.fire({ icon: constantes.exito_swal, title: constantes.exito, text: res.mensaje });
         this.movimientoContable=new MovimientoContable();
         this.consultar();
       },
-      err => Swal.fire(constantes.error, err.error.mensaje, constantes.error_swal)
+      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
 
@@ -161,10 +161,10 @@ export class MovimientoContableComponent implements OnInit {
       event.preventDefault();
     this.movimientoContableService.eliminar(this.movimientoContable).subscribe(
       res => {
-        Swal.fire(constantes.exito, res.mensaje, constantes.exito_swal);
+        Swal.fire({ icon: constantes.exito_swal, title: constantes.exito, text: res.mensaje });
         this.movimientoContable = res.resultado as MovimientoContable;     
       },
-      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.message })
+      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
 
@@ -176,7 +176,7 @@ export class MovimientoContableComponent implements OnInit {
         this.dataSourceMovimientoContable.paginator = this.paginator;
         this.dataSourceMovimientoContable.sort = this.sort;
       },
-      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.message })
+      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
 
@@ -187,7 +187,7 @@ export class MovimientoContableComponent implements OnInit {
       res => {
           this.movimientosContables = res.resultado as MovimientoContable[]
       },
-      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.message })
+      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
 
