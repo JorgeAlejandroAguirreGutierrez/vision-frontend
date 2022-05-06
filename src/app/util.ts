@@ -91,6 +91,7 @@ export const saldoInicialInventario: string= "/saldoInicialInventario";
 export const kardex: string= "/kardex";
 export const equivalenciaMedida: string= "/tablaEquivalenciaMedida";
 export const buscarEquivalenciaMedida:string="/buscarMedidasEquivalentes"
+export const personalizado:string="/personalizado"
 export const generar: string= "/generar";
 export const pdf: string= "/pdf";
 

@@ -83,4 +83,13 @@ export class OrigenIngresoService {
       })
     );
   }
+
+  eliminarPersonalizado(origenIngreso: OrigenIngreso): Observable<Respuesta> {
+    return this.http.delete(environment.host+util.ruta+util.origenIngreso+util.personalizado + '/' + origenIngreso.id, util.options).pipe(
+      map(response => response as Respuesta),
+      catchError(err => {
+        return throwError(()=>err);
+      })
+    );
+  }
 }

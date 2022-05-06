@@ -91,6 +91,15 @@ export class ClienteService {
     );
   }
 
+  eliminarPersonalizado(cliente: Cliente): Observable<Respuesta> {
+    return this.http.delete(environment.host+util.ruta+util.cliente+util.personalizado + '/' + cliente.id, util.options).pipe(
+      map(response => response as Respuesta),
+      catchError(err => {
+        return throwError(()=>err);
+      })
+    );
+  }
+
   validarIdentificacion(identificacion: string): Observable<Respuesta> {
     return this.http.get(environment.host+util.ruta+util.cliente + '/identificacion/validar/' + identificacion, util.options).pipe(
       map(response => response as Respuesta),

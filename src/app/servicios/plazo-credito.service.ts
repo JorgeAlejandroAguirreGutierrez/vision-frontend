@@ -75,6 +75,15 @@ export class PlazoCreditoService {
     );
   }
 
+  eliminarPersonalizado(plazoCredito: PlazoCredito): Observable<Respuesta> {
+    return this.http.delete(environment.host+util.ruta+util.plazoCredito+util.personalizado + '/' + plazoCredito.id, util.options).pipe(
+      map(response => response as Respuesta),
+      catchError(err => {
+        return throwError(()=>err);
+      })
+    );
+  }
+
   buscar(plazoCredito: PlazoCredito): Observable<Respuesta> {
     return this.http.get(environment.host + util.ruta + util.plazoCredito+util.buscar+'/'+plazoCredito.codigo + '/'+plazoCredito.descripcion+'/'+plazoCredito.plazo, util.options).pipe(
       map(response => response as Respuesta),

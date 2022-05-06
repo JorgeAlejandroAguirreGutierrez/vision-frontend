@@ -1,10 +1,10 @@
 import { Component, OnInit, HostListener } from '@angular/core';
-import { TabService } from '../../../componentes/services/tab.service';
+import { TabService } from '../../componentes/services/tab.service';
 import Swal from 'sweetalert2';
-import * as constantes from '../../../constantes';
-import * as util from '../../../util';
-import { Banco } from '../../../modelos/banco';
-import { BancoService } from '../../../servicios/banco.service';
+import * as constantes from '../../constantes';
+import * as util from '../../util';
+import { Banco } from '../../modelos/banco';
+import { BancoService } from '../../servicios/banco.service';
 import { Sesion } from 'src/app/modelos/sesion';
 import { Router } from '@angular/router';
 import { SesionService } from 'src/app/servicios/sesion.service';

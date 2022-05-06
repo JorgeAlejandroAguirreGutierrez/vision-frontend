@@ -27,7 +27,6 @@ export class Cliente {
     razonSocial:string;
     especial: boolean;
     estado:string;
-    eliminado:boolean;
 
     puntoVenta: PuntoVenta;
     grupoCliente: GrupoCliente;

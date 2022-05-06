@@ -48,6 +48,7 @@ import { TipoRetencionService } from '../../servicios/tipo-retencion.service';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
+import { CalificacionClienteComponent } from '../calificacion-cliente/calificacion-cliente.component';
 
 @Component({
   selector: 'app-cliente',
@@ -138,8 +139,9 @@ export class ClienteComponent implements OnInit {
     { nombreColumna: 'direccion', cabecera: 'Direccion', celda: (row: Auxiliar) => `${row.direccion.direccion}`},
     { nombreColumna: 'provincia', cabecera: 'Provincia', celda: (row: Auxiliar) => `${row.direccion.ubicacion.provincia}`},
     { nombreColumna: 'canton', cabecera: 'Cantón', celda: (row: Auxiliar) => `${row.direccion.ubicacion.canton}`},
+    { nombreColumna: 'parroquia', cabecera: 'Parroquia', celda: (row: Auxiliar) => `${row.direccion.ubicacion.parroquia}`},
     { nombreColumna: 'estado', cabecera: 'Estado', celda: (row: Auxiliar) => `${row.estado ? 'ACTIVO' : 'INACTIVO'}`},
-    { nombreColumna: 'acciones', cabecera: 'Acciones', celda: ''}
+    { nombreColumna: 'acciones', cabecera: 'Acciones'}
   ];
   cabeceraDependientes: string[]  = this.columnasDependiente.map(titulo => titulo.nombreColumna);
   dataSourceDependiente: MatTableDataSource<Auxiliar>;
@@ -379,10 +381,9 @@ export class ClienteComponent implements OnInit {
     this.clienteService.crear(this.cliente).subscribe(
       res => {
         this.cliente = res.resultado as Cliente;
-        Swal.fire(constantes.exito, res.mensaje, constantes.exito_swal);
-        let indiceTabActivo = constantes.tab_activo(this.tabService);
-        this.tabService.removeTab(indiceTabActivo);
-        this.tabService.addNewTab(ClienteComponent, constantes.tab_crear_cliente);
+        Swal.fire({ icon: constantes.exito_swal, title: constantes.exito, text: res.mensaje });
+        this.nuevo(null);
+        this.consultar();
       },
       err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
     );
@@ -475,56 +476,31 @@ export class ClienteComponent implements OnInit {
 
     this.clienteService.actualizar(this.cliente).subscribe(
       res => {
-        if (res.resultado != null) {
-          Swal.fire(constantes.exito, res.mensaje, constantes.exito_swal);
-          this.cliente = res.resultado as Cliente;
-          this.auxiliarCantones = [];
-          this.auxiliarParroquias = [];
-          this.auxiliarProvincia = "";
-          this.auxiliarCanton = "";
-          this.auxiliarParroquia = "";
-          this.auxiliarTelefono = new TelefonoAuxiliar();
-          this.auxiliarCelular = new CelularAuxiliar();
-          this.auxiliarCorreo = new CorreoAuxiliar();
-          this.auxiliar = new Auxiliar();
-        }
-        else {
-          Swal.fire(constantes.error, res.mensaje, constantes.error_swal);
-        }
+        Swal.fire({ icon: constantes.exito_swal, title: constantes.exito, text: res.mensaje });
+        this.cliente = res.resultado as Cliente;
+        this.auxiliarCantones = [];
+        this.auxiliarParroquias = [];
+        this.auxiliarProvincia = "";
+        this.auxiliarCanton = "";
+        this.auxiliarParroquia = "";
+        this.auxiliarTelefono = new TelefonoAuxiliar();
+        this.auxiliarCelular = new CelularAuxiliar();
+        this.auxiliarCorreo = new CorreoAuxiliar();
+        this.auxiliar = new Auxiliar();
       },
       err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
 
-  actualizarLeer(event: any) {
+  eliminar(event: any) {
     if (event!=null)
       event.preventDefault();
-    this.clienteService.enviar(this.cliente.id);
-    this.tabService.addNewTab(this.ComponenteCliente,'Actualizar Cliente');
-  }
-
-  eliminar(cliente: Cliente) {
-    this.clienteService.eliminar(cliente).subscribe(
+    this.clienteService.eliminarPersonalizado(this.cliente).subscribe(
       res => {
-        if (res.resultado != null) {
-          Swal.fire(constantes.exito, res.mensaje, constantes.exito_swal);
-          this.cliente = res.resultado as Cliente
-          this.ngOnInit();
-        } else {
-          Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: res.mensaje, })
-        }
-      },
-      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
-    );
-  }
-
-  eliminarLeer(event: any) {
-    if (event!=null)
-      event.preventDefault();
-    this.clienteService.eliminar(this.cliente).subscribe(
-      res => {
-        Swal.fire(constantes.exito, res.mensaje, constantes.exito_swal);
-        this.consultar();
+        Swal.fire({ icon: constantes.exito_swal, title: constantes.exito, text: res.mensaje });
+        let indiceTabActivo = constantes.tab_activo(this.tabService);
+        this.tabService.removeTab(indiceTabActivo);
+        this.tabService.addNewTab(ClienteComponent, constantes.tab_crear_cliente);
       },
       err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
     );
@@ -572,6 +548,7 @@ export class ClienteComponent implements OnInit {
       this.canton(this.clienteCanton);
       this.clienteParroquia=this.cliente.direccion.ubicacion.parroquia;
       this.cambiarFormaPago();
+      this.llenarDataSourceDependiente(this.cliente.auxiliares);
     } else {
       this.clickedRows.clear();
       this.cliente = new Cliente();

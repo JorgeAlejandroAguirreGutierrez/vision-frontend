@@ -63,14 +63,14 @@ import { TransportistaComponent } from './entregas/transportista/transportista.c
 import { VehiculoTransporteComponent } from './entregas/vehiculo-transporte/vehiculo-transporte.component';
 
 //Módulo de Recaudaciones
-import { FinanciamientoComponent } from './comprobantes/recaudacion/financiamiento/financiamiento.component';
-import { RecaudacionComponent } from './comprobantes/recaudacion/recaudacion/recaudacion.component';
-import { BancoComponent } from './comprobantes/recaudacion/banco/banco.component';
-import { DepositoTransferenciaComponent } from './comprobantes/recaudacion/deposito-transferencia/deposito-transferencia.component';
-import { TarjetaCreditoComponent } from './comprobantes/recaudacion/tarjeta-credito/tarjeta-credito.component';
-import { TarjetaDebitoComponent } from './comprobantes/recaudacion/tarjeta-debito/tarjeta-debito.component';
-import { CompensacionComponent } from './comprobantes/recaudacion/compensacion/compensacion.component';
-import { ChequeComponent } from './comprobantes/recaudacion/cheque/cheque.component';
+import { FinanciamientoComponent } from './recaudacion/financiamiento/financiamiento.component';
+import { RecaudacionComponent } from './recaudacion/recaudacion/recaudacion.component';
+import { BancoComponent } from './recaudacion/banco/banco.component';
+import { DepositoTransferenciaComponent } from './recaudacion/deposito-transferencia/deposito-transferencia.component';
+import { TarjetaCreditoComponent } from './recaudacion/tarjeta-credito/tarjeta-credito.component';
+import { TarjetaDebitoComponent } from './recaudacion/tarjeta-debito/tarjeta-debito.component';
+import { CompensacionComponent } from './recaudacion/compensacion/compensacion.component';
+import { ChequeComponent } from './recaudacion/cheque/cheque.component';
 
 // Módulo de Comprobantes
 import { FacturaComponent } from './comprobantes/factura/factura.component';

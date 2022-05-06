@@ -2,13 +2,10 @@ import { Component, OnInit, HostListener} from '@angular/core';
 import Swal from 'sweetalert2';
 import * as constantes from '../../constantes';
 import * as util from '../../util';
-
 import { ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-
-import { TabService } from '../../componentes/services/tab.service';
 import { Sesion } from '../../modelos/sesion';
 import { SesionService } from '../../servicios/sesion.service';
 import { PlazoCreditoService } from '../../servicios/plazo-credito.service';
@@ -22,32 +19,35 @@ import { Router } from '@angular/router';
 })
 export class PlazoCreditoComponent implements OnInit {
 
-  sesion: Sesion;
   abrirPanelNuevoPlazoCredito = true;
   abrirPanelAdminPlazoCredito = false;
 
+  sesion: Sesion=null;
   plazoCredito= new PlazoCredito();
-
   plazosCreditos: PlazoCredito[];
-  plazoCreditoActualizar: PlazoCredito= new PlazoCredito();
-  plazoCreditoBuscar: PlazoCredito=new PlazoCredito();
 
-  columnasPlazoCredito: string[] = ['id', 'codigo', 'descripcion', 'plazo', 'estado'];
+  columnasPlazoCredito: any[] = [
+    { nombreColumna: 'id', cabecera: 'ID', celda: (row: PlazoCredito) => `${row.id}` },
+    { nombreColumna: 'codigo', cabecera: 'Código', celda: (row: PlazoCredito) => `${row.codigo}` },
+    { nombreColumna: 'descripcion', cabecera: 'Descripción', celda: (row: PlazoCredito) => `${row.descripcion}` },
+    { nombreColumna: 'plazo', cabecera: 'Plazo', celda: (row: PlazoCredito) => `${row.plazo}` },
+    { nombreColumna: 'estado', cabecera: 'Estado', celda: (row: PlazoCredito) => `${row.estado}` }
+  ];
+  cabeceraPlazoCredito: string[] = this.columnasPlazoCredito.map(titulo => titulo.nombreColumna);
   dataSourcePlazoCredito: MatTableDataSource<PlazoCredito>;
   clickedRows = new Set<PlazoCredito>();
-
+  
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
-  constructor(private tabService: TabService,private plazoCreditoService: PlazoCreditoService,
-    private sesionService: SesionService, private router: Router) { }
+  constructor(private plazoCreditoService: PlazoCreditoService,
+    private sesionService: SesionService,private router: Router) { }
 
   ngOnInit() {
-    this.sesion=util.validarSesion( this.sesionService, this.router);
-    this.construirPlazoCredito();
+    this.sesion=util.validarSesion(this.sesionService, this.router);
     this.consultar();
   }
-
+  
   @HostListener('window:keypress', ['$event'])
   keyEvent($event: KeyboardEvent) {
     if (($event.shiftKey || $event.metaKey) && $event.key == 'G') //SHIFT + G
@@ -61,22 +61,7 @@ export class PlazoCreditoComponent implements OnInit {
   nuevo(event) {
     if (event!=null)
       event.preventDefault();
-    this.tabService.addNewTab(PlazoCreditoComponent, constantes.tab_crear_plazo_credito);
-  }
-
-  borrar(event){
-    if (event!=null)
-      event.preventDefault();
-      if(this.plazoCredito.id!=0){
-        let id=this.plazoCredito.id;
-        let codigo=this.plazoCredito.codigo;
-        this.plazoCredito=new PlazoCredito();
-        this.plazoCredito.id=id;
-        this.plazoCredito.codigo=codigo;
-      }
-      else{
-        this.plazoCredito=new PlazoCredito();
-      }
+    this.plazoCredito = new PlazoCredito();
   }
 
   crear(event) {
@@ -85,6 +70,7 @@ export class PlazoCreditoComponent implements OnInit {
     this.plazoCreditoService.crear(this.plazoCredito).subscribe(
       res => {
         Swal.fire({ icon: constantes.exito_swal, title: constantes.exito, text: res.mensaje });
+        this.plazoCredito=res.resultado as PlazoCredito;
         this.consultar();
       },
       err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
@@ -104,57 +90,23 @@ export class PlazoCreditoComponent implements OnInit {
     );
   }
 
-  actualizarLeer(event){
+  eliminar(event:any) {
     if (event!=null)
       event.preventDefault();
-      this.abrirPanelNuevoPlazoCredito = true;
-      this.abrirPanelAdminPlazoCredito = false;
-    if (this.plazoCreditoActualizar.id != 0){
-      this.plazoCredito={... this.plazoCreditoActualizar};
-      this.plazoCreditoActualizar=new PlazoCredito();
-    }
-  }
-
-  eliminar(plazo_credito: PlazoCredito) {
-    this.plazoCreditoService.eliminar(plazo_credito).subscribe(
+    this.plazoCreditoService.eliminarPersonalizado(this.plazoCredito).subscribe(
       res => {
         Swal.fire({ icon: constantes.exito_swal, title: constantes.exito, text: res.mensaje });
-        this.plazoCredito=res.resultado as PlazoCredito
+        this.nuevo(null);
+        this.consultar();
       },
       err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
-
-  eliminarLeer(event) {
-    if (event!=null)
-      event.preventDefault();
-    this.plazoCreditoService.eliminar(this.plazoCredito).subscribe(
-      res => {
-        Swal.fire({ icon: constantes.exito_swal, title: constantes.exito, text: res.mensaje });
-          this.consultar();
-      },
-      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
-    );
-  }
-
-  async construirPlazoCredito() {
-    let plazo_credito_id=0;
-    this.plazoCreditoService.currentMessage.subscribe(message => plazo_credito_id = message);
-    if (plazo_credito_id!= 0) {
-      await this.plazoCreditoService.obtenerAsync(plazo_credito_id).then(
-        res => {
-          Object.assign(this.plazoCredito, res.resultado as PlazoCredito);
-          this.plazoCreditoService.enviar(0);
-        },
-        err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
-      );
-    }
-  }
-
+  
   consultar() {
     this.plazoCreditoService.consultar().subscribe(
       res => {
-        this.plazosCreditos = res.resultado as PlazoCredito[];
+        this.plazosCreditos = res.resultado as PlazoCredito[]
         this.dataSourcePlazoCredito = new MatTableDataSource(this.plazosCreditos);
         this.dataSourcePlazoCredito.paginator = this.paginator;
         this.dataSourcePlazoCredito.sort = this.sort;
@@ -163,23 +115,11 @@ export class PlazoCreditoComponent implements OnInit {
     );
   }
 
-  buscar(event) {
-    if (event!=null)
-      event.preventDefault();
-      this.plazoCreditoService.buscar(this.plazoCreditoBuscar).subscribe(
-        res => {
-          this.plazosCreditos = res.resultado as PlazoCredito[]
-        },
-        err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
-      );
-  }
-
-  seleccion(plazoCreditoSeleccionado: PlazoCredito) {
-    if (!this.clickedRows.has(plazoCreditoSeleccionado)){
+  seleccion(plazoCredito: PlazoCredito) {
+    if (!this.clickedRows.has(plazoCredito)){
       this.clickedRows.clear();
-      this.clickedRows.add(plazoCreditoSeleccionado);
-      this.plazoCredito = plazoCreditoSeleccionado;
-      this.plazoCreditoActualizar=plazoCreditoSeleccionado;
+      this.clickedRows.add(plazoCredito);
+      this.plazoCredito = plazoCredito;
     } else {
       this.clickedRows.clear();
       this.plazoCredito = new PlazoCredito();
@@ -192,17 +132,5 @@ export class PlazoCreditoComponent implements OnInit {
     if (this.dataSourcePlazoCredito.paginator) {
       this.dataSourcePlazoCredito.paginator.firstPage();
     }
-  }
-
-  cambiarBuscarCodigo(){
-    this.buscar(null);
-  }
-
-  cambiarBuscarDescripcion(){
-    this.buscar(null);
-  }
-
-  cambiarBuscarPlazo(){
-    this.buscar(null);
   }
 }
