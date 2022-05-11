@@ -1,13 +1,15 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, HostListener, OnInit, ViewChild } from '@angular/core';
 import { VehiculoTransporteService } from '../../servicios/vehiculo-transporte.service';
 import { VehiculoTransporte } from '../../modelos/vehiculo-transporte';
-import {NgbModal, ModalDismissReasons} from '@ng-bootstrap/ng-bootstrap';
 import Swal from 'sweetalert2';
 import * as constantes from '../../constantes';
 import * as util from '../../util';
 import { SesionService } from 'src/app/servicios/sesion.service';
 import { Router } from '@angular/router';
 import { Sesion } from 'src/app/modelos/sesion';
+import { MatTableDataSource } from '@angular/material/table';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSort } from '@angular/material/sort';
 
 @Component({
   selector: 'app-vehiculo-transporte',
@@ -16,78 +18,124 @@ import { Sesion } from 'src/app/modelos/sesion';
 })
 export class VehiculoTransporteComponent implements OnInit {
 
-  vehiculoTransporte= new VehiculoTransporte();
-  vehiculosTransportes: VehiculoTransporte[];
-  pVehiculoTransporte= new VehiculoTransporte();
-  sesion: Sesion=null;
+  abrirPanelNuevoVehiculoTransporte = true;
+  abrirPanelAdminVehiculoTransporte = false;
 
-  constructor(private sesionService: SesionService, private router: Router, private vehiculoTransporteService: VehiculoTransporteService, private modalService: NgbModal) { }
+  sesion: Sesion=null;
+  vehiculoTransporte= new VehiculoTransporte();
+  VehiculosTransportes: VehiculoTransporte[];
+
+  columnasVehiculoTransporte: any[] = [
+    { nombreColumna: 'id', cabecera: 'ID', celda: (row: VehiculoTransporte) => `${row.id}` },
+    { nombreColumna: 'codigo', cabecera: 'Código', celda: (row: VehiculoTransporte) => `${row.codigo}` },
+    { nombreColumna: 'modelo', cabecera: 'Modelo', celda: (row: VehiculoTransporte) => `${row.modelo}` },
+    { nombreColumna: 'placa', cabecera: 'Placa', celda: (row: VehiculoTransporte) => `${row.placa}` },
+    { nombreColumna: 'marca', cabecera: 'Marca', celda: (row: VehiculoTransporte) => `${row.marca}` },
+    { nombreColumna: 'cilindraje', cabecera: 'Cilindraje', celda: (row: VehiculoTransporte) => `${row.cilindraje}` },
+    { nombreColumna: 'clase', cabecera: 'Clase', celda: (row: VehiculoTransporte) => `${row.clase}` },
+    { nombreColumna: 'color', cabecera: 'Color', celda: (row: VehiculoTransporte) => `${row.color}` },
+    { nombreColumna: 'fabricacion', cabecera: 'Fabricacion', celda: (row: VehiculoTransporte) => `${row.fabricacion}` },
+    { nombreColumna: 'numero', cabecera: 'Numero', celda: (row: VehiculoTransporte) => `${row.numero}` }
+  ];
+  cabeceraVehiculoTransporte: string[] = this.columnasVehiculoTransporte.map(titulo => titulo.nombreColumna);
+  dataSourceVehiculoTransporte: MatTableDataSource<VehiculoTransporte>;
+  clickedRows = new Set<VehiculoTransporte>();
+  
+  @ViewChild(MatPaginator) paginator: MatPaginator;
+  @ViewChild(MatSort) sort: MatSort;
+
+  constructor(private vehiculoTransporteService: VehiculoTransporteService,
+    private sesionService: SesionService,private router: Router) { }
 
   ngOnInit() {
-    this.sesion=util.validarSesion( this.sesionService, this.router);
-    this.vehiculoTransporteService.consultar().subscribe(
-      res=>{
-        this.vehiculosTransportes= res.resultado as VehiculoTransporte[]
-      },
-      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
-    );
+    this.sesion=util.validarSesion(this.sesionService, this.router);
+    this.consultar();
+  }
+  
+  @HostListener('window:keypress', ['$event'])
+  keyEvent($event: KeyboardEvent) {
+    if (($event.shiftKey || $event.metaKey) && $event.key == 'G') //SHIFT + G
+      this.crear(null);
+    if (($event.shiftKey || $event.metaKey) && $event.key == 'N') //ASHIFT + N
+      this.nuevo(null);
+    if (($event.shiftKey || $event.metaKey) && $event.key == 'E') // SHIFT + E
+      this.eliminar(null);
   }
 
-  open(content: any, vehiculoTransporte: VehiculoTransporte) {
-    this.pVehiculoTransporte=vehiculoTransporte;
-    this.modalService.open(content, {size: 'lg'}).result.then((result) => {
-      if (result=="actualizar") {
-        this.actualizar(this.pVehiculoTransporte);
-      }
-      if (result=="eliminar") {
-        this.eliminar(this.pVehiculoTransporte);
-      }
-    }, (reason: any) => {
-      
-    });
+  nuevo(event) {
+    if (event!=null)
+      event.preventDefault();
+    this.vehiculoTransporte = new VehiculoTransporte();
   }
 
-  private getDismissReason(reason: any): string {
-    if (reason === ModalDismissReasons.ESC) {
-      return 'by pressing ESC';
-    } else if (reason === ModalDismissReasons.BACKDROP_CLICK) {
-      return 'by clicking on a backdrop';
-    } else {
-      return  `with: ${reason}`;
-    }
-  }
-
-  crear() {
+  crear(event) {
+    if (event!=null)
+      event.preventDefault();
     this.vehiculoTransporteService.crear(this.vehiculoTransporte).subscribe(
       res => {
         Swal.fire({ icon: constantes.exito_swal, title: constantes.exito, text: res.mensaje });
         this.vehiculoTransporte=res.resultado as VehiculoTransporte;
-        this.ngOnInit();
+        this.consultar();
       },
       err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
 
-  actualizar(vehiculoTransporte: VehiculoTransporte) {
-    this.vehiculoTransporteService.actualizar(vehiculoTransporte).subscribe(
+  actualizar(event) {
+    if (event!=null)
+      event.preventDefault();
+    this.vehiculoTransporteService.actualizar(this.vehiculoTransporte).subscribe(
       res => {
         Swal.fire({ icon: constantes.exito_swal, title: constantes.exito, text: res.mensaje });
         this.vehiculoTransporte=res.resultado as VehiculoTransporte;
-        this.ngOnInit();
+        this.consultar();
       },
       err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
 
-  eliminar(vehiculoTransporte: VehiculoTransporte) {
-    this.vehiculoTransporteService.eliminar(vehiculoTransporte).subscribe(
+  eliminar(event:any) {
+    if (event!=null)
+      event.preventDefault();
+    this.vehiculoTransporteService.eliminar(this.vehiculoTransporte).subscribe(
       res => {
         Swal.fire({ icon: constantes.exito_swal, title: constantes.exito, text: res.mensaje });
-        this.vehiculoTransporte=res.resultado as VehiculoTransporte
-        this.ngOnInit();
+        this.nuevo(null);
+        this.consultar();
       },
       err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
     );
+  }
+  
+  consultar() {
+    this.vehiculoTransporteService.consultar().subscribe(
+      res => {
+        this.VehiculosTransportes = res.resultado as VehiculoTransporte[]
+        this.dataSourceVehiculoTransporte = new MatTableDataSource(this.VehiculosTransportes);
+        this.dataSourceVehiculoTransporte.paginator = this.paginator;
+        this.dataSourceVehiculoTransporte.sort = this.sort;
+      },
+      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
+    );
+  }
+
+  seleccion(vehiculoTransporte: VehiculoTransporte) {
+    if (!this.clickedRows.has(vehiculoTransporte)){
+      this.clickedRows.clear();
+      this.clickedRows.add(vehiculoTransporte);
+      this.vehiculoTransporte = vehiculoTransporte;
+    } else {
+      this.clickedRows.clear();
+      this.vehiculoTransporte = new VehiculoTransporte();
+    }
+  }
+
+  filtroVehiculoTransporte(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.dataSourceVehiculoTransporte.filter = filterValue.trim().toUpperCase();
+    if (this.dataSourceVehiculoTransporte.paginator) {
+      this.dataSourceVehiculoTransporte.paginator.firstPage();
+    }
   }
 
 }

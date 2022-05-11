@@ -1,5 +1,4 @@
-import { Component, OnInit, HostListener, Type } from '@angular/core';
-import { TabService } from '../../componentes/services/tab.service';
+import { Component, OnInit, HostListener, ViewChild } from '@angular/core';
 import { EstadoCivil } from '../../modelos/estado-civil';
 import { EstadoCivilService } from '../../servicios/estado-civil.service';
 import * as constantes from '../../constantes';
@@ -8,6 +7,9 @@ import Swal from 'sweetalert2';
 import { Router } from '@angular/router';
 import { Sesion } from '../../modelos/sesion';
 import { SesionService } from '../../servicios/sesion.service';
+import { MatSort } from '@angular/material/sort';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatTableDataSource } from '@angular/material/table';
 
 @Component({
   selector: 'app-estado-civil',
@@ -16,56 +18,48 @@ import { SesionService } from '../../servicios/sesion.service';
 })
 export class EstadoCivilComponent implements OnInit {
 
-  collapsed = true;
   abrirPanelNuevoEstadoCivil = true;
   abrirPanelAdminEstadoCivil = false;
 
-  sesion: Sesion;
+  sesion: Sesion=null;
   estadoCivil= new EstadoCivil();
-
   estadosCiviles: EstadoCivil[];
-  estadoCivilActualizar: EstadoCivil= new EstadoCivil();
-  estadoCivilBuscar: EstadoCivil=new EstadoCivil();
-  ComponenteEstadoCivil: Type<any> = EstadoCivilComponent;
 
-  constructor(private tabService: TabService,private estadoCivilService: EstadoCivilService,
+  columnasEstadoCivil: any[] = [
+    { nombreColumna: 'id', cabecera: 'ID', celda: (row: EstadoCivil) => `${row.id}` },
+    { nombreColumna: 'codigo', cabecera: 'Código', celda: (row: EstadoCivil) => `${row.codigo}` },
+    { nombreColumna: 'descripcion', cabecera: 'Descripcion', celda: (row: EstadoCivil) => `${row.descripcion}` },
+    { nombreColumna: 'abreviatura', cabecera: 'Abreviatura', celda: (row: EstadoCivil) => `${row.abreviatura}` },
+  ];
+  cabeceraEstadoCivil: string[] = this.columnasEstadoCivil.map(titulo => titulo.nombreColumna);
+  dataSourceEstadoCivil: MatTableDataSource<EstadoCivil>;
+  clickedRows = new Set<EstadoCivil>();
+  
+  @ViewChild(MatPaginator) paginator: MatPaginator;
+  @ViewChild(MatSort) sort: MatSort;
+
+  constructor(private estadoCivilService: EstadoCivilService,
     private sesionService: SesionService,private router: Router) { }
 
   ngOnInit() {
     this.sesion=util.validarSesion(this.sesionService, this.router);
-    this.construirEstadoCivil();
     this.consultar();
-    this.sesion= this.sesionService.getSesion();
   }
   
   @HostListener('window:keypress', ['$event'])
   keyEvent($event: KeyboardEvent) {
-    if (($event.shiftKey || $event.metaKey) && $event.key == "G") //SHIFT + G
+    if (($event.shiftKey || $event.metaKey) && $event.key == 'G') //SHIFT + G
       this.crear(null);
-    if (($event.shiftKey || $event.metaKey) && $event.key == "N") //ASHIFT + N
+    if (($event.shiftKey || $event.metaKey) && $event.key == 'N') //ASHIFT + N
       this.nuevo(null);
-    if (($event.shiftKey || $event.metaKey) && $event.key == "E") // SHIFT + E
+    if (($event.shiftKey || $event.metaKey) && $event.key == 'E') // SHIFT + E
       this.eliminar(null);
   }
 
   nuevo(event) {
     if (event!=null)
       event.preventDefault();
-  }
-
-  borrar(event){
-    if (event!=null)
-      event.preventDefault();
-      if(this.estadoCivil.id!=0){
-        let id=this.estadoCivil.id;
-        let codigo=this.estadoCivil.codigo;
-        this.estadoCivil=new EstadoCivil();
-        this.estadoCivil.id=id;
-        this.estadoCivil.codigo=codigo;
-      }
-      else{
-        this.estadoCivil=new EstadoCivil();
-      }
+    this.estadoCivil = new EstadoCivil();
   }
 
   crear(event) {
@@ -74,7 +68,7 @@ export class EstadoCivilComponent implements OnInit {
     this.estadoCivilService.crear(this.estadoCivil).subscribe(
       res => {
         Swal.fire({ icon: constantes.exito_swal, title: constantes.exito, text: res.mensaje });
-        this.nuevo(null);
+        this.estadoCivil=res.resultado as EstadoCivil;
         this.consultar();
       },
       err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
@@ -94,99 +88,47 @@ export class EstadoCivilComponent implements OnInit {
     );
   }
 
-  actualizarLeer(event){
-    if (event!=null)
-      event.preventDefault();
-      this.abrirPanelNuevoEstadoCivil = true;
-      this.abrirPanelAdminEstadoCivil = false;
-    if (this.estadoCivilActualizar.id != 0){
-      this.estadoCivil={... this.estadoCivilActualizar};
-      this.estadoCivilActualizar=new EstadoCivil();
-    }
-  }
-
-  eliminar(estadoCivil: EstadoCivil) {
-    this.estadoCivilService.eliminar(estadoCivil).subscribe(
-      res => {
-        Swal.fire({ icon: constantes.exito_swal, title: constantes.exito, text: res.mensaje });
-        this.estadoCivil=res.resultado as EstadoCivil
-        this.consultar(); 
-      },
-      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
-    );
-  }
-
-  eliminarLeer(event) {
+  eliminar(event:any) {
     if (event!=null)
       event.preventDefault();
     this.estadoCivilService.eliminar(this.estadoCivil).subscribe(
       res => {
-        if (res.resultado!=null){
-          Swal.fire({ icon: constantes.exito_swal, title: constantes.exito, text: res.mensaje });
-          this.estadoCivil = res.resultado as EstadoCivil
-          this.consultar(); 
-        } else {
-          Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: res.mensaje });
-        }        
+        Swal.fire({ icon: constantes.exito_swal, title: constantes.exito, text: res.mensaje });
+        this.nuevo(null);
+        this.consultar();
       },
       err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
-
-  async construirEstadoCivil() {
-    let estadoCivilId=0;
-    this.estadoCivilService.currentMessage.subscribe(message => estadoCivilId = message);
-    if (estadoCivilId!= 0) {
-      await this.estadoCivilService.obtenerAsync(estadoCivilId).then(
-        res => {
-          Object.assign(this.estadoCivil, res.resultado as EstadoCivil);
-          this.estadoCivilService.enviar(0);
-        },
-        err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
-      );
-    }
-  }
-
+  
   consultar() {
     this.estadoCivilService.consultar().subscribe(
       res => {
         this.estadosCiviles = res.resultado as EstadoCivil[]
-      },
-      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
-    );
-  }
-
-  buscar(event) {
-    if (event!=null)
-      event.preventDefault();
-    this.estadoCivilService.buscar(this.estadoCivilBuscar).subscribe(
-      res => {
-        if (res.resultado!=null) {
-          this.estadosCiviles = res.resultado as EstadoCivil[]
-        } else {
-          Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: res.mensaje });
-        }
+        this.dataSourceEstadoCivil = new MatTableDataSource(this.estadosCiviles);
+        this.dataSourceEstadoCivil.paginator = this.paginator;
+        this.dataSourceEstadoCivil.sort = this.sort;
       },
       err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
 
   seleccion(estadoCivil: EstadoCivil) {
-    this.estadoCivil=estadoCivil;
+    if (!this.clickedRows.has(estadoCivil)){
+      this.clickedRows.clear();
+      this.clickedRows.add(estadoCivil);
+      this.estadoCivil = estadoCivil;
+    } else {
+      this.clickedRows.clear();
+      this.estadoCivil = new EstadoCivil();
+    }
   }
 
-  cambiarBuscarCodigo(){
-    this.estadoCivilBuscar.descripcion="";
-    this.estadoCivilBuscar.abreviatura="";
-  }
-
-  cambiarBuscarDescripcion(){
-    this.estadoCivilBuscar.codigo="";
-    this.estadoCivilBuscar.abreviatura="";
-  }
-
-  cambiarBuscarAbreviatura(){
-    this.estadoCivilBuscar.codigo="";
-    this.estadoCivilBuscar.descripcion="";
+  filtroEstadoCivil(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.dataSourceEstadoCivil.filter = filterValue.trim().toUpperCase();
+    if (this.dataSourceEstadoCivil.paginator) {
+      this.dataSourceEstadoCivil.paginator.firstPage();
+    }
   }
 }

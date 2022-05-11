@@ -306,11 +306,10 @@ export class ClienteComponent implements OnInit {
   }
 
   obtenerEmpresa() {
-    let empresa = new Empresa();
-    empresa.id = 1;
-    this.empresaService.obtener(empresa).subscribe(
+    let empresaId = 1;
+    this.empresaService.obtener(empresaId).subscribe(
       res => {
-        empresa = res.resultado as Empresa
+        let empresa = res.resultado as Empresa
         this.urlLogo = environment.prefijo_url_imagenes + "logos/" + empresa.logo;
         this.nombreEmpresa = empresa.razonSocial;
       },

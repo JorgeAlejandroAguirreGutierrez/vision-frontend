@@ -4,6 +4,7 @@ export class Empresa {
     identificacion:string;
     razonSocial:string;
     logo: string;
+    estado: string;
     
     constructor() {
         this.id=0;
@@ -11,5 +12,6 @@ export class Empresa {
         this.identificacion="";
         this.razonSocial="";
         this.logo="";
+        this.estado="";
     }
 }

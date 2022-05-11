@@ -24,14 +24,14 @@
 </nav>
 <div class="contenedor">
     <mat-accordion class="headers-align">
-        <mat-expansion-panel (opened)="abrirPanelNuevoCalificacion = true"
-            (closed)="abrirPanelNuevoCalificacion = false" [expanded]="abrirPanelNuevoCalificacion">
+        <mat-expansion-panel (opened)="abrirPanelNuevoCalificacionCliente = true"
+            (closed)="abrirPanelNuevoCalificacionCliente = false" [expanded]="abrirPanelNuevoCalificacionCliente">
             <mat-expansion-panel-header>
                 <mat-panel-title>
                     <i><u>CALIFICACIÓN</u></i>
                 </mat-panel-title>
                 <mat-panel-description>
-                    {{abrirPanelNuevoCalificacion ? 'Ocultar crear calificaciones' : 'Crear nueva calificación'}}
+                    {{abrirPanelNuevoCalificacionCliente ? 'Ocultar crear calificaciones' : 'Crear nueva calificación'}}
                     <mat-icon>playlist_add</mat-icon>
                 </mat-panel-description>
             </mat-expansion-panel-header>
@@ -69,14 +69,16 @@
                 </div>
             </div>
         </mat-expansion-panel>
-        <mat-expansion-panel (opened)="abrirPanelAdminCalificacion = true"
-            (closed)="abrirPanelAdminCalificacion = false">
+    </mat-accordion>
+    <mat-accordion class="headers-align">
+        <mat-expansion-panel (opened)="abrirPanelAdminCalificacionCliente = true"
+            (closed)="abrirPanelAdminCalificacionCliente = false" [expanded]="abrirPanelAdminCalificacionCliente">
             <mat-expansion-panel-header>
                 <mat-panel-title>
                     <i><u>GESTIONAR CALIFICACIONES</u></i>
                 </mat-panel-title>
                 <mat-panel-description>
-                    {{abrirPanelAdminCalificacion ? 'Ocultar administrador de calificaciones' : 'Editar
+                    {{abrirPanelAdminCalificacionCliente ? 'Ocultar administrador de calificaciones' : 'Editar
                     calificaciones existentes'}}
                     <mat-icon>playlist_add_check</mat-icon>
                 </mat-panel-description>
@@ -89,7 +91,8 @@
             <div class="mat-elevation-z8">
                 <table mat-table [dataSource]="dataSourceCalificacionCliente" matSort>
                     <!-- Columnas Dinamicas -->
-                    <ng-container *ngFor="let columna of columnasCalificacionCliente" [matColumnDef]="columna.nombreColumna">
+                    <ng-container *ngFor="let columna of columnasCalificacionCliente"
+                        [matColumnDef]="columna.nombreColumna">
                         <th mat-header-cell *matHeaderCellDef mat-sort-header> {{ columna.cabecera }} </th>
                         <td mat-cell *matCellDef="let row"> {{ columna.celda(row) }} </td>
                     </ng-container>

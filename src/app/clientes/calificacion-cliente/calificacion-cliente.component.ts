@@ -21,8 +21,8 @@ import * as util from '../../util';
 
 export class CalificacionClienteComponent implements OnInit {
 
-  abrirPanelNuevoCalificacion = true;
-  abrirPanelAdminCalificacion = false;
+  abrirPanelNuevoCalificacionCliente = true;
+  abrirPanelAdminCalificacionCliente = false;
 
   sesion: Sesion=null;
   calificacionCliente= new CalificacionCliente();

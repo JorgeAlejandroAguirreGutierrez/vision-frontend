@@ -1,13 +1,15 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, HostListener, OnInit, ViewChild } from '@angular/core';
 import { ImpuestoService } from '../../servicios/impuesto.service';
 import { Impuesto } from '../../modelos/impuesto';
-import {NgbModal, ModalDismissReasons} from '@ng-bootstrap/ng-bootstrap';
 import Swal from 'sweetalert2';
 import * as constantes from '../../constantes';
 import * as util from '../../util';
 import { SesionService } from 'src/app/servicios/sesion.service';
 import { Router } from '@angular/router';
 import { Sesion } from 'src/app/modelos/sesion';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSort } from '@angular/material/sort';
+import { MatTableDataSource } from '@angular/material/table';
 
 @Component({
   selector: 'app-impuesto',
@@ -16,81 +18,118 @@ import { Sesion } from 'src/app/modelos/sesion';
 })
 export class ImpuestoComponent implements OnInit {
 
+  abrirPanelNuevoImpuesto = true;
+  abrirPanelAdminImpuesto = false;
+
+  sesion: Sesion=null;
   impuesto= new Impuesto();
   impuestos: Impuesto[];
-  pImpuesto= new Impuesto();
-  sesion: Sesion=null;
 
-  constructor(private sesionService: SesionService, private router: Router, private impuestoService: ImpuestoService, private modalService: NgbModal) { }
+  columnasImpuesto: any[] = [
+    { nombreColumna: 'id', cabecera: 'ID', celda: (row: Impuesto) => `${row.id}` },
+    { nombreColumna: 'codigo', cabecera: 'Código', celda: (row: Impuesto) => `${row.codigo}` },
+    { nombreColumna: 'codigoNorma', cabecera: 'Codigo Norma', celda: (row: Impuesto) => `${row.codigoNorma}` },
+    { nombreColumna: 'porcentaje', cabecera: 'Porcentaje', celda: (row: Impuesto) => `${row.porcentaje}` },
+  ];
+  cabeceraImpuesto: string[] = this.columnasImpuesto.map(titulo => titulo.nombreColumna);
+  dataSourceImpuesto: MatTableDataSource<Impuesto>;
+  clickedRows = new Set<Impuesto>();
+  
+  @ViewChild(MatPaginator) paginator: MatPaginator;
+  @ViewChild(MatSort) sort: MatSort;
+
+  constructor(private impuestoService: ImpuestoService,
+    private sesionService: SesionService,private router: Router) { }
 
   ngOnInit() {
     this.sesion=util.validarSesion(this.sesionService, this.router);
-    this.impuestoService.consultar().subscribe(
-      res=>{
-        this.impuestos= res.resultado as Impuesto[]
-      }
-    );
+    this.consultar();
+  }
+  
+  @HostListener('window:keypress', ['$event'])
+  keyEvent($event: KeyboardEvent) {
+    if (($event.shiftKey || $event.metaKey) && $event.key == 'G') //SHIFT + G
+      this.crear(null);
+    if (($event.shiftKey || $event.metaKey) && $event.key == 'N') //ASHIFT + N
+      this.nuevo(null);
+    if (($event.shiftKey || $event.metaKey) && $event.key == 'E') // SHIFT + E
+      this.eliminar(null);
   }
 
-  open(content: any, impuesto: Impuesto) {
-    this.pImpuesto=impuesto;
-    this.modalService.open(content, {size: 'lg'}).result.then((result) => {
-      if (result=="actualizar") {
-        this.actualizar(this.pImpuesto);
-      }
-      if (result=="eliminar") {
-        this.eliminar(this.pImpuesto);
-      }
-    }, (reason) => {
-      
-    });
+  nuevo(event) {
+    if (event!=null)
+      event.preventDefault();
+    this.impuesto = new Impuesto();
   }
 
-  private getDismissReason(reason: any): string {
-    if (reason === ModalDismissReasons.ESC) {
-      return 'by pressing ESC';
-    } else if (reason === ModalDismissReasons.BACKDROP_CLICK) {
-      return 'by clicking on a backdrop';
-    } else {
-      return  `with: ${reason}`;
-    }
-  }
-
-  crear() {
+  crear(event) {
+    if (event!=null)
+      event.preventDefault();
     this.impuestoService.crear(this.impuesto).subscribe(
       res => {
         Swal.fire({ icon: constantes.exito_swal, title: constantes.exito, text: res.mensaje });
         this.impuesto=res.resultado as Impuesto;
-        this.ngOnInit();
+        this.consultar();
       },
       err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
 
-  actualizar(impuesto: Impuesto) {
-    this.impuestoService.actualizar(impuesto).subscribe(
+  actualizar(event) {
+    if (event!=null)
+      event.preventDefault();
+    this.impuestoService.actualizar(this.impuesto).subscribe(
       res => {
         Swal.fire({ icon: constantes.exito_swal, title: constantes.exito, text: res.mensaje });
         this.impuesto=res.resultado as Impuesto;
-        this.ngOnInit();
+        this.consultar();
       },
       err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
 
-  eliminar(impuesto: Impuesto) {
-    this.impuestoService.eliminar(impuesto).subscribe(
+  eliminar(event:any) {
+    if (event!=null)
+      event.preventDefault();
+    this.impuestoService.eliminar(this.impuesto).subscribe(
       res => {
         Swal.fire({ icon: constantes.exito_swal, title: constantes.exito, text: res.mensaje });
-        this.impuesto=res.resultado as Impuesto
-        this.ngOnInit();
+        this.nuevo(null);
+        this.consultar();
+      },
+      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
+    );
+  }
+  
+  consultar() {
+    this.impuestoService.consultar().subscribe(
+      res => {
+        this.impuestos = res.resultado as Impuesto[]
+        this.dataSourceImpuesto = new MatTableDataSource(this.impuestos);
+        this.dataSourceImpuesto.paginator = this.paginator;
+        this.dataSourceImpuesto.sort = this.sort;
       },
       err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
 
   seleccion(impuesto: Impuesto) {
-    
+    if (!this.clickedRows.has(impuesto)){
+      this.clickedRows.clear();
+      this.clickedRows.add(impuesto);
+      this.impuesto = impuesto;
+    } else {
+      this.clickedRows.clear();
+      this.impuesto = new Impuesto();
+    }
+  }
+
+  filtroImpuesto(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.dataSourceImpuesto.filter = filterValue.trim().toUpperCase();
+    if (this.dataSourceImpuesto.paginator) {
+      this.dataSourceImpuesto.paginator.firstPage();
+    }
   }
 
 }

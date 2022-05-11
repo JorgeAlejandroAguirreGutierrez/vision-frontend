@@ -24,14 +24,15 @@
 </nav>
 <div class="contenedor">
     <mat-accordion class="headers-align">
-        <mat-expansion-panel (opened)="abrirPanelNuevoOrigenIngreso = true" (closed)="abrirPanelNuevoOrigenIngreso = false"
-            [expanded]="abrirPanelNuevoOrigenIngreso">
+        <mat-expansion-panel (opened)="abrirPanelNuevoOrigenIngreso = true"
+            (closed)="abrirPanelNuevoOrigenIngreso = false" [expanded]="abrirPanelNuevoOrigenIngreso">
             <mat-expansion-panel-header>
                 <mat-panel-title>
                     <i><u>ORIGEN DE LOS INGRESOS</u></i>
                 </mat-panel-title>
                 <mat-panel-description>
-                    {{abrirPanelNuevoOrigenIngreso ? 'Ocultar crear origen de ingreso' : 'Crear nuevo origen de ingreso'}}
+                    {{abrirPanelNuevoOrigenIngreso ? 'Ocultar crear origen de ingreso' : 'Crear nuevo origen de
+                    ingreso'}}
                     <mat-icon>playlist_add</mat-icon>
                 </mat-panel-description>
             </mat-expansion-panel-header>
@@ -69,7 +70,10 @@
                 </div>
             </div>
         </mat-expansion-panel>
-        <mat-expansion-panel (opened)="abrirPanelAdminOrigenIngreso = true" (closed)="abrirPanelAdminOrigenIngreso = false">
+    </mat-accordion>
+    <mat-accordion class="headers-align">
+        <mat-expansion-panel (opened)="abrirPanelAdminOrigenIngreso = true"
+            (closed)="abrirPanelAdminOrigenIngreso = false">
             <mat-expansion-panel-header>
                 <mat-panel-title>
                     <i><u>GESTIONAR ORIGEN DE LOS INGRESOS</u></i>

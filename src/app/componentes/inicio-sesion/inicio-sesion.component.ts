@@ -88,11 +88,10 @@ export class InicioSesionComponent implements OnInit {
   }
 
   obtenerEmpresa(){
-    let empresa=new Empresa();
-    empresa.id=1;
-    this.empresaService.obtener(empresa).subscribe(
+    let empresaId=1;
+    this.empresaService.obtener(empresaId).subscribe(
       res => {
-        empresa= res.resultado as Empresa
+        let empresa= res.resultado as Empresa
         this.urlEmpresa=environment.prefijo_url_imagenes+"logos/"+empresa.logo;
       },
       err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })

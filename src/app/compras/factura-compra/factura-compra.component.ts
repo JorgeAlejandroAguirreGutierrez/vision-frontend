@@ -360,7 +360,7 @@ export class FacturaCompraComponent implements OnInit {
   obtenerEmpresa(){
     let empresa=new Empresa();
     empresa.id=1;
-    this.empresaService.obtener(empresa).subscribe(
+    this.empresaService.obtener(empresa.id).subscribe(
       res => {
         empresa= res.resultado as Empresa
         this.urlLogo=environment.prefijo_url_imagenes+"logos/"+empresa.logo;
