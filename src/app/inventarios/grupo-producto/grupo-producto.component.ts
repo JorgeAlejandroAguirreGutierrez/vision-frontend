@@ -198,7 +198,7 @@ export class GrupoProductoComponent implements OnInit {
         this.grupoProducto = res.resultado as GrupoProducto;
         let indice_tab_activo = constantes.tab_activo(this.tabService);
         this.tabService.removeTab(indice_tab_activo);
-        this.tabService.addNewTab(GrupoProductoComponent, constantes.tab_crear_grupo_producto);
+        this.tabService.addNewTab(GrupoProductoComponent, constantes.tab_grupo_producto);
       },
       err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
     );

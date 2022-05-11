@@ -77,7 +77,7 @@ export class MedidaComponent implements OnInit {
   nuevo(event: any) {
     if (event!=null)
       event.preventDefault();
-    this.tabService.addNewTab(MedidaComponent, constantes.tab_crear_medida);
+    this.tabService.addNewTab(MedidaComponent, constantes.tab_medida);
   }
   
   borrar(event: any){

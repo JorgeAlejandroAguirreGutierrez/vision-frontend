@@ -6,6 +6,7 @@ import { of, Observable, throwError } from 'rxjs';
 import { Router } from '@angular/router';
 import * as util from '../util';
 import { environment } from '../../environments/environment';
+import { TipoRetencion } from '../modelos/tipo-retencion';
 
 @Injectable({
   providedIn: 'root'
@@ -44,6 +45,59 @@ export class TipoRetencionService {
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(err);
+      })
+    );
+  }
+
+  crear(tipoRetencion: TipoRetencion): Observable<Respuesta> {
+    return this.http.post(environment.host + util.ruta + util.tipoRetencion, tipoRetencion, util.options).pipe(
+      map(response => response as Respuesta),
+      catchError(err => {
+        return throwError(()=>err);
+      })
+    );
+  }
+
+  obtener(tipoRetencionId: number): Observable<Respuesta> {
+    return this.http.get<Respuesta>(environment.host + util.ruta + util.tipoRetencion + '/' + tipoRetencionId, util.options).pipe(
+      map(response => response as Respuesta),
+      catchError(err => {
+        return throwError(()=>err);
+      })
+    );
+  }
+
+  consultar(): Observable<Respuesta> {
+    return this.http.get(environment.host + util.ruta + util.tipoRetencion, util.options).pipe(
+      map(response => response as Respuesta),
+      catchError(err => {
+        return throwError(()=>err);
+      }));
+  }
+
+  buscar(tipoRetencion: TipoRetencion): Observable<Respuesta> {
+    return this.http.post(environment.host + util.ruta + util.tipoRetencion+util.buscar, tipoRetencion, util.options).pipe(
+      map(response => response as Respuesta),
+      catchError(err => {
+        return throwError(()=>err);
+      })
+    );
+  }
+
+  actualizar(tipoRetencion: TipoRetencion): Observable<Respuesta> {
+    return this.http.put(environment.host+util.ruta+util.tipoRetencion, tipoRetencion, util.options).pipe(
+      map(response => response as Respuesta),
+      catchError(err => {
+        return throwError(()=>err);
+      })
+    );
+  }
+
+  eliminar(tipoRetencion: TipoRetencion): Observable<Respuesta> {
+    return this.http.delete(environment.host+util.ruta+util.tipoRetencion + '/' + tipoRetencion.id, util.options).pipe(
+      map(response => response as Respuesta),
+      catchError(err => {
+        return throwError(()=>err);
       })
     );
   }

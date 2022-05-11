@@ -95,6 +95,7 @@ import { TablesComponent } from './componentes/pages/tables/tables.component';
 import { FormsComponent } from './componentes/pages/forms/forms.component';
 import { TypographyComponent } from './componentes/pages/typography/typography.component';
 import { MapsComponent } from './componentes/pages/maps/maps.component';
+import { TipoRetencionComponent } from './configuraciones/tipo-retencion/tipo-retencion.component';
 
 
 const routes: Routes = [
@@ -151,7 +152,7 @@ const routes: Routes = [
   imports: [RouterModule.forRoot(routes, { relativeLinkResolution: 'legacy' })],
   exports: [RouterModule],
   entryComponents: [ImportarComponent, ExportarComponent, CambioCredencialesComponent, DialogoMovimientoContableComponent, 
-    DialogoGrupoProductoComponent, UsuarioComponent, PuntoVentaComponent,
+    DialogoGrupoProductoComponent, UsuarioComponent, PuntoVentaComponent, TipoRetencionComponent,
     EstablecimientoComponent, ClienteComponent, GrupoClienteComponent, CalificacionClienteComponent, EstadoCivilComponent, 
     GeneroComponent, OrigenIngresoComponent, PlazoCreditoComponent, FormaPagoComponent, TipoPagoComponent, BodegaComponent, 
     DialogComponente, EquivalenciaMedidaComponent, MedidaComponent, FacturaComponent, ProformaComponent
@@ -175,6 +176,7 @@ export const RoutingComponents = [
   UbicacionComponent,
   EmpresaComponent,
   DatoAdicionalComponent,
+  TipoRetencionComponent,
   //Usuarios
   SesionComponent,
   PermisoComponent,

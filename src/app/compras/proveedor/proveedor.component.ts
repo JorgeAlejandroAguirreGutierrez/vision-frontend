@@ -345,7 +345,7 @@ export class ProveedorComponent implements OnInit {
   nuevoCliente(event) {
     if (event != null)
       event.preventDefault();
-    this.tabService.addNewTab(ClienteComponent, constantes.tab_crear_cliente);
+    this.tabService.addNewTab(ClienteComponent, constantes.tab_cliente);
   }
 
   open(content: any, event) {
@@ -406,7 +406,7 @@ export class ProveedorComponent implements OnInit {
         Swal.fire(constantes.exito, res.mensaje, constantes.exito_swal);
         let indice_tab_activo = constantes.tab_activo(this.tabService);
         this.tabService.removeTab(indice_tab_activo);
-        this.tabService.addNewTab(ClienteComponent, constantes.tab_crear_cliente);
+        this.tabService.addNewTab(ClienteComponent, constantes.tab_cliente);
       },
       err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.message })
     );

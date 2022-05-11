@@ -322,7 +322,7 @@ export class ClienteComponent implements OnInit {
   nuevo(event: any) {
     if (event != null)
       event.preventDefault();
-    this.tabService.addNewTab(ClienteComponent, constantes.tab_crear_cliente);
+    this.tabService.addNewTab(ClienteComponent, constantes.tab_cliente);
   }
 
   open(content: any, event: any) {
@@ -499,7 +499,7 @@ export class ClienteComponent implements OnInit {
         Swal.fire({ icon: constantes.exito_swal, title: constantes.exito, text: res.mensaje });
         let indiceTabActivo = constantes.tab_activo(this.tabService);
         this.tabService.removeTab(indiceTabActivo);
-        this.tabService.addNewTab(ClienteComponent, constantes.tab_crear_cliente);
+        this.tabService.addNewTab(ClienteComponent, constantes.tab_cliente);
       },
       err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
     );
