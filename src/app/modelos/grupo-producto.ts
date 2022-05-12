@@ -21,7 +21,6 @@ export class GrupoProducto {
         this.linea="";
         this.sublinea="";
         this.presentacion="";
-        this.presentacionBien=0;
         this.categoriaProducto = new CategoriaProducto();
     }
 }

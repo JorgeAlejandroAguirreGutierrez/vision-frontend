@@ -39,15 +39,6 @@ export class MedidaService {
     );
   }
 
-  async obtenerAsync(medida_id: number): Promise<Respuesta> {
-    return await lastValueFrom(this.http.get<Respuesta>(environment.host + util.ruta + util.medida + '/' + medida_id, util.options).pipe(
-      map(response => response as Respuesta),
-      catchError(err => {
-        return throwError(()=>err);
-      })
-    ));
-  }
-
   consultar(): Observable<Respuesta> {
     return this.http.get(environment.host + util.ruta + util.medida, util.options).pipe(
       map(response => response as Respuesta),
@@ -74,8 +65,8 @@ export class MedidaService {
     );
   }
 
-  buscar(medida: Medida): Observable<Respuesta> {
-    return this.http.get(environment.host + util.ruta + util.medida+util.buscar+'/'+medida.descripcion + '/'+medida.descripcion, util.options).pipe(
+  eliminarPersonalizado(medida: Medida): Observable<Respuesta> {
+    return this.http.delete(environment.host+util.ruta+util.bodega+util.personalizado + '/' + medida.id, util.options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);

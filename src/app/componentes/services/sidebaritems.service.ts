@@ -55,7 +55,6 @@ export class SidebarItemsService {
 
   constructor() { }
 
-  // Para llenar las opciones del sideBar
   llenarOpciones(Componente: Type<any>, tabTitulo: string, itemNombre: string, icoItem: string) {
     this.opciones.push(new SidebarItem(Componente, tabTitulo, itemNombre, icoItem));
   }
@@ -75,7 +74,6 @@ export class SidebarItemsService {
 
     if (tabNombre == constantes.modulo_compras) {
       this.llenarOpciones(ProveedorComponent, constantes.tab_proveedor, constantes.item_proveedor, constantes.ico_proveedor);
-      this.llenarOpciones(FacturaCompraComponent, constantes.tab_factura_compra, constantes.item_factura_compra, constantes.ico_factura_compra);
     }
 
     if (tabNombre == constantes.modulo_ventas) {
@@ -83,7 +81,6 @@ export class SidebarItemsService {
       this.llenarOpciones(PedidoComponent, constantes.tab_pedido, constantes.item_pedido, constantes.ico_pedido);
       this.llenarOpciones(ProformaComponent, constantes.tab_proforma, constantes.item_proforma, constantes.ico_proforma);
       this.llenarOpciones(EgresoComponent, constantes.tab_egreso, constantes.item_egreso, constantes.ico_egreso);
-      this.llenarOpciones(EgresoComponent, constantes.tab_recaudacion, constantes.item_recaudacion, constantes.ico_recaudacion);
     }
 
     if (tabNombre == constantes.modulo_inventarios) {
@@ -107,7 +104,6 @@ export class SidebarItemsService {
     }
 
     if (tabNombre == constantes.modulo_activos_fijos) {
-      this.llenarOpciones(FacturaComponent, constantes.tab_factura, constantes.item_factura, constantes.ico_factura);
     }
 
     if (tabNombre == constantes.modulo_talento_humano) {
@@ -115,11 +111,9 @@ export class SidebarItemsService {
     }
 
     if (tabNombre == constantes.modulo_produccion) {
-      this.llenarOpciones(FacturaComponent, constantes.tab_factura, constantes.item_factura, constantes.ico_factura);
     }
 
     if (tabNombre == constantes.modulo_importacion) {
-      this.llenarOpciones(FacturaComponent, constantes.tab_factura, constantes.item_factura, constantes.ico_factura);
     }
 
     if (tabNombre == constantes.modulo_configuracion) {
@@ -134,22 +128,17 @@ export class SidebarItemsService {
     }
     
     if (tabNombre == constantes.modulo_estadisticas) {
-      this.llenarOpciones(FacturaComponent, constantes.tab_factura, constantes.item_factura, constantes.ico_factura);
     }
 
     if (tabNombre == constantes.modulo_control) {
-      this.llenarOpciones(FacturaComponent, constantes.tab_factura, constantes.item_factura, constantes.ico_factura);
     }
 
     if (tabNombre == constantes.modulo_auditoria) {
-      this.llenarOpciones(FacturaComponent, constantes.tab_factura, constantes.item_factura, constantes.ico_factura);
     }
 
     if (tabNombre == constantes.modulo_usuarios) {
       this.llenarOpciones(UsuarioComponent, constantes.tab_usuario, constantes.item_usuario, constantes.ico_usuario);
-      // Integrar
       this.llenarOpciones(EstablecimientoComponent, constantes.tab_establecimiento, constantes.item_establecimiento, constantes.ico_establecimiento);
-      // Integrar
       this.llenarOpciones(PuntoVentaComponent,constantes.tab_punto_venta, constantes.item_punto_venta, constantes.ico_punto_venta);
     }
     return this.opciones;
