@@ -23,98 +23,56 @@ import { Router } from '@angular/router';
 })
 export class MovimientoContableComponent implements OnInit {
 
-  abrirPanelMovimientoContable: boolean = true;
-  abrirPanelAdminMovimientoContable:boolean = false;
+  abrirPanelNuevoMovimientoContable = true;
+  abrirPanelAdminMovimientoContable = false;
 
-  sesion: Sesion;
-  estado:string= 'ACTIVO'; // Quitar cuando se aumente el campo en la tabla segmento
-  afectaciones: AfectacionContable[] = [];
-
-  afectacion_contable = new AfectacionContable();
-  movimientoContable: MovimientoContable= new MovimientoContable();
+  sesion: Sesion=null;
+  movimientoContable= new MovimientoContable();
   movimientosContables: MovimientoContable[];
-  movimientoContableActualizar: MovimientoContable= new MovimientoContable();
-  movimientoContableBuscar: MovimientoContable=new MovimientoContable();
-
-  columnas: any[] = [
+  afectacionesContables: AfectacionContable[];
+  
+  columnasMovimientoContable: any[] = [
     { nombreColumna: 'id', cabecera: 'ID', celda: (row: MovimientoContable) => `${row.id}`},
     { nombreColumna: 'inventario', cabecera: 'Inventario', celda: (row: MovimientoContable) => `${row.codigo}`},
-    { nombreColumna: 'costo_venta', cabecera: 'Costo Venta', celda: (row: MovimientoContable) => `${row.costoVenta}`},
-    { nombreColumna: 'devolucion_compra', cabecera: 'Dev. Compra', celda: (row: MovimientoContable) => `${row.devolucionCompra}`},
-    { nombreColumna: 'descuento_compra', cabecera: 'Des. Compra', celda: (row: MovimientoContable) => `${row.descuentoCompra}`},
+    { nombreColumna: 'costoVenta', cabecera: 'Costo Venta', celda: (row: MovimientoContable) => `${row.costoVenta}`},
+    { nombreColumna: 'devolucionCompra', cabecera: 'Dev. Compra', celda: (row: MovimientoContable) => `${row.devolucionCompra}`},
+    { nombreColumna: 'descuentoCompra', cabecera: 'Des. Compra', celda: (row: MovimientoContable) => `${row.descuentoCompra}`},
     { nombreColumna: 'venta', cabecera: 'Venta', celda: (row: MovimientoContable) => `${row.venta}`},
-    { nombreColumna: 'devolucion_venta', cabecera: 'Dev. Venta', celda: (row: MovimientoContable) => `${row.devolucionVenta}`},
-    { nombreColumna: 'descuento_venta', cabecera: 'Des. Venta', celda: (row: MovimientoContable) => `${row.descuentoVenta}`},
-    { nombreColumna: 'devolucion_costo_venta', cabecera: 'Dev Const Venta', celda: (row: MovimientoContable) => `${row.devolucionCostoVenta}`},
+    { nombreColumna: 'devolucionVenta', cabecera: 'Dev. Venta', celda: (row: MovimientoContable) => `${row.devolucionVenta}`},
+    { nombreColumna: 'descuentoVenta', cabecera: 'Des. Venta', celda: (row: MovimientoContable) => `${row.descuentoVenta}`},
+    { nombreColumna: 'devolucionCostoVenta', cabecera: 'Dev Const Venta', celda: (row: MovimientoContable) => `${row.devolucionCostoVenta}`},
   ];
-  columnasMovimientoContable: string[]  = this.columnas.map(titulo => titulo.nombreColumna);
+
+  cabeceraMovimientoContable: string[] = this.columnasMovimientoContable.map(titulo => titulo.nombreColumna);
   dataSourceMovimientoContable: MatTableDataSource<MovimientoContable>;
   clickedRows = new Set<MovimientoContable>();
   
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
-  constructor(private sesionService: SesionService, private router: Router, private movimientoContableService: MovimientoContableService, 
-    private afectacionContableService: AfectacionContableService) { }
+  constructor(private movimientoContableService: MovimientoContableService, private afectacionContableService: AfectacionContableService,
+    private sesionService: SesionService,private router: Router) { }
 
   ngOnInit() {
     this.sesion=util.validarSesion(this.sesionService, this.router);
-    this.construir_movimiento_contable();
     this.consultar();
-    this.afectacionContableService.consultar().subscribe(
-      res => {
-        this.afectaciones = res.resultado as AfectacionContable[];
-        this.movimientoContable.afectacionContable.id = this.afectaciones[0].id;
-      },
-      err => {
-        Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.message });
-      }
-    );
+    this.consultarAfectacionesContables();
   }
-
+  
   @HostListener('window:keypress', ['$event'])
   keyEvent($event: KeyboardEvent) {
-    if (($event.shiftKey || $event.metaKey) && $event.key == "G") //SHIFT + G
+    if (($event.shiftKey || $event.metaKey) && $event.key == 'G') //SHIFT + G
       this.crear(null);
-    if (($event.shiftKey || $event.metaKey) && $event.key == "N") //ASHIFT + N
+    if (($event.shiftKey || $event.metaKey) && $event.key == 'N') //ASHIFT + N
       this.nuevo(null);
-    if (($event.shiftKey || $event.metaKey) && $event.key == "E") // SHIFT + E
+    if (($event.shiftKey || $event.metaKey) && $event.key == 'E') // SHIFT + E
       this.eliminar(null);
-  }
-
-  async construir_movimiento_contable() {
-    let movimientoContableId=0;
-    this.movimientoContableService.currentMessage.subscribe(message => movimientoContableId = message);
-    if (movimientoContableId!= 0) {
-      await this.movimientoContableService.obtenerAsync(movimientoContableId).then(
-        res => {
-          Object.assign(this.movimientoContable, res.resultado as MovimientoContable);
-          this.movimientoContableService.enviar(0);
-        },
-        err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
-      );
-    }
   }
 
   nuevo(event) {
     if (event!=null)
       event.preventDefault();
-    this.movimientoContable=new MovimientoContable();
-  }
-
-  borrar(event){
-    if (event!=null){
-      event.preventDefault()};
-      if(this.movimientoContable.id!=0){
-        let id=this.movimientoContable.id;
-        let codigo=this.movimientoContable.codigo;
-        this.movimientoContable=new MovimientoContable();
-        this.movimientoContable.id=id;
-        this.movimientoContable.codigo=codigo;
-      }
-      else{
-        this.movimientoContable=new MovimientoContable();
-      }
+    this.movimientoContable = new MovimientoContable();
   }
 
   crear(event) {
@@ -123,8 +81,7 @@ export class MovimientoContableComponent implements OnInit {
     this.movimientoContableService.crear(this.movimientoContable).subscribe(
       res => {
         Swal.fire({ icon: constantes.exito_swal, title: constantes.exito, text: res.mensaje });
-        this.movimientoContable=new MovimientoContable();
-        this.nuevo(null);
+        this.movimientoContable=res.resultado as MovimientoContable;
         this.consultar();
       },
       err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
@@ -137,37 +94,25 @@ export class MovimientoContableComponent implements OnInit {
     this.movimientoContableService.actualizar(this.movimientoContable).subscribe(
       res => {
         Swal.fire({ icon: constantes.exito_swal, title: constantes.exito, text: res.mensaje });
-        this.movimientoContable=new MovimientoContable();
+        this.movimientoContable=res.resultado as MovimientoContable;
         this.consultar();
       },
       err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
 
-  actualizarLeer(event){
-    if (event!=null)
-      event.preventDefault();
-      this.abrirPanelMovimientoContable = true;
-      this.abrirPanelAdminMovimientoContable = false;
-      if(this.movimientoContableActualizar.id!=0){
-        this.movimientoContable={... this.movimientoContableActualizar};
-        this.movimientoContableActualizar=new MovimientoContable();
-      }
-      
-  }
-
-  eliminar(event) {
+  eliminar(event:any) {
     if (event!=null)
       event.preventDefault();
     this.movimientoContableService.eliminar(this.movimientoContable).subscribe(
       res => {
         Swal.fire({ icon: constantes.exito_swal, title: constantes.exito, text: res.mensaje });
-        this.movimientoContable = res.resultado as MovimientoContable;     
+        this.consultar();
       },
       err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
-
+  
   consultar() {
     this.movimientoContableService.consultar().subscribe(
       res => {
@@ -180,23 +125,11 @@ export class MovimientoContableComponent implements OnInit {
     );
   }
 
-  buscar(event) {
-    if (event!=null)
-      event.preventDefault();
-    this.movimientoContableService.buscar(this.movimientoContableBuscar).subscribe(
-      res => {
-          this.movimientosContables = res.resultado as MovimientoContable[]
-      },
-      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
-    );
-  }
-
-  seleccion(movimientoContableSeleccionado: MovimientoContable) {
-    if (!this.clickedRows.has(movimientoContableSeleccionado)){
+  seleccion(movimientoContable: MovimientoContable) {
+    if (!this.clickedRows.has(movimientoContable)){
       this.clickedRows.clear();
-      this.clickedRows.add(movimientoContableSeleccionado);
-      this.movimientoContable = movimientoContableSeleccionado;
-      this.movimientoContableActualizar=movimientoContableSeleccionado;
+      this.clickedRows.add(movimientoContable);
+      this.movimientoContable = movimientoContable;
     } else {
       this.clickedRows.clear();
       this.movimientoContable = new MovimientoContable();
@@ -211,15 +144,12 @@ export class MovimientoContableComponent implements OnInit {
     }
   }
 
-  cambiarBuscarCodigo(){
-    this.buscar(null);
-  }
-
-  cambiarBuscarDescripcion(){
-    this.buscar(null);
-  }
-
-  cambiarBuscarAbreviatura(){
-    this.buscar(null);
+  consultarAfectacionesContables() {
+    this.afectacionContableService.consultar().subscribe(
+      res => {
+        this.afectacionesContables = res.resultado as AfectacionContable[]
+      },
+      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
+    );
   }
 }

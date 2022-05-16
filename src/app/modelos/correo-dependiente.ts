@@ -1,4 +1,4 @@
-export class CorreoAuxiliar {
+export class CorreoDependiente {
     id:number;
     codigo:string;
     email:string;

@@ -100,8 +100,8 @@
                                 </mat-form-field>
                             </div>
                             <div class="col-1 centrar iconos">
-                                <button mat-icon-button [disabled]="habilitarSeleccionAuxiliar">
-                                    <mat-icon (click)="asignarAuxiliar(modalAuxiliares)">supervisor_account</mat-icon>
+                                <button mat-icon-button [disabled]="habilitarSeleccionDependiente">
+                                    <mat-icon (click)="asignarDependiente(modalDependientes)">supervisor_account</mat-icon>
                                 </button>
                             </div>
                             <div class="col-12">
@@ -742,7 +742,7 @@
         </mat-step>
     </mat-stepper>
 </div>
-<ng-template #block_auxiliar>
+<ng-template #block_dependiente>
     <div class="col-12">
         <div class="form-row">
             <div class="form-group col-2">
@@ -755,12 +755,12 @@
             <div class="form-group col-8">
                 <mat-form-field appearance="standard">
                     <mat-label>Cliente/Pista</mat-label>
-                    <input matInput type="text" [value]="factura.auxiliar.razonSocial" class="form-control-sm" disabled>
+                    <input matInput type="text" [value]="factura.dependiente.razonSocial" class="form-control-sm" disabled>
                 </mat-form-field>
             </div>
             <div class="form-group col-2">
-                <mat-checkbox [disabled]="habilitarSeleccionAuxiliar" (change)="asignarAuxiliar(modalAuxiliares)"
-                    [(ngModel)]="seleccionAuxiliar" class="form-control-sm" color="primary"> Fact. a Dep</mat-checkbox>
+                <mat-checkbox [disabled]="habilitarSeleccionDependiente" (change)="asignarDependiente(modalDependientes)"
+                    [(ngModel)]="seleccionDependiente" class="form-control-sm" color="primary"> Fact. a Dep</mat-checkbox>
             </div>
         </div>
         <div class="form-row">
@@ -769,7 +769,7 @@
                     <div class="form-group col-12">
                         <mat-form-field appearance="standard">
                             <mat-label>Direccion</mat-label>
-                            <input matInput type="text" [(ngModel)]="factura.auxiliar.direccion.direccion"
+                            <input matInput type="text" [(ngModel)]="factura.dependiente.direccion.direccion"
                                 class="form-control-sm" [disabled]="true">
                         </mat-form-field>
                     </div>
@@ -778,7 +778,7 @@
                     <div class="form-group col-3">
                         <mat-form-field appearance="standard">
                             <mat-label>Telefono</mat-label>
-                            <input matInput type="text" [(ngModel)]="primerTelefonoAuxiliar" class="form-control-sm"
+                            <input matInput type="text" [(ngModel)]="primerTelefonoDependiente" class="form-control-sm"
                                 [disabled]="true">
                         </mat-form-field>
                     </div>
@@ -792,7 +792,7 @@
                     <div class="form-group col-3">
                         <mat-form-field appearance="standard">
                             <mat-label>Celular</mat-label>
-                            <input matInput type="text" [(ngModel)]="primerCelularAuxiliar" class="form-control-sm"
+                            <input matInput type="text" [(ngModel)]="primerCelularDependiente" class="form-control-sm"
                                 [disabled]="true">
                         </mat-form-field>
                     </div>
@@ -806,7 +806,7 @@
                     <div class="form-group col-3">
                         <mat-form-field appearance="standard">
                             <mat-label>Email</mat-label>
-                            <input matInput type="text" [(ngModel)]="primerCorreoAuxiliar" class="form-control-sm"
+                            <input matInput type="text" [(ngModel)]="primerCorreoDependiente" class="form-control-sm"
                                 [disabled]="true">
                         </mat-form-field>
                     </div>
@@ -969,9 +969,9 @@
         <button type="button " class="btn btn-outline-dark " (click)="modal.close( 'close') ">Cerrar</button>
     </div>
 </ng-template>
-<ng-template #modalAuxiliares let-modal>
+<ng-template #modalDependientes let-modal>
     <div class="modal-header ">
-        <h5 class="modal-title ">Auxiliares</h5>
+        <h5 class="modal-title ">Dependientes</h5>
         <button type="button " class="close " aria-label="Close " (click)="modal.dismiss( 'Cross click') ">
             <span aria-hidden="true ">&times;</span>
         </button>
@@ -980,13 +980,13 @@
         <div class="form-group form-row ">
             <div class="form-group col-12 ">
                 <label>Razon Social</label>
-                <input type="text " [(ngModel)]="auxiliarBuscar.razonSocial "
+                <input type="text " [(ngModel)]="dependienteBuscar.razonSocial "
                     oninput="this.value=this.value.toUpperCase() " class="form-control form-control-sm ">
             </div>
         </div>
         <div class="form-group form-row ">
             <div class="form-group col-12 ">
-                <button class="btn btn-lg btn-block btn-success " (click)="auxiliarBuscarAccion() ">Buscar</button>
+                <button class="btn btn-lg btn-block btn-success " (click)="dependienteBuscarAccion() ">Buscar</button>
             </div>
         </div>
         <div class="form-row table-responsive">
@@ -999,12 +999,12 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr *ngFor="let auxiliar of auxiliares; let i=index">
+                    <tr *ngFor="let dependiente of dependientes; let i=index">
                         <td>
-                            <input type="radio" class="form-control" (click)="seleccionarAuxiliar(i)">
+                            <input type="radio" class="form-control" (click)="seleccionarDependiente(i)">
                         </td>
-                        <td>{{auxiliar.codigo}}</td>
-                        <td>{{auxiliar.razonSocial}}</td>
+                        <td>{{dependiente.codigo}}</td>
+                        <td>{{dependiente.razonSocial}}</td>
                     </tr>
                 </tbody>
             </table>

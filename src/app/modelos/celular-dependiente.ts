@@ -1,9 +1,9 @@
-export class TelefonoAuxiliar {
+export class CelularDependiente {
     id:number;
     codigo:string;
     numero:string;
 
-    constructor() {
+    constructor(){
         this.numero="";
     }
 }

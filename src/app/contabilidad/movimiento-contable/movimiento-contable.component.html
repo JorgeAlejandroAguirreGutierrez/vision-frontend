@@ -1,65 +1,49 @@
 <nav class="navbar-light nav-fijo">
     <ul class="navbar-nav">
-        <ng-container *ngIf="abrirPanelMovimientoContable">
-            <li class="nav-item">
-                <a class="nav-link" title="Nuevo" role="button" (click)="nuevo($event)">
-                    <mat-icon>note_add</mat-icon>
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" title="Borrar" role="button" (click)="borrar($event)">
-                    <mat-icon>backspace</mat-icon>
-                </a>
-            </li>
-            <li class="nav-item" *ngIf="movimientoContable.id==0">
-                <a class="nav-link" title="Guardar" role="button" (click)="crear($event)">
-                    <mat-icon>save</mat-icon>
-                </a>
-            </li>
-            <li class="nav-item" *ngIf="movimientoContable.id!=0">
-                <a class="nav-link" title="Actualizar" role="button" (click)="actualizar($event)">
-                    <mat-icon>update</mat-icon>
-                </a>
-            </li>
-        </ng-container>
-        <ng-container *ngIf="abrirPanelAdminMovimientoContable">
-            <li class="nav-item">
-                <a class="nav-link" title="Buscar" role="button" (click)="buscar($event)">
-                    <mat-icon>search</mat-icon>
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" title="Editar" role="button" (click)="actualizarLeer($event)">
-                    <mat-icon>edit</mat-icon>
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" title="Eliminar" role="button" (click)="eliminar($event)">
-                    <mat-icon>delete</mat-icon>
-                </a>
-            </li>
-        </ng-container>
+        <li class="nav-item">
+            <a class="nav-link" title="Nuevo" role="button" (click)="nuevo($event)">
+                <mat-icon>note_add</mat-icon>
+            </a>
+        </li>
+        <li class="nav-item" *ngIf="movimientoContable.id==0">
+            <a class="nav-link" title="Guardar" role="button" (click)="crear($event)">
+                <mat-icon>save</mat-icon>
+            </a>
+        </li>
+        <li class="nav-item" *ngIf="movimientoContable.id!=0">
+            <a class="nav-link" title="Actualizar" role="button" (click)="actualizar($event)">
+                <mat-icon>update</mat-icon>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" title="Eliminar" role="button" (click)="eliminar($event)">
+                <mat-icon>delete</mat-icon>
+            </a>
+        </li>
     </ul>
 </nav>
 <div class="contenedor">
     <mat-accordion class="headers-align">
-        <mat-expansion-panel (opened)="abrirPanelMovimientoContable = true"
-            (closed)="abrirPanelMovimientoContable = false" [expanded]="abrirPanelMovimientoContable">
+        <mat-expansion-panel (opened)="abrirPanelNuevoMovimientoContable = true"
+            (closed)="abrirPanelNuevoMovimientoContable = false" [expanded]="abrirPanelNuevoMovimientoContable">
             <mat-expansion-panel-header>
                 <mat-panel-title>
                     <i><u>MOVIMIENTO CONTABLE</u></i>
                 </mat-panel-title>
                 <mat-panel-description>
-                    {{abrirPanelMovimientoContable ? 'Ocultar crear movimiento contable' : 'Crear un nuevo movimiento
-                    contable'}}
+                    {{abrirPanelNuevoMovimientoContable ? 'Ocultar crear movimiento contable' : 'Crear nuevo movimiento contable'}}
                     <mat-icon>playlist_add</mat-icon>
                 </mat-panel-description>
             </mat-expansion-panel-header>
             <hr>
             <div class="form-group form-row">
-                <!--div class="col-12 centrar-titulo fondo">
-                    CUENTAS CONTABLES
-                </div-->
+                <div class="col-3">
+                    <mat-form-field appearance="standard">
+                        <mat-label>Codigo</mat-label>
+                        <input matInput type="text" [(ngModel)]="movimientoContable.codigo" class="form-control-sm"
+                            [disabled]="true">
+                    </mat-form-field>
+                </div>
                 <div class="col-3">
                     <mat-form-field appearance="standard">
                         <mat-label>Inventario</mat-label>
@@ -76,58 +60,56 @@
                 </div>
                 <div class="col-3">
                     <mat-form-field appearance="standard">
-                        <mat-label>Dev. Compra</mat-label>
+                        <mat-label>Devolucion Compra</mat-label>
                         <input matInput type="text" [(ngModel)]="movimientoContable.devolucionCompra"
                             oninput="this.value = this.value.toUpperCase()" class="form-control-sm">
                     </mat-form-field>
                 </div>
-                <div class="col-3">
-                    <mat-form-field appearance="standard">
-                        <mat-label>Desc. Compra</mat-label>
-                        <input matInput type="text" [(ngModel)]="movimientoContable.descuentoCompra"
-                            oninput="this.value = this.value.toUpperCase()" class="form-control-sm">
-                    </mat-form-field>
-                </div>
+            </div>
+            <div class="form-group form-row">
                 <div class="col-3">
                     <mat-form-field appearance="standard">
                         <mat-label>Venta</mat-label>
-                        <input matInput type="text" [(ngModel)]="movimientoContable.venta"
-                            oninput="this.value = this.value.toUpperCase()" class="form-control-sm">
+                        <input matInput type="text" [(ngModel)]="movimientoContable.venta" oninput="this.value = this.value.toUpperCase()" class="form-control-sm">
                     </mat-form-field>
                 </div>
                 <div class="col-3">
                     <mat-form-field appearance="standard">
-                        <mat-label>Dev. Venta</mat-label>
+                        <mat-label>Devolucion Venta</mat-label>
                         <input matInput type="text" [(ngModel)]="movimientoContable.devolucionVenta"
                             oninput="this.value = this.value.toUpperCase()" class="form-control-sm">
                     </mat-form-field>
                 </div>
                 <div class="col-3">
                     <mat-form-field appearance="standard">
-                        <mat-label>Desc. Venta</mat-label>
+                        <mat-label>Descuento Venta</mat-label>
                         <input matInput type="text" [(ngModel)]="movimientoContable.descuentoVenta"
                             oninput="this.value = this.value.toUpperCase()" class="form-control-sm">
                     </mat-form-field>
                 </div>
                 <div class="col-3">
                     <mat-form-field appearance="standard">
-                        <mat-label>Dev. Costo Venta</mat-label>
+                        <mat-label>Devolucion Costo Venta</mat-label>
                         <input matInput type="text" [(ngModel)]="movimientoContable.devolucionCostoVenta"
                             oninput="this.value = this.value.toUpperCase()" class="form-control-sm">
                     </mat-form-field>
                 </div>
-                <div class="col-3">
+            </div>
+            <div class="form-group form-row">
+                <div class="col-12">
                     <mat-form-field appearance="standard">
-                        <mat-label>Afectación Contable</mat-label>
-                        <mat-select [(ngModel)]="movimientoContable.afectacionContable.id"
-                            class="form-control-sm">
-                            <mat-option *ngFor="let afectacion of afectaciones" [value]="afectacion.id">
-                                {{afectacion.descripcion}}</mat-option>
+                        <mat-label>Afectacion Contable</mat-label>
+                        <mat-select type="text" [(ngModel)]="movimientoContable.afectacionContable" class="form-control-sm">
+                            <mat-option *ngFor="let afectacionContable of afectacionesContables" [value]="afectacionContable">
+                                {{afectacionContable.descripcion}}
+                            </mat-option>
                         </mat-select>
                     </mat-form-field>
                 </div>
             </div>
         </mat-expansion-panel>
+    </mat-accordion>
+    <mat-accordion class="headers-align">
         <mat-expansion-panel (opened)="abrirPanelAdminMovimientoContable = true"
             (closed)="abrirPanelAdminMovimientoContable = false">
             <mat-expansion-panel-header>
@@ -135,13 +117,40 @@
                     <i><u>GESTIONAR MOVIMIENTOS CONTABLES</u></i>
                 </mat-panel-title>
                 <mat-panel-description>
-                    {{abrirPanelAdminMovimientoContable ? 'Ocultar administrador de movimientos contables' : 'Editar
-                    movimientos contables existentes'}}
+                    {{abrirPanelAdminMovimientoContable ? 'Ocultar administrador de movimiento contable' : 'Editar
+                    movimiento contable existente'}}
                     <mat-icon>playlist_add_check</mat-icon>
                 </mat-panel-description>
             </mat-expansion-panel-header>
             <hr>
-            <app-tabla-movimiento-contable></app-tabla-movimiento-contable>
+            <mat-form-field appearance="standard">
+                <mat-label>Buscar movimiento contable</mat-label>
+                <input matInput (keyup)="filtroMovimientoContable($event)" #input>
+            </mat-form-field>
+            <div class="mat-elevation-z8">
+                <table mat-table [dataSource]="dataSourceMovimientoContable" matSort>
+                    <!-- Columnas Dinamicas -->
+                    <ng-container *ngFor="let columna of columnasMovimientoContable" [matColumnDef]="columna.nombreColumna">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> {{ columna.cabecera }} </th>
+                        <td mat-cell *matCellDef="let row"> {{ columna.celda(row) }} </td>
+                    </ng-container>
+                    <tr mat-header-row *matHeaderRowDef="cabeceraMovimientoContable"></tr>
+                    <tr mat-row (click)="seleccion(row)" [class.selected-row]="clickedRows.has(row)"
+                        *matRowDef="let row; columns: cabeceraMovimientoContable;"></tr>
+                    <!-- Row shown when there is no matching data. -->
+                    <tr class="mat-row" *matNoDataRow>
+                        <td class="mat-cell" colspan="6">No hay datos que coincidan con el movimiento contable
+                        </td>
+                    </tr>
+                </table>
+                <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
+            </div>
+            <div class="azul" *ngIf="!clickedRows.size">
+                Seleccione una fila para editar
+            </div>
+            <div class="azul" *ngFor="let clickedRow of clickedRows">
+                Id: {{clickedRow.id}} seleccionado
+            </div>
         </mat-expansion-panel>
     </mat-accordion>
 </div>

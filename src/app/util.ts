@@ -7,7 +7,7 @@ import { Sesion } from './modelos/sesion';
 
 export const host='http://localhost:8000/api';
 export const ruta: string='/sicecuador';
-export const auxiliar: string='/auxiliar';
+export const dependiente: string='/dependiente';
 export const plazoCredito: string='/plazoCredito';
 export const datoAdicional: string='/datoAdicional';
 export const impuesto: string='/impuesto';

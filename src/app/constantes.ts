@@ -31,6 +31,7 @@ export const error_kardex_VACIO: string='ERROR KARDEX VACIO';
 export const error_kardex_VACIO_MENSAJE: string='INGRESA UN KARDEX';
 export const error_bodega: string='ERROR EN BODEGA';
 export const error_agregar_recaudacion="VALOR SUPERA EL MONTO DE COBRO DE LA FACTURA";
+export const error_agregar_dependiente='ERROR AL AGREGAR EL DEPENDIENTE';
 export const error_swal='error';
 export const error='Error';
 export const mensaje_kardex_inicial: string='Está seguro que quiere inicializar el kardex con saldo 0';

@@ -20,8 +20,8 @@ import { Producto } from '../../modelos/producto';
 import { ImpuestoService } from '../../servicios/impuesto.service';
 import { Impuesto } from '../../modelos/impuesto';
 import { FacturaService } from '../../servicios/factura.service';
-import { AuxiliarService } from '../../servicios/auxiliar.service';
-import { Auxiliar } from '../../modelos/auxiliar';
+import { DependienteService } from '../../servicios/dependiente.service';
+import { Dependiente } from '../../modelos/dependiente';
 import { Caracteristica } from '../../modelos/caracteristica';
 import { Bodega } from '../../modelos/bodega';
 import { BodegaService } from '../../servicios/bodega.service';
@@ -51,7 +51,7 @@ export class FacturaComponent implements OnInit {
   facturaDetalleEntregado="";
   serieBuscar:string="";
 
-  seleccionAuxiliar: boolean =false;
+  seleccionDependiente: boolean =false;
   seleccionFacturar: boolean =false;
 
   firstFormGroup: FormGroup;
@@ -90,19 +90,19 @@ export class FacturaComponent implements OnInit {
   @ViewChild('paginatorFacturas') paginatorFacturas: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
-  constructor(private clienteService: ClienteService, private auxiliarService: AuxiliarService, private sesionService: SesionService, 
+  constructor(private clienteService: ClienteService, private dependienteService: DependienteService, private sesionService: SesionService, 
     private impuestoService: ImpuestoService, private facturaDetalleService: FacturaDetalleService, private router: Router,
     private facturaService: FacturaService, private productoService: ProductoService, private bodegaService: BodegaService, private tabService: TabService,
     private modalService: NgbModal, private _formBuilder: FormBuilder) { }
 
   factura: Factura = new Factura();
-  auxiliarBuscar: Auxiliar=new Auxiliar();
+  dependienteBuscar: Dependiente=new Dependiente();
 
   columnasDetalleFactura: string[] = ['nombre', 'medida', 'cantidad', 'valor', 'descuento', 'descuentoPorcentaje', 'impuesto', 'total', 'entregado', 'acciones'];
   dataFacturaDetalle = new MatTableDataSource<FacturaDetalle>(this.factura.facturaDetalles);
 
   clientes: Cliente[]=[];
-  auxiliares: Auxiliar[]= [];
+  dependientes: Dependiente[]= [];
   productos: Producto[] = [];
   bodegas: Bodega[]=[];
 
@@ -118,9 +118,9 @@ export class FacturaComponent implements OnInit {
   primerCelularCliente: string = "";
   primerCorreoCliente: string = "";
 
-  primerTelefonoAuxiliar: string = "";
-  primerCelularAuxiliar: string = "";
-  primerCorreoAuxiliar: string = "";
+  primerTelefonoDependiente: string = "";
+  primerCelularDependiente: string = "";
+  primerCorreoDependiente: string = "";
 
   primerTelefonoClienteFactura: string = "";
   primerCelularClienteFactura: string = "";
@@ -128,11 +128,11 @@ export class FacturaComponent implements OnInit {
 
   caracteristica: string="";
 
-  habilitarSeleccionAuxiliar=true;
+  habilitarSeleccionDependiente=true;
   habilitarFacturar=false;
 
-  auxiliarIndice=-1;
-  auxiliar: Auxiliar= null;
+  dependienteIndice=-1;
+  dependiente: Dependiente= null;
 
   saldoTotal=0;
   saldo=0;
@@ -383,7 +383,7 @@ export class FacturaComponent implements OnInit {
   seleccionarRazonSocialCliente() {
     let cliente_id=undefined;
     cliente_id=this.seleccionRazonSocialCliente.value.id;
-    this.auxiliarBuscar.cliente.id=cliente_id;
+    this.dependienteBuscar.cliente.id=cliente_id;
     this.clienteService.obtenerAsync(cliente_id).then(
       res => {
         Object.assign(this.factura.cliente, res.resultado as Cliente);
@@ -398,7 +398,7 @@ export class FacturaComponent implements OnInit {
           this.primerCorreoCliente = this.factura.cliente.correos[0].email;
         if (this.factura.cliente.identificacion!="9999999999999")
         {
-          this.habilitarSeleccionAuxiliar=false;
+          this.habilitarSeleccionDependiente=false;
           this.habilitarFacturar=false;
           this.seleccionFacturar=false;
         } else {
@@ -412,9 +412,9 @@ export class FacturaComponent implements OnInit {
       },
       err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
     );
-    this.auxiliarService.consultarClienteID(this.auxiliarBuscar).subscribe(
+    this.dependienteService.consultarClienteID(this.dependienteBuscar).subscribe(
       res => {
-        this.auxiliares = res.resultado as Auxiliar[]
+        this.dependientes = res.resultado as Dependiente[]
       },
       err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
     );
@@ -423,7 +423,7 @@ export class FacturaComponent implements OnInit {
   seleccionarIdentificacionCliente() {
     let cliente_id=undefined;
     cliente_id=this.seleccionIdentificacionCliente.value.id;
-    this.auxiliarBuscar.cliente.id=cliente_id;
+    this.dependienteBuscar.cliente.id=cliente_id;
     this.clienteService.obtenerAsync(cliente_id).then(
       res => {
         Object.assign(this.factura.cliente,res.resultado as Cliente);
@@ -438,7 +438,7 @@ export class FacturaComponent implements OnInit {
           this.primerCorreoCliente = this.factura.cliente.correos[0].email;
         if (this.factura.cliente.identificacion!="9999999999999")
         {
-          this.habilitarSeleccionAuxiliar=false;
+          this.habilitarSeleccionDependiente=false;
           this.habilitarFacturar=false;
           this.seleccionFacturar=false;
         } else {
@@ -451,9 +451,9 @@ export class FacturaComponent implements OnInit {
       },
       err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
     );
-    this.auxiliarService.consultarClienteID(this.auxiliarBuscar).subscribe(
+    this.dependienteService.consultarClienteID(this.dependienteBuscar).subscribe(
       res => {
-        this.auxiliares = res.resultado as Auxiliar[]
+        this.dependientes = res.resultado as Dependiente[]
       },
       err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
     );
@@ -499,25 +499,25 @@ export class FacturaComponent implements OnInit {
     );
   }
 
-  asignarAuxiliar(content: any){
+  asignarDependiente(content: any){
     if (this.factura.cliente.id!=undefined){
       this.modalService.open(content, { size: 'lg' }).result.then((result) => {
         if (result == "confirmar") {
-            this.factura.auxiliar=this.auxiliares[this.auxiliarIndice];
-            if (this.factura.auxiliar.telefonos.length>0)
-              this.primerTelefonoAuxiliar = this.factura.auxiliar.telefonos[0].numero;
-            if (this.factura.auxiliar.celulares.length>0)
-              this.primerCelularAuxiliar = this.factura.auxiliar.celulares[0].numero;
-            if (this.factura.auxiliar.correos.length>0)
-              this.primerCorreoAuxiliar = this.factura.auxiliar.correos[0].email;
+            this.factura.dependiente=this.dependientes[this.dependienteIndice];
+            if (this.factura.dependiente.telefonos.length>0)
+              this.primerTelefonoDependiente = this.factura.dependiente.telefonos[0].numero;
+            if (this.factura.dependiente.celulares.length>0)
+              this.primerCelularDependiente = this.factura.dependiente.celulares[0].numero;
+            if (this.factura.dependiente.correos.length>0)
+              this.primerCorreoDependiente = this.factura.dependiente.correos[0].email;
         } else {
-          this.seleccionAuxiliar=false;
+          this.seleccionDependiente=false;
         }
       }, (reason) => {
         console.log(`Dismissed ${this.getDismissReason(reason)}`);
       });
     } else {
-      this.factura.auxiliar=null;
+      this.factura.dependiente=null;
     }
   }
   asignarFacturar(){
@@ -533,8 +533,8 @@ export class FacturaComponent implements OnInit {
     
   }
   
-  seleccionarAuxiliar(i: number){
-    this.auxiliarIndice=i;
+  seleccionarDependiente(i: number){
+    this.dependienteIndice=i;
   }
 
   seleccionarHabilitar() {
@@ -822,10 +822,10 @@ export class FacturaComponent implements OnInit {
     }
   }
 
-  auxiliarBuscarAccion(){
-    this.auxiliarService.consultarRazonSocial(this.auxiliarBuscar).subscribe(
+  dependienteBuscarAccion(){
+    this.dependienteService.consultarRazonSocial(this.dependienteBuscar).subscribe(
       res => {
-        this.auxiliares = res.resultado as Auxiliar[]
+        this.dependientes = res.resultado as Dependiente[]
       },
       err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.message })
     );

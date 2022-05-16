@@ -1,5 +1,5 @@
 import { Cliente } from '../modelos/cliente';
-import { Auxiliar } from '../modelos/auxiliar';
+import { Dependiente } from './dependiente';
 import { Usuario } from '../modelos/usuario';
 import { FacturaDetalle } from './factura-detalle';
 import { Sesion } from './sesion';
@@ -37,7 +37,7 @@ export class Factura {
 
   cliente: Cliente;
   clienteFactura:Cliente;
-  auxiliar: Auxiliar;
+  dependiente: Dependiente;
   vendedor: Usuario;
   sesion: Sesion;
   facturaDetalles: FacturaDetalle[];
@@ -50,7 +50,7 @@ export class Factura {
     this.eliminado=false;
     this.cliente=new Cliente();
     this.clienteFactura=new Cliente();
-    this.auxiliar=null;
+    this.dependiente=null;
     this.vendedor=new Usuario();
     this.facturaDetalles=[];
     this.comentario="";

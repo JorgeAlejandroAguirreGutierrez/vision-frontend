@@ -11,7 +11,7 @@ import { PuntoVenta } from '../modelos/punto-venta';
 import { Telefono } from '../modelos/telefono';
 import { Celular } from '../modelos/celular';
 import { Correo } from '../modelos/correo';
-import { Auxiliar } from './auxiliar';
+import { Dependiente } from './dependiente';
 import { RetencionCliente } from './retencion-cliente';
 import { TipoPago } from './tipo-pago';
 import { FormaPago } from './forma-pago';
@@ -40,7 +40,7 @@ export class Cliente {
     origenIngreso: OrigenIngreso;
     obligadoContabilidad=false;
 
-    auxiliares: Auxiliar[];
+    dependientes: Dependiente[];
     telefonos: Telefono[];
     celulares: Celular[];
     correos: Correo[];
@@ -65,7 +65,7 @@ export class Cliente {
         this.telefonos=[];
         this.celulares=[];
         this.correos=[];
-        this.auxiliares=[];
+        this.dependientes=[];
         this.retencionesCliente=[];
         this.retencionesCliente.push(new RetencionCliente());
         this.retencionesCliente.push(new RetencionCliente());

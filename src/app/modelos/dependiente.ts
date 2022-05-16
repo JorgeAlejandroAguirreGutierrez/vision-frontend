@@ -1,10 +1,10 @@
 import { Cliente } from './cliente';
 import { Direccion } from './direccion';
-import { TelefonoAuxiliar } from './telefono-auxiliar';
-import { CelularAuxiliar } from './celular-auxiliar';
-import { CorreoAuxiliar } from './correo-auxiliar';
+import { TelefonoDependiente } from './telefono-dependiente';
+import { CelularDependiente } from './celular-dependiente';
+import { CorreoDependiente } from './correo-dependiente';
 
-export class Auxiliar {
+export class Dependiente {
     id: number;
     codigo: string;
     razonSocial: string;
@@ -12,9 +12,9 @@ export class Auxiliar {
     eliminado: boolean;
     direccion:Direccion;
     cliente: Cliente;
-    telefonos: TelefonoAuxiliar[];
-    celulares: CelularAuxiliar[];
-    correos: CorreoAuxiliar[];
+    telefonos: TelefonoDependiente[];
+    celulares: CelularDependiente[];
+    correos: CorreoDependiente[];
 
     constructor(){
         this.codigo="";
