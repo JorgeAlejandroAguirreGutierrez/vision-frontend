@@ -7,6 +7,8 @@ import { Empresa } from '../../modelos/empresa';
 import { environment } from '../../../environments/environment';
 import { TabService } from "../services/tab.service";
 import { FooterComponent } from "../footer/footer.component";
+import * as util from '../../util';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-menu',
@@ -72,11 +74,11 @@ export class MenuComponent implements OnInit {
   ico_usuarios: string = environment.prefijo_url_imagenes+"iconos/icotutoriales.png";
   ico_configuracion: string = environment.prefijo_url_imagenes+"iconos/icoconfiguraciones.png";
 
-  constructor(private sesionService: SesionService, private empresaService: EmpresaService, public tabService: TabService) { }
+  constructor(private sesionService: SesionService, private empresaService: EmpresaService, public tabService: TabService, private router: Router) { }
 
   ngOnInit() {
+    this.sesion=util.validarSesion(this.sesionService, this.router);
     this.obtenerEmpresa();
-    this.obtenerSesion();
     // FINANCIERO
     this.permiso_clientes=this.obtenerPermiso('CLIENTES');
     this.permiso_proveedores=this.obtenerPermiso('PROVEEDORES');
@@ -101,16 +103,11 @@ export class MenuComponent implements OnInit {
     this.permiso_configuraciones=this.obtenerPermiso('CONFIGURACIONES');
   }
 
-  obtenerSesion(){
-    this.sesion=this.sesionService.getSesion();
-  }
-
   obtenerEmpresa(){
-    let empresa=new Empresa();
-    empresa.id=1;
-    this.empresaService.obtener(empresa).subscribe(
+    let empresaId=1;
+    this.empresaService.obtener(empresaId).subscribe(
       res => {
-        empresa= res.resultado as Empresa
+        let empresa= res.resultado as Empresa
         this.url_logo=environment.prefijo_url_imagenes+"logos/"+empresa.logo;
         this.nombre_empresa=empresa.razonSocial;
       }

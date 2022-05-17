@@ -4,4 +4,5 @@ export class DatoAdicional {
     tipo: string
     nombre: string;
     abreviatura: string;
+    estado: string;
 }

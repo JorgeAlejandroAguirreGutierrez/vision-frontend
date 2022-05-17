@@ -4,8 +4,12 @@ import { Establecimiento } from '../../modelos/establecimiento';
 import Swal from 'sweetalert2';
 import { TabService } from '../../componentes/services/tab.service';
 import * as constantes from '../../constantes';
+import * as util from '../../util';
 import { Empresa } from '../../modelos/empresa';
 import { EmpresaService } from '../../servicios/empresa.service';
+import { Sesion } from 'src/app/modelos/sesion';
+import { SesionService } from 'src/app/servicios/sesion.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-establecimiento',
@@ -16,10 +20,12 @@ export class EstablecimientoComponent implements OnInit {
 
   establecimiento= new Establecimiento();
   empresas: Empresa[]=[];
+  sesion: Sesion;
 
-  constructor(private tabService: TabService,private establecimientoService: EstablecimientoService, private empresaService: EmpresaService) { }
+  constructor(private tabService: TabService,private establecimientoService: EstablecimientoService, private empresaService: EmpresaService, private sesionService: SesionService, private router: Router) { }
 
   ngOnInit() {
+    this.sesion=util.validarSesion(this.sesionService, this.router);
     this.construirEstablecimiento();
     this.consultarEmpresas();
   }
@@ -33,10 +39,10 @@ export class EstablecimientoComponent implements OnInit {
   consultarEmpresas(){
     this.empresaService.consultar().subscribe(
       res => {
-        Swal.fire(constantes.exito, res.mensaje, constantes.exito_swal);
+        Swal.fire({ icon: constantes.exito_swal, title: constantes.exito, text: res.mensaje });
         this.empresas=res.resultado as Empresa[];
       },
-      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.message })
+      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
 
@@ -45,10 +51,10 @@ export class EstablecimientoComponent implements OnInit {
       event.preventDefault();
     this.establecimientoService.crear(this.establecimiento).subscribe(
       res => {
-        Swal.fire(constantes.exito, res.mensaje, constantes.exito_swal);
+        Swal.fire({ icon: constantes.exito_swal, title: constantes.exito, text: res.mensaje });
         this.nuevo(null);
       },
-      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.message })
+      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
 
@@ -57,10 +63,10 @@ export class EstablecimientoComponent implements OnInit {
       event.preventDefault();
     this.establecimientoService.actualizar(this.establecimiento).subscribe(
       res => {
-        Swal.fire(constantes.exito, res.mensaje, constantes.exito_swal);
+        Swal.fire({ icon: constantes.exito_swal, title: constantes.exito, text: res.mensaje });
         this.establecimiento=res.resultado as Establecimiento;
       },
-      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.message })
+      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
 
@@ -73,7 +79,7 @@ export class EstablecimientoComponent implements OnInit {
           Object.assign(this.establecimiento, res.resultado as Establecimiento);
           this.establecimientoService.enviar(0);
         },
-        err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.message })
+        err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
       );
     }
   }

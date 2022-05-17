@@ -1,6 +1,7 @@
 import { Component, OnInit, Type } from '@angular/core';
 import Swal from 'sweetalert2';
 import * as constantes from '../../../constantes';
+import * as util from '../../../util';
 import { MovimientoContableService } from '../../../servicios/movimiento-contable.service';
 import { MovimientoContable } from '../../../modelos/movimiento-contable';
 
@@ -8,6 +9,9 @@ import { ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
+import { Sesion } from 'src/app/modelos/sesion';
+import { SesionService } from 'src/app/servicios/sesion.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-tabla-movimiento-contable',
@@ -18,17 +22,18 @@ export class TablaMovimientoContableComponent implements OnInit {
 
   movimientoContable: MovimientoContable= new MovimientoContable();
   movimientosContables: MovimientoContable[];
+  sesion: Sesion=null;
 
   columnas: any[] = [
     { nombreColumna: 'id', cabecera: 'ID', celda: (row: MovimientoContable) => `${row.id}`},
     { nombreColumna: 'inventario', cabecera: 'Inventario', celda: (row: MovimientoContable) => `${row.codigo}`},
-    { nombreColumna: 'costo_venta', cabecera: 'Costo Venta', celda: (row: MovimientoContable) => `${row.costoVenta}`},
-    { nombreColumna: 'devolucion_compra', cabecera: 'Dev. Compra', celda: (row: MovimientoContable) => `${row.devolucionCompra}`},
-    { nombreColumna: 'descuento_compra', cabecera: 'Des. Compra', celda: (row: MovimientoContable) => `${row.descuentoCompra}`},
+    { nombreColumna: 'costo_Venta', cabecera: 'Costo Venta', celda: (row: MovimientoContable) => `${row.costoVenta}`},
+    { nombreColumna: 'devolucionCompra', cabecera: 'Dev. Compra', celda: (row: MovimientoContable) => `${row.devolucionCompra}`},
+    { nombreColumna: 'descuentoCompra', cabecera: 'Des. Compra', celda: (row: MovimientoContable) => `${row.descuentoCompra}`},
     { nombreColumna: 'venta', cabecera: 'Venta', celda: (row: MovimientoContable) => `${row.venta}`},
-    { nombreColumna: 'devolucion_venta', cabecera: 'Dev. Venta', celda: (row: MovimientoContable) => `${row.devolucionVenta}`},
-    { nombreColumna: 'descuento_venta', cabecera: 'Des. Venta', celda: (row: MovimientoContable) => `${row.descuentoVenta}`},
-    { nombreColumna: 'devolucion_costo_venta', cabecera: 'Dev Const Venta', celda: (row: MovimientoContable) => `${row.devolucionCostoVenta}`},
+    { nombreColumna: 'devolucionVenta', cabecera: 'Dev. Venta', celda: (row: MovimientoContable) => `${row.devolucionVenta}`},
+    { nombreColumna: 'descuentoVenta', cabecera: 'Des. Venta', celda: (row: MovimientoContable) => `${row.descuentoVenta}`},
+    { nombreColumna: 'devolucionCostoVenta', cabecera: 'Dev Const Venta', celda: (row: MovimientoContable) => `${row.devolucionCostoVenta}`},
   ];
   columnasMovimientoContable: string[]  = this.columnas.map(titulo => titulo.nombreColumna);
   dataSourceMovimientoContable: MatTableDataSource<MovimientoContable>;
@@ -37,9 +42,10 @@ export class TablaMovimientoContableComponent implements OnInit {
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
-  constructor(private movimientoContableService: MovimientoContableService) { }
+  constructor(private sesionService: SesionService, private router: Router, private movimientoContableService: MovimientoContableService) { }
 
   ngOnInit() {
+    this.sesion=util.validarSesion(this.sesionService, this.router);
     this.consultar();
   }
 
@@ -59,7 +65,7 @@ export class TablaMovimientoContableComponent implements OnInit {
         this.dataSourceMovimientoContable.paginator = this.paginator;
         this.dataSourceMovimientoContable.sort = this.sort;
       },
-      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.message })
+      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
 

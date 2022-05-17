@@ -1,10 +1,6 @@
 import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
 //import { TableDataSource, ValidatorService } from 'angular4-material-table';
-
-import { ComboValidatorService } from './combo-validator.service'; 
-import { ComponenteValidatorService } from '../tabla-componente/componente-validator.service'; 
 import { Combo } from '../combo'; //clase
-import { Componente } from '../componente'; //clase
 
 @Component({
   selector: 'app-tabla-combo',

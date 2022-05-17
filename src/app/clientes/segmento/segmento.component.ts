@@ -1,5 +1,6 @@
 import { Component, OnInit, HostListener, ElementRef, Renderer2  } from '@angular/core';
 import * as constantes from '../../constantes';
+import * as util from '../../util';
 import Swal from 'sweetalert2';
 
 import { Sesion } from '../../modelos/sesion';
@@ -11,6 +12,7 @@ import { ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
+import { Router } from '@angular/router';
 
 
 @Component({
@@ -20,117 +22,111 @@ import { MatTableDataSource } from '@angular/material/table';
 })
 export class SegmentoComponent implements OnInit {
 
-  sesion: Sesion;
-  estadoActivo: string = constantes.estadoActivo;
-  estadoInactivo: string = constantes.estadoInactivo;
+  abrirPanelNuevoSegmento = true;
+  abrirPanelAdminSegmento = false;
 
-  abrirPanelNuevoSegmento: boolean = true;
-  abrirPanelAdminSegmento: boolean = false;
-  deshabilitarEditarSegmento: boolean = false;
-
-  segmento = new Segmento();
+  sesion: Sesion=null;
+  segmento= new Segmento();
   segmentos: Segmento[];
 
   columnasSegmento: any[] = [
     { nombreColumna: 'id', cabecera: 'ID', celda: (row: Segmento) => `${row.id}` },
     { nombreColumna: 'codigo', cabecera: 'Código', celda: (row: Segmento) => `${row.codigo}` },
     { nombreColumna: 'descripcion', cabecera: 'Descripción', celda: (row: Segmento) => `${row.descripcion}` },
-    { nombreColumna: 'margen_ganancia', cabecera: 'Ganancia %', celda: (row: Segmento) => `${row.margenGanancia} %` },
+    { nombreColumna: 'margen_ganancia', cabecera: 'Margen Ganancia %', celda: (row: Segmento) => `${row.margenGanancia} %` },
     { nombreColumna: 'estado', cabecera: 'Estado', celda: (row: Segmento) => `${row.estado}` }
   ];
   cabeceraSegmento: string[] = this.columnasSegmento.map(titulo => titulo.nombreColumna);
   dataSourceSegmento: MatTableDataSource<Segmento>;
-  clickedSegmento = new Set<Segmento>();
-
-  @ViewChild('inputFiltroSegmento') inputFiltroSegmento: ElementRef;
+  clickedRows = new Set<Segmento>();
+  
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
-  constructor(private renderer: Renderer2, private segmentoService: SegmentoService, private sesionService: SesionService) { }
+  constructor(private segmentoService: SegmentoService,
+    private sesionService: SesionService,private router: Router) { }
 
   ngOnInit() {
-    this.sesion = this.sesionService.getSesion();
+    this.sesion=util.validarSesion(this.sesionService, this.router);
     this.consultar();
   }
-
+  
   @HostListener('window:keypress', ['$event'])
   keyEvent($event: KeyboardEvent) {
     if (($event.shiftKey || $event.metaKey) && $event.key == 'G') //SHIFT + G
       this.crear(null);
     if (($event.shiftKey || $event.metaKey) && $event.key == 'N') //ASHIFT + N
-      this.limpiar();
+      this.nuevo(null);
     if (($event.shiftKey || $event.metaKey) && $event.key == 'E') // SHIFT + E
       this.eliminar(null);
   }
 
-  editar() {
-    this.deshabilitarEditarSegmento = false;
-  }
-
-  limpiar() {
-    this.editar();
+  nuevo(event) {
+    if (event!=null)
+      event.preventDefault();
     this.segmento = new Segmento();
-    this.clickedSegmento.clear();
   }
 
   crear(event) {
-    if (event != null)
+    if (event!=null)
       event.preventDefault();
     this.segmentoService.crear(this.segmento).subscribe(
       res => {
-        Swal.fire(constantes.exito, res.mensaje, constantes.exito_swal);
+        Swal.fire({ icon: constantes.exito_swal, title: constantes.exito, text: res.mensaje });
+        this.segmento=res.resultado as Segmento;
         this.consultar();
-        this.limpiar();
-        this.abrirPanelAdminSegmento = true;
       },
-      err => Swal.fire(constantes.error, err.error.mensaje, constantes.error_swal)
+      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
 
-  actualizar() {
+  actualizar(event) {
+    if (event!=null)
+      event.preventDefault();
     this.segmentoService.actualizar(this.segmento).subscribe(
       res => {
-        Swal.fire(constantes.exito, res.mensaje, constantes.exito_swal);
-        this.segmento = res.resultado as Segmento;
-        this.limpiar();
-        this.llenarDataSourceSegmento(this.segmentos);
+        Swal.fire({ icon: constantes.exito_swal, title: constantes.exito, text: res.mensaje });
+        this.segmento=res.resultado as Segmento;
+        this.consultar();
       },
-      err => Swal.fire(constantes.error, err.error.mensaje, constantes.error_swal)
+      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
 
-  eliminar(segmento: Segmento) {
-    this.segmentoService.eliminar(segmento).subscribe(
+  eliminar(event:any) {
+    if (event!=null)
+      event.preventDefault();
+    this.segmentoService.eliminarPersonalizado(this.segmento).subscribe(
       res => {
-        Swal.fire(constantes.exito, res.mensaje, constantes.exito_swal);
-        this.segmento = res.resultado as Segmento
+        Swal.fire({ icon: constantes.exito_swal, title: constantes.exito, text: res.mensaje });
+        this.nuevo(null);
+        this.consultar();
       },
-      err => Swal.fire(constantes.error, err.error.mensaje, constantes.error_swal)
+      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
-
-  eliminarEstado() {
-    this.segmento.estado = constantes.estadoEliminado;
-    //console.log(this.segmento);
-    this.actualizar();
-  }
-
+  
   consultar() {
     this.segmentoService.consultar().subscribe(
       res => {
-        this.segmentos = res.resultado as Segmento[];
-        this.llenarDataSourceSegmento(this.segmentos);
+        this.segmentos = res.resultado as Segmento[]
+        this.dataSourceSegmento = new MatTableDataSource(this.segmentos);
+        this.dataSourceSegmento.paginator = this.paginator;
+        this.dataSourceSegmento.sort = this.sort;
       },
-      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.message })
+      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
 
-  llenarDataSourceSegmento(segmento : Segmento[]){
-    this.dataSourceSegmento = new MatTableDataSource(segmento);
-    this.dataSourceSegmento.filterPredicate = (data: Segmento, filter: string): boolean =>
-      data.codigo.toUpperCase().includes(filter) || data.descripcion.toUpperCase().includes(filter) || data.estado.toUpperCase().includes(filter);
-      this.dataSourceSegmento.paginator = this.paginator;
-      this.dataSourceSegmento.sort = this.sort;
+  seleccion(segmento: Segmento) {
+    if (!this.clickedRows.has(segmento)){
+      this.clickedRows.clear();
+      this.clickedRows.add(segmento);
+      this.segmento = segmento;
+    } else {
+      this.clickedRows.clear();
+      this.segmento = new Segmento();
+    }
   }
 
   filtroSegmento(event: Event) {
@@ -138,27 +134,6 @@ export class SegmentoComponent implements OnInit {
     this.dataSourceSegmento.filter = filterValue.trim().toUpperCase();
     if (this.dataSourceSegmento.paginator) {
       this.dataSourceSegmento.paginator.firstPage();
-    }
-  }
-
-  borrarFiltroSegmento(){
-    //this.textoFiltroSegmento = '';
-    this.renderer.setProperty(this.inputFiltroSegmento.nativeElement, 'value', '');
-    //this.inputFiltroSegmento.nativeElement.value = '';
-    this.dataSourceSegmento.filter = '';
-  }
-
-  seleccion(segmentoSeleccionado: Segmento) {
-    if (!this.clickedSegmento.has(segmentoSeleccionado)) {
-      this.clickedSegmento.clear();
-      this.clickedSegmento.add(segmentoSeleccionado);
-      this.segmento = segmentoSeleccionado;
-      this.deshabilitarEditarSegmento = true;
-      this.abrirPanelNuevoSegmento = true;
-    } else {
-      this.clickedSegmento.clear();
-      this.segmento = new Segmento();
-      this.deshabilitarEditarSegmento = false;
     }
   }
 }

@@ -82,4 +82,13 @@ export class CalificacionClienteService {
       })
     );
   }
+
+  eliminarPersonalizado(calificacionCliente: CalificacionCliente): Observable<Respuesta> {
+    return this.http.delete(environment.host+util.ruta+util.calificacionCliente+util.personalizado + '/' + calificacionCliente.id, util.options).pipe(
+      map(response => response as Respuesta),
+      catchError(err => {
+        return throwError(()=>err);
+      })
+    );
+  }
 }

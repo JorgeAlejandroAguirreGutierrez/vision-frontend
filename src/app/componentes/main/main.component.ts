@@ -5,7 +5,10 @@ import { SidebarItemsService } from '../../componentes/services/sidebaritems.ser
 import { Tab } from "../../modelos/tab.model";
 import { MenuComponent } from '../menu/menu.component';
 import { SidebarItem } from "../../modelos/sidebar-item.model";
-
+import { Sesion } from 'src/app/modelos/sesion';
+import * as util from '../../util';
+import { SesionService } from 'src/app/servicios/sesion.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-main',
@@ -33,9 +36,12 @@ export class MainComponent implements OnInit {
 
   opciones = new Array<SidebarItem>();
 
-  constructor(private tabService: TabService, private sidebarService: SidebarService, private sidebaritemsService: SidebarItemsService) { }
+  sesion: Sesion;
+
+  constructor(private tabService: TabService, private sidebarService: SidebarService, private sidebaritemsService: SidebarItemsService, private sesionService: SesionService, private router: Router) { }
 
   ngOnInit() {
+    this.sesion=util.validarSesion(this.sesionService, this.router);
     this.tabService.addNewTab1(MenuComponent, 'MENU');
     //una vez que te suscribes al evento observable tabSub se sigue recibiendo los tabs1 del tab.Service
     //para desuscribirse se necesita un evento take   

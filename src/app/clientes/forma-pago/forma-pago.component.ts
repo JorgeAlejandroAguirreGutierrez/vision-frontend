@@ -2,8 +2,7 @@ import { Component, OnInit, HostListener, Type } from '@angular/core';
 import { Router } from '@angular/router';
 import Swal from 'sweetalert2';
 import * as constantes from '../../constantes';
-
-import { TabService } from '../../componentes/services/tab.service';
+import * as util from '../../util';
 import { Sesion } from '../../modelos/sesion';
 import { SesionService } from '../../servicios/sesion.service';
 import { FormaPago } from '../../modelos/forma-pago';
@@ -22,61 +21,49 @@ import { MatTableDataSource } from '@angular/material/table';
 
 export class FormaPagoComponent implements OnInit {
 
-  ComponenteFormaPago: Type<any> = FormaPagoComponent;
-
-  sesion: Sesion;
   abrirPanelNuevoFormaPago = true;
   abrirPanelAdminFormaPago = false;
 
+  sesion: Sesion=null;
   formaPago= new FormaPago();
-  formas_pagos: FormaPago[];
-  formaPagoActualizar: FormaPago= new FormaPago();
-  formaPagoBuscar: FormaPago=new FormaPago();
+  formasPagos: FormaPago[];
 
-  columnasFormaPago: string[] = ['id', 'codigo', 'descripcion', 'abreviatura', 'estado'];
+  columnasFormaPago: any[] = [
+    { nombreColumna: 'id', cabecera: 'ID', celda: (row: FormaPago) => `${row.id}` },
+    { nombreColumna: 'codigo', cabecera: 'Código', celda: (row: FormaPago) => `${row.codigo}` },
+    { nombreColumna: 'descripcion', cabecera: 'Descripción', celda: (row: FormaPago) => `${row.descripcion}` },
+    { nombreColumna: 'abreviatura', cabecera: 'Abreviatura', celda: (row: FormaPago) => `${row.abreviatura}` },
+    { nombreColumna: 'estado', cabecera: 'Estado', celda: (row: FormaPago) => `${row.estado}` }
+  ];
+  cabeceraFormaPago: string[] = this.columnasFormaPago.map(titulo => titulo.nombreColumna);
   dataSourceFormaPago: MatTableDataSource<FormaPago>;
   clickedRows = new Set<FormaPago>();
   
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
-  constructor(private tabService: TabService,private formaPagoService: FormaPagoService,
+  constructor(private formaPagoService: FormaPagoService,
     private sesionService: SesionService,private router: Router) { }
 
   ngOnInit() {
-    this.sesion= this.sesionService.getSesion();
-    this.construirFormaPago();
+    this.sesion=util.validarSesion(this.sesionService, this.router);
     this.consultar();
   }
-
+  
   @HostListener('window:keypress', ['$event'])
   keyEvent($event: KeyboardEvent) {
-    if (($event.shiftKey || $event.metaKey) && $event.key == "G") //SHIFT + G
+    if (($event.shiftKey || $event.metaKey) && $event.key == 'G') //SHIFT + G
       this.crear(null);
-    if (($event.shiftKey || $event.metaKey) && $event.key == "N") //ASHIFT + N
+    if (($event.shiftKey || $event.metaKey) && $event.key == 'N') //ASHIFT + N
       this.nuevo(null);
-    if (($event.shiftKey || $event.metaKey) && $event.key == "E") // SHIFT + E
+    if (($event.shiftKey || $event.metaKey) && $event.key == 'E') // SHIFT + E
       this.eliminar(null);
   }
 
   nuevo(event) {
     if (event!=null)
       event.preventDefault();
-  }
-
-  borrar(event){
-    if (event!=null)
-      event.preventDefault();
-      if(this.formaPago.id!=0){
-        let id=this.formaPago.id;
-        let codigo=this.formaPago.codigo;
-        this.formaPago=new FormaPago();
-        this.formaPago.id=id;
-        this.formaPago.codigo=codigo;
-      }
-      else{
-        this.formaPago=new FormaPago();
-      }
+    this.formaPago = new FormaPago();
   }
 
   crear(event) {
@@ -84,11 +71,11 @@ export class FormaPagoComponent implements OnInit {
       event.preventDefault();
     this.formaPagoService.crear(this.formaPago).subscribe(
       res => {
-        Swal.fire(constantes.exito, res.mensaje, constantes.exito_swal);
-        this.nuevo(null);
+        Swal.fire({ icon: constantes.exito_swal, title: constantes.exito, text: res.mensaje });
+        this.formaPago=res.resultado as FormaPago;
         this.consultar();
       },
-      err => Swal.fire(constantes.error, err.error.mensaje, constantes.error_swal)
+      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
 
@@ -97,92 +84,44 @@ export class FormaPagoComponent implements OnInit {
       event.preventDefault();
     this.formaPagoService.actualizar(this.formaPago).subscribe(
       res => {
-        Swal.fire(constantes.exito, res.mensaje, constantes.exito_swal);
+        Swal.fire({ icon: constantes.exito_swal, title: constantes.exito, text: res.mensaje });
         this.formaPago=res.resultado as FormaPago;
         this.consultar();
       },
-      err => Swal.fire(constantes.error, err.error.mensaje, constantes.error_swal)
+      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
 
-  actualizarLeer(event){
+  eliminar(event:any) {
     if (event!=null)
       event.preventDefault();
-      this.abrirPanelNuevoFormaPago = true;
-      this.abrirPanelAdminFormaPago = false;
-    if (this.formaPagoActualizar.id != 0){
-      this.formaPago={... this.formaPagoActualizar};
-      this.formaPagoActualizar=new FormaPago();
-    }
-  }
-
-  eliminar(forma_pago: FormaPago) {
-    this.formaPagoService.eliminar(forma_pago).subscribe(
+    this.formaPagoService.eliminarPersonalizado(this.formaPago).subscribe(
       res => {
-        Swal.fire(constantes.exito, res.mensaje, constantes.exito_swal);
-        this.formaPago=res.resultado as FormaPago
+        Swal.fire({ icon: constantes.exito_swal, title: constantes.exito, text: res.mensaje });
+        this.nuevo(null);
         this.consultar();
       },
-      err => Swal.fire(constantes.error, err.error.mensaje, constantes.error_swal)
+      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
-
-  eliminarLeer(event) {
-    if (event!=null)
-      event.preventDefault();
-    this.formaPagoService.eliminar(this.formaPago).subscribe(
-      res => {
-        Swal.fire(constantes.exito, res.mensaje, constantes.exito_swal);
-        this.formaPago = res.resultado as FormaPago
-        this.consultar();
-      },
-      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.message })
-    );
-  }
-
-  async construirFormaPago() {
-    let forma_pago_id=0;
-    this.formaPagoService.currentMessage.subscribe(message => forma_pago_id = message);
-    if (forma_pago_id!= 0) {
-      await this.formaPagoService.obtenerAsync(forma_pago_id).then(
-        res => {
-          Object.assign(this.formaPago, res.resultado as FormaPago);
-          this.formaPagoService.enviar(0);
-        },
-        err => Swal.fire(constantes.error, err.error.mensaje, constantes.error_swal)
-      );
-    }
-  }
-
+  
   consultar() {
     this.formaPagoService.consultar().subscribe(
       res => {
-        this.formas_pagos = res.resultado as FormaPago[]
-        this.dataSourceFormaPago = new MatTableDataSource(this.formas_pagos);
+        this.formasPagos = res.resultado as FormaPago[]
+        this.dataSourceFormaPago = new MatTableDataSource(this.formasPagos);
         this.dataSourceFormaPago.paginator = this.paginator;
         this.dataSourceFormaPago.sort = this.sort;
       },
-      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.message })
+      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
 
-  buscar(event) {
-    if (event!=null)
-      event.preventDefault();
-    this.formaPagoService.buscar(this.formaPagoBuscar).subscribe(
-      res => {
-        this.formas_pagos = res.resultado as FormaPago[]
-      },
-      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.message })
-    );
-  }
-
-  seleccion(formaPagoSeleccionada: FormaPago) {
-    if (!this.clickedRows.has(formaPagoSeleccionada)){
+  seleccion(calificacionSeleccionada: FormaPago) {
+    if (!this.clickedRows.has(calificacionSeleccionada)){
       this.clickedRows.clear();
-      this.clickedRows.add(formaPagoSeleccionada);
-      this.formaPago = formaPagoSeleccionada;
-      this.formaPagoActualizar=formaPagoSeleccionada;
+      this.clickedRows.add(calificacionSeleccionada);
+      this.formaPago = calificacionSeleccionada;
     } else {
       this.clickedRows.clear();
       this.formaPago = new FormaPago();
@@ -195,18 +134,6 @@ export class FormaPagoComponent implements OnInit {
     if (this.dataSourceFormaPago.paginator) {
       this.dataSourceFormaPago.paginator.firstPage();
     }
-  }
-
-  cambiar_buscar_codigo(){
-    this.buscar(null);
-  }
-
-  cambiar_buscar_descripcion(){
-    this.buscar(null);
-  }
-
-  cambiar_buscar_abreviatura(){
-    this.buscar(null);
   }
 
 }

@@ -3,6 +3,10 @@ import { Modelo } from '../../modelos/modelo';
 import { ModeloService } from '../../servicios/modelo.service';
 import Swal from 'sweetalert2';
 import * as constantes from '../../constantes';
+import { Sesion } from 'src/app/modelos/sesion';
+import * as util from '../../util';
+import { SesionService } from 'src/app/servicios/sesion.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-exportar',
@@ -13,9 +17,11 @@ export class ExportarComponent implements OnInit {
 
   modelos: Modelo[]=[];
   modelo: Modelo= new Modelo();
-  constructor(private modeloService: ModeloService) { }
+  sesion: Sesion;
+  constructor(private modeloService: ModeloService, private sesionService: SesionService, private router: Router) { }
 
   ngOnInit() {
+    this.sesion=util.validarSesion(this.sesionService, this.router);
     this.consultaModelos();
   }
   consultaModelos(){
@@ -25,19 +31,19 @@ export class ExportarComponent implements OnInit {
           this.modelos = res.resultado as Modelo[]
         }
       },
-      err => Swal.fire(constantes.error, err.error.mensaje, constantes.error_swal)
+      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
   exportar(){
     this.modeloService.exportar(this.modelo).subscribe(
       res => {
         if (res.resultado!=null && res.resultado) {
-            Swal.fire(constantes.exito, res.mensaje, constantes.exito_swal);
+          Swal.fire({ icon: constantes.exito_swal, title: constantes.exito, text: res.mensaje });
         } else{
-          Swal.fire(constantes.error, res.mensaje, constantes.error_swal)
+          Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: res.mensaje });
         }
       },
-      err => Swal.fire(constantes.error, err.error.mensaje, constantes.error_swal)
+      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
 

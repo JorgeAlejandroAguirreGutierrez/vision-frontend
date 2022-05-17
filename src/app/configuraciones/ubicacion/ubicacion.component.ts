@@ -1,10 +1,16 @@
-import { Component, OnInit,ViewChild, HostListener, Input } from '@angular/core';
-import {NgbModal, ModalDismissReasons} from '@ng-bootstrap/ng-bootstrap';
+import { Component, OnInit, HostListener, ViewChild } from '@angular/core';
 import Swal from 'sweetalert2';
 import { UbicacionService } from '../../servicios/ubicacion.service';
 import { Ubicacion } from '../../modelos/ubicacion';
 import { TabService } from '../../componentes/services/tab.service';
 import * as constantes from '../../constantes';
+import * as util from '../../util';
+import { Sesion } from 'src/app/modelos/sesion';
+import { SesionService } from 'src/app/servicios/sesion.service';
+import { Router } from '@angular/router';
+import { MatTableDataSource } from '@angular/material/table';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSort } from '@angular/material/sort';
 
 @Component({
   selector: 'app-ubicacion',
@@ -13,12 +19,44 @@ import * as constantes from '../../constantes';
 })
 export class UbicacionComponent implements OnInit {
 
-  ubicacion= new Ubicacion();
+  abrirPanelNuevoUbicacion = true;
+  abrirPanelAdminUbicacion = false;
 
-  constructor(private tabService: TabService,private ubicacionService: UbicacionService) { }
+  sesion: Sesion=null;
+  ubicacion= new Ubicacion();
+  ubicaciones: Ubicacion[];
+
+  columnasUbicacion: any[] = [
+    { nombreColumna: 'id', cabecera: 'ID', celda: (row: Ubicacion) => `${row.id}` },
+    { nombreColumna: 'codigo', cabecera: 'Código', celda: (row: Ubicacion) => `${row.codigo}` },
+    { nombreColumna: 'codigoNorma', cabecera: 'Código Norma', celda: (row: Ubicacion) => `${row.codigoNorma}` },
+    { nombreColumna: 'provincia', cabecera: 'Provincia', celda: (row: Ubicacion) => `${row.provincia}` },
+    { nombreColumna: 'canton', cabecera: 'Canton', celda: (row: Ubicacion) => `${row.canton}` },
+    { nombreColumna: 'parroquia', cabecera: 'Parroquia', celda: (row: Ubicacion) => `${row.parroquia}` },
+  ];
+  cabeceraUbicacion: string[] = this.columnasUbicacion.map(titulo => titulo.nombreColumna);
+  dataSourceUbicacion: MatTableDataSource<Ubicacion>;
+  clickedRows = new Set<Ubicacion>();
+  
+  @ViewChild(MatPaginator) paginator: MatPaginator;
+  @ViewChild(MatSort) sort: MatSort;
+
+  constructor(private ubicacionService: UbicacionService,
+    private sesionService: SesionService,private router: Router) { }
 
   ngOnInit() {
-    this.construirUbicacion();
+    this.sesion=util.validarSesion(this.sesionService, this.router);
+    this.consultar();
+  }
+  
+  @HostListener('window:keypress', ['$event'])
+  keyEvent($event: KeyboardEvent) {
+    if (($event.shiftKey || $event.metaKey) && $event.key == 'G') //SHIFT + G
+      this.crear(null);
+    if (($event.shiftKey || $event.metaKey) && $event.key == 'N') //ASHIFT + N
+      this.nuevo(null);
+    if (($event.shiftKey || $event.metaKey) && $event.key == 'E') // SHIFT + E
+      this.eliminar(null);
   }
 
   nuevo(event) {
@@ -32,10 +70,11 @@ export class UbicacionComponent implements OnInit {
       event.preventDefault();
     this.ubicacionService.crear(this.ubicacion).subscribe(
       res => {
-        Swal.fire(constantes.exito, res.mensaje, constantes.exito_swal);
-        this.nuevo(null);
+        Swal.fire({ icon: constantes.exito_swal, title: constantes.exito, text: res.mensaje });
+        this.ubicacion=res.resultado as Ubicacion;
+        this.consultar();
       },
-      err => Swal.fire(constantes.error, err.error.mensaje, constantes.error_swal)
+      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
 
@@ -44,44 +83,55 @@ export class UbicacionComponent implements OnInit {
       event.preventDefault();
     this.ubicacionService.actualizar(this.ubicacion).subscribe(
       res => {
-        Swal.fire(constantes.exito, res.mensaje, constantes.exito_swal);
+        Swal.fire({ icon: constantes.exito_swal, title: constantes.exito, text: res.mensaje });
         this.ubicacion=res.resultado as Ubicacion;
+        this.consultar();
       },
-      err => Swal.fire(constantes.error, err.error.mensaje, constantes.error_swal)
+      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
 
-  eliminar(ubicacion: Ubicacion) {
-    this.ubicacionService.eliminar(ubicacion).subscribe(
+  eliminar(event:any) {
+    if (event!=null)
+      event.preventDefault();
+    this.ubicacionService.eliminar(this.ubicacion).subscribe(
       res => {
-        Swal.fire(constantes.exito, res.mensaje, constantes.exito_swal);
-        this.ubicacion=res.resultado as Ubicacion
+        Swal.fire({ icon: constantes.exito_swal, title: constantes.exito, text: res.mensaje });
+        this.nuevo(null);
+        this.consultar();
       },
-      err => Swal.fire(constantes.error, err.error.mensaje, constantes.error_swal)
+      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
+    );
+  }
+  
+  consultar() {
+    this.ubicacionService.consultar().subscribe(
+      res => {
+        this.ubicaciones = res.resultado as Ubicacion[]
+        this.dataSourceUbicacion = new MatTableDataSource(this.ubicaciones);
+        this.dataSourceUbicacion.paginator = this.paginator;
+        this.dataSourceUbicacion.sort = this.sort;
+      },
+      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
 
-  async construirUbicacion() {
-    let ubicacionId=0;
-    this.ubicacionService.currentMessage.subscribe(message => ubicacionId = message);
-    if (ubicacionId!= 0) {
-      await this.ubicacionService.obtenerAsync(ubicacionId).then(
-        res => {
-          Object.assign(this.ubicacion, res.resultado as Ubicacion);
-          this.ubicacionService.enviar(0);
-        },
-        err => Swal.fire(constantes.error, err.error.mensaje, constantes.error_swal)
-      );
+  seleccion(ubicacion: Ubicacion) {
+    if (!this.clickedRows.has(ubicacion)){
+      this.clickedRows.clear();
+      this.clickedRows.add(ubicacion);
+      this.ubicacion = ubicacion;
+    } else {
+      this.clickedRows.clear();
+      this.ubicacion = new Ubicacion();
     }
   }
 
-  @HostListener('window:keypress', ['$event'])
-  keyEvent($event: KeyboardEvent) {
-    if (($event.shiftKey || $event.metaKey) && $event.keyCode == 71) //SHIFT + G
-      this.crear(null);
-    if (($event.shiftKey || $event.metaKey) && $event.keyCode == 78) //ASHIFT + N
-      this.nuevo(null);
-    if (($event.shiftKey || $event.metaKey) && $event.keyCode == 69) // SHIFT + E
-      this.eliminar(null);
+  filtroUbicacion(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.dataSourceUbicacion.filter = filterValue.trim().toUpperCase();
+    if (this.dataSourceUbicacion.paginator) {
+      this.dataSourceUbicacion.paginator.firstPage();
+    }
   }
 }

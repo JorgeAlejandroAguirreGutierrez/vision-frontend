@@ -3,6 +3,10 @@ import { ModeloService } from '../../servicios/modelo.service';
 import { Modelo } from '../../modelos/modelo';
 import Swal from 'sweetalert2';
 import * as constantes from '../../constantes';
+import { SesionService } from 'src/app/servicios/sesion.service';
+import { Router } from '@angular/router';
+import { Sesion } from 'src/app/modelos/sesion';
+import * as util from '../../util';
 
 @Component({
   selector: 'app-importar',
@@ -11,15 +15,16 @@ import * as constantes from '../../constantes';
 })
 export class ImportarComponent implements OnInit {
 
-  constructor(private modeloService: ModeloService) { }
-
   modelos: Modelo[]=[];
   modelo: Modelo= new Modelo();
   archivo: File= null;
-
   cargando: boolean=false;
+  sesion: Sesion;
+
+  constructor(private modeloService: ModeloService, private sesionService: SesionService,private router: Router) { }
 
   ngOnInit() {
+    this.sesion=util.validarSesion(this.sesionService, this.router);
     this.consultaModelos();
   }
 
@@ -30,7 +35,7 @@ export class ImportarComponent implements OnInit {
           this.modelos = res.resultado as Modelo[]
         }
       },
-      err => Swal.fire(constantes.error, err.error.mensaje, constantes.error_swal)
+      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
   cargarArchivo(archivos: FileList){
@@ -41,14 +46,14 @@ export class ImportarComponent implements OnInit {
     this.modeloService.importar(this.archivo, this.modelo).subscribe(
       res => {
         if (res.resultado!=null && res.resultado) {
-            Swal.fire(constantes.exito, res.mensaje, constantes.exito_swal);
+          Swal.fire({ icon: constantes.exito_swal, title: constantes.exito, text: res.mensaje });
         } else{
-          Swal.fire(constantes.error, res.mensaje, constantes.error_swal)
+          Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: res.mensaje });
         }
         this.cargando=false;
       },
       err => {
-        Swal.fire(constantes.error, err.error.mensaje, constantes.error_swal);
+        Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
         this.cargando=false;
       }
     );

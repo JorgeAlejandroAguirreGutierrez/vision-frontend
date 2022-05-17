@@ -75,6 +75,15 @@ export class FormaPagoService {
     );
   }
 
+  eliminarPersonalizado(formaPago: FormaPago): Observable<Respuesta> {
+    return this.http.delete(environment.host+util.ruta+util.formaPago+util.personalizado + '/' + formaPago.id, util.options).pipe(
+      map(response => response as Respuesta),
+      catchError(err => {
+        return throwError(()=>err);
+      })
+    );
+  }
+
   buscar(formaPago: FormaPago): Observable<Respuesta> {
     return this.http.post(environment.host + util.ruta + util.formaPago+util.buscar, formaPago, util.options).pipe(
       map(response => response as Respuesta),

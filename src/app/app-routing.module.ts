@@ -18,17 +18,13 @@ import { MenuComponent } from './componentes/menu/menu.component';
 import { DatoAdicionalComponent } from './configuraciones/dato-adicional/dato-adicional.component';
 import { EmpresaComponent } from './configuraciones/empresa/empresa.component';
 import { UbicacionComponent } from './configuraciones/ubicacion/ubicacion.component';
-import { UbicacionLeerComponent } from './configuraciones/ubicacion/ubicacion-leer/ubicacion-leer.component';
 
 // Módulo de Usuarios
 import { SesionComponent } from './usuarios/sesion/sesion.component';
 import { PermisoComponent } from './usuarios/permiso/permiso.component';
 import { UsuarioComponent } from './usuarios/usuario/usuario.component';
-import { UsuarioMostrarComponent } from './usuarios/usuario/usuario-leer/usuario-leer.component';
 import { EstablecimientoComponent } from './usuarios/establecimiento/establecimiento.component';
-import { EstablecimientoMostrarComponent } from './usuarios/establecimiento/establecimiento-leer/establecimiento-leer.component';
 import { PuntoVentaComponent } from './usuarios/punto-venta/punto-venta.component';
-import { PuntoVentaLeerComponent } from './usuarios/punto-venta/punto-.venta-leer/punto-venta-leer.component';
 import { PerfilComponent } from './usuarios/perfil/perfil.component';
 
 // Molulo de Clientes
@@ -38,17 +34,14 @@ import { GrupoClienteComponent } from './clientes/grupo-cliente/grupo-cliente.co
 import { OrigenIngresoComponent } from './clientes/origen-ingreso/origen-ingreso.component';
 import { CalificacionClienteComponent } from './clientes/calificacion-cliente/calificacion-cliente.component';
 import { EstadoCivilComponent } from './configuraciones/estado-civil/estado-civil.component';
-import { EstadoCivilLeerComponent } from './configuraciones/estado-civil/estado-civil-leer/estado-civil-leer.component';
 import { GeneroComponent } from './configuraciones/genero/genero.component';
 import { PlazoCreditoComponent } from './clientes/plazo-credito/plazo-credito.component';
 import { ImpuestoComponent } from './configuraciones/impuesto/impuesto.component';
 import { FormaPagoComponent } from './clientes/forma-pago/forma-pago.component';
 import { TipoPagoComponent } from './configuraciones/tipo-pago/tipo-pago.component';
-import { TipoPagoLeerComponent } from './configuraciones/tipo-pago/tipo-pago-leer/tipo-pago-leer.component';
 
 //Módulo de Inventarios
 import { BodegaComponent } from './inventarios/bodega/bodega.component';
-import { BodegaLeerComponent } from './inventarios/bodega/bodega-leer/bodega-leer.component';
 import { MedidaComponent } from './inventarios/medida/medida.component';
 import { GrupoProductoComponent, DialogoMovimientoContableComponent } from './inventarios/grupo-producto/grupo-producto.component';
 import { TablaGrupoProductoComponent } from './inventarios/grupo-producto/tabla-grupo-producto/tabla-grupo-producto.component';
@@ -70,18 +63,17 @@ import { TransportistaComponent } from './entregas/transportista/transportista.c
 import { VehiculoTransporteComponent } from './entregas/vehiculo-transporte/vehiculo-transporte.component';
 
 //Módulo de Recaudaciones
-import { FinanciamientoComponent } from './comprobantes/recaudacion/financiamiento/financiamiento.component';
-import { RecaudacionComponent } from './comprobantes/recaudacion/recaudacion/recaudacion.component';
-import { BancoComponent } from './comprobantes/recaudacion/banco/banco.component';
-import { DepositoTransferenciaComponent } from './comprobantes/recaudacion/deposito-transferencia/deposito-transferencia.component';
-import { TarjetaCreditoComponent } from './comprobantes/recaudacion/tarjeta-credito/tarjeta-credito.component';
-import { TarjetaDebitoComponent } from './comprobantes/recaudacion/tarjeta-debito/tarjeta-debito.component';
-import { CompensacionComponent } from './comprobantes/recaudacion/compensacion/compensacion.component';
-import { ChequeComponent } from './comprobantes/recaudacion/cheque/cheque.component';
+import { FinanciamientoComponent } from './recaudacion/financiamiento/financiamiento.component';
+import { RecaudacionComponent } from './recaudacion/recaudacion/recaudacion.component';
+import { BancoComponent } from './recaudacion/banco/banco.component';
+import { DepositoTransferenciaComponent } from './recaudacion/deposito-transferencia/deposito-transferencia.component';
+import { TarjetaCreditoComponent } from './recaudacion/tarjeta-credito/tarjeta-credito.component';
+import { TarjetaDebitoComponent } from './recaudacion/tarjeta-debito/tarjeta-debito.component';
+import { CompensacionComponent } from './recaudacion/compensacion/compensacion.component';
+import { ChequeComponent } from './recaudacion/cheque/cheque.component';
 
 // Módulo de Comprobantes
 import { FacturaComponent } from './comprobantes/factura/factura.component';
-import { FacturaLeerComponent } from './comprobantes/factura/factura-leer/factura-leer.component';
 import { EgresoComponent } from './comprobantes/egreso/egreso.component';
 import { PedidoComponent } from './comprobantes/pedido/pedido.component';
 import { ProformaComponent } from './comprobantes/proforma/proforma.component';
@@ -103,7 +95,7 @@ import { TablesComponent } from './componentes/pages/tables/tables.component';
 import { FormsComponent } from './componentes/pages/forms/forms.component';
 import { TypographyComponent } from './componentes/pages/typography/typography.component';
 import { MapsComponent } from './componentes/pages/maps/maps.component';
-import { NotificationsComponent } from './componentes/pages/notifications/notifications.component';
+import { TipoRetencionComponent } from './configuraciones/tipo-retencion/tipo-retencion.component';
 
 
 const routes: Routes = [
@@ -114,16 +106,12 @@ const routes: Routes = [
   {path: 'menu', component: MenuComponent},
   // Rutas del Modulo de configuración
   {path: 'cliente/ubicacion', component: UbicacionComponent},
-  {path: 'cliente/ubicacion-mostrar', component: UbicacionLeerComponent},
   {path: 'cliente/empresa', component: EmpresaComponent},
   {path: 'cliente/datoadicional', component: DatoAdicionalComponent},
   // Rutas para el modulo de usuarios
   {path: 'usuario', component: UsuarioComponent},
-  {path: 'usuario-mostrar', component: UsuarioMostrarComponent},
   {path: 'usuario/establecimiento', component: EstablecimientoComponent},
-  {path: 'usuario/establecimiento-mostrar', component: EstablecimientoMostrarComponent},
   {path: 'usuario/puntoventa', component: PuntoVentaComponent},
-  {path: 'usuario/puntoventa-mostrar', component: PuntoVentaLeerComponent},
   // Rutas para el modulo de clientes
   {path: 'cliente', component: ClienteComponent},
   {path: 'cliente/plazocredito', component: PlazoCreditoComponent},
@@ -131,12 +119,10 @@ const routes: Routes = [
   {path: 'cliente/grupocliente', component: GrupoClienteComponent},
   {path: 'cliente/genero', component: GeneroComponent},
   {path: 'cliente/estadocivil', component: EstadoCivilComponent},
-  {path: 'cliente/estadocivil-leer', component: EstadoCivilLeerComponent},
   {path: 'cliente/calificacioncliente', component: CalificacionClienteComponent},
   {path: 'cliente/origeningreso', component: OrigenIngresoComponent},
   {path: 'cliente/formapago', component: FormaPagoComponent},
   {path: 'cliente/tipopago', component: TipoPagoComponent},
-  {path: 'cliente/tipopago-leer', component: TipoPagoLeerComponent},
   // Rutas para el Modulo de inventarios
   {path: 'producto', component: ProductoComponent},
   {path: 'inventario/medida', component: MedidaComponent},
@@ -153,23 +139,20 @@ const routes: Routes = [
   {path: 'factura-compra', component: FacturaCompraComponent},
   // Rutas para el módulo de comprobantes
   {path: 'factura', component: FacturaComponent},
-  {path: 'factura-leer', component: FacturaLeerComponent},
   // Estos no se usa, borrar al final
   {path: 'dashboard', component: DashboardComponent},
   {path: 'forms', component: FormsComponent},
   {path: 'tables', component: TablesComponent},
   {path: 'typography', component: TypographyComponent},
   {path: 'maps', component: MapsComponent},
-  //{path: 'notifications', component: NotificationsComponent},
   {path: 'proforma', component: ProformaComponent},
-  //{path: '**',   redirectTo: '/iniciosesion', pathMatch: 'full'},
 ];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes, { relativeLinkResolution: 'legacy' })],
   exports: [RouterModule],
   entryComponents: [ImportarComponent, ExportarComponent, CambioCredencialesComponent, DialogoMovimientoContableComponent, 
-    DialogoGrupoProductoComponent, UsuarioComponent, PuntoVentaComponent,
+    DialogoGrupoProductoComponent, UsuarioComponent, PuntoVentaComponent, TipoRetencionComponent,
     EstablecimientoComponent, ClienteComponent, GrupoClienteComponent, CalificacionClienteComponent, EstadoCivilComponent, 
     GeneroComponent, OrigenIngresoComponent, PlazoCreditoComponent, FormaPagoComponent, TipoPagoComponent, BodegaComponent, 
     DialogComponente, EquivalenciaMedidaComponent, MedidaComponent, FacturaComponent, ProformaComponent
@@ -191,18 +174,15 @@ export const RoutingComponents = [
   CambioCredencialesComponent,
   // configuración
   UbicacionComponent,
-  UbicacionLeerComponent,
   EmpresaComponent,
   DatoAdicionalComponent,
+  TipoRetencionComponent,
   //Usuarios
   SesionComponent,
   PermisoComponent,
   UsuarioComponent,
-  UsuarioMostrarComponent,
   EstablecimientoComponent,
-  EstablecimientoMostrarComponent,
   PuntoVentaComponent,
-  PuntoVentaLeerComponent,
   PerfilComponent,
   // Clientes
   ClienteComponent,
@@ -213,11 +193,9 @@ export const RoutingComponents = [
   OrigenIngresoComponent,
   CalificacionClienteComponent,
   EstadoCivilComponent,
-  EstadoCivilLeerComponent,
   GeneroComponent,
   FormaPagoComponent,
   TipoPagoComponent,
-  TipoPagoLeerComponent,
   // Inventarios
   ProductoComponent,
   DialogoGrupoProductoComponent,
@@ -225,7 +203,6 @@ export const RoutingComponents = [
   DialogoMovimientoContableComponent,
   TablaGrupoProductoComponent,
   BodegaComponent,
-  BodegaLeerComponent,
   MedidaComponent,
   KardexComponent,
   ProveedorProductoComponent,
@@ -253,7 +230,6 @@ export const RoutingComponents = [
   ChequeComponent,
   //Comprobantes
   FacturaComponent,
-  FacturaLeerComponent,
   EgresoComponent,
   PedidoComponent,
   ProformaComponent,
@@ -271,6 +247,5 @@ export const RoutingComponents = [
   TablesComponent,
   FormsComponent,
   TypographyComponent,
-  MapsComponent,
-  //NotificationsComponent
+  MapsComponent
 ];

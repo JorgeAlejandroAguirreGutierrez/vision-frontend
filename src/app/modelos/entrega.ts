@@ -2,7 +2,7 @@ import { Direccion } from './direccion';
 import { Transportista } from './transportista';
 import { Factura } from './factura';
 
-export class GuiaRemision {
+export class Entrega {
     id: number;
     codigo: string;
     fecha: Date;
@@ -12,7 +12,7 @@ export class GuiaRemision {
     celular: string;
     correo: string;
     referencia: string;
-    estado: boolean;
+    estado: string;
     transportista: Transportista;
     factura: Factura;
     inhabilitar: boolean;
@@ -26,7 +26,7 @@ export class GuiaRemision {
         this.telefono="";
         this.celular="";
         this.correo="";
-        this.estado=false;
+        this.estado="PENDIENTE";
         this.transportista=new Transportista();
         this.factura=new Factura();
         this.inhabilitar=false;

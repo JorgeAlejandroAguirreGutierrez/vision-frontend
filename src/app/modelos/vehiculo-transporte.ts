@@ -9,7 +9,6 @@ export class VehiculoTransporte {
     color:string;
     fabricacion:string;
     numero:string;
-    activo:boolean;
 
     constructor(){
         this.id=0;
@@ -22,7 +21,6 @@ export class VehiculoTransporte {
         this.color="";
         this.fabricacion="";
         this.numero="";
-        this.activo=false;
     }
 
 }

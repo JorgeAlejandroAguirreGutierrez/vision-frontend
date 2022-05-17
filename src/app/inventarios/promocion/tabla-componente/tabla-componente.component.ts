@@ -1,7 +1,4 @@
 import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
-//import { TableDataSource, ValidatorService } from 'angular4-material-table';
-
-import { ComponenteValidatorService } from './componente-validator.service'; 
 import { Componente } from '../componente'; //clase
 
 @Component({

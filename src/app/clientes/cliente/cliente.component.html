@@ -1,25 +1,24 @@
 <nav class="navbar-light nav-fijo">
     <ul class="navbar-nav">
         <li class="nav-item">
-            <a class="nav-link" title="Nuevo" role="button" (click)="nuevoCliente($event)">
+            <a class="nav-link" title="Nuevo" role="button" (click)="nuevo($event)">
                 <mat-icon>note_add</mat-icon>
             </a>
         </li>
-        <li class="nav-item">
-            <a class="nav-link" title="Borrar" role="button" (click)="$event.preventDefault()">
-                <mat-icon>backspace</mat-icon>
+        <li class="nav-item" *ngIf="cliente.id==0">
+            <a class="nav-link" title="Guardar" role="button" (click)="crear($event)">
+                <mat-icon>save</mat-icon>
+            </a>
+        </li>
+        <li class="nav-item" *ngIf="cliente.id!=0">
+            <a class="nav-link" title="Actualizar" role="button" (click)="actualizar($event)">
+                <mat-icon>update</mat-icon>
             </a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" title="Guardar" role="button" (click)="crearCliente($event)"
-                *ngIf="cliente.id==0; else block_actualizar">
-                <mat-icon>save</mat-icon>
+            <a class="nav-link" title="Eliminar" role="button" (click)="eliminar($event)">
+                <mat-icon>delete</mat-icon>
             </a>
-            <ng-template #block_actualizar>
-                <a class="nav-link" title="Actualizar" role="button" (click)="actualizar($event)">
-                    <mat-icon>save</mat-icon>
-                </a>
-            </ng-template>
         </li>
     </ul>
 </nav>
@@ -269,7 +268,7 @@
                             <mat-form-field appearance="standard">
                                 <mat-label>Correo electrónico</mat-label>
                                 <input matInput type="text " [(ngModel)]="correo.email"
-                                    oninput="this.value = this.value.toLowerCase()" class="form-control-sm "
+                                    oninput="this.value = this.value.toUpperCase()" class="form-control-sm "
                                     (change)="validarCorreo()" placeholder="ejemplo@siice.com">
                             </mat-form-field>
                         </div>
@@ -283,7 +282,7 @@
                                 <mat-form-field appearance="standard">
                                     <mat-label>Correo electrónico</mat-label>
                                     <input matInput type="text " [value]="correo.email"
-                                        oninput="this.value = this.value.toLowerCase()" class="form-control-sm "
+                                        oninput="this.value = this.value.toUpperCase()" class="form-control-sm" disabled
                                         (change)="validarCorreo()" placeholder="ejemplo@siice.com">
                                 </mat-form-field>
                             </div>
@@ -325,20 +324,20 @@
                     <div class="col-10">
                         <mat-form-field appearance="standard">
                             <mat-label>Nombre</mat-label>
-                            <input matInput type="text" [(ngModel)]="auxiliar.razonSocial"
-                                (change)="cambiarRazonSocialAuxiliar()"
+                            <input matInput type="text" [(ngModel)]="dependiente.razonSocial"
+                                (change)="cambiarRazonSocialDependiente()"
                                 oninput="this.value = this.value.toUpperCase()" class="form-control-sm">
-                            <button mat-button *ngIf="auxiliar.razonSocial" matSuffix mat-icon-button
-                                (click)="auxiliar.razonSocial=''">
+                            <button mat-button *ngIf="dependiente.razonSocial" matSuffix mat-icon-button
+                                (click)="dependiente.razonSocial=''">
                                 <mat-icon>close</mat-icon>
                             </button>
                         </mat-form-field>
                         <mat-form-field appearance="standard">
                             <mat-label>Direccion</mat-label>
-                            <input matInput type="text" [(ngModel)]="auxiliar.direccion.direccion"
+                            <input matInput type="text" [(ngModel)]="dependiente.direccion.direccion"
                                 oninput="this.value = this.value.toUpperCase()" class="form-control-sm">
-                            <button mat-button *ngIf="auxiliar.direccion.direccion" matSuffix mat-icon-button
-                                (click)="auxiliar.direccion.direccion=''">
+                            <button mat-button *ngIf="dependiente.direccion.direccion" matSuffix mat-icon-button
+                                (click)="dependiente.direccion.direccion=''">
                                 <mat-icon>close</mat-icon>
                             </button>
                         </mat-form-field>
@@ -346,10 +345,10 @@
                             <div class="col-4">
                                 <mat-form-field appearance="standard">
                                     <mat-label>Provincia</mat-label>
-                                    <mat-select type="text" [(ngModel)]="auxiliarProvincia"
-                                        (selectionChange)="seleccionarAuxiliarProvincia($event.value)"
+                                    <mat-select type="text" [(ngModel)]="dependienteProvincia"
+                                        (selectionChange)="seleccionarDependienteProvincia($event.value)"
                                         class="form-control-sm">
-                                        <mat-option *ngFor="let provincia of auxiliarProvincias"
+                                        <mat-option *ngFor="let provincia of dependienteProvincias"
                                             [value]="provincia.provincia">
                                             {{provincia.provincia}}
                                         </mat-option>
@@ -359,10 +358,10 @@
                             <div class="col-4">
                                 <mat-form-field appearance="standard">
                                     <mat-label>Canton</mat-label>
-                                    <mat-select type="text" [(ngModel)]="auxiliarCanton"
-                                        (selectionChange)="seleccionarAuxiliarCanton($event.value)"
+                                    <mat-select type="text" [(ngModel)]="dependienteCanton"
+                                        (selectionChange)="seleccionarDependienteCanton($event.value)"
                                         class="form-control-sm">
-                                        <mat-option *ngFor="let canton of auxiliarCantones" [value]="canton.canton">
+                                        <mat-option *ngFor="let canton of dependienteCantones" [value]="canton.canton">
                                             {{canton.canton}}
                                         </mat-option>
                                     </mat-select>
@@ -371,9 +370,9 @@
                             <div class="col-4">
                                 <mat-form-field appearance="standard">
                                     <mat-label>Parroquia</mat-label>
-                                    <mat-select type="text" [(ngModel)]="auxiliarParroquia" class="form-control-sm"
-                                        (selectionChange)="seleccionarAuxiliarParroquia($event.value)">
-                                        <mat-option *ngFor="let parroquia of auxiliarParroquias"
+                                    <mat-select type="text" [(ngModel)]="dependienteParroquia" class="form-control-sm"
+                                        (selectionChange)="seleccionarDependienteParroquia($event.value)">
+                                        <mat-option *ngFor="let parroquia of dependienteParroquias"
                                             [value]="parroquia.parroquia">
                                             {{parroquia.parroquia}}
                                         </mat-option>
@@ -401,24 +400,24 @@
                             <mat-form-field appearance="standard">
                                 <mat-label>Teléfono</mat-label>
                                 <b matPrefix>+593 </b>
-                                <input matInput type="tel" [(ngModel)]="auxiliarTelefono.numero"
-                                    class="form-control-sm" (change)="validarTelefonoAuxiliar()"
-                                    [disabled]="habilitarCelularTelefonoCorreoAuxiliar" oninput="this.value = this.value.replace
+                                <input matInput type="tel" [(ngModel)]="dependienteTelefono.numero" placeholder="03-2999-123"
+                                    class="form-control-sm" (change)="validarTelefonoDependiente()" 
+                                    [disabled]="habilitarCelularTelefonoCorreoDependiente" oninput="this.value = this.value.replace
                                             ( /^(\d{2})(\d{4})(\d{3})$/, '$1-$2-$3')">
                             </mat-form-field>
                         </div>
                         <div class="col-3 iconos">
                             <button mat-icon-button>
-                                <mat-icon (click)="crearTelefonoAuxiliar()">add</mat-icon>
+                                <mat-icon (click)="crearTelefonoDependiente()">add</mat-icon>
                             </button>
                         </div>
-                        <ng-container *ngFor="let auxiliarTelefono of auxiliar.telefonos; let i= index">
+                        <ng-container *ngFor="let dependienteTelefono of dependiente.telefonos; let i= index">
                             <div class="col-9">
                                 <mat-form-field appearance="standard">
                                     <mat-label>Teléfono</mat-label>
                                     <b matPrefix>+593 &nbsp;</b>
-                                    <input matInput type="tel" [value]="auxiliarTelefono.numero"
-                                        class="form-control-sm" disabled (change)="validarTelefonoAuxiliar()"
+                                    <input matInput type="tel" [value]="dependienteTelefono.numero"
+                                        class="form-control-sm" disabled (change)="validarTelefonoDependiente()"
                                         placeholder="03-2999-123" oninput="this.value = this.value.replace
                                         ( /^(\d{2})(\d{4})(\d{3})$/, '$1-$2-$3')">
                                 </mat-form-field>
@@ -428,7 +427,7 @@
                                     <mat-icon class="iconos-peque">edit</mat-icon>
                                 </button>
                                 <button mat-icon-button>
-                                    <mat-icon class="iconos-peque" (click)="eliminarTelefonoAuxiliar(i)">close
+                                    <mat-icon class="iconos-peque" (click)="eliminarTelefonoDependiente(i)">close
                                     </mat-icon>
                                 </button>
                             </div>
@@ -439,25 +438,25 @@
                             <mat-form-field appearance="standard">
                                 <mat-label>Celular</mat-label>
                                 <b matPrefix>+593 </b>
-                                <input matInput type="tel" [(ngModel)]="auxiliarCelular.numero" class="form-control-sm"
-                                    (change)="validarCelularAuxiliar()"
-                                    [disabled]="habilitarCelularTelefonoCorreoAuxiliar" placeholder="09-9999-1234"
+                                <input matInput type="tel" [(ngModel)]="dependienteCelular.numero" class="form-control-sm"
+                                    (change)="validarCelularDependiente()"
+                                    [disabled]="habilitarCelularTelefonoCorreoDependiente" placeholder="09-9999-1234"
                                     oninput="this.value = this.value.replace
                                         ( /^(\d{2})(\d{4})(\d{4})$/, '$1-$2-$3')">
                             </mat-form-field>
                         </div>
                         <div class="col-3 iconos">
                             <button mat-icon-button>
-                                <mat-icon (click)="crearCelularAuxiliar()">add</mat-icon>
+                                <mat-icon (click)="crearCelularDependiente()">add</mat-icon>
                             </button>
                         </div>
-                        <ng-container *ngFor="let auxiliarCelular of auxiliar.celulares; let i=index ">
+                        <ng-container *ngFor="let dependienteCelular of dependiente.celulares; let i=index ">
                             <div class="col-9">
                                 <mat-form-field appearance="standard">
                                     <mat-label>Celular</mat-label>
                                     <b matPrefix>+593 &nbsp;</b>
-                                    <input matInput type="tel" [value]="auxiliarCelular.numero" class="form-control-sm"
-                                        disabled (change)="validarCelularAuxiliar()" placeholder="09-9999-1234"
+                                    <input matInput type="tel" [value]="dependienteCelular.numero" class="form-control-sm"
+                                        disabled (change)="validarCelularDependiente()" placeholder="09-9999-1234"
                                         oninput="this.value = this.value.replace
                                         ( /^(\d{2})(\d{4})(\d{4})$/, '$1-$2-$3')">
                                 </mat-form-field>
@@ -467,7 +466,7 @@
                                     <mat-icon class="iconos-peque">edit</mat-icon>
                                 </button>
                                 <button mat-icon-button>
-                                    <mat-icon class="iconos-peque" (click)="eliminarCelularAuxiliar(i)">close
+                                    <mat-icon class="iconos-peque" (click)="eliminarCelularDependiente(i)">close
                                     </mat-icon>
                                 </button>
                             </div>
@@ -477,25 +476,25 @@
                         <div class="col-9">
                             <mat-form-field appearance="standard">
                                 <mat-label>Correo electrónico</mat-label>
-                                <input matInput type="text" [(ngModel)]="auxiliarCorreo.email"
+                                <input matInput type="text" [(ngModel)]="dependienteCorreo.email"
                                     oninput="this.value = this.value.toLowerCase()" class="form-control-sm"
-                                    (change)="validarCorreoAuxiliar()"
-                                    [disabled]="habilitarCelularTelefonoCorreoAuxiliar"
+                                    (change)="validarCorreoDependiente()"
+                                    [disabled]="habilitarCelularTelefonoCorreoDependiente"
                                     placeholder="ejemplo@siice.com">
                             </mat-form-field>
                         </div>
                         <div class="col-3 iconos">
                             <button mat-icon-button>
-                                <mat-icon (click)="crearCorreoAuxiliar()">add</mat-icon>
+                                <mat-icon (click)="crearCorreoDependiente()">add</mat-icon>
                             </button>
                         </div>
-                        <ng-container *ngFor="let auxiliarCorreo of auxiliar.correos; let i=index ">
+                        <ng-container *ngFor="let dependienteCorreo of dependiente.correos; let i=index ">
                             <div class="col-9">
                                 <mat-form-field appearance="standard">
                                     <mat-label>Correo electrónico</mat-label>
-                                    <input matInput type="text " [value]="auxiliarCorreo.email"
+                                    <input matInput type="text " [value]="dependienteCorreo.email"
                                         oninput="this.value = this.value.toLowerCase()" class="form-control-sm "
-                                        (change)="validarCorreoAuxiliar()" placeholder="ejemplo@siice.com">
+                                        (change)="validarCorreoDependiente()" placeholder="ejemplo@siice.com">
                                 </mat-form-field>
                             </div>
                             <div class="col-3 iconos">
@@ -503,7 +502,7 @@
                                     <mat-icon class="iconos-peque">edit</mat-icon>
                                 </button>
                                 <button mat-icon-button>
-                                    <mat-icon class="iconos-peque" (click)="eliminarCorreoAuxiliar(i)">close
+                                    <mat-icon class="iconos-peque" (click)="eliminarCorreoDependiente(i)">close
                                     </mat-icon>
                                 </button>
                             </div>
@@ -518,10 +517,10 @@
                     </iframe>
                 </div>
                 <div class="col-1 iconos linea-vertical centrar-vertical">
-                    <mat-icon (click)="crearAuxiliar()">add</mat-icon>
+                    <mat-icon (click)="agregarDependiente()">add</mat-icon>
                 </div>
             </div>
-            <div *ngIf="cliente.auxiliares.length > 0">
+            <div *ngIf="cliente.dependientes.length > 0">
                 <mat-divider></mat-divider>
                 <mat-form-field appearance="standard">
                     <mat-label>Buscar dependientes</mat-label>
@@ -530,32 +529,19 @@
                 <div class="mat-elevation-z8">
                     <table mat-table [dataSource]="dataSourceDependiente" matSort>
                         <!-- Columnas Dinamicas -->
-                        <ng-container *ngFor="let columna of columnasDependiente"
-                            [matColumnDef]="columna.nombreColumna">
+                        <ng-container *ngFor="let columna of columnasDependiente" [matColumnDef]="columna.nombreColumna">
                             <th mat-header-cell *matHeaderCellDef mat-sort-header> {{ columna.cabecera }} </th>
-                            <ng-container *ngIf="columna.nombreColumna=='acciones'">
-                                <td mat-cell *matCellDef="let row">
-                                    <button *ngIf="!editing" mat-icon-button color="primary"
-                                        (click)="editarAuxiliar(row)">
-                                        <i class="fa fa-pencil mat-icon"></i>
-                                    </button>
-                                    <button *ngIf="editing" mat-icon-button color="primary"
-                                        (click)="confirmarEditarAuxiliar(row)">
-                                        <i class="fa fa-check mat-icon"></i>
-                                    </button>
-                                    <button mat-icon-button color="primary" (click)="eliminarAuxiliar(row)">
+                            <td mat-cell *matCellDef="let row"> 
+                                <ng-container *ngIf="columna.nombreColumna!='acciones'">
+                                    {{ columna.celda(row) }} 
+                                </ng-container>
+                                <ng-container *ngIf="columna.nombreColumna=='acciones'">
+                                    <button mat-icon-button color="primary" (click)="eliminarDependiente(row)">
                                         <i class="fa fa-times mat-icon"></i>
                                     </button>
-                                </td>
-                            </ng-container>
-                            <!--td mat-cell *matCellDef="let row">
-                                <mat-form-field floatLabel="{{ editing ? 'float' : 'never'}}">
-                                    <input matInput [value]="columna.celda(row)" type="text" [readonly]="!editing"
-                                        placeholder="{{ columna.cabecera }}">
-                                </mat-form-field>
-                            </td-->
+                                </ng-container>
+                            </td>
                         </ng-container>
-
                         <tr mat-header-row *matHeaderRowDef="cabeceraDependientes"></tr>
                         <tr mat-row *matRowDef="let row; columns: cabeceraDependientes;"
                             [class.selected-row]="filaSeleccionada.has(row)"></tr>

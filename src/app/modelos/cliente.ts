@@ -11,7 +11,7 @@ import { PuntoVenta } from '../modelos/punto-venta';
 import { Telefono } from '../modelos/telefono';
 import { Celular } from '../modelos/celular';
 import { Correo } from '../modelos/correo';
-import { Auxiliar } from './auxiliar';
+import { Dependiente } from './dependiente';
 import { RetencionCliente } from './retencion-cliente';
 import { TipoPago } from './tipo-pago';
 import { FormaPago } from './forma-pago';
@@ -27,7 +27,6 @@ export class Cliente {
     razonSocial:string;
     especial: boolean;
     estado:string;
-    eliminado:boolean;
 
     puntoVenta: PuntoVenta;
     grupoCliente: GrupoCliente;
@@ -41,7 +40,7 @@ export class Cliente {
     origenIngreso: OrigenIngreso;
     obligadoContabilidad=false;
 
-    auxiliares: Auxiliar[];
+    dependientes: Dependiente[];
     telefonos: Telefono[];
     celulares: Celular[];
     correos: Correo[];
@@ -66,7 +65,7 @@ export class Cliente {
         this.telefonos=[];
         this.celulares=[];
         this.correos=[];
-        this.auxiliares=[];
+        this.dependientes=[];
         this.retencionesCliente=[];
         this.retencionesCliente.push(new RetencionCliente());
         this.retencionesCliente.push(new RetencionCliente());
@@ -74,14 +73,13 @@ export class Cliente {
         this.retencionesCliente.push(new RetencionCliente());
      }
 
-     construir(){
+     normalizar(){
         if (this.tipoContribuyente==null) this.tipoContribuyente=new TipoContribuyente();
         if (this.segmento==null) this.segmento=new Segmento();
         if (this.grupoCliente==null) this.grupoCliente=new GrupoCliente();
         if (this.calificacionCliente==null) this.calificacionCliente=new CalificacionCliente();
         if (this.origenIngreso==null) this.origenIngreso=new OrigenIngreso();
         if (this.financiamiento==null) this.financiamiento=new Financiamiento();
-        if (this.financiamiento.tipoPago==null) this.financiamiento.tipoPago=new TipoPago();
         if (this.financiamiento.formaPago==null) this.financiamiento.formaPago=new FormaPago();
         if (this.financiamiento.plazoCredito==null) this.financiamiento.plazoCredito=new PlazoCredito();
         if (this.direccion==null) this.direccion=new Direccion();

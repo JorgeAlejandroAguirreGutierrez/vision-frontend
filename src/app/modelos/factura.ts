@@ -1,5 +1,5 @@
 import { Cliente } from '../modelos/cliente';
-import { Auxiliar } from '../modelos/auxiliar';
+import { Dependiente } from './dependiente';
 import { Usuario } from '../modelos/usuario';
 import { FacturaDetalle } from './factura-detalle';
 import { Sesion } from './sesion';
@@ -9,7 +9,7 @@ export class Factura {
   codigo: string;
   secuencia: string;
   fecha: Date;
-  estado: boolean;
+  estado: string;
   eliminado: boolean;
 
   subtotalSinDescuento: number;
@@ -37,7 +37,7 @@ export class Factura {
 
   cliente: Cliente;
   clienteFactura:Cliente;
-  auxiliar: Auxiliar;
+  dependiente: Dependiente;
   vendedor: Usuario;
   sesion: Sesion;
   facturaDetalles: FacturaDetalle[];
@@ -46,11 +46,11 @@ export class Factura {
     this.id=0;
     this.secuencia="";
     this.fecha=new Date();
-    this.estado=true;
+    this.estado="";
     this.eliminado=false;
     this.cliente=new Cliente();
     this.clienteFactura=new Cliente();
-    this.auxiliar=new Auxiliar();
+    this.dependiente=null;
     this.vendedor=new Usuario();
     this.facturaDetalles=[];
     this.comentario="";
@@ -68,7 +68,7 @@ export class Factura {
     this.totalConDescuento=0;
   }
 
-  construir(){
+  normalizar(){
     if (this.cliente==null) this.cliente=new Cliente();
     if (this.clienteFactura==null) this.clienteFactura=new Cliente();
     if (this.vendedor==null) this.vendedor=new Usuario();

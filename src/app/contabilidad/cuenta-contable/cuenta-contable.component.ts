@@ -1,6 +1,7 @@
 import { Component, OnInit, HostListener  } from '@angular/core';
 import Swal from 'sweetalert2';
 import * as constantes from '../../constantes';
+import * as util from '../../util';
 import { Sesion } from '../../modelos/sesion';
 import { SesionService } from '../../servicios/sesion.service';
 import { CuentaContableService } from '../../servicios/cuenta-contable.service';
@@ -10,6 +11,7 @@ import { ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-cuenta-contable',
@@ -36,11 +38,11 @@ export class CuentaContableComponent implements OnInit {
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
-  constructor(private sesionService: SesionService, 
+  constructor(private sesionService: SesionService, private router: Router,
         private cuentaContableService: CuentaContableService) { }
 
   ngOnInit() {
-    this.sesion= this.sesionService.getSesion();
+    this.sesion=util.validarSesion(this.sesionService, this.router);
     this.construirCuentaContable();
     this.consultar();
   }
@@ -64,7 +66,7 @@ export class CuentaContableComponent implements OnInit {
           Object.assign(this.cuentaContable, res.resultado as CuentaContable);
           this.cuentaContableService.enviar(0);
         },
-        err => Swal.fire(constantes.error, err.error.mensaje, constantes.error_swal)
+        err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
       );
     }
   }
@@ -95,12 +97,12 @@ export class CuentaContableComponent implements OnInit {
       event.preventDefault();
     this.cuentaContableService.crear(this.cuentaContable).subscribe(
       res => {
-        Swal.fire(constantes.exito, res.mensaje, constantes.exito_swal);
+        Swal.fire({ icon: constantes.exito_swal, title: constantes.exito, text: res.mensaje });
         this.cuentaContable=new CuentaContable();
         this.nuevo(null);
         this.consultar();
       },
-      err => Swal.fire(constantes.error, err.error.mensaje, constantes.error_swal)
+      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
 
@@ -109,11 +111,11 @@ export class CuentaContableComponent implements OnInit {
       event.preventDefault();
     this.cuentaContableService.actualizar(this.cuentaContable).subscribe(
       res => {
-        Swal.fire(constantes.exito, res.mensaje, constantes.exito_swal);
+        Swal.fire({ icon: constantes.exito_swal, title: constantes.exito, text: res.mensaje });
         this.cuentaContable=new CuentaContable();
         this.consultar();
       },
-      err => Swal.fire(constantes.error, err.error.mensaje, constantes.error_swal)
+      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
 
@@ -133,10 +135,10 @@ export class CuentaContableComponent implements OnInit {
       event.preventDefault();
     this.cuentaContableService.eliminar(this.cuentaContable).subscribe(
       res => {
-        Swal.fire(constantes.exito, res.mensaje, constantes.exito_swal);
+        Swal.fire({ icon: constantes.exito_swal, title: constantes.exito, text: res.mensaje });
         this.cuentaContable = res.resultado as CuentaContable;     
       },
-      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.message })
+      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
 
@@ -148,7 +150,7 @@ export class CuentaContableComponent implements OnInit {
         this.dataSourceCuentaContable.paginator = this.paginator;
         this.dataSourceCuentaContable.sort = this.sort;
       },
-      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.message })
+      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
 
@@ -159,7 +161,7 @@ export class CuentaContableComponent implements OnInit {
       res => {
           this.cuentasContables = res.resultado as CuentaContable[]
       },
-      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.message })
+      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
 

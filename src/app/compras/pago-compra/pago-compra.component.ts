@@ -470,7 +470,7 @@ export class PagoCompraComponent implements OnInit {
       this.dataCheques = new MatTableDataSource<Cheque>(this.recaudacion.cheques);
       this.dataCheques.sort = this.sort;
       this.dataCheques.paginator = this.paginator;
-      this.recaudacion.calcularTotales();
+      //this.recaudacion.calcularTotales();
       this.seleccionarValorPagado();
       this.modificarEstado();
     } else {
@@ -495,7 +495,7 @@ export class PagoCompraComponent implements OnInit {
     this.dataCheques = new MatTableDataSource<Cheque>(this.recaudacion.cheques);
     this.dataCheques.sort = this.sort;
     this.dataCheques.paginator = this.paginator;
-    this.recaudacion.calcularTotales();
+    //this.recaudacion.calcularTotales();
     this.seleccionarValorPagado();
     this.defectoRecaudacion();
   }
@@ -506,7 +506,7 @@ export class PagoCompraComponent implements OnInit {
       this.dataCheques = new MatTableDataSource<Cheque>(this.recaudacion.cheques);
       this.dataCheques.sort = this.sort;
       this.dataCheques.paginator = this.paginator;
-      this.recaudacion.calcularTotales();
+      //this.recaudacion.calcularTotales();
       this.seleccionarValorPagado();
       this.defectoRecaudacion();
     }
@@ -526,7 +526,7 @@ export class PagoCompraComponent implements OnInit {
       this.dataDepositos = new MatTableDataSource<Deposito>(this.recaudacion.depositos);
       this.dataDepositos.sort = this.sort;
       this.dataDepositos.paginator = this.paginator;
-      this.recaudacion.calcularTotales();
+      //this.recaudacion.calcularTotales();
       this.seleccionarValorPagado();
     } else {
       Swal.fire(constantes.error, "Valor supera el monto de cobro de la factura", constantes.error_swal);
@@ -549,7 +549,7 @@ export class PagoCompraComponent implements OnInit {
     this.dataDepositos = new MatTableDataSource<Deposito>(this.recaudacion.depositos);
     this.dataDepositos.sort = this.sort;
     this.dataDepositos.paginator = this.paginator;
-    this.recaudacion.calcularTotales();
+    //this.recaudacion.calcularTotales();
     this.seleccionarValorPagado();
     this.defectoRecaudacion();
   }
@@ -560,7 +560,7 @@ export class PagoCompraComponent implements OnInit {
       this.dataDepositos = new MatTableDataSource<Deposito>(this.recaudacion.depositos);
       this.dataDepositos.sort = this.sort;
       this.dataDepositos.paginator = this.paginator;
-      this.recaudacion.calcularTotales();
+      //this.recaudacion.calcularTotales();
       this.seleccionarValorPagado();
       this.defectoRecaudacion();
     }
@@ -579,7 +579,7 @@ export class PagoCompraComponent implements OnInit {
       this.dataTransferencias = new MatTableDataSource<Transferencia>(this.recaudacion.transferencias);
       this.dataTransferencias.sort = this.sort;
       this.dataTransferencias.paginator = this.paginator;
-      this.recaudacion.calcularTotales();
+      //this.recaudacion.calcularTotales();
       this.seleccionarValorPagado();
     } else {
       Swal.fire(constantes.error, "Valor supera el monto de cobro de la factura", constantes.error_swal);
@@ -602,7 +602,7 @@ export class PagoCompraComponent implements OnInit {
     this.dataTransferencias = new MatTableDataSource<Transferencia>(this.recaudacion.transferencias);
     this.dataTransferencias.sort = this.sort;
     this.dataTransferencias.paginator = this.paginator;
-    this.recaudacion.calcularTotales();
+    //this.recaudacion.calcularTotales();
     this.seleccionarValorPagado();
     this.defectoRecaudacion();
   }
@@ -613,7 +613,7 @@ export class PagoCompraComponent implements OnInit {
       this.dataTransferencias = new MatTableDataSource<Transferencia>(this.recaudacion.transferencias);
       this.dataTransferencias.sort = this.sort;
       this.dataTransferencias.paginator = this.paginator;
-      this.recaudacion.calcularTotales();
+      //this.recaudacion.calcularTotales();
       this.seleccionarValorPagado();
       this.defectoRecaudacion();
     }
@@ -632,7 +632,7 @@ export class PagoCompraComponent implements OnInit {
       this.dataTarjetasCreditos = new MatTableDataSource<TarjetaCredito>(this.recaudacion.tarjetasCreditos);
       this.dataTarjetasCreditos.sort = this.sort;
       this.dataTarjetasCreditos.paginator = this.paginator;
-      this.recaudacion.calcularTotales();
+      //this.recaudacion.calcularTotales();
       this.seleccionarValorPagado();
     } else {
       Swal.fire(constantes.error, "Valor supera el monto de cobro de la factura", constantes.error_swal);
@@ -656,7 +656,7 @@ export class PagoCompraComponent implements OnInit {
     this.dataTarjetasCreditos = new MatTableDataSource<TarjetaCredito>(this.recaudacion.tarjetasCreditos);
     this.dataTarjetasCreditos.sort = this.sort;
     this.dataTarjetasCreditos.paginator = this.paginator;
-    this.recaudacion.calcularTotales();
+    //this.recaudacion.calcularTotales();
     this.seleccionarValorPagado();
     this.defectoRecaudacion();
   }
@@ -667,7 +667,7 @@ export class PagoCompraComponent implements OnInit {
       this.dataTarjetasCreditos = new MatTableDataSource<TarjetaCredito>(this.recaudacion.tarjetasCreditos);
       this.dataTarjetasCreditos.sort = this.sort;
       this.dataTarjetasCreditos.paginator = this.paginator;
-      this.recaudacion.calcularTotales();
+      //this.recaudacion.calcularTotales();
       this.seleccionarValorPagado();
       this.defectoRecaudacion();
     }
@@ -700,7 +700,7 @@ export class PagoCompraComponent implements OnInit {
       this.dataTarjetasDebitos = new MatTableDataSource<TarjetaDebito>(this.recaudacion.tarjetasDebitos);
       this.dataTarjetasDebitos.sort = this.sort;
       this.dataTarjetasDebitos.paginator = this.paginator;
-      this.recaudacion.calcularTotales();
+      //this.recaudacion.calcularTotales();
       this.seleccionarValorPagado();
     } else {
       Swal.fire(constantes.error, "Valor supera el monto de cobro de la factura", constantes.error_swal);
@@ -723,7 +723,7 @@ export class PagoCompraComponent implements OnInit {
     this.dataTarjetasDebitos = new MatTableDataSource<TarjetaDebito>(this.recaudacion.tarjetasDebitos);
     this.dataTarjetasDebitos.sort = this.sort;
     this.dataTarjetasDebitos.paginator = this.paginator;
-    this.recaudacion.calcularTotales();
+    //this.recaudacion.calcularTotales();
     this.seleccionarValorPagado();
     this.defectoRecaudacion();
   }
@@ -734,7 +734,7 @@ export class PagoCompraComponent implements OnInit {
       this.dataTarjetasDebitos = new MatTableDataSource<TarjetaDebito>(this.recaudacion.tarjetasDebitos);
       this.dataTarjetasDebitos.sort = this.sort;
       this.dataTarjetasDebitos.paginator = this.paginator;
-      this.recaudacion.calcularTotales();
+      //this.recaudacion.calcularTotales();
       this.seleccionarValorPagado();
       this.defectoRecaudacion();
     }
@@ -780,7 +780,7 @@ export class PagoCompraComponent implements OnInit {
     this.dataCompensaciones = new MatTableDataSource<Compensacion>(this.recaudacion.compensaciones);
     this.dataCompensaciones.sort = this.sort;
     this.dataCompensaciones.paginator = this.paginator;
-    this.recaudacion.calcularTotales();
+    //this.recaudacion.calcularTotales();
     this.seleccionarValorPagado();
     this.defectoRecaudacion();
   }
@@ -791,7 +791,7 @@ export class PagoCompraComponent implements OnInit {
       this.dataCompensaciones = new MatTableDataSource<Compensacion>(this.recaudacion.compensaciones);
       this.dataCompensaciones.sort = this.sort;
       this.dataCompensaciones.paginator = this.paginator;
-      this.recaudacion.calcularTotales();
+      //this.recaudacion.calcularTotales();
       this.seleccionarValorPagado();
       this.defectoRecaudacion();
     }
@@ -824,7 +824,7 @@ export class PagoCompraComponent implements OnInit {
     this.dataRetencionesVentas = new MatTableDataSource<RetencionVenta>(this.recaudacion.retencionesVentas);
     this.dataRetencionesVentas.sort = this.sort;
     this.dataRetencionesVentas.paginator = this.paginator;
-    this.recaudacion.calcularTotales();
+    //this.recaudacion.calcularTotales();
     this.seleccionarValorPagado();
     this.defectoRecaudacion();
   }
@@ -835,7 +835,7 @@ export class PagoCompraComponent implements OnInit {
       this.dataRetencionesVentas = new MatTableDataSource<RetencionVenta>(this.recaudacion.retencionesVentas);
       this.dataCompensaciones.sort = this.sort;
       this.dataCompensaciones.paginator = this.paginator;
-      this.recaudacion.calcularTotales();
+      //this.recaudacion.calcularTotales();
       this.seleccionarValorPagado();
       this.defectoRecaudacion();
     }
@@ -883,9 +883,9 @@ export class PagoCompraComponent implements OnInit {
 
   modificarEstado(){
     if (this.recaudacion.total==this.factura.totalConDescuento && this.factura.id!=0){
-      this.recaudacion.estado=true;
+      //this.recaudacion.estado=true;
     }else {
-      this.recaudacion.estado=false;
+      //this.recaudacion.estado=false;
     }
     this.estado=this.recaudacion.estado? "RECAUDADO": "NORECAUDADO";
   }
@@ -899,7 +899,7 @@ export class PagoCompraComponent implements OnInit {
     if (event!=null)
       event.preventDefault();
     this.recaudacion.sesion = this.sesion;
-    this.recaudacion.estado = this.estado=="RECAUDADO"? true: false;
+    //this.recaudacion.estado = this.estado=="RECAUDADO"? true: false;
     this.recaudacion.factura = this.factura;
     console.log(this.recaudacion);
     if (this.factura.totalConDescuento-this.recaudacion.total>0){

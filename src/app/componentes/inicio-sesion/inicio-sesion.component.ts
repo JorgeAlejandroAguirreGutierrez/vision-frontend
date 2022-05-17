@@ -54,18 +54,24 @@ export class InicioSesionComponent implements OnInit {
           res => {
             this.sesion=res.resultado as Sesion;
             this.sesionService.setSesion(this.sesion);
-            Swal.fire(constantes.exito, res.mensaje, constantes.exito_swal);
+            Swal.fire({ icon: constantes.exito_swal, title: constantes.exito, text: res.mensaje });
+            this.navegarExito();
           },
-          error => Swal.fire(constantes.error, error.error.mensaje, constantes.error_swal),
-          () => this.navigate()
+          err => {
+            Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
+            this.navegarError();
+          }
         );
       },
-      error => Swal.fire(constantes.error, error.error.mensaje, constantes.error_swal),
+      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
 
-  navigate() {
+  navegarExito() {
     this.router.navigateByUrl('/main');
+  }
+  navegarError() {
+    this.router.navigateByUrl('/index');
   }
 
   activarSesion() {
@@ -77,19 +83,18 @@ export class InicioSesionComponent implements OnInit {
       res => {
         this.empresas = res.resultado as Empresa[]
       },
-      error => Swal.fire(constantes.error, error.error.mensaje, constantes.error_swal)
+      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
 
   obtenerEmpresa(){
-    let empresa=new Empresa();
-    empresa.id=1;
-    this.empresaService.obtener(empresa).subscribe(
+    let empresaId=1;
+    this.empresaService.obtener(empresaId).subscribe(
       res => {
-        empresa= res.resultado as Empresa
+        let empresa= res.resultado as Empresa
         this.urlEmpresa=environment.prefijo_url_imagenes+"logos/"+empresa.logo;
       },
-      error => Swal.fire(constantes.error, error.error.mensaje, constantes.error_swal)
+      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
 
@@ -101,7 +106,7 @@ export class InicioSesionComponent implements OnInit {
         parametro= res.resultado as Parametro;
         this.urlLogo=environment.prefijo_url_imagenes+parametro.nombre;
       },
-      error => Swal.fire(constantes.error, error.error.mensaje, constantes.error_swal)
+      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
 

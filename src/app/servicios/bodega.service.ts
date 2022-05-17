@@ -74,8 +74,8 @@ export class BodegaService {
     );
   }
 
-  buscarCodigo(bodega: Bodega): Observable<Respuesta> {
-    return this.http.get<Respuesta>(environment.host + util.ruta + util.bodega+util.buscar+util.codigo+'/'+bodega.codigo, util.options).pipe(
+  eliminarPersonalizado(bodega: Bodega): Observable<Respuesta> {
+    return this.http.delete(environment.host+util.ruta+util.bodega+util.personalizado + '/' + bodega.id, util.options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);

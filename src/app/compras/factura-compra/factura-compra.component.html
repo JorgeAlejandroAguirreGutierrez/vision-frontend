@@ -814,9 +814,9 @@
         <button type="button " class="btn btn-outline-dark " (click)="modal.close('close') ">Cerrar</button>
     </div>
 </ng-template>
-<ng-template #modal_auxiliar let-modal>
+<ng-template #modal_dependiente let-modal>
     <div class="modal-header">
-        <h5 class="modal-title ">Ver Auxiliares</h5>
+        <h5 class="modal-title ">Ver Dependientees</h5>
         <button type="button " class="close " aria-label="Close " (click)="modal.dismiss( 'Cross click') ">
             <span aria-hidden="true ">&times;</span>
         </button>
@@ -834,27 +834,27 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr *ngFor="let auxiliar of cliente.auxiliares; let i= index ">
+                    <tr *ngFor="let dependiente of cliente.dependientes; let i= index ">
                         <td>
-                            {{auxiliar.razonSocial}}
+                            {{dependiente.razonSocial}}
                         </td>
                         <td>
-                            {{auxiliar.direccion.direccion}}
+                            {{dependiente.direccion.direccion}}
                         </td>
                         <td>
-                            <ng-container *ngIf="auxiliar.direccion.ubicacion != null">
-                                {{auxiliar.direccion.ubicacion.provincia}}</ng-container>
+                            <ng-container *ngIf="dependiente.direccion.ubicacion != null">
+                                {{dependiente.direccion.ubicacion.provincia}}</ng-container>
                         </td>
                         <td>
-                            <ng-container *ngIf="auxiliar.direccion.ubicacion != null">
-                                {{auxiliar.direccion.ubicacion.canton}}</ng-container>
+                            <ng-container *ngIf="dependiente.direccion.ubicacion != null">
+                                {{dependiente.direccion.ubicacion.canton}}</ng-container>
                         </td>
                         <td>
-                            <ng-container *ngIf="auxiliar.direccion.ubicacion != null">
-                                {{auxiliar.direccion.ubicacion.parroquia}}</ng-container>
+                            <ng-container *ngIf="dependiente.direccion.ubicacion != null">
+                                {{dependiente.direccion.ubicacion.parroquia}}</ng-container>
                         </td>
                         <td>
-                            <button class="btn btn-primary btn-circle " (click)="eliminarAuxiliar(i) ">
+                            <button class="btn btn-primary btn-circle " (click)="eliminarDependiente(i) ">
                                 <mat-icon>person_remove</mat-icon>
                             </button>
                         </td>
@@ -867,7 +867,7 @@
         <button type="button " class="btn btn-outline-dark " (click)="modal.close( 'close') ">Cerrar</button>
     </div>
 </ng-template>
-<ng-template #modal_telefono_auxiliar let-modal>
+<ng-template #modal_telefono_dependiente let-modal>
     <div class="modal-header ">
         <h5 class="modal-title ">Ver Telefonos</h5>
         <button type="button " class="close " aria-label="Close " (click)="modal.dismiss( 'Cross click') ">
@@ -887,19 +887,19 @@
                 <tbody>
                     <tr>
                         <td>
-                            {{auxiliar.razonSocial}}
+                            {{dependiente.razonSocial}}
                         </td>
                         <td>
-                            {{auxiliar.direccion.direccion}}
+                            {{dependiente.direccion.direccion}}
                         </td>
                         <td>
                             <table class="table table-bordered ">
                                 <tbody>
-                                    <tr *ngFor="let telefono of auxiliar.telefonos; let i= index">
+                                    <tr *ngFor="let telefono of dependiente.telefonos; let i= index">
                                         <td>{{telefono.numero}}</td>
                                         <td>
                                             <button class="btn btn-primary btn-circle "
-                                                (click)="eliminarTelefonoAuxiliar(i) ">
+                                                (click)="eliminarTelefonoDependiente(i) ">
                                                 <mat-icon>phonelink_erase</mat-icon>
                                             </button>
                                         </td>
@@ -916,7 +916,7 @@
         <button type="button " class="btn btn-outline-dark " (click)="modal.close( 'close') ">Cerrar</button>
     </div>
 </ng-template>
-<ng-template #modal_celular_auxiliar let-modal>
+<ng-template #modal_celular_dependiente let-modal>
     <div class="modal-header ">
         <h5 class="modal-title ">Ver Celulares</h5>
         <button type="button " class="close " aria-label="Close " (click)="modal.dismiss( 'Cross click') ">
@@ -936,19 +936,19 @@
                 <tbody>
                     <tr>
                         <td>
-                            {{auxiliar.razonSocial}}
+                            {{dependiente.razonSocial}}
                         </td>
                         <td>
-                            {{auxiliar.direccion.direccion}}
+                            {{dependiente.direccion.direccion}}
                         </td>
                         <td>
                             <table class="table table-bordered ">
                                 <tbody>
-                                    <tr *ngFor="let celular of auxiliar.celulares; let i= index">
+                                    <tr *ngFor="let celular of dependiente.celulares; let i= index">
                                         <td>{{celular.numero}}</td>
                                         <td>
                                             <button class="btn btn-primary btn-circle "
-                                                (click)="eliminarCelularAuxiliar(i) ">
+                                                (click)="eliminarCelularDependiente(i) ">
                                                 <mat-icon>phonelink_erase</mat-icon>
                                             </button>
                                         </td>
@@ -965,7 +965,7 @@
         <button type="button " class="btn btn-outline-dark " (click)="modal.close( 'close') ">Cerrar</button>
     </div>
 </ng-template>
-<ng-template #modal_correo_auxiliar let-modal>
+<ng-template #modal_correo_dependiente let-modal>
     <div class="modal-header ">
         <h5 class="modal-title ">Ver Correos</h5>
         <button type="button " class="close " aria-label="Close " (click)="modal.dismiss( 'Cross click') ">
@@ -985,19 +985,19 @@
                 <tbody>
                     <tr>
                         <td>
-                            {{auxiliar.razonSocial}}
+                            {{dependiente.razonSocial}}
                         </td>
                         <td>
-                            {{auxiliar.direccion.direccion}}
+                            {{dependiente.direccion.direccion}}
                         </td>
                         <td>
                             <table class="table table-bordered ">
                                 <tbody>
-                                    <tr *ngFor="let correo of auxiliar.correos; let i= index">
+                                    <tr *ngFor="let correo of dependiente.correos; let i= index">
                                         <td>{{correo.email}}</td>
                                         <td>
                                             <button class="btn btn-primary btn-circle "
-                                                (click)="eliminarCorreoAuxiliar(i) ">
+                                                (click)="eliminarCorreoDependiente(i) ">
                                                 <mat-icon>person_remove</mat-icon>
                                             </button>
                                         </td>

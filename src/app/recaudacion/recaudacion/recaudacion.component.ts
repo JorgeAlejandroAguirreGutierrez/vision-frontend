@@ -1,53 +1,55 @@
-import { Component, OnInit, Input, ViewChild, EventEmitter, Output } from '@angular/core';
+import { Component, OnInit, Input, ViewChild} from '@angular/core';
 import { DatePipe } from '@angular/common';
-import { FormControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormControl } from '@angular/forms';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { DateAdapter, MAT_DATE_FORMATS } from '@angular/material/core';
 import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
 import { Router } from '@angular/router';
-import { Observable, Subscription } from 'rxjs';
+import { Observable } from 'rxjs';
+import * as util from '../../util';
 import Swal from 'sweetalert2';
-import { Recaudacion } from '../../../modelos/recaudacion';
-import { Cheque } from '../../../modelos/cheque';
-import { Deposito } from '../../../modelos/deposito';
-import { TarjetaCredito } from '../../../modelos/tarjeta-credito';
-import { TarjetaDebito } from '../../../modelos/tarjeta-debito';
-import { Compensacion } from '../../../modelos/compensacion';
-import { FacturaService } from '../../../servicios/factura.service';
-import { Factura } from '../../../modelos/factura';
-import { Banco } from '../../../modelos/banco';
-import { Cliente } from '../../../modelos/cliente';
+import { Recaudacion } from '../../modelos/recaudacion';
+import { Cheque } from '../../modelos/cheque';
+import { Deposito } from '../../modelos/deposito';
+import { TarjetaCredito } from '../../modelos/tarjeta-credito';
+import { TarjetaDebito } from '../../modelos/tarjeta-debito';
+import { Compensacion } from '../../modelos/compensacion';
+import { FacturaService } from '../../servicios/factura.service';
+import { Factura } from '../../modelos/factura';
+import { Banco } from '../../modelos/banco';
+import { Cliente } from '../../modelos/cliente';
 import { startWith, map } from 'rxjs/operators';
-import { ClienteService } from '../../../servicios/cliente.service';
-import { BancoService } from '../../../servicios/banco.service';
-import { FormaPagoService } from '../../../servicios/forma-pago.service';
-import { FormaPago } from '../../../modelos/forma-pago';
-import { CuentaPropia } from '../../../modelos/cuenta-propia';
-import { CuentaPropiaService } from '../../../servicios/cuenta-propia.service';
-import { Transferencia } from '../../../modelos/transferencia';
-import { FranquiciaTarjeta } from '../../../modelos/franquicia-tarjeta';
-import { FranquiciaTarjetaService } from '../../../servicios/franquicia-tarjeta.service';
-import { AppDateAdapter, APP_DATE_FORMATS } from '../../../modelos/format-date-picker';
-import { OperadorTarjeta } from '../../../modelos/operador-tarjeta';
-import { Comprobante } from '../../../modelos/comprobante';
-import { OperadorTarjetaService } from '../../../servicios/operador-tarjeta.service';
-import { TipoComprobante } from '../../../modelos/tipo-comprobante';
-import { TipoComprobanteService } from '../../../servicios/tipo-comprobante.service';
-import { SesionService } from '../../../servicios/sesion.service';
-import { Sesion } from '../../../modelos/sesion';
-import { RecaudacionService } from '../../../servicios/recaudacion.service';
-import { RetencionVenta } from '../../../modelos/retencion-venta';
-import { EstablecimientoService } from '../../../servicios/establecimiento.service';
-import { Establecimiento } from '../../../modelos/establecimiento';
-import { PuntoVenta } from '../../../modelos/punto-venta';
-import { PuntoVentaService } from '../../../servicios/punto-venta.service';
-import { Parametro } from '../../../modelos/parametro';
-import { ParametroService } from '../../../servicios/parametro.service';
-import * as constantes from '../../../constantes';
-import { CreditoService } from '../../../servicios/credito.service';
-import { Credito } from '../../../modelos/credito';
+import { ClienteService } from '../../servicios/cliente.service';
+import { BancoService } from '../../servicios/banco.service';
+import { FormaPagoService } from '../../servicios/forma-pago.service';
+import { FormaPago } from '../../modelos/forma-pago';
+import { CuentaPropia } from '../../modelos/cuenta-propia';
+import { CuentaPropiaService } from '../../servicios/cuenta-propia.service';
+import { Transferencia } from '../../modelos/transferencia';
+import { FranquiciaTarjeta } from '../../modelos/franquicia-tarjeta';
+import { FranquiciaTarjetaService } from '../../servicios/franquicia-tarjeta.service';
+import { AppDateAdapter, APP_DATE_FORMATS } from '../../modelos/format-date-picker';
+import { OperadorTarjeta } from '../../modelos/operador-tarjeta';
+import { Comprobante } from '../../modelos/comprobante';
+import { OperadorTarjetaService } from '../../servicios/operador-tarjeta.service';
+import { TipoComprobante } from '../../modelos/tipo-comprobante';
+import { TipoComprobanteService } from '../../servicios/tipo-comprobante.service';
+import { SesionService } from '../../servicios/sesion.service';
+import { Sesion } from '../../modelos/sesion';
+import { RecaudacionService } from '../../servicios/recaudacion.service';
+import { RetencionVenta } from '../../modelos/retencion-venta';
+import { EstablecimientoService } from '../../servicios/establecimiento.service';
+import { Establecimiento } from '../../modelos/establecimiento';
+import { PuntoVenta } from '../../modelos/punto-venta';
+import { PuntoVentaService } from '../../servicios/punto-venta.service';
+import { Parametro } from '../../modelos/parametro';
+import { ParametroService } from '../../servicios/parametro.service';
+import * as constantes from '../../constantes';
+import { CreditoService } from '../../servicios/credito.service';
+import { Credito } from '../../modelos/credito';
+import { MatStepper } from '@angular/material/stepper';
 
 @Component({
   selector: 'app-recaudacion',
@@ -61,7 +63,7 @@ import { Credito } from '../../../modelos/credito';
 
 export class RecaudacionComponent implements OnInit {
 
-  @Output()propagar = new EventEmitter<boolean>();
+  @Input('stepper') stepper: MatStepper;
 
   constructor(private facturaService: FacturaService, private clienteService: ClienteService, private bancoService: BancoService, private sesionService: SesionService,
     private cuentaPropiaService: CuentaPropiaService, private operadorTarjetaService: OperadorTarjetaService, private datePipe: DatePipe,
@@ -69,9 +71,8 @@ export class RecaudacionComponent implements OnInit {
     private parametroService: ParametroService, private establecimientoService: EstablecimientoService, private puntoVentaService: PuntoVentaService,
     private tipoComprobanteService: TipoComprobanteService, private recaudacionService: RecaudacionService, private modalService: NgbModal, private router: Router) { }
 
-  @Input() factura: Factura;
+  factura: Factura= new Factura();
   recaudacion: Recaudacion = new Recaudacion();
-  recaudacionCrear: Recaudacion;
   cheque: Cheque=new Cheque();
   deposito: Deposito=new Deposito();
   transferencia: Transferencia=new Transferencia();
@@ -111,9 +112,8 @@ export class RecaudacionComponent implements OnInit {
   bancosTarjetasDebitos: Banco[];
   seleccionBancoTarjetaDebito = new FormControl();
   filtroBancosTarjetasDebitos: Observable<Banco[]> = new Observable<Banco[]>();
-  formasPago = new FormControl();
-  formasPagoLista: string[] = ['CHEQUES', 'DEPOSITOS', 'TRANSFERENCIAS', 'TARJETA DE CREDITO', 'TARJETA DE DEBITO', 'COMPENSACIONES', 'RETENCION VENTAS'];
-  formasPagoSelecionadas;
+  formasPagoLista: string[] = constantes.formas_pago
+  formaPagoSelecionada:string="";
   @ViewChild(MatSort, { static: true }) sort: MatSort;
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
 
@@ -167,9 +167,7 @@ export class RecaudacionComponent implements OnInit {
   
 
   ngOnInit() {
-    this.validarSesion();
-    this.defectoRecaudacion();
-    this.modificarEstado();
+    this.sesion=util.validarSesion(this.sesionService, this.router);
     this.consultarEstablecimientos();
     this.consultarCuentasPropias();
     this.consultarFranquiciasTarjetas();
@@ -183,6 +181,12 @@ export class RecaudacionComponent implements OnInit {
     this.consultarBancosTransferencias();
     this.consultarBancosTarjetasCreditos();
     this.consultarBancosTarjetasDebitos();
+
+    this.facturaService.eventoRecaudacion.subscribe((data:Factura) => {
+        this.factura=data;
+        this.cargar();
+        this.calcular();
+    });
     
     this.filtroRazonSocialClientes = this.seleccionRazonSocialCliente.valueChanges
       .pipe(
@@ -222,12 +226,59 @@ export class RecaudacionComponent implements OnInit {
       );
   }
 
+  cargar(){
+    if(this.factura.id!=0){
+      this.recaudacionService.obtenerPorFactura(this.factura.id).subscribe(
+        res => {
+          let recaudacion=new Recaudacion();
+          if(res.resultado==null){
+            recaudacion.factura=this.factura;
+          } else{
+            Object.assign(recaudacion, res.resultado as Recaudacion);
+          }
+          recaudacion.normalizar();
+          this.recaudacion=recaudacion;
+          if(this.recaudacion.cheques.length>0){
+            this.habilitarSeccionPago(constantes.formas_pago[0]);
+            this.dataCheques = new MatTableDataSource<Cheque>(this.recaudacion.cheques);
+          }
+          if(this.recaudacion.depositos.length>0){
+            this.habilitarSeccionPago(constantes.formas_pago[1]);
+            this.dataDepositos = new MatTableDataSource<Deposito>(this.recaudacion.depositos);
+          }
+          if(this.recaudacion.transferencias.length>0){
+            this.habilitarSeccionPago(constantes.formas_pago[2]);
+            this.dataTransferencias = new MatTableDataSource<Transferencia>(this.recaudacion.transferencias);
+          }
+          if(this.recaudacion.tarjetasCreditos.length>0){
+            this.habilitarSeccionPago(constantes.formas_pago[3]);
+            this.dataTarjetasCreditos = new MatTableDataSource<TarjetaCredito>(this.recaudacion.tarjetasCreditos);
+          }
+          if(this.recaudacion.tarjetasDebitos.length>0){
+            this.habilitarSeccionPago(constantes.formas_pago[4]);
+            this.dataTarjetasDebitos = new MatTableDataSource<TarjetaDebito>(this.recaudacion.tarjetasDebitos);
+          }
+          if(this.recaudacion.compensaciones.length>0){
+            this.habilitarSeccionPago(constantes.formas_pago[5]);
+            this.dataCompensaciones = new MatTableDataSource<Compensacion>(this.recaudacion.compensaciones);
+          }
+          if(this.recaudacion.retencionesVentas.length>0){
+            this.habilitarSeccionPago(constantes.formas_pago[6]);
+            this.dataRetencionesVentas = new MatTableDataSource<RetencionVenta>(this.recaudacion.retencionesVentas);
+          }
+          this.calcular();
+        },
+        err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
+      );
+    }
+  }
+
   consultarEstablecimientos(){
     this.establecimientoService.consultar().subscribe(
       res => {
         this.establecimientos = res.resultado as Establecimiento[]
       },
-      err => Swal.fire(constantes.error, err.error.mensaje, constantes.error_swal)
+      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
 
@@ -236,7 +287,7 @@ export class RecaudacionComponent implements OnInit {
       res => {
         this.puntosVentas = res.resultado as PuntoVenta[]
       },
-      err => Swal.fire(constantes.error, err.error.mensaje, constantes.error_swal)
+      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
 
@@ -245,7 +296,7 @@ export class RecaudacionComponent implements OnInit {
       res => {
         this.cuentasPropias = res.resultado as CuentaPropia[]
       },
-      err => Swal.fire(constantes.error, err.error.mensaje, constantes.error_swal)
+      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
   consultarFranquiciasTarjetas(){
@@ -254,7 +305,7 @@ export class RecaudacionComponent implements OnInit {
         this.franquiciasTarjetasCreditos = res.resultado as FranquiciaTarjeta[]
         this.franquiciasTarjetasDebitos = res.resultado as FranquiciaTarjeta[]
       },
-      err => Swal.fire(constantes.error, err.error.mensaje, constantes.error_swal)
+      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
   consultarOperadoresTarjetasCreditos(){
@@ -262,7 +313,7 @@ export class RecaudacionComponent implements OnInit {
       res => {
         this.operadoresTarjetasCreditos = res.resultado as OperadorTarjeta[]
       },
-      err => Swal.fire(constantes.error, err.error.mensaje, constantes.error_swal)
+      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
   consultarOperadoresTarjetasDebitos(){
@@ -270,7 +321,7 @@ export class RecaudacionComponent implements OnInit {
       res => {
         this.operadoresTarjetasDebitos = res.resultado as OperadorTarjeta[]
       },
-      err => Swal.fire(constantes.error, err.error.mensaje, constantes.error_swal)
+      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
   consultarModelosAmortizaciones(){
@@ -280,7 +331,7 @@ export class RecaudacionComponent implements OnInit {
       res => {
         this.modelosAmortizaciones = res.resultado as Parametro[]
       },
-      err => Swal.fire(constantes.error, err.error.mensaje, constantes.error_swal)
+      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
   consultarPeriodicidades(){
@@ -290,7 +341,7 @@ export class RecaudacionComponent implements OnInit {
       res => {
         this.periodicidades = res.resultado as Parametro[]
       },
-      err => Swal.fire(constantes.error, err.error.mensaje, constantes.error_swal)
+      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
   consultarTiposComprobantes(){
@@ -298,7 +349,7 @@ export class RecaudacionComponent implements OnInit {
       res => {
         this.tiposComprobantes = res.resultado as TipoComprobante[]
       },
-      err => Swal.fire(constantes.error, err.error.mensaje, constantes.error_swal)
+      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
   consultarClientes() {
@@ -306,7 +357,7 @@ export class RecaudacionComponent implements OnInit {
      res => {
        this.clientes = res.resultado as Cliente[]
      },
-     err => Swal.fire(constantes.error, err.error.mensaje, constantes.error_swal)
+     err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
    );
   }
   consultarBancosCheques() {
@@ -314,42 +365,48 @@ export class RecaudacionComponent implements OnInit {
     res => {
       this.bancosCheques = res.resultado as Banco[]
     },
-    err => Swal.fire(constantes.error, err.error.mensaje, constantes.error_swal));
+    err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
+    );
   }
   consultarBancosDepositos() {
     this.bancoService.consultar().subscribe(
     res => {
       this.bancosDepositos = res.resultado as Banco[]
     },
-    err => Swal.fire(constantes.error, err.error.mensaje, constantes.error_swal));
+    err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
+    );
   }  
   consultarBancosTransferencias() {
     this.bancoService.consultar().subscribe(
     res => {
       this.bancosTransferencias = res.resultado as Banco[]
     },
-    err => Swal.fire(constantes.error, err.error.mensaje, constantes.error_swal));
+    err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
+    );
   } 
   consultarBancosTarjetasCreditos() {
     this.bancoService.consultar().subscribe(
     res => {
       this.bancosTarjetasCreditos = res.resultado as Banco[]
     },
-    err => Swal.fire(constantes.error, err.error.mensaje, constantes.error_swal));
+    err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
+    );
   }
   consultarBancosTarjetasDebitos() {
     this.bancoService.consultar().subscribe(
     res => {
       this.bancosTarjetasDebitos = res.resultado as Banco[]
     },
-    err => Swal.fire(constantes.error, err.error.mensaje, constantes.error_swal));
+    err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
+    );
   }
   consultarFormasPagos() {
     this.formaPagoService.consultar().subscribe(
     res => {
       this.formasPagos = res.resultado as FormaPago[]
     },
-    err => Swal.fire(constantes.error, err.error.mensaje, constantes.error_swal));
+    err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
+    );
   }  
 
   private filtroRazonSocialCliente(value: string): Cliente[] {
@@ -435,35 +492,34 @@ export class RecaudacionComponent implements OnInit {
   }
 
   habilitarSeccionPago(formaPago: string){
-    if (formaPago == 'CHEQUES'){
+    if (formaPago == constantes.formas_pago[0]){
       this.habilitarCheques = !this.habilitarCheques;
     }
-    if (formaPago == 'DEPOSITOS'){
+    if (formaPago == constantes.formas_pago[1]){
       this.habilitarDepositos = !this.habilitarDepositos;
     }
-    if (formaPago == 'TRANSFERENCIAS'){
+    if (formaPago == constantes.formas_pago[2]){
       this.habilitarTransferencias = !this.habilitarTransferencias;
     }
-    if (formaPago == 'TARJETA DE CREDITO'){
+    if (formaPago == constantes.formas_pago[3]){
       this.habilitarTarjetasCreditos = !this.habilitarTarjetasCreditos;
       this.defectoTarjetaCredito();
     }
-    if (formaPago == 'TARJETA DE DEBITO'){
+    if (formaPago == constantes.formas_pago[4]){
       this.habilitarTarjetasDebitos = !this.habilitarTarjetasDebitos;
       this.defectoTarjetaDebito();
     }
-    if (formaPago == 'COMPENSACIONES'){
+    if (formaPago == constantes.formas_pago[5]){
       this.habilitarCompensaciones = !this.habilitarCompensaciones;
     }
-    if (formaPago == 'RETENCION VENTAS'){
+    if (formaPago == constantes.formas_pago[6]){
       this.habilitarRetencionesVentas = !this.habilitarRetencionesVentas;
     }
-    this.defectoRecaudacion();
+    this.calcular();
   }
 
   agregarCheque() {
-    if (this.recaudacion.total+Number(this.cheque.valor)<=this.factura.totalConDescuento 
-    && this.seleccionBancoCheque.value!=null && this.cheque.tipo!=null) {
+    if (this.recaudacion.total+Number(this.cheque.valor)<=this.factura.totalConDescuento && this.seleccionBancoCheque.value!=null && this.cheque.tipo!=null) {
       this.cheque.banco=this.seleccionBancoCheque.value;
       this.recaudacion.cheques.push(this.cheque);
       this.recaudacion.totalCheques;
@@ -472,14 +528,10 @@ export class RecaudacionComponent implements OnInit {
       this.dataCheques = new MatTableDataSource<Cheque>(this.recaudacion.cheques);
       this.dataCheques.sort = this.sort;
       this.dataCheques.paginator = this.paginator;
-      this.recaudacion.calcularTotales();
-      this.seleccionarValorPagado();
-      this.modificarEstado();
     } else {
-      Swal.fire(constantes.error, "Error en los parametros ingresados", constantes.error_swal);
+      Swal.fire(constantes.error, constantes.error_agregar_recaudacion, constantes.error_swal);
     }
-    this.defectoRecaudacion();
-    this.modificarEstado();
+    this.calcular();
   }
 
   editarCheque(i: number){
@@ -497,20 +549,16 @@ export class RecaudacionComponent implements OnInit {
     this.dataCheques = new MatTableDataSource<Cheque>(this.recaudacion.cheques);
     this.dataCheques.sort = this.sort;
     this.dataCheques.paginator = this.paginator;
-    this.recaudacion.calcularTotales();
-    this.seleccionarValorPagado();
-    this.defectoRecaudacion();
+    this.calcular();
   }
 
   eliminarCheque(i: number) {
-    if (confirm("Realmente quiere eliminar el cheque?")) {
+    if (confirm(constantes.pregunta_eliminar_cheque)) {
       this.recaudacion.cheques.splice(i, 1);
       this.dataCheques = new MatTableDataSource<Cheque>(this.recaudacion.cheques);
       this.dataCheques.sort = this.sort;
       this.dataCheques.paginator = this.paginator;
-      this.recaudacion.calcularTotales();
-      this.seleccionarValorPagado();
-      this.defectoRecaudacion();
+      this.calcular();
     }
   }
 
@@ -519,7 +567,6 @@ export class RecaudacionComponent implements OnInit {
   }
 
   agregarDeposito() {
-    console.log(this.recaudacion.total+Number(this.deposito.valor));
     if (this.recaudacion.total+Number(this.deposito.valor)<=this.factura.totalConDescuento){
       this.deposito.banco=this.seleccionBancoDeposito.value;
       this.recaudacion.depositos.push(this.deposito);
@@ -528,13 +575,10 @@ export class RecaudacionComponent implements OnInit {
       this.dataDepositos = new MatTableDataSource<Deposito>(this.recaudacion.depositos);
       this.dataDepositos.sort = this.sort;
       this.dataDepositos.paginator = this.paginator;
-      this.recaudacion.calcularTotales();
-      this.seleccionarValorPagado();
     } else {
-      Swal.fire(constantes.error, "Valor supera el monto de cobro de la factura", constantes.error_swal);
+      Swal.fire(constantes.error, constantes.error_agregar_recaudacion, constantes.error_swal);
     }
-    this.defectoRecaudacion();
-    this.modificarEstado();
+    this.calcular();
   }
 
   editarDeposito(i: number){
@@ -551,20 +595,16 @@ export class RecaudacionComponent implements OnInit {
     this.dataDepositos = new MatTableDataSource<Deposito>(this.recaudacion.depositos);
     this.dataDepositos.sort = this.sort;
     this.dataDepositos.paginator = this.paginator;
-    this.recaudacion.calcularTotales();
-    this.seleccionarValorPagado();
-    this.defectoRecaudacion();
+    this.calcular();
   }
 
   eliminarDeposito(i: number) {
-    if (confirm("Realmente quiere eliminar el deposito?")) {
+    if (confirm(constantes.pregunta_eliminar_deposito)) {
       this.recaudacion.depositos.splice(i, 1);
       this.dataDepositos = new MatTableDataSource<Deposito>(this.recaudacion.depositos);
       this.dataDepositos.sort = this.sort;
       this.dataDepositos.paginator = this.paginator;
-      this.recaudacion.calcularTotales();
-      this.seleccionarValorPagado();
-      this.defectoRecaudacion();
+      this.calcular();
     }
   }
 
@@ -581,13 +621,11 @@ export class RecaudacionComponent implements OnInit {
       this.dataTransferencias = new MatTableDataSource<Transferencia>(this.recaudacion.transferencias);
       this.dataTransferencias.sort = this.sort;
       this.dataTransferencias.paginator = this.paginator;
-      this.recaudacion.calcularTotales();
-      this.seleccionarValorPagado();
     } else {
-      Swal.fire(constantes.error, "Valor supera el monto de cobro de la factura", constantes.error_swal);
+      Swal.fire(constantes.error, constantes.error_agregar_recaudacion, constantes.error_swal);
     }
-    this.defectoRecaudacion();
-    this.modificarEstado();
+    this.defectoTransferencia();
+    this.calcular();
   }
 
   editarTransferencia(i: number){
@@ -604,20 +642,16 @@ export class RecaudacionComponent implements OnInit {
     this.dataTransferencias = new MatTableDataSource<Transferencia>(this.recaudacion.transferencias);
     this.dataTransferencias.sort = this.sort;
     this.dataTransferencias.paginator = this.paginator;
-    this.recaudacion.calcularTotales();
-    this.seleccionarValorPagado();
-    this.defectoRecaudacion();
+    this.calcular();
   }
 
   eliminarTransferencia(i: number) {
-    if (confirm("Realmente quiere eliminar la transferencia?")) {
+    if (confirm(constantes.pregunta_eliminar_transferencia)) {
       this.recaudacion.transferencias.splice(i, 1);
       this.dataTransferencias = new MatTableDataSource<Transferencia>(this.recaudacion.transferencias);
       this.dataTransferencias.sort = this.sort;
       this.dataTransferencias.paginator = this.paginator;
-      this.recaudacion.calcularTotales();
-      this.seleccionarValorPagado();
-      this.defectoRecaudacion();
+      this.calcular();
     }
   }
 
@@ -634,14 +668,11 @@ export class RecaudacionComponent implements OnInit {
       this.dataTarjetasCreditos = new MatTableDataSource<TarjetaCredito>(this.recaudacion.tarjetasCreditos);
       this.dataTarjetasCreditos.sort = this.sort;
       this.dataTarjetasCreditos.paginator = this.paginator;
-      this.recaudacion.calcularTotales();
-      this.seleccionarValorPagado();
     } else {
-      Swal.fire(constantes.error, "Valor supera el monto de cobro de la factura", constantes.error_swal);
+      Swal.fire(constantes.error, constantes.error_agregar_recaudacion, constantes.error_swal);
     }
     this.defectoTarjetaCredito();
-    this.defectoRecaudacion();
-    this.modificarEstado();
+    this.calcular();
   }
   editarTarjetaCredito(i: number){
     this.indiceEditar=i;
@@ -658,20 +689,16 @@ export class RecaudacionComponent implements OnInit {
     this.dataTarjetasCreditos = new MatTableDataSource<TarjetaCredito>(this.recaudacion.tarjetasCreditos);
     this.dataTarjetasCreditos.sort = this.sort;
     this.dataTarjetasCreditos.paginator = this.paginator;
-    this.recaudacion.calcularTotales();
-    this.seleccionarValorPagado();
-    this.defectoRecaudacion();
+    this.calcular();
   }
 
   eliminarTarjetaCredito(i: number) {
-    if (confirm("Realmente quiere eliminar la tarjeta de crédito?")) {
+    if (confirm(constantes.pregunta_eliminar_tarjeta_credito)) {
       this.recaudacion.tarjetasCreditos.splice(i, 1);
       this.dataTarjetasCreditos = new MatTableDataSource<TarjetaCredito>(this.recaudacion.tarjetasCreditos);
       this.dataTarjetasCreditos.sort = this.sort;
       this.dataTarjetasCreditos.paginator = this.paginator;
-      this.recaudacion.calcularTotales();
-      this.seleccionarValorPagado();
-      this.defectoRecaudacion();
+      this.calcular();
     }
   }
 
@@ -683,10 +710,10 @@ export class RecaudacionComponent implements OnInit {
     this.clienteService.validarIdentificacion(this.tarjetaCredito.identificacion).subscribe(
       res => {
         if (res.resultado!=null){
-          Swal.fire(constantes.exito, 'Identificacion verificada', constantes.exito_swal);
+          Swal.fire({ icon: constantes.exito_swal, title: constantes.exito, text: res.mensaje });
         } else {
           this.tarjetaCredito.identificacion='';
-          Swal.fire(constantes.error, "Error al validar la identificacion", constantes.error_swal);
+          Swal.fire({ icon: constantes.error_swal, title: constantes.exito, text: res.mensaje });
         } 
       },
       err => Swal.fire(constantes.error, err.error.mensaje, constantes.error_swal)
@@ -702,14 +729,11 @@ export class RecaudacionComponent implements OnInit {
       this.dataTarjetasDebitos = new MatTableDataSource<TarjetaDebito>(this.recaudacion.tarjetasDebitos);
       this.dataTarjetasDebitos.sort = this.sort;
       this.dataTarjetasDebitos.paginator = this.paginator;
-      this.recaudacion.calcularTotales();
-      this.seleccionarValorPagado();
     } else {
-      Swal.fire(constantes.error, "Valor supera el monto de cobro de la factura", constantes.error_swal);
+      Swal.fire(constantes.error, constantes.error_agregar_recaudacion, constantes.error_swal);
     }
     this.defectoTarjetaDebito();
-    this.defectoRecaudacion();
-    this.modificarEstado();
+    this.calcular();
   }
 
   editarTarjetaDebito(i: number){
@@ -726,20 +750,16 @@ export class RecaudacionComponent implements OnInit {
     this.dataTarjetasDebitos = new MatTableDataSource<TarjetaDebito>(this.recaudacion.tarjetasDebitos);
     this.dataTarjetasDebitos.sort = this.sort;
     this.dataTarjetasDebitos.paginator = this.paginator;
-    this.recaudacion.calcularTotales();
-    this.seleccionarValorPagado();
-    this.defectoRecaudacion();
+    this.calcular();
   }
 
   eliminarTarjetaDebito(i: number) {
-    if (confirm("Realmente quiere eliminar la tarjeta de débito?")) {
+    if (confirm(constantes.pregunta_eliminar_tarjeta_debito)) {
       this.recaudacion.tarjetasDebitos.splice(i, 1);
       this.dataTarjetasDebitos = new MatTableDataSource<TarjetaDebito>(this.recaudacion.tarjetasDebitos);
       this.dataTarjetasDebitos.sort = this.sort;
       this.dataTarjetasDebitos.paginator = this.paginator;
-      this.recaudacion.calcularTotales();
-      this.seleccionarValorPagado();
-      this.defectoRecaudacion();
+      this.calcular();
     }
   }
 
@@ -751,13 +771,13 @@ export class RecaudacionComponent implements OnInit {
     this.clienteService.validarIdentificacion(this.tarjetaDebito.identificacion).subscribe(
       res => {
         if (res.resultado!=null){
-          Swal.fire(constantes.exito, 'Identificacion verificada', constantes.exito_swal);
+          Swal.fire({ icon: constantes.exito_swal, title: constantes.exito, text: res.mensaje });
         } else {
           this.tarjetaDebito.identificacion='';
-          Swal.fire(constantes.error, "Error al validar la identificacion", constantes.error_swal);
+          Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: res.mensaje });
         } 
       },
-      err => Swal.fire(constantes.error, err.error.mensaje, constantes.error_swal)
+      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
 
@@ -766,9 +786,7 @@ export class RecaudacionComponent implements OnInit {
     this.dataCompensaciones = new MatTableDataSource<Compensacion>(this.recaudacion.compensaciones);
     this.dataCompensaciones.sort = this.sort;
     this.dataCompensaciones.paginator = this.paginator;
-    this.seleccionarValorPagado();
-    this.defectoRecaudacion();
-    this.modificarEstado();
+    this.calcular();
   }
 
   editarCompensacion(i: number){
@@ -783,20 +801,16 @@ export class RecaudacionComponent implements OnInit {
     this.dataCompensaciones = new MatTableDataSource<Compensacion>(this.recaudacion.compensaciones);
     this.dataCompensaciones.sort = this.sort;
     this.dataCompensaciones.paginator = this.paginator;
-    this.recaudacion.calcularTotales();
-    this.seleccionarValorPagado();
-    this.defectoRecaudacion();
+    this.calcular();
   }
 
   eliminarCompensacion(i: number) {
-    if (confirm("Realmente quiere eliminar la compensacion?")) {
+    if (confirm(constantes.pregunta_eliminar_compensacion)) {
       this.recaudacion.compensaciones.splice(i, 1);
       this.dataCompensaciones = new MatTableDataSource<Compensacion>(this.recaudacion.compensaciones);
       this.dataCompensaciones.sort = this.sort;
       this.dataCompensaciones.paginator = this.paginator;
-      this.recaudacion.calcularTotales();
-      this.seleccionarValorPagado();
-      this.defectoRecaudacion();
+      this.calcular();
     }
   }
 
@@ -809,9 +823,7 @@ export class RecaudacionComponent implements OnInit {
     this.dataRetencionesVentas = new MatTableDataSource<RetencionVenta>(this.recaudacion.retencionesVentas);
     this.dataRetencionesVentas.sort = this.sort;
     this.dataRetencionesVentas.paginator = this.paginator;
-    this.seleccionarValorPagado();
-    this.defectoRecaudacion();
-    this.modificarEstado();
+    this.calcular();
   }
 
   editarRetencionVenta(i: number){
@@ -827,20 +839,16 @@ export class RecaudacionComponent implements OnInit {
     this.dataRetencionesVentas = new MatTableDataSource<RetencionVenta>(this.recaudacion.retencionesVentas);
     this.dataRetencionesVentas.sort = this.sort;
     this.dataRetencionesVentas.paginator = this.paginator;
-    this.recaudacion.calcularTotales();
-    this.seleccionarValorPagado();
-    this.defectoRecaudacion();
+    this.calcular();
   }
 
   eliminarRetencionVenta(i: number) {
-    if (confirm("Realmente quiere eliminar la retencion en la venta?")) {
+    if (confirm(constantes.pregunta_eliminar_retencion_venta)) {
       this.recaudacion.retencionesVentas.splice(i, 1);
       this.dataRetencionesVentas = new MatTableDataSource<RetencionVenta>(this.recaudacion.retencionesVentas);
       this.dataCompensaciones.sort = this.sort;
       this.dataCompensaciones.paginator = this.paginator;
-      this.recaudacion.calcularTotales();
-      this.seleccionarValorPagado();
-      this.defectoRecaudacion();
+      this.calcular();
     }
   }
 
@@ -852,18 +860,17 @@ export class RecaudacionComponent implements OnInit {
     return 0;
   }
 
-  defectoRecaudacion(){
-    let suma=Number(this.recaudacion.efectivo)+Number(this.recaudacion.totalCheques)+
-      Number(this.recaudacion.totalDepositos)+Number(this.recaudacion.totalTransferencias)+
-      Number(this.recaudacion.totalCredito)+Number(this.recaudacion.totalTarjetasDebitos)+
-      Number(this.recaudacion.totalTarjetasCreditos)+Number(this.recaudacion.totalCompensaciones);
-    let pagar=this.factura.totalConDescuento-suma;
-    this.cheque.valor=Number(pagar.toFixed(2));
-    this.deposito.valor=Number(pagar.toFixed(2));
-    this.transferencia.valor=Number(pagar.toFixed(2));
-    this.tarjetaCredito.valor=Number(pagar.toFixed(2));
-    this.tarjetaDebito.valor=Number(pagar.toFixed(2));
-    this.recaudacion.credito.saldo=Number(pagar.toFixed(2));
+  calcular(){
+    this.recaudacionService.calcular(this.recaudacion).subscribe(
+      res => {
+        this.recaudacion = res.resultado as Recaudacion;
+        this.cheque.valor=this.recaudacion.credito.saldo;
+	      this.deposito.valor=this.recaudacion.credito.saldo;
+	      this.transferencia.valor=this.recaudacion.credito.saldo;
+	      this.tarjetaCredito.valor=this.recaudacion.credito.saldo;
+	      this.tarjetaDebito.valor=this.recaudacion.credito.saldo;
+      }, err => Swal.fire(constantes.error, err.error.mensaje, constantes.error_swal)
+    );
   }
 
   seleccionarEfectivo(){
@@ -871,26 +878,7 @@ export class RecaudacionComponent implements OnInit {
       this.recaudacion.cambio=Number(this.recaudacion.efectivo)-Number(this.factura.totalConDescuento);
       this.recaudacion.cambio=Number(this.recaudacion.cambio.toFixed(2));
     }
-    this.seleccionarValorPagado();
-  }
-  seleccionarValorPagado(){
-    if (this.recaudacion.efectivo>=this.factura.totalConDescuento){
-      this.recaudacion.total=this.factura.totalConDescuento;
-    } else{
-      this.recaudacion.total=Number(this.recaudacion.efectivo)+Number(this.recaudacion.totalCheques)+
-      Number(this.recaudacion.totalDepositos)+Number(this.recaudacion.totalTransferencias)+
-      Number(this.recaudacion.totalCredito)+Number(this.recaudacion.totalTarjetasDebitos)+
-      Number(this.recaudacion.totalTarjetasCreditos)+Number(this.recaudacion.totalCompensaciones);
-    }
-  }
-
-  modificarEstado(){
-    if (this.recaudacion.total==this.factura.totalConDescuento && this.factura.id!=0){
-      this.recaudacion.estado=true;
-    }else {
-      this.recaudacion.estado=false;
-    }
-    this.estado=this.recaudacion.estado? "RECAUDADO": "NORECAUDADO";
+    this.calcular();
   }
 
   nuevo(event){
@@ -902,9 +890,7 @@ export class RecaudacionComponent implements OnInit {
     if (event!=null)
       event.preventDefault();
     this.recaudacion.sesion = this.sesion;
-    this.recaudacion.estado = this.estado=="RECAUDADO"? true: false;
     this.recaudacion.factura = this.factura;
-    console.log(this.recaudacion);
     if (this.factura.totalConDescuento-this.recaudacion.total>0){
       if(this.recaudacion.credito.periodicidad=="" || this.recaudacion.credito.cuotas<1 
       || this.recaudacion.credito.fechaPrimeraCuota==null){
@@ -914,14 +900,30 @@ export class RecaudacionComponent implements OnInit {
     }
     this.recaudacionService.crear(this.recaudacion).subscribe(
       res => {
-        this.recaudacionCrear = res.resultado as Recaudacion
-        this.propagar.emit(true);
-        if (res.mensaje){
-          Swal.fire(constantes.exito, 'Se creo la Recaudacion', constantes.exito_swal);
-        } else {
-          Swal.fire(constantes.error, res.mensaje, constantes.error_swal);
-        }
-      }, err => Swal.fire(constantes.error, err.error.mensaje, constantes.error_swal)
+        let recaudacion = res.resultado as Recaudacion;
+        recaudacion.normalizar();
+        this.recaudacion=recaudacion;
+        Swal.fire({ icon: constantes.exito_swal, title: constantes.exito, text: res.mensaje });
+        this.facturaService.enviarEventoEntrega(this.factura);
+        this.stepper.next();
+      }, 
+      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
+    );
+  }
+
+  actualizar(event){
+    if (event!=null)
+      event.preventDefault();
+    this.recaudacionService.actualizar(this.recaudacion).subscribe(
+      res => {
+        let recaudacion= new Recaudacion();
+        Object.assign(recaudacion, res.resultado as Recaudacion);
+        this.recaudacion=recaudacion;
+        Swal.fire({ icon: constantes.exito_swal, title: constantes.exito, text: res.mensaje });
+        this.facturaService.enviarEventoEntrega(this.factura)
+        this.stepper.next();
+      }, 
+      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
 
@@ -938,10 +940,8 @@ export class RecaudacionComponent implements OnInit {
   rellenarNumeroTransferencia(){
     this.transferencia.comprobante= this.pad(this.transferencia.comprobante, 13);
   }
-  validarSesion(){
-    this.sesion = this.sesionService.getSesion();
-    if (this.sesion == undefined)
-      this.router.navigate(['/iniciosesion']);
+
+  defectoTransferencia(){
   }
 
   defectoTarjetaCredito(){
@@ -949,6 +949,7 @@ export class RecaudacionComponent implements OnInit {
     this.tarjetaCredito.identificacion=this.factura.cliente.identificacion;
     this.tarjetaCredito.nombre=this.factura.cliente.razonSocial;
   }
+
   defectoTarjetaDebito(){
     this.tarjetaDebito.titular=true;
     this.tarjetaDebito.identificacion=this.factura.cliente.identificacion;
@@ -986,7 +987,7 @@ export class RecaudacionComponent implements OnInit {
         parametro = res.resultado as Parametro
         this.recaudacion.credito.periodicidadNumero=Number(parametro.nombre);
       },
-      err => Swal.fire(constantes.error, err.error.mensaje, constantes.error_swal)
+      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
     );
     parametro.tipo=constantes.periodo+"_"+this.recaudacion.credito.periodicidad;
     this.parametroService.obtenerTipo(parametro).subscribe(
@@ -994,12 +995,12 @@ export class RecaudacionComponent implements OnInit {
         parametro = res.resultado as Parametro
         this.recaudacion.credito.periodicidadTotal=Number(parametro.nombre);
       },
-      err => Swal.fire(constantes.error, err.error.mensaje, constantes.error_swal)
+      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
 
   amortizacion(content: any){
-    this.defectoRecaudacion();
+    this.calcular();
     let fecha: Date=this.recaudacion.credito.fechaPrimeraCuota;
     this.creditoService.construir(this.recaudacion.credito).subscribe(
       res => {
@@ -1010,7 +1011,7 @@ export class RecaudacionComponent implements OnInit {
           console.log(`Dismissed ${this.getDismissReason(reason)}`);
         });
       },
-      err => Swal.fire(constantes.error, err.error.mensaje, constantes.error_swal)
+      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
 

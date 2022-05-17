@@ -8,6 +8,7 @@ import { Transferencia } from './transferencia';
 import { Sesion } from './sesion';
 import { Factura } from './factura';
 import { RetencionVenta } from './retencion-venta';
+import * as constantes from '../constantes';
 
 export class Recaudacion {
     id:number;
@@ -15,7 +16,7 @@ export class Recaudacion {
     total: number;
     comentario: string;
     cambio: number;
-    estado: boolean;
+    estado: string;
     efectivo: number;
     totalCheques: number;
     totalDepositos: number;
@@ -41,7 +42,7 @@ export class Recaudacion {
         this.total=0;
         this.efectivo=0;
         this.cambio=0;
-        this.estado=false;
+        this.estado=constantes.norecaudado;
         this.totalCheques=0;
         this.totalDepositos=0;
         this.totalTransferencias=0;
@@ -62,43 +63,7 @@ export class Recaudacion {
         this.factura=new Factura();
     }
 
-    private calcularTotalCheques(){
-        this.totalCheques=0;
-        this.cheques.forEach((cheque, index)=> {
-            this.totalCheques=this.totalCheques+Number(cheque.valor);
-        });  
-    }
-    private calcularTotalDepositos(){
-        this.totalDepositos=0;
-        this.depositos.forEach((deposito, index)=> {
-            this.totalDepositos=this.totalDepositos+Number(deposito.valor);
-        });  
-    }
-    private calcularTotalTransferencias(){
-        this.totalTransferencias=0;
-        this.transferencias.forEach((transferencia, index)=> {
-            this.totalTransferencias=this.totalTransferencias+Number(transferencia.valor);
-        });  
-    }
-    private calcularTotalTarjetasDebitos(){
-        this.totalTarjetasDebitos=0;
-        this.tarjetasDebitos.forEach((tarjeta_debito, index)=> {
-            this.totalTarjetasDebitos=this.totalTarjetasDebitos+Number(tarjeta_debito.valor);
-        });  
-    }
-    private calcularTotalTarjetasCreditos(){
-        this.totalTarjetasCreditos=0;
-        this.tarjetasCreditos.forEach((tarjeta_credito, index)=> {
-            this.totalTarjetasCreditos=this.totalTarjetasCreditos+Number(tarjeta_credito.valor);
-        });  
-    }
-
-    calcularTotales(){
-        this.calcularTotalCheques();
-        this.calcularTotalDepositos();
-        this.calcularTotalTransferencias();
-        this.calcularTotalTarjetasDebitos();
-        this.calcularTotalTarjetasCreditos();
-        
+    normalizar(){
+        if (this.credito==null) this.credito=new Credito();
     }
 }

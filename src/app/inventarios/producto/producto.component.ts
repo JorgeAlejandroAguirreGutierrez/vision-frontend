@@ -1,8 +1,9 @@
 import { Component, OnInit, Type, Inject } from '@angular/core';
 import { FormControl, FormArray, FormGroup, Validators } from '@angular/forms';
-import { BehaviorSubject, EmptyError, Observable } from 'rxjs';
+import { BehaviorSubject } from 'rxjs';
 import Swal from 'sweetalert2';
 import * as constantes from '../../constantes';
+import * as util from '../../util';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 import { Sesion } from '../../modelos/sesion';
@@ -23,8 +24,6 @@ import { CategoriaProductoService } from '../../servicios/categoria-producto.ser
 import { CategoriaProducto } from '../../modelos/categoria-producto';
 import { Router } from '@angular/router';
 import { Kardex } from '../../modelos/kardex';
-import { KardexService } from '../../servicios/kardex.service';
-import { TabService } from '../../componentes/services/tab.service';
 import { MedidaPrecio } from '../../modelos/medida-precio';
 import { EquivalenciaMedidaService } from '../../servicios/equivalencia-medida.service';
 import { EquivalenciaMedida } from '../../modelos/equivalencia-medida'
@@ -58,7 +57,7 @@ export class ProductoComponent implements OnInit {
   deshabilitarOtrasMedidas: boolean = true;
   deshabilitarSaldoInicial: boolean = false;
 
-  sesion: Sesion;
+  sesion: Sesion = null;
   bodega: Bodega = new Bodega();
   productoBodega: ProductoBodega = new ProductoBodega();
   producto: Producto = new Producto();
@@ -102,7 +101,6 @@ export class ProductoComponent implements OnInit {
   setValue() {
     this.formKardexInicial.setValue({ controlSaldoInicial: true, controlCostoTotal: this.kardexInicial.costoPromedio });
   }
-
   // Variables para las tablas
   equivalenciaMedida: EquivalenciaMedida = new EquivalenciaMedida();
 
@@ -144,16 +142,14 @@ export class ProductoComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.sesion = this.sesionService.getSesion();
+    this.sesion=util.validarSesion(this.sesionService, this.router);
     this.consultar();
     this.categoriaProductoService.consultar().subscribe(
       res => {
         this.categoriasProductos = res.resultado as CategoriaProducto[];
         this.producto.categoriaProducto.id = this.categoriasProductos[0].id;
       },
-      err => {
-        Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.message });
-      }
+      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
     );
     this.impuestoService.consultar().subscribe(
       res => {
@@ -161,34 +157,26 @@ export class ProductoComponent implements OnInit {
         this.producto.impuesto.id = this.impuestos[0].id;
         this.impuesto = this.impuestos[0];
       },
-      err => {
-        Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.message });
-      }
+      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
     );
     this.tipoGastoService.consultar().subscribe(
       res => {
         this.tiposGastos = res.resultado as TipoGasto[];
         this.producto.tipoGasto.id = this.tiposGastos[0].id;
       },
-      err => {
-        Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.message });
-      }
+      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
     );
     this.medidaService.consultar().subscribe(
       res => {
         this.medidas = res.resultado as Medida[];
       },
-      err => {
-        Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.message });
-      }
+      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
     );
     this.segmentoService.consultar().subscribe(
       res => {
         this.segmentos = res.resultado as Segmento[];
       },
-      err => {
-        Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.message });
-      }
+      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
 
@@ -226,13 +214,13 @@ export class ProductoComponent implements OnInit {
     console.log(this.producto);
     this.productoService.crear(this.producto).subscribe({
       next: (res) => {
+        Swal.fire({ icon: constantes.exito_swal, title: constantes.exito, text: res.mensaje });
         this.producto = res.resultado as Producto;
-        Swal.fire(constantes.exito, res.mensaje, constantes.exito_swal);
         this.limpiar();
         this.consultar();
       },
       error: (err) => {
-        Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.message });
+        Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
       }
     });
   }
@@ -291,12 +279,12 @@ export class ProductoComponent implements OnInit {
     console.log(this.producto);
     this.productoService.actualizar(this.producto).subscribe({
       next: (res) => {
-        Swal.fire(constantes.exito, res.mensaje, constantes.exito_swal);
+        Swal.fire({ icon: constantes.exito_swal, title: constantes.exito, text: res.mensaje });
         this.limpiar();
         this.consultar();
       },
       error: (err) => {
-        Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.message });
+        Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
       }
     });
   }
@@ -306,7 +294,7 @@ export class ProductoComponent implements OnInit {
       event.preventDefault();
     this.productoService.eliminar(this.producto).subscribe({
       next: (res) => {
-        Swal.fire(constantes.exito, res.mensaje, constantes.exito_swal);
+        Swal.fire({ icon: constantes.exito_swal, title: constantes.exito, text: res.mensaje });
         this.consultar();
       },
       error: (err) => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.message })
@@ -319,7 +307,7 @@ export class ProductoComponent implements OnInit {
         this.productos = res.resultado as Producto[];
         this.llenarDataSourceProducto(this.productos);
       },
-      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.message })
+      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
 
@@ -372,7 +360,7 @@ export class ProductoComponent implements OnInit {
         this.medidas = res.resultado as Medida[];
       },
       error: (err) => {
-        Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.message });
+        Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
       }
     });
     this.kardexInicial.cantidad = kardex[0].cantidad;
@@ -443,7 +431,7 @@ export class ProductoComponent implements OnInit {
         this.producto.medidaKardex = res.resultado as Medida;
       },
       error: (err) => {
-        Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.message });
+        Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
       }
   });
   }
@@ -455,7 +443,7 @@ export class ProductoComponent implements OnInit {
         //console.log(this.porcentaje_impuesto);
       },
       err => {
-        Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.message });
+        Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
       }
     );
 
@@ -496,7 +484,7 @@ export class ProductoComponent implements OnInit {
           //console.log(this.producto.medidaKardex);
         },
         err => {
-          Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.message });
+          Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
         }
       );
       this.kardexInicial.cantidad = 1;
@@ -759,7 +747,7 @@ export class ProductoComponent implements OnInit {
         }
       },
       err => {
-        Swal.fire(constantes.error, err.error.mensaje, constantes.error_swal)
+        Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
       }
     );
   }

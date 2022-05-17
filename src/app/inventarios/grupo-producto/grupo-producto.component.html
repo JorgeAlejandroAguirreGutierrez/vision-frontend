@@ -78,7 +78,7 @@
                         <mat-form-field appearance="standard">
                             <mat-label>Subgrupo</mat-label>
                             <input type="text" matInput aria-label="subgrupo" class="form-control-sm"
-                            [formControl]="seleccionSubgrupo" [matAutocomplete]="subgrupo">
+                                [formControl]="seleccionSubgrupo" [matAutocomplete]="subgrupo">
                             <mat-autocomplete autoActiveFirstOption #subgrupo="matAutocomplete">
                                 <mat-option *ngFor="let subgrupo of filtroSubgrupos | async" [value]="subgrupo">
                                     {{subgrupo}}
@@ -90,7 +90,7 @@
                         <mat-form-field appearance="standard">
                             <mat-label>Sección</mat-label>
                             <input type="text" matInput aria-label="seccion" class="form-control-sm"
-                            [formControl]="seleccionSeccion" [matAutocomplete]="seccion">
+                                [formControl]="seleccionSeccion" [matAutocomplete]="seccion">
                             <mat-autocomplete autoActiveFirstOption #seccion="matAutocomplete">
                                 <mat-option *ngFor="let seccion of filtroSecciones | async" [value]="seccion">
                                     {{seccion}}
@@ -102,7 +102,7 @@
                         <mat-form-field appearance="standard">
                             <mat-label>Línea</mat-label>
                             <input type="text" matInput aria-label="linea" class="form-control-sm"
-                            [formControl]="seleccionLinea" [matAutocomplete]="linea">
+                                [formControl]="seleccionLinea" [matAutocomplete]="linea">
                             <mat-autocomplete autoActiveFirstOption #linea="matAutocomplete">
                                 <mat-option *ngFor="let linea of filtroLineas | async" [value]="linea">
                                     {{linea}}
@@ -114,7 +114,7 @@
                         <mat-form-field appearance="standard">
                             <mat-label>Sublínea</mat-label>
                             <input type="text" matInput aria-label="sublinea" class="form-control-sm"
-                            [formControl]="seleccionSublinea" [matAutocomplete]="sublinea">
+                                [formControl]="seleccionSublinea" [matAutocomplete]="sublinea">
                             <mat-autocomplete autoActiveFirstOption #sublinea="matAutocomplete">
                                 <mat-option *ngFor="let sublinea of filtroSublineas | async" [value]="sublinea">
                                     {{sublinea}}
@@ -137,7 +137,8 @@
                             <mat-label>Categoría</mat-label>
                             <mat-select [(ngModel)]="grupoProducto.categoriaProducto" class="form-control-sm"
                                 (selectionChange)="validarCategoria()">
-                                <mat-option *ngFor="let categoriaProducto of categoriasProductos" [value]="categoriaProducto">
+                                <mat-option *ngFor="let categoriaProducto of categoriasProductos"
+                                    [value]="categoriaProducto">
                                     {{categoriaProducto.descripcion}}</mat-option>
                             </mat-select>
                         </mat-form-field>
@@ -154,15 +155,15 @@
                     <div class="col-8">
                         <mat-form-field appearance="standard">
                             <mat-label>Cod. Movimiento Contable</mat-label>
-                            <input matInput type="text" [(ngModel)]="grupoProducto"
-                                disabled oninput="this.value = this.value.toUpperCase()" class="form-control-sm">
+                            <input matInput type="text" [(ngModel)]="grupoProducto" disabled
+                                oninput="this.value = this.value.toUpperCase()" class="form-control-sm">
                         </mat-form-field>
                     </div>
                     <div class="col-4 iconos">
                         <button mat-icon-button aria-label="Ver movimientos contables">
-                          <mat-icon (click)="dialogoMovimientosContables()">search</mat-icon>
+                            <mat-icon (click)="dialogoMovimientosContables()">search</mat-icon>
                         </button>
-                      </div>
+                    </div>
                 </div>
             </div>
         </mat-expansion-panel>
@@ -178,7 +179,8 @@
                 </mat-panel-description>
             </mat-expansion-panel-header>
             <hr>
-            <app-tabla-grupo-producto  (grupoProductoSeleccionado)="grupoSeleccionado($event)"></app-tabla-grupo-producto>
+            <app-tabla-grupo-producto (grupoProductoSeleccionado)="grupoSeleccionado($event)">
+            </app-tabla-grupo-producto>
         </mat-expansion-panel>
     </mat-accordion>
 </div>

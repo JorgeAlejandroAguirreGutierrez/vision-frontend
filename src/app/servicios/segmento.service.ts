@@ -76,6 +76,15 @@ export class SegmentoService {
     );
   }
 
+  eliminarPersonalizado(segmento: Segmento): Observable<Respuesta> {
+    return this.http.delete(environment.host+util.ruta+util.segmento+util.personalizado + '/' + segmento.id, util.options).pipe(
+      map(response => response as Respuesta),
+      catchError(err => {
+        return throwError(()=>err);
+      })
+    );
+  }
+
   buscar(segmento: Segmento): Observable<Respuesta> {
     return this.http.get(environment.host + util.ruta + util.segmento+util.buscar+'/'+segmento.codigo + '/'+segmento.descripcion+'/'+segmento.margenGanancia, util.options).pipe(
       map(response => response as Respuesta),

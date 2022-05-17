@@ -1,56 +1,37 @@
 <nav class="navbar-light nav-fijo">
     <ul class="navbar-nav">
-        <ng-container *ngIf="abrirPanelNuevaBodega">
-            <li class="nav-item" *ngIf="bodega.id==0">
-                <a class="nav-link" title="Guardar" role="button" (click)="crear($event)">
-                    <mat-icon>save</mat-icon>
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" title="Borrar" role="button" (click)="borrar($event)">
-                    <mat-icon>backspace</mat-icon>
-                </a>
-            </li>
-            <li class="nav-item" *ngIf="bodega.id!=0">
-                <a class="nav-link" title="Actualizar" role="button" (click)="actualizar($event)">
-                    <mat-icon>update</mat-icon>
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" title="Eliminar" role="button" (click)="eliminarLeer($event)">
-                    <mat-icon>delete</mat-icon>
-                </a>
-            </li>
-        </ng-container>
-        <ng-container *ngIf="abrirPanelAdminBodega">
-            <li class="nav-item">
-                <a class="nav-link" title="Buscar" role="button" (click)="buscar($event)">
-                    <mat-icon>search</mat-icon>
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" title="Editar" role="button" (click)="actualizarLeer($event)">
-                    <mat-icon>edit</mat-icon>
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" title="Eliminar" role="button" (click)="eliminarLeer($event)">
-                    <mat-icon>delete</mat-icon>
-                </a>
-            </li>
-        </ng-container>
+        <li class="nav-item">
+            <a class="nav-link" title="Nuevo" role="button" (click)="nuevo($event)">
+                <mat-icon>note_add</mat-icon>
+            </a>
+        </li>
+        <li class="nav-item" *ngIf="bodega.id==0">
+            <a class="nav-link" title="Guardar" role="button" (click)="crear($event)">
+                <mat-icon>save</mat-icon>
+            </a>
+        </li>
+        <li class="nav-item" *ngIf="bodega.id!=0">
+            <a class="nav-link" title="Actualizar" role="button" (click)="actualizar($event)">
+                <mat-icon>update</mat-icon>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" title="Eliminar" role="button" (click)="eliminar($event)">
+                <mat-icon>delete</mat-icon>
+            </a>
+        </li>
     </ul>
 </nav>
 <div class="contenedor">
     <mat-accordion class="headers-align">
-        <mat-expansion-panel (opened)="abrirPanelNuevaBodega = true"
-            (closed)="abrirPanelNuevaBodega = false" [expanded]="abrirPanelNuevaBodega">
+        <mat-expansion-panel (opened)="abrirPanelNuevoBodega = true"
+            (closed)="abrirPanelNuevoBodega = false" [expanded]="abrirPanelNuevoBodega">
             <mat-expansion-panel-header>
                 <mat-panel-title>
                     <i><u>BODEGA</u></i>
                 </mat-panel-title>
                 <mat-panel-description>
-                    {{abrirPanelNuevaBodega ? 'Ocultar crear bodega' : 'Crear nueva bodega'}}
+                    {{abrirPanelNuevoBodega ? 'Ocultar crear bodega' : 'Crear nuevo bodega'}}
                     <mat-icon>playlist_add</mat-icon>
                 </mat-panel-description>
             </mat-expansion-panel-header>
@@ -58,31 +39,31 @@
             <div class="form-group form-row">
                 <div class="col-3">
                     <mat-form-field appearance="standard">
-                        <mat-label>Código</mat-label>
+                        <mat-label>Codigo</mat-label>
                         <input matInput type="text" [(ngModel)]="bodega.codigo" class="form-control-sm"
                             [disabled]="true">
                     </mat-form-field>
                 </div>
-                <div class="col-5">
+                <div class="col-7">
                     <mat-form-field appearance="standard">
-                        <mat-label>Descripción</mat-label>
+                        <mat-label>Nombre</mat-label>
                         <input matInput type="text" [(ngModel)]="bodega.nombre"
                             oninput="this.value = this.value.toUpperCase()" class="form-control-sm">
                     </mat-form-field>
-                </div>
-                <div class="col-2">
                 </div>
                 <div class="col-2">
                     <mat-form-field appearance="standard">
                         <mat-label>Estado</mat-label>
                         <mat-select [(ngModel)]="bodega.estado" class="form-control-sm">
                             <mat-option value="ACTIVO">ACTIVO</mat-option>
-                            <mat-option value="INACTIVO"> INACTIVO</mat-option>
+                            <mat-option value="INACTIVO">INACTIVO</mat-option>
                         </mat-select>
                     </mat-form-field>
                 </div>
             </div>
         </mat-expansion-panel>
+    </mat-accordion>
+    <mat-accordion class="headers-align">
         <mat-expansion-panel (opened)="abrirPanelAdminBodega = true"
             (closed)="abrirPanelAdminBodega = false">
             <mat-expansion-panel-header>
@@ -98,24 +79,22 @@
             <hr>
             <mat-form-field appearance="standard">
                 <mat-label>Buscar bodega</mat-label>
-                <input matInput (keyup)="filtroBodega($event)" placeholder="Ej. CO" #input>
+                <input matInput (keyup)="filtroBodega($event)" #input>
             </mat-form-field>
             <div class="mat-elevation-z8">
                 <table mat-table [dataSource]="dataSourceBodega" matSort>
-
                     <!-- Columnas Dinamicas -->
-                    <ng-container *ngFor="let columna of columnas" [matColumnDef]="columna.nombreColumna">
+                    <ng-container *ngFor="let columna of columnasBodega" [matColumnDef]="columna.nombreColumna">
                         <th mat-header-cell *matHeaderCellDef mat-sort-header> {{ columna.cabecera }} </th>
                         <td mat-cell *matCellDef="let row"> {{ columna.celda(row) }} </td>
                     </ng-container>
-
-                    <tr mat-header-row *matHeaderRowDef="columnasBodega"></tr>
+                    <tr mat-header-row *matHeaderRowDef="cabeceraBodega"></tr>
                     <tr mat-row (click)="seleccion(row)" [class.selected-row]="clickedRows.has(row)"
-                        *matRowDef="let row; columns: columnasBodega;"></tr>
-
+                        *matRowDef="let row; columns: cabeceraBodega;"></tr>
                     <!-- Row shown when there is no matching data. -->
                     <tr class="mat-row" *matNoDataRow>
-                        <td class="mat-cell" colspan="6">No hay datos que coincidan con la bodega "{{input.value}}"</td>
+                        <td class="mat-cell" colspan="6">No hay datos que coincidan con la bodega
+                        </td>
                     </tr>
                 </table>
                 <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>

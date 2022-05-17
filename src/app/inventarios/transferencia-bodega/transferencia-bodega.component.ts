@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 import { startWith, map } from 'rxjs/operators';
 import Swal from 'sweetalert2';
 import * as constantes from '../../constantes';
-
+import * as util from '../../util';
 import { Producto } from '../../modelos/producto';
 import { ProductoService } from '../../servicios/producto.service';
 import { Bodega } from '../../modelos/bodega';
@@ -16,6 +16,9 @@ import { Proveedor } from '../../modelos/proveedor';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
+import { Router } from '@angular/router';
+import { SesionService } from 'src/app/servicios/sesion.service';
+import { Sesion } from 'src/app/modelos/sesion';
 
 @Component({
   selector: 'app-transferencia-bodega',
@@ -23,11 +26,15 @@ import { MatTableDataSource } from '@angular/material/table';
   styleUrls: ['./transferencia-bodega.component.scss']
 })
 export class TransferenciaBodegaComponent implements OnInit {
-
+  
   abrirPanelAsignarBodega: boolean = true;
   deshabilitarBodegaDestino: boolean = true;
   deshabilitarFiltroBodega: boolean = true;
   verActualizarProducto = false;
+  sesion: Sesion=null;
+  verPanelAsignarBodega: boolean = false;
+  abrirPanelAsignarBodega:boolean = true;
+  deshabilitarFiltroBodega: boolean = false;
 
   producto: Producto = new Producto();
   bodegaOrigen: Bodega = new Bodega();
@@ -65,9 +72,10 @@ export class TransferenciaBodegaComponent implements OnInit {
   dataSourceProductoBodega: MatTableDataSource<ProductoBodega>;
   clickedRowsProductoBodega = new Set<ProductoBodega>();
 
-  constructor(private renderer: Renderer2, private productoService: ProductoService, private bodegaService: BodegaService) { }
+  constructor(private renderer: Renderer2, private productoService: ProductoService, private bodegaService: BodegaService, private sesionService: SesionService, private router: Router) { }
 
   ngOnInit() {
+    this.sesion=util.validarSesion(this.sesionService, this.router);
     this.consultarProductos();
     this.consultarBodegasDestino();
     this.filtroProductos = this.controlProducto.valueChanges
@@ -112,7 +120,7 @@ export class TransferenciaBodegaComponent implements OnInit {
     this.producto.kardexs[0].proveedor = new Proveedor;
     this.productoService.actualizar(this.producto).subscribe({
       next: (res) => {
-        Swal.fire(constantes.exito, res.mensaje, constantes.exito_swal);
+        Swal.fire({ icon: constantes.exito_swal, title: constantes.exito, text: res.mensaje });
         this.limpiar();
       },
       error: (err) => {
@@ -275,7 +283,7 @@ export class TransferenciaBodegaComponent implements OnInit {
         //this.controlBodegaDestino.disable();
       },
       error: (err) => {
-        Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.message });
+        Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
       }
     });
   }

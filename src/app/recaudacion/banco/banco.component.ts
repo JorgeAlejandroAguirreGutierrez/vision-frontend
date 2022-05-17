@@ -1,9 +1,13 @@
 import { Component, OnInit, HostListener } from '@angular/core';
-import { TabService } from '../../../componentes/services/tab.service';
+import { TabService } from '../../componentes/services/tab.service';
 import Swal from 'sweetalert2';
-import * as constantes from '../../../constantes';
-import { Banco } from '../../../modelos/banco';
-import { BancoService } from '../../../servicios/banco.service';
+import * as constantes from '../../constantes';
+import * as util from '../../util';
+import { Banco } from '../../modelos/banco';
+import { BancoService } from '../../servicios/banco.service';
+import { Sesion } from 'src/app/modelos/sesion';
+import { Router } from '@angular/router';
+import { SesionService } from 'src/app/servicios/sesion.service';
 
 @Component({
   selector: 'app-banco',
@@ -13,10 +17,12 @@ import { BancoService } from '../../../servicios/banco.service';
 export class BancoComponent implements OnInit {
 
   banco= new Banco();
+  sesion: Sesion=null;
 
-  constructor(private tabService: TabService,private bancoService: BancoService) { }
+  constructor(private sesionService: SesionService, private router: Router, private tabService: TabService,private bancoService: BancoService) { }
 
   ngOnInit() {
+    this.sesion=util.validarSesion(this.sesionService, this.router);
     this.construirBanco();
   }
 
@@ -31,10 +37,10 @@ export class BancoComponent implements OnInit {
       event.preventDefault();
     this.bancoService.crear(this.banco).subscribe(
       res => {
-        Swal.fire(constantes.exito, res.mensaje, constantes.exito_swal);
+        Swal.fire({ icon: constantes.exito_swal, title: constantes.exito, text: res.mensaje });
         this.banco=res.resultado as Banco;
       },
-      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.message })
+      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
 
@@ -43,20 +49,20 @@ export class BancoComponent implements OnInit {
       event.preventDefault();
     this.bancoService.actualizar(this.banco).subscribe(
       res => {
-        Swal.fire(constantes.exito, res.mensaje, constantes.exito_swal);
+        Swal.fire({ icon: constantes.exito_swal, title: constantes.exito, text: res.mensaje });
         this.banco=res.resultado as Banco;
       },
-      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.message })
+      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
 
   eliminar(banco: Banco) {
     this.bancoService.eliminar(banco).subscribe(
       res => {
-        Swal.fire(constantes.exito, res.mensaje, constantes.exito_swal);
+        Swal.fire({ icon: constantes.exito_swal, title: constantes.exito, text: res.mensaje });
         this.banco=res.resultado as Banco
       },
-      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.message })
+      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
 
@@ -69,7 +75,7 @@ export class BancoComponent implements OnInit {
           this.banco=res.resultado as Banco
           this.bancoService.enviar(0);
         },
-        err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.message })
+        err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
       );
     }
   }
