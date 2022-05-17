@@ -292,13 +292,13 @@ export class ProductoComponent implements OnInit {
   eliminar(event: any) {
     if (event != null)
       event.preventDefault();
-    this.productoService.eliminar(this.producto).subscribe(
-      res => {
+    this.productoService.eliminar(this.producto).subscribe({
+      next: (res) => {
         Swal.fire({ icon: constantes.exito_swal, title: constantes.exito, text: res.mensaje });
         this.consultar();
       },
-      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
-    );
+      error: (err) => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.message })
+    });
   }
 
   consultar() {
