@@ -33,8 +33,6 @@ export class TransferenciaBodegaComponent implements OnInit {
   verActualizarProducto = false;
   sesion: Sesion=null;
   verPanelAsignarBodega: boolean = false;
-  abrirPanelAsignarBodega:boolean = true;
-  deshabilitarFiltroBodega: boolean = false;
 
   producto: Producto = new Producto();
   bodegaOrigen: Bodega = new Bodega();
