@@ -65,6 +65,17 @@ export class RecaudacionComponent implements OnInit {
 
   @Input('stepper') stepper: MatStepper;
 
+  panelRecaudacion=false;
+  panelCheques=false;
+  panelDepositos=false;
+  panelTransferencias=false;
+  panelTarjetasCredito=false;
+  panelTarjetasDebito=false;
+  panelRetencionVentas=false;
+  panelCompensaciones=false;
+  panelCredito=false;
+  deshabilitarTabla=true;
+
   constructor(private facturaService: FacturaService, private clienteService: ClienteService, private bancoService: BancoService, private sesionService: SesionService,
     private cuentaPropiaService: CuentaPropiaService, private operadorTarjetaService: OperadorTarjetaService, private datePipe: DatePipe,
     private franquiciaTarjetaService: FranquiciaTarjetaService, private formaPagoService: FormaPagoService, private creditoService: CreditoService,

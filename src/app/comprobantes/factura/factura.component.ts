@@ -51,6 +51,7 @@ export class FacturaComponent implements OnInit {
   facturaDetalleEntregado="";
   serieBuscar:string="";
 
+  panelOpenState=false;
   seleccionDependiente: boolean =false;
   seleccionFacturar: boolean =false;
 
@@ -142,7 +143,7 @@ export class FacturaComponent implements OnInit {
   productoIndice=0;
   cantidadTransferencia=0;
   facturaDetalle: FacturaDetalle=new FacturaDetalle();
-  panelOpenState=false;
+  
 
   @HostListener('window:keypress', ['$event'])
   keyEvent($event: KeyboardEvent) {

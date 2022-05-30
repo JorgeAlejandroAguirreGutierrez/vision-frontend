@@ -26,6 +26,9 @@ import { FacturaDetalle } from '../../modelos/factura-detalle';
 })
 export class EntregaComponent implements OnInit {
 
+  panelGuiaRemision=true;
+  panelGuiaDetalle=false;
+
   transportistas: Transportista[];
   entrega: Entrega=new Entrega();
   sesion: Sesion;
