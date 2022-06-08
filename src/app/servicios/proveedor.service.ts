@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { BehaviorSubject } from 'rxjs';
 import { Respuesta } from '../respuesta';
 import * as util from '../util';
 import { HttpClient, HttpParams } from '@angular/common/http';
@@ -12,7 +13,14 @@ import { Proveedor } from '../modelos/proveedor';
 })
 export class ProveedorService {
 
+  private messageSource = new BehaviorSubject(0);
+  currentMessage = this.messageSource.asObservable();
+
   constructor(private http: HttpClient) { }
+
+  enviar(proveedorId: number) {
+    this.messageSource.next(proveedorId);
+  }
 
   crear(proveedor: Proveedor): Observable<Respuesta> {
     return this.http.post(environment.host + util.ruta + util.proveedor, proveedor, util.options).pipe(
@@ -60,6 +68,32 @@ export class ProveedorService {
 
   eliminar(proveedor: Proveedor): Observable<Respuesta> {
     return this.http.delete(environment.host+util.ruta + util.proveedor + '/' + proveedor.id, util.options).pipe(
+      map(response => response as Respuesta),
+      catchError(err => {
+        return throwError(()=>err);
+      })
+    );
+  }
+
+  buscar(proveedor: Proveedor): Observable<Respuesta> {
+    return this.http.post<Respuesta>(environment.host + util.ruta + util.proveedor+util.buscar, proveedor, util.options).pipe(
+      map(response => response as Respuesta),
+      catchError(err => {
+        return throwError(()=>err);
+      })
+    );
+  }
+
+  obtenerIdentificacion(identificacion: string): Observable<Respuesta> {
+    return this.http.get<Respuesta>(environment.host + util.ruta + util.cliente + util.identificacion+'/'+identificacion, util.options).pipe(
+      map(response => response as Respuesta),
+      catchError(err => {
+        return throwError(()=>err);
+      }));
+  }
+
+  validarIdentificacion(identificacion: string): Observable<Respuesta> {
+    return this.http.get(environment.host+util.ruta+util.cliente + '/identificacion/validar/' + identificacion, util.options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);

@@ -1,4 +1,4 @@
-import { Router } from '@angular/router';
+import { Router } from '@angular/router'; 
 import { Component, OnInit, HostListener, Input, Type, ViewChild } from '@angular/core';
 import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
 import Swal from 'sweetalert2';
@@ -48,7 +48,6 @@ import { TipoRetencionService } from '../../servicios/tipo-retencion.service';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { CalificacionClienteComponent } from '../calificacion-cliente/calificacion-cliente.component';
 
 @Component({
   selector: 'app-cliente',

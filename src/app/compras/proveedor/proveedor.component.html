@@ -1,7 +1,7 @@
-<nav class="navbar-light nav-fijo">
+<nav class="navbar-light nav-fijo"> 
     <ul class="navbar-nav">
         <li class="nav-item">
-            <a class="nav-link" title="Nuevo" role="button" (click)="nuevoCliente($event)">
+            <a class="nav-link" title="Nuevo" role="button" (click)="nuevoProveedor($event)">
                 <mat-icon>note_add</mat-icon>
             </a>
         </li>
@@ -11,7 +11,7 @@
             </a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" title="Guardar" role="button" (click)="crearCliente($event)"
+            <a class="nav-link" title="Guardar" role="button" (click)="crearProveedor($event)"
                 *ngIf="cliente.id==0; else block_actualizar">
                 <mat-icon>save</mat-icon>
             </a>
@@ -41,7 +41,7 @@
                 <div class="col-2">
                     <mat-form-field appearance="standard">
                         <mat-label>Identificación</mat-label>
-                        <input matInput type="text" [(ngModel)]="cliente.identificacion"
+                        <input matInput type="text" [(ngModel)]="proveedor.identificacion"
                             oninput="this.value = this.value.toUpperCase()" class="form-control-sm"
                             (change)="validarIdentificacion()">
                     </mat-form-field>
@@ -49,14 +49,14 @@
                 <div class="col-1">
                     <mat-form-field appearance="standard">
                         <mat-label>Documento</mat-label>
-                        <input matInput type="text" class="form-control-sm" [(ngModel)]="cliente.tipoIdentificacion"
+                        <input matInput type="text" class="form-control-sm" [(ngModel)]="proveedor.tipoIdentificacion"
                             disabled>
                     </mat-form-field>
                 </div>
                 <div class="col-2">
                     <mat-form-field appearance="standard">
                         <mat-label>Contribuyente</mat-label>
-                        <mat-select [ngModel]="cliente.tipoContribuyente?.id"
+                        <mat-select [ngModel]="proveedor.tipoContribuyente?.id"
                             oninput="this.value = this.value.toUpperCase()" [disabled]="!habilitarTipoContribuyente"
                             (selectionChange)="validarTipoContribuyente()" class="form-control-sm">
                             <mat-option *ngFor="let tipoContribuyente of tiposContribuyentes"
@@ -71,9 +71,9 @@
                 <div class="col-3">
                     <mat-form-field appearance="standard">
                         <mat-label>Grupo Proveedor</mat-label>
-                        <mat-select [(ngModel)]="cliente.grupoCliente.id" class="form-control-sm">
-                            <mat-option *ngFor="let grupoCliente of gruposClientes" [value]="grupoCliente.id">
-                                {{grupoCliente.descripcion}}
+                        <mat-select [(ngModel)]="proveedor.grupoCliente.id" class="form-control-sm">
+                            <mat-option *ngFor="let grupoProveedor of gruposClientes" [value]="grupoProveedor.id">
+                                {{grupoProveedor.descripcion}}
                             </mat-option>
                         </mat-select>
                     </mat-form-field>
@@ -81,41 +81,41 @@
                 <div class="col-2">
                     <mat-form-field appearance="standard">
                         <mat-label>Código</mat-label>
-                        <input matInput type="text" disabled [(ngModel)]="cliente.codigo" class="form-control-sm">
+                        <input matInput type="text" disabled [(ngModel)]="proveedor.codigo" class="form-control-sm">
                     </mat-form-field>
                 </div>
                 <div class="col-10">
                     <mat-form-field appearance="standard">
                         <mat-label>Razón Social</mat-label>
-                        <input matInput type="text" [(ngModel)]="cliente.razonSocial"
+                        <input matInput type="text" [(ngModel)]="proveedor.razonSocial"
                             oninput="this.value = this.value.toUpperCase()" class="form-control-sm">
-                        <button mat-button *ngIf="cliente.razonSocial" matSuffix mat-icon-button
-                            (click)="cliente.razonSocial=''">
+                        <button mat-button *ngIf="proveedor.razonSocial" matSuffix mat-icon-button
+                            (click)="proveedor.razonSocial=''">
                             <mat-icon>close</mat-icon>
                         </button>
                     </mat-form-field>
                 </div>
                 <div class="col-1">
-                    <mat-checkbox [(ngModel)]="cliente.tipoContribuyente.obligadoContabilidad" class="form-control-sm"
+                    <mat-checkbox [(ngModel)]="proveedor.tipoContribuyente.obligadoContabilidad" class="form-control-sm"
                         color="primary">Oblig.</mat-checkbox>
                 </div>
                 <div class="col-1">
-                    <mat-checkbox [(ngModel)]="cliente.especial" class="form-control-sm" color="primary">
+                    <mat-checkbox [(ngModel)]="proveedor.especial" class="form-control-sm" color="primary">
                         Espec.</mat-checkbox>
                 </div>
                 <div class="col-8">
                     <mat-form-field appearance="standard">
                         <mat-label>Nombre Comercial</mat-label>
-                        <input matInput type="text" [(ngModel)]="cliente.razonSocial"
+                        <input matInput type="text" [(ngModel)]="proveedor.nombreComercial"
                             oninput="this.value = this.value.toUpperCase()" class="form-control-sm">
-                        <button mat-button *ngIf="cliente.razonSocial" matSuffix mat-icon-button
-                            (click)="cliente.razonSocial=''">
+                        <button mat-button *ngIf="proveedor.nombreComercial" matSuffix mat-icon-button
+                            (click)="proveedor.nombreComercial=''">
                             <mat-icon>close</mat-icon>
                         </button>
                     </mat-form-field>
                 </div>
                 <div class="col-2">
-                    <mat-checkbox [(ngModel)]="cliente.especial" class="form-control-sm" color="primary">
+                    <mat-checkbox [(ngModel)]="proveedor.especial" class="form-control-sm" color="primary">
                         Relacionado</mat-checkbox>
                 </div>
                 <div class="col-2">
@@ -142,10 +142,10 @@
                     <div class="col-10">
                         <mat-form-field appearance="standard">
                             <mat-label>Direccion</mat-label>
-                            <input matInput type="text" [(ngModel)]="cliente.direccion.direccion"
+                            <input matInput type="text" [(ngModel)]="proveedor.direccion.direccion"
                                 oninput="this.value = this.value.toUpperCase()" class="form-control-sm">
-                            <button mat-button *ngIf="cliente.direccion.direccion" matSuffix mat-icon-button
-                                (click)="cliente.direccion.direccion=''">
+                            <button mat-button *ngIf="proveedor.direccion.direccion" matSuffix mat-icon-button
+                                (click)="proveedor.direccion.direccion=''">
                                 <mat-icon>close</mat-icon>
                             </button>
                         </mat-form-field>
@@ -153,7 +153,7 @@
                             <div class="col-4">
                                 <mat-form-field appearance="standard">
                                     <mat-label>Provincia</mat-label>
-                                    <mat-select type="text" [(ngModel)]="clienteProvincia"
+                                    <mat-select type="text" [(ngModel)]="proveedorProvincia"
                                         (selectionChange)="provincia($event.value)" class="form-control-sm">
                                         <mat-option *ngFor="let provincia of provincias" [value]="provincia.provincia">
                                             {{provincia.provincia}}
@@ -164,7 +164,7 @@
                             <div class="col-4">
                                 <mat-form-field appearance="standard">
                                     <mat-label>Canton</mat-label>
-                                    <mat-select type="text" [(ngModel)]="clienteCanton"
+                                    <mat-select type="text" [(ngModel)]="proveedorCanton"
                                         (selectionChange)="canton($event.value)" class="form-control-sm">
                                         <mat-option *ngFor="let canton of cantones" [value]="canton.canton">
                                             {{canton.canton}}
@@ -175,7 +175,7 @@
                             <div class="col-4">
                                 <mat-form-field appearance="standard">
                                     <mat-label>Parroquia</mat-label>
-                                    <mat-select type="text" [(ngModel)]="clienteParroquia" class="form-control-sm"
+                                    <mat-select type="text" [(ngModel)]="proveedorParroquia" class="form-control-sm"
                                         (selectionChange)="parroquia($event.value)">
                                         <mat-option *ngFor="let parroquia of parroquias" [value]="parroquia.parroquia">
                                             {{parroquia.parroquia}}
@@ -334,7 +334,7 @@
                             <div class="col-12">
                                 <mat-form-field appearance="standard">
                                     <mat-label>Forma de pago</mat-label>
-                                    <mat-select [(ngModel)]="cliente.financiamiento.formaPago.id"
+                                    <mat-select [(ngModel)]="proveedor.financiamiento.formaPago.id"
                                         [compareWith]="compareFn" (selectionChange)="cambiarFormaPago()"
                                         class="form-control-sm">
                                         <mat-option *ngFor="let formaPago of formasPagos" [value]="formaPago.id">
@@ -347,7 +347,7 @@
                                 <mat-form-field appearance="standard">
                                     <mat-label>Plazo/días</mat-label>
                                     <mat-select [disabled]="activacionPlazoCredito"
-                                        [(ngModel)]="cliente.financiamiento.plazoCredito" [compareWith]="compareFn"
+                                        [(ngModel)]="proveedor.financiamiento.plazoCredito" [compareWith]="compareFn"
                                         class="form-control-sm">
                                         <mat-option *ngFor="let plazoCredito of plazosCreditos" [value]="plazoCredito">
                                             {{plazoCredito.plazo}}
@@ -358,7 +358,7 @@
                             <div class="col-6">
                                 <mat-form-field appearance="standard">
                                     <mat-label>Monto</mat-label>
-                                    <input matInput [(ngModel)]="cliente.financiamiento.monto" class="form-control-sm "
+                                    <input matInput [(ngModel)]="proveedor.financiamiento.monto" class="form-control-sm "
                                         [disabled]="activacionPlazoCredito">
                                 </mat-form-field>
                             </div>
@@ -377,7 +377,7 @@
                         <div class="col-5">
                             <mat-form-field appearance="standard">
                                 <mat-label>Código</mat-label>
-                                <mat-select type="text" [(ngModel)]="cliente.retencionesCliente[0].tipoRetencion"
+                                <mat-select type="text" [(ngModel)]="proveedor.retencionesCliente[0].tipoRetencion"
                                     [compareWith]="compareFn" class="form-control-sm ">
                                     <mat-option *ngFor="let tipoRetencionIvaBien of tiposRetencionesIvaBien "
                                         [value]="tipoRetencionIvaBien ">
@@ -389,7 +389,7 @@
                         <div class="col-5">
                             <mat-form-field appearance="standard">
                                 <mat-label>%</mat-label>
-                                <mat-select type="text " [(ngModel)]="cliente.retencionesCliente[0].tipoRetencion"
+                                <mat-select type="text " [(ngModel)]="proveedor.retencionesCliente[0].tipoRetencion"
                                     [compareWith]="compareFn" class="form-control-sm ">
                                     <mat-option [value]="tipoRetencionIvaBien"
                                         *ngFor="let tipoRetencionIvaBien of tiposRetencionesIvaBien">
@@ -405,7 +405,7 @@
                         <div class="col-5">
                             <mat-form-field appearance="standard">
                                 <mat-label>Código</mat-label>
-                                <mat-select type="text" [(ngModel)]="cliente.retencionesCliente[2].tipoRetencion"
+                                <mat-select type="text" [(ngModel)]="proveedor.retencionesCliente[2].tipoRetencion"
                                     [compareWith]="compareFn" class="form-control-sm ">
                                     <mat-option [value]="tipoRetencionIvaServicio"
                                         *ngFor="let tipoRetencionIvaServicio of tiposRetencionesIvaServicio">
@@ -417,7 +417,7 @@
                         <div class="col-5">
                             <mat-form-field appearance="standard">
                                 <mat-label>%</mat-label>
-                                <mat-select type="text" [(ngModel)]="cliente.retencionesCliente[2].tipoRetencion"
+                                <mat-select type="text" [(ngModel)]="proveedor.retencionesCliente[2].tipoRetencion"
                                     [compareWith]="compareFn" class="form-control-sm ">
                                     <mat-option [value]="tipoRetencionIvaServicio"
                                         *ngFor="let tipoRetencionIvaServicio of tiposRetencionesIvaServicio">
@@ -440,7 +440,7 @@
                         <div class="col-5">
                             <mat-form-field appearance="standard">
                                 <mat-label>Código</mat-label>
-                                <mat-select type="text " [(ngModel)]="cliente.retencionesCliente[1].tipoRetencion"
+                                <mat-select type="text " [(ngModel)]="proveedor.retencionesCliente[1].tipoRetencion"
                                     [compareWith]="compareFn" class="form-control-sm ">
                                     <mat-option [value]="tipoRetencionRentaBien"
                                         *ngFor="let tipoRetencionRentaBien of tiposRetencionesRentaBien ">
@@ -452,7 +452,7 @@
                         <div class="col-5">
                             <mat-form-field appearance="standard">
                                 <mat-label>%</mat-label>
-                                <mat-select type="text " [(ngModel)]="cliente.retencionesCliente[1].tipoRetencion"
+                                <mat-select type="text " [(ngModel)]="proveedor.retencionesCliente[1].tipoRetencion"
                                     [compareWith]="compareFn" class="form-control-sm ">
                                     <mat-option [value]="tipoRetencionRentaBien"
                                         *ngFor="let tipoRetencionRentaBien of tiposRetencionesRentaBien ">
@@ -468,7 +468,7 @@
                         <div class="col-5">
                             <mat-form-field appearance="standard">
                                 <mat-label>Código</mat-label>
-                                <mat-select type="text " [(ngModel)]="cliente.retencionesCliente[3].tipoRetencion"
+                                <mat-select type="text " [(ngModel)]="proveedor.retencionesCliente[3].tipoRetencion"
                                     [compareWith]="compareFn" class="form-control-sm ">
                                     <mat-option [value]="tipoRetencionesRentaServicio"
                                         *ngFor="let tipoRetencionesRentaServicio of tiposRetencionesRentaServicio ">
@@ -480,7 +480,7 @@
                         <div class="col-5">
                             <mat-form-field appearance="standard">
                                 <mat-label>%</mat-label>
-                                <mat-select type="text " [(ngModel)]="cliente.retencionesCliente[3].tipoRetencion"
+                                <mat-select type="text " [(ngModel)]="proveedor.retencionesCliente[3].tipoRetencion"
                                     [compareWith]="compareFn" class="form-control-sm ">
                                     <mat-option [value]="tipoRetencionRentaServicio"
                                         *ngFor="let tipoRetencionRentaServicio of tiposRetencionesRentaServicio ">
@@ -500,7 +500,7 @@
                     <i><u>GESTIONAR PROVEEDORES</u></i>
                 </mat-panel-title>
                 <mat-panel-description>
-                    {{abrirPanelAdminProveedor ? 'Ocultar administrador de clientes' : 'Editar cliente existente'}}
+                    {{abrirPanelAdminProveedor ? 'Ocultar administrador de proveedores' : 'Editar proveedor existente'}}
                     <mat-icon>settings_brightness</mat-icon>
                 </mat-panel-description>
             </mat-expansion-panel-header>
@@ -540,7 +540,7 @@
 </div>
 <ng-template #modal_importar let-modal>
     <div class="modal-header ">
-        <h5 class="modal-title ">Importar un Cliente</h5>
+        <h5 class="modal-title ">Importar un Proveedor</h5>
         <button type="button " class="close " aria-label="Close " (click)="modal.dismiss( 'Cross click') ">
             <span aria-hidden="true ">&times;</span>
         </button>
