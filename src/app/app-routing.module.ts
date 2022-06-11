@@ -28,7 +28,7 @@ import { PuntoVentaComponent } from './usuarios/punto-venta/punto-venta.componen
 import { PerfilComponent } from './usuarios/perfil/perfil.component';
 
 // Molulo de Clientes
-import { ClienteComponent } from './clientes/cliente/cliente.component';
+import { ClienteComponent, DialogoMapaComponent } from './clientes/cliente/cliente.component';
 import { SegmentoComponent } from './clientes/segmento/segmento.component';
 import { GrupoClienteComponent } from './clientes/grupo-cliente/grupo-cliente.component';
 import { OrigenIngresoComponent } from './clientes/origen-ingreso/origen-ingreso.component';
@@ -39,6 +39,7 @@ import { PlazoCreditoComponent } from './clientes/plazo-credito/plazo-credito.co
 import { ImpuestoComponent } from './configuraciones/impuesto/impuesto.component';
 import { FormaPagoComponent } from './clientes/forma-pago/forma-pago.component';
 import { TipoPagoComponent } from './configuraciones/tipo-pago/tipo-pago.component';
+import { MapsComponent } from './componentes/pages/maps/maps.component';
 
 //Módulo de Inventarios
 import { BodegaComponent } from './inventarios/bodega/bodega.component';
@@ -94,7 +95,6 @@ import { DashboardComponent } from './componentes/pages/dashboard/dashboard.comp
 import { TablesComponent } from './componentes/pages/tables/tables.component';
 import { FormsComponent } from './componentes/pages/forms/forms.component';
 import { TypographyComponent } from './componentes/pages/typography/typography.component';
-import { MapsComponent } from './componentes/pages/maps/maps.component';
 import { TipoRetencionComponent } from './configuraciones/tipo-retencion/tipo-retencion.component';
 
 
@@ -151,11 +151,11 @@ const routes: Routes = [
 @NgModule({
   imports: [RouterModule.forRoot(routes, { relativeLinkResolution: 'legacy' })],
   exports: [RouterModule],
-  entryComponents: [ImportarComponent, ExportarComponent, CambioCredencialesComponent, DialogoMovimientoContableComponent, 
-    DialogoGrupoProductoComponent, UsuarioComponent, PuntoVentaComponent, TipoRetencionComponent,
+  entryComponents: [DialogoMapaComponent, DialogoMovimientoContableComponent, 
+    DialogoGrupoProductoComponent, CambioCredencialesComponent, UsuarioComponent, PuntoVentaComponent, TipoRetencionComponent,
     EstablecimientoComponent, ClienteComponent, GrupoClienteComponent, CalificacionClienteComponent, EstadoCivilComponent, 
     GeneroComponent, OrigenIngresoComponent, PlazoCreditoComponent, FormaPagoComponent, TipoPagoComponent, BodegaComponent, 
-    DialogComponente, EquivalenciaMedidaComponent, MedidaComponent, FacturaComponent, ProformaComponent
+    DialogComponente, EquivalenciaMedidaComponent, MedidaComponent, FacturaComponent, ProformaComponent, ImportarComponent, ExportarComponent
   ],
   bootstrap: [ProformaComponent],
 })
@@ -186,6 +186,7 @@ export const RoutingComponents = [
   PerfilComponent,
   // Clientes
   ClienteComponent,
+  DialogoMapaComponent,
   SegmentoComponent,
   GrupoClienteComponent,
   PlazoCreditoComponent,

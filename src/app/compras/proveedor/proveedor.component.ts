@@ -644,7 +644,7 @@ export class ProveedorComponent implements OnInit {
               this.proveedor.tipoContribuyente = this.obtenerTipoContribuyente();
             }
             this.proveedor.segmento.id = 1;
-            this.proveedor.grupoCliente.id = 1;
+            this.proveedor.grupoProveedor.id = 1;
             this.proveedor.financiamiento.formaPago.id = 1;
             this.cambiarFormaPago();
             this.validarSexoEstadoCivilOrigenIngreso();

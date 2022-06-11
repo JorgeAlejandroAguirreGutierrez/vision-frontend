@@ -1,4 +1,4 @@
-import { GrupoCliente } from '../modelos/grupo-cliente';
+import { GrupoProveedor } from '../modelos/grupo-proveedor';
 import { TipoContribuyente } from '../modelos/tipo-contribuyente';
 import { Segmento } from '../modelos/segmento';
 import { Direccion } from '../modelos/direccion';
@@ -29,7 +29,7 @@ export class Proveedor {
     estado: string;
 
     puntoVenta: PuntoVenta;
-    grupoCliente: GrupoCliente;
+    grupoProveedor: GrupoProveedor;
     tipoContribuyente: TipoContribuyente;
     segmento: Segmento;
     direccion: Direccion;
@@ -58,7 +58,7 @@ export class Proveedor {
         this.puntoVenta=new PuntoVenta();
         this.tipoContribuyente=new TipoContribuyente();
         this.segmento=new Segmento();
-        this.grupoCliente=new GrupoCliente();
+        this.grupoProveedor=new GrupoProveedor();
         this.direccion=new Direccion();
         this.financiamiento=new Financiamiento();
         this.genero=new Genero();

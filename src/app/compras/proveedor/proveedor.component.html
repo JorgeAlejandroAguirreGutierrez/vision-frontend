@@ -71,7 +71,7 @@
                 <div class="col-3">
                     <mat-form-field appearance="standard">
                         <mat-label>Grupo Proveedor</mat-label>
-                        <mat-select [(ngModel)]="proveedor.grupoCliente.id" class="form-control-sm">
+                        <mat-select [(ngModel)]="proveedor.grupoProveedor.id" class="form-control-sm">
                             <mat-option *ngFor="let grupoProveedor of gruposClientes" [value]="grupoProveedor.id">
                                 {{grupoProveedor.descripcion}}
                             </mat-option>
