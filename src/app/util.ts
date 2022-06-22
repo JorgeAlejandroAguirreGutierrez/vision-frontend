@@ -106,12 +106,12 @@ export const optionsGenerarArchivo = {headers: headers, responseType: 'blob' as 
 
 export function validarSesion(sesionService: SesionService, router: Router): Sesion{
     let sesion: Sesion=sesionService.getSesion();
-    sesionService.validar(sesion).subscribe(
-        res => {
+    sesionService.validar(sesion).subscribe({
+        next: res => {
             sesion=res.resultado as Sesion;
             return sesion;
         },
-        err => {
+        error: err => {
             if(err.error.codigo==constantes.error_codigo_sesion_invalida){
                 sesionService.cerrarSesion();
                 router.navigate(['/index']);
@@ -121,6 +121,6 @@ export function validarSesion(sesionService: SesionService, router: Router): Ses
                 router.navigate(['/index']);
             }
         }
-    );
+    });
     return sesion;
 }

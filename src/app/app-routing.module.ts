@@ -58,11 +58,6 @@ import { ProveedorProductoComponent } from './inventarios/proveedor-producto/pro
 import { TransferenciaBodegaComponent } from './inventarios/transferencia-bodega/transferencia-bodega.component';
 import { EquivalenciaMedidaComponent } from './inventarios/equivalencia-medida/equivalencia-medida.component';
 
-//Módulo de Entregas
-import { EntregaComponent } from './entregas/entrega/entrega.component';
-import { TransportistaComponent } from './entregas/transportista/transportista.component';
-import { VehiculoTransporteComponent } from './entregas/vehiculo-transporte/vehiculo-transporte.component';
-
 //Módulo de Recaudaciones
 import { FinanciamientoComponent } from './recaudacion/financiamiento/financiamiento.component';
 import { RecaudacionComponent } from './recaudacion/recaudacion/recaudacion.component';
@@ -79,8 +74,13 @@ import { EgresoComponent } from './comprobantes/egreso/egreso.component';
 import { PedidoComponent } from './comprobantes/pedido/pedido.component';
 import { ProformaComponent } from './comprobantes/proforma/proforma.component';
 
+//Módulo de Entregas
+import { EntregaComponent } from './entregas/entrega/entrega.component';
+import { TransportistaComponent } from './entregas/transportista/transportista.component';
+import { VehiculoTransporteComponent } from './entregas/vehiculo-transporte/vehiculo-transporte.component';
+
 //Módulo de Compras
-import { ProveedorComponent } from './compras/proveedor/proveedor.component';
+import { ProveedorComponent, DialogoMapaProveedorComponent } from './compras/proveedor/proveedor.component';
 import { FacturaCompraComponent } from './compras/factura-compra/factura-compra.component';
 import { PagoCompraComponent } from './compras/pago-compra/pago-compra.component';
 
@@ -236,6 +236,7 @@ export const RoutingComponents = [
   ProformaComponent,
   // Compras
   ProveedorComponent,
+  DialogoMapaProveedorComponent,
   FacturaCompraComponent,
   PagoCompraComponent,
   // Contabilidad

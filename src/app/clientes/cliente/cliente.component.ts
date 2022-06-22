@@ -1,11 +1,11 @@
 import { Component, OnInit, HostListener, Type, ViewChild, Inject } from '@angular/core';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
 import { MouseEvent } from '@agm/core'; 
 import { Router } from '@angular/router'; 
 import Swal from 'sweetalert2';
 import * as constantes from '../../constantes';
 import * as util from '../../util';
-import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 import { environment } from '../../../environments/environment';
 import { Empresa } from '../../modelos/empresa';
@@ -73,6 +73,7 @@ export class ClienteComponent implements OnInit {
   abrirPanelAdminCliente: boolean = false;
   estadoCliente: boolean = true;
   editing: boolean = false;
+  dirEstablecida: boolean = true;
 
   cliente: Cliente = new Cliente();
   clientes: Cliente[];

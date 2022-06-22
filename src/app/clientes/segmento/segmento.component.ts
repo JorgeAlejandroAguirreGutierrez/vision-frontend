@@ -1,4 +1,5 @@
-import { Component, OnInit, HostListener, ElementRef, Renderer2  } from '@angular/core';
+import { Component, OnInit, HostListener, ElementRef, Renderer2 } from '@angular/core';
+import { BehaviorSubject } from 'rxjs';
 import * as constantes from '../../constantes';
 import * as util from '../../util';
 import Swal from 'sweetalert2';
@@ -24,9 +25,10 @@ export class SegmentoComponent implements OnInit {
 
   abrirPanelNuevoSegmento = true;
   abrirPanelAdminSegmento = false;
+  editarSegmento = true;
 
-  sesion: Sesion=null;
-  segmento= new Segmento();
+  sesion: Sesion = null;
+  segmento: Segmento = new Segmento();
   segmentos: Segmento[];
 
   columnasSegmento: any[] = [
@@ -38,19 +40,21 @@ export class SegmentoComponent implements OnInit {
   ];
   cabeceraSegmento: string[] = this.columnasSegmento.map(titulo => titulo.nombreColumna);
   dataSourceSegmento: MatTableDataSource<Segmento>;
+  //observableDSSegmento: BehaviorSubject<MatTableDataSource<Segmento>> = new BehaviorSubject<MatTableDataSource<Segmento>>(null);
   clickedRows = new Set<Segmento>();
-  
+
+
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
   constructor(private segmentoService: SegmentoService,
-    private sesionService: SesionService,private router: Router) { }
+    private sesionService: SesionService, private router: Router) { }
 
   ngOnInit() {
     this.sesion=util.validarSesion(this.sesionService, this.router);
-    this.consultar();
+    this.consultarSegmentos();
   }
-  
+
   @HostListener('window:keypress', ['$event'])
   keyEvent($event: KeyboardEvent) {
     if (($event.shiftKey || $event.metaKey) && $event.key == 'G') //SHIFT + G
@@ -61,71 +65,90 @@ export class SegmentoComponent implements OnInit {
       this.eliminar(null);
   }
 
-  nuevo(event) {
-    if (event!=null)
-      event.preventDefault();
+  limpiar() {
     this.segmento = new Segmento();
+    this.editarSegmento = true;
+    this.clickedRows.clear();
+  }
+
+  nuevo(event) {
+    if (event != null)
+      event.preventDefault();
+    this.limpiar();
   }
 
   crear(event) {
-    if (event!=null)
+    if (event != null)
       event.preventDefault();
-    this.segmentoService.crear(this.segmento).subscribe(
-      res => {
+    this.segmentoService.crear(this.segmento).subscribe({
+      next: res => {
+        this.segmento = res.resultado as Segmento;
         Swal.fire({ icon: constantes.exito_swal, title: constantes.exito, text: res.mensaje });
-        this.segmento=res.resultado as Segmento;
-        this.consultar();
+        this.segmentos.push(this.segmento);
+        this.llenarTablaSegmento(this.segmentos);
       },
-      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
-    );
+      error: err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
+    });
+  }
+
+  editar(event) {
+    if (event != null)
+      event.preventDefault();
+    this.editarSegmento = true;
   }
 
   actualizar(event) {
-    if (event!=null)
+    if (event != null)
       event.preventDefault();
-    this.segmentoService.actualizar(this.segmento).subscribe(
-      res => {
+    this.segmentoService.actualizar(this.segmento).subscribe({
+      next: res => {
+        this.segmento = res.resultado as Segmento;
         Swal.fire({ icon: constantes.exito_swal, title: constantes.exito, text: res.mensaje });
-        this.segmento=res.resultado as Segmento;
-        this.consultar();
+        this.limpiar();
       },
-      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
-    );
+      error: err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
+    });
   }
 
-  eliminar(event:any) {
-    if (event!=null)
+  eliminar(event: any) {
+    if (event != null)
       event.preventDefault();
-    this.segmentoService.eliminarPersonalizado(this.segmento).subscribe(
-      res => {
+    this.segmento.estado = constantes.estadoEliminado;
+    this.segmentoService.eliminarEstado(this.segmento).subscribe({
+      next: res => {
         Swal.fire({ icon: constantes.exito_swal, title: constantes.exito, text: res.mensaje });
-        this.nuevo(null);
-        this.consultar();
+        this.limpiar();
       },
-      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
-    );
+      error: err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
+    });
   }
-  
-  consultar() {
-    this.segmentoService.consultar().subscribe(
-      res => {
+
+  consultarSegmentos() {
+    this.segmentoService.consultar().subscribe({
+      next: res => {
         this.segmentos = res.resultado as Segmento[]
-        this.dataSourceSegmento = new MatTableDataSource(this.segmentos);
-        this.dataSourceSegmento.paginator = this.paginator;
-        this.dataSourceSegmento.sort = this.sort;
+        this.llenarTablaSegmento(this.segmentos);
       },
-      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
-    );
+      error: err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
+    });
+  }
+
+  llenarTablaSegmento(segmentos: Segmento[]) {
+    this.ordenarAsc(segmentos, 'id');
+    this.dataSourceSegmento = new MatTableDataSource(segmentos);
+    this.dataSourceSegmento.paginator = this.paginator;
+    this.dataSourceSegmento.sort = this.sort;
+    //this.observableDSSegmento.next(this.dataSourceSegmento);
   }
 
   seleccion(segmento: Segmento) {
-    if (!this.clickedRows.has(segmento)){
+    if (!this.clickedRows.has(segmento)) {
       this.clickedRows.clear();
       this.clickedRows.add(segmento);
       this.segmento = segmento;
+      this.editarSegmento = false;
     } else {
-      this.clickedRows.clear();
-      this.segmento = new Segmento();
+      this.limpiar();
     }
   }
 
@@ -135,5 +158,11 @@ export class SegmentoComponent implements OnInit {
     if (this.dataSourceSegmento.paginator) {
       this.dataSourceSegmento.paginator.firstPage();
     }
+  }
+
+  ordenarAsc(arrayJson: any, pKey: any) {
+    arrayJson.sort(function (a: any, b: any) {
+      return a[pKey] > b[pKey];
+    });
   }
 }

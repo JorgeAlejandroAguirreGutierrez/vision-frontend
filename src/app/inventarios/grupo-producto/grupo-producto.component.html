@@ -1,16 +1,6 @@
 <nav class="navbar-light nav-fijo">
     <ul class="navbar-nav">
         <ng-container *ngIf="abrirPanelNuevoGrupo">
-            <li class="nav-item">
-                <a class="nav-link" title="Nuevo" role="button" (click)="nuevo($event)">
-                    <mat-icon>note_add</mat-icon>
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" title="Borrar" role="button" (click)="borrar($event)">
-                    <mat-icon>backspace</mat-icon>
-                </a>
-            </li>
             <li class="nav-item" *ngIf="grupoProducto.id==0">
                 <a class="nav-link" title="Guardar" role="button" (click)="crear($event)">
                     <mat-icon>save</mat-icon>
@@ -19,6 +9,16 @@
             <li class="nav-item" *ngIf="grupoProducto.id!=0">
                 <a class="nav-link" title="Actualizar" role="button" (click)="actualizar($event)">
                     <mat-icon>update</mat-icon>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" title="Nuevo" role="button" (click)="nuevo($event)">
+                    <mat-icon>file_copy</mat-icon>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" title="Borrar" role="button" (click)="borrar($event)">
+                    <mat-icon>backspace</mat-icon>
                 </a>
             </li>
             <li class="nav-item">

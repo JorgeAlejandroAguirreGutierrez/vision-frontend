@@ -1,9 +1,10 @@
-import { Router } from '@angular/router'; 
-import { Component, OnInit, HostListener, Input, Type, ViewChild, ɵConsole } from '@angular/core';
+import { Component, OnInit, HostListener, Type, ViewChild, Inject, ɵConsole } from '@angular/core';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
 import Swal from 'sweetalert2';
 import * as constantes from '../../constantes';
 
+import { Router } from '@angular/router'; 
 import { environment } from '../../../environments/environment';
 import { Empresa } from '../../modelos/empresa';
 import { EmpresaService } from '../../servicios/empresa.service';
@@ -22,6 +23,7 @@ import { Ubicacion } from '../../modelos/ubicacion';
 import { UbicacionService } from '../../servicios/ubicacion.service';
 import { Telefono } from '../../modelos/telefono';
 import { Celular } from '../../modelos/celular';
+import { Coordenada } from '../../modelos/coordenada';
 import { Correo } from '../../modelos/correo';
 import { Dependiente } from '../../modelos/dependiente';
 import { TelefonoDependiente } from '../../modelos/telefono-dependiente';
@@ -130,6 +132,14 @@ export class ProveedorComponent implements OnInit {
   panelOpenState = false;
   value = 'Clear me';
 
+  //Mapa
+  latitud: number = -1.6705413480437092; //Tomar de configuación y poner en el init
+  longitud: number = -78.64974203645144;
+  ubicacionCentral: Coordenada = new Coordenada(this.latitud, this.longitud);
+  ubicacionGeografica: Coordenada;
+  mapTypeId: string = 'hybrid';
+  coordenadas: Coordenada[] = [];
+
   columnasProveedor: any[] = [
     { nombreColumna: 'id', cabecera: 'ID', celda: (row: Proveedor) => `${row.id}`},
     { nombreColumna: 'codigo', cabecera: 'Código', celda: (row: Proveedor) => `${row.codigo}`},
@@ -145,7 +155,7 @@ export class ProveedorComponent implements OnInit {
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
-  constructor(private modalService: NgbModal, private proveedorService: ProveedorService, private clienteService: ClienteService, private generoService: GeneroService,
+  constructor(public dialog: MatDialog, private modalService: NgbModal, private proveedorService: ProveedorService, private clienteService: ClienteService, private generoService: GeneroService,
     private estadoCivilService: EstadoCivilService, private origenIngresoService: OrigenIngresoService,
     private calificacionClienteService: CalificacionClienteService, private plazoCreditoService: PlazoCreditoService,
     private tipoPagoService: TipoPagoService, private formaPagoService: FormaPagoService,
@@ -912,4 +922,54 @@ export class ProveedorComponent implements OnInit {
     );
   }
 
+  dialogoMapas(): void {
+    //console.log('El dialogo para selección de grupo producto fue abierto');
+    const dialogRef = this.dialog.open(DialogoMapaProveedorComponent, {
+      width: '80%',
+      // Para enviar datos
+      //data: { usuario: this.usuario, clave: this.clave, grupo_producto_recibido: "" }
+      data: this.ubicacionGeografica as Coordenada
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      //console.log('El dialogo para selección de coordenada fue cerrado');
+      console.log(result);
+      if (result) {
+        this.ubicacionGeografica = result as Coordenada;
+        this.ubicacionCentral = this.ubicacionGeografica;
+       //console.log(result);
+      }
+    });
+  }
+
+}
+
+@Component({
+  selector: 'dialogo-mapa-proveedor',
+  templateUrl: 'dialogo-mapa-proveedor.component.html',
+})
+export class DialogoMapaProveedorComponent {
+
+  mapa: string[] = [];
+
+  constructor(
+    public dialogRef: MatDialogRef<DialogoMapaProveedorComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: Coordenada) { }
+
+  onNoClick(): void {
+    this.dialogRef.close();
+    //console.log('El dialogo para selección de coordenada fue cancelado');
+    this.data = new Coordenada(0,0);
+  }
+
+  coordenadaSeleccionada(event: any) {
+    //console.log(event);
+    if (event && event.latitud != 0) {
+      this.data = event as Coordenada;
+      //this.producto.grupo_producto = grupoProductoRecibido;
+      console.log(this.data);
+    } else {
+      this.data = new Coordenada(0,0);
+    }
+  }
 }

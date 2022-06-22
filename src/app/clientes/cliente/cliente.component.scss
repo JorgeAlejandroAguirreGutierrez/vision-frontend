@@ -3,6 +3,7 @@
 .mat-icon-button {
     width: 20px;
 }
+
 .derecha{
     justify-content: end;
 }
@@ -10,4 +11,9 @@
 .mapa{
     width: 100%;
     height: 180px;
+}
+
+section>.form-row{
+    margin-right: 0px;
+    margin-left: 0px;
 }

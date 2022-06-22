@@ -76,8 +76,8 @@ export class SegmentoService {
     );
   }
 
-  eliminarPersonalizado(segmento: Segmento): Observable<Respuesta> {
-    return this.http.delete(environment.host+util.ruta+util.segmento+util.personalizado + '/' + segmento.id, util.options).pipe(
+  eliminarEstado(segmento: Segmento): Observable<Respuesta> {
+    return this.http.put(environment.host+util.ruta+util.segmento, JSON.stringify(segmento), util.options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);

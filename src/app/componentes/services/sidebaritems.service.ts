@@ -29,6 +29,7 @@ import { TransferenciaBodegaComponent } from '../../inventarios/transferencia-bo
 import { BodegaComponent } from "../../inventarios/bodega/bodega.component";
 
 import { TransportistaComponent } from '../../entregas/transportista/transportista.component';
+import { VehiculoTransporteComponent } from '../../entregas/vehiculo-transporte/vehiculo-transporte.component';
 
 import { MedidaComponent } from '../../inventarios/medida/medida.component';
 import { EquivalenciaMedidaComponent } from '../../inventarios/equivalencia-medida/equivalencia-medida.component';
@@ -81,6 +82,8 @@ export class SidebarItemsService {
       this.llenarOpciones(PedidoComponent, constantes.tab_pedido, constantes.item_pedido, constantes.ico_pedido);
       this.llenarOpciones(ProformaComponent, constantes.tab_proforma, constantes.item_proforma, constantes.ico_proforma);
       this.llenarOpciones(EgresoComponent, constantes.tab_egreso, constantes.item_egreso, constantes.ico_egreso);
+      this.llenarOpciones(TransportistaComponent, constantes.tab_transportista, constantes.item_transportista, constantes.ico_transportista);
+      this.llenarOpciones(VehiculoTransporteComponent, constantes.tab_vehiculo_transporte, constantes.item_vehiculo_transporte, constantes.ico_vehiculo_transporte);
     }
 
     if (tabNombre == constantes.modulo_inventarios) {
@@ -120,7 +123,6 @@ export class SidebarItemsService {
       this.llenarOpciones(EstadoCivilComponent,constantes.tab_estado_civil, constantes.item_estado_civil, constantes.ico_estado_civil);
       this.llenarOpciones(GeneroComponent, constantes.tab_genero, constantes.item_genero, constantes.ico_genero);
       this.llenarOpciones(TipoPagoComponent,constantes.tab_tipo_pago, constantes.item_tipo_pago, constantes.ico_tipo_pago);
-      this.llenarOpciones(TransportistaComponent, constantes.tab_transportista, constantes.item_transportista, constantes.ico_transportista);
       this.llenarOpciones(UbicacionComponent,constantes.tab_ubicacion, constantes.item_ubicacion, constantes.ico_ubicacion);
       this.llenarOpciones(TipoRetencionComponent,constantes.tab_tipo_retencion, constantes.item_tipo_retencion, constantes.ico_tipo_retencion);
       this.llenarOpciones(ImportarComponent, constantes.tab_importacion, constantes.item_importacion, constantes.ico_importacion);
