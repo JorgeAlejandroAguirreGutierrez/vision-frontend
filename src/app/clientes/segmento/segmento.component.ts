@@ -23,9 +23,12 @@ import { Router } from '@angular/router';
 })
 export class SegmentoComponent implements OnInit {
 
-  abrirPanelNuevoSegmento = true;
-  abrirPanelAdminSegmento = false;
-  editarSegmento = true;
+  estadoActivo:String = constantes.estadoActivo;
+  estadoInactivo:String = constantes.estadoInactivo;
+
+  abrirPanelNuevoSegmento:boolean = true;
+  abrirPanelAdminSegmento:boolean = false;
+  editarSegmento:boolean = true;
 
   sesion: Sesion = null;
   segmento: Segmento = new Segmento();
@@ -40,14 +43,15 @@ export class SegmentoComponent implements OnInit {
   ];
   cabeceraSegmento: string[] = this.columnasSegmento.map(titulo => titulo.nombreColumna);
   dataSourceSegmento: MatTableDataSource<Segmento>;
-  //observableDSSegmento: BehaviorSubject<MatTableDataSource<Segmento>> = new BehaviorSubject<MatTableDataSource<Segmento>>(null);
+  observableDSSegmento: BehaviorSubject<MatTableDataSource<Segmento>> = new BehaviorSubject<MatTableDataSource<Segmento>>(null);
   clickedRows = new Set<Segmento>();
 
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
+  @ViewChild("inputFiltroSegmento") inputFiltroSegmento: ElementRef;
 
-  constructor(private segmentoService: SegmentoService,
+  constructor(private renderer: Renderer2, private segmentoService: SegmentoService,
     private sesionService: SesionService, private router: Router) { }
 
   ngOnInit() {
@@ -69,6 +73,7 @@ export class SegmentoComponent implements OnInit {
     this.segmento = new Segmento();
     this.editarSegmento = true;
     this.clickedRows.clear();
+    this.borrarFiltroSegmento();
   }
 
   nuevo(event) {
@@ -138,7 +143,7 @@ export class SegmentoComponent implements OnInit {
     this.dataSourceSegmento = new MatTableDataSource(segmentos);
     this.dataSourceSegmento.paginator = this.paginator;
     this.dataSourceSegmento.sort = this.sort;
-    //this.observableDSSegmento.next(this.dataSourceSegmento);
+    this.observableDSSegmento.next(this.dataSourceSegmento);
   }
 
   seleccion(segmento: Segmento) {
@@ -158,6 +163,10 @@ export class SegmentoComponent implements OnInit {
     if (this.dataSourceSegmento.paginator) {
       this.dataSourceSegmento.paginator.firstPage();
     }
+  }
+  borrarFiltroSegmento(){
+    this.renderer.setProperty(this.inputFiltroSegmento.nativeElement, 'value', '');
+    this.dataSourceSegmento.filter = '';
   }
 
   ordenarAsc(arrayJson: any, pKey: any) {

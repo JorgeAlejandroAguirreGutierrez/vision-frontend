@@ -69,8 +69,8 @@
                     <mat-form-field appearance="standard">
                         <mat-label>Estado</mat-label>
                         <mat-select [(ngModel)]="segmento.estado" [disabled]="!editarSegmento" class="form-control-sm">
-                            <mat-option value="ACTIVO">ACTIVO</mat-option>
-                            <mat-option value="INACTIVO">INACTIVO</mat-option>
+                            <mat-option [value]="estadoActivo">{{estadoActivo}}</mat-option>
+                            <mat-option [value]="estadoInactivo">{{estadoInactivo}}</mat-option>
                         </mat-select>
                     </mat-form-field>
                 </div>
@@ -93,10 +93,14 @@
             <hr>
             <mat-form-field appearance="standard">
                 <mat-label>Buscar segmento</mat-label>
-                <input matInput (keyup)="filtroSegmento($event)" #input>
+                <input matInput (keyup)="filtroSegmento($event)" #inputFiltroSegmento>
+                <button mat-button *ngIf="inputFiltroSegmento.value" matSuffix mat-icon-button
+                    (click)="borrarFiltroSegmento()">
+                    <mat-icon>close</mat-icon>
+                </button>
             </mat-form-field>
             <div class="mat-elevation-z8">
-                <table mat-table [dataSource]="dataSourceSegmento" matSort>
+                <table mat-table [dataSource]="observableDSSegmento.value" matSort>
                     <!-- Columnas Dinamicas -->
                     <ng-container *ngFor="let columna of columnasSegmento" [matColumnDef]="columna.nombreColumna">
                         <th mat-header-cell *matHeaderCellDef mat-sort-header> {{ columna.cabecera }} </th>
@@ -108,6 +112,7 @@
                     <!-- Row shown when there is no matching data. -->
                     <tr class="mat-row" *matNoDataRow>
                         <td class="mat-cell" colspan="6">No hay datos que coincidan con el segmento
+                            "{{inputFiltroSegmento.value}}" 
                         </td>
                     </tr>
                 </table>
