@@ -146,7 +146,7 @@ export const tab_recaudacion='Recaudacion';
 export const tab_transferencia_bodega='Transferencia Bodega';
 export const tab_mapa_cliente = 'Mapa Cliente'
 export const tab_promociones = 'Promocion'
-
+export const tab_indicadores = 'Indicadores'
 
 /**********************************
  * CONSTANTES PARA NOMBRAR LOS ITEMS DEL SIDEBAR
@@ -210,6 +210,7 @@ export const item_recaudacion='Recaudación';
 export const item_transferencia_bodega='Transferencia Bodega';
 export const item_mapa_cliente = 'Mapa Cliente'
 export const item_promociones = 'Promocion'
+export const item_indicadores = 'Dashboard'
 
 /**********************************
  * CONSTANTES CON NOMBRES DE LOS ICONOS DEL SIDEBAR
@@ -271,6 +272,7 @@ export const ico_proveedor_producto='fa fa-bus';
 export const ico_transferencia_bodega='fa fa-handshake-o';
 export const ico_mapa_cliente = 'fa fa-map';
 export const ico_promociones = 'fa fa-product-hunt';
+export const ico_indicadores = 'fa fa-bar-chart';
 
 /*********************************
  * NOMBRES DEL TAB PRICIPAL

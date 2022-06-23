@@ -45,6 +45,8 @@ import { GeneroComponent } from '../../configuraciones/genero/genero.component';
 import { ImportarComponent } from '../../configuraciones/importar/importar.component';
 import { ExportarComponent } from '../../configuraciones/exportar/exportar.component';
 
+import { DashboardComponent } from '../../componentes/pages/dashboard/dashboard.component';
+
 import { SegmentoComponent } from '../../clientes/segmento/segmento.component';
 import { MovimientoContableComponent } from '../../contabilidad/movimiento-contable/movimiento-contable.component';
 import { CuentaContableComponent } from '../../contabilidad/cuenta-contable/cuenta-contable.component';
@@ -136,6 +138,7 @@ export class SidebarItemsService {
     }
     
     if (tabNombre == constantes.modulo_estadisticas) {
+      this.llenarOpciones(DashboardComponent,constantes.tab_indicadores, constantes.item_indicadores, constantes.ico_indicadores);
     }
 
     if (tabNombre == constantes.modulo_control) {
