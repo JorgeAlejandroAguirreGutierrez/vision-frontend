@@ -6,16 +6,16 @@
             </a>
         </li>
         <ng-container *ngIf="segmento.id!=0">
-        <li class="nav-item" *ngIf="!editarSegmento">
-            <a class="nav-link" title="Actualizar" role="button" (click)="editar($event)">
-                <mat-icon>edit</mat-icon>
-            </a>
-        </li>
-        <li class="nav-item" *ngIf="editarSegmento">
-            <a class="nav-link" title="Actualizar" role="button" (click)="actualizar($event)">
-                <mat-icon>update</mat-icon>
-            </a>
-        </li>
+            <li class="nav-item" *ngIf="!editarSegmento">
+                <a class="nav-link" title="Actualizar" role="button" (click)="editar($event)">
+                    <mat-icon>edit</mat-icon>
+                </a>
+            </li>
+            <li class="nav-item" *ngIf="editarSegmento">
+                <a class="nav-link" title="Actualizar" role="button" (click)="actualizar($event)">
+                    <mat-icon>update</mat-icon>
+                </a>
+            </li>
         </ng-container>
         <li class="nav-item">
             <a class="nav-link" title="Nuevo" role="button" (click)="nuevo($event)">
@@ -76,7 +76,7 @@
                 </div>
             </div>
         </mat-expansion-panel>
-    </mat-accordion>    
+    </mat-accordion>
     <mat-accordion class="headers-align">
         <mat-expansion-panel (opened)="abrirPanelAdminSegmento = true" (closed)="abrirPanelAdminSegmento = false"
             [expanded]="abrirPanelAdminSegmento">
@@ -85,8 +85,7 @@
                     <i><u>GESTIONAR SEGMENTOS</u></i>
                 </mat-panel-title>
                 <mat-panel-description>
-                    {{abrirPanelAdminSegmento ? 'Ocultar administrador de segmentos' : 'Editar
-                    segmento existente'}}
+                    {{abrirPanelAdminSegmento ? 'Ocultar administrador de segmentos' : 'Editar segmento existente'}}
                     <mat-icon>playlist_add_check</mat-icon>
                 </mat-panel-description>
             </mat-expansion-panel-header>
@@ -111,8 +110,8 @@
                         *matRowDef="let row; columns: cabeceraSegmento;"></tr>
                     <!-- Row shown when there is no matching data. -->
                     <tr class="mat-row" *matNoDataRow>
-                        <td class="mat-cell" colspan="6">No hay datos que coincidan con el segmento
-                            "{{inputFiltroSegmento.value}}" 
+                        <td class="mat-cell" colspan="6">No hay datos que coincidan con el segmento: 
+                            "{{inputFiltroSegmento.value}}"
                         </td>
                     </tr>
                 </table>

@@ -1,8 +1,10 @@
-import { Component, OnInit, HostListener  } from '@angular/core';
+import { Component, OnInit, HostListener, ElementRef, Renderer2 } from '@angular/core';
+import { BehaviorSubject } from 'rxjs';
 import * as constantes from '../../constantes';
 import * as util from '../../util';
 import Swal from 'sweetalert2';
 
+import { Router } from '@angular/router';
 import { Sesion } from '../../modelos/sesion';
 import { SesionService } from '../../servicios/sesion.service';
 import { GrupoClienteService } from '../../servicios/grupo-cliente.service';
@@ -12,7 +14,6 @@ import { ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-grupo-cliente',
@@ -22,12 +23,16 @@ import { Router } from '@angular/router';
 
 export class GrupoClienteComponent implements OnInit {
 
-  abrirPanelNuevoGrupoCliente = true;
-  abrirPanelAdminGrupoCliente = false;
+  estadoActivo: string = constantes.estadoActivo;
+  estadoInactivo: string = constantes.estadoInactivo;
+
+  abrirPanelNuevoGrupoCliente: boolean = true;
+  abrirPanelAdminGrupoCliente: boolean = false;
+  editarGrupoCliente: boolean = true;
 
   sesion: Sesion=null;
   grupoCliente= new GrupoCliente();
-  gruposClientes: GrupoCliente[];
+  grupoClientes: GrupoCliente[];
 
   columnasGrupoCliente: any[] = [
     { nombreColumna: 'id', cabecera: 'ID', celda: (row: GrupoCliente) => `${row.id}` },
@@ -38,17 +43,19 @@ export class GrupoClienteComponent implements OnInit {
   ];
   cabeceraGrupoCliente: string[] = this.columnasGrupoCliente.map(titulo => titulo.nombreColumna);
   dataSourceGrupoCliente: MatTableDataSource<GrupoCliente>;
+  observableDSGrupoCliente: BehaviorSubject<MatTableDataSource<GrupoCliente>> = new BehaviorSubject<MatTableDataSource<GrupoCliente>>(null);
   clickedRows = new Set<GrupoCliente>();
   
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
+  @ViewChild("inputFiltroGrupoCliente") inputFiltroGrupoCliente: ElementRef;
 
-  constructor(private grupoClienteService: GrupoClienteService,
+  constructor(private renderer: Renderer2, private grupoClienteService: GrupoClienteService,
     private sesionService: SesionService,private router: Router) { }
 
   ngOnInit() {
     this.sesion=util.validarSesion(this.sesionService, this.router);
-    this.consultar();
+    this.consultarGrupoCliente();
   }
   
   @HostListener('window:keypress', ['$event'])
@@ -61,70 +68,90 @@ export class GrupoClienteComponent implements OnInit {
       this.eliminar(null);
   }
 
-  nuevo(event) {
-    if (event!=null)
-      event.preventDefault();
+  limpiar() {
     this.grupoCliente = new GrupoCliente();
+    this.editarGrupoCliente = true;
+    this.clickedRows.clear();
+    this.borrarFiltroGrupoCliente();
+  }
+
+  nuevo(event) {
+    if (event != null)
+      event.preventDefault();
+    this.limpiar();
   }
 
   crear(event) {
-    if (event!=null)
+    if (event != null)
       event.preventDefault();
-    this.grupoClienteService.crear(this.grupoCliente).subscribe(
-      res => {
+    this.grupoClienteService.crear(this.grupoCliente).subscribe({
+      next: res => {
+        this.grupoCliente = res.resultado as GrupoCliente;
         Swal.fire({ icon: constantes.exito_swal, title: constantes.exito, text: res.mensaje });
-        this.grupoCliente=res.resultado as GrupoCliente;
-        this.consultar();
+        this.grupoClientes.push(this.grupoCliente);
+        this.llenarTablaGrupoCliente(this.grupoClientes);
       },
-      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
-    );
+      error: err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
+    });
+  }
+
+  editar(event) {
+    if (event != null)
+      event.preventDefault();
+    this.editarGrupoCliente = true;
   }
 
   actualizar(event) {
-    if (event!=null)
+    if (event != null)
       event.preventDefault();
-    this.grupoClienteService.actualizar(this.grupoCliente).subscribe(
-      res => {
+    this.grupoClienteService.actualizar(this.grupoCliente).subscribe({
+      next: res => {
+        this.grupoCliente = res.resultado as GrupoCliente;
         Swal.fire({ icon: constantes.exito_swal, title: constantes.exito, text: res.mensaje });
-        this.grupoCliente=res.resultado as GrupoCliente;
-        this.consultar();
+        this.limpiar();
       },
-      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
-    );
+      error: err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
+    });
   }
 
-  eliminar(event:any) {
-    if (event!=null)
+  eliminar(event: any) {
+    if (event != null)
       event.preventDefault();
-    this.grupoClienteService.eliminarPersonalizado(this.grupoCliente).subscribe(
-      res => {
+    this.grupoClienteService.eliminarPersonalizado(this.grupoCliente).subscribe({
+      next: res => {
         Swal.fire({ icon: constantes.exito_swal, title: constantes.exito, text: res.mensaje });
-        this.consultar();
+        this.limpiar();
       },
-      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
-    );
+      error: err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
+    });
   }
-  
-  consultar() {
-    this.grupoClienteService.consultar().subscribe(
-      res => {
-        this.gruposClientes = res.resultado as GrupoCliente[]
-        this.dataSourceGrupoCliente = new MatTableDataSource(this.gruposClientes);
-        this.dataSourceGrupoCliente.paginator = this.paginator;
-        this.dataSourceGrupoCliente.sort = this.sort;
+
+  consultarGrupoCliente() {
+    this.grupoClienteService.consultar().subscribe({
+      next: res => {
+        this.grupoClientes = res.resultado as GrupoCliente[]
+        this.llenarTablaGrupoCliente(this.grupoClientes);
       },
-      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
-    );
+      error: err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
+    });
+  }
+
+  llenarTablaGrupoCliente(grupoClientes: GrupoCliente[]) {
+    this.ordenarAsc(grupoClientes, 'id');
+    this.dataSourceGrupoCliente = new MatTableDataSource(grupoClientes);
+    this.dataSourceGrupoCliente.paginator = this.paginator;
+    this.dataSourceGrupoCliente.sort = this.sort;
+    this.observableDSGrupoCliente.next(this.dataSourceGrupoCliente);
   }
 
   seleccion(grupoCliente: GrupoCliente) {
-    if (!this.clickedRows.has(grupoCliente)){
+    if (!this.clickedRows.has(grupoCliente)) {
       this.clickedRows.clear();
       this.clickedRows.add(grupoCliente);
       this.grupoCliente = grupoCliente;
+      this.editarGrupoCliente = false;
     } else {
-      this.clickedRows.clear();
-      this.grupoCliente = new GrupoCliente();
+      this.limpiar();
     }
   }
 
@@ -134,5 +161,15 @@ export class GrupoClienteComponent implements OnInit {
     if (this.dataSourceGrupoCliente.paginator) {
       this.dataSourceGrupoCliente.paginator.firstPage();
     }
+  }
+  borrarFiltroGrupoCliente() {
+    this.renderer.setProperty(this.inputFiltroGrupoCliente.nativeElement, 'value', '');
+    this.dataSourceGrupoCliente.filter = '';
+  }
+
+  ordenarAsc(arrayJson: any, pKey: any) {
+    arrayJson.sort(function (a: any, b: any) {
+      return a[pKey] > b[pKey];
+    });
   }
 }

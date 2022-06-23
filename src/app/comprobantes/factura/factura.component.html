@@ -1,7 +1,7 @@
 <div class="contenedor">
     <mat-stepper [linear]="isLinear" #stepper>
         <!-- Paso Facturación -->
-        <mat-step [stepControl]="firstFormGroup" [editable]="isEditable" >
+        <mat-step [stepControl]="firstFormGroup" [editable]="isEditable">
             <nav class="navbar-light nav-fijo">
                 <ul class="navbar-nav">
                     <li class="nav-item">
@@ -101,7 +101,8 @@
                             </div>
                             <div class="col-1 centrar iconos">
                                 <button mat-icon-button [disabled]="habilitarSeleccionDependiente">
-                                    <mat-icon (click)="asignarDependiente(modalDependientes)">supervisor_account</mat-icon>
+                                    <mat-icon (click)="asignarDependiente(modalDependientes)">supervisor_account
+                                    </mat-icon>
                                 </button>
                             </div>
                             <div class="col-12">
@@ -308,7 +309,8 @@
                         </div>
                     </div>
                 </mat-expansion-panel>
-                <mat-expansion-panel (opened)="panelOpenState = true" (closed)="panelOpenState = false" *ngIf="verAcordeonFacturaDetalle">
+                <mat-expansion-panel (opened)="panelOpenState = true" (closed)="panelOpenState = false"
+                    *ngIf="verAcordeonFacturaDetalle">
                     <mat-expansion-panel-header>
                         <mat-panel-title>
                             <i><u>DETALLE FACTURA</u></i>
@@ -503,7 +505,7 @@
                                 <!-- Cantidad Columna -->
                                 <ng-container matColumnDef="cantidad">
                                     <th mat-header-cell *matHeaderCellDef mat-sort-header>Cant </th>
-                                    <td mat-cell *matCellDef="let facturaDetalle"> 
+                                    <td mat-cell *matCellDef="let facturaDetalle">
                                         {{facturaDetalle.cantidad}} </td>
                                 </ng-container>
                                 <!-- Valor Columna -->
@@ -621,7 +623,7 @@
                                                     class="form-control-sm " disabled>
                                             </mat-form-field>
                                         </div>
-                                        <div class="col-7 negrita centrar-vertical-izq" >
+                                        <div class="col-7 negrita centrar-vertical-izq">
                                             <mat-label>Descuento :</mat-label>
                                         </div>
                                         <div class="col-5">
@@ -665,9 +667,11 @@
                                         <div class="col-5">
                                             <form [formGroup]="firstFormGroup">
                                                 <mat-form-field appearance="standard">
-                                                    <input matInput type="text" formControlName="firstCtrl" [(ngModel)]="factura.totalConDescuento"
+                                                    <input matInput type="text" formControlName="firstCtrl"
+                                                        [(ngModel)]="factura.totalConDescuento"
                                                         class="form-control-sm resaltar" [disabled] required>
-                                                    <mat-error *ngIf="firstFormGroup.get('firstCtrl').errors">Sin valor</mat-error>
+                                                    <mat-error *ngIf="firstFormGroup.get('firstCtrl').errors">Sin valor
+                                                    </mat-error>
                                                 </mat-form-field>
                                             </form>
                                         </div>
@@ -678,47 +682,51 @@
                     </div>
                 </mat-expansion-panel>
             </mat-accordion>
-            <mat-expansion-panel (opened)="abrirPanelAdminFactura = true" (closed)="abrirPanelAdminFactura = false">
-                <mat-expansion-panel-header>
-                    <mat-panel-title>
-                        <i><u>GESTIONAR FACTURAS</u></i>
-                    </mat-panel-title>
-                    <mat-panel-description>
-                        {{abrirPanelAdminFactura ? 'Ocultar administrador de facturas' : 'Editar facturas existentes'}}
-                        <mat-icon>group</mat-icon>
-                    </mat-panel-description>
-                </mat-expansion-panel-header>
-                <hr>
-                <mat-form-field appearance="standard">
-                    <mat-label>Buscar factura</mat-label>
-                    <input matInput (keyup)="filtroFactura($event)" placeholder="Ej. 001" #input>
-                </mat-form-field>
-                <div class="mat-elevation-z8">
-                    <table mat-table [dataSource]="dataSourceFactura" matSort>
-                        <!-- Columnas Dinamicas -->
-                        <ng-container *ngFor="let columna of columnas" [matColumnDef]="columna.nombreColumna">
-                            <th mat-header-cell *matHeaderCellDef mat-sort-header> {{ columna.cabecera }} </th>
-                            <td mat-cell *matCellDef="let row"> {{ columna.celda(row) }} </td>
-                            
-                        </ng-container>
-    
-                        <tr mat-header-row *matHeaderRowDef="columnasFactura"></tr>
-                        <tr mat-row (click)="seleccionActualizar(row)" [class.selected-row]="clickedRows.has(row)"
-                            *matRowDef="let row; columns: columnasFactura;"></tr>
-    
-                        <tr class="mat-row" *matNoDataRow>
-                            <td class="mat-cell" colspan="6">No hay datos que coincidan con el grupo "{{input.value}}"</td>
-                        </tr>
-                    </table>
-                    <mat-paginator #paginatorFacturas [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
-                </div>
-                <div class="azul" *ngIf="!clickedRows.size">
-                    Seleccione una fila para editar
-                </div>
-                <div class="azul" *ngFor="let clickedRow of clickedRows">
-                    Id: {{clickedRow.id}} seleccionado
-                </div>
-            </mat-expansion-panel>
+            <mat-accordion class="headers-align">
+                <mat-expansion-panel (opened)="abrirPanelAdminFactura = true" (closed)="abrirPanelAdminFactura = false">
+                    <mat-expansion-panel-header>
+                        <mat-panel-title>
+                            <i><u>GESTIONAR FACTURAS</u></i>
+                        </mat-panel-title>
+                        <mat-panel-description>
+                            {{abrirPanelAdminFactura ? 'Ocultar administrador de facturas' : 'Editar facturas
+                            existentes'}}
+                            <mat-icon>group</mat-icon>
+                        </mat-panel-description>
+                    </mat-expansion-panel-header>
+                    <hr>
+                    <mat-form-field appearance="standard">
+                        <mat-label>Buscar factura</mat-label>
+                        <input matInput (keyup)="filtroFactura($event)" placeholder="Ej. 001" #input>
+                    </mat-form-field>
+                    <div class="mat-elevation-z8">
+                        <table mat-table [dataSource]="dataSourceFactura" matSort>
+                            <!-- Columnas Dinamicas -->
+                            <ng-container *ngFor="let columna of columnas" [matColumnDef]="columna.nombreColumna">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header> {{ columna.cabecera }} </th>
+                                <td mat-cell *matCellDef="let row"> {{ columna.celda(row) }} </td>
+
+                            </ng-container>
+
+                            <tr mat-header-row *matHeaderRowDef="columnasFactura"></tr>
+                            <tr mat-row (click)="seleccionActualizar(row)" [class.selected-row]="clickedRows.has(row)"
+                                *matRowDef="let row; columns: columnasFactura;"></tr>
+
+                            <tr class="mat-row" *matNoDataRow>
+                                <td class="mat-cell" colspan="6">No hay datos que coincidan con el grupo
+                                    "{{input.value}}"</td>
+                            </tr>
+                        </table>
+                        <mat-paginator #paginatorFacturas [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
+                    </div>
+                    <div class="azul" *ngIf="!clickedRows.size">
+                        Seleccione una fila para editar
+                    </div>
+                    <div class="azul" *ngFor="let clickedRow of clickedRows">
+                        Id: {{clickedRow.id}} seleccionado
+                    </div>
+                </mat-expansion-panel>
+            </mat-accordion>
         </mat-step>
         <!-- Paso Recaudación -->
         <mat-step [stepControl]="secondFormGroup" [editable]="isEditable">
@@ -731,7 +739,7 @@
             </div>
         </mat-step>
         <!-- Pasos Entrega -->
-        <mat-step [stepControl]="thirdFormGroup"  [editable]="isEditable">
+        <mat-step [stepControl]="thirdFormGroup" [editable]="isEditable">
             <ng-template matStepLabel>Entrega</ng-template>
             <app-entrega></app-entrega>
             <mat-divider></mat-divider>
@@ -755,12 +763,14 @@
             <div class="form-group col-8">
                 <mat-form-field appearance="standard">
                     <mat-label>Cliente/Pista</mat-label>
-                    <input matInput type="text" [value]="factura.dependiente.razonSocial" class="form-control-sm" disabled>
+                    <input matInput type="text" [value]="factura.dependiente.razonSocial" class="form-control-sm"
+                        disabled>
                 </mat-form-field>
             </div>
             <div class="form-group col-2">
-                <mat-checkbox [disabled]="habilitarSeleccionDependiente" (change)="asignarDependiente(modalDependientes)"
-                    [(ngModel)]="seleccionDependiente" class="form-control-sm" color="primary"> Fact. a Dep</mat-checkbox>
+                <mat-checkbox [disabled]="habilitarSeleccionDependiente"
+                    (change)="asignarDependiente(modalDependientes)" [(ngModel)]="seleccionDependiente"
+                    class="form-control-sm" color="primary"> Fact. a Dep</mat-checkbox>
             </div>
         </div>
         <div class="form-row">
@@ -878,8 +888,7 @@
                             <tr>
                                 <td>
                                     <mat-checkbox [(ngModel)]="caracteristica.seleccionado" class="form-control-sm"
-                                        color="primary"
-                                        [disabled]>
+                                        color="primary" [disabled]>
                                     </mat-checkbox>
                                 </td>
                                 <td>

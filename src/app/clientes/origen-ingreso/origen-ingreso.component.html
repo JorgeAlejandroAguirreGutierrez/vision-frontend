@@ -5,17 +5,24 @@
                 <mat-icon>save</mat-icon>
             </a>
         </li>
-        <li class="nav-item" *ngIf="origenIngreso.id!=0">
-            <a class="nav-link" title="Actualizar" role="button" (click)="actualizar($event)">
-                <mat-icon>update</mat-icon>
-            </a>
-        </li>
+        <ng-container *ngIf="origenIngreso.id!=0">
+            <li class="nav-item" *ngIf="!editarOrigenIngreso">
+                <a class="nav-link" title="Actualizar" role="button" (click)="editar($event)">
+                    <mat-icon>edit</mat-icon>
+                </a>
+            </li>
+            <li class="nav-item" *ngIf="editarOrigenIngreso">
+                <a class="nav-link" title="Actualizar" role="button" (click)="actualizar($event)">
+                    <mat-icon>update</mat-icon>
+                </a>
+            </li>
+        </ng-container>
         <li class="nav-item">
             <a class="nav-link" title="Nuevo" role="button" (click)="nuevo($event)">
                 <mat-icon>file_copy</mat-icon>
             </a>
         </li>
-        <li class="nav-item">
+        <li class="nav-item" *ngIf="origenIngreso.id!=0">
             <a class="nav-link" title="Eliminar" role="button" (click)="eliminar($event)">
                 <mat-icon>delete</mat-icon>
             </a>
@@ -31,8 +38,7 @@
                     <i><u>ORIGEN DE LOS INGRESOS</u></i>
                 </mat-panel-title>
                 <mat-panel-description>
-                    {{abrirPanelNuevoOrigenIngreso ? 'Ocultar crear origen de ingreso' : 'Crear nuevo origen de
-                    ingreso'}}
+                    {{abrirPanelNuevoOrigenIngreso ? 'Ocultar crear origen de ingreso' : 'Crear nuevo origen de ingreso'}}
                     <mat-icon>add_business</mat-icon>
                 </mat-panel-description>
             </mat-expansion-panel-header>
@@ -48,23 +54,23 @@
                 <div class="col-5">
                     <mat-form-field appearance="standard">
                         <mat-label>Descripcion</mat-label>
-                        <input matInput type="text" [(ngModel)]="origenIngreso.descripcion"
+                        <input matInput type="text" [(ngModel)]="origenIngreso.descripcion" [disabled]="!editarOrigenIngreso"
                             oninput="this.value = this.value.toUpperCase()" class="form-control-sm">
                     </mat-form-field>
                 </div>
                 <div class="col-2">
                     <mat-form-field appearance="standard">
                         <mat-label>Abreviatura</mat-label>
-                        <input matInput type="text" [(ngModel)]="origenIngreso.abreviatura"
+                        <input matInput type="text" [(ngModel)]="origenIngreso.abreviatura" [disabled]="!editarOrigenIngreso"
                             oninput="this.value = this.value.toUpperCase()" class="form-control-sm">
                     </mat-form-field>
                 </div>
                 <div class="col-2">
                     <mat-form-field appearance="standard">
                         <mat-label>Estado</mat-label>
-                        <mat-select [(ngModel)]="origenIngreso.estado" class="form-control-sm">
-                            <mat-option value="ACTIVO">ACTIVO</mat-option>
-                            <mat-option value="INACTIVO">INACTIVO</mat-option>
+                        <mat-select [(ngModel)]="origenIngreso.estado" [disabled]="!editarOrigenIngreso" class="form-control-sm">
+                            <mat-option [value]="estadoActivo">{{estadoActivo}}</mat-option>
+                            <mat-option [value]="estadoInactivo">{{estadoInactivo}}</mat-option>
                         </mat-select>
                     </mat-form-field>
                 </div>
@@ -79,18 +85,21 @@
                     <i><u>GESTIONAR ORIGEN DE LOS INGRESOS</u></i>
                 </mat-panel-title>
                 <mat-panel-description>
-                    {{abrirPanelAdminOrigenIngreso ? 'Ocultar administrador de origen de los ingresos' : 'Editar
-                    origen de ingresos existente'}}
+                    {{abrirPanelAdminOrigenIngreso ? 'Ocultar administrador de origen de los ingresos' : 'Editar origen de ingresos existente'}}
                     <mat-icon>playlist_add_check</mat-icon>
                 </mat-panel-description>
             </mat-expansion-panel-header>
             <hr>
             <mat-form-field appearance="standard">
                 <mat-label>Buscar origen de ingreso</mat-label>
-                <input matInput (keyup)="filtroOrigenIngreso($event)" #input>
+                <input matInput (keyup)="filtroOrigenIngreso($event)" #inputFiltroOrigenIngreso>
+                <button mat-button *ngIf="inputFiltroOrigenIngreso.value" matSuffix mat-icon-button
+                    (click)="borrarFiltroOrigenIngreso()">
+                <mat-icon>close</mat-icon>
+            </button>
             </mat-form-field>
             <div class="mat-elevation-z8">
-                <table mat-table [dataSource]="dataSourceOrigenIngreso" matSort>
+                <table mat-table [dataSource]="observableDSOrigenIngreso.value" matSort>
                     <!-- Columnas Dinamicas -->
                     <ng-container *ngFor="let columna of columnasOrigenIngreso" [matColumnDef]="columna.nombreColumna">
                         <th mat-header-cell *matHeaderCellDef mat-sort-header> {{ columna.cabecera }} </th>
@@ -101,7 +110,8 @@
                         *matRowDef="let row; columns: cabeceraOrigenIngreso;"></tr>
                     <!-- Row shown when there is no matching data. -->
                     <tr class="mat-row" *matNoDataRow>
-                        <td class="mat-cell" colspan="6">No hay datos que coincidan con el origen de ingreso
+                        <td class="mat-cell" colspan="6">No hay datos que coincidan con el origen de ingreso:
+                            "{{inputFiltroOrigenIngreso.value}}"
                         </td>
                     </tr>
                 </table>

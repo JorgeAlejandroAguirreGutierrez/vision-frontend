@@ -94,6 +94,7 @@ export const buscarEquivalenciaMedida:string="/buscarMedidasEquivalentes"
 export const personalizado:string="/personalizado"
 export const generar: string= "/generar";
 export const pdf: string= "/pdf";
+export const estadoEliminado: string = "ELIMINADO"
 
 export const credencialUsuario='admin';
 export const credencialPassword='admin';

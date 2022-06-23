@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Respuesta } from '../respuesta';
 import * as util from '../util';
-import {HttpClient} from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { map, catchError } from 'rxjs/operators';
 import { Observable, throwError, BehaviorSubject, lastValueFrom } from 'rxjs';
 import { environment } from '../../environments/environment';
@@ -76,7 +76,8 @@ export class SegmentoService {
     );
   }
 
-  eliminarEstado(segmento: Segmento): Observable<Respuesta> {
+  eliminarPersonalizado(segmento: Segmento): Observable<Respuesta> {
+    segmento.estado = util.estadoEliminado;
     return this.http.put(environment.host+util.ruta+util.segmento, JSON.stringify(segmento), util.options).pipe(
       map(response => response as Respuesta),
       catchError(err => {

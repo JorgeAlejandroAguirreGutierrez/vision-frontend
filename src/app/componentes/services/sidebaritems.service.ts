@@ -35,10 +35,13 @@ import { MedidaComponent } from '../../inventarios/medida/medida.component';
 import { EquivalenciaMedidaComponent } from '../../inventarios/equivalencia-medida/equivalencia-medida.component';
 import { GrupoProductoComponent } from '../../inventarios/grupo-producto/grupo-producto.component';
 
-import { GeneroComponent } from '../../configuraciones/genero/genero.component';
+import { EmpresaComponent } from '../../configuraciones/empresa/empresa.component';
 import { UbicacionComponent } from '../../configuraciones/ubicacion/ubicacion.component';
-import { TipoPagoComponent } from '../../configuraciones/tipo-pago/tipo-pago.component';
 import { EstadoCivilComponent } from '../../configuraciones/estado-civil/estado-civil.component';
+import { ImpuestoComponent } from '../../configuraciones/impuesto/impuesto.component';
+import { TipoPagoComponent } from '../../configuraciones/tipo-pago/tipo-pago.component';
+import { DatoAdicionalComponent } from '../../configuraciones/dato-adicional/dato-adicional.component';
+import { GeneroComponent } from '../../configuraciones/genero/genero.component';
 import { ImportarComponent } from '../../configuraciones/importar/importar.component';
 import { ExportarComponent } from '../../configuraciones/exportar/exportar.component';
 
@@ -120,11 +123,14 @@ export class SidebarItemsService {
     }
 
     if (tabNombre == constantes.modulo_configuracion) {
-      this.llenarOpciones(EstadoCivilComponent,constantes.tab_estado_civil, constantes.item_estado_civil, constantes.ico_estado_civil);
-      this.llenarOpciones(GeneroComponent, constantes.tab_genero, constantes.item_genero, constantes.ico_genero);
-      this.llenarOpciones(TipoPagoComponent,constantes.tab_tipo_pago, constantes.item_tipo_pago, constantes.ico_tipo_pago);
+      this.llenarOpciones(EmpresaComponent,constantes.tab_empresa, constantes.item_empresa, constantes.ico_empresa);
       this.llenarOpciones(UbicacionComponent,constantes.tab_ubicacion, constantes.item_ubicacion, constantes.ico_ubicacion);
+      this.llenarOpciones(EstadoCivilComponent,constantes.tab_estado_civil, constantes.item_estado_civil, constantes.ico_estado_civil);
+      this.llenarOpciones(ImpuestoComponent, constantes.tab_impuesto, constantes.item_impuesto, constantes.ico_impuesto);
+      this.llenarOpciones(TipoPagoComponent,constantes.tab_tipo_pago, constantes.item_tipo_pago, constantes.ico_tipo_pago);
+      this.llenarOpciones(DatoAdicionalComponent, constantes.tab_dato_adicional, constantes.item_dato_adicional, constantes.ico_dato_adicional);
       this.llenarOpciones(TipoRetencionComponent,constantes.tab_tipo_retencion, constantes.item_tipo_retencion, constantes.ico_tipo_retencion);
+      this.llenarOpciones(GeneroComponent, constantes.tab_genero, constantes.item_genero, constantes.ico_genero);
       this.llenarOpciones(ImportarComponent, constantes.tab_importacion, constantes.item_importacion, constantes.ico_importacion);
       this.llenarOpciones(ExportarComponent, constantes.tab_exportacion, constantes.item_exportacion, constantes.ico_exportacion);
     }

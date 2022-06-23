@@ -788,16 +788,16 @@ export class ClienteComponent implements OnInit {
 
   provincia(provincia: string) {
     this.cliente.direccion.ubicacion.provincia = provincia;
-    this.ubicacionService.obtenerCantones(provincia).subscribe(
-      res => {
+    this.ubicacionService.obtenerCantones(provincia).subscribe({
+      next: res => {
         if (res.resultado != null) {
           this.cantones = res.resultado as Ubicacion[];
         } else {
           Swal.fire(constantes.error, res.mensaje, constantes.error_swal);
         }
       },
-      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
-    );
+      error: err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
+    });
   }
 
   seleccionarDependienteProvincia(provincia: string) {
@@ -816,16 +816,16 @@ export class ClienteComponent implements OnInit {
 
   canton(canton: string) {
     this.cliente.direccion.ubicacion.canton = canton;
-    this.ubicacionService.obtenerParroquias(canton).subscribe(
-      res => {
+    this.ubicacionService.obtenerParroquias(canton).subscribe({
+      next: res => {
         if (res.resultado != null) {
           this.parroquias = res.resultado as Ubicacion[];
         } else {
           Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: res.mensaje })
         }
       },
-      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
-    );
+      error: err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
+    });
   }
 
   seleccionarDependienteCanton(canton: string) {

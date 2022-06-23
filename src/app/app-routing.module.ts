@@ -14,11 +14,6 @@ import { InicioSesionComponent, CambioCredencialesComponent } from './componente
 import { MainComponent } from './componentes/main/main.component';
 import { MenuComponent } from './componentes/menu/menu.component';
 
-//Módulo de Configuraciones
-import { DatoAdicionalComponent } from './configuraciones/dato-adicional/dato-adicional.component';
-import { EmpresaComponent } from './configuraciones/empresa/empresa.component';
-import { UbicacionComponent } from './configuraciones/ubicacion/ubicacion.component';
-
 // Módulo de Usuarios
 import { SesionComponent } from './usuarios/sesion/sesion.component';
 import { PermisoComponent } from './usuarios/permiso/permiso.component';
@@ -89,6 +84,11 @@ import { ContabilizacionComponent } from './contabilidad/contabilizacion/contabi
 import { CuentaContableComponent } from './contabilidad/cuenta-contable/cuenta-contable.component';
 import { MovimientoContableComponent } from './contabilidad/movimiento-contable/movimiento-contable.component';
 import { TablaMovimientoContableComponent } from './contabilidad/movimiento-contable/tabla-movimiento-contable/tabla-movimiento-contable.component';
+
+//Módulo de Configuraciones
+import { EmpresaComponent, DialogoMapaEmpresaComponent } from './configuraciones/empresa/empresa.component';
+import { UbicacionComponent } from './configuraciones/ubicacion/ubicacion.component';
+import { DatoAdicionalComponent } from './configuraciones/dato-adicional/dato-adicional.component';
 
 // Otros - borrar al final
 import { DashboardComponent } from './componentes/pages/dashboard/dashboard.component';
@@ -172,11 +172,6 @@ export const RoutingComponents = [
   MainComponent,
   MenuComponent,
   CambioCredencialesComponent,
-  // configuración
-  UbicacionComponent,
-  EmpresaComponent,
-  DatoAdicionalComponent,
-  TipoRetencionComponent,
   //Usuarios
   SesionComponent,
   PermisoComponent,
@@ -244,6 +239,12 @@ export const RoutingComponents = [
   CuentaContableComponent,
   MovimientoContableComponent,
   TablaMovimientoContableComponent,
+  // configuración
+  EmpresaComponent,
+  DialogoMapaEmpresaComponent,
+  DatoAdicionalComponent,
+  TipoRetencionComponent,
+  UbicacionComponent,
   //otros
   DashboardComponent,
   TablesComponent,

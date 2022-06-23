@@ -40,15 +40,6 @@ export class PlazoCreditoService {
     );
   }
 
-  async obtenerAsync(plazoCreditoId: number): Promise<Respuesta> {
-    return await lastValueFrom(this.http.get<Respuesta>(environment.host + util.ruta + util.plazoCredito + '/' + plazoCreditoId, util.options).pipe(
-      map(response => response as Respuesta),
-      catchError(err => {
-        return throwError(()=>err);
-      })
-    ));
-  }
-
   consultar(): Observable<Respuesta> {
     return this.http.get(environment.host + util.ruta + util.plazoCredito, util.options).pipe(
       map(response => response as Respuesta),
@@ -76,7 +67,9 @@ export class PlazoCreditoService {
   }
 
   eliminarPersonalizado(plazoCredito: PlazoCredito): Observable<Respuesta> {
-    return this.http.delete(environment.host+util.ruta+util.plazoCredito+util.personalizado + '/' + plazoCredito.id, util.options).pipe(
+    plazoCredito.estado = util.estadoEliminado;
+    //return this.http.delete(environment.host+util.ruta+util.plazoCredito+util.personalizado + '/' + plazoCredito.id, util.options).pipe(
+    return this.http.put(environment.host+util.ruta+util.plazoCredito, plazoCredito, util.options).pipe(  
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);

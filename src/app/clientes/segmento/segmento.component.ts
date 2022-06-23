@@ -4,6 +4,7 @@ import * as constantes from '../../constantes';
 import * as util from '../../util';
 import Swal from 'sweetalert2';
 
+import { Router } from '@angular/router';
 import { Sesion } from '../../modelos/sesion';
 import { SesionService } from '../../servicios/sesion.service';
 import { Segmento } from '../../modelos/segmento';
@@ -13,22 +14,21 @@ import { ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { Router } from '@angular/router';
-
 
 @Component({
   selector: 'app-segmento',
   templateUrl: './segmento.component.html',
   styleUrls: ['./segmento.component.scss']
 })
+
 export class SegmentoComponent implements OnInit {
 
-  estadoActivo:String = constantes.estadoActivo;
-  estadoInactivo:String = constantes.estadoInactivo;
+  estadoActivo: string = constantes.estadoActivo;
+  estadoInactivo: string = constantes.estadoInactivo;
 
-  abrirPanelNuevoSegmento:boolean = true;
-  abrirPanelAdminSegmento:boolean = false;
-  editarSegmento:boolean = true;
+  abrirPanelNuevoSegmento: boolean = true;
+  abrirPanelAdminSegmento: boolean = false;
+  editarSegmento: boolean = true;
 
   sesion: Sesion = null;
   segmento: Segmento = new Segmento();
@@ -55,7 +55,7 @@ export class SegmentoComponent implements OnInit {
     private sesionService: SesionService, private router: Router) { }
 
   ngOnInit() {
-    this.sesion=util.validarSesion(this.sesionService, this.router);
+    this.sesion = util.validarSesion(this.sesionService, this.router);
     this.consultarSegmentos();
   }
 
@@ -118,8 +118,7 @@ export class SegmentoComponent implements OnInit {
   eliminar(event: any) {
     if (event != null)
       event.preventDefault();
-    this.segmento.estado = constantes.estadoEliminado;
-    this.segmentoService.eliminarEstado(this.segmento).subscribe({
+    this.segmentoService.eliminarPersonalizado(this.segmento).subscribe({
       next: res => {
         Swal.fire({ icon: constantes.exito_swal, title: constantes.exito, text: res.mensaje });
         this.limpiar();
@@ -164,7 +163,7 @@ export class SegmentoComponent implements OnInit {
       this.dataSourceSegmento.paginator.firstPage();
     }
   }
-  borrarFiltroSegmento(){
+  borrarFiltroSegmento() {
     this.renderer.setProperty(this.inputFiltroSegmento.nativeElement, 'value', '');
     this.dataSourceSegmento.filter = '';
   }

@@ -5,17 +5,24 @@
                 <mat-icon>save</mat-icon>
             </a>
         </li>
-        <li class="nav-item" *ngIf="calificacionCliente.id!=0">
-            <a class="nav-link" title="Actualizar" role="button" (click)="actualizar($event)">
-                <mat-icon>update</mat-icon>
-            </a>
-        </li>
+        <ng-container *ngIf="calificacionCliente.id!=0">
+            <li class="nav-item" *ngIf="!editarCalificacionCliente">
+                <a class="nav-link" title="Actualizar" role="button" (click)="editar($event)">
+                    <mat-icon>edit</mat-icon>
+                </a>
+            </li>
+            <li class="nav-item" *ngIf="editarCalificacionCliente">
+                <a class="nav-link" title="Actualizar" role="button" (click)="actualizar($event)">
+                    <mat-icon>update</mat-icon>
+                </a>
+            </li>
+        </ng-container>
         <li class="nav-item">
             <a class="nav-link" title="Nuevo" role="button" (click)="nuevo($event)">
                 <mat-icon>file_copy</mat-icon>
             </a>
         </li>
-        <li class="nav-item">
+        <li class="nav-item" *ngIf="calificacionCliente.id!=0">
             <a class="nav-link" title="Eliminar" role="button" (click)="eliminar($event)">
                 <mat-icon>delete</mat-icon>
             </a>
@@ -49,22 +56,25 @@
                     <mat-form-field appearance="standard">
                         <mat-label>Descripcion</mat-label>
                         <input matInput type="text" [(ngModel)]="calificacionCliente.descripcion"
-                            oninput="this.value = this.value.toUpperCase()" class="form-control-sm">
+                            [disabled]="!editarCalificacionCliente" oninput="this.value = this.value.toUpperCase()"
+                            class="form-control-sm">
                     </mat-form-field>
                 </div>
                 <div class="col-2">
                     <mat-form-field appearance="standard">
                         <mat-label>Abreviatura</mat-label>
                         <input matInput type="text" [(ngModel)]="calificacionCliente.abreviatura"
-                            oninput="this.value = this.value.toUpperCase()" class="form-control-sm">
+                            [disabled]="!editarCalificacionCliente" oninput="this.value = this.value.toUpperCase()"
+                            class="form-control-sm">
                     </mat-form-field>
                 </div>
                 <div class="col-2">
                     <mat-form-field appearance="standard">
                         <mat-label>Estado</mat-label>
-                        <mat-select [(ngModel)]="calificacionCliente.estado" class="form-control-sm">
-                            <mat-option value="ACTIVO">ACTIVO</mat-option>
-                            <mat-option value="INACTIVO"> INACTIVO</mat-option>
+                        <mat-select [(ngModel)]="calificacionCliente.estado" [disabled]="!editarCalificacionCliente"
+                            class="form-control-sm">
+                            <mat-option [value]="estadoActivo">{{estadoActivo}}</mat-option>
+                            <mat-option [value]="estadoInactivo">{{estadoInactivo}}</mat-option>
                         </mat-select>
                     </mat-form-field>
                 </div>
@@ -87,10 +97,15 @@
             <hr>
             <mat-form-field appearance="standard">
                 <mat-label>Buscar calificaciones</mat-label>
-                <input matInput (keyup)="filtroCalificacionCliente($event)" placeholder="Ej. EX" #input>
+                <input matInput (keyup)="filtroCalificacionCliente($event)" placeholder="Ej. MU"
+                    #inputFiltroCalificacionCliente>
+                <button mat-button *ngIf="inputFiltroCalificacionCliente.value" matSuffix mat-icon-button
+                    (click)="borrarFiltroCalificacionCliente()">
+                    <mat-icon>close</mat-icon>
+                </button>
             </mat-form-field>
             <div class="mat-elevation-z8">
-                <table mat-table [dataSource]="dataSourceCalificacionCliente" matSort>
+                <table mat-table [dataSource]="observableDSCalificacionCliente.value" matSort>
                     <!-- Columnas Dinamicas -->
                     <ng-container *ngFor="let columna of columnasCalificacionCliente"
                         [matColumnDef]="columna.nombreColumna">
@@ -102,7 +117,9 @@
                         *matRowDef="let row; columns: cabeceraCalificacionCliente;"></tr>
                     <!-- Row shown when there is no matching data. -->
                     <tr class="mat-row" *matNoDataRow>
-                        <td class="mat-cell" colspan="6">No hay datos que coincidan con la calificacion del cliente</td>
+                        <td class="mat-cell" colspan="6">No hay datos que coincidan con la calificacion:  
+                            "{{inputFiltroCalificacionCliente.value}}"
+                        </td>
                     </tr>
                 </table>
                 <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
