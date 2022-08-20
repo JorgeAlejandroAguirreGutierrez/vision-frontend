@@ -384,7 +384,7 @@ export class ProductoComponent implements OnInit {
   construirMedidasPrecios(precios: Precio[]) {
     if (precios.length > 0) {
       this.abrirPanelPrecios = [];
-      this.ordenarAsc(precios, 'id')
+      this.ordenarAsc(precios, 'id');
       this.tablaPrecios = precios;
       this.medidaPrecio = new MedidaPrecio();
       this.medidaPrecio.medida = precios[0].medida;

@@ -1,17 +1,19 @@
-import { Component, OnInit, HostListener, Type } from '@angular/core';
+import { Component, OnInit, HostListener, ElementRef, Renderer2 } from '@angular/core';
+import { BehaviorSubject } from 'rxjs';
+import * as constantes from '../../constantes';
+import * as util from '../../util';
 import Swal from 'sweetalert2';
+
 import { Router } from '@angular/router';
 import { Sesion } from '../../modelos/sesion';
 import { SesionService } from '../../servicios/sesion.service';
 import { CalificacionCliente } from '../../modelos/calificacion-cliente';
 import { CalificacionClienteService } from '../../servicios/calificacion-cliente.service';
-import * as constantes from '../../constantes';
 
 import { ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import * as util from '../../util';
 
 @Component({
   selector: 'app-calificacion-cliente',
@@ -21,12 +23,16 @@ import * as util from '../../util';
 
 export class CalificacionClienteComponent implements OnInit {
 
-  abrirPanelNuevoCalificacionCliente = true;
-  abrirPanelAdminCalificacionCliente = false;
+  estadoActivo: string = constantes.estadoActivo;
+  estadoInactivo: string = constantes.estadoInactivo;
+
+  abrirPanelNuevoCalificacionCliente : boolean= true;
+  abrirPanelAdminCalificacionCliente: boolean = false;
+  editarCalificacionCliente: boolean = true;
 
   sesion: Sesion=null;
   calificacionCliente= new CalificacionCliente();
-  calificacionesClientes: CalificacionCliente[];
+  calificacionClientes: CalificacionCliente[];
 
   columnasCalificacionCliente: any[] = [
     { nombreColumna: 'id', cabecera: 'ID', celda: (row: CalificacionCliente) => `${row.id}` },
@@ -37,17 +43,19 @@ export class CalificacionClienteComponent implements OnInit {
   ];
   cabeceraCalificacionCliente: string[] = this.columnasCalificacionCliente.map(titulo => titulo.nombreColumna);
   dataSourceCalificacionCliente: MatTableDataSource<CalificacionCliente>;
+  observableDSCalificacionCliente: BehaviorSubject<MatTableDataSource<CalificacionCliente>> = new BehaviorSubject<MatTableDataSource<CalificacionCliente>>(null);
   clickedRows = new Set<CalificacionCliente>();
   
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
+  @ViewChild("inputFiltroCalificacionCliente") inputFiltroCalificacionCliente: ElementRef;
 
-  constructor(private calificacionClienteService: CalificacionClienteService,
-    private sesionService: SesionService,private router: Router) { }
+  constructor(private renderer: Renderer2, private calificacionClienteService: CalificacionClienteService,
+        private sesionService: SesionService,private router: Router) { }
 
   ngOnInit() {
     this.sesion=util.validarSesion(this.sesionService, this.router);
-    this.consultar();
+    this.consultarCalificacionClientes();
   }
   
   @HostListener('window:keypress', ['$event'])
@@ -60,70 +68,91 @@ export class CalificacionClienteComponent implements OnInit {
       this.eliminar(null);
   }
 
-  nuevo(event) {
-    if (event!=null)
-      event.preventDefault();
+  limpiar() {
     this.calificacionCliente = new CalificacionCliente();
+    this.editarCalificacionCliente = true;
+    this.clickedRows.clear();
+    this.borrarFiltroCalificacionCliente();
+  }
+
+  nuevo(event) {
+    if (event != null)
+      event.preventDefault();
+    this.limpiar();
   }
 
   crear(event) {
-    if (event!=null)
+    if (event != null)
       event.preventDefault();
-    this.calificacionClienteService.crear(this.calificacionCliente).subscribe(
-      res => {
+    this.calificacionClienteService.crear(this.calificacionCliente).subscribe({
+      next: res => {
+        this.calificacionCliente = res.resultado as CalificacionCliente;
         Swal.fire({ icon: constantes.exito_swal, title: constantes.exito, text: res.mensaje });
-        this.calificacionCliente=res.resultado as CalificacionCliente;
-        this.consultar();
+        this.calificacionClientes.push(this.calificacionCliente);
+        this.llenarTablaCalificacionCliente(this.calificacionClientes);
       },
-      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
-    );
+      error: err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
+    });
+  }
+
+  editar(event) {
+    if (event != null)
+      event.preventDefault();
+    this.editarCalificacionCliente = true;
   }
 
   actualizar(event) {
-    if (event!=null)
+    if (event != null)
       event.preventDefault();
-    this.calificacionClienteService.actualizar(this.calificacionCliente).subscribe(
-      res => {
+    this.calificacionClienteService.actualizar(this.calificacionCliente).subscribe({
+      next: res => {
+        this.calificacionCliente = res.resultado as CalificacionCliente;
         Swal.fire({ icon: constantes.exito_swal, title: constantes.exito, text: res.mensaje });
-        this.calificacionCliente=res.resultado as CalificacionCliente;
-        this.consultar();
+        this.limpiar();
       },
-      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
-    );
+      error: err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
+    });
   }
 
-  eliminar(event:any) {
-    if (event!=null)
+  eliminar(event: any) {
+    if (event != null)
       event.preventDefault();
-    this.calificacionClienteService.eliminarPersonalizado(this.calificacionCliente).subscribe(
-      res => {
+    this.calificacionCliente.estado = constantes.estadoEliminado;
+    this.calificacionClienteService.eliminarPersonalizado(this.calificacionCliente).subscribe({
+      next: res => {
         Swal.fire({ icon: constantes.exito_swal, title: constantes.exito, text: res.mensaje });
-        this.consultar();
+        this.limpiar();
       },
-      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
-    );
-  }
-  
-  consultar() {
-    this.calificacionClienteService.consultar().subscribe(
-      res => {
-        this.calificacionesClientes = res.resultado as CalificacionCliente[]
-        this.dataSourceCalificacionCliente = new MatTableDataSource(this.calificacionesClientes);
-        this.dataSourceCalificacionCliente.paginator = this.paginator;
-        this.dataSourceCalificacionCliente.sort = this.sort;
-      },
-      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
-    );
+      error: err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
+    });
   }
 
-  seleccion(calificacionSeleccionada: CalificacionCliente) {
-    if (!this.clickedRows.has(calificacionSeleccionada)){
+  consultarCalificacionClientes() {
+    this.calificacionClienteService.consultar().subscribe({
+      next: res => {
+        this.calificacionClientes = res.resultado as CalificacionCliente[]
+        this.llenarTablaCalificacionCliente(this.calificacionClientes);
+      },
+      error: err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
+    });
+  }
+
+  llenarTablaCalificacionCliente(calificacionClientes: CalificacionCliente[]) {
+    this.ordenarAsc(calificacionClientes, 'id');
+    this.dataSourceCalificacionCliente = new MatTableDataSource(calificacionClientes);
+    this.dataSourceCalificacionCliente.paginator = this.paginator;
+    this.dataSourceCalificacionCliente.sort = this.sort;
+    this.observableDSCalificacionCliente.next(this.dataSourceCalificacionCliente);
+  }
+
+  seleccion(calificacionCliente: CalificacionCliente) {
+    if (!this.clickedRows.has(calificacionCliente)) {
       this.clickedRows.clear();
-      this.clickedRows.add(calificacionSeleccionada);
-      this.calificacionCliente = calificacionSeleccionada;
+      this.clickedRows.add(calificacionCliente);
+      this.calificacionCliente = calificacionCliente;
+      this.editarCalificacionCliente = false;
     } else {
-      this.clickedRows.clear();
-      this.calificacionCliente = new CalificacionCliente();
+      this.limpiar();
     }
   }
 
@@ -133,6 +162,16 @@ export class CalificacionClienteComponent implements OnInit {
     if (this.dataSourceCalificacionCliente.paginator) {
       this.dataSourceCalificacionCliente.paginator.firstPage();
     }
+  }
+  borrarFiltroCalificacionCliente() {
+    this.renderer.setProperty(this.inputFiltroCalificacionCliente.nativeElement, 'value', '');
+    this.dataSourceCalificacionCliente.filter = '';
+  }
+
+  ordenarAsc(arrayJson: any, pKey: any) {
+    arrayJson.sort(function (a: any, b: any) {
+      return a[pKey] > b[pKey];
+    });
   }
 
 }

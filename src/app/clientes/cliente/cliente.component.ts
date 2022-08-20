@@ -1,6 +1,8 @@
-import { Router } from '@angular/router';
-import { Component, OnInit, HostListener, Input, Type, ViewChild } from '@angular/core';
+import { Component, OnInit, HostListener, Type, ViewChild, Inject } from '@angular/core';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
+import { MouseEvent } from '@agm/core'; 
+import { Router } from '@angular/router'; 
 import Swal from 'sweetalert2';
 import * as constantes from '../../constantes';
 import * as util from '../../util';
@@ -24,6 +26,7 @@ import { UbicacionService } from '../../servicios/ubicacion.service';
 import { Telefono } from '../../modelos/telefono';
 import { Celular } from '../../modelos/celular';
 import { Correo } from '../../modelos/correo';
+import { Coordenada } from '../../modelos/coordenada';
 import { Dependiente } from '../../modelos/dependiente';
 import { TelefonoDependiente } from '../../modelos/telefono-dependiente';
 import { CorreoDependiente } from '../../modelos/correo-dependiente';
@@ -48,7 +51,6 @@ import { TipoRetencionService } from '../../servicios/tipo-retencion.service';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { CalificacionClienteComponent } from '../calificacion-cliente/calificacion-cliente.component';
 
 @Component({
   selector: 'app-cliente',
@@ -71,6 +73,7 @@ export class ClienteComponent implements OnInit {
   abrirPanelAdminCliente: boolean = false;
   estadoCliente: boolean = true;
   editing: boolean = false;
+  dirEstablecida: boolean = true;
 
   cliente: Cliente = new Cliente();
   clientes: Cliente[];
@@ -122,6 +125,14 @@ export class ClienteComponent implements OnInit {
   panelOpenState = false;
   value = 'Clear me';
 
+  //Mapa
+  latitud: number = -1.6705413480437092; //Tomar de configuación y poner en el init
+  longitud: number = -78.64974203645144;
+  ubicacionCentral: Coordenada = new Coordenada(this.latitud, this.longitud);
+  ubicacionGeografica: Coordenada;
+  mapTypeId: string = 'hybrid';
+  coordenadas: Coordenada[] = [];
+
   columnasCliente: any[] = [
     { nombreColumna: 'id', cabecera: 'ID', celda: (row: Cliente) => `${row.id}` },
     { nombreColumna: 'codigo', cabecera: 'Código', celda: (row: Cliente) => `${row.codigo}` },
@@ -150,7 +161,7 @@ export class ClienteComponent implements OnInit {
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
-  constructor(private clienteService: ClienteService, private generoService: GeneroService,
+  constructor(public dialog: MatDialog, private clienteService: ClienteService, private generoService: GeneroService,
     private estadoCivilService: EstadoCivilService, private origenIngresoService: OrigenIngresoService,
     private calificacionClienteService: CalificacionClienteService, private plazoCreditoService: PlazoCreditoService,
     private tipoPagoService: TipoPagoService, private formaPagoService: FormaPagoService,
@@ -158,6 +169,20 @@ export class ClienteComponent implements OnInit {
     private tipoRetencionService: TipoRetencionService, private router: Router, private tabService: TabService,
     private sesionService: SesionService, private empresaService: EmpresaService, private segmentoService: SegmentoService,
     private tipoContribuyenteService: TipoContribuyenteService, private modalService: NgbModal) { }
+
+    @HostListener('window:keypress', ['$event'])
+    keyEvent($event: KeyboardEvent) {
+      if (($event.shiftKey || $event.metaKey) && $event.key == "G")
+        this.crear(null);
+      if (($event.shiftKey || $event.metaKey) && $event.key == "N")
+        this.nuevo(null);
+      if (($event.shiftKey || $event.metaKey) && $event.key == "E")
+        console.log('SHIFT + E');
+      if (($event.shiftKey || $event.metaKey) && $event.key == "B")
+        console.log('SHIFT + B');
+      if (($event.shiftKey || $event.metaKey) && $event.key == "A")
+        console.log('SHIFT + A');
+    }
 
   ngOnInit() {
     this.sesion = util.validarSesion(this.sesionService, this.router);
@@ -287,18 +312,16 @@ export class ClienteComponent implements OnInit {
     );
   }
 
-  @HostListener('window:keypress', ['$event'])
-  keyEvent($event: KeyboardEvent) {
-    if (($event.shiftKey || $event.metaKey) && $event.key == "G")
-      this.crear(null);
-    if (($event.shiftKey || $event.metaKey) && $event.key == "N")
-      this.nuevo(null);
-    if (($event.shiftKey || $event.metaKey) && $event.key == "E")
-      console.log('SHIFT + E');
-    if (($event.shiftKey || $event.metaKey) && $event.key == "B")
-      console.log('SHIFT + B');
-    if (($event.shiftKey || $event.metaKey) && $event.key == "A")
-      console.log('SHIFT + A');
+  mapClicked($event: MouseEvent){
+    let coordenada = new Coordenada($event.coords.lat, $event.coords.lng);
+    this.coordenadas.push(coordenada);
+  }
+
+  getCurrentPosition(){
+    navigator.geolocation.getCurrentPosition(position => {
+      this.ubicacionCentral = new Coordenada(position.coords.latitude, position.coords.longitude);
+      console.log(this.ubicacionCentral);
+    })
   }
 
   obtenerSesion() {
@@ -765,16 +788,16 @@ export class ClienteComponent implements OnInit {
 
   provincia(provincia: string) {
     this.cliente.direccion.ubicacion.provincia = provincia;
-    this.ubicacionService.obtenerCantones(provincia).subscribe(
-      res => {
+    this.ubicacionService.obtenerCantones(provincia).subscribe({
+      next: res => {
         if (res.resultado != null) {
           this.cantones = res.resultado as Ubicacion[];
         } else {
           Swal.fire(constantes.error, res.mensaje, constantes.error_swal);
         }
       },
-      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
-    );
+      error: err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
+    });
   }
 
   seleccionarDependienteProvincia(provincia: string) {
@@ -793,16 +816,16 @@ export class ClienteComponent implements OnInit {
 
   canton(canton: string) {
     this.cliente.direccion.ubicacion.canton = canton;
-    this.ubicacionService.obtenerParroquias(canton).subscribe(
-      res => {
+    this.ubicacionService.obtenerParroquias(canton).subscribe({
+      next: res => {
         if (res.resultado != null) {
           this.parroquias = res.resultado as Ubicacion[];
         } else {
           Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: res.mensaje })
         }
       },
-      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
-    );
+      error: err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
+    });
   }
 
   seleccionarDependienteCanton(canton: string) {
@@ -859,4 +882,55 @@ export class ClienteComponent implements OnInit {
     );
   }
 
+  dialogoMapas(): void {
+    //console.log('El dialogo para selección de grupo producto fue abierto');
+    const dialogRef = this.dialog.open(DialogoMapaComponent, {
+      width: '80%',
+      // Para enviar datos
+      //data: { usuario: this.usuario, clave: this.clave, grupo_producto_recibido: "" }
+      data: this.ubicacionGeografica as Coordenada
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      //console.log('El dialogo para selección de coordenada fue cerrado');
+      console.log(result);
+      if (result) {
+        this.ubicacionGeografica = result as Coordenada;
+        this.ubicacionCentral = this.ubicacionGeografica;
+       //console.log(result);
+      }
+    });
+  }
+
+}
+
+
+@Component({
+  selector: 'dialogo-mapa',
+  templateUrl: 'dialogo-mapa.component.html',
+})
+export class DialogoMapaComponent {
+
+  mapa: string[] = [];
+
+  constructor(
+    public dialogRef: MatDialogRef<DialogoMapaComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: Coordenada) { }
+
+  onNoClick(): void {
+    this.dialogRef.close();
+    //console.log('El dialogo para selección de coordenada fue cancelado');
+    this.data = new Coordenada(0,0);
+  }
+
+  coordenadaSeleccionada(event: any) {
+    //console.log(event);
+    if (event && event.latitud != 0) {
+      this.data = event as Coordenada;
+      //this.producto.grupo_producto = grupoProductoRecibido;
+      console.log(this.data);
+    } else {
+      this.data = new Coordenada(0,0);
+    }
+  }
 }

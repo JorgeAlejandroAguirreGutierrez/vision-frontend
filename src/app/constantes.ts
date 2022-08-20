@@ -144,8 +144,9 @@ export const tab_movimiento_contable="Movimiento contable";
 export const tab_cuenta_contable='Cuenta contable';
 export const tab_recaudacion='Recaudacion';
 export const tab_transferencia_bodega='Transferencia Bodega';
-
-
+export const tab_mapa_cliente = 'Mapa Cliente'
+export const tab_promociones = 'Promocion'
+export const tab_indicadores = 'Indicadores'
 
 /**********************************
  * CONSTANTES PARA NOMBRAR LOS ITEMS DEL SIDEBAR
@@ -207,6 +208,9 @@ export const item_cuenta_contable='Cuenta Contable';
 export const item_proveedor_producto='Proveedor del producto';
 export const item_recaudacion='Recaudación';
 export const item_transferencia_bodega='Transferencia Bodega';
+export const item_mapa_cliente = 'Mapa Cliente'
+export const item_promociones = 'Promocion'
+export const item_indicadores = 'Dashboard'
 
 /**********************************
  * CONSTANTES CON NOMBRES DE LOS ICONOS DEL SIDEBAR
@@ -215,21 +219,21 @@ export const item_transferencia_bodega='Transferencia Bodega';
 export const ico_auxiliar=        'fa fa-file-text-o';
 export const ico_calificacion_cliente='fa fa-star-half-o';
 export const ico_celular=         'fa fa-file-text-o';
-export const ico_cliente=         'fa fa-user-plus';
+export const ico_cliente=         'fa fa-address-book';
 export const ico_correo=          'fa fa-file-text-o';
 export const ico_direccion=       'fa fa-address-card';
 export const ico_estado_civil=    'fa fa-venus-mars';
 export const ico_forma_pago=      'fa fa-cc-mastercard';
 export const ico_genero=          'fa fa-mars-stroke';
 export const ico_grupo_cliente=   'fa fa-users';
-export const ico_impuesto=        'fa fa-file-text-o';
+export const ico_impuesto=        'fa fa-university';
 export const ico_origen_ingreso=  'fa fa-briefcase';
-export const ico_plazo_credito=   'fa fa-credit-card';
+export const ico_plazo_credito=   'fa fa-calendar';
 export const ico_retencion_cliente='fa fa-file-text-o';
 export const ico_telefono=        'fa fa-file-text-o';
 export const ico_tipo_contribuyente='fa fa-file-text-o';
 export const ico_tipo_pago=       'fa fa-ticket';
-export const ico_tipo_retencion=  'fa fa-file-text-o';
+export const ico_tipo_retencion=  'fa fa-retweet';
 export const ico_factura_compra=  'fa fa-file-text-o';
 export const ico_pago_compra=     'fa fa-file-text-o';
 export const ico_proveedor=       'fa fa-truck';
@@ -237,11 +241,11 @@ export const ico_egreso=          'fa fa-file-text-o';
 export const ico_factura=         'fa fa-clipboard';
 export const ico_pedido=          'fa fa-file-text-o';
 export const ico_proforma=        'fa fa-file-text-o';
-export const ico_dato_adicional=  'fa fa-file-text-o';
-export const ico_empresa=         'fa fa-file-text-o';
-export const ico_exportacion=     'fa fa-file-text-o';
-export const ico_importacion=     'fa fa-file-text-o';
-export const ico_ubicacion=       'fa fa-file-text-o';
+export const ico_dato_adicional=  'fa fa-table';
+export const ico_empresa=         'fa fa-building';
+export const ico_exportacion=     'fa fa-download';
+export const ico_importacion=     'fa fa-upload';
+export const ico_ubicacion=       'fa fa-globe';
 export const ico_contabilizacion= 'fa fa-file-text-o';
 export const ico_cuenta=          'fa fa-file-text-o';
 export const ico_entrega=         'fa fa-file-text-o';
@@ -266,18 +270,13 @@ export const ico_cuenta_contable= 'fa fa-sort-amount-asc';
 export const ico_recaudacion=     'fa fa-file-text-o';
 export const ico_proveedor_producto='fa fa-bus';
 export const ico_transferencia_bodega='fa fa-handshake-o';
+export const ico_mapa_cliente = 'fa fa-map';
+export const ico_promociones = 'fa fa-product-hunt';
+export const ico_indicadores = 'fa fa-bar-chart';
 
 /*********************************
- * CONSTANTES PARA OTROS COMPONENTES
+ * NOMBRES DEL TAB PRICIPAL
  *********************************/
-export const tab_mapa_cliente = 'Mapa Cliente'
-export const item_mapa_cliente = 'Mapa Cliente'
-export const ico_mapa_cliente = 'fa fa-map';
-export const tab_promociones = 'Promocion'
-export const item_promociones = 'Promocion'
-export const ico_promociones = 'fa fa-product-hunt';
-
-//NOMBRES DEL TAB PRICIPAL
 export const modulo_clientes='CLIENTES';
 export const modulo_compras='COMPRAS';
 export const modulo_ventas='VENTAS';

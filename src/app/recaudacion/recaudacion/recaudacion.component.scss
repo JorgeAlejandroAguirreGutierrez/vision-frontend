@@ -1,17 +1,7 @@
-
-.resaltar{
-    font-weight: bold;
-    color: red;
-}
-
+// SCSS DE RECAUDACION
 .derecha{
     position: sticky;
     text-align: right;
-}
-
-.izquierda{
-    position: sticky;
-    text-align: left;
 }
 
 /*oculta el ancho del autocomplete*/
@@ -31,18 +21,8 @@ mat-datepicker{
     padding: 0px !important;;
 }
 
-.grande.mat-form-field{
-    width: 100% !important;
-}
-
 .mat-checkbox{
     padding-top: 10px;
-}
-
-.mat-card{
-    text-align: center !important;
-    padding: 0px;
-    margin: 0px;
 }
 
 textarea.mat-input-element{

@@ -1,8 +1,10 @@
-import { Component, OnInit, HostListener, Type } from '@angular/core';
-import { Router } from '@angular/router';
-import Swal from 'sweetalert2';
+import { Component, OnInit, HostListener, ElementRef, Renderer2 } from '@angular/core';
+import { BehaviorSubject } from 'rxjs';
 import * as constantes from '../../constantes';
 import * as util from '../../util';
+import Swal from 'sweetalert2';
+
+import { Router } from '@angular/router';
 import { Sesion } from '../../modelos/sesion';
 import { SesionService } from '../../servicios/sesion.service';
 import { FormaPago } from '../../modelos/forma-pago';
@@ -21,12 +23,16 @@ import { MatTableDataSource } from '@angular/material/table';
 
 export class FormaPagoComponent implements OnInit {
 
-  abrirPanelNuevoFormaPago = true;
-  abrirPanelAdminFormaPago = false;
+  estadoActivo: string = constantes.estadoActivo;
+  estadoInactivo: string = constantes.estadoInactivo;
+
+  abrirPanelNuevoFormaPago: boolean = true;
+  abrirPanelAdminFormaPago: boolean = false;
+  editarFormaPago: boolean = true;
 
   sesion: Sesion=null;
   formaPago= new FormaPago();
-  formasPagos: FormaPago[];
+  formaPagos: FormaPago[];
 
   columnasFormaPago: any[] = [
     { nombreColumna: 'id', cabecera: 'ID', celda: (row: FormaPago) => `${row.id}` },
@@ -37,17 +43,19 @@ export class FormaPagoComponent implements OnInit {
   ];
   cabeceraFormaPago: string[] = this.columnasFormaPago.map(titulo => titulo.nombreColumna);
   dataSourceFormaPago: MatTableDataSource<FormaPago>;
+  observableDSFormaPago: BehaviorSubject<MatTableDataSource<FormaPago>> = new BehaviorSubject<MatTableDataSource<FormaPago>>(null);
   clickedRows = new Set<FormaPago>();
   
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
+  @ViewChild("inputFiltroFormaPago") inputFiltroFormaPago: ElementRef;
 
-  constructor(private formaPagoService: FormaPagoService,
-    private sesionService: SesionService,private router: Router) { }
+  constructor(private renderer: Renderer2, private formaPagoService: FormaPagoService,
+        private sesionService: SesionService,private router: Router) { }
 
   ngOnInit() {
     this.sesion=util.validarSesion(this.sesionService, this.router);
-    this.consultar();
+    this.consultarFormaPagos();
   }
   
   @HostListener('window:keypress', ['$event'])
@@ -60,71 +68,90 @@ export class FormaPagoComponent implements OnInit {
       this.eliminar(null);
   }
 
-  nuevo(event) {
-    if (event!=null)
-      event.preventDefault();
+  limpiar() {
     this.formaPago = new FormaPago();
+    this.editarFormaPago = true;
+    this.clickedRows.clear();
+    this.borrarFiltroFormaPago();
+  }
+
+  nuevo(event) {
+    if (event != null)
+      event.preventDefault();
+    this.limpiar();
   }
 
   crear(event) {
-    if (event!=null)
+    if (event != null)
       event.preventDefault();
-    this.formaPagoService.crear(this.formaPago).subscribe(
-      res => {
+    this.formaPagoService.crear(this.formaPago).subscribe({
+      next: res => {
+        this.formaPago = res.resultado as FormaPago;
         Swal.fire({ icon: constantes.exito_swal, title: constantes.exito, text: res.mensaje });
-        this.formaPago=res.resultado as FormaPago;
-        this.consultar();
+        this.formaPagos.push(this.formaPago);
+        this.llenarTablaFormaPago(this.formaPagos);
       },
-      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
-    );
+      error: err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
+    });
+  }
+
+  editar(event) {
+    if (event != null)
+      event.preventDefault();
+    this.editarFormaPago = true;
   }
 
   actualizar(event) {
-    if (event!=null)
+    if (event != null)
       event.preventDefault();
-    this.formaPagoService.actualizar(this.formaPago).subscribe(
-      res => {
+    this.formaPagoService.actualizar(this.formaPago).subscribe({
+      next: res => {
+        this.formaPago = res.resultado as FormaPago;
         Swal.fire({ icon: constantes.exito_swal, title: constantes.exito, text: res.mensaje });
-        this.formaPago=res.resultado as FormaPago;
-        this.consultar();
+        this.limpiar();
       },
-      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
-    );
+      error: err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
+    });
   }
 
-  eliminar(event:any) {
-    if (event!=null)
+  eliminar(event: any) {
+    if (event != null)
       event.preventDefault();
-    this.formaPagoService.eliminarPersonalizado(this.formaPago).subscribe(
-      res => {
+    this.formaPagoService.eliminarPersonalizado(this.formaPago).subscribe({
+      next: res => {
         Swal.fire({ icon: constantes.exito_swal, title: constantes.exito, text: res.mensaje });
-        this.nuevo(null);
-        this.consultar();
+        this.limpiar();
       },
-      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
-    );
-  }
-  
-  consultar() {
-    this.formaPagoService.consultar().subscribe(
-      res => {
-        this.formasPagos = res.resultado as FormaPago[]
-        this.dataSourceFormaPago = new MatTableDataSource(this.formasPagos);
-        this.dataSourceFormaPago.paginator = this.paginator;
-        this.dataSourceFormaPago.sort = this.sort;
-      },
-      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
-    );
+      error: err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
+    });
   }
 
-  seleccion(calificacionSeleccionada: FormaPago) {
-    if (!this.clickedRows.has(calificacionSeleccionada)){
+  consultarFormaPagos() {
+    this.formaPagoService.consultar().subscribe({
+      next: res => {
+        this.formaPagos = res.resultado as FormaPago[]
+        this.llenarTablaFormaPago(this.formaPagos);
+      },
+      error: err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
+    });
+  }
+
+  llenarTablaFormaPago(formaPagos: FormaPago[]) {
+    this.ordenarAsc(formaPagos, 'id');
+    this.dataSourceFormaPago = new MatTableDataSource(formaPagos);
+    this.dataSourceFormaPago.paginator = this.paginator;
+    this.dataSourceFormaPago.sort = this.sort;
+    this.observableDSFormaPago.next(this.dataSourceFormaPago);
+  }
+
+  seleccion(formaPago: FormaPago) {
+    if (!this.clickedRows.has(formaPago)) {
       this.clickedRows.clear();
-      this.clickedRows.add(calificacionSeleccionada);
-      this.formaPago = calificacionSeleccionada;
+      this.clickedRows.add(formaPago);
+      this.formaPago = formaPago;
+      this.editarFormaPago = false;
     } else {
-      this.clickedRows.clear();
-      this.formaPago = new FormaPago();
+      this.limpiar();
     }
   }
 
@@ -134,6 +161,16 @@ export class FormaPagoComponent implements OnInit {
     if (this.dataSourceFormaPago.paginator) {
       this.dataSourceFormaPago.paginator.firstPage();
     }
+  }
+  borrarFiltroFormaPago() {
+    this.renderer.setProperty(this.inputFiltroFormaPago.nativeElement, 'value', '');
+    this.dataSourceFormaPago.filter = '';
+  }
+
+  ordenarAsc(arrayJson: any, pKey: any) {
+    arrayJson.sort(function (a: any, b: any) {
+      return a[pKey] > b[pKey];
+    });
   }
 
 }

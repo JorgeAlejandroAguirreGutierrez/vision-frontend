@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
-import { CalificacionCliente } from '../modelos/calificacion-cliente';
 import { Respuesta } from '../respuesta';
 import * as util from '../util';
 import {HttpClient} from '@angular/common/http';
 import { map, catchError } from 'rxjs/operators';
 import { Observable, throwError, BehaviorSubject, lastValueFrom } from 'rxjs';
 import { environment } from '../../environments/environment';
+import { CalificacionCliente } from '../modelos/calificacion-cliente';
 
 @Injectable({
   providedIn: 'root'
@@ -37,15 +37,6 @@ export class CalificacionClienteService {
         return throwError(()=>err);
       })
     );
-  }
-
-  async obtenerAsync(calificacionClienteId: number): Promise<Respuesta> {
-    return await lastValueFrom(this.http.get<Respuesta>(environment.host + util.ruta + util.calificacionCliente + '/' + calificacionClienteId, util.options).pipe(
-      map(response => response as Respuesta),
-      catchError(err => {
-        return throwError(()=>err);
-      })
-    ));
   }
 
   consultar(): Observable<Respuesta> {
@@ -84,7 +75,8 @@ export class CalificacionClienteService {
   }
 
   eliminarPersonalizado(calificacionCliente: CalificacionCliente): Observable<Respuesta> {
-    return this.http.delete(environment.host+util.ruta+util.calificacionCliente+util.personalizado + '/' + calificacionCliente.id, util.options).pipe(
+    calificacionCliente.estado = util.estadoEliminado;
+    return this.http.put(environment.host+util.ruta+util.calificacionCliente, JSON.stringify(calificacionCliente), util.options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);

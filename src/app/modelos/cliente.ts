@@ -13,7 +13,6 @@ import { Celular } from '../modelos/celular';
 import { Correo } from '../modelos/correo';
 import { Dependiente } from './dependiente';
 import { RetencionCliente } from './retencion-cliente';
-import { TipoPago } from './tipo-pago';
 import { FormaPago } from './forma-pago';
 import { PlazoCredito } from './plazo-credito';
 import { Ubicacion } from './ubicacion';

@@ -9,6 +9,9 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 // Componentes de Angular Material
 import { MaterialModule } from './componentes/material-module';
 
+// Componete para google maps
+import { AgmCoreModule } from '@agm/core';
+
 import { AppComponent } from './app.component';
 import { ModeloService } from './servicios/modelo.service';
 
@@ -75,6 +78,7 @@ import { TipoRetencionService } from './servicios/tipo-retencion.service';
     NgbModule,
     FlexLayoutModule,
     MaterialModule,
+    AgmCoreModule.forRoot({apiKey: 'AIzaSyBmbDYyXuK6PzbmJDoadvlJU7UtcgDJQZM'}),
     AppRoutingModule
   ],
   providers: [DatoAdicionalService, PlazoCreditoService, ImpuestoService, RetencionService, ModeloService,

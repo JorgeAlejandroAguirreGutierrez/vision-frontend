@@ -48,15 +48,6 @@ export class FormaPagoService {
       }));
   }
 
-  async obtenerAsync(formaPagoId: number): Promise<Respuesta> {
-    return await lastValueFrom(this.http.get<Respuesta>(environment.host + util.ruta + util.formaPago + '/' + formaPagoId, util.options).pipe(
-      map(response => response as Respuesta),
-      catchError(err => {
-        return throwError(()=>err);
-      })
-    ));
-  }
-
   actualizar(formaPago: FormaPago): Observable<Respuesta> {
     return this.http.put(environment.host+util.ruta+util.formaPago, JSON.stringify(formaPago), util.options).pipe(
       map(response => response as Respuesta),
@@ -76,7 +67,8 @@ export class FormaPagoService {
   }
 
   eliminarPersonalizado(formaPago: FormaPago): Observable<Respuesta> {
-    return this.http.delete(environment.host+util.ruta+util.formaPago+util.personalizado + '/' + formaPago.id, util.options).pipe(
+    formaPago.estado = util.estadoEliminado;
+    return this.http.put(environment.host+util.ruta+util.formaPago, JSON.stringify(formaPago), util.options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);

@@ -86,7 +86,8 @@ export class GrupoClienteService {
   }
 
   eliminarPersonalizado(grupoCliente: GrupoCliente): Observable<Respuesta> {
-    return this.http.delete(environment.host+util.ruta+util.grupoCliente+util.personalizado + '/' + grupoCliente.id, util.options).pipe(
+    grupoCliente.estado = util.estadoEliminado;
+    return this.http.put(environment.host+util.ruta+util.grupoCliente, grupoCliente, util.options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);

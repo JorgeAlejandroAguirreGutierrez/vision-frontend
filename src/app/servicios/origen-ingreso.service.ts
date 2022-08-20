@@ -48,15 +48,6 @@ export class OrigenIngresoService {
       }));
   }
 
-  async obtenerAsync(origenIngresoId: number): Promise<Respuesta> {
-    return await lastValueFrom(this.http.get<Respuesta>(environment.host + util.ruta + util.origenIngreso + '/' + origenIngresoId, util.options).pipe(
-      map(response => response as Respuesta),
-      catchError(err => {
-        return throwError(()=>err);
-      })
-    ));
-  }
-
   buscar(origenIngreso: OrigenIngreso): Observable<Respuesta> {
     return this.http.post(environment.host + util.ruta + util.origenIngreso+util.buscar, origenIngreso, util.options).pipe(
       map(response => response as Respuesta),
@@ -85,7 +76,8 @@ export class OrigenIngresoService {
   }
 
   eliminarPersonalizado(origenIngreso: OrigenIngreso): Observable<Respuesta> {
-    return this.http.delete(environment.host+util.ruta+util.origenIngreso+util.personalizado + '/' + origenIngreso.id, util.options).pipe(
+    origenIngreso.estado = util.estadoEliminado;
+    return this.http.put(environment.host+util.ruta+util.origenIngreso, origenIngreso, util.options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);
