@@ -20,7 +20,7 @@ import { Sesion } from 'src/app/modelos/sesion';
 export class TablaGrupoProductoComponent implements OnInit {
 
   sesion: Sesion=null;
-  @Output() grupo_producto_seleccionado = new EventEmitter();
+  @Output() grupoProductoSeleccionado = new EventEmitter();
   gruposProductos: GrupoProducto[];
 
   columnasGrupoProducto: any[] = [
@@ -56,13 +56,13 @@ export class TablaGrupoProductoComponent implements OnInit {
   }
 
   consultar() {
-    this.grupoProductoService.consultar().subscribe(
-      res => {
+    this.grupoProductoService.consultar().subscribe({
+      next: res => {
         this.gruposProductos = res.resultado as GrupoProducto[];
         this.llenarDataSourceGrupoProducto(this.gruposProductos);
       },
-      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
-    );
+      error: err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
+    });
   }
 
   llenarDataSourceGrupoProducto(gruposProductos : GrupoProducto[]){
@@ -78,14 +78,12 @@ export class TablaGrupoProductoComponent implements OnInit {
     if (!this.clickedRows.has(grupoProductoSeleccionado)){
       this.clickedRows.clear();
       this.clickedRows.add(grupoProductoSeleccionado);
-      this.grupo_producto_seleccionado.emit(
-        { grupoProductoSeleccionado }
-      );
     } else {
       this.clickedRows.clear();
-      this.grupo_producto_seleccionado.emit(
-         new GrupoProducto()
-      );
+      grupoProductoSeleccionado = new GrupoProducto();
     }
+    this.grupoProductoSeleccionado.emit(
+      { grupoProductoSeleccionado }
+    );
   }
 }

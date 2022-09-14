@@ -1,3 +1,4 @@
+import { AfectacionContable } from "./afectacion-contable";
 import { CategoriaProducto } from "./categoria-producto";
 
 export class GrupoProducto {
@@ -10,6 +11,7 @@ export class GrupoProducto {
     sublinea: string;
     presentacion: string;
     presentacionBien: number;
+    afectacionContable: AfectacionContable;
     categoriaProducto: CategoriaProducto;
 
     constructor() {
@@ -21,6 +23,7 @@ export class GrupoProducto {
         this.linea="";
         this.sublinea="";
         this.presentacion="";
+        this.afectacionContable = new AfectacionContable();
         this.categoriaProducto = new CategoriaProducto();
     }
 }

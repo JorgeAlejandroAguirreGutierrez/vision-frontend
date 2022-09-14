@@ -1,49 +1,32 @@
 <nav class="navbar-light nav-fijo">
     <ul class="navbar-nav">
-        <ng-container *ngIf="abrirPanelNuevoGrupo">
-            <li class="nav-item" *ngIf="grupoProducto.id==0">
-                <a class="nav-link" title="Guardar" role="button" (click)="crear($event)">
-                    <mat-icon>save</mat-icon>
+        <li class="nav-item" *ngIf="grupoProducto.id==0">
+            <a class="nav-link" title="Guardar" role="button" (click)="crear($event)">
+                <mat-icon>save</mat-icon>
+            </a>
+        </li>
+        <ng-container *ngIf="grupoProducto.id!=0">
+            <li class="nav-item" *ngIf="!editarGrupoProducto">
+                <a class="nav-link" title="Actualizar" role="button" (click)="editar()">
+                    <mat-icon>edit</mat-icon>
                 </a>
             </li>
-            <li class="nav-item" *ngIf="grupoProducto.id!=0">
+            <li class="nav-item" *ngIf="editarGrupoProducto">
                 <a class="nav-link" title="Actualizar" role="button" (click)="actualizar($event)">
                     <mat-icon>update</mat-icon>
                 </a>
             </li>
-            <li class="nav-item">
-                <a class="nav-link" title="Nuevo" role="button" (click)="nuevo($event)">
-                    <mat-icon>file_copy</mat-icon>
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" title="Borrar" role="button" (click)="borrar($event)">
-                    <mat-icon>backspace</mat-icon>
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" title="Eliminar" role="button" (click)="eliminarLeer($event)">
-                    <mat-icon>delete</mat-icon>
-                </a>
-            </li>
         </ng-container>
-        <ng-container *ngIf="abrirPanelAdminGrupo">
-            <li class="nav-item">
-                <a class="nav-link" title="Buscar" role="button" (click)="buscar($event)">
-                    <mat-icon>search</mat-icon>
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" title="Editar" role="button" (click)="actualizarLeer($event)">
-                    <mat-icon>edit</mat-icon>
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" title="Eliminar" role="button" (click)="eliminarLeer($event)">
-                    <mat-icon>delete</mat-icon>
-                </a>
-            </li>
-        </ng-container>
+        <li class="nav-item">
+            <a class="nav-link" title="Nuevo" role="button" (click)="nuevo($event)">
+                <mat-icon>file_copy</mat-icon>
+            </a>
+        </li>
+        <li class="nav-item" *ngIf="grupoProducto.id!=0">
+            <a class="nav-link" title="Eliminar" role="button" (click)="eliminarLeer($event)">
+                <mat-icon>delete</mat-icon>
+            </a>
+        </li>
     </ul>
 </nav>
 <div class="contenedor">
@@ -66,7 +49,7 @@
                         <mat-form-field appearance="standard">
                             <mat-label>Grupo</mat-label>
                             <input type="text" matInput aria-label="grupo" class="form-control-sm"
-                                [formControl]="seleccionGrupo" [matAutocomplete]="grupo">
+                                [formControl]="controlGrupo" [matAutocomplete]="grupo">
                             <mat-autocomplete autoActiveFirstOption #grupo="matAutocomplete">
                                 <mat-option *ngFor="let grupo of filtroGrupos | async" [value]="grupo">
                                     {{grupo}}
@@ -78,7 +61,7 @@
                         <mat-form-field appearance="standard">
                             <mat-label>Subgrupo</mat-label>
                             <input type="text" matInput aria-label="subgrupo" class="form-control-sm"
-                                [formControl]="seleccionSubgrupo" [matAutocomplete]="subgrupo">
+                                [formControl]="controlSubgrupo" [matAutocomplete]="subgrupo">
                             <mat-autocomplete autoActiveFirstOption #subgrupo="matAutocomplete">
                                 <mat-option *ngFor="let subgrupo of filtroSubgrupos | async" [value]="subgrupo">
                                     {{subgrupo}}
@@ -90,7 +73,7 @@
                         <mat-form-field appearance="standard">
                             <mat-label>Sección</mat-label>
                             <input type="text" matInput aria-label="seccion" class="form-control-sm"
-                                [formControl]="seleccionSeccion" [matAutocomplete]="seccion">
+                                [formControl]="controlSeccion" [matAutocomplete]="seccion">
                             <mat-autocomplete autoActiveFirstOption #seccion="matAutocomplete">
                                 <mat-option *ngFor="let seccion of filtroSecciones | async" [value]="seccion">
                                     {{seccion}}
@@ -102,7 +85,7 @@
                         <mat-form-field appearance="standard">
                             <mat-label>Línea</mat-label>
                             <input type="text" matInput aria-label="linea" class="form-control-sm"
-                                [formControl]="seleccionLinea" [matAutocomplete]="linea">
+                                [formControl]="controlLinea" [matAutocomplete]="linea">
                             <mat-autocomplete autoActiveFirstOption #linea="matAutocomplete">
                                 <mat-option *ngFor="let linea of filtroLineas | async" [value]="linea">
                                     {{linea}}
@@ -114,7 +97,7 @@
                         <mat-form-field appearance="standard">
                             <mat-label>Sublínea</mat-label>
                             <input type="text" matInput aria-label="sublinea" class="form-control-sm"
-                                [formControl]="seleccionSublinea" [matAutocomplete]="sublinea">
+                                [formControl]="controlSublinea" [matAutocomplete]="sublinea">
                             <mat-autocomplete autoActiveFirstOption #sublinea="matAutocomplete">
                                 <mat-option *ngFor="let sublinea of filtroSublineas | async" [value]="sublinea">
                                     {{sublinea}}
@@ -135,10 +118,10 @@
                     <div class="col-6">
                         <mat-form-field appearance="standard">
                             <mat-label>Categoría</mat-label>
-                            <mat-select [(ngModel)]="grupoProducto.categoriaProducto" class="form-control-sm"
-                                (selectionChange)="validarCategoria()">
+                            <mat-select [(ngModel)]="grupoProducto.categoriaProducto.id" class="form-control-sm"
+                                (selectionChange)="validarCategoria()" [disabled]="!editarGrupoProducto">
                                 <mat-option *ngFor="let categoriaProducto of categoriasProductos"
-                                    [value]="categoriaProducto">
+                                    [value]="categoriaProducto.id">
                                     {{categoriaProducto.descripcion}}</mat-option>
                             </mat-select>
                         </mat-form-field>
@@ -146,27 +129,29 @@
                     <div class="col-6">
                         <mat-form-field appearance="standard">
                             <mat-label>Estado</mat-label>
-                            <mat-select [(ngModel)]="estado" class="form-control-sm">
-                                <mat-option value="ACTIVO">ACTIVO</mat-option>
-                                <mat-option value="INACTIVO"> INACTIVO</mat-option>
+                            <mat-select [(ngModel)]="estado" class="form-control-sm" [disabled]="!editarGrupoProducto">
+                                <mat-option [value]="estadoActivo">{{estadoActivo}}</mat-option>
+                                <mat-option [value]="estadoInactivo">{{estadoInactivo}}</mat-option>
                             </mat-select>
                         </mat-form-field>
                     </div>
                     <div class="col-8">
                         <mat-form-field appearance="standard">
                             <mat-label>Cod. Movimiento Contable</mat-label>
-                            <input matInput type="text" [(ngModel)]="grupoProducto" disabled
+                            <input matInput type="text" [(ngModel)]="grupoProducto.afectacionContable.descripcion" disabled
                                 oninput="this.value = this.value.toUpperCase()" class="form-control-sm">
                         </mat-form-field>
                     </div>
                     <div class="col-4 iconos">
-                        <button mat-icon-button aria-label="Ver movimientos contables">
-                            <mat-icon (click)="dialogoMovimientosContables()">search</mat-icon>
+                        <button mat-icon-button aria-label="Mov. Conta" [disabled]="!editarGrupoProducto" (click)="dialogoMovimientosContables()">
+                            <mat-icon >search</mat-icon>
                         </button>
                     </div>
                 </div>
             </div>
         </mat-expansion-panel>
+    </mat-accordion>
+    <mat-accordion class="headers-align">    
         <mat-expansion-panel (opened)="abrirPanelAdminGrupo = true" (closed)="abrirPanelAdminGrupo = false">
             <mat-expansion-panel-header>
                 <mat-panel-title>
@@ -179,7 +164,7 @@
                 </mat-panel-description>
             </mat-expansion-panel-header>
             <hr>
-            <app-tabla-grupo-producto (grupoProductoSeleccionado)="grupoSeleccionado($event)">
+            <app-tabla-grupo-producto (grupoProductoSeleccionado)="seleccion($event)">
             </app-tabla-grupo-producto>
         </mat-expansion-panel>
     </mat-accordion>

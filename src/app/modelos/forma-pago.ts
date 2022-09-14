@@ -3,6 +3,7 @@ export class FormaPago {
     codigo: string;
     descripcion: string;
     abreviatura: string;
+    codigoSri:string;
     estado:string;
 
     constructor() {
@@ -10,6 +11,7 @@ export class FormaPago {
         this.codigo="";
         this.descripcion="";
         this.abreviatura="";
+        this.codigoSri="";
         this.estado="ACTIVO";
     }
     
