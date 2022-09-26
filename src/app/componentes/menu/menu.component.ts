@@ -37,12 +37,12 @@ export class MenuComponent implements OnInit {
   permiso_importacion: boolean;
   permiso_reportes: boolean;
 
+  permiso_accesos: boolean;
+  permiso_configuraciones: boolean;
   permiso_estadisticas: boolean;
   permiso_control: boolean;
   permiso_auditorias: boolean;
   permiso_tutoriales: boolean;
-  permiso_configuraciones: boolean;
-  permiso_usuarios: boolean;
 
 
   perfil_contador: boolean;
@@ -68,11 +68,13 @@ export class MenuComponent implements OnInit {
   ico_importacion: string = environment.prefijo_url_imagenes+"iconos/icoimportacion.png";
   ico_reportes: string = environment.prefijo_url_imagenes+"iconos/icoreportes.png";
 
+  ico_accesos: string = environment.prefijo_url_imagenes+"iconos/icoacceso.png";
+  ico_configuracion: string = environment.prefijo_url_imagenes+"iconos/icoconfiguraciones.png";
   ico_estadistica: string = environment.prefijo_url_imagenes+"iconos/icoestadisticas.png";
   ico_organismoscontrol: string = environment.prefijo_url_imagenes+"iconos/icoorganismoscontrol.png";
   ico_auditoria: string = environment.prefijo_url_imagenes+"iconos/icoauditoria.png";
-  ico_usuarios: string = environment.prefijo_url_imagenes+"iconos/icotutoriales.png";
-  ico_configuracion: string = environment.prefijo_url_imagenes+"iconos/icoconfiguraciones.png";
+  ico_tutoriales: string = environment.prefijo_url_imagenes+"iconos/icotutoriales.png";
+
 
   constructor(private sesionService: SesionService, private empresaService: EmpresaService, public tabService: TabService, private router: Router) { }
 
@@ -96,11 +98,12 @@ export class MenuComponent implements OnInit {
     this.permiso_reportes= this.obtenerPermiso('REPORTES');
     
     // ADMINISTRACION  
+    this.permiso_accesos=this.obtenerPermiso('USUARIOS');
+    this.permiso_configuraciones=this.obtenerPermiso('CONFIGURACIONES');
     this.permiso_estadisticas=this.obtenerPermiso('ESTADISTICAS');
     this.permiso_control=this.obtenerPermiso('ORGANISMOS_CONTROL');
     this.permiso_auditorias=this.obtenerPermiso('AUDITORIA');
-    this.permiso_usuarios=this.obtenerPermiso('USUARIOS');
-    this.permiso_configuraciones=this.obtenerPermiso('CONFIGURACIONES');
+    this.permiso_tutoriales=this.obtenerPermiso('TUTORIALES');
   }
 
   obtenerEmpresa(){

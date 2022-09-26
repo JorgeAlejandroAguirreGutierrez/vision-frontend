@@ -29,7 +29,7 @@ export class ProveedorProductoComponent implements OnInit {
   sesion: Sesion=null;
   verPanelAsignarProveedor: boolean = false;
   abrirPanelAsignarProveedor: boolean = true;
-  deshabilitarEditarProveedor: boolean = false;
+  deshabilitarEditarProveedor: boolean = true;
   deshabilitarFiltroProveedores: boolean = true;
   verActualizarProveedor: boolean = false;
   verActualizarProducto: boolean = false;
@@ -72,6 +72,7 @@ export class ProveedorProductoComponent implements OnInit {
 
   ngOnInit() {
     this.sesion=util.validarSesion(this.sesionService, this.router);
+    this.controlProveedor.disable();
     this.consultarProductos();
     this.consultarProveedores();
     this.filtroProductos = this.controlProducto.valueChanges
@@ -93,6 +94,8 @@ export class ProveedorProductoComponent implements OnInit {
     this.producto = new Producto();
     this.abrirPanelAsignarProveedor = true;
     this.deshabilitarFiltroProveedores = true;
+    this.controlProveedor.disable();
+    this.deshabilitarEditarProveedor = true;
     this.verActualizarProducto = false;
     this.controlProducto.patchValue('');
     this.productoProveedor = new ProductoProveedor();
@@ -146,13 +149,11 @@ export class ProveedorProductoComponent implements OnInit {
   seleccionarProducto(){
     this.producto = this.controlProducto.value as Producto;
     this.productoProveedores = this.producto.productosProveedores;
+    this.deshabilitarEditarProveedor = false;
+    this.controlProveedor.enable();
     if (this.productoProveedores.length > 0) {
       this.llenarDataSourceProductoProveedor(this.productoProveedores);
     }
-  }
-
-  habilitarAsignarProveedor(){
-    this.deshabilitarFiltroProveedores = false;
   }
 
   // CODIGO PARA PROVEEDOR
@@ -160,8 +161,8 @@ export class ProveedorProductoComponent implements OnInit {
     this.proveedor = new Proveedor();
     this.controlProveedor.patchValue("");
     this.controlProveedor.enable();
-    this.codigoEquivalente = "";
     this.deshabilitarEditarProveedor = false;
+    this.codigoEquivalente = "";
     this.verActualizarProveedor = false;
     this.clickedRowsProductoProveedor.clear();
   }
@@ -182,6 +183,7 @@ export class ProveedorProductoComponent implements OnInit {
     this.producto.productosProveedores = this.productoProveedores;
     this.llenarDataSourceProductoProveedor(this.productoProveedores);
     this.verActualizarProducto = true;
+    //this.deshabilitarFiltroProveedores = false;
     this.limpiarProveedor();
     //console.log(this.producto); 
   }

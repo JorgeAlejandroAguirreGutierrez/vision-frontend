@@ -44,7 +44,7 @@ export class GrupoClienteComponent implements OnInit {
   cabeceraGrupoCliente: string[] = this.columnasGrupoCliente.map(titulo => titulo.nombreColumna);
   dataSourceGrupoCliente: MatTableDataSource<GrupoCliente>;
   observableDSGrupoCliente: BehaviorSubject<MatTableDataSource<GrupoCliente>> = new BehaviorSubject<MatTableDataSource<GrupoCliente>>(null);
-  clickedRows = new Set<GrupoCliente>();
+  clickedRows = new Set<GrupoCliente>(); 
   
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;

@@ -39,7 +39,7 @@
                                 </mat-option>
                             </mat-autocomplete>
                             <button mat-button *ngIf="autocompleteProducto.value" matSuffix mat-icon-button
-                                (click)="autocompleteProducto.value=''">
+                                (click)="limpiar()">
                                 <mat-icon>close</mat-icon>
                             </button>
                         </mat-form-field>
@@ -97,11 +97,11 @@
                             </mat-form-field>
                         </div>
                         <div class="col-1 iconos">
-                            <button mat-icon-button mat-button>
+                            <button mat-icon-button mat-button *ngIf="!deshabilitarEditarProveedor">
                                 <mat-icon title="Agregar"
                                     *ngIf="!deshabilitarEditarProveedor && !verActualizarProveedor"
                                     (click)="agregarProductoProveedor()">add</mat-icon>
-                                <mat-icon title="Editar" *ngIf="deshabilitarEditarProveedor"
+                                <mat-icon title="Editar" *ngIf="deshabilitarEditarProveedor" 
                                     (click)="editarProductoProveedor()">edit</mat-icon>
                                 <mat-icon title="Actualizar" *ngIf="verActualizarProveedor"
                                     (click)="actualizarProductoProveedor()">update</mat-icon>
@@ -117,7 +117,7 @@
                             (keyup)="filtroProductoProveedor($event)" placeholder="Ej. BA"
                             oninput="this.value = this.value.toUpperCase()" #inputFiltroProductoProveedor>
                         <button mat-button *ngIf="inputFiltroProductoProveedor.value" matSuffix mat-icon-button
-                            (click)="borrarFiltroProductoProveedor()">
+                            (click)="borrarFiltroProductoProveedor()"> 
                             <mat-icon>close</mat-icon>
                         </button>
                     </mat-form-field>

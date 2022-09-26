@@ -115,8 +115,9 @@ export class ProductoComponent implements OnInit {
     { nombreColumna: 'id', cabecera: 'ID', celda: (row: Producto) => `${row.id}` },
     { nombreColumna: 'codigo', cabecera: 'Código', celda: (row: Producto) => `${row.codigo}` },
     { nombreColumna: 'nombre', cabecera: 'Nombre', celda: (row: Producto) => `${row.nombre}` },
+    { nombreColumna: 'medidaKardex', cabecera: 'Medida Kardex', celda: (row: Producto) => `${row.medidaKardex.descripcion}` },
+    { nombreColumna: 'categoriaProducto', cabecera: 'Categoria', celda: (row: Producto) => `${row.categoriaProducto.descripcion}` },
     { nombreColumna: 'tipoGasto', cabecera: 'Tipo Gasto', celda: (row: Producto) => `${row.tipoGasto.nombre}` },
-    { nombreColumna: 'categoriaProducto', cabecera: 'Categoria', celda: (row: Producto) => `${row.tipoGasto.nombre}` }, // cambiar a categoria_producto
     { nombreColumna: 'estado', cabecera: 'Estado', celda: (row: Producto) => `${row.estado}` }
   ];
   cabeceraProducto: string[] = this.columnasProducto.map(titulo => titulo.nombreColumna);

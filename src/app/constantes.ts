@@ -147,6 +147,7 @@ export const tab_transferencia_bodega='Transferencia Bodega';
 export const tab_mapa_cliente = 'Mapa Cliente'
 export const tab_promociones = 'Promocion'
 export const tab_indicadores = 'Indicadores'
+export const tab_perfil = 'Perfiles'
 
 /**********************************
  * CONSTANTES PARA NOMBRAR LOS ITEMS DEL SIDEBAR
@@ -211,6 +212,7 @@ export const item_transferencia_bodega='Transferencia Bodega';
 export const item_mapa_cliente = 'Mapa Cliente'
 export const item_promociones = 'Promocion'
 export const item_indicadores = 'Dashboard'
+export const item_perfil = 'Perfiles'
 
 /**********************************
  * CONSTANTES CON NOMBRES DE LOS ICONOS DEL SIDEBAR
@@ -253,7 +255,7 @@ export const ico_transportista=   'fa fa-file-text-o';
 export const ico_vehiculo_transporte='fa fa-file-text-o';
 export const ico_activo_fijo=     'fa fa-file-text-o';
 export const ico_bodega=          'fa fa-archive';
-export const ico_kardex=          'fa fa-file-text-o';
+export const ico_kardex=          'fa fa-table';
 export const ico_medida=          'fa fa-medium';
 export const ico_producto=        'fa fa-shopping-basket';
 export const ico_servicio=        'fa fa-child';
@@ -273,6 +275,7 @@ export const ico_transferencia_bodega='fa fa-handshake-o';
 export const ico_mapa_cliente = 'fa fa-map';
 export const ico_promociones = 'fa fa-product-hunt';
 export const ico_indicadores = 'fa fa-bar-chart';
+export const ico_perfil =     'fa fa-file-text-o';
 
 /*********************************
  * NOMBRES DEL TAB PRICIPAL
@@ -287,6 +290,7 @@ export const modulo_activos_fijos='ACTIVOS FIJOS';
 export const modulo_talento_humano='TALENTO HUMANO';
 export const modulo_produccion='PRODUCCION';
 export const modulo_importacion='IMPORTACION';
+export const modulo_accesos='ACCESOS';
 export const modulo_configuracion='CONFIGURACION';
 export const modulo_estadisticas='ESTADISTICAS';
 export const modulo_control='CONTROL';

@@ -18,7 +18,7 @@
             </li>
         </ng-container>
         <li class="nav-item">
-            <a class="nav-link" title="Nuevo" role="button" (click)="nuevo($event)">
+            <a class="nav-link" title="Nuevo" role="button" (click)="limpiar()">
                 <mat-icon>file_copy</mat-icon>
             </a>
         </li>
@@ -158,13 +158,12 @@
                     <i><u>GESTIONAR GRUPOS</u></i>
                 </mat-panel-title>
                 <mat-panel-description>
-                    {{abrirPanelAdminGrupo ? 'Ocultar administrador de grupos' : 'Editar
-                    grupos de productos existentes'}}
+                    {{abrirPanelAdminGrupo ? 'Ocultar administrador de grupos' : 'Editar grupos de productos existentes'}}
                     <mat-icon>playlist_add_check</mat-icon>
                 </mat-panel-description>
             </mat-expansion-panel-header>
             <hr>
-            <app-tabla-grupo-producto (grupoProductoSeleccionado)="seleccion($event)">
+            <app-tabla-grupo-producto [clickedRows]="clickedRows" (grupoProductoSeleccionado)="seleccion($event)">
             </app-tabla-grupo-producto>
         </mat-expansion-panel>
     </mat-accordion>

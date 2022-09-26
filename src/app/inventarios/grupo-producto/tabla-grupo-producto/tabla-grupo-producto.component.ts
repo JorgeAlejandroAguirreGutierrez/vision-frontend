@@ -1,4 +1,5 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, ElementRef, Renderer2 } from '@angular/core';
+import { BehaviorSubject } from 'rxjs';
 import Swal from 'sweetalert2';
 import * as constantes from '../../../constantes';
 import * as util from '../../../util';
@@ -35,16 +36,19 @@ export class TablaGrupoProductoComponent implements OnInit {
   ];
   cabeceraGrupoProducto: string[]  = this.columnasGrupoProducto.map(titulo => titulo.nombreColumna);
   dataSourceGrupoProducto: MatTableDataSource<GrupoProducto>;
-  clickedRows = new Set<GrupoProducto>();
+  observableDSGrupoProducto: BehaviorSubject<MatTableDataSource<GrupoProducto>> = new BehaviorSubject<MatTableDataSource<GrupoProducto>>(null);
+  @Input() clickedRows = new Set<GrupoProducto>();
   
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
+  @ViewChild("inputFiltroGrupoProducto") inputFiltroGrupoProducto: ElementRef;
 
-  constructor(private sesionService: SesionService, private router: Router, private grupoProductoService: GrupoProductoService) { }
+  constructor(private renderer: Renderer2, private sesionService: SesionService, private router: Router, 
+    private grupoProductoService: GrupoProductoService) { }
 
   ngOnInit() {
     this.sesion=util.validarSesion(this.sesionService, this.router);
-    this.consultar();
+    this.consultarGrupoProductos();
   }
 
   filtroGrupoProducto(event: Event) {
@@ -54,8 +58,12 @@ export class TablaGrupoProductoComponent implements OnInit {
       this.dataSourceGrupoProducto.paginator.firstPage();
     }
   }
+  borrarFiltroGrupoProducto() {
+    this.renderer.setProperty(this.inputFiltroGrupoProducto.nativeElement, 'value', '');
+    this.dataSourceGrupoProducto.filter = '';
+  }
 
-  consultar() {
+  consultarGrupoProductos() {
     this.grupoProductoService.consultar().subscribe({
       next: res => {
         this.gruposProductos = res.resultado as GrupoProducto[];
@@ -66,12 +74,20 @@ export class TablaGrupoProductoComponent implements OnInit {
   }
 
   llenarDataSourceGrupoProducto(gruposProductos : GrupoProducto[]){
+    this.ordenarAsc(gruposProductos, 'id');
     this.dataSourceGrupoProducto = new MatTableDataSource(gruposProductos);
     this.dataSourceGrupoProducto.filterPredicate = (data: GrupoProducto, filter: string): boolean =>
       data.codigo.toUpperCase().includes(filter) || data.grupo.toUpperCase().includes(filter) || data.subgrupo.toUpperCase().includes(filter) ||
       data.seccion.toUpperCase().includes(filter) || data.linea.toUpperCase().includes(filter) || data.sublinea.toUpperCase().includes(filter) || data.presentacion.toUpperCase().includes(filter);
     this.dataSourceGrupoProducto.paginator = this.paginator;
     this.dataSourceGrupoProducto.sort = this.sort;
+    this.observableDSGrupoProducto.next(this.dataSourceGrupoProducto);
+  }
+
+  ordenarAsc(arrayJson: any, pKey: any) {
+    arrayJson.sort(function (a: any, b: any) {
+      return a[pKey] > b[pKey];
+    });
   }
 
   seleccion(grupoProductoSeleccionado: GrupoProducto) {

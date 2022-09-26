@@ -1,10 +1,14 @@
 <div>
     <mat-form-field appearance="standard">
         <mat-label>Buscar en grupo de productos</mat-label>
-        <input matInput (keyup)="filtroGrupoProducto($event)" placeholder="Ej. TE" #input>
+        <input matInput (keyup)="filtroGrupoProducto($event)" placeholder="Ej. LG" #inputFiltroGrupoProducto>
+        <button mat-button *ngIf="inputFiltroGrupoProducto.value" matSuffix mat-icon-button
+            (click)="borrarFiltroGrupoProducto()">
+        <mat-icon>close</mat-icon>
+    </button>
     </mat-form-field>
     <div class="mat-elevation-z8">
-        <table mat-table [dataSource]="dataSourceGrupoProducto" matSort>
+        <table mat-table [dataSource]="observableDSGrupoProducto.value" matSort>
 
             <!-- Columnas Dinamicas -->
             <ng-container *ngFor="let columna of columnasGrupoProducto" [matColumnDef]="columna.nombreColumna">
@@ -18,7 +22,7 @@
 
             <!-- Row shown when there is no matching data. -->
             <tr class="mat-row" *matNoDataRow>
-                <td class="mat-cell" colspan="7">No hay datos que coincidan con el grupo "{{input.value}}"</td>
+                <td class="mat-cell" colspan="7">No hay datos que coincidan con el grupo "{{inputFiltroGrupoProducto.value}}"</td>
             </tr>
         </table>
         <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>

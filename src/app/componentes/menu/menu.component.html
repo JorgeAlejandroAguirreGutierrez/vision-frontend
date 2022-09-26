@@ -127,6 +127,14 @@
         </div>
         <div class="card-body">
             <div fxLayout="row wrap" fxLayoutGap="13px grid">
+                <div [fxFlex]="(100/gridColumns) + '%'" fxFlex.xs="100%" fxFlex.sm="33%" *ngIf="permiso_accesos">
+                    <mat-card class="mat-elevation-z4 text-center" (click)="abrirOpcion('USUARIOS')">
+                        <img mat-card-image class="efecto" src="{{ico_accesos}}" alt="">
+                        <mat-card-content>
+                            <h6><a class="card-title">ACCESOS</a></h6>
+                        </mat-card-content>
+                    </mat-card>
+                </div>
                 <div [fxFlex]="(100/gridColumns) + '%'" fxFlex.xs="100%" fxFlex.sm="33%"
                     *ngIf="permiso_configuraciones">
                     <mat-card class="mat-elevation-z4 text-center" (click)="abrirOpcion('CONFIGURACION')">
@@ -160,9 +168,9 @@
                         </mat-card-content>
                     </mat-card>
                 </div>
-                <div [fxFlex]="(100/gridColumns) + '%'" fxFlex.xs="100%" fxFlex.sm="33%" *ngIf="permiso_usuarios">
-                    <mat-card class="mat-elevation-z4 text-center" (click)="abrirOpcion('USUARIOS')">
-                        <img mat-card-image class="efecto" src="{{ico_usuarios}}" alt="">
+                <div [fxFlex]="(100/gridColumns) + '%'" fxFlex.xs="100%" fxFlex.sm="33%" *ngIf="permiso_tutoriales">
+                    <mat-card class="mat-elevation-z4 text-center" (click)="abrirOpcion('TUTORIALES')">
+                        <img mat-card-image class="efecto" src="{{ico_tutoriales}}" alt="">
                         <mat-card-content>
                             <h6><a class="card-title">TUTORIALES</a></h6>
                         </mat-card-content>
