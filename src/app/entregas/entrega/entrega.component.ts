@@ -1,23 +1,21 @@
 import { Component, OnInit } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Router } from '@angular/router';
-import * as util from '../../util';
 import Swal from 'sweetalert2';
-import { SesionService } from '../../servicios/sesion.service';
-import { Factura } from '../../modelos/factura';
-import { Ubicacion } from '../../modelos/ubicacion';
-import { UbicacionService } from '../../servicios/ubicacion.service';
-import { TransportistaService } from '../../servicios/transportista.service';
-import { Transportista } from '../../modelos/transportista';
-import { VehiculoTransporteService } from '../../servicios/vehiculo-transporte.service';
-import { Entrega } from '../../modelos/entrega';
-import { Direccion } from '../../modelos/direccion';
-import { EntregaService } from '../../servicios/entrega.service';
-import { Sesion } from '../../modelos/sesion';
-import { FacturaService } from '../../servicios/factura.service';
-import * as constantes from '../../constantes';
+import { SesionService } from '../../servicios/usuario/sesion.service';
+import { Factura } from '../../modelos/comprobante/factura';
+import { Ubicacion } from '../../modelos/configuracion/ubicacion';
+import { UbicacionService } from '../../servicios/configuracion/ubicacion.service';
+import { TransportistaService } from '../../servicios/entrega/transportista.service';
+import { Transportista } from '../../modelos/entrega/transportista';
+import { Entrega } from '../../modelos/entrega/entrega';
+import { Direccion } from '../../modelos/cliente/direccion';
+import { EntregaService } from '../../servicios/entrega/entrega.service';
+import { Sesion } from '../../modelos/usuario/sesion';
+import { FacturaService } from '../../servicios/comprobante/factura.service';
+import { valores, validarSesion, tab_activo, exito, exito_swal, error, error_swal } from '../../constantes';
 import { MatTableDataSource } from '@angular/material/table';
-import { FacturaDetalle } from '../../modelos/factura-detalle';
+import { FacturaDetalle } from '../../modelos/comprobante/factura-detalle';
 
 @Component({
   selector: 'app-entrega',
@@ -41,11 +39,11 @@ export class EntregaComponent implements OnInit {
   dataFacturaDetalle = new MatTableDataSource<FacturaDetalle>(this.entrega.factura.facturaDetalles);
 
   constructor(private transportistaService: TransportistaService, private sesionService: SesionService, private router: Router,
-    private vehiculoTransporteService: VehiculoTransporteService, private facturaService: FacturaService, private modalService: NgbModal,
+    private facturaService: FacturaService, private modalService: NgbModal,
     private ubicacionService: UbicacionService, private entregaService: EntregaService) { }
 
   ngOnInit() {
-    this.sesion=util.validarSesion(this.sesionService, this.router);
+    this.sesion=validarSesion(this.sesionService, this.router);
     this.consultarTransportistas();
     this.consultarUbicaciones();
 
@@ -75,7 +73,7 @@ export class EntregaComponent implements OnInit {
           }
           this.dataFacturaDetalle = new MatTableDataSource<FacturaDetalle>(this.entrega.factura.facturaDetalles);
         },
-        err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
+        err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
       );
     }
   }
@@ -85,7 +83,7 @@ export class EntregaComponent implements OnInit {
       res => {
         this.provincias = res.resultado as Ubicacion[];
       },
-      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
+      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
 
@@ -94,7 +92,7 @@ export class EntregaComponent implements OnInit {
       res => {
         this.transportistas = res.resultado as Transportista[]
       },
-      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
+      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
 
@@ -106,9 +104,9 @@ export class EntregaComponent implements OnInit {
     this.entregaService.crear(this.entrega).subscribe(
       res => {
         this.entrega = res.resultado as Entrega;
-        Swal.fire({ icon: constantes.exito_swal, title: constantes.exito, text: res.mensaje });
+        Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
       },
-      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
+      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
 
@@ -119,10 +117,10 @@ export class EntregaComponent implements OnInit {
     console.log(this.entrega);
     this.entregaService.actualizar(this.entrega).subscribe(
       res => {
-        Swal.fire({ icon: constantes.exito_swal, title: constantes.exito, text: res.mensaje });
+        Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
         this.entrega = res.resultado as Entrega;
       },
-      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
+      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
 
@@ -131,7 +129,7 @@ export class EntregaComponent implements OnInit {
       res => {
           this.cantones = res.resultado as Ubicacion[];
       },
-      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
+      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
 
@@ -140,7 +138,7 @@ export class EntregaComponent implements OnInit {
       res => {
           this.parroquias = res.resultado as Ubicacion[];
       },
-      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
+      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
   parroquia(){
@@ -149,32 +147,32 @@ export class EntregaComponent implements OnInit {
         res => {
           this.entrega.direccion.ubicacion=res.resultado as Ubicacion;
         },
-        err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
+        err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
       );
     }
   }
 
   validarTelefono() {
     let digito=this.entrega.telefono.substr(0,1);
-    if (this.entrega.telefono.length!=11 || digito!="0") {
-      this.entrega.telefono="";
-      Swal.fire(constantes.error, "Telefono Invalido", constantes.error_swal);
+    if (this.entrega.telefono.length!=11 || digito!= "0") {
+      this.entrega.telefono= valores.vacio;
+      Swal.fire(error, "Telefono Invalido", error_swal);
     }
   }
 
   validarCelular() {
     let digito=this.entrega.celular.substr(0,2);
     if (this.entrega.celular.length!=12 || digito!="09") {
-      this.entrega.celular="";
-      Swal.fire(constantes.error, "Celular Invalido", constantes.error_swal);
+      this.entrega.celular= valores.vacio;
+      Swal.fire(error, "Celular Invalido", error_swal);
     }
   }
 
   validarCorreo() {
     let arroba=this.entrega.correo.includes("@");
     if (!arroba) {
-      this.entrega.correo="";
-      Swal.fire(constantes.error, "Correo Invalido", constantes.error_swal);
+      this.entrega.correo=valores.vacio;
+      Swal.fire(error, "Correo Invalido", error_swal);
     }
   }
 
@@ -200,17 +198,17 @@ export class EntregaComponent implements OnInit {
       this.deshabilitar=true;
     } else if (event.value=="1") {
       this.entrega.direccion=new Direccion();
-      this.entrega.telefono="";
-      this.entrega.celular="";
-      this.entrega.correo="";
+      this.entrega.telefono= valores.vacio;
+      this.entrega.celular= valores.vacio;
+      this.entrega.correo= valores.vacio;
       this.entrega.inhabilitar=false;
       this.deshabilitar=false
     } else if (event.value=="2"){
       this.entrega.transportista=new Transportista();
       this.entrega.direccion=new Direccion();
-      this.entrega.telefono="";
-      this.entrega.celular="";
-      this.entrega.correo="";
+      this.entrega.telefono= valores.vacio;
+      this.entrega.celular= valores.vacio;
+      this.entrega.correo= valores.vacio;
       this.entrega.inhabilitar=true;
       this.deshabilitar=true
     }
@@ -233,7 +231,7 @@ export class EntregaComponent implements OnInit {
         var fileURL = URL.createObjectURL(file);
         window.open(fileURL);
       },
-      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
+      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
 }

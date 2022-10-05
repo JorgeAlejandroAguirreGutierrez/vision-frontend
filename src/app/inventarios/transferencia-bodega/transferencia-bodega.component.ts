@@ -3,22 +3,21 @@ import { FormControl } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { startWith, map } from 'rxjs/operators';
 import Swal from 'sweetalert2';
-import * as constantes from '../../constantes';
-import * as util from '../../util';
-import { Producto } from '../../modelos/producto';
-import { ProductoService } from '../../servicios/producto.service';
-import { Bodega } from '../../modelos/bodega';
-import { BodegaService } from '../../servicios/bodega.service';
-import { ProductoBodega } from '../../modelos/producto-bodega';
+import { valores, mensajes, validarSesion, tab_activo, exito, exito_swal, error, error_swal } from '../../constantes';
+import { Producto } from '../../modelos/inventario/producto';
+import { ProductoService } from '../../servicios/inventario/producto.service';
+import { Bodega } from '../../modelos/inventario/bodega';
+import { BodegaService } from '../../servicios/inventario/bodega.service';
+import { ProductoBodega } from '../../modelos/inventario/producto-bodega';
 //Solo por el error
-import { Proveedor } from '../../modelos/proveedor';
+import { Proveedor } from '../../modelos/proveedor/proveedor';
 
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
-import { SesionService } from 'src/app/servicios/sesion.service';
-import { Sesion } from 'src/app/modelos/sesion';
+import { SesionService } from 'src/app/servicios/usuario/sesion.service';
+import { Sesion } from 'src/app/modelos/usuario/sesion';
 
 @Component({
   selector: 'app-transferencia-bodega',
@@ -73,7 +72,7 @@ export class TransferenciaBodegaComponent implements OnInit {
   constructor(private renderer: Renderer2, private productoService: ProductoService, private bodegaService: BodegaService, private sesionService: SesionService, private router: Router) { }
 
   ngOnInit() {
-    this.sesion=util.validarSesion(this.sesionService, this.router);
+    this.sesion=validarSesion(this.sesionService, this.router);
     this.consultarProductos();
     this.consultarBodegasDestino();
     this.filtroProductos = this.controlProducto.valueChanges
@@ -110,7 +109,7 @@ export class TransferenciaBodegaComponent implements OnInit {
     if (event != null)
       event.preventDefault();
     if (this.producto.nombre == '') {
-      Swal.fire(constantes.error, constantes.error_nombre_producto, constantes.error_swal);
+      Swal.fire(error, mensajes.error_nombre_producto, error_swal);
       return;
     }
     console.log(this.producto);
@@ -118,11 +117,11 @@ export class TransferenciaBodegaComponent implements OnInit {
     this.producto.kardexs[0].proveedor = new Proveedor;
     this.productoService.actualizar(this.producto).subscribe({
       next: (res) => {
-        Swal.fire({ icon: constantes.exito_swal, title: constantes.exito, text: res.mensaje });
+        Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
         this.limpiar();
       },
       error: (err) => {
-        Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.message });
+        Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.message });
       }
     });
   }
@@ -132,7 +131,7 @@ export class TransferenciaBodegaComponent implements OnInit {
       next: (res) => {
         this.productos = res.resultado as Producto[]
       },
-      error: (err) => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.message })
+      error: (err) => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.message })
     });
   }
   private filtroProducto(value: string): Producto[] {
@@ -173,7 +172,7 @@ export class TransferenciaBodegaComponent implements OnInit {
           this.verActualizarProducto = true;
           this.limpiarBodega();
         } else {
-          Swal.fire(constantes.error, constantes.error_bodega_cantidad, constantes.error_swal);
+          Swal.fire(error, mensajes.error_bodega_cantidad, error_swal);
           return;
         }
 
@@ -268,7 +267,7 @@ export class TransferenciaBodegaComponent implements OnInit {
         this.producto.productosBodegas = this.productosBodegas;
       }
     } else {
-      Swal.fire(constantes.error, constantes.error_eliminar_bodega, constantes.error_swal);
+      Swal.fire(error, mensajes.error_eliminar_bodega, error_swal);
       return;
     }
   }
@@ -281,7 +280,7 @@ export class TransferenciaBodegaComponent implements OnInit {
         //this.controlBodegaDestino.disable();
       },
       error: (err) => {
-        Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
+        Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
       }
     });
   }
@@ -297,7 +296,6 @@ export class TransferenciaBodegaComponent implements OnInit {
   }
   seleccionarBodegaDestino() {
     this.bodegaDestino = this.controlBodegaDestino.value as Bodega;
-    //console.log(this.proveedor.codigo);
   }
 
 }

@@ -1,21 +1,20 @@
 import { Component, OnInit, HostListener, ElementRef, Renderer2, Inject } from '@angular/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { BehaviorSubject } from 'rxjs';
-import * as constantes from '../../constantes';
-import * as util from '../../util';
+import { valores, validarSesion, tab_activo, exito, exito_swal, error, error_swal } from '../../constantes';
 import Swal from 'sweetalert2';
 
 import { Router } from '@angular/router';
-import { Sesion } from 'src/app/modelos/sesion';
-import { SesionService } from 'src/app/servicios/sesion.service';
-import { Empresa } from '../../modelos/empresa';
-import { EmpresaService } from '../../servicios/empresa.service';
-import { Ubicacion } from '../../modelos/ubicacion';
-import { UbicacionService } from '../../servicios/ubicacion.service';
-import { Telefono } from '../../modelos/telefono';
-import { Celular } from '../../modelos/celular';
-import { Correo } from '../../modelos/correo';
-import { Coordenada } from '../../modelos/coordenada';
+import { Sesion } from 'src/app/modelos/usuario/sesion';
+import { SesionService } from 'src/app/servicios/usuario/sesion.service';
+import { Empresa } from '../../modelos/configuracion/empresa';
+import { EmpresaService } from '../../servicios/configuracion/empresa.service';
+import { Ubicacion } from '../../modelos/configuracion/ubicacion';
+import { UbicacionService } from '../../servicios/configuracion/ubicacion.service';
+import { Telefono } from '../../modelos/cliente/telefono';
+import { Celular } from '../../modelos/cliente/celular';
+import { Correo } from '../../modelos/cliente/correo';
+import { Coordenada } from '../../modelos/configuracion/coordenada';
 
 import { ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
@@ -29,8 +28,8 @@ import { MatTableDataSource } from '@angular/material/table';
 })
 export class EmpresaComponent implements OnInit {
 
-  estadoActivo: string = constantes.estadoActivo;
-  estadoInactivo: string = constantes.estadoInactivo;
+  activo: string = valores.activo;
+  inactivo: string = valores.inactivo;
 
   abrirPanelNuevoEmpresa: boolean = true;
   abrirPanelUbicacionEmpresa: boolean = true;
@@ -80,14 +79,14 @@ export class EmpresaComponent implements OnInit {
     private empresaService: EmpresaService, private ubicacionService: UbicacionService) { }
 
   ngOnInit() {
-    this.sesion=util.validarSesion(this.sesionService, this.router);
+    this.sesion=validarSesion(this.sesionService, this.router);
     this.consultarEmpresas();
     this.ubicacionService.obtenerProvincias().subscribe({
       next: res => {
         this.provincias = res.resultado as Ubicacion[];
       },
       error: err => {
-        Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje });
+        Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje });
       }
     });
   }
@@ -121,11 +120,11 @@ export class EmpresaComponent implements OnInit {
     this.empresaService.crear(this.empresa).subscribe({
       next: res => {
         this.empresa = res.resultado as Empresa;
-        Swal.fire({ icon: constantes.exito_swal, title: constantes.exito, text: res.mensaje });
+        Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
         this.empresas.push(this.empresa);
         this.llenarTablaEmpresa(this.empresas);
       },
-      error: err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
+      error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     });
   }
 
@@ -141,10 +140,10 @@ export class EmpresaComponent implements OnInit {
     this.empresaService.actualizar(this.empresa).subscribe({
       next: res => {
         this.empresa = res.resultado as Empresa;
-        Swal.fire({ icon: constantes.exito_swal, title: constantes.exito, text: res.mensaje });
+        Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
         this.limpiar();
       },
-      error: err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
+      error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     });
   }
 
@@ -153,10 +152,10 @@ export class EmpresaComponent implements OnInit {
       event.preventDefault();
     this.empresaService.eliminarPersonalizado(this.empresa).subscribe({
       next: res => {
-        Swal.fire({ icon: constantes.exito_swal, title: constantes.exito, text: res.mensaje });
+        Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
         this.limpiar();
       },
-      error: err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
+      error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     });
   }
 
@@ -166,7 +165,7 @@ export class EmpresaComponent implements OnInit {
         this.empresas = res.resultado as Empresa[]
         this.llenarTablaEmpresa(this.empresas);
       },
-      error: err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
+      error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     });
   }
 
@@ -208,50 +207,50 @@ export class EmpresaComponent implements OnInit {
   }
 
   provincia(provincia: string) {
-    this.empresa.direccionMatriz.ubicacion.provincia = provincia;
+    this.empresa.direccion.ubicacion.provincia = provincia;
     this.ubicacionService.obtenerCantones(provincia).subscribe({
       next: res => {
         if (res.resultado != null) {
           this.cantones = res.resultado as Ubicacion[];
         } else {
-          Swal.fire(constantes.error, res.mensaje, constantes.error_swal);
+          Swal.fire(error, res.mensaje, error_swal);
         }
       },
-      error: err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
+      error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     });
   }
 
   canton(canton: string) {
-    this.empresa.direccionMatriz.ubicacion.canton = canton;
+    this.empresa.direccion.ubicacion.canton = canton;
     this.ubicacionService.obtenerParroquias(canton).subscribe({
       next: res => {
         if (res.resultado != null) {
           this.parroquias = res.resultado as Ubicacion[];
         } else {
-          Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: res.mensaje })
+          Swal.fire({ icon: error_swal, title: error, text: res.mensaje })
         }
       },
-      error: err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
+      error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     });
   }
 
   parroquia(parroquia: string) {
-    this.empresa.direccionMatriz.ubicacion.parroquia = parroquia;
+    this.empresa.direccion.ubicacion.parroquia = parroquia;
   }
 
   crearTelefono() {
-    if (this.telefono.numero.length != 0) {
+    if (this.telefono.numero.length != valores.cero) {
       this.empresa.telefonos.push(this.telefono);
       this.telefono = new Telefono();
     } else {
-      Swal.fire(constantes.error, "Ingrese un número telefónico válido", constantes.error_swal);
+      Swal.fire(error, "Ingrese un número telefónico válido", error_swal);
     }
   }
   validarTelefono() {
     let digito = this.telefono.numero.substr(0, 1);
     if (this.telefono.numero.length != 11 || digito != "0") {
-      this.telefono.numero = "";
-      Swal.fire(constantes.error, "Telefono Invalido", constantes.error_swal);
+      this.telefono.numero = valores.vacio;
+      Swal.fire(error, "Telefono Invalido", error_swal);
     }
   }
   eliminarTelefono(i: number) {
@@ -259,18 +258,18 @@ export class EmpresaComponent implements OnInit {
   }
 
   crearCelular() {
-    if (this.celular.numero.length != 0) {
+    if (this.celular.numero.length != valores.cero) {
       this.empresa.celulares.push(this.celular);
       this.celular = new Celular();
     } else {
-      Swal.fire(constantes.error, "Ingrese un número de celular válido", constantes.error_swal);
+      Swal.fire(error, "Ingrese un número de celular válido", error_swal);
     }
   }
   validarCelular() {
     let digito = this.celular.numero.substr(0, 2);
     if (this.celular.numero.length != 12 || digito != "09") {
-      this.celular.numero = "";
-      Swal.fire(constantes.error, "Celular Invalido", constantes.error_swal);
+      this.celular.numero = valores.vacio;
+      Swal.fire(error, "Celular Invalido", error_swal);
     }
   }
   eliminarCelular(i: number) {
@@ -278,18 +277,18 @@ export class EmpresaComponent implements OnInit {
   }
 
   crearCorreo() {
-    if (this.correo.email.length != 0) {
+    if (this.correo.email.length != valores.cero) {
       this.empresa.correos.push(this.correo);
       this.correo = new Correo();
     } else {
-      Swal.fire(constantes.error, "Ingrese un correo válido", constantes.error_swal);
+      Swal.fire(error, "Ingrese un correo válido", error_swal);
     }
   }
   validarCorreo() {
     let arroba = this.correo.email.includes("@");
     if (!arroba) {
       this.correo.email = "";
-      Swal.fire(constantes.error, "Correo Invalido", constantes.error_swal);
+      Swal.fire(error, "Correo Invalido", error_swal);
     }
   }
   eliminarCorreo(i: number) {

@@ -9,45 +9,44 @@ import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
 import { Router } from '@angular/router';
 import { Observable, Subscription } from 'rxjs';
 import Swal from 'sweetalert2';
-import { Recaudacion } from '../../modelos/recaudacion';
-import { Cheque } from '../../modelos/cheque';
-import { Deposito } from '../../modelos/deposito';
-import { TarjetaCredito } from '../../modelos/tarjeta-credito';
-import { TarjetaDebito } from '../../modelos/tarjeta-debito';
-import { Compensacion } from '../../modelos/compensacion';
-import { FacturaService } from '../../servicios/factura.service';
-import { Factura } from '../../modelos/factura';
-import { Banco } from '../../modelos/banco';
-import { Cliente } from '../../modelos/cliente';
+import { Recaudacion } from '../../modelos/recaudacion/recaudacion';
+import { Cheque } from '../../modelos/recaudacion/cheque';
+import { Deposito } from '../../modelos/recaudacion/deposito';
+import { TarjetaCredito } from '../../modelos/recaudacion/tarjeta-credito';
+import { TarjetaDebito } from '../../modelos/recaudacion/tarjeta-debito';
+import { Compensacion } from '../../modelos/recaudacion/compensacion';
+import { FacturaService } from '../../servicios/comprobante/factura.service';
+import { Factura } from '../../modelos/comprobante/factura';
+import { Banco } from '../../modelos/recaudacion/banco';
+import { Cliente } from '../../modelos/cliente/cliente';
 import { startWith, map } from 'rxjs/operators';
-import { ClienteService } from '../../servicios/cliente.service';
-import { BancoService } from '../../servicios/banco.service';
-import { FormaPagoService } from '../../servicios/forma-pago.service';
-import { FormaPago } from '../../modelos/forma-pago';
-import { CuentaPropia } from '../../modelos/cuenta-propia';
-import { CuentaPropiaService } from '../../servicios/cuenta-propia.service';
-import { Transferencia } from '../../modelos/transferencia';
-import { FranquiciaTarjeta } from '../../modelos/franquicia-tarjeta';
-import { FranquiciaTarjetaService } from '../../servicios/franquicia-tarjeta.service';
+import { ClienteService } from '../../servicios/cliente/cliente.service';
+import { BancoService } from '../../servicios/recaudacion/banco.service';
+import { FormaPagoService } from '../../servicios/cliente/forma-pago.service';
+import { FormaPago } from '../../modelos/cliente/forma-pago';
+import { CuentaPropia } from '../../modelos/recaudacion/cuenta-propia';
+import { CuentaPropiaService } from '../../servicios/contabilidad/cuenta-propia.service';
+import { Transferencia } from '../../modelos/recaudacion/transferencia';
+import { FranquiciaTarjeta } from '../../modelos/recaudacion/franquicia-tarjeta';
+import { FranquiciaTarjetaService } from '../../servicios/recaudacion/franquicia-tarjeta.service';
 import { AppDateAdapter, APP_DATE_FORMATS } from '../../modelos/format-date-picker';
-import { OperadorTarjeta } from '../../modelos/operador-tarjeta';
-import { Comprobante } from '../../modelos/comprobante';
-import { OperadorTarjetaService } from '../../servicios/operador-tarjeta.service';
-import { TipoComprobante } from '../../modelos/tipo-comprobante';
-import { TipoComprobanteService } from '../../servicios/tipo-comprobante.service';
-import { SesionService } from '../../servicios/sesion.service';
-import { Sesion } from '../../modelos/sesion';
-import { RecaudacionService } from '../../servicios/recaudacion.service';
-import { RetencionVenta } from '../../modelos/retencion-venta';
-import { EstablecimientoService } from '../../servicios/establecimiento.service';
-import { Establecimiento } from '../../modelos/establecimiento';
-import { PuntoVenta } from '../../modelos/punto-venta';
-import { PuntoVentaService } from '../../servicios/punto-venta.service';
-import { Parametro } from '../../modelos/parametro';
-import { ParametroService } from '../../servicios/parametro.service';
-import * as constantes from '../../constantes';
-import { CreditoService } from '../../servicios/credito.service';
-import { Credito } from '../../modelos/credito';
+import { OperadorTarjeta } from '../../modelos/recaudacion/operador-tarjeta';
+import { OperadorTarjetaService } from '../../servicios/recaudacion/operador-tarjeta.service';
+import { TipoComprobante } from '../../modelos/comprobante/tipo-comprobante';
+import { TipoComprobanteService } from '../../servicios/comprobante/tipo-comprobante.service';
+import { SesionService } from '../../servicios/usuario/sesion.service';
+import { Sesion } from '../../modelos/usuario/sesion';
+import { RecaudacionService } from '../../servicios/recaudacion/recaudacion.service';
+import { RetencionVenta } from '../../modelos/recaudacion/retencion-venta';
+import { EstablecimientoService } from '../../servicios/usuario/establecimiento.service';
+import { Establecimiento } from '../../modelos/usuario/establecimiento';
+import { PuntoVenta } from '../../modelos/usuario/punto-venta';
+import { PuntoVentaService } from '../../servicios/usuario/punto-venta.service';
+import { Parametro } from '../../modelos/configuracion/parametro';
+import { ParametroService } from '../../servicios/configuracion/parametro.service';
+import { valores, validarSesion, otras, tab_activo, exito, exito_swal, error, error_swal } from '../../constantes';
+import { CreditoService } from '../../servicios/recaudacion/credito.service';
+import { Credito } from '../../modelos/recaudacion/credito';
 
 @Component({
   selector: 'app-pago-compra',
@@ -82,7 +81,6 @@ export class PagoCompraComponent implements OnInit {
   modelosAmortizaciones: Parametro[];
   periodicidades: Parametro[];
   formasPagos: FormaPago[]=[];
-  comprobantes: Comprobante[]=[];
   clientes: Cliente[]=[];
   cuentasPropias: CuentaPropia[]=[];
   franquiciasTarjetasCreditos: FranquiciaTarjeta[];
@@ -235,7 +233,7 @@ export class PagoCompraComponent implements OnInit {
       res => {
         this.puntosVentas = res.resultado as PuntoVenta[]
       },
-      err => Swal.fire(constantes.error, err.error.mensaje, constantes.error_swal)
+      err => Swal.fire(error, err.error.mensaje, error_swal)
     );
   }
 
@@ -244,7 +242,7 @@ export class PagoCompraComponent implements OnInit {
       res => {
         this.cuentasPropias = res.resultado as CuentaPropia[]
       },
-      err => Swal.fire(constantes.error, err.error.mensaje, constantes.error_swal)
+      err => Swal.fire(error, err.error.mensaje, error_swal)
     );
   }
   consultarFranquiciasTarjetas(){
@@ -269,27 +267,27 @@ export class PagoCompraComponent implements OnInit {
       res => {
         this.operadoresTarjetasDebitos = res.resultado as OperadorTarjeta[]
       },
-      err => Swal.fire(constantes.error, err.error.mensaje, constantes.error_swal)
+      err => Swal.fire(error, err.error.mensaje, error_swal)
     );
   }
   consultarModelosAmortizaciones(){
     let parametro=new Parametro();
-    parametro.tipo=constantes.modelo_amortizacion;
+    parametro.tipo = otras.modeloAmortizacion;
     this.parametroService.consultarTipo(parametro).subscribe(
       res => {
         this.modelosAmortizaciones = res.resultado as Parametro[]
       },
-      err => Swal.fire(constantes.error, err.error.mensaje, constantes.error_swal)
+      err => Swal.fire(error, err.error.mensaje, error_swal)
     );
   }
   consultarPeriodicidades(){
     let parametro=new Parametro();
-    parametro.tipo=constantes.periodicidad;
+    parametro.tipo = otras.periodicidad;
     this.parametroService.consultarTipo(parametro).subscribe(
       res => {
         this.periodicidades = res.resultado as Parametro[]
       },
-      err => Swal.fire(constantes.error, err.error.mensaje, constantes.error_swal)
+      err => Swal.fire(error, err.error.mensaje, error_swal)
     );
   }
   consultarTiposComprobantes(){
@@ -297,7 +295,7 @@ export class PagoCompraComponent implements OnInit {
       res => {
         this.tiposComprobantes = res.resultado as TipoComprobante[]
       },
-      err => Swal.fire(constantes.error, err.error.mensaje, constantes.error_swal)
+      err => Swal.fire(error, err.error.mensaje, error_swal)
     );
   }
   consultarClientes() {
@@ -305,7 +303,7 @@ export class PagoCompraComponent implements OnInit {
      res => {
        this.clientes = res.resultado as Cliente[]
      },
-     err => Swal.fire(constantes.error, err.error.mensaje, constantes.error_swal)
+     err => Swal.fire(error, err.error.mensaje, error_swal)
    );
   }
   consultarBancosCheques() {
@@ -313,42 +311,42 @@ export class PagoCompraComponent implements OnInit {
     res => {
       this.bancosCheques = res.resultado as Banco[]
     },
-    err => Swal.fire(constantes.error, err.error.mensaje, constantes.error_swal));
+    err => Swal.fire(error, err.error.mensaje, error_swal));
   }
   consultarBancosDepositos() {
     this.bancoService.consultar().subscribe(
     res => {
       this.bancosDepositos = res.resultado as Banco[]
     },
-    err => Swal.fire(constantes.error, err.error.mensaje, constantes.error_swal));
+    err => Swal.fire(error, err.error.mensaje, error_swal));
   }  
   consultarBancosTransferencias() {
     this.bancoService.consultar().subscribe(
     res => {
       this.bancosTransferencias = res.resultado as Banco[]
     },
-    err => Swal.fire(constantes.error, err.error.mensaje, constantes.error_swal));
+    err => Swal.fire(error, err.error.mensaje, error_swal));
   } 
   consultarBancosTarjetasCreditos() {
     this.bancoService.consultar().subscribe(
     res => {
       this.bancosTarjetasCreditos = res.resultado as Banco[]
     },
-    err => Swal.fire(constantes.error, err.error.mensaje, constantes.error_swal));
+    err => Swal.fire(error, err.error.mensaje, error_swal));
   }
   consultarBancosTarjetasDebitos() {
     this.bancoService.consultar().subscribe(
     res => {
       this.bancosTarjetasDebitos = res.resultado as Banco[]
     },
-    err => Swal.fire(constantes.error, err.error.mensaje, constantes.error_swal));
+    err => Swal.fire(error, err.error.mensaje, error_swal));
   }
   consultarFormasPagos() {
     this.formaPagoService.consultar().subscribe(
     res => {
       this.formasPagos = res.resultado as FormaPago[]
     },
-    err => Swal.fire(constantes.error, err.error.mensaje, constantes.error_swal));
+    err => Swal.fire(error, err.error.mensaje, error_swal));
   }  
 
   private filtroRazonSocialCliente(value: string): Cliente[] {
@@ -474,7 +472,7 @@ export class PagoCompraComponent implements OnInit {
       this.seleccionarValorPagado();
       this.modificarEstado();
     } else {
-      Swal.fire(constantes.error, "Valor supera el monto de cobro de la factura", constantes.error_swal);
+      Swal.fire(error, "Valor supera el monto de cobro de la factura", error_swal);
     }
     this.defectoRecaudacion();
     this.modificarEstado();
@@ -529,7 +527,7 @@ export class PagoCompraComponent implements OnInit {
       //this.recaudacion.calcularTotales();
       this.seleccionarValorPagado();
     } else {
-      Swal.fire(constantes.error, "Valor supera el monto de cobro de la factura", constantes.error_swal);
+      Swal.fire(error, "Valor supera el monto de cobro de la factura", error_swal);
     }
     this.defectoRecaudacion();
     this.modificarEstado();
@@ -582,7 +580,7 @@ export class PagoCompraComponent implements OnInit {
       //this.recaudacion.calcularTotales();
       this.seleccionarValorPagado();
     } else {
-      Swal.fire(constantes.error, "Valor supera el monto de cobro de la factura", constantes.error_swal);
+      Swal.fire(error, "Valor supera el monto de cobro de la factura", error_swal);
     }
     this.defectoRecaudacion();
     this.modificarEstado();
@@ -635,7 +633,7 @@ export class PagoCompraComponent implements OnInit {
       //this.recaudacion.calcularTotales();
       this.seleccionarValorPagado();
     } else {
-      Swal.fire(constantes.error, "Valor supera el monto de cobro de la factura", constantes.error_swal);
+      Swal.fire(error, "Valor supera el monto de cobro de la factura", error_swal);
     }
     this.defectoTarjetaCredito();
     this.defectoRecaudacion();
@@ -681,13 +679,13 @@ export class PagoCompraComponent implements OnInit {
     this.clienteService.validarIdentificacion(this.tarjetaCredito.identificacion).subscribe(
       res => {
         if (res.resultado!=null){
-          Swal.fire(constantes.exito, 'Identificacion verificada', constantes.exito_swal);
+          Swal.fire(exito, 'Identificacion verificada', exito_swal);
         } else {
           this.tarjetaCredito.identificacion='';
-          Swal.fire(constantes.error, "Error al validar la identificacion", constantes.error_swal);
+          Swal.fire(error, "Error al validar la identificacion", error_swal);
         } 
       },
-      err => Swal.fire(constantes.error, err.error.mensaje, constantes.error_swal)
+      err => Swal.fire(error, err.error.mensaje, error_swal)
     );
   }
 
@@ -703,7 +701,7 @@ export class PagoCompraComponent implements OnInit {
       //this.recaudacion.calcularTotales();
       this.seleccionarValorPagado();
     } else {
-      Swal.fire(constantes.error, "Valor supera el monto de cobro de la factura", constantes.error_swal);
+      Swal.fire(error, "Valor supera el monto de cobro de la factura", error_swal);
     }
     this.defectoTarjetaDebito();
     this.defectoRecaudacion();
@@ -748,13 +746,13 @@ export class PagoCompraComponent implements OnInit {
     this.clienteService.validarIdentificacion(this.tarjetaDebito.identificacion).subscribe(
       res => {
         if (res.resultado!=null){
-          Swal.fire(constantes.exito, 'Identificacion verificada', constantes.exito_swal);
+          Swal.fire(exito, 'Identificacion verificada', exito_swal);
         } else {
           this.tarjetaDebito.identificacion='';
-          Swal.fire(constantes.error, "Error al validar la identificacion", constantes.error_swal);
+          Swal.fire(error, "Error al validar la identificacion", error_swal);
         } 
       },
-      err => Swal.fire(constantes.error, err.error.mensaje, constantes.error_swal)
+      err => Swal.fire(error, err.error.mensaje, error_swal)
     );
   }
 
@@ -905,7 +903,7 @@ export class PagoCompraComponent implements OnInit {
     if (this.factura.totalConDescuento-this.recaudacion.total>0){
       if(this.recaudacion.credito.periodicidad=="" || this.recaudacion.credito.cuotas<1 
       || this.recaudacion.credito.fechaPrimeraCuota==null){
-        Swal.fire(constantes.error, 'Por favor validar el credito', constantes.error_swal);
+        Swal.fire(error, 'Por favor validar el credito', error_swal);
         return;
       }
     }
@@ -914,11 +912,11 @@ export class PagoCompraComponent implements OnInit {
         this.recaudacionCrear = res.resultado as Recaudacion
         this.propagar.emit(true);
         if (res.mensaje){
-          Swal.fire(constantes.exito, 'Se creo la Recaudacion', constantes.exito_swal);
+          Swal.fire(exito, 'Se creo la Recaudacion', exito_swal);
         } else {
-          Swal.fire(constantes.error, res.mensaje, constantes.error_swal);
+          Swal.fire(error, res.mensaje, error_swal);
         }
-      }, err => Swal.fire(constantes.error, err.error.mensaje, constantes.error_swal)
+      }, err => Swal.fire(error, err.error.mensaje, error_swal)
     );
   }
 
@@ -983,15 +981,15 @@ export class PagoCompraComponent implements OnInit {
         parametro = res.resultado as Parametro
         this.recaudacion.credito.periodicidadNumero=Number(parametro.nombre);
       },
-      err => Swal.fire(constantes.error, err.error.mensaje, constantes.error_swal)
+      err => Swal.fire(error, err.error.mensaje, error_swal)
     );
-    parametro.tipo=constantes.periodo+"_"+this.recaudacion.credito.periodicidad;
+    parametro.tipo = otras.periodo + "_" + this.recaudacion.credito.periodicidad;
     this.parametroService.obtenerTipo(parametro).subscribe(
       res => {
         parametro = res.resultado as Parametro
         this.recaudacion.credito.periodicidadTotal=Number(parametro.nombre);
       },
-      err => Swal.fire(constantes.error, err.error.mensaje, constantes.error_swal)
+      err => Swal.fire(error, err.error.mensaje, error_swal)
     );
   }
 
@@ -1007,7 +1005,7 @@ export class PagoCompraComponent implements OnInit {
           console.log(`Dismissed ${this.getDismissReason(reason)}`);
         });
       },
-      err => Swal.fire(constantes.error, err.error.mensaje, constantes.error_swal)
+      err => Swal.fire(error, err.error.mensaje, error_swal)
     );
   }
 

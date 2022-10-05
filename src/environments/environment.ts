@@ -5,7 +5,7 @@
 export const environment = {
   production: false,
   host: 'http://localhost:5000/api',
-  prefijo_url_imagenes: 'http://localhost:5000/storage/'
+  prefijoUrlImagenes: 'http://localhost:5000/storage/'
 };
 
 /*

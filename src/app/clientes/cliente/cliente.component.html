@@ -47,9 +47,13 @@
                 </div>
                 <div class="col-1">
                     <mat-form-field appearance="standard">
-                        <mat-label>Documento</mat-label>
-                        <input matInput type="text" class="form-control-sm" [(ngModel)]="cliente.tipoIdentificacion"
-                            disabled>
+                        <mat-label>Tipo de Documento</mat-label>
+                        <mat-select [ngModel]="cliente.tipoIdentificacion?.id" class="form-control-sm">
+                            <mat-option *ngFor="let tipoIdentificacion of tiposIdentificaciones"
+                                [value]="tipoIdentificacion.id">
+                                {{tipoIdentificacion.codigoSri}}
+                            </mat-option>
+                        </mat-select>
                     </mat-form-field>
                 </div>
                 <div class="col-2">
@@ -110,11 +114,6 @@
                     <mat-checkbox [(ngModel)]="cliente.especial" class="form-control-sm" color="primary">
                         Espec.</mat-checkbox>
                 </div>
-                <div class="col-1">
-                    <mat-slide-toggle [(ngModel)]="estadoCliente" (change)="cambiarEstado()">
-                        Estado
-                    </mat-slide-toggle>
-                </div>
             </div>
         </mat-expansion-panel>
     </mat-accordion>
@@ -132,169 +131,158 @@
             </mat-expansion-panel-header>
             <hr>
             <div class="form-group form-row">
-                <div class="form-row col-8">
-                    <div class="col-2">
-                        <mat-form-field appearance="standard">
-                            <mat-label>Lugar</mat-label>
-                            <mat-select type="text" [(ngModel)]="cliente.direccion.lugar" class="form-control-sm">
-                                <mat-option [value]="true">CASA</mat-option>
-                                <mat-option [value]="false">TRABAJO</mat-option>
-                            </mat-select>
-                        </mat-form-field>
-                    </div>
-                    <div class="col-9">
-                        <mat-form-field appearance="standard">
-                            <mat-label>Direccion</mat-label>
-                            <input matInput type="text" [(ngModel)]="cliente.direccion.direccion"
-                                oninput="this.value = this.value.toUpperCase()" class="form-control-sm">
-                            <button mat-button *ngIf="cliente.direccion.direccion" matSuffix mat-icon-button
-                                (click)="cliente.direccion.direccion=''">
-                                <mat-icon>close</mat-icon>
+                <div class="col-9">
+                    <mat-form-field appearance="standard">
+                        <mat-label>Direccion</mat-label>
+                        <input matInput type="text" [(ngModel)]="cliente.direccion.direccion"
+                            oninput="this.value = this.value.toUpperCase()" class="form-control-sm">
+                        <button mat-button *ngIf="cliente.direccion.direccion" matSuffix mat-icon-button
+                            (click)="cliente.direccion.direccion=''">
+                            <mat-icon>close</mat-icon>
+                        </button>
+                    </mat-form-field>
+                </div>
+                <div class="col-1">
+                    <mat-checkbox [(ngModel)]="dirEstablecida">Act.</mat-checkbox>
+                </div>
+                <div class="col-4">
+                    <mat-form-field appearance="standard">
+                        <mat-label>Provincia</mat-label>
+                        <mat-select type="text" [(ngModel)]="clienteProvincia"
+                            (selectionChange)="provincia($event.value)" class="form-control-sm">
+                            <mat-option *ngFor="let provincia of provincias" [value]="provincia.provincia">
+                                {{provincia.provincia}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+                <div class="col-4">
+                    <mat-form-field appearance="standard">
+                        <mat-label>Canton</mat-label>
+                        <mat-select type="text" [(ngModel)]="clienteCanton" (selectionChange)="canton($event.value)"
+                            class="form-control-sm">
+                            <mat-option *ngFor="let canton of cantones" [value]="canton.canton">
+                                {{canton.canton}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+                <div class="col-4">
+                    <mat-form-field appearance="standard">
+                        <mat-label>Parroquia</mat-label>
+                        <mat-select type="text" [(ngModel)]="clienteParroquia" class="form-control-sm"
+                            (selectionChange)="parroquia($event.value)">
+                            <mat-option *ngFor="let parroquia of parroquias" [value]="parroquia.parroquia">
+                                {{parroquia.parroquia}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+                <section class="form-row">
+                    <div class="form-row col-4">
+                        <div class="col-9">
+                            <mat-form-field appearance="standard">
+                                <mat-label>Teléfono</mat-label>
+                                <b matPrefix>+593 &nbsp;</b>
+                                <input matInput type="tel" [(ngModel)]="telefono.numero" class="form-control-sm"
+                                    (change)="validarTelefono()" placeholder="03-2999-123" oninput="this.value = this.value.replace
+                                        ( /^(\d{2})(\d{4})(\d{3})$/, '$1-$2-$3')">
+                            </mat-form-field>
+                        </div>
+                        <div class="col-3 iconos">
+                            <button mat-icon-button>
+                                <mat-icon (click)="crearTelefono()">add</mat-icon>
                             </button>
-                        </mat-form-field>
-                    </div>
-                    <div class="col-1">
-                        <mat-checkbox [(ngModel)]="dirEstablecida">Act.</mat-checkbox>
-                    </div>
-                    <div class="col-4">
-                        <mat-form-field appearance="standard">
-                            <mat-label>Provincia</mat-label>
-                            <mat-select type="text" [(ngModel)]="clienteProvincia"
-                                (selectionChange)="provincia($event.value)" class="form-control-sm">
-                                <mat-option *ngFor="let provincia of provincias" [value]="provincia.provincia">
-                                    {{provincia.provincia}}
-                                </mat-option>
-                            </mat-select>
-                        </mat-form-field>
-                    </div>
-                    <div class="col-4">
-                        <mat-form-field appearance="standard">
-                            <mat-label>Canton</mat-label>
-                            <mat-select type="text" [(ngModel)]="clienteCanton" (selectionChange)="canton($event.value)"
-                                class="form-control-sm">
-                                <mat-option *ngFor="let canton of cantones" [value]="canton.canton">
-                                    {{canton.canton}}
-                                </mat-option>
-                            </mat-select>
-                        </mat-form-field>
-                    </div>
-                    <div class="col-4">
-                        <mat-form-field appearance="standard">
-                            <mat-label>Parroquia</mat-label>
-                            <mat-select type="text" [(ngModel)]="clienteParroquia" class="form-control-sm"
-                                (selectionChange)="parroquia($event.value)">
-                                <mat-option *ngFor="let parroquia of parroquias" [value]="parroquia.parroquia">
-                                    {{parroquia.parroquia}}
-                                </mat-option>
-                            </mat-select>
-                        </mat-form-field>
-                    </div>
-                    <section class="form-row">
-                        <div class="form-row col-4">
+                        </div>
+                        <ng-container *ngFor="let telefono of cliente.telefonos; let i=index ">
                             <div class="col-9">
                                 <mat-form-field appearance="standard">
                                     <mat-label>Teléfono</mat-label>
                                     <b matPrefix>+593 &nbsp;</b>
-                                    <input matInput type="tel" [(ngModel)]="telefono.numero" class="form-control-sm"
-                                        (change)="validarTelefono()" placeholder="03-2999-123" oninput="this.value = this.value.replace
+                                    <input matInput type="tel" [value]="telefono.numero" class="form-control-sm"
+                                        disabled (change)="validarTelefono()" placeholder="03-2999-123" oninput="this.value = this.value.replace
                                         ( /^(\d{2})(\d{4})(\d{3})$/, '$1-$2-$3')">
                                 </mat-form-field>
                             </div>
                             <div class="col-3 iconos">
                                 <button mat-icon-button>
-                                    <mat-icon (click)="crearTelefono()">add</mat-icon>
+                                    <mat-icon class="iconos-peque">edit</mat-icon>
+                                </button>
+                                <button mat-icon-button>
+                                    <mat-icon class="iconos-peque" (click)="eliminarTelefono(i)">close</mat-icon>
                                 </button>
                             </div>
-                            <ng-container *ngFor="let telefono of cliente.telefonos; let i=index ">
-                                <div class="col-9">
-                                    <mat-form-field appearance="standard">
-                                        <mat-label>Teléfono</mat-label>
-                                        <b matPrefix>+593 &nbsp;</b>
-                                        <input matInput type="tel" [value]="telefono.numero" class="form-control-sm"
-                                            disabled (change)="validarTelefono()" placeholder="03-2999-123" oninput="this.value = this.value.replace
-                                        ( /^(\d{2})(\d{4})(\d{3})$/, '$1-$2-$3')">
-                                    </mat-form-field>
-                                </div>
-                                <div class="col-3 iconos">
-                                    <button mat-icon-button>
-                                        <mat-icon class="iconos-peque">edit</mat-icon>
-                                    </button>
-                                    <button mat-icon-button>
-                                        <mat-icon class="iconos-peque" (click)="eliminarTelefono(i)">close</mat-icon>
-                                    </button>
-                                </div>
-                            </ng-container>
+                        </ng-container>
+                    </div>
+                    <div class="form-row col-4">
+                        <div class="col-9">
+                            <mat-form-field appearance="standard">
+                                <mat-label>Celular</mat-label>
+                                <b matPrefix>+593 </b>
+                                <input matInput type="tel" [(ngModel)]="celular.numero" class="form-control-sm"
+                                    (change)="validarCelular()" placeholder="09-9999-1234" oninput="this.value = this.value.replace
+                                            ( /^(\d{2})(\d{4})(\d{4})$/, '$1-$2-$3')">
+                            </mat-form-field>
                         </div>
-                        <div class="form-row col-4">
+                        <div class="col-3 iconos">
+                            <button mat-icon-button>
+                                <mat-icon (click)="crearCelular()">add</mat-icon>
+                            </button>
+                        </div>
+                        <ng-container *ngFor="let celular of cliente.celulares; let i=index ">
                             <div class="col-9">
                                 <mat-form-field appearance="standard">
                                     <mat-label>Celular</mat-label>
-                                    <b matPrefix>+593 </b>
-                                    <input matInput type="tel" [(ngModel)]="celular.numero" class="form-control-sm"
+                                    <b matPrefix>+593 &nbsp;</b>
+                                    <input matInput type="tel" [value]="celular.numero" class="form-control-sm" disabled
                                         (change)="validarCelular()" placeholder="09-9999-1234" oninput="this.value = this.value.replace
-                                            ( /^(\d{2})(\d{4})(\d{4})$/, '$1-$2-$3')">
+                                        ( /^(\d{2})(\d{4})(\d{4})$/, '$1-$2-$3')">
                                 </mat-form-field>
                             </div>
                             <div class="col-3 iconos">
                                 <button mat-icon-button>
-                                    <mat-icon (click)="crearCelular()">add</mat-icon>
+                                    <mat-icon class="iconos-peque">edit</mat-icon>
+                                </button>
+                                <button mat-icon-button>
+                                    <mat-icon class="iconos-peque" (click)="eliminarCelular(i)">close</mat-icon>
                                 </button>
                             </div>
-                            <ng-container *ngFor="let celular of cliente.celulares; let i=index ">
-                                <div class="col-9">
-                                    <mat-form-field appearance="standard">
-                                        <mat-label>Celular</mat-label>
-                                        <b matPrefix>+593 &nbsp;</b>
-                                        <input matInput type="tel" [value]="celular.numero" class="form-control-sm"
-                                            disabled (change)="validarCelular()" placeholder="09-9999-1234" oninput="this.value = this.value.replace
-                                        ( /^(\d{2})(\d{4})(\d{4})$/, '$1-$2-$3')">
-                                    </mat-form-field>
-                                </div>
-                                <div class="col-3 iconos">
-                                    <button mat-icon-button>
-                                        <mat-icon class="iconos-peque">edit</mat-icon>
-                                    </button>
-                                    <button mat-icon-button>
-                                        <mat-icon class="iconos-peque" (click)="eliminarCelular(i)">close</mat-icon>
-                                    </button>
-                                </div>
-                            </ng-container>
+                        </ng-container>
+                    </div>
+                    <div class="form-row col-4">
+                        <div class="col-9">
+                            <mat-form-field appearance="standard">
+                                <mat-label>Correo electrónico</mat-label>
+                                <input matInput type="text " [(ngModel)]="correo.email"
+                                    oninput="this.value = this.value.toUpperCase()" class="form-control-sm "
+                                    (change)="validarCorreo()" placeholder="ejemplo@siice.com">
+                            </mat-form-field>
                         </div>
-                        <div class="form-row col-4">
+                        <div class="col-3 iconos">
+                            <button mat-icon-button>
+                                <mat-icon (click)="crearCorreo()">add</mat-icon>
+                            </button>
+                        </div>
+                        <ng-container *ngFor="let correo of cliente.correos; let i=index ">
                             <div class="col-9">
                                 <mat-form-field appearance="standard">
                                     <mat-label>Correo electrónico</mat-label>
-                                    <input matInput type="text " [(ngModel)]="correo.email"
-                                        oninput="this.value = this.value.toUpperCase()" class="form-control-sm "
+                                    <input matInput type="text " [value]="correo.email"
+                                        oninput="this.value = this.value.toUpperCase()" class="form-control-sm" disabled
                                         (change)="validarCorreo()" placeholder="ejemplo@siice.com">
                                 </mat-form-field>
                             </div>
                             <div class="col-3 iconos">
                                 <button mat-icon-button>
-                                    <mat-icon (click)="crearCorreo()">add</mat-icon>
+                                    <mat-icon class="iconos-peque">edit</mat-icon>
+                                </button>
+                                <button mat-icon-button>
+                                    <mat-icon class="iconos-peque" (click)="eliminarCorreo(i)">close</mat-icon>
                                 </button>
                             </div>
-                            <ng-container *ngFor="let correo of cliente.correos; let i=index ">
-                                <div class="col-9">
-                                    <mat-form-field appearance="standard">
-                                        <mat-label>Correo electrónico</mat-label>
-                                        <input matInput type="text " [value]="correo.email"
-                                            oninput="this.value = this.value.toUpperCase()" class="form-control-sm"
-                                            disabled (change)="validarCorreo()" placeholder="ejemplo@siice.com">
-                                    </mat-form-field>
-                                </div>
-                                <div class="col-3 iconos">
-                                    <button mat-icon-button>
-                                        <mat-icon class="iconos-peque">edit</mat-icon>
-                                    </button>
-                                    <button mat-icon-button>
-                                        <mat-icon class="iconos-peque" (click)="eliminarCorreo(i)">close</mat-icon>
-                                    </button>
-                                </div>
-                            </ng-container>
-                        </div>
-                    </section>
-                </div>
+                        </ng-container>
+                    </div>
+                </section>
                 <div class="col-4 text-center linea-vertical">
                     <!--mat-label>Georeferencia</mat-label-->
                     <mat-card title="Doble click para maximizar">

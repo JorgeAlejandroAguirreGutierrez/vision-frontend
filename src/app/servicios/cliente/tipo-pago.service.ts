@@ -1,0 +1,86 @@
+import { Injectable } from '@angular/core';
+import { TipoPago } from '../../modelos/cliente/tipo-pago';
+import { Respuesta } from '../../respuesta';
+import { urn, options } from '../../constantes';
+import {HttpClient} from '@angular/common/http';
+import { map, catchError } from 'rxjs/operators';
+import {BehaviorSubject, Observable, throwError, lastValueFrom } from 'rxjs';
+import { environment } from '../../../environments/environment';
+import { Router } from '@angular/router';
+
+@Injectable({
+  providedIn: 'root'
+})
+export class TipoPagoService {
+
+  private messageSource = new BehaviorSubject(0);
+  currentMessage = this.messageSource.asObservable();
+
+  constructor(private http: HttpClient, private router: Router) { }
+
+  enviar(grupo_cliente_id: number) {
+    this.messageSource.next(grupo_cliente_id);
+  }
+
+  crear(tipoPago: TipoPago): Observable<Respuesta> {
+    return this.http.post(environment.host + urn.ruta + urn.tipoPago, tipoPago, options).pipe(
+      map(response => response as Respuesta),
+      catchError(err => {
+        return throwError(()=>err);
+      })
+    );
+  }
+
+  obtener(tipoPagoId: number): Observable<Respuesta> {
+    return this.http.get<Respuesta>(environment.host + urn.ruta + urn.tipoPago + '/' + tipoPagoId, options).pipe(
+      map(response => response as Respuesta),
+      catchError(err => {
+        return throwError(()=>err);
+      })
+    );
+  }
+
+  consultar(): Observable<Respuesta> {
+    return this.http.get(environment.host + urn.ruta + urn.tipoPago, options).pipe(
+      map(response => response as Respuesta),
+      catchError(err => {
+        return throwError(()=>err);
+      }));
+  }
+
+  async obtenerAsync(tipoPagoId: number): Promise<Respuesta> {
+    return await lastValueFrom(this.http.get<Respuesta>(environment.host + urn.ruta + urn.tipoPago + '/' + tipoPagoId, options).pipe(
+      map(response => response as Respuesta),
+      catchError(err => {
+        return throwError(()=>err);
+      })
+    ));
+  }
+
+  buscar(tipoPago: TipoPago): Observable<Respuesta> {
+    return this.http.post(environment.host + urn.ruta + urn.tipoPago + urn.buscar, tipoPago, options).pipe(
+      map(response => response as Respuesta),
+      catchError(err => {
+        return throwError(()=>err);
+      })
+    );
+  }
+
+  actualizar(tipoPago: TipoPago): Observable<Respuesta> {
+    return this.http.put(environment.host + urn.ruta + urn.tipoPago, tipoPago, options).pipe(
+      map(response => response as Respuesta),
+      catchError(err => {
+        return throwError(()=>err);
+      })
+    );
+  }
+
+  eliminar(tipoPago: TipoPago): Observable<Respuesta> {
+    return this.http.delete(environment.host + urn.ruta + urn.tipoPago + '/' + tipoPago.id, options).pipe(
+      map(response => response as Respuesta),
+      catchError(err => {
+        return throwError(()=>err);
+      })
+    );
+  }
+}

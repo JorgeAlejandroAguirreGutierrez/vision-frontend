@@ -1,14 +1,13 @@
 import { Component, OnInit, HostListener, ElementRef, Renderer2 } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
-import * as constantes from '../../constantes';
-import * as util from '../../util';
+import { valores, validarSesion, tab_activo, exito, exito_swal, error, error_swal } from '../../constantes';
 import Swal from 'sweetalert2';
 
 import { Router } from '@angular/router';
-import { Sesion } from '../../modelos/sesion';
-import { SesionService } from '../../servicios/sesion.service';
-import { FormaPago } from '../../modelos/forma-pago';
-import { FormaPagoService } from '../../servicios/forma-pago.service';
+import { Sesion } from '../../modelos/usuario/sesion';
+import { SesionService } from '../../servicios/usuario/sesion.service';
+import { FormaPago } from '../../modelos/cliente/forma-pago';
+import { FormaPagoService } from '../../servicios/cliente/forma-pago.service';
 
 import { ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
@@ -23,8 +22,8 @@ import { MatTableDataSource } from '@angular/material/table';
 
 export class FormaPagoComponent implements OnInit {
 
-  estadoActivo: string = constantes.estadoActivo;
-  estadoInactivo: string = constantes.estadoInactivo;
+  activo: string = valores.activo;
+  inactivo: string = valores.inactivo;
 
   abrirPanelNuevoFormaPago: boolean = true;
   abrirPanelAdminFormaPago: boolean = false;
@@ -54,7 +53,7 @@ export class FormaPagoComponent implements OnInit {
         private sesionService: SesionService,private router: Router) { }
 
   ngOnInit() {
-    this.sesion=util.validarSesion(this.sesionService, this.router);
+    this.sesion=validarSesion(this.sesionService, this.router);
     this.consultarFormaPagos();
   }
   
@@ -87,11 +86,11 @@ export class FormaPagoComponent implements OnInit {
     this.formaPagoService.crear(this.formaPago).subscribe({
       next: res => {
         this.formaPago = res.resultado as FormaPago;
-        Swal.fire({ icon: constantes.exito_swal, title: constantes.exito, text: res.mensaje });
+        Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
         this.formaPagos.push(this.formaPago);
         this.llenarTablaFormaPago(this.formaPagos);
       },
-      error: err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
+      error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     });
   }
 
@@ -107,10 +106,10 @@ export class FormaPagoComponent implements OnInit {
     this.formaPagoService.actualizar(this.formaPago).subscribe({
       next: res => {
         this.formaPago = res.resultado as FormaPago;
-        Swal.fire({ icon: constantes.exito_swal, title: constantes.exito, text: res.mensaje });
+        Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
         this.limpiar();
       },
-      error: err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
+      error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     });
   }
 
@@ -119,10 +118,10 @@ export class FormaPagoComponent implements OnInit {
       event.preventDefault();
     this.formaPagoService.eliminarPersonalizado(this.formaPago).subscribe({
       next: res => {
-        Swal.fire({ icon: constantes.exito_swal, title: constantes.exito, text: res.mensaje });
+        Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
         this.limpiar();
       },
-      error: err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
+      error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     });
   }
 
@@ -132,7 +131,7 @@ export class FormaPagoComponent implements OnInit {
         this.formaPagos = res.resultado as FormaPago[]
         this.llenarTablaFormaPago(this.formaPagos);
       },
-      error: err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
+      error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     });
   }
 

@@ -1,300 +1,462 @@
-'use strict';
-
 import { TabService } from './componentes/services/tab.service';
+import { HttpHeaders } from '@angular/common/http';
+import { SesionService } from './servicios/usuario/sesion.service';
+import { Router } from '@angular/router';
+import { Sesion } from './modelos/usuario/sesion';
 
-export const exito_agregar_detalle_factura='SE AGREGO EL DETALLE';
-export const exito_crear_factura='SE CREO LA FACTURA';
-export const exito_actualizar_factura='SE ACTUALIZO LA FACTURA';
-export const error_unidad_kardex: string='ERROR EN UNIDAD KARDEX';
-export const error_impuesto: string='ERROR EN IMPUESTO';
-export const error_costo: string='ERROR EN COSTO';
-export const error_medida: string='ERROR EN MEDIDA, DEBE SELECCIONAR UNA MEDIDA PARA EL KARDEX';
-export const error_nombre_producto: string='INGRESE UN NOMBRE VÁLIDO';
-export const error_grupo_producto: string='SELECCIONE UN GRUPO PARA EL PRODUCTO';
-export const error_sub_grupo_producto: string='ERROR EN SUB GRUPO DE PRODUCTO';
-export const error_seccion_producto: string='ERROR EN SECCION DE PRODUCTO';
-export const error_linea_producto: string='ERROR EN LINEA DE PRODUCTO';
-export const error_sub_linea_producto: string='ERROR EN SUB LINEA DE PRODUCTO';
-export const error_presentacion_producto: string='ERROR EN PRESENTACION DE PRODUCTO';
-export const error_medida_kardex: string='SELECCIONE UNA MEDIDA PARA EL KARDEX DEL PRODUCTO';
-export const error_saldo_inicial: string='AGREGUE EL SALDO INICIAL PARA EL KARDEX';
-export const error_tipo_gasto: string='ERROR EN TIPO DE GASTO';
-export const error_tipo_producto: string='ERROR EN TIPO DE PRODUCTO';
-export const error_kardex_inicial: string='ERROR EN KARDEX INICIAL';
-export const error_cantidad: string='INGRESE UNA CANTIDAD VÁLIDA';
-export const error_costo_unitario: string='INGRESE UN COSTO UNITARIO VÁLIDO';
-export const error_costo_total: string='COSTO TOTAL NO SE PUEDE DETERMINAR';
-export const error_precio: string='INGRESE UN PRECIO';
-export const error_producto: string='ERROR EN EL PRODUCTO';
-export const error_producto_proveedor: string="PROVEEDOR YA EXISTE PARA ESTE PRODUCTO";
-export const error_kardex: string='ERROR KARDEX EXISTENTE';
-export const error_kardex_VACIO: string='ERROR KARDEX VACIO';
-export const error_kardex_VACIO_MENSAJE: string='INGRESA UN KARDEX';
-export const error_bodega: string='ERROR EN BODEGA';
-export const error_bodega_cantidad: string='LA CANTIDAD SUPERA A LA EXISTENTE';
-export const error_eliminar_bodega: string='NO PUEDE ELIMINAR UNA BODEGA CON SALDO';
-export const error_agregar_recaudacion="VALOR SUPERA EL MONTO DE COBRO DE LA FACTURA";
-export const error_agregar_dependiente='ERROR AL AGREGAR EL DEPENDIENTE';
-export const error_swal='error';
-export const error='Error';
-export const mensaje_kardex_inicial: string='Está seguro que quiere inicializar el kardex con saldo 0';
-export const advertencia_swal='warning';
-export const advertencia='Advertencia';
-export const exito_swal='success';
-export const exito='Exito';
-export const si_seguro="SI, ESTOY SEGURO";
-export const SI="SI";
-export const NO="NO";
-export const vacio="";
-export const espacio=" ";
-export const estadoActivo = "ACTIVO";
-export const estadoInactivo = "INACTIVO";
-export const estadoEliminado = "ELIMINADO";
-export const recaudado="RECAUDADO";
-export const norecaudado="NORECAUDADO";
-export const identificacion_consumidor_final="9999999999999";
-export const tipo_contribuyente_natural="NATURAL";
-export const tipo_contribuyente_juridica="JURIDICA";
-export const tipo_contribuyente_publica="PUBLICA";
-export const tabla_amortizacion_francesa: string='FRANCESA';
-export const tabla_amortizacion_alemana: string='ALEMANA';
-export const modelo_amortizacion: string='MODELO_AMORTIZACION';
-export const periodicidad: string='PERIODICIDAD';
-export const periodo: string='PERIODO';
-export const operacion_inicial_kardex: string='INVENTARIO INICIAL';
-export const formas_pago: string[]=["CHEQUES", "DEPOSITOS", "TRANSFERENCIAS", "TARJETA DE CREDITO", "TARJETA DE DEBITO", "COMPENSACIONES", "RETENCION VENTAS"];
-export const pregunta_eliminar_cheque="Realmente quiere eliminar el cheque?";
-export const pregunta_eliminar_deposito="Realmente quiere eliminar el deposito?";
-export const pregunta_eliminar_transferencia="Realmente quiere eliminar la transferencia?";
-export const pregunta_eliminar_tarjeta_credito="Realmente quiere eliminar la tarjeta de crédito?";
-export const pregunta_eliminar_tarjeta_debito="Realmente quiere eliminar la tarjeta de debito?";
-export const pregunta_eliminar_compensacion="Realmente quiere eliminar la compensacion?";
-export const pregunta_eliminar_retencion_venta="Realmente quiere eliminar la retencion en la venta?";
+export const urn =
+{
+    /**
+     * URN
+     */
+     ruta: "/sicecuador",
+     dependiente: "/dependiente",
+     plazoCredito: "/plazoCredito",
+     impuesto: "/impuesto",
+     retencionCliente: "/retencionCliente",
+     grupoCliente: "/grupoCliente",
+     tipoContribuyente: "/tipoContribuyente",
+     transportista: "/transportista",
+     ubicacion: "/ubicacion",
+     vehiculoTransporte: "/vehiculoTransporte",
+     empresa: "/empresa",
+     parametro: "/parametro",
+     usuario: "/usuario",
+     perfil: "/perfil",
+     sesion: "/sesion",
+     validar: "/validar",
+     establecimiento: "/establecimiento",
+     puntoVenta: "/puntoVenta",
+     origenIngreso: "/origenIngreso",
+     genero: "/genero",
+     estadoCivil: "/estadoCivil",
+     calificacionCliente: "/calificacionCliente",
+     tipoPago: "/tipoPago",
+     formaPago: "/formaPago",
+     tipoIdentificacion: "/tipoIdentificacion",
+     cliente: "/cliente",
+     factura: "/factura",
+     facturaDetalle: "/facturaDetalle",
+     tipoRetencion: "/tipoRetencion",
+     servicio: "/servicio",
+     caracteristica: "/caracteristica",
+     bien: "/bien",
+     activoFijo: "/activoFijo",
+     tipo: "/tipo",
+     producto: "/producto",
+     medida: "/medida",
+     buscar: "/buscar",
+     calcular: "/calcular",
+     calcularTotales: "/calcularTotales",
+     calcularFacturaDetalleTemp: "/calcularFacturaDetalleTemp",
+     identificacion: "/identificacion",
+     razonSocial: "/razonSocial",
+     codigo: "/codigo",
+     importar: "/importar",
+     porcentaje: "/porcentaje",
+     secuencia: "/secuencia",
+     nombre: "/nombre",
+     banco: "/banco",
+     cuentaPropia:  "/cuentaPropia",
+     franquiciaTarjeta: "/franquiciaTarjeta",
+     existencias: "/existencias",
+     bodega: "/bodega",
+     operadorTarjeta: "/operadorTarjeta",
+     tipoComprobante: "/tipoComprobante",
+     recaudacion: "/recaudacion",
+     credito: "/credito",
+     amortizacion: "/amortizacion",
+     entrega: "/entrega",
+     grupoProducto: "/grupoProducto",
+     proveedor: "/proveedor",
+     productoProveedor: "/productoProveedor",
+     consultarGrupos: "/consultarGrupos",
+     consultarSubgrupos: "/consultarSubgrupos",
+     consultarSecciones: "/consultarSecciones",
+     consultarLineas: "/consultarlineas",
+     consultarSublineas: "/consultarSublineas",
+     consultarPresentaciones: "/consultarPresentaciones",
+     consultarMovimientoContable: "/consultarMovimientoContable",
+     consultarProveedor: "/consultarProveedor",
+     cuentaContable: "/cuentaContable",
+     presentacionProducto: "/presentacionProducto",
+     obtenerGrupoProducto: "/obtenerGrupoProducto",
+     categoriaProducto: "/categoriaProducto",
+     afectacionContable: "/afectacionContable",
+     tipoGasto: "/tipoGasto",
+     modelo: "/modelo",
+      medidaPrecio: "/medidaPrecio",
+     movimientoContable: "/movimientoContable",
+     precio: "/precio",
+     segmento: "/segmento",
+     saldoInicialInventario: "/saldoInicialInventario",
+     kardex: "/kardex",
+     ivaBien: "/ivaBien",
+     ivaServicio: "/ivaServicio",
+     rentaBien: "/rentaBien",
+     rentaServicio: "/rentaServicio",
+     equivalenciaMedida: "/equivalenciaMedida",
+     buscarEquivalenciaMedida: "/buscarEquivalenciaMedida",
+     personalizado: "/personalizado",
+     generar: "/generar",
+     pdf: "/pdf"
+}
+export const valores ={
+    /**
+     * VALORES
+     */
+     cero : 0,
+     vacio : "",
+     espacio : " ",
+     activo : "ACTIVO",
+     inactivo : "INACTIVO",
+     pendiente : "PENDIENTE",
+     norecaudado : "NO RECAUDADO",
+     recaudado : "RECAUDADO"
+}
+    
+export const mensajes = {
+    /**
+     * MENSAJES
+     */
+     exito_agregar_detalle_factura : "SE AGREGO EL DETALLE",
+     exito_crear_factura : "SE CREO LA FACTURA",
+     exito_actualizar_factura : "SE ACTUALIZO LA FACTURA",
+     error_telefono_ingresado : "INGRESE UN NUMERO DE TELEFONO",
+     error_telefono_invalido : "NUMERO DE TELEFONO INVALIDO",
+     error_celular_ingresado : "INGRESE UN NUMERO DE CELULAR",
+     error_celular_invalido : "NUMERO DE CELULAR INVALIDO",
+     error_correo_ingresado : "INGRESE UN NUMERO DE CORREO",
+     error_correo_invalido : "NUMERO DE CORREO INVALIDO",
+     error_unidad_kardex : "ERROR EN UNIDAD KARDEX",
+     error_impuesto : "ERROR EN IMPUESTO",
+     error_costo : "ERROR EN COSTO",
+     error_medida : "ERROR EN MEDIDA, DEBE SELECCIONAR UNA MEDIDA PARA EL KARDEX",
+     error_nombre_producto : "INGRESE UN NOMBRE VÁLIDO",
+     error_grupo_producto : "SELECCIONE UN GRUPO PARA EL PRODUCTO",
+     error_sub_grupo_producto : "ERROR EN SUB GRUPO DE PRODUCTO",
+     error_seccion_producto : "ERROR EN SECCION DE PRODUCTO",
+     error_linea_producto : "ERROR EN LINEA DE PRODUCTO",
+     error_sub_linea_producto : "ERROR EN SUB LINEA DE PRODUCTO",
+     error_presentacion_producto : "ERROR EN PRESENTACION DE PRODUCTO",
+     error_medida_karde : "SELECCIONE UNA MEDIDA PARA EL KARDEX DEL PRODUCTO",
+     error_saldo_inicial : "AGREGUE EL SALDO INICIAL PARA EL KARDEX",
+     error_tipo_gasto : "ERROR EN TIPO DE GASTO",
+     error_tipo_producto : "ERROR EN TIPO DE PRODUCTO",
+     error_kardex_inicial : "ERROR EN KARDEX INICIAL",
+     error_cantidad : "INGRESE UNA CANTIDAD VALIDA",
+     error_costo_unitario : "INGRESE UN COSTO UNITARIO VALIDO",
+     error_costo_total : "COSTO TOTAL NO SE PUEDE DETERMINAR",
+     error_precio : "INGRESE UN PRECIO",
+     error_producto : "ERROR EN EL PRODUCTO",
+     error_producto_proveedor : "PROVEEDOR YA EXISTE PARA ESTE PRODUCTO",
+     error_kardex : "ERROR KARDEX EXISTENTE",
+     error_kardex_vacio : "ERROR KARDEX VACIO",
+     error_kardex_vacio_mensaje : "INGRESA UN KARDEX",
+     error_bodega : "ERROR EN BODEGA",
+     error_bodega_cantidad : "LA CANTIDAD SUPERA A LA EXISTENTE",
+     error_eliminar_bodega : "NO PUEDE ELIMINAR UNA BODEGA CON SALDO",
+     error_agregar_recaudacion : "VALOR SUPERA EL MONTO DE COBRO DE LA FACTURA",
+     error_agregar_dependiente : "ERROR AL AGREGAR EL DEPENDIENTE",
+     mensaje_kardex_inicial : "INICIALIZAR KARDEX CON SALDO 0",
+     error_medida_kardex : "ERROR MEDIDA KARDEX",
+     si : "SI",
+     no : "NO"
+}
 
-//CODIGOS DE ERROR
-export const error_codigo_modelo_existente="4001";
-export const error_codigo_modelo_no_existente="4002";
-export const error_codigo_suscripcion_invalida="4003";
-export const error_codigo_sesion_invalida="4004";
-export const error_codigo_datos_invalidos="4005";
-export const error_codigo_generico="4000";
+export const otras ={
+    /**
+     * OTRAS
+     */
+     estadoEliminado : "ELIMINADO",
+     identificacion_consumidor_final : "9999999999999",
+     tipoContribuyenteNatural : "NATURAL",
+     tipoContribuyenteJuridica : "JURIDICA",
+     tipoContribuyentePublica : "PUBLICA",
+     tablaAmortizacionFrancesa : "FRANCESA",
+     tablaAmortizacionAlemana : "ALEMANA",
+     modeloAmortizacion : "MODELO_AMORTIZACION",
+     periodicidad : "PERIODICIDAD",
+     periodo : "PERIODO",
+     operacionInicialKardex : 'INVENTARIO INICIAL',
+     formasPagos : ["CHEQUES", "DEPOSITOS", "TRANSFERENCIAS", "TARJETA DE CREDITO", "TARJETA DE DEBITO", "COMPENSACIONES", "RETENCION VENTAS"],
+     pregunta_eliminar_cheque : "Realmente quiere eliminar el cheque?",
+     pregunta_eliminar_deposito : "Realmente quiere eliminar el deposito?",
+     pregunta_eliminar_transferencia : "Realmente quiere eliminar la transferencia?",
+     pregunta_eliminar_tarjeta_credito : "Realmente quiere eliminar la tarjeta de crédito?",
+     pregunta_eliminar_tarjeta_debito : "Realmente quiere eliminar la tarjeta de debito?",
+     pregunta_eliminar_compensacion : "Realmente quiere eliminar la compensacion?",
+     pregunta_eliminar_retencion_venta : "Realmente quiere eliminar la retencion en la venta?",
+}
 
+export const codigos = {
+    /**
+     * CODIGOS DE ERROR
+     */
+     error_codigo_modelo_existente : "4001",
+     error_codigo_modelo_no_existente : "4002",
+     error_codigo_suscripcion_invalida : "4003",
+     error_codigo_sesion_invalida : "4004",
+     error_codigo_datos_invalidos : "4005",
+     error_codigo_generico : "4000"
+}
+export const modulos = {
+    /**
+     * MODULOS
+     */
+     modulo_clientes: "CLIENTES",
+     modulo_compras: "COMPRAS",
+     modulo_ventas: "VENTAS",
+     modulo_inventarios: "INVENTARIOS",
+     modulo_contabilidad: "CONTABILIDAD",
+     modulo_financiero: "FINANCIERO",
+     modulo_activos_fijos: "ACTIVOS FIJOS",
+     modulo_talento_humano: "TALENTO HUMANO",
+     modulo_produccion: "PRODUCCION",
+     modulo_importacion: "IMPORTACION",
+     modulo_configuracion: "CONFIGURACION",
+     modulo_estadisticas: "ESTADISTICAS",
+     modulo_control: "CONTROL",
+     modulo_auditoria: "AUDITORIA",
+     modulo_usuarios: "USUARIOS"
+}    
+
+export const tabs = {
+    /**
+     * TABS
+     */
+     tab_auxiliar: "Dependiente",
+     tab_calificacion_cliente: "Calificacion Cliente",
+     tab_celular: "Celular",
+     tab_cliente: "Cliente",
+     tab_correo: "Correo",
+     tab_direccion: "Direccion",
+     tab_estado_civil: "Estado Civil",
+     tab_forma_pago: "Forma de Pago",
+     tab_genero: "Genero",
+     tab_grupo_cliente: "Grupo Cliente",
+     tab_impuesto: "Impuesto",
+     tab_origen_ingreso: "Origen de Ingreso",
+     tab_plazo_credito: "Plazo de Credito",
+     tab_retencion_cliente: "Retencion Cliente",
+     tab_telefono: "Telefono",
+     tab_tipo_contribuyente: "Tipo de Contribuyente",
+     tab_tipo_pago: "Tipo de Pago",
+     tab_tipo_retencion: "Tipo de Retencion",
+     tab_factura_compra: "Factura de Compra",
+     tab_pago_compra: "Pago de Compra",
+     tab_proveedor: "Proveedor",
+     tab_proveedor_bodega: "Proveedor Bodega",
+     tab_proveedor_producto: "Proveedor Producto",
+     tab_egreso: " Egreso",
+     tab_factura: "Factura",
+     tab_pedido: "Pedido",
+     tab_proforma:  "Proforma",
+     tab_dato_adicional: "Dato Adicional",
+     tab_empresa: "Empresa",
+     tab_exportacion: "Exportacion",
+     tab_importacion: "Importacion",
+     tab_ubicacion: "Ubicacion",
+     tab_contabilizacion: "Contabilizacion",
+     tab_cuenta: "Cuenta",
+     tab_entrega: "Entrega",
+     tab_transportista: "Transportista",
+     tab_vehiculo_transporte: "Vehiculo de Transporte",
+     tab_activo_fijo: "Activo Fijo",
+     tab_bodega: "Bodegas",
+     tab_kardex: "Kardex",
+     tab_medida: "Medida",
+     tab_producto: "Producto",
+     tab_servicio:  "Servicio",
+     tab_promocion: "Promocion",
+     tab_saldo_inicial_inventario: "Saldo inicial",
+     tab_equivalencia_medida: "Equivalencia Medida",
+     tab_usuario: "Usuario",
+     tab_establecimiento: "Establecimiento",
+     tab_punto_venta: "Punto de Venta",
+     tab_grupo_producto: "Grupo de Producto",
+     tab_segmento: "Segmentos",
+     tab_movimiento_contable: "Movimiento contable",
+     tab_cuenta_contable: "Cuenta contable",
+     tab_recaudacion: "Recaudacion",
+     tab_transferencia_bodega: "Transferencia Bodega",
+     tab_mapa_cliente: "Mapa Cliente",
+     tab_promociones: "Promocion",
+     tab_indicadores: "Indicadores",
+}
+    
+export const items = {
+    /**
+     * ITEMS
+     */
+     item_auxiliar : "Auxiliar",
+     item_calificacion_cliente : "Calificacion de Cliente",
+     item_celular : "Celular",
+     item_cliente : "Cliente",
+     item_correo : "Correo",
+     item_direccion : "Direccion",
+     item_estado_civil : "Estado Civil",
+     item_forma_pago : "Forma de Pago",
+     item_genero : "Genero",
+     item_grupo_cliente : "Grupo de Cliente",
+     item_impuesto : "Impuesto",
+     item_origen_ingreso : "Origen de Ingreso",
+     item_plazo_credito : "Plazo de Crédito",
+     item_retencion_cliente : "Retencion de Cliente",
+     item_telefono : "Telefono",
+     item_tipo_contribuyente : "Tipo de Contribuyente",
+     item_tipo_pago : "Tipo de Pago",
+     item_tipo_retencion : "Tipo de Retencion",
+     item_factura_compra : "Factura de Compra",
+     item_pago_compra : "Pago de Compra",
+     item_proveedor : "Proveedor",
+     item_proveedor_bodega : "Proveedor de Bodega",
+     item_egreso : "Egreso", 
+     item_factura : "Factura",
+     item_pedido : "Pedido",
+     item_proforma : "Proforma",
+     item_empresa : "Empresa",
+     item_exportacion : "Exportacion",
+     item_importacion : "Importacion",
+     item_ubicacion : "Ubicacion",
+     item_contabilizacion : "Contabilizacion",
+     item_cuenta : "Cuenta",
+     item_entrega : "Entrega",
+     item_transportista : "Transportista",
+     item_vehiculo_transporte : "Vehiculo Transporte",
+     item_activo_fijo : "Activo Fijo",
+     item_bodega : "Bodega",
+     item_kardex : "Kardex",
+     item_medida : "Medida",
+     item_producto : "Producto",
+     item_servicio : "Servicios y Activos Fijos",
+     item_promocion : "Promocion",
+     item_saldo_inicial_inventario : "Saldo Inicial Producto",
+     item_equivalencia_medida : "Equivalencia Medida",
+     item_usuario : "Usuario",
+     item_establecimiento : "Establecimiento",
+     item_punto_venta : "Punto de Venta",
+     item_grupo_producto : "Grupo Producto",
+     item_grupo_servicio : "Grupo de Servicio",
+     item_segmento : "Segmento",
+     item_movimiento_contable : "Movimiento Contable",
+     item_cuenta_contable : "Cuenta Contable",
+     item_proveedor_producto : "Proveedor del producto",
+     item_recaudacion : "Recaudación",
+     item_transferencia_bodega : "Transferencia Bodega",
+     item_mapa_cliente : "Mapa Cliente",
+     item_promociones : "Promocion",
+     item_indicadores : "Dashboard"
+}
+    
+export const icos = {
+    /**
+     * ICOS
+     */
+     ico_auxiliar : 'fa fa-file-text-o',
+     ico_calificacion_cliente : 'fa fa-star-half-o',
+     ico_celular : 'fa fa-file-text-o',
+     ico_cliente : 'fa fa-address-book',
+     ico_correo : 'fa fa-file-text-o',
+     ico_direccion : 'fa fa-address-card',
+     ico_estado_civil : 'fa fa-venus-mars',
+     ico_forma_pago : 'fa fa-cc-mastercard',
+     ico_genero : 'fa fa-mars-stroke',
+     ico_grupo_cliente : 'fa fa-users',
+     ico_impuesto : 'fa fa-university',
+     ico_origen_ingreso : 'fa fa-briefcase',
+     ico_plazo_credito : 'fa fa-calendar',
+     ico_retencion_cliente : 'fa fa-file-text-o',
+     ico_telefono : 'fa fa-file-text-o',
+     ico_tipo_contribuyente : 'fa fa-file-text-o',
+     ico_tipo_pago : 'fa fa-ticket',
+     ico_tipo_retencion : 'fa fa-retweet',
+     ico_factura_compra : 'fa fa-file-text-o',
+     ico_pago_compra : 'fa fa-file-text-o',
+     ico_proveedor : 'fa fa-truck',
+     ico_egreso : 'fa fa-file-text-o',
+     ico_factura : 'fa fa-clipboard',
+     ico_pedido : 'fa fa-file-text-o',
+     ico_proforma : 'fa fa-file-text-o',
+     ico_dato_adicional : 'fa fa-table',
+     ico_empresa : 'fa fa-building',
+     ico_exportacion : 'fa fa-download',
+     ico_importacion : 'fa fa-upload',
+     ico_ubicacion : 'fa fa-globe',
+     ico_contabilizacion : 'fa fa-file-text-o',
+     ico_cuenta : 'fa fa-file-text-o',
+     ico_entrega : 'fa fa-file-text-o',
+     ico_transportista : 'fa fa-file-text-o',
+     ico_vehiculo_transporte : 'fa fa-file-text-o',
+     ico_activo_fijo : 'fa fa-file-text-o',
+     ico_bodega : 'fa fa-archive',
+     ico_kardex : 'fa fa-file-text-o',
+     ico_medida : 'fa fa-medium',
+     ico_producto : 'fa fa-shopping-basket',
+     ico_servicio : 'fa fa-child',
+     ico_promocion : 'fa fa-product-hunt',
+     ico_proveedor_bodega : 'fa fa-bus',
+     ico_equivalencia_medida : 'fa fa-exchange',
+     ico_usuario : 'fa fa-file-text-o',
+     ico_establecimiento : 'fa fa-file-text-o',
+     ico_punto_venta : 'fa fa-file-text-o',
+     ico_grupo_producto : 'fa fa-object-group',
+     ico_segmento : 'fa fa-th-list',
+     ico_movimiento_contable : 'fa fa-retweet',
+     ico_cuenta_contable : 'fa fa-sort-amount-asc',
+     ico_recaudacion :     'fa fa-file-text-o',
+     ico_proveedor_producto : 'fa fa-bus',
+     ico_transferencia_bodega : 'fa fa-handshake-o',
+     ico_mapa_cliente : 'fa fa-map',
+     ico_promociones : 'fa fa-product-hunt',
+     ico_indicadores : 'fa fa-bar-chart',
+}
+
+export const exito = "EXITO";
+export const error = "Error";
+export const exito_swal = 'success';
+export const error_swal = 'error';
+export const warning_swal = 'warning';
+export const warning = "WARNING";
+export const si_seguro = "SI, ESTOY SEGURO";
 
 //CAMPOS PARA CONSULTAS DINAMICAS
-export const codigo="codigo";
-export const descripcion="descripcion";
-export const abreviatura="abreviatura";
+export const descripcion = "descripcion";
+export const abreviatura = "abreviatura";
 
-/**********************************
- * CONSTANTES PARA NOMBRAR LOS TITULOS DE LOS TABS
- **********************************/
-//PARA CREAR TABS
-export const tab_auxiliar='Dependiente';
-export const tab_calificacion_cliente='Calificacion Cliente';
-export const tab_celular='Celular';
-export const tab_cliente='Cliente';
-export const tab_correo='Correo';
-export const tab_direccion='Direccion';
-export const tab_estado_civil='Estado Civil';
-export const tab_forma_pago='Forma de Pago';
-export const tab_genero='Genero';
-export const tab_grupo_cliente='Grupo Cliente';
-export const tab_impuesto='Impuesto';
-export const tab_origen_ingreso='Origen de Ingreso';
-export const tab_plazo_credito='Plazo de Credito';
-export const tab_retencion_cliente='Retencion Cliente';
-export const tab_telefono='Telefono';
-export const tab_tipo_contribuyente='Tipo de Contribuyente';
-export const tab_tipo_pago='Tipo de Pago';
-export const tab_tipo_retencion='Tipo de Retencion';
-export const tab_factura_compra='Factura de Compra';
-export const tab_pago_compra='Pago de Compra';
-export const tab_proveedor='Proveedor';
-export const tab_proveedor_bodega='Proveedor Bodega';
-export const tab_proveedor_producto='Proveedor Producto';
-export const tab_egreso='Egreso';
-export const tab_factura='Factura';
-export const tab_pedido='Pedido';
-export const tab_proforma='Proforma';
-export const tab_dato_adicional='Dato Adicional';
-export const tab_empresa='Empresa';
-export const tab_exportacion='Exportacion';
-export const tab_importacion='Importacion';
-export const tab_ubicacion='Ubicacion';
-export const tab_contabilizacion='Contabilizacion';
-export const tab_cuenta='Cuenta';
-export const tab_entrega='Entrega';
-export const tab_transportista='Transportista';
-export const tab_vehiculo_transporte='Vehiculo de Transporte';
-export const tab_activo_fijo='Activo Fijo';
-export const tab_bodega='Bodegas';
-export const tab_kardex='Kardex';
-export const tab_medida='Medida';
-export const tab_producto='Producto';
-export const tab_servicio='Servicio';
-export const tab_promocion='Promocion';
-export const tab_saldo_inicial_inventario='Saldo inicial';
-export const tab_tabla_equivalencia_medida='Tabla Equivalencia Medida';
-export const tab_usuario='Usuario';
-export const tab_establecimiento='Establecimiento';
-export const tab_punto_venta='Punto de Venta';
-export const tab_grupo_producto='Grupo de Producto';
-export const tab_segmento='Segmentos';
-export const tab_movimiento_contable="Movimiento contable";
-export const tab_cuenta_contable='Cuenta contable';
-export const tab_recaudacion='Recaudacion';
-export const tab_transferencia_bodega='Transferencia Bodega';
-export const tab_mapa_cliente = 'Mapa Cliente'
-export const tab_promociones = 'Promocion'
-export const tab_indicadores = 'Indicadores'
+export const credencialUsuario = "admin";
+export const credencialPassword = "admin";
+export const credencial = credencialUsuario + ":" + credencialPassword;
+export const headers = new HttpHeaders({"Content-Type" : "application/json", "Authorization" : "Basic "+btoa(credencial)});
+export const options = {headers: headers};
+export const headersCargarArchivo = new HttpHeaders({"Authorization" : "Basic "+btoa(credencial)});
+export const optionsCargarArchivo = {headers: headersCargarArchivo};
+export const optionsGenerarArchivo = {headers: headers, responseType: "blob" as "json" };
 
-/**********************************
- * CONSTANTES PARA NOMBRAR LOS ITEMS DEL SIDEBAR
- **********************************/
-//PARA CREAR TABS
-export const item_auxiliar='Auxiliar';
-export const item_calificacion_cliente='Calificacion de Cliente';
-export const item_celular='Celular';
-export const item_cliente='Cliente';
-export const item_correo='Correo';
-export const item_direccion='Direccion';
-export const item_estado_civil='Estado Civil';
-export const item_forma_pago='Forma de Pago';
-export const item_genero='Genero';
-export const item_grupo_cliente='Grupo de Cliente';
-export const item_impuesto='Impuesto';
-export const item_origen_ingreso='Origen de Ingreso';
-export const item_plazo_credito='Plazo de Crédito';
-export const item_retencion_cliente='Retencion de Cliente';
-export const item_telefono='Telefono';
-export const item_tipo_contribuyente='Tipo de Contribuyente';
-export const item_tipo_pago='Tipo de Pago';
-export const item_tipo_retencion='Tipo de Retencion';
-export const item_factura_compra='Factura de Compra';
-export const item_pago_compra='Pago de Compra';
-export const item_proveedor='Proveedor';
-export const item_proveedor_bodega='Proveedor de Bodega';
-export const item_egreso='Egreso';
-export const item_factura='Factura';
-export const item_pedido='Pedido';
-export const item_proforma='Proforma';
-export const item_dato_adicional='Dato Adicional';
-export const item_empresa='Empresa';
-export const item_exportacion='Exportacion';
-export const item_importacion='Importacion';
-export const item_ubicacion='Ubicacion';
-export const item_contabilizacion='Contabilizacion';
-export const item_cuenta='Cuenta';
-export const item_entrega='Entrega';
-export const item_transportista='Transportista';
-export const item_vehiculo_transporte='Vehiculo Transporte';
-export const item_activo_fijo='Activo Fijo';
-export const item_bodega='Bodega';
-export const item_kardex='Kardex';
-export const item_medida='Medida';
-export const item_producto='Producto';
-export const item_servicio='Servicios y Activos Fijos';
-export const item_promocion='Promocion';
-export const item_saldo_inicial_inventario='Saldo Inicial Producto';
-export const item_tabla_equivalencia_medida='Tabla Equivalencia Medida';
-export const item_usuario='Usuario';
-export const item_establecimiento='Establecimiento';
-export const item_punto_venta='Punto de Venta';
-export const item_grupo_producto='Grupo Producto';
-export const item_grupo_servicio='Grupo de Servicio';
-export const item_segmento='Segmento';
-export const item_movimiento_contable='Movimiento Contable';
-export const item_cuenta_contable='Cuenta Contable';
-export const item_proveedor_producto='Proveedor del producto';
-export const item_recaudacion='Recaudación';
-export const item_transferencia_bodega='Transferencia Bodega';
-export const item_mapa_cliente = 'Mapa Cliente'
-export const item_promociones = 'Promocion'
-export const item_indicadores = 'Dashboard'
-
-/**********************************
- * CONSTANTES CON NOMBRES DE LOS ICONOS DEL SIDEBAR
- **********************************/
-//PARA CREAR TABS
-export const ico_auxiliar=        'fa fa-file-text-o';
-export const ico_calificacion_cliente='fa fa-star-half-o';
-export const ico_celular=         'fa fa-file-text-o';
-export const ico_cliente=         'fa fa-address-book';
-export const ico_correo=          'fa fa-file-text-o';
-export const ico_direccion=       'fa fa-address-card';
-export const ico_estado_civil=    'fa fa-venus-mars';
-export const ico_forma_pago=      'fa fa-cc-mastercard';
-export const ico_genero=          'fa fa-mars-stroke';
-export const ico_grupo_cliente=   'fa fa-users';
-export const ico_impuesto=        'fa fa-university';
-export const ico_origen_ingreso=  'fa fa-briefcase';
-export const ico_plazo_credito=   'fa fa-calendar';
-export const ico_retencion_cliente='fa fa-file-text-o';
-export const ico_telefono=        'fa fa-file-text-o';
-export const ico_tipo_contribuyente='fa fa-file-text-o';
-export const ico_tipo_pago=       'fa fa-ticket';
-export const ico_tipo_retencion=  'fa fa-retweet';
-export const ico_factura_compra=  'fa fa-file-text-o';
-export const ico_pago_compra=     'fa fa-file-text-o';
-export const ico_proveedor=       'fa fa-truck';
-export const ico_egreso=          'fa fa-file-text-o';
-export const ico_factura=         'fa fa-clipboard';
-export const ico_pedido=          'fa fa-file-text-o';
-export const ico_proforma=        'fa fa-file-text-o';
-export const ico_dato_adicional=  'fa fa-table';
-export const ico_empresa=         'fa fa-building';
-export const ico_exportacion=     'fa fa-download';
-export const ico_importacion=     'fa fa-upload';
-export const ico_ubicacion=       'fa fa-globe';
-export const ico_contabilizacion= 'fa fa-file-text-o';
-export const ico_cuenta=          'fa fa-file-text-o';
-export const ico_entrega=         'fa fa-file-text-o';
-export const ico_transportista=   'fa fa-file-text-o';
-export const ico_vehiculo_transporte='fa fa-file-text-o';
-export const ico_activo_fijo=     'fa fa-file-text-o';
-export const ico_bodega=          'fa fa-archive';
-export const ico_kardex=          'fa fa-file-text-o';
-export const ico_medida=          'fa fa-medium';
-export const ico_producto=        'fa fa-shopping-basket';
-export const ico_servicio=        'fa fa-child';
-export const ico_promocion=       'fa fa-product-hunt';
-export const ico_proveedor_bodega='fa fa-bus';
-export const ico_tabla_equivalencia_medida='fa fa-exchange';
-export const ico_usuario=         'fa fa-file-text-o';
-export const ico_establecimiento= 'fa fa-file-text-o';
-export const ico_punto_venta=     'fa fa-file-text-o';
-export const ico_grupo_producto=  'fa fa-object-group';
-export const ico_segmento=        'fa fa-th-list';
-export const ico_movimiento_contable='fa fa-retweet';
-export const ico_cuenta_contable= 'fa fa-sort-amount-asc';
-export const ico_recaudacion=     'fa fa-file-text-o';
-export const ico_proveedor_producto='fa fa-bus';
-export const ico_transferencia_bodega='fa fa-handshake-o';
-export const ico_mapa_cliente = 'fa fa-map';
-export const ico_promociones = 'fa fa-product-hunt';
-export const ico_indicadores = 'fa fa-bar-chart';
-
-/*********************************
- * NOMBRES DEL TAB PRICIPAL
- *********************************/
-export const modulo_clientes='CLIENTES';
-export const modulo_compras='COMPRAS';
-export const modulo_ventas='VENTAS';
-export const modulo_inventarios='INVENTARIOS';
-export const modulo_contabilidad='CONTABILIDAD';
-export const modulo_financiero='FINANCIERO';
-export const modulo_activos_fijos='ACTIVOS FIJOS';
-export const modulo_talento_humano='TALENTO HUMANO';
-export const modulo_produccion='PRODUCCION';
-export const modulo_importacion='IMPORTACION';
-export const modulo_configuracion='CONFIGURACION';
-export const modulo_estadisticas='ESTADISTICAS';
-export const modulo_control='CONTROL';
-export const modulo_auditoria='AUDITORIA';
-export const modulo_usuarios='USUARIOS';
+export function validarSesion(sesionService : SesionService, router: Router) : Sesion{
+    let sesion: Sesion = sesionService.getSesion();
+    console.log(sesion);
+    sesionService.validar(sesion).subscribe({
+        next: res => {
+            sesion = res.resultado as Sesion;
+            return sesion;
+        },
+        error: err => {
+            if(err.error.codigo == codigos.error_codigo_sesion_invalida){
+                sesionService.cerrarSesion();
+                router.navigate(['/index']);
+            }
+            if(err.error.codigo == codigos.error_codigo_modelo_no_existente){
+                sesionService.cerrarSesion();
+                router.navigate(['/index']);
+            }
+        }
+    });
+    return sesion;
+}
 
 export function tab_activo(tabService: TabService){
-    for(let i=0; i<tabService.tabs.length; i++){
+    for(let i=0; i < tabService.tabs.length; i++){
         if(tabService.tabs[i].active){
         return i;
         }

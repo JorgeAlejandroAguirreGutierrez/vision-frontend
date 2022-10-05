@@ -74,10 +74,7 @@
                 <div class="col-2">
                     <mat-form-field appearance="standard">
                         <mat-label>Tipo Proveedor</mat-label>
-                        <mat-select type="text" [(ngModel)]="cliente.direccion.lugar" class="form-control-sm">
-                            <mat-option [value]="true">RIMPE POPULAR</mat-option>
-                            <mat-option [value]="false">RIMPE</mat-option>
-                        </mat-select>
+                        <input matInput type="text" disabled [(ngModel)]="proveedor.codigo" class="form-control-sm">
                     </mat-form-field>
                 </div>
                 <div class="col-2">

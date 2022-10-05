@@ -3,19 +3,17 @@ import { FormControl } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { startWith, map } from 'rxjs/operators';
 import { Router } from '@angular/router';
-import { Sesion } from '../../modelos/sesion';
-import { SesionService } from '../../servicios/sesion.service';
+import { Sesion } from '../../modelos/usuario/sesion';
+import { SesionService } from '../../servicios/usuario/sesion.service';
 import { TabService } from '../../componentes/services/tab.service';
 import Swal from 'sweetalert2';
-import * as constantes from '../../constantes';
-import * as util from '../../util';
-import { GrupoProducto } from '../../modelos/grupo-producto';
-import { GrupoProductoService } from '../../servicios/grupo-producto.service';
-import { CategoriaProductoService } from '../../servicios/categoria-producto.service';
-import { CategoriaProducto } from '../../modelos/categoria-producto';
-import { PresentacionBien } from '../../modelos/presentacion-bien';
-import { MovimientoContable } from '../../modelos/movimiento-contable';
-import { MovimientoContableService } from '../../servicios/movimiento-contable.service';
+import { validarSesion, tabs, tab_activo, exito, exito_swal, error, error_swal } from '../../constantes';
+import { GrupoProducto } from '../../modelos/inventario/grupo-producto';
+import { GrupoProductoService } from '../../servicios/inventario/grupo-producto.service';
+import { CategoriaProductoService } from '../../servicios/inventario/categoria-producto.service';
+import { CategoriaProducto } from '../../modelos/inventario/categoria-producto';
+import { MovimientoContable } from '../../modelos/contabilidad/movimiento-contable';
+import { MovimientoContableService } from '../../servicios/contabilidad/movimiento-contable.service';
 
 import { ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
@@ -48,7 +46,6 @@ export class GrupoProductoComponent implements OnInit {
   categoriasProductos: CategoriaProducto[] = [];
 
   grupoProducto:GrupoProducto = new GrupoProducto();
-  presentacionBien:PresentacionBien = new PresentacionBien();
   movimientoContable:MovimientoContable = new MovimientoContable();
 
   ComponenteGrupoProducto: Type<any> = GrupoProductoComponent;
@@ -92,7 +89,7 @@ export class GrupoProductoComponent implements OnInit {
     private movimientoContableService: MovimientoContableService) { }
 
   async ngOnInit() {
-    this.sesion=util.validarSesion(this.sesionService, this.router);
+    this.sesion=validarSesion(this.sesionService, this.router);
     this.construirGrupoProducto();
     this.consultar();
     console.log(this.gruposProductos);
@@ -101,7 +98,7 @@ export class GrupoProductoComponent implements OnInit {
         this.categoriasProductos = res.resultado as CategoriaProducto[];
         this.grupoProducto.categoriaProducto = this.categoriasProductos[0]; // Falta el .id
       },
-      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
+      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     );
     await this.consultarGruposAsync();
     this.filtroGrupos = this.seleccionGrupo.valueChanges
@@ -154,7 +151,7 @@ export class GrupoProductoComponent implements OnInit {
           this.grupoProducto = res.resultado as GrupoProducto
           this.grupoProductoService.enviar(0);
         },
-        err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
+        err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
       );
     }
   }
@@ -164,7 +161,7 @@ export class GrupoProductoComponent implements OnInit {
       res => {
         this.grupos = res.resultado as string[];
       },
-      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
+      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
 
@@ -194,13 +191,13 @@ export class GrupoProductoComponent implements OnInit {
       event.preventDefault();
     this.grupoProductoService.crear(this.grupoProducto).subscribe(
       res => {
-        Swal.fire({ icon: constantes.exito_swal, title: constantes.exito, text: res.mensaje });
+        Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
         this.grupoProducto = res.resultado as GrupoProducto;
-        let indice_tab_activo = constantes.tab_activo(this.tabService);
+        let indice_tab_activo = tab_activo(this.tabService);
         this.tabService.removeTab(indice_tab_activo);
-        this.tabService.addNewTab(GrupoProductoComponent, constantes.tab_grupo_producto);
+        this.tabService.addNewTab(GrupoProductoComponent, tabs.tab_grupo_producto);
       },
-      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
+      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
 
@@ -209,20 +206,20 @@ export class GrupoProductoComponent implements OnInit {
       event.preventDefault();
     this.grupoProductoService.actualizar(this.grupoProducto).subscribe(
       res => {
-        Swal.fire({ icon: constantes.exito_swal, title: constantes.exito, text: res.mensaje });
+        Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
         this.grupoProducto = res.resultado as GrupoProducto;
       },
-      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
+      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
 
   eliminar(grupo_producto: GrupoProducto) {
     this.grupoProductoService.eliminar(grupo_producto).subscribe(
       res => {
-        Swal.fire({ icon: constantes.exito_swal, title: constantes.exito, text: res.mensaje });
+        Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
         this.grupoProducto = res.resultado as GrupoProducto
       },
-      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
+      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
 
@@ -231,7 +228,7 @@ export class GrupoProductoComponent implements OnInit {
       res => {
         this.gruposProductos = res.resultado as GrupoProducto[];
       },
-      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
+      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
 
@@ -240,7 +237,7 @@ export class GrupoProductoComponent implements OnInit {
       res => {
         this.gruposProductos = res.resultado as GrupoProducto[];
       },
-      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
+      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
 
@@ -265,11 +262,11 @@ export class GrupoProductoComponent implements OnInit {
       event.preventDefault();
     if (this.grupoProducto != null) {
       this.grupoProductoService.enviar(this.grupoProducto.id);
-      let indiceTabActivo = constantes.tab_activo(this.tabService);
+      let indiceTabActivo = tab_activo(this.tabService);
       this.tabService.removeTab(indiceTabActivo);
       this.tabService.addNewTab(this.ComponenteGrupoProducto, 'Actualizar Tabla de Grupo de Producto');
     } else {
-      Swal.fire(constantes.error, "Selecciona un Grupo de Producto", constantes.error_swal);
+      Swal.fire(error, "Selecciona un Grupo de Producto", error_swal);
     }
   }
 
@@ -278,10 +275,10 @@ export class GrupoProductoComponent implements OnInit {
       event.preventDefault();
     this.grupoProductoService.eliminar(this.grupoProducto).subscribe(
       res => {
-        Swal.fire({ icon: constantes.exito_swal, title: constantes.exito, text: res.mensaje });
+        Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
         this.consultar();
       },
-      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
+      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
 
@@ -292,7 +289,7 @@ export class GrupoProductoComponent implements OnInit {
       res => {
         this.gruposProductos = res.resultado as GrupoProducto[]
       },
-      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
+      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
   // Para el buscador de la tabla
@@ -350,7 +347,7 @@ export class GrupoProductoComponent implements OnInit {
       res => {
         this.subgrupos = res.resultado as string[];
       },
-      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
+      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     );
     this.limpiarFormulario('grupo');
   }
@@ -372,7 +369,7 @@ export class GrupoProductoComponent implements OnInit {
       res => {
         this.secciones = res.resultado as string[];
       },
-      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
+      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     );
     this.limpiarFormulario('subgrupo');
   }
@@ -397,7 +394,7 @@ export class GrupoProductoComponent implements OnInit {
       res => {
         this.lineas = res.resultado as string[];
       },
-      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
+      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     );
     this.limpiarFormulario('seccion');
     //this.consultarMovimientoContable();
@@ -408,7 +405,7 @@ export class GrupoProductoComponent implements OnInit {
       res => {
         //this.grupo_producto.movimiento_contable = res.resultado as MovimientoContable;
       },
-      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
+      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
 
@@ -429,7 +426,7 @@ export class GrupoProductoComponent implements OnInit {
       res => {
         this.sublineas = res.resultado as string[];
       },
-      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
+      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     );
     this.limpiarFormulario('linea');
   }
@@ -451,7 +448,7 @@ export class GrupoProductoComponent implements OnInit {
       res => {
         this.presentaciones = res.resultado as string[];
       },
-      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
+      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     );
     this.limpiarFormulario('sublinea');
   }

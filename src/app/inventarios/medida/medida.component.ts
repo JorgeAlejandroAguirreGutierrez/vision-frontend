@@ -1,19 +1,15 @@
 import { Component, HostListener, OnInit, Type } from '@angular/core';
 import { Router } from '@angular/router';
 import Swal from 'sweetalert2';
-import * as constantes from '../../constantes';
-import * as util from '../../util';
-
+import { validarSesion, tab_activo, exito, exito_swal, error, error_swal } from '../../constantes';
 import { ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-
-import { TabService } from '../../componentes/services/tab.service';
-import { Sesion } from '../../modelos/sesion';
-import { SesionService } from '../../servicios/sesion.service';
-import { Medida } from '../../modelos/medida';
-import { MedidaService } from '../../servicios/medida.service';
+import { Sesion } from '../../modelos/usuario/sesion';
+import { SesionService } from '../../servicios/usuario/sesion.service';
+import { Medida } from '../../modelos/inventario/medida';
+import { MedidaService } from '../../servicios/inventario/medida.service';
 
 @Component({
   selector: 'app-medida',
@@ -48,7 +44,7 @@ export class MedidaComponent implements OnInit {
     private sesionService: SesionService,private router: Router) { }
 
   ngOnInit() {
-    this.sesion=util.validarSesion(this.sesionService, this.router);
+    this.sesion=validarSesion(this.sesionService, this.router);
     this.consultar();
   }
   
@@ -73,11 +69,11 @@ export class MedidaComponent implements OnInit {
       event.preventDefault();
     this.medidaService.crear(this.medida).subscribe(
       res => {
-        Swal.fire({ icon: constantes.exito_swal, title: constantes.exito, text: res.mensaje });
+        Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
         this.medida=res.resultado as Medida;
         this.consultar();
       },
-      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
+      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
 
@@ -86,11 +82,11 @@ export class MedidaComponent implements OnInit {
       event.preventDefault();
     this.medidaService.actualizar(this.medida).subscribe(
       res => {
-        Swal.fire({ icon: constantes.exito_swal, title: constantes.exito, text: res.mensaje });
+        Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
         this.medida=res.resultado as Medida;
         this.consultar();
       },
-      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
+      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
 
@@ -99,10 +95,10 @@ export class MedidaComponent implements OnInit {
       event.preventDefault();
     this.medidaService.eliminarPersonalizado(this.medida).subscribe(
       res => {
-        Swal.fire({ icon: constantes.exito_swal, title: constantes.exito, text: res.mensaje });
+        Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
         this.consultar();
       },
-      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
+      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
   
@@ -114,7 +110,7 @@ export class MedidaComponent implements OnInit {
         this.dataSourceMedida.paginator = this.paginator;
         this.dataSourceMedida.sort = this.sort;
       },
-      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
+      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
 

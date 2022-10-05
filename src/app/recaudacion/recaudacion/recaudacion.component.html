@@ -1227,17 +1227,7 @@
             </mat-expansion-panel-header>
             <mat-divider></mat-divider>
                 <div class="form-group form-row">
-                    <div class="col-2">
-                        <mat-form-field appearance="standard">
-                            <mat-label>Compensar</mat-label>
-                            <mat-select class="form-control-sm" [(ngModel)]="compensacion.comprobante">
-                                <mat-option *ngFor="let comprobante of comprobantes">
-                                    {{comprobante.tipo}}
-                                </mat-option>
-                            </mat-select>
-                        </mat-form-field>
-                    </div>
-                    <div class="col-2">
+                    <div class="col-4">
                         <mat-form-field appearance="standard">
                             <mat-label>Comprobante</mat-label>
                             <mat-select class="form-control-sm" [(ngModel)]="compensacion.tipoComprobante">

@@ -1,14 +1,13 @@
 import { Component, OnInit, HostListener, ElementRef, Renderer2 } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
-import * as constantes from '../../constantes';
-import * as util from '../../util';
+import { valores, validarSesion, exito, exito_swal, error, error_swal } from '../../constantes';
 import Swal from 'sweetalert2';
 
 import { Router } from '@angular/router';
-import { Sesion } from '../../modelos/sesion';
-import { SesionService } from '../../servicios/sesion.service';
-import { CalificacionCliente } from '../../modelos/calificacion-cliente';
-import { CalificacionClienteService } from '../../servicios/calificacion-cliente.service';
+import { Sesion } from '../../modelos/usuario/sesion';
+import { SesionService } from '../../servicios/usuario/sesion.service';
+import { CalificacionCliente } from '../../modelos/cliente/calificacion-cliente';
+import { CalificacionClienteService } from '../../servicios/cliente/calificacion-cliente.service';
 
 import { ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
@@ -23,8 +22,8 @@ import { MatTableDataSource } from '@angular/material/table';
 
 export class CalificacionClienteComponent implements OnInit {
 
-  estadoActivo: string = constantes.estadoActivo;
-  estadoInactivo: string = constantes.estadoInactivo;
+  activo: string = valores.activo;
+  inactivo: string = valores.inactivo;
 
   abrirPanelNuevoCalificacionCliente : boolean= true;
   abrirPanelAdminCalificacionCliente: boolean = false;
@@ -54,7 +53,7 @@ export class CalificacionClienteComponent implements OnInit {
         private sesionService: SesionService,private router: Router) { }
 
   ngOnInit() {
-    this.sesion=util.validarSesion(this.sesionService, this.router);
+    this.sesion=validarSesion(this.sesionService, this.router);
     this.consultarCalificacionClientes();
   }
   
@@ -87,11 +86,11 @@ export class CalificacionClienteComponent implements OnInit {
     this.calificacionClienteService.crear(this.calificacionCliente).subscribe({
       next: res => {
         this.calificacionCliente = res.resultado as CalificacionCliente;
-        Swal.fire({ icon: constantes.exito_swal, title: constantes.exito, text: res.mensaje });
+        Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
         this.calificacionClientes.push(this.calificacionCliente);
         this.llenarTablaCalificacionCliente(this.calificacionClientes);
       },
-      error: err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
+      error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     });
   }
 
@@ -107,23 +106,22 @@ export class CalificacionClienteComponent implements OnInit {
     this.calificacionClienteService.actualizar(this.calificacionCliente).subscribe({
       next: res => {
         this.calificacionCliente = res.resultado as CalificacionCliente;
-        Swal.fire({ icon: constantes.exito_swal, title: constantes.exito, text: res.mensaje });
+        Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
         this.limpiar();
       },
-      error: err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
+      error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     });
   }
 
   eliminar(event: any) {
     if (event != null)
       event.preventDefault();
-    this.calificacionCliente.estado = constantes.estadoEliminado;
     this.calificacionClienteService.eliminarPersonalizado(this.calificacionCliente).subscribe({
       next: res => {
-        Swal.fire({ icon: constantes.exito_swal, title: constantes.exito, text: res.mensaje });
+        Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
         this.limpiar();
       },
-      error: err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
+      error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     });
   }
 
@@ -133,7 +131,7 @@ export class CalificacionClienteComponent implements OnInit {
         this.calificacionClientes = res.resultado as CalificacionCliente[]
         this.llenarTablaCalificacionCliente(this.calificacionClientes);
       },
-      error: err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
+      error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     });
   }
 

@@ -1,17 +1,16 @@
 import { Component, HostListener, OnInit, ViewChild } from '@angular/core';
 import Swal from 'sweetalert2';
-import * as util from '../../util';
-import { TransportistaService } from '../../servicios/transportista.service';
-import { Transportista } from '../../modelos/transportista';
-import * as constantes from '../../constantes';
-import { SesionService } from 'src/app/servicios/sesion.service';
+import { TransportistaService } from '../../servicios/entrega/transportista.service';
+import { Transportista } from '../../modelos/entrega/transportista';
+import { valores, validarSesion, tab_activo, exito, exito_swal, error, error_swal } from '../../constantes';
+import { SesionService } from 'src/app/servicios/usuario/sesion.service';
 import { Router } from '@angular/router';
-import { Sesion } from 'src/app/modelos/sesion';
+import { Sesion } from 'src/app/modelos/usuario/sesion';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { VehiculoTransporte } from 'src/app/modelos/vehiculo-transporte';
-import { VehiculoTransporteService } from 'src/app/servicios/vehiculo-transporte.service';
+import { VehiculoTransporte } from 'src/app/modelos/entrega/vehiculo-transporte';
+import { VehiculoTransporteService } from 'src/app/servicios/entrega/vehiculo-transporte.service';
 
 @Component({
   selector: 'app-transportista',
@@ -47,7 +46,7 @@ export class TransportistaComponent implements OnInit {
     private sesionService: SesionService,private router: Router) { }
 
   ngOnInit() {
-    this.sesion=util.validarSesion(this.sesionService, this.router);
+    this.sesion=validarSesion(this.sesionService, this.router);
     this.consultar();
     this.consultarVehiculoTransporte();
   }
@@ -73,11 +72,11 @@ export class TransportistaComponent implements OnInit {
       event.preventDefault();
     this.transportistaService.crear(this.transportista).subscribe(
       res => {
-        Swal.fire({ icon: constantes.exito_swal, title: constantes.exito, text: res.mensaje });
+        Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
         this.transportista=res.resultado as Transportista;
         this.consultar();
       },
-      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
+      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
 
@@ -86,11 +85,11 @@ export class TransportistaComponent implements OnInit {
       event.preventDefault();
     this.transportistaService.actualizar(this.transportista).subscribe(
       res => {
-        Swal.fire({ icon: constantes.exito_swal, title: constantes.exito, text: res.mensaje });
+        Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
         this.transportista=res.resultado as Transportista;
         this.consultar();
       },
-      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
+      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
 
@@ -99,11 +98,11 @@ export class TransportistaComponent implements OnInit {
       event.preventDefault();
     this.transportistaService.eliminar(this.transportista).subscribe(
       res => {
-        Swal.fire({ icon: constantes.exito_swal, title: constantes.exito, text: res.mensaje });
+        Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
         this.nuevo(null);
         this.consultar();
       },
-      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
+      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
   
@@ -115,7 +114,7 @@ export class TransportistaComponent implements OnInit {
         this.dataSourceTransportista.paginator = this.paginator;
         this.dataSourceTransportista.sort = this.sort;
       },
-      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
+      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
 
@@ -143,7 +142,7 @@ export class TransportistaComponent implements OnInit {
       res => {
         this.vehiculosTransportes = res.resultado as VehiculoTransporte[]
       },
-      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
+      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
 

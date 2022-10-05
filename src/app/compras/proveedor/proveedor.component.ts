@@ -2,51 +2,50 @@ import { Component, OnInit, HostListener, Type, ViewChild, Inject, ɵConsole } f
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
 import Swal from 'sweetalert2';
-import * as constantes from '../../constantes';
-
+import { valores, validarSesion, otras, tabs, tab_activo, exito, exito_swal, error, error_swal } from '../../constantes';
 import { Router } from '@angular/router'; 
 import { environment } from '../../../environments/environment';
-import { Empresa } from '../../modelos/empresa';
-import { EmpresaService } from '../../servicios/empresa.service';
-import { Sesion } from '../../modelos/sesion';
-import { SesionService } from '../../servicios/sesion.service';
+import { Empresa } from '../../modelos/configuracion/empresa';
+import { EmpresaService } from '../../servicios/configuracion/empresa.service';
+import { Sesion } from '../../modelos/usuario/sesion';
+import { SesionService } from '../../servicios/usuario/sesion.service';
 import { TabService } from '../../componentes/services/tab.service';
-import { Cliente } from '../../modelos/cliente';
-import { ClienteService } from '../../servicios/cliente.service';
-import { TipoContribuyente } from '../../modelos/tipo-contribuyente';
-import { TipoContribuyenteService } from '../../servicios/tipo-contribuyente.service';
-import { SegmentoService } from '../../servicios/segmento.service';
-import { Segmento } from '../../modelos/segmento';
-import { GrupoCliente } from '../../modelos/grupo-cliente'
-import { GrupoClienteService } from '../../servicios/grupo-cliente.service';
-import { Ubicacion } from '../../modelos/ubicacion';
-import { UbicacionService } from '../../servicios/ubicacion.service';
-import { Telefono } from '../../modelos/telefono';
-import { Celular } from '../../modelos/celular';
-import { Coordenada } from '../../modelos/coordenada';
-import { Correo } from '../../modelos/correo';
-import { Dependiente } from '../../modelos/dependiente';
-import { TelefonoDependiente } from '../../modelos/telefono-dependiente';
-import { CorreoDependiente } from '../../modelos/correo-dependiente';
-import { CelularDependiente } from '../../modelos/celular-dependiente';
-import { Genero } from '../../modelos/genero';
-import { GeneroService } from '../../servicios/genero.service';
-import { EstadoCivil } from '../../modelos/estado-civil';
-import { EstadoCivilService } from '../../servicios/estado-civil.service';
-import { OrigenIngreso } from '../../modelos/origen-ingreso';
-import { OrigenIngresoService } from '../../servicios/origen-ingreso.service';
-import { CalificacionCliente } from '../../modelos/calificacion-cliente';
-import { CalificacionClienteService } from '../../servicios/calificacion-cliente.service';
-import { PlazoCredito } from '../../modelos/plazo-credito';
-import { PlazoCreditoService } from '../../servicios/plazo-credito.service';
-import { FormaPago } from '../../modelos/forma-pago';
-import { FormaPagoService } from '../../servicios/forma-pago.service';
-import { TipoPago } from '../../modelos/tipo-pago';
-import { TipoPagoService } from '../../servicios/tipo-pago.service';
-import { TipoRetencion } from '../../modelos/tipo-retencion';
-import { TipoRetencionService } from '../../servicios/tipo-retencion.service';
-import { Proveedor } from '../../modelos/proveedor';
-import { ProveedorService } from '../../servicios/proveedor.service';
+import { Cliente } from '../../modelos/cliente/cliente';
+import { ClienteService } from '../../servicios/cliente/cliente.service';
+import { TipoContribuyente } from '../../modelos/cliente/tipo-contribuyente';
+import { TipoContribuyenteService } from '../../servicios/cliente/tipo-contribuyente.service';
+import { SegmentoService } from '../../servicios/inventario/segmento.service';
+import { Segmento } from '../../modelos/inventario/segmento';
+import { GrupoCliente } from '../../modelos/cliente/grupo-cliente'
+import { GrupoClienteService } from '../../servicios/cliente/grupo-cliente.service';
+import { Ubicacion } from '../../modelos/configuracion/ubicacion';
+import { UbicacionService } from '../../servicios/configuracion/ubicacion.service';
+import { Telefono } from '../../modelos/cliente/telefono';
+import { Celular } from '../../modelos/cliente/celular';
+import { Coordenada } from '../../modelos/configuracion/coordenada';
+import { Correo } from '../../modelos/cliente/correo';
+import { Dependiente } from '../../modelos/cliente/dependiente';
+import { TelefonoDependiente } from '../../modelos/cliente/telefono-dependiente';
+import { CorreoDependiente } from '../../modelos/cliente/correo-dependiente';
+import { CelularDependiente } from '../../modelos/cliente/celular-dependiente';
+import { Genero } from '../../modelos/cliente/genero';
+import { GeneroService } from '../../servicios/cliente/genero.service';
+import { EstadoCivil } from '../../modelos/cliente/estado-civil';
+import { EstadoCivilService } from '../../servicios/cliente/estado-civil.service';
+import { OrigenIngreso } from '../../modelos/cliente/origen-ingreso';
+import { OrigenIngresoService } from '../../servicios/cliente/origen-ingreso.service';
+import { CalificacionCliente } from '../../modelos/cliente/calificacion-cliente';
+import { CalificacionClienteService } from '../../servicios/cliente/calificacion-cliente.service';
+import { PlazoCredito } from '../../modelos/cliente/plazo-credito';
+import { PlazoCreditoService } from '../../servicios/cliente/plazo-credito.service';
+import { FormaPago } from '../../modelos/cliente/forma-pago';
+import { FormaPagoService } from '../../servicios/cliente/forma-pago.service';
+import { TipoPago } from '../../modelos/cliente/tipo-pago';
+import { TipoPagoService } from '../../servicios/cliente/tipo-pago.service';
+import { TipoRetencion } from '../../modelos/configuracion/tipo-retencion';
+import { TipoRetencionService } from '../../servicios/configuracion/tipo-retencion.service';
+import { Proveedor } from '../../modelos/proveedor/proveedor';
+import { ProveedorService } from '../../servicios/proveedor/proveedor.service';
 
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
@@ -63,9 +62,9 @@ export class ProveedorComponent implements OnInit {
   sesion: Sesion;
   ComponenteProveedor: Type<any> = ProveedorComponent;
 
-  urlLogo: string = "";
-  nombreEmpresa: string = "";
-  urlAvatar: string = environment.prefijo_url_imagenes + "avatar/avatar1.png";
+  urlLogo: string = valores.vacio;
+  nombreEmpresa: string = valores.vacio;
+  urlAvatar: string = environment.prefijoUrlImagenes + "avatar/avatar1.png";
 
   abrirPanelProveedor: boolean = true;
   abrirPanelUbicacion: boolean = false;
@@ -78,11 +77,9 @@ export class ProveedorComponent implements OnInit {
   cliente: Cliente = new Cliente;
   proveedor: Proveedor = new Proveedor;
   proveedores: Proveedor[];
-  //cliente: Cliente;
   proveedorCrear: Proveedor;
   proveedorBuscar = new Proveedor();
   proveedorActualizar: Proveedor;
-  //proveedores: Proveedor[];
   segmento: Segmento = new Segmento();
   segmentos: Segmento[] = [];
   dependiente: Dependiente = new Dependiente();
@@ -96,12 +93,12 @@ export class ProveedorComponent implements OnInit {
   formasPagos: FormaPago[];
   tiposContribuyentes: TipoContribuyente[] = [];
 
-  proveedorProvincia: string = "";
-  proveedorCanton: string = "";
-  proveedorParroquia: string = "";
-  dependienteProvincia: string = "";
-  dependienteCanton: string = "";
-  dependienteParroquia: string = "";
+  proveedorProvincia: string = valores.vacio;
+  proveedorCanton: string = valores.vacio;
+  proveedorParroquia: string = valores.vacio;
+  dependienteProvincia: string = valores.vacio;
+  dependienteCanton: string = valores.vacio;
+  dependienteParroquia: string = valores.vacio;
   telefono = new Telefono();
   celular = new Celular();
   correo = new Correo();
@@ -194,11 +191,11 @@ export class ProveedorComponent implements OnInit {
     this.empresaService.obtener(empresa.id).subscribe({
       next:(res) => {
         empresa = res.resultado as Empresa
-        this.urlLogo = environment.prefijo_url_imagenes + "logos/" + empresa.logo;
+        this.urlLogo = environment.prefijoUrlImagenes + "logos/" + empresa.logo;
         this.nombreEmpresa = empresa.razonSocial;
       },
       error:(err) => {
-        Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.message });
+        Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.message });
       }
     });
   }
@@ -215,7 +212,7 @@ export class ProveedorComponent implements OnInit {
         this.tiposContribuyentes = res.resultado as TipoContribuyente[]
       },
       error: (err) => {
-        Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.message });
+        Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.message });
       }
     });
     this.segmentoService.consultar().subscribe({
@@ -223,7 +220,7 @@ export class ProveedorComponent implements OnInit {
         this.segmentos = res.resultado as Segmento[];
       },
       error: (err) => {
-        Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.message });
+        Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.message });
       }
     });
     this.grupoClienteService.consultar().subscribe({
@@ -231,7 +228,7 @@ export class ProveedorComponent implements OnInit {
         this.gruposClientes = res.resultado as GrupoCliente[]
       },
       error: (err) => {
-        Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.message });
+        Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.message });
       }
     });
     this.generoService.consultar().subscribe({
@@ -239,7 +236,7 @@ export class ProveedorComponent implements OnInit {
         this.generos = res.resultado as Genero[]
       },
       error: err => {
-        Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.message });
+        Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.message });
       }
     });
     this.estadoCivilService.consultar().subscribe({
@@ -247,7 +244,7 @@ export class ProveedorComponent implements OnInit {
         this.estadosCiviles = res.resultado as EstadoCivil[]
       },
       error: err => {
-        Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.message });
+        Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.message });
       }
     });
     this.origenIngresoService.consultar().subscribe({
@@ -255,7 +252,7 @@ export class ProveedorComponent implements OnInit {
         this.origenesIngresos = res.resultado as OrigenIngreso[]
       },
       error: err => {
-        Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.message });
+        Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.message });
       }
     });
     this.calificacionClienteService.consultar().subscribe({
@@ -263,7 +260,7 @@ export class ProveedorComponent implements OnInit {
         this.calificacionesClientes = res.resultado as CalificacionCliente[]
       },
       error: err => {
-        Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.message });
+        Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.message });
       }
     });
     this.plazoCreditoService.consultar().subscribe({
@@ -271,7 +268,7 @@ export class ProveedorComponent implements OnInit {
         this.plazosCreditos = res.resultado as PlazoCredito[]
       },
       error: err => {
-        Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.message });
+        Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.message });
       }
     });
     this.tipoPagoService.consultar().subscribe({
@@ -279,7 +276,7 @@ export class ProveedorComponent implements OnInit {
         this.tiposPagos = res.resultado as TipoPago[]
       },
       error: err => {
-        Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.message });
+        Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.message });
       }
     });
     this.formaPagoService.consultar().subscribe({
@@ -287,7 +284,7 @@ export class ProveedorComponent implements OnInit {
         this.formasPagos = res.resultado as FormaPago[]
       },
       error: err => {
-        Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.message });
+        Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.message });
       }
     });
     this.ubicacionService.obtenerProvincias().subscribe({
@@ -296,7 +293,7 @@ export class ProveedorComponent implements OnInit {
         this.dependienteProvincias = res.resultado as Ubicacion[]
       },
       error: err => {
-        Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.message });
+        Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.message });
       }
     });
     this.tipoRetencionService.obtenerIvaBien().subscribe({
@@ -304,7 +301,7 @@ export class ProveedorComponent implements OnInit {
         this.tiposRetencionesIvaBien = res.resultado as TipoRetencion[]
       },
       error: err => {
-        Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.message });
+        Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.message });
       }
     });
     this.tipoRetencionService.obtenerIvaServicio().subscribe({
@@ -312,7 +309,7 @@ export class ProveedorComponent implements OnInit {
         this.tiposRetencionesIvaServicio = res.resultado as TipoRetencion[]
       },
       error: err => {
-        Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.message });
+        Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.message });
       }
     });
     this.tipoRetencionService.obtenerRentaBien().subscribe({
@@ -320,7 +317,7 @@ export class ProveedorComponent implements OnInit {
         this.tiposRetencionesRentaBien = res.resultado as TipoRetencion[]
       },
       error: err => {
-        Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.message });
+        Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.message });
       }
     });
     this.tipoRetencionService.obtenerRentaServicio().subscribe({
@@ -328,7 +325,7 @@ export class ProveedorComponent implements OnInit {
         this.tiposRetencionesRentaServicio = res.resultado as TipoRetencion[]
       },
       error: err => {
-        Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.message });
+        Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.message });
       }
     });
   }
@@ -347,7 +344,7 @@ export class ProveedorComponent implements OnInit {
           this.proveedorService.enviar(0);
         },
         error: err => {
-          Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.message });
+          Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.message });
         }
       })
     }
@@ -356,7 +353,7 @@ export class ProveedorComponent implements OnInit {
   nuevoProveedor(event) {
     if (event != null)
       event.preventDefault();
-    this.tabService.addNewTab(ProveedorComponent, constantes.tab_proveedor);
+    this.tabService.addNewTab(ProveedorComponent, tabs.tab_proveedor);
   }
 
   open(content: any, event: any) {
@@ -372,23 +369,23 @@ export class ProveedorComponent implements OnInit {
     if (event != null)
       event.preventDefault();
     //AGREGAR DEPENDIENTE
-    if (this.dependiente.razonSocial != constantes.vacio && this.dependiente.direccion.direccion != constantes.vacio) {
-      if (this.dependienteTelefono.numero != constantes.vacio)
+    if (this.dependiente.razonSocial != valores.vacio && this.dependiente.direccion.direccion != valores.vacio) {
+      if (this.dependienteTelefono.numero != valores.vacio)
         this.dependiente.telefonos.push(this.dependienteTelefono);
-      if (this.dependienteTelefono.numero != constantes.vacio)
+      if (this.dependienteTelefono.numero != valores.vacio)
         this.dependiente.celulares.push(this.dependienteCelular);
-      if (this.dependienteCorreo.email != constantes.vacio)
+      if (this.dependienteCorreo.email != valores.vacio)
         this.dependiente.correos.push(this.dependienteCorreo);
       let ubicacion: Ubicacion = new Ubicacion();
       ubicacion.provincia = this.dependienteProvincia;
       ubicacion.canton = this.dependienteCanton;
       ubicacion.parroquia = this.dependienteParroquia;
-      if (ubicacion.provincia != "" && ubicacion.canton != "" && ubicacion.parroquia != "") {
+      if (ubicacion.provincia != valores.vacio && ubicacion.canton != valores.vacio && ubicacion.parroquia != valores.vacio) {
         await this.ubicacionService.obtenerUbicacionID(ubicacion).then(
           res => {
             this.dependiente.direccion.ubicacion = res.resultado as Ubicacion;
           },
-          err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.message })
+          err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.message })
         );
       }
       this.proveedor.dependientes.push(this.dependiente);
@@ -400,26 +397,26 @@ export class ProveedorComponent implements OnInit {
         res => {
           this.proveedor.direccion.ubicacion = res.resultado as Ubicacion;
         },
-        err => Swal.fire(constantes.error, err.error.mensaje, constantes.error_swal)
+        err => Swal.fire(error, err.error.mensaje, error_swal)
       );
     }
     this.proveedor.puntoVenta = this.sesion.usuario.puntoVenta;
-    if (this.telefono.numero != constantes.vacio)
+    if (this.telefono.numero != valores.vacio)
       this.proveedor.telefonos.push(this.telefono);
-    if (this.celular.numero != constantes.vacio)
+    if (this.celular.numero != valores.vacio)
       this.proveedor.celulares.push(this.celular);
-    if (this.correo.email != constantes.vacio)
+    if (this.correo.email != valores.vacio)
       this.proveedor.correos.push(this.correo);
     console.log(this.proveedor);
     this.proveedorService.crear(this.proveedor).subscribe({
       next: res => {
         this.proveedor = res.resultado as Proveedor;
-        Swal.fire(constantes.exito, res.mensaje, constantes.exito_swal);
-        let indice_tab_activo = constantes.tab_activo(this.tabService);
+        Swal.fire(exito, res.mensaje, exito_swal);
+        let indice_tab_activo = tab_activo(this.tabService);
         this.tabService.removeTab(indice_tab_activo);
-        this.tabService.addNewTab(ProveedorComponent, constantes.tab_proveedor);
+        this.tabService.addNewTab(ProveedorComponent, tabs.tab_proveedor);
       },
-      error: err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.message })
+      error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.message })
     });
   }
   
@@ -439,15 +436,15 @@ export class ProveedorComponent implements OnInit {
         res => {
           this.dependiente.direccion.ubicacion = res.resultado as Ubicacion;
         },
-        err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.message })
+        err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.message })
       );
     }
     this.proveedor.dependientes.push(this.dependiente);
     this.dependiente = new Dependiente();
     this.habilitarCelularTelefonoCorreoDependiente = false;
-    this.dependienteProvincia = "";
-    this.dependienteCanton = "";
-    this.dependienteParroquia = "";
+    this.dependienteProvincia = valores.vacio;
+    this.dependienteCanton = valores.vacio;
+    this.dependienteParroquia = valores.vacio;
     this.dependienteTelefono = new TelefonoDependiente();
     this.dependienteCelular = new CelularDependiente();
     this.dependienteCorreo = new CorreoDependiente();
@@ -474,42 +471,42 @@ export class ProveedorComponent implements OnInit {
     if (event != null)
       event.preventDefault();
     //AGREGAR DEPENDIENTES
-    if (this.dependiente.razonSocial != constantes.vacio) {
-      if (this.dependienteTelefono.numero != constantes.vacio)
+    if (this.dependiente.razonSocial != valores.vacio) {
+      if (this.dependienteTelefono.numero != valores.vacio)
         this.dependiente.telefonos.push(this.dependienteTelefono);
-      if (this.dependienteTelefono.numero != constantes.vacio)
+      if (this.dependienteTelefono.numero != valores.vacio)
         this.dependiente.celulares.push(this.dependienteCelular);
-      if (this.dependienteCorreo.email != constantes.vacio)
+      if (this.dependienteCorreo.email != valores.vacio)
         this.dependiente.correos.push(this.dependienteCorreo);
       let ubicacion: Ubicacion = new Ubicacion();
       ubicacion.provincia = this.dependienteProvincia;
       ubicacion.canton = this.dependienteCanton;
       ubicacion.parroquia = this.dependienteParroquia;
-      if (ubicacion.provincia != constantes.vacio && ubicacion.canton != constantes.vacio && ubicacion.parroquia != constantes.vacio) {
+      if (ubicacion.provincia != valores.vacio && ubicacion.canton != valores.vacio && ubicacion.parroquia != valores.vacio) {
         await this.ubicacionService.obtenerUbicacionID(ubicacion).then(
           res => {
             this.dependiente.direccion.ubicacion = res.resultado as Ubicacion;
           },
-          err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.message })
+          err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.message })
         );
       }
       this.proveedor.dependientes.push(this.dependiente);
     }
     //proveedor
     console.log(this.proveedor);
-    if (this.proveedor.direccion.ubicacion.provincia != "" && this.proveedor.direccion.ubicacion.canton != "" && this.cliente.direccion.ubicacion.parroquia != "") {
+    if (this.proveedor.direccion.ubicacion.provincia != valores.vacio && this.proveedor.direccion.ubicacion.canton != valores.vacio && this.cliente.direccion.ubicacion.parroquia != valores.vacio) {
       await this.ubicacionService.obtenerUbicacionID(this.proveedor.direccion.ubicacion).then(
         res => {
           this.proveedor.direccion.ubicacion = res.resultado as Ubicacion;
         },
-        err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.message })
+        err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.message })
       );
     }
 
     this.proveedorService.actualizar(this.proveedor).subscribe({
       next: res => {
         if (res.resultado != null) {
-          Swal.fire(constantes.exito, res.mensaje, constantes.exito_swal);
+          Swal.fire(exito, res.mensaje, exito_swal);
           this.proveedor = res.resultado as Proveedor;
           this.dependienteCantones = [];
           this.dependienteParroquias = [];
@@ -523,10 +520,10 @@ export class ProveedorComponent implements OnInit {
           this.dependiente = new Dependiente();
         }
         else {
-          Swal.fire(constantes.error, res.mensaje, constantes.error_swal);
+          Swal.fire(error, res.mensaje, error_swal);
         }
       },
-      error: err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.message })
+      error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.message })
     });
   }
 
@@ -541,14 +538,14 @@ export class ProveedorComponent implements OnInit {
     this.proveedorService.eliminar(proveedor).subscribe({
       next: res => {
         if (res.resultado != null) {
-          Swal.fire(constantes.exito, res.mensaje, constantes.exito_swal);
+          Swal.fire(exito, res.mensaje, exito_swal);
           this.proveedor = res.resultado as Proveedor
           this.ngOnInit();
         } else {
-          Swal.fire(constantes.error, res.mensaje, constantes.error_swal);
+          Swal.fire(error, res.mensaje, error_swal);
         }
       },
-      error: err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.message })
+      error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.message })
     });
   }
 
@@ -557,10 +554,10 @@ export class ProveedorComponent implements OnInit {
       event.preventDefault();
     this.proveedorService.eliminar(this.proveedor).subscribe({
       next: res => {
-        Swal.fire(constantes.exito, res.mensaje, constantes.exito_swal);
+        Swal.fire(exito, res.mensaje, exito_swal);
         this.consultarProveedores();
       },
-      error: err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.message })
+      error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.message })
     });
   }
 
@@ -570,7 +567,7 @@ export class ProveedorComponent implements OnInit {
         this.proveedores = res.resultado as Proveedor[]
         this.llenarDataSourceProveedor(this.proveedores);
       },
-      error: (err) => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.message })
+      error: (err) => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.message })
     });
   }
 
@@ -610,7 +607,7 @@ export class ProveedorComponent implements OnInit {
       next: res => {
         this.proveedores = res.resultado as Proveedor[]
       },
-      error: err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.message })
+      error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.message })
     });
   }
 
@@ -660,16 +657,16 @@ export class ProveedorComponent implements OnInit {
             this.validarSexoEstadoCivilOrigenIngreso();
           },
           error: err => {
-            this.proveedor.tipoIdentificacion = '';
+            this.proveedor.tipoIdentificacion = valores.vacio;
             this.proveedor.tipoContribuyente = new TipoContribuyente();
-            Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.message });
+            Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.message });
           }
         });
       },
       error: err => {
-        this.proveedor.tipoIdentificacion = '';
+        this.proveedor.tipoIdentificacion = valores.vacio;
         this.proveedor.tipoContribuyente = new TipoContribuyente();
-        Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.message });
+        Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.message });
       }
     });
   }
@@ -686,7 +683,7 @@ export class ProveedorComponent implements OnInit {
   }
 
   cambiarRazonSocialDependiente() {
-    if (this.dependiente.razonSocial != "") {
+    if (this.dependiente.razonSocial != valores.vacio) {
       this.habilitarCelularTelefonoCorreoDependiente = false;
     }
   }
@@ -702,18 +699,18 @@ export class ProveedorComponent implements OnInit {
   }
 
   crearTelefono() {
-    if (this.telefono.numero.length != 0 ){
+    if (this.telefono.numero.length != valores.cero ){
     this.proveedor.telefonos.push(this.telefono);
     this.telefono = new Telefono();
      } else {
-      Swal.fire(constantes.error, "Ingrese un número telefónico válido", constantes.error_swal);
+      Swal.fire(error, "Ingrese un número telefónico válido", error_swal);
     }
   }
   validarTelefono() {
     let digito = this.telefono.numero.substr(0, 1);
     if (this.telefono.numero.length != 11 || digito != "0") {
-      this.telefono.numero = "";
-      Swal.fire(constantes.error, "Telefono Invalido", constantes.error_swal);
+      this.telefono.numero = valores.vacio;
+      Swal.fire(error, "Telefono Invalido", error_swal);
     }
   }
   eliminarTelefono(i: number) {
@@ -721,18 +718,18 @@ export class ProveedorComponent implements OnInit {
   }
 
   crearCelular() {
-    if (this.celular.numero.length != 0 ){
+    if (this.celular.numero.length != valores.cero ){
       this.proveedor.celulares.push(this.celular);
       this.celular = new Celular();
        } else {
-        Swal.fire(constantes.error, "Ingrese un número de celular válido", constantes.error_swal);
+        Swal.fire(error, "Ingrese un número de celular válido", error_swal);
       }
   }
   validarCelular() {
     let digito = this.celular.numero.substr(0, 2);
     if (this.celular.numero.length != 12 || digito != "09") {
-      this.celular.numero = "";
-      Swal.fire(constantes.error, "Celular Invalido", constantes.error_swal);
+      this.celular.numero = valores.vacio;
+      Swal.fire(error, "Celular Invalido", error_swal);
     }
   }
   eliminarCelular(i: number) {
@@ -744,14 +741,14 @@ export class ProveedorComponent implements OnInit {
       this.proveedor.correos.push(this.correo);
       this.correo = new Correo();
        } else {
-        Swal.fire(constantes.error, "Ingrese un correo válido", constantes.error_swal);
+        Swal.fire(error, "Ingrese un correo válido", error_swal);
       }
   }
   validarCorreo() {
     let arroba = this.correo.email.includes("@");
     if (!arroba) {
-      this.correo.email = "";
-      Swal.fire(constantes.error, "Correo Invalido", constantes.error_swal);
+      this.correo.email = valores.vacio;
+      Swal.fire(error, "Correo Invalido", error_swal);
     }
   }
   eliminarCorreo(i: number) {
@@ -772,7 +769,7 @@ export class ProveedorComponent implements OnInit {
     let digito = this.dependienteTelefono.numero.substr(0, 1);
     if (this.dependienteTelefono.numero.length != 11 || digito != "0") {
       this.dependienteTelefono.numero = "";
-      Swal.fire(constantes.error, "Telefono Invalido", constantes.error_swal);
+      Swal.fire(error, "Telefono Invalido", error_swal);
     }
   }
   eliminarTelefonoDependiente(i: number) {
@@ -781,8 +778,8 @@ export class ProveedorComponent implements OnInit {
   }
 
   crearCelularDependiente() {
-    if (this.dependienteCelular.numero.length !=0 ){
-      if (this.proveedor.dependientes.length > 0 && this.dependiente.razonSocial == "") {
+    if (this.dependienteCelular.numero.length != valores.cero ){
+      if (this.proveedor.dependientes.length > 0 && this.dependiente.razonSocial == valores.vacio) {
         this.proveedor.dependientes.slice(-1)[0].celulares.push(this.dependienteCelular);
       }
       else {
@@ -795,7 +792,7 @@ export class ProveedorComponent implements OnInit {
     let digito = this.dependienteCelular.numero.substr(0, 2);
     if (this.dependienteCelular.numero.length != 12 || digito != "09") {
       this.dependienteCelular.numero = "";
-      Swal.fire(constantes.error, "Celular Invalido", constantes.error_swal);
+      Swal.fire(error, "Celular Invalido", error_swal);
     }
   }
   eliminarCelularDependiente(i: number) {
@@ -804,8 +801,8 @@ export class ProveedorComponent implements OnInit {
   }
 
   crearCorreoDependiente() {
-    if (this.dependienteCorreo.email.length !=0 ){
-      if (this.proveedor.dependientes.length > 0 && this.dependiente.razonSocial == "") {
+    if (this.dependienteCorreo.email.length != valores.cero ){
+      if (this.proveedor.dependientes.length > 0 && this.dependiente.razonSocial == valores.vacio) {
         this.proveedor.dependientes.slice(-1)[0].correos.push(this.dependienteCorreo);
       } else {
         this.dependiente.correos.push(this.dependienteCorreo);
@@ -816,8 +813,8 @@ export class ProveedorComponent implements OnInit {
   validarCorreoDependiente() {
     let arroba = this.dependienteCorreo.email.includes("@");
     if (!arroba) {
-      this.dependienteCorreo.email = "";
-      Swal.fire(constantes.error, "Correo Invalido", constantes.error_swal);
+      this.dependienteCorreo.email = valores.vacio;
+      Swal.fire(error, "Correo Invalido", error_swal);
     }
   }
   eliminarCorreoDependiente(i: number) {
@@ -833,10 +830,10 @@ export class ProveedorComponent implements OnInit {
         if (res.resultado != null) {
           this.cantones = res.resultado as Ubicacion[];
         } else {
-          Swal.fire(constantes.error, res.mensaje, constantes.error_swal);
+          Swal.fire(error, res.mensaje, error_swal);
         }
       },
-      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.message })
+      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.message })
     );
   }
 
@@ -847,10 +844,10 @@ export class ProveedorComponent implements OnInit {
         if (res.resultado != null) {
           this.dependienteCantones = res.resultado as Ubicacion[];
         } else {
-          Swal.fire(constantes.error, res.mensaje, constantes.error_swal);
+          Swal.fire(error, res.mensaje, error_swal);
         }
       },
-      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.message })
+      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.message })
     );
   }
 
@@ -861,10 +858,10 @@ export class ProveedorComponent implements OnInit {
         if (res.resultado != null) {
           this.parroquias = res.resultado as Ubicacion[];
         } else {
-          Swal.fire(constantes.error, res.mensaje, constantes.error_swal);
+          Swal.fire(error, res.mensaje, error_swal);
         }
       },
-      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.message })
+      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.message })
     );
   }
 
@@ -875,10 +872,10 @@ export class ProveedorComponent implements OnInit {
         if (res.resultado != null) {
           this.dependienteParroquias = res.resultado as Ubicacion[];
         } else {
-          Swal.fire(constantes.error, res.mensaje, constantes.error_swal);
+          Swal.fire(error, res.mensaje, error_swal);
         }
       },
-      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.message })
+      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.message })
     );
   }
 
@@ -891,7 +888,7 @@ export class ProveedorComponent implements OnInit {
   }
 
   validarSexoEstadoCivilOrigenIngreso() {
-    if (this.proveedor.tipoContribuyente.tipo == constantes.tipo_contribuyente_juridica) {
+    if (this.proveedor.tipoContribuyente.tipo == otras.tipoContribuyenteJuridica) {
       this.activacion_s_es_oi = true;
     } else {
       this.activacion_s_es_oi = false;
@@ -915,10 +912,10 @@ export class ProveedorComponent implements OnInit {
         if (res.resultado != null) {
           this.dependienteCantones = res.resultado as Ubicacion[];
         } else {
-          Swal.fire(constantes.error, res.mensaje, constantes.error_swal);
+          Swal.fire(error, res.mensaje, error_swal);
         }
       },
-      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.message })
+      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.message })
     );
   }
 

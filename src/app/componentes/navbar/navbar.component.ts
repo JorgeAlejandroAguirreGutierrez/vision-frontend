@@ -1,7 +1,7 @@
 import { SidebarService } from '../../componentes/services/sidebar.service';
 import { Component, OnInit, Input } from '@angular/core';
-import { EmpresaService } from '../../servicios/empresa.service';
-import { Empresa } from '../../modelos/empresa';
+import { EmpresaService } from '../../servicios/configuracion/empresa.service';
+import { Empresa } from '../../modelos/configuracion/empresa';
 import { environment } from '../../../environments/environment';
 
 @Component({
@@ -29,7 +29,7 @@ export class NavbarComponent implements OnInit {
     this.empresaService.obtener(empresaId).subscribe(
       res => {
         let empresa = res.resultado as Empresa
-        this.url_logo = environment.prefijo_url_imagenes + "logos/" + empresa.logo;
+        this.url_logo = environment.prefijoUrlImagenes + "logos/" + empresa.logo;
         this.nombre_empresa = empresa.razonSocial;
       }
     );

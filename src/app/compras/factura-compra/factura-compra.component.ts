@@ -6,44 +6,44 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatStepper } from '@angular/material/stepper';
 import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
 import Swal from 'sweetalert2';
-import { ClienteService } from '../../servicios/cliente.service';
-import { GeneroService } from '../../servicios/genero.service';
-import { EstadoCivilService } from '../../servicios/estado-civil.service';
-import { OrigenIngresoService } from '../../servicios/origen-ingreso.service';
-import { CalificacionClienteService } from '../../servicios/calificacion-cliente.service';
-import { PlazoCreditoService } from '../../servicios/plazo-credito.service';
-import { FormaPagoService } from '../../servicios/forma-pago.service';
-import { TipoPagoService } from '../../servicios/tipo-pago.service';
-import { UbicacionService } from '../../servicios/ubicacion.service';
-import { Cliente } from '../../modelos/cliente';
-import {GrupoCliente} from '../../modelos/grupo-cliente'
-import { Genero } from '../../modelos/genero';
-import { EstadoCivil } from '../../modelos/estado-civil';
-import { OrigenIngreso } from '../../modelos/origen-ingreso';
-import { CalificacionCliente } from '../../modelos/calificacion-cliente';
-import { PlazoCredito } from '../../modelos/plazo-credito';
-import { FormaPago } from '../../modelos/forma-pago';
-import { TipoPago } from '../../modelos/tipo-pago';
-import { Telefono } from '../../modelos/telefono';
-import { Celular } from '../../modelos/celular';
-import { Correo } from '../../modelos/correo';
-import { Ubicacion } from '../../modelos/ubicacion';
-import { TipoContribuyente } from '../../modelos/tipo-contribuyente';
-import { GrupoClienteService } from '../../servicios/grupo-cliente.service';
-import { TipoRetencionService } from '../../servicios/tipo-retencion.service';
-import { TipoRetencion } from '../../modelos/tipo-retencion';
-import { SesionService } from '../../servicios/sesion.service';
-import { Sesion } from '../../modelos/sesion';
-import { Dependiente } from '../../modelos/dependiente';
-import { EmpresaService } from '../../servicios/empresa.service';
-import { Empresa } from '../../modelos/empresa';
+import { ClienteService } from '../../servicios/cliente/cliente.service';
+import { GeneroService } from '../../servicios/cliente/genero.service';
+import { EstadoCivilService } from '../../servicios/cliente/estado-civil.service';
+import { OrigenIngresoService } from '../../servicios/cliente/origen-ingreso.service';
+import { CalificacionClienteService } from '../../servicios/cliente/calificacion-cliente.service';
+import { PlazoCreditoService } from '../../servicios/cliente/plazo-credito.service';
+import { FormaPagoService } from '../../servicios/cliente/forma-pago.service';
+import { TipoPagoService } from '../../servicios/cliente/tipo-pago.service';
+import { UbicacionService } from '../../servicios/configuracion/ubicacion.service';
+import { Cliente } from '../../modelos/cliente/cliente';
+import {GrupoCliente} from '../../modelos/cliente/grupo-cliente'
+import { Genero } from '../../modelos/cliente/genero';
+import { EstadoCivil } from '../../modelos/cliente/estado-civil';
+import { OrigenIngreso } from '../../modelos/cliente/origen-ingreso';
+import { CalificacionCliente } from '../../modelos/cliente/calificacion-cliente';
+import { PlazoCredito } from '../../modelos/cliente/plazo-credito';
+import { FormaPago } from '../../modelos/cliente/forma-pago';
+import { TipoPago } from '../../modelos/cliente/tipo-pago';
+import { Telefono } from '../../modelos/cliente/telefono';
+import { Celular } from '../../modelos/cliente/celular';
+import { Correo } from '../../modelos/cliente/correo';
+import { Ubicacion } from '../../modelos/configuracion/ubicacion';
+import { TipoContribuyente } from '../../modelos/cliente/tipo-contribuyente';
+import { GrupoClienteService } from '../../servicios/cliente/grupo-cliente.service';
+import { TipoRetencionService } from '../../servicios/configuracion/tipo-retencion.service';
+import { TipoRetencion } from '../../modelos/configuracion/tipo-retencion';
+import { SesionService } from '../../servicios/usuario/sesion.service';
+import { Sesion } from '../../modelos/usuario/sesion';
+import { Dependiente } from '../../modelos/cliente/dependiente';
+import { EmpresaService } from '../../servicios/configuracion/empresa.service';
+import { Empresa } from '../../modelos/configuracion/empresa';
 import { environment } from '../../../environments/environment';
-import { TipoContribuyenteService } from '../../servicios/tipo-contribuyente.service';
-import { TelefonoDependiente } from '../../modelos/telefono-dependiente';
-import { CorreoDependiente } from '../../modelos/correo-dependiente';
-import { CelularDependiente } from '../../modelos/celular-dependiente';
-import { Factura } from '../../modelos/factura';
-import { FacturaDetalle } from '../../modelos/factura-detalle';
+import { TipoContribuyenteService } from '../../servicios/cliente/tipo-contribuyente.service';
+import { TelefonoDependiente } from '../../modelos/cliente/telefono-dependiente';
+import { CorreoDependiente } from '../../modelos/cliente/correo-dependiente';
+import { CelularDependiente } from '../../modelos/cliente/celular-dependiente';
+import { Factura } from '../../modelos/comprobante/factura';
+import { FacturaDetalle } from '../../modelos/comprobante/factura-detalle';
 
 @Component({
   selector: 'app-factura-compra',
@@ -111,7 +111,7 @@ export class FacturaCompraComponent implements OnInit {
 
   urlLogo: string ="";
   nombreEmpresa: string="";
-  urlAvatar: string= environment.prefijo_url_imagenes+"avatar/avatar1.png";
+  urlAvatar: string= environment.prefijoUrlImagenes+"avatar/avatar1.png";
 
   isLinear = false;
   isEditable=false;
@@ -363,7 +363,7 @@ export class FacturaCompraComponent implements OnInit {
     this.empresaService.obtener(empresa.id).subscribe(
       res => {
         empresa= res.resultado as Empresa
-        this.urlLogo=environment.prefijo_url_imagenes+"logos/"+empresa.logo;
+        this.urlLogo=environment.prefijoUrlImagenes+"logos/"+empresa.logo;
         this.nombreEmpresa=empresa.razonSocial;
       }
     );
@@ -410,7 +410,7 @@ export class FacturaCompraComponent implements OnInit {
                 }
                 this.validarSexoEstadoCivilOrigenIngreso();
               } else {
-                this.cliente.tipoIdentificacion='';
+                this.cliente.tipoIdentificacion=null;
                 this.cliente.identificacion='';
                 Swal.fire('Error', res.mensaje, 'error');
               } 
@@ -418,7 +418,7 @@ export class FacturaCompraComponent implements OnInit {
             err => Swal.fire('Error', err.error.mensaje, 'error')
           );
         } else {
-          this.cliente.tipoIdentificacion='';
+          this.cliente.tipoIdentificacion=null;
           this.cliente.identificacion='';
           Swal.fire('Error', res.mensaje, 'error');
         } 

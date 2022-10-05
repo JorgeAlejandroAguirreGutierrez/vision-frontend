@@ -3,20 +3,19 @@ import { FormControl } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { startWith, map } from 'rxjs/operators';
 import Swal from 'sweetalert2';
-import * as constantes from '../../constantes';
-import * as util from '../../util';
-import { Producto } from '../../modelos/producto';
-import { ProductoService } from '../../servicios/producto.service';
-import { Proveedor } from '../../modelos/proveedor';
-import { ProveedorService } from '../../servicios/proveedor.service';
-import { ProductoProveedor } from '../../modelos/producto-proveedor';
-import { ProductoProveedorService } from '../../servicios/producto-proveedor.service';
+import { valores, mensajes, validarSesion, exito, exito_swal, error, error_swal } from '../../constantes';
+import { Producto } from '../../modelos/inventario/producto';
+import { ProductoService } from '../../servicios/inventario/producto.service';
+import { Proveedor } from '../../modelos/proveedor/proveedor';
+import { ProveedorService } from '../../servicios/proveedor/proveedor.service';
+import { ProductoProveedor } from '../../modelos/inventario/producto-proveedor';
+import { ProductoProveedorService } from '../../servicios/inventario/producto-proveedor.service';
 
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { Sesion } from 'src/app/modelos/sesion';
-import { SesionService } from 'src/app/servicios/sesion.service';
+import { Sesion } from 'src/app/modelos/usuario/sesion';
+import { SesionService } from 'src/app/servicios/usuario/sesion.service';
 import { Router } from '@angular/router';
 
 @Component({
@@ -71,7 +70,7 @@ export class ProveedorProductoComponent implements OnInit {
               private productoProveedorService: ProductoProveedorService, private sesionService: SesionService, private router: Router) { }
 
   ngOnInit() {
-    this.sesion=util.validarSesion(this.sesionService, this.router);
+    this.sesion=validarSesion(this.sesionService, this.router);
     this.consultarProductos();
     this.consultarProveedores();
     this.filtroProductos = this.controlProducto.valueChanges
@@ -106,20 +105,20 @@ export class ProveedorProductoComponent implements OnInit {
   actualizarProducto(event: any){
     if (event!=null)
       event.preventDefault();
-    if (this.producto.nombre == '') {
-        Swal.fire(constantes.error, constantes.error_nombre_producto, constantes.error_swal);
+    if (this.producto.nombre == valores.vacio) {
+        Swal.fire(error, mensajes.error_nombre_producto, error_swal);
         return;
     }
     console.log(this.producto);
     this.producto.kardexs[0].proveedor = new Proveedor;
     this.productoService.actualizar(this.producto).subscribe({
       next: (res) => {
-        Swal.fire({ icon: constantes.exito_swal, title: constantes.exito, text: res.mensaje });
+        Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
         this.limpiar();
         //this.consultar();
       },
       error: (err) => {
-        Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
+        Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
       }
     });
   }
@@ -129,7 +128,7 @@ export class ProveedorProductoComponent implements OnInit {
       next: (res) => {
         this.productos = res.resultado as Producto[]
       },
-      error: err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
+      error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
       }
     );
   }
@@ -169,9 +168,8 @@ export class ProveedorProductoComponent implements OnInit {
   agregarProductoProveedor(){
     let existe: boolean;
     existe = this.existeProductoProveedor();
-    //console.log("existe:" + existe)
     if (existe) {
-      Swal.fire(constantes.error, constantes.error_producto_proveedor, constantes.error_swal);
+      Swal.fire(error, mensajes.error_producto_proveedor, error_swal);
       return;
     }
     this.productoProveedor = new ProductoProveedor();
@@ -264,10 +262,10 @@ export class ProveedorProductoComponent implements OnInit {
     if (confirm("Realmente quiere eliminar el proveedor?")) {
     this.productoProveedorService.eliminar(this.productoProveedor).subscribe({
       next: (res) => {
-        Swal.fire({ icon: constantes.exito_swal, title: constantes.exito, text: res.mensaje });
+        Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
         //this.consultar();
       },
-      error: (err) => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
+      error: (err) => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     });
     }
   }
@@ -279,7 +277,7 @@ export class ProveedorProductoComponent implements OnInit {
         this.proveedores = res.resultado as Proveedor[];
       },
       err => {
-        Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
+        Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
       }
     );
   }

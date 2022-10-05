@@ -1,11 +1,10 @@
 import { Component, OnInit, ViewChild, HostListener } from '@angular/core';
 import Swal from 'sweetalert2';
-import { TipoPago } from '../../modelos/tipo-pago';
-import { TipoPagoService } from '../../servicios/tipo-pago.service';
-import * as constantes from '../../constantes';
-import * as util from '../../util';
-import { SesionService } from 'src/app/servicios/sesion.service';
-import { Sesion } from 'src/app/modelos/sesion';
+import { TipoPago } from '../../modelos/cliente/tipo-pago';
+import { TipoPagoService } from '../../servicios/cliente/tipo-pago.service';
+import { valores, validarSesion, tab_activo, exito, exito_swal, error, error_swal } from '../../constantes';
+import { SesionService } from 'src/app/servicios/usuario/sesion.service';
+import { Sesion } from 'src/app/modelos/usuario/sesion';
 import { Router } from '@angular/router';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
@@ -42,7 +41,7 @@ export class TipoPagoComponent implements OnInit {
     private sesionService: SesionService,private router: Router) { }
 
   ngOnInit() {
-    this.sesion=util.validarSesion(this.sesionService, this.router);
+    this.sesion=validarSesion(this.sesionService, this.router);
     this.consultar();
   }
   
@@ -67,11 +66,11 @@ export class TipoPagoComponent implements OnInit {
       event.preventDefault();
     this.tipoPagoService.crear(this.tipoPago).subscribe(
       res => {
-        Swal.fire({ icon: constantes.exito_swal, title: constantes.exito, text: res.mensaje });
+        Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
         this.tipoPago=res.resultado as TipoPago;
         this.consultar();
       },
-      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
+      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
 
@@ -80,11 +79,11 @@ export class TipoPagoComponent implements OnInit {
       event.preventDefault();
     this.tipoPagoService.actualizar(this.tipoPago).subscribe(
       res => {
-        Swal.fire({ icon: constantes.exito_swal, title: constantes.exito, text: res.mensaje });
+        Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
         this.tipoPago=res.resultado as TipoPago;
         this.consultar();
       },
-      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
+      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
 
@@ -93,11 +92,11 @@ export class TipoPagoComponent implements OnInit {
       event.preventDefault();
     this.tipoPagoService.eliminar(this.tipoPago).subscribe(
       res => {
-        Swal.fire({ icon: constantes.exito_swal, title: constantes.exito, text: res.mensaje });
+        Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
         this.nuevo(null);
         this.consultar();
       },
-      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
+      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
   
@@ -109,7 +108,7 @@ export class TipoPagoComponent implements OnInit {
         this.dataSourceTipoPago.paginator = this.paginator;
         this.dataSourceTipoPago.sort = this.sort;
       },
-      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
+      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
 

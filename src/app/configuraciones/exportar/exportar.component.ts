@@ -1,11 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { Modelo } from '../../modelos/modelo';
-import { ModeloService } from '../../servicios/modelo.service';
+import { Modelo } from '../../modelos/administracion/modelo';
+import { ModeloService } from '../../servicios/administracion/modelo.service';
 import Swal from 'sweetalert2';
-import * as constantes from '../../constantes';
-import { Sesion } from 'src/app/modelos/sesion';
-import * as util from '../../util';
-import { SesionService } from 'src/app/servicios/sesion.service';
+import { valores, validarSesion, tab_activo, exito, exito_swal, error, error_swal } from '../../constantes';
+import { Sesion } from 'src/app/modelos/usuario/sesion';
+import { SesionService } from 'src/app/servicios/usuario/sesion.service';
 import { Router } from '@angular/router';
 
 @Component({
@@ -21,7 +20,7 @@ export class ExportarComponent implements OnInit {
   constructor(private modeloService: ModeloService, private sesionService: SesionService, private router: Router) { }
 
   ngOnInit() {
-    this.sesion=util.validarSesion(this.sesionService, this.router);
+    this.sesion=validarSesion(this.sesionService, this.router);
     this.consultaModelos();
   }
   consultaModelos(){
@@ -31,19 +30,19 @@ export class ExportarComponent implements OnInit {
           this.modelos = res.resultado as Modelo[]
         }
       },
-      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
+      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
   exportar(){
     this.modeloService.exportar(this.modelo).subscribe(
       res => {
         if (res.resultado!=null && res.resultado) {
-          Swal.fire({ icon: constantes.exito_swal, title: constantes.exito, text: res.mensaje });
+          Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
         } else{
-          Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: res.mensaje });
+          Swal.fire({ icon: error_swal, title: error, text: res.mensaje });
         }
       },
-      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
+      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
 

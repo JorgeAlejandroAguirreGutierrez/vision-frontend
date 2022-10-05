@@ -1,14 +1,13 @@
 import { Component, HostListener, OnInit } from '@angular/core';
-import { PuntoVentaService } from '../../servicios/punto-venta.service';
-import { PuntoVenta } from '../../modelos/punto-venta';
+import { PuntoVentaService } from '../../servicios/usuario/punto-venta.service';
+import { PuntoVenta } from '../../modelos/usuario/punto-venta';
 import Swal from 'sweetalert2';
-import * as constantes from '../../constantes';
-import * as util from '../../util';
+import { validarSesion, exito_swal, error_swal, exito, error } from '../../constantes';
 import { TabService } from '../../componentes/services/tab.service';
-import { Establecimiento } from '../../modelos/establecimiento';
-import { EstablecimientoService } from '../../servicios/establecimiento.service';
-import { Sesion } from 'src/app/modelos/sesion';
-import { SesionService } from 'src/app/servicios/sesion.service';
+import { Establecimiento } from '../../modelos/usuario/establecimiento';
+import { EstablecimientoService } from '../../servicios/usuario/establecimiento.service';
+import { Sesion } from 'src/app/modelos/usuario/sesion';
+import { SesionService } from 'src/app/servicios/usuario/sesion.service';
 import { Router } from '@angular/router';
 
 @Component({
@@ -25,7 +24,7 @@ export class PuntoVentaComponent implements OnInit {
   constructor(private tabService: TabService,private puntoVentaService: PuntoVentaService, private establecimientoService: EstablecimientoService, private sesionService: SesionService, private router: Router) { }
 
   ngOnInit() {
-    this.sesion=util.validarSesion(this.sesionService, this.router);
+    this.sesion=validarSesion(this.sesionService, this.router);
     this.consultarEstablecimientos();
     this.construirPuntoVenta();
     
@@ -42,11 +41,11 @@ export class PuntoVentaComponent implements OnInit {
       event.preventDefault();
     this.puntoVentaService.crear(this.puntoVenta).subscribe(
       res => {
-        Swal.fire({ icon: constantes.exito_swal, title: constantes.exito, text: res.mensaje });
+        Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
         this.nuevo(null);
 
       },
-      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
+      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
 
@@ -55,10 +54,10 @@ export class PuntoVentaComponent implements OnInit {
       event.preventDefault();
     this.puntoVentaService.actualizar(this.puntoVenta).subscribe(
       res => {
-        Swal.fire({ icon: constantes.exito_swal, title: constantes.exito, text: res.mensaje });
+        Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
         this.puntoVenta=res.resultado as PuntoVenta;
       },
-      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
+      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
 
@@ -71,7 +70,7 @@ export class PuntoVentaComponent implements OnInit {
           Object.assign(this.puntoVenta, res.resultado as PuntoVenta);
           this.puntoVentaService.enviar(0);
         },
-        err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
+        err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
       );
     }
   }
@@ -79,10 +78,10 @@ export class PuntoVentaComponent implements OnInit {
   consultarEstablecimientos(){
     this.establecimientoService.consultar().subscribe(
       res => {
-        Swal.fire({ icon: constantes.exito_swal, title: constantes.exito, text: res.mensaje });
+        Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
         this.establecimientos=res.resultado as Establecimiento[]
       },
-      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
+      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
 

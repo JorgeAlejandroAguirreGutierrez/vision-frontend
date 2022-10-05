@@ -1,12 +1,11 @@
 import { Component, HostListener, OnInit, ViewChild } from '@angular/core';
-import { ImpuestoService } from '../../servicios/impuesto.service';
-import { Impuesto } from '../../modelos/impuesto';
+import { ImpuestoService } from '../../servicios/inventario/impuesto.service';
+import { Impuesto } from '../../modelos/inventario/impuesto';
 import Swal from 'sweetalert2';
-import * as constantes from '../../constantes';
-import * as util from '../../util';
-import { SesionService } from 'src/app/servicios/sesion.service';
+import { valores, validarSesion, tab_activo, exito, exito_swal, error, error_swal } from '../../constantes';
+import { SesionService } from 'src/app/servicios/usuario/sesion.service';
 import { Router } from '@angular/router';
-import { Sesion } from 'src/app/modelos/sesion';
+import { Sesion } from 'src/app/modelos/usuario/sesion';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
@@ -42,7 +41,7 @@ export class ImpuestoComponent implements OnInit {
     private sesionService: SesionService,private router: Router) { }
 
   ngOnInit() {
-    this.sesion=util.validarSesion(this.sesionService, this.router);
+    this.sesion=validarSesion(this.sesionService, this.router);
     this.consultar();
   }
   
@@ -67,11 +66,11 @@ export class ImpuestoComponent implements OnInit {
       event.preventDefault();
     this.impuestoService.crear(this.impuesto).subscribe(
       res => {
-        Swal.fire({ icon: constantes.exito_swal, title: constantes.exito, text: res.mensaje });
+        Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
         this.impuesto=res.resultado as Impuesto;
         this.consultar();
       },
-      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
+      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
 
@@ -80,11 +79,11 @@ export class ImpuestoComponent implements OnInit {
       event.preventDefault();
     this.impuestoService.actualizar(this.impuesto).subscribe(
       res => {
-        Swal.fire({ icon: constantes.exito_swal, title: constantes.exito, text: res.mensaje });
+        Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
         this.impuesto=res.resultado as Impuesto;
         this.consultar();
       },
-      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
+      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
 
@@ -93,11 +92,11 @@ export class ImpuestoComponent implements OnInit {
       event.preventDefault();
     this.impuestoService.eliminar(this.impuesto).subscribe(
       res => {
-        Swal.fire({ icon: constantes.exito_swal, title: constantes.exito, text: res.mensaje });
+        Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
         this.nuevo(null);
         this.consultar();
       },
-      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
+      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
   
@@ -109,7 +108,7 @@ export class ImpuestoComponent implements OnInit {
         this.dataSourceImpuesto.paginator = this.paginator;
         this.dataSourceImpuesto.sort = this.sort;
       },
-      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
+      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
 

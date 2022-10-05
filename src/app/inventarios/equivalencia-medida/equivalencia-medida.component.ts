@@ -1,14 +1,13 @@
 import { Component, OnInit, HostListener, Type } from '@angular/core';
 import { TabService } from '../../componentes/services/tab.service';
 import Swal from 'sweetalert2';
-import * as util from '../../util';
-import { EquivalenciaMedida } from '../../modelos/equivalencia-medida';
-import { EquivalenciaMedidaService } from '../../servicios/equivalencia-medida.service';
-import { MedidaService } from '../../servicios/medida.service';
-import * as constantes from '../../constantes';
+import { EquivalenciaMedida } from '../../modelos/inventario/equivalencia-medida';
+import { EquivalenciaMedidaService } from '../../servicios/inventario/equivalencia-medida.service';
+import { MedidaService } from '../../servicios/inventario/medida.service';
+import { validarSesion, exito, exito_swal, error, error_swal } from '../../constantes';
 import { Router } from '@angular/router';
-import { Sesion } from '../../modelos/sesion';
-import { SesionService } from '../../servicios/sesion.service';
+import { Sesion } from '../../modelos/usuario/sesion';
+import { SesionService } from '../../servicios/usuario/sesion.service';
 
 import { ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
@@ -51,7 +50,7 @@ export class EquivalenciaMedidaComponent implements OnInit {
     private sesionService: SesionService,private router: Router) { }
 
   ngOnInit() {
-    this.sesion=util.validarSesion(this.sesionService, this.router);
+    this.sesion=validarSesion(this.sesionService, this.router);
     this.construirEquivalenciaMedida();
     this.consultar();
   }
@@ -75,7 +74,7 @@ export class EquivalenciaMedidaComponent implements OnInit {
           Object.assign(this.equivalenciaMedida, res.resultado as EquivalenciaMedida);
           this.equivalenciaMedidaService.enviar(0);
         },
-        err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
+        err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
       );
     }
   }
@@ -106,9 +105,9 @@ export class EquivalenciaMedidaComponent implements OnInit {
       event.preventDefault();
     this.equivalenciaMedidaService.crear(this.equivalenciaMedida).subscribe(
       res => {
-        Swal.fire({ icon: constantes.exito_swal, title: constantes.exito, text: res.mensaje });
+        Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
       },
-      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
+      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
 
@@ -117,10 +116,10 @@ export class EquivalenciaMedidaComponent implements OnInit {
       event.preventDefault();
     this.equivalenciaMedidaService.actualizar(this.equivalenciaMedida).subscribe(
       res => {
-        Swal.fire({ icon: constantes.exito_swal, title: constantes.exito, text: res.mensaje });
+        Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
         this.equivalenciaMedida=res.resultado as EquivalenciaMedida;
       },
-      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
+      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
 
@@ -138,10 +137,10 @@ export class EquivalenciaMedidaComponent implements OnInit {
   eliminar(equivalencia_medida: EquivalenciaMedida) {
     this.equivalenciaMedidaService.eliminar(equivalencia_medida).subscribe(
       res => {
-        Swal.fire({ icon: constantes.exito_swal, title: constantes.exito, text: res.mensaje });
+        Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
         this.equivalenciaMedida=res.resultado as EquivalenciaMedida
       },
-      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
+      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
 
@@ -150,10 +149,10 @@ export class EquivalenciaMedidaComponent implements OnInit {
       event.preventDefault();
     this.equivalenciaMedidaService.eliminar(this.equivalenciaMedida).subscribe(
       res => {
-        Swal.fire({ icon: constantes.exito_swal, title: constantes.exito, text: res.mensaje });
+        Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
         this.consultar();
       },
-      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
+      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
 
@@ -167,7 +166,7 @@ export class EquivalenciaMedidaComponent implements OnInit {
         this.equivalenciasMedidas = res.resultado as EquivalenciaMedida[];
         this.llenarDataSourceEquivalenciaMedida(this.equivalenciasMedidas);
       },
-      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
+      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
 
@@ -178,7 +177,7 @@ export class EquivalenciaMedidaComponent implements OnInit {
       res => {
           this.equivalenciasMedidas = res.resultado as EquivalenciaMedida[]
       },
-      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
+      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
 

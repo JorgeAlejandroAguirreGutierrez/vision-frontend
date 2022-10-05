@@ -1,12 +1,10 @@
 import { Component, OnInit, HostListener, ViewChild } from '@angular/core';
 import Swal from 'sweetalert2';
-import { UbicacionService } from '../../servicios/ubicacion.service';
-import { Ubicacion } from '../../modelos/ubicacion';
-import { TabService } from '../../componentes/services/tab.service';
-import * as constantes from '../../constantes';
-import * as util from '../../util';
-import { Sesion } from 'src/app/modelos/sesion';
-import { SesionService } from 'src/app/servicios/sesion.service';
+import { UbicacionService } from '../../servicios/configuracion/ubicacion.service';
+import { Ubicacion } from '../../modelos/configuracion/ubicacion';
+import { valores, validarSesion, tab_activo, exito, exito_swal, error, error_swal } from '../../constantes';
+import { Sesion } from 'src/app/modelos/usuario/sesion';
+import { SesionService } from 'src/app/servicios/usuario/sesion.service';
 import { Router } from '@angular/router';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
@@ -45,7 +43,7 @@ export class UbicacionComponent implements OnInit {
     private sesionService: SesionService,private router: Router) { }
 
   ngOnInit() {
-    this.sesion=util.validarSesion(this.sesionService, this.router);
+    this.sesion=validarSesion(this.sesionService, this.router);
     this.consultar();
   }
   
@@ -70,11 +68,11 @@ export class UbicacionComponent implements OnInit {
       event.preventDefault();
     this.ubicacionService.crear(this.ubicacion).subscribe(
       res => {
-        Swal.fire({ icon: constantes.exito_swal, title: constantes.exito, text: res.mensaje });
+        Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
         this.ubicacion=res.resultado as Ubicacion;
         this.consultar();
       },
-      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
+      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
 
@@ -83,11 +81,11 @@ export class UbicacionComponent implements OnInit {
       event.preventDefault();
     this.ubicacionService.actualizar(this.ubicacion).subscribe(
       res => {
-        Swal.fire({ icon: constantes.exito_swal, title: constantes.exito, text: res.mensaje });
+        Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
         this.ubicacion=res.resultado as Ubicacion;
         this.consultar();
       },
-      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
+      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
 
@@ -96,11 +94,11 @@ export class UbicacionComponent implements OnInit {
       event.preventDefault();
     this.ubicacionService.eliminar(this.ubicacion).subscribe(
       res => {
-        Swal.fire({ icon: constantes.exito_swal, title: constantes.exito, text: res.mensaje });
+        Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
         this.nuevo(null);
         this.consultar();
       },
-      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
+      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
   
@@ -112,7 +110,7 @@ export class UbicacionComponent implements OnInit {
         this.dataSourceUbicacion.paginator = this.paginator;
         this.dataSourceUbicacion.sort = this.sort;
       },
-      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
+      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
 

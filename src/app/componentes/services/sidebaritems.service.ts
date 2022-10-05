@@ -1,5 +1,5 @@
 import { Injectable, Type } from '@angular/core';
-import * as constantes from '../../constantes';
+import { modulos, tabs, items, icos } from '../../constantes';
 import { SidebarItem } from "../../modelos/sidebar-item.model";
 import { MapsComponent } from '../pages/maps/maps.component';
 
@@ -40,7 +40,6 @@ import { UbicacionComponent } from '../../configuraciones/ubicacion/ubicacion.co
 import { EstadoCivilComponent } from '../../configuraciones/estado-civil/estado-civil.component';
 import { ImpuestoComponent } from '../../configuraciones/impuesto/impuesto.component';
 import { TipoPagoComponent } from '../../configuraciones/tipo-pago/tipo-pago.component';
-import { DatoAdicionalComponent } from '../../configuraciones/dato-adicional/dato-adicional.component';
 import { GeneroComponent } from '../../configuraciones/genero/genero.component';
 import { ImportarComponent } from '../../configuraciones/importar/importar.component';
 import { ExportarComponent } from '../../configuraciones/exportar/exportar.component';
@@ -67,90 +66,89 @@ export class SidebarItemsService {
 
   menuOpciones(tabNombre: string): SidebarItem[] {
     this.opciones = [];
-    if (tabNombre == constantes.modulo_clientes) {
-      this.llenarOpciones(ClienteComponent,constantes.tab_cliente, constantes.item_cliente, constantes.ico_cliente);
-      this.llenarOpciones(SegmentoComponent,constantes.tab_segmento, constantes.item_segmento, constantes.ico_segmento);
-      this.llenarOpciones(GrupoClienteComponent,constantes.tab_grupo_cliente, constantes.item_grupo_cliente, constantes.ico_grupo_cliente);
-      this.llenarOpciones(CalificacionClienteComponent,constantes.tab_calificacion_cliente, constantes.item_calificacion_cliente, constantes.ico_calificacion_cliente);
-      this.llenarOpciones(FormaPagoComponent, constantes.tab_forma_pago, constantes.item_forma_pago, constantes.ico_forma_pago);
-      this.llenarOpciones(OrigenIngresoComponent,constantes.tab_origen_ingreso, constantes.item_origen_ingreso, constantes.ico_origen_ingreso);
-      this.llenarOpciones(PlazoCreditoComponent,constantes.tab_plazo_credito, constantes.item_plazo_credito, constantes.ico_plazo_credito);
-      this.llenarOpciones(MapsComponent,constantes.tab_mapa_cliente, constantes.item_mapa_cliente,constantes.ico_mapa_cliente);
+    if (tabNombre == modulos.modulo_clientes) {
+      this.llenarOpciones(ClienteComponent, tabs.tab_cliente, items.item_cliente, icos.ico_cliente);
+      this.llenarOpciones(SegmentoComponent, tabs.tab_segmento, items.item_segmento, icos.ico_segmento);
+      this.llenarOpciones(GrupoClienteComponent, tabs.tab_grupo_cliente, items.item_grupo_cliente, icos.ico_grupo_cliente);
+      this.llenarOpciones(CalificacionClienteComponent, tabs.tab_calificacion_cliente, items.item_calificacion_cliente, icos.ico_calificacion_cliente);
+      this.llenarOpciones(FormaPagoComponent, tabs.tab_forma_pago, items.item_forma_pago, icos.ico_forma_pago);
+      this.llenarOpciones(OrigenIngresoComponent, tabs.tab_origen_ingreso, items.item_origen_ingreso, icos.ico_origen_ingreso);
+      this.llenarOpciones(PlazoCreditoComponent, tabs.tab_plazo_credito, items.item_plazo_credito, icos.ico_plazo_credito);
+      this.llenarOpciones(MapsComponent, tabs.tab_mapa_cliente, items.item_mapa_cliente, icos.ico_mapa_cliente);
     }
 
-    if (tabNombre == constantes.modulo_compras) {
-      this.llenarOpciones(ProveedorComponent, constantes.tab_proveedor, constantes.item_proveedor, constantes.ico_proveedor);
+    if (tabNombre == modulos.modulo_compras) {
+      this.llenarOpciones(ProveedorComponent, tabs.tab_proveedor, items.item_proveedor, icos.ico_proveedor);
     }
 
-    if (tabNombre == constantes.modulo_ventas) {
-      this.llenarOpciones(FacturaComponent, constantes.tab_factura, constantes.item_factura, constantes.ico_factura);
-      this.llenarOpciones(PedidoComponent, constantes.tab_pedido, constantes.item_pedido, constantes.ico_pedido);
-      this.llenarOpciones(ProformaComponent, constantes.tab_proforma, constantes.item_proforma, constantes.ico_proforma);
-      this.llenarOpciones(EgresoComponent, constantes.tab_egreso, constantes.item_egreso, constantes.ico_egreso);
-      this.llenarOpciones(TransportistaComponent, constantes.tab_transportista, constantes.item_transportista, constantes.ico_transportista);
-      this.llenarOpciones(VehiculoTransporteComponent, constantes.tab_vehiculo_transporte, constantes.item_vehiculo_transporte, constantes.ico_vehiculo_transporte);
+    if (tabNombre == modulos.modulo_ventas) {
+      this.llenarOpciones(FacturaComponent, tabs.tab_factura, items.item_factura, icos.ico_factura);
+      this.llenarOpciones(PedidoComponent, tabs.tab_pedido, items.item_pedido, icos.ico_pedido);
+      this.llenarOpciones(ProformaComponent, tabs.tab_proforma, items.item_proforma, icos.ico_proforma);
+      this.llenarOpciones(EgresoComponent, tabs.tab_egreso, items.item_egreso, icos.ico_egreso);
+      this.llenarOpciones(TransportistaComponent, tabs.tab_transportista, items.item_transportista, icos.ico_transportista);
+      this.llenarOpciones(VehiculoTransporteComponent, tabs.tab_vehiculo_transporte, items.item_vehiculo_transporte, icos.ico_vehiculo_transporte);
     }
 
-    if (tabNombre == constantes.modulo_inventarios) {
-      this.llenarOpciones(GrupoProductoComponent,constantes.tab_grupo_producto, constantes.item_grupo_producto, constantes.ico_grupo_producto);
-      this.llenarOpciones(ProductoComponent,constantes.tab_producto, constantes.item_producto, constantes.ico_producto);
-      this.llenarOpciones(PromocionComponent,constantes.tab_promociones,constantes.item_promociones,constantes.ico_promociones);
-      this.llenarOpciones(ProveedorProductoComponent,constantes.tab_proveedor_producto, constantes.item_proveedor_producto, constantes.ico_proveedor_producto);
-      this.llenarOpciones(TransferenciaBodegaComponent,constantes.tab_transferencia_bodega, constantes.item_transferencia_bodega, constantes.ico_transferencia_bodega);
-      this.llenarOpciones(BodegaComponent,constantes.tab_bodega, constantes.item_bodega, constantes.ico_bodega);
-      this.llenarOpciones(MedidaComponent,constantes.tab_medida, constantes.item_medida, constantes.ico_medida);
-      this.llenarOpciones(EquivalenciaMedidaComponent,constantes.tab_tabla_equivalencia_medida, constantes.item_tabla_equivalencia_medida, constantes.ico_tabla_equivalencia_medida);
+    if (tabNombre == modulos.modulo_inventarios) {
+      this.llenarOpciones(GrupoProductoComponent,tabs.tab_grupo_producto, items.item_grupo_producto, icos.ico_grupo_producto);
+      this.llenarOpciones(ProductoComponent,tabs.tab_producto, items.item_producto, icos.ico_producto);
+      this.llenarOpciones(PromocionComponent,tabs.tab_promociones,items.item_promociones,icos.ico_promociones);
+      this.llenarOpciones(ProveedorProductoComponent,tabs.tab_proveedor_producto, items.item_proveedor_producto, icos.ico_proveedor_producto);
+      this.llenarOpciones(TransferenciaBodegaComponent,tabs.tab_transferencia_bodega, items.item_transferencia_bodega, icos.ico_transferencia_bodega);
+      this.llenarOpciones(BodegaComponent,tabs.tab_bodega, items.item_bodega, icos.ico_bodega);
+      this.llenarOpciones(MedidaComponent,tabs.tab_medida, items.item_medida, icos.ico_medida);
+      this.llenarOpciones(EquivalenciaMedidaComponent,tabs.tab_equivalencia_medida, items.item_equivalencia_medida, icos.ico_equivalencia_medida);
     }
 
-    if (tabNombre == constantes.modulo_contabilidad) {
-      this.llenarOpciones(CuentaContableComponent, constantes.tab_cuenta_contable, constantes.item_cuenta_contable, constantes.ico_cuenta_contable);
-      this.llenarOpciones(MovimientoContableComponent, constantes.tab_movimiento_contable, constantes.item_movimiento_contable, constantes.ico_movimiento_contable);
+    if (tabNombre == modulos.modulo_contabilidad) {
+      this.llenarOpciones(CuentaContableComponent, tabs.tab_cuenta_contable, items.item_cuenta_contable, icos.ico_cuenta_contable);
+      this.llenarOpciones(MovimientoContableComponent, tabs.tab_movimiento_contable, items.item_movimiento_contable, icos.ico_movimiento_contable);
     }
 
-    if (tabNombre == constantes.modulo_financiero) {
-      this.llenarOpciones(FacturaComponent, constantes.tab_factura, constantes.item_factura, constantes.ico_factura);
+    if (tabNombre == modulos.modulo_financiero) {
+      this.llenarOpciones(FacturaComponent, tabs.tab_factura, items.item_factura, icos.ico_factura);
     }
 
-    if (tabNombre == constantes.modulo_activos_fijos) {
+    if (tabNombre == modulos.modulo_activos_fijos) {
     }
 
-    if (tabNombre == constantes.modulo_talento_humano) {
-      this.llenarOpciones(TransportistaComponent,constantes.tab_transportista,constantes.item_transportista, constantes.ico_transportista);
+    if (tabNombre == modulos.modulo_talento_humano) {
+      this.llenarOpciones(TransportistaComponent,tabs.tab_transportista, items.item_transportista, icos.ico_transportista);
     }
 
-    if (tabNombre == constantes.modulo_produccion) {
+    if (tabNombre == modulos.modulo_produccion) {
     }
 
-    if (tabNombre == constantes.modulo_importacion) {
+    if (tabNombre == modulos.modulo_importacion) {
     }
 
-    if (tabNombre == constantes.modulo_configuracion) {
-      this.llenarOpciones(EmpresaComponent,constantes.tab_empresa, constantes.item_empresa, constantes.ico_empresa);
-      this.llenarOpciones(UbicacionComponent,constantes.tab_ubicacion, constantes.item_ubicacion, constantes.ico_ubicacion);
-      this.llenarOpciones(EstadoCivilComponent,constantes.tab_estado_civil, constantes.item_estado_civil, constantes.ico_estado_civil);
-      this.llenarOpciones(ImpuestoComponent, constantes.tab_impuesto, constantes.item_impuesto, constantes.ico_impuesto);
-      this.llenarOpciones(TipoPagoComponent,constantes.tab_tipo_pago, constantes.item_tipo_pago, constantes.ico_tipo_pago);
-      this.llenarOpciones(DatoAdicionalComponent, constantes.tab_dato_adicional, constantes.item_dato_adicional, constantes.ico_dato_adicional);
-      this.llenarOpciones(TipoRetencionComponent,constantes.tab_tipo_retencion, constantes.item_tipo_retencion, constantes.ico_tipo_retencion);
-      this.llenarOpciones(GeneroComponent, constantes.tab_genero, constantes.item_genero, constantes.ico_genero);
-      this.llenarOpciones(ImportarComponent, constantes.tab_importacion, constantes.item_importacion, constantes.ico_importacion);
-      this.llenarOpciones(ExportarComponent, constantes.tab_exportacion, constantes.item_exportacion, constantes.ico_exportacion);
+    if (tabNombre == modulos.modulo_configuracion) {
+      this.llenarOpciones(EmpresaComponent, tabs.tab_empresa, items.item_empresa, icos.ico_empresa);
+      this.llenarOpciones(UbicacionComponent, tabs.tab_ubicacion, items.item_ubicacion, icos.ico_ubicacion);
+      this.llenarOpciones(EstadoCivilComponent, tabs.tab_estado_civil, items.item_estado_civil, icos.ico_estado_civil);
+      this.llenarOpciones(ImpuestoComponent, tabs.tab_impuesto, items.item_impuesto, icos.ico_impuesto);
+      this.llenarOpciones(TipoPagoComponent, tabs.tab_tipo_pago, items.item_tipo_pago, icos.ico_tipo_pago);
+      this.llenarOpciones(TipoRetencionComponent, tabs.tab_tipo_retencion, items.item_tipo_retencion, icos.ico_tipo_retencion);
+      this.llenarOpciones(GeneroComponent, tabs.tab_genero, items.item_genero, icos.ico_genero);
+      this.llenarOpciones(ImportarComponent, tabs.tab_importacion, items.item_importacion, icos.ico_importacion);
+      this.llenarOpciones(ExportarComponent, tabs.tab_exportacion, items.item_exportacion, icos.ico_exportacion);
     }
     
-    if (tabNombre == constantes.modulo_estadisticas) {
-      this.llenarOpciones(DashboardComponent,constantes.tab_indicadores, constantes.item_indicadores, constantes.ico_indicadores);
+    if (tabNombre == modulos.modulo_estadisticas) {
+      this.llenarOpciones(DashboardComponent, tabs.tab_indicadores, items.item_indicadores, icos.ico_indicadores);
     }
 
-    if (tabNombre == constantes.modulo_control) {
+    if (tabNombre == modulos.modulo_control) {
     }
 
-    if (tabNombre == constantes.modulo_auditoria) {
+    if (tabNombre == modulos.modulo_auditoria) {
     }
 
-    if (tabNombre == constantes.modulo_usuarios) {
-      this.llenarOpciones(UsuarioComponent, constantes.tab_usuario, constantes.item_usuario, constantes.ico_usuario);
-      this.llenarOpciones(EstablecimientoComponent, constantes.tab_establecimiento, constantes.item_establecimiento, constantes.ico_establecimiento);
-      this.llenarOpciones(PuntoVentaComponent,constantes.tab_punto_venta, constantes.item_punto_venta, constantes.ico_punto_venta);
+    if (tabNombre == modulos.modulo_usuarios) {
+      this.llenarOpciones(UsuarioComponent, tabs.tab_usuario, items.item_usuario, icos.ico_usuario);
+      this.llenarOpciones(EstablecimientoComponent, tabs.tab_establecimiento, items.item_establecimiento, icos.ico_establecimiento);
+      this.llenarOpciones(PuntoVentaComponent, tabs.tab_punto_venta, items.item_punto_venta, icos.ico_punto_venta);
     }
     return this.opciones;
   }  
