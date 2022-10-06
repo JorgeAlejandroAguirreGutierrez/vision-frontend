@@ -27,8 +27,8 @@ import { Router } from '@angular/router';
 export class ProveedorProductoComponent implements OnInit {
 
   sesion: Sesion=null;
-  verPanelAsignarProveedor: boolean = false;
   abrirPanelAsignarProveedor: boolean = true;
+  verBotones: boolean = false;
   deshabilitarEditarProveedor: boolean = true;
   deshabilitarFiltroProveedores: boolean = true;
   verActualizarProveedor: boolean = false;
@@ -95,7 +95,8 @@ export class ProveedorProductoComponent implements OnInit {
     this.abrirPanelAsignarProveedor = true;
     this.deshabilitarFiltroProveedores = true;
     this.controlProveedor.disable();
-    this.deshabilitarEditarProveedor = true;
+    this.verBotones = false;
+    this.deshabilitarEditarProveedor = false;
     this.verActualizarProducto = false;
     this.controlProducto.patchValue('');
     this.productoProveedor = new ProductoProveedor();
@@ -149,8 +150,9 @@ export class ProveedorProductoComponent implements OnInit {
   seleccionarProducto(){
     this.producto = this.controlProducto.value as Producto;
     this.productoProveedores = this.producto.productosProveedores;
-    this.deshabilitarEditarProveedor = false;
+    this.verBotones = true;
     this.controlProveedor.enable();
+    this.deshabilitarEditarProveedor = false;
     if (this.productoProveedores.length > 0) {
       this.llenarDataSourceProductoProveedor(this.productoProveedores);
     }
@@ -212,11 +214,11 @@ export class ProveedorProductoComponent implements OnInit {
   }
 
   seleccionProductoProveedor(productoProveedorSeleccionado: ProductoProveedor) {
-    if (!this.clickedRowsProductoProveedor.has(productoProveedorSeleccionado)){
-      this.limpiarProveedor();
-      this.construirProductoProveedor(productoProveedorSeleccionado);
-    } else {
-      this.limpiarProveedor();
+      if (!this.clickedRowsProductoProveedor.has(productoProveedorSeleccionado)){
+        this.limpiarProveedor();
+        this.construirProductoProveedor(productoProveedorSeleccionado);
+      } else {
+        this.limpiarProveedor();  
     }
   }
 

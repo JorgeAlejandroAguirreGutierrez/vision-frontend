@@ -111,7 +111,7 @@ export class SidebarItemsService {
       this.llenarOpciones(TransferenciaBodegaComponent,constantes.tab_transferencia_bodega, constantes.item_transferencia_bodega, constantes.ico_transferencia_bodega);
       this.llenarOpciones(BodegaComponent,constantes.tab_bodega, constantes.item_bodega, constantes.ico_bodega);
       this.llenarOpciones(MedidaComponent,constantes.tab_medida, constantes.item_medida, constantes.ico_medida);
-      this.llenarOpciones(EquivalenciaMedidaComponent,constantes.tab_tabla_equivalencia_medida, constantes.item_tabla_equivalencia_medida, constantes.ico_tabla_equivalencia_medida);
+      this.llenarOpciones(EquivalenciaMedidaComponent,constantes.tab_equivalencia_medida, constantes.item_equivalencia_medida, constantes.ico_equivalencia_medida);
     }
 
     if (tabNombre == constantes.modulo_contabilidad) {

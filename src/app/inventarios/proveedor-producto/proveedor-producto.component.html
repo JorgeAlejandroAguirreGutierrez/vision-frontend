@@ -97,7 +97,7 @@
                             </mat-form-field>
                         </div>
                         <div class="col-1 iconos">
-                            <button mat-icon-button mat-button *ngIf="!deshabilitarEditarProveedor">
+                            <button mat-icon-button mat-button *ngIf="verBotones">
                                 <mat-icon title="Agregar"
                                     *ngIf="!deshabilitarEditarProveedor && !verActualizarProveedor"
                                     (click)="agregarProductoProveedor()">add</mat-icon>
