@@ -137,15 +137,18 @@ export class SidebarItemsService {
     }
 
     if (tabNombre == constantes.modulo_accesos) {
-
-    }
-
-    if (tabNombre == constantes.modulo_usuarios) {
       this.llenarOpciones(UsuarioComponent, constantes.tab_usuario, constantes.item_usuario, constantes.ico_usuario);
       this.llenarOpciones(EstablecimientoComponent, constantes.tab_establecimiento, constantes.item_establecimiento, constantes.ico_establecimiento);
       this.llenarOpciones(PuntoVentaComponent,constantes.tab_punto_venta, constantes.item_punto_venta, constantes.ico_punto_venta);
       this.llenarOpciones(PerfilComponent,constantes.tab_perfil, constantes.item_perfil, constantes.ico_perfil);
     }
+
+    //if (tabNombre == constantes.modulo_usuarios) {
+      //this.llenarOpciones(UsuarioComponent, constantes.tab_usuario, constantes.item_usuario, constantes.ico_usuario);
+      //this.llenarOpciones(EstablecimientoComponent, constantes.tab_establecimiento, constantes.item_establecimiento, constantes.ico_establecimiento);
+      //this.llenarOpciones(PuntoVentaComponent,constantes.tab_punto_venta, constantes.item_punto_venta, constantes.ico_punto_venta);
+      //this.llenarOpciones(PerfilComponent,constantes.tab_perfil, constantes.item_perfil, constantes.ico_perfil);
+    //}
 
     if (tabNombre == constantes.modulo_configuracion) {
       this.llenarOpciones(EmpresaComponent,constantes.tab_empresa, constantes.item_empresa, constantes.ico_empresa);
