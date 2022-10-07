@@ -1,12 +1,11 @@
 import { Component, OnInit, HostListener, ViewChild } from '@angular/core';
-import * as constantes from '../../constantes';
-import * as util from '../../util';
+import { valores, validarSesion, tab_activo, exito, exito_swal, error, error_swal } from '../../constantes';
 import Swal from 'sweetalert2';
 import { Router } from '@angular/router';
-import { Sesion } from '../../modelos/sesion';
-import { SesionService } from '../../servicios/sesion.service';
-import { GeneroService } from '../../servicios/genero.service';
-import { Genero } from '../../modelos/genero';
+import { Sesion } from '../../modelos/usuario/sesion';
+import { SesionService } from '../../servicios/usuario/sesion.service';
+import { GeneroService } from '../../servicios/cliente/genero.service';
+import { Genero } from '../../modelos/cliente/genero';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
@@ -43,7 +42,7 @@ export class GeneroComponent implements OnInit {
     private sesionService: SesionService,private router: Router) { }
 
   ngOnInit() {
-    this.sesion=util.validarSesion(this.sesionService, this.router);
+    this.sesion=validarSesion(this.sesionService, this.router);
     this.consultar();
   }
   
@@ -68,11 +67,11 @@ export class GeneroComponent implements OnInit {
       event.preventDefault();
     this.generoService.crear(this.genero).subscribe(
       res => {
-        Swal.fire({ icon: constantes.exito_swal, title: constantes.exito, text: res.mensaje });
+        Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
         this.genero=res.resultado as Genero;
         this.consultar();
       },
-      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
+      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
 
@@ -81,11 +80,11 @@ export class GeneroComponent implements OnInit {
       event.preventDefault();
     this.generoService.actualizar(this.genero).subscribe(
       res => {
-        Swal.fire({ icon: constantes.exito_swal, title: constantes.exito, text: res.mensaje });
+        Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
         this.genero=res.resultado as Genero;
         this.consultar();
       },
-      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
+      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
 
@@ -94,11 +93,11 @@ export class GeneroComponent implements OnInit {
       event.preventDefault();
     this.generoService.eliminar(this.genero).subscribe(
       res => {
-        Swal.fire({ icon: constantes.exito_swal, title: constantes.exito, text: res.mensaje });
+        Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
         this.nuevo(null);
         this.consultar();
       },
-      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
+      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
   
@@ -110,7 +109,7 @@ export class GeneroComponent implements OnInit {
         this.dataSourceGenero.paginator = this.paginator;
         this.dataSourceGenero.sort = this.sort;
       },
-      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
+      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
 

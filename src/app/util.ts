@@ -1,9 +1,10 @@
 'use strict';
 import {HttpHeaders} from '@angular/common/http';
-import { SesionService } from './servicios/sesion.service';
+import { Sesion } from './modelos/usuario/sesion';
+import { SesionService } from './servicios/usuario/sesion.service';
 import * as constantes from './constantes';
 import { Router } from '@angular/router';
-import { Sesion } from './modelos/sesion';
+
 
 export const host='http://localhost:8000/api';
 export const ruta: string='/sicecuador';
@@ -113,11 +114,11 @@ export function validarSesion(sesionService: SesionService, router: Router): Ses
             return sesion;
         },
         error: err => {
-            if(err.error.codigo==constantes.error_codigo_sesion_invalida){
+            if(err.error.codigo==constantes.codigos.error_codigo_sesion_invalida){
                 sesionService.cerrarSesion();
                 router.navigate(['/index']);
             }
-            if(err.error.codigo==constantes.error_codigo_modelo_no_existente){
+            if(err.error.codigo==constantes.codigos.error_codigo_modelo_no_existente){
                 sesionService.cerrarSesion();
                 router.navigate(['/index']);
             }

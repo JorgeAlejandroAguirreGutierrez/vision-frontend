@@ -1,12 +1,11 @@
 import { Component, OnInit, HostListener, ViewChild } from '@angular/core';
-import { EstadoCivil } from '../../modelos/estado-civil';
-import { EstadoCivilService } from '../../servicios/estado-civil.service';
-import * as constantes from '../../constantes';
-import * as util from '../../util';
+import { EstadoCivil } from '../../modelos/cliente/estado-civil';
+import { EstadoCivilService } from '../../servicios/cliente/estado-civil.service';
+import { valores, validarSesion, tab_activo, exito, exito_swal, error, error_swal } from '../../constantes';
 import Swal from 'sweetalert2';
 import { Router } from '@angular/router';
-import { Sesion } from '../../modelos/sesion';
-import { SesionService } from '../../servicios/sesion.service';
+import { Sesion } from '../../modelos/usuario/sesion';
+import { SesionService } from '../../servicios/usuario/sesion.service';
 import { MatSort } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
@@ -42,7 +41,7 @@ export class EstadoCivilComponent implements OnInit {
     private sesionService: SesionService,private router: Router) { }
 
   ngOnInit() {
-    this.sesion=util.validarSesion(this.sesionService, this.router);
+    this.sesion=validarSesion(this.sesionService, this.router);
     this.consultar();
   }
   
@@ -67,11 +66,11 @@ export class EstadoCivilComponent implements OnInit {
       event.preventDefault();
     this.estadoCivilService.crear(this.estadoCivil).subscribe(
       res => {
-        Swal.fire({ icon: constantes.exito_swal, title: constantes.exito, text: res.mensaje });
+        Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
         this.estadoCivil=res.resultado as EstadoCivil;
         this.consultar();
       },
-      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
+      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
 
@@ -80,11 +79,11 @@ export class EstadoCivilComponent implements OnInit {
       event.preventDefault();
     this.estadoCivilService.actualizar(this.estadoCivil).subscribe(
       res => {
-        Swal.fire({ icon: constantes.exito_swal, title: constantes.exito, text: res.mensaje });
+        Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
         this.estadoCivil=res.resultado as EstadoCivil;
         this.consultar();
       },
-      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
+      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
 
@@ -93,11 +92,11 @@ export class EstadoCivilComponent implements OnInit {
       event.preventDefault();
     this.estadoCivilService.eliminar(this.estadoCivil).subscribe(
       res => {
-        Swal.fire({ icon: constantes.exito_swal, title: constantes.exito, text: res.mensaje });
+        Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
         this.nuevo(null);
         this.consultar();
       },
-      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
+      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
   
@@ -109,7 +108,7 @@ export class EstadoCivilComponent implements OnInit {
         this.dataSourceEstadoCivil.paginator = this.paginator;
         this.dataSourceEstadoCivil.sort = this.sort;
       },
-      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
+      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
 

@@ -1,14 +1,14 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { Router } from '@angular/router';
 import Swal from 'sweetalert2';
-import { Sesion } from '../../modelos/sesion';
-import { SesionService } from '../../servicios/sesion.service';
-import { Empresa } from '../../modelos/empresa';
-import { Parametro } from '../../modelos/parametro';
-import { EmpresaService } from '../../servicios/empresa.service';
-import { ParametroService } from '../../servicios/parametro.service';
+import { Sesion } from '../../modelos/usuario/sesion';
+import { SesionService } from '../../servicios/usuario/sesion.service';
+import { Empresa } from '../../modelos/configuracion/empresa';
+import { Parametro } from '../../modelos/configuracion/parametro';
+import { EmpresaService } from '../../servicios/configuracion/empresa.service';
+import { ParametroService } from '../../servicios/configuracion/parametro.service';
+import { valores, exito, exito_swal, error, error_swal } from '../../constantes';
 import { environment } from '../../../environments/environment';
-import * as constantes from '../../constantes';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 export interface DialogData {
@@ -23,8 +23,8 @@ export interface DialogData {
 })
 export class InicioSesionComponent implements OnInit {
 
-  usuario: string="";
-  clave: string="";
+  usuario: string = valores.vacio;
+  clave: string = valores.vacio;
 
   sesion = new Sesion();
 
@@ -33,9 +33,9 @@ export class InicioSesionComponent implements OnInit {
 
   urlLogo: string ="";
   urlEmpresa: string="";
-  urlIcoempresa: string = environment.prefijo_url_imagenes+"iconos/icoempresa.png";
-  urlIcousuario: string = environment.prefijo_url_imagenes+"iconos/icousuario.png";
-  urlIcocontrasenia: string = environment.prefijo_url_imagenes+"iconos/icocontrasenia.png";
+  urlIcoempresa: string = environment.prefijoUrlImagenes+"iconos/icoempresa.png";
+  urlIcousuario: string = environment.prefijoUrlImagenes+"iconos/icousuario.png";
+  urlIcocontrasenia: string = environment.prefijoUrlImagenes+"iconos/icocontrasenia.png";
 
   constructor(private sesionService: SesionService, private empresaService: EmpresaService, 
     private parametroService: ParametroService, private router: Router, public dialog: MatDialog) { }
@@ -54,16 +54,16 @@ export class InicioSesionComponent implements OnInit {
           res => {
             this.sesion=res.resultado as Sesion;
             this.sesionService.setSesion(this.sesion);
-            Swal.fire({ icon: constantes.exito_swal, title: constantes.exito, text: res.mensaje });
+            Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
             this.navegarExito();
           },
           err => {
-            Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
+            Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
             this.navegarError();
           }
         );
       },
-      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
+      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
 
@@ -83,7 +83,7 @@ export class InicioSesionComponent implements OnInit {
       res => {
         this.empresas = res.resultado as Empresa[]
       },
-      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
+      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
 
@@ -92,9 +92,9 @@ export class InicioSesionComponent implements OnInit {
     this.empresaService.obtener(empresaId).subscribe(
       res => {
         let empresa= res.resultado as Empresa
-        this.urlEmpresa=environment.prefijo_url_imagenes+"logos/"+empresa.logo;
+        this.urlEmpresa=environment.prefijoUrlImagenes+"logos/"+empresa.logo;
       },
-      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
+      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
 
@@ -104,9 +104,9 @@ export class InicioSesionComponent implements OnInit {
     this.parametroService.obtenerTipo(parametro).subscribe(
       res => {
         parametro= res.resultado as Parametro;
-        this.urlLogo=environment.prefijo_url_imagenes+parametro.nombre;
+        this.urlLogo=environment.prefijoUrlImagenes+parametro.nombre;
       },
-      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
+      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
 

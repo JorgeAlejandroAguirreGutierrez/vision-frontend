@@ -2,34 +2,33 @@ import { Component, OnInit, Type, Inject } from '@angular/core';
 import { FormControl, FormArray, FormGroup, Validators } from '@angular/forms';
 import { BehaviorSubject } from 'rxjs';
 import Swal from 'sweetalert2';
-import * as constantes from '../../constantes';
-import * as util from '../../util';
+import { valores, mensajes, validarSesion, exito, exito_swal, error, error_swal, warning, warning_swal, si_seguro } from '../../constantes';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
-import { Sesion } from '../../modelos/sesion';
-import { SesionService } from '../../servicios/sesion.service';
-import { GrupoProducto } from '../../modelos/grupo-producto';
-import { Producto } from '../../modelos/producto';
-import { TipoGasto } from '../../modelos/tipo-gasto';
-import { TipoGastoService } from '../../servicios/tipo-gasto.service';
-import { Impuesto } from '../../modelos/impuesto';
-import { ImpuestoService } from '../../servicios/impuesto.service';
-import { Medida } from '../../modelos/medida';
-import { MedidaService } from '../../servicios/medida.service';
-import { Precio } from '../../modelos/precio';
-import { SegmentoService } from '../../servicios/segmento.service';
-import { Segmento } from '../../modelos/segmento';
-import { ProductoService } from '../../servicios/producto.service';
-import { CategoriaProductoService } from '../../servicios/categoria-producto.service';
-import { CategoriaProducto } from '../../modelos/categoria-producto';
+import { Sesion } from '../../modelos/usuario/sesion';
+import { SesionService } from '../../servicios/usuario/sesion.service';
+import { GrupoProducto } from '../../modelos/inventario/grupo-producto';
+import { Producto } from '../../modelos/inventario/producto';
+import { TipoGasto } from '../../modelos/inventario/tipo-gasto';
+import { TipoGastoService } from '../../servicios/inventario/tipo-gasto.service';
+import { Impuesto } from '../../modelos/inventario/impuesto';
+import { ImpuestoService } from '../../servicios/inventario/impuesto.service';
+import { Medida } from '../../modelos/inventario/medida';
+import { MedidaService } from '../../servicios/inventario/medida.service';
+import { Precio } from '../../modelos/inventario/precio';
+import { SegmentoService } from '../../servicios/inventario/segmento.service';
+import { Segmento } from '../../modelos/inventario/segmento';
+import { ProductoService } from '../../servicios/inventario/producto.service';
+import { CategoriaProductoService } from '../../servicios/inventario/categoria-producto.service';
+import { CategoriaProducto } from '../../modelos/inventario/categoria-producto';
 import { Router } from '@angular/router';
-import { Kardex } from '../../modelos/kardex';
-import { MedidaPrecio } from '../../modelos/medida-precio';
-import { EquivalenciaMedidaService } from '../../servicios/equivalencia-medida.service';
-import { EquivalenciaMedida } from '../../modelos/equivalencia-medida'
-import { Proveedor } from '../../modelos/proveedor';
-import { Bodega } from '../../modelos/bodega';
-import { ProductoBodega } from '../../modelos/producto-bodega';
+import { Kardex } from '../../modelos/inventario/kardex';
+import { MedidaPrecio } from '../../modelos/inventario/medida-precio';
+import { EquivalenciaMedidaService } from '../../servicios/inventario/equivalencia-medida.service';
+import { EquivalenciaMedida } from '../../modelos/inventario/equivalencia-medida'
+import { Proveedor } from '../../modelos/proveedor/proveedor';
+import { Bodega } from '../../modelos/inventario/bodega';
+import { ProductoBodega } from '../../modelos/inventario/producto-bodega';
 
 import { ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
@@ -143,14 +142,14 @@ export class ProductoComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.sesion=util.validarSesion(this.sesionService, this.router);
+    this.sesion=validarSesion(this.sesionService, this.router);
     this.consultar();
     this.categoriaProductoService.consultar().subscribe(
       res => {
         this.categoriasProductos = res.resultado as CategoriaProducto[];
         this.producto.categoriaProducto.id = this.categoriasProductos[0].id;
       },
-      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
+      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     );
     this.impuestoService.consultar().subscribe(
       res => {
@@ -158,54 +157,46 @@ export class ProductoComponent implements OnInit {
         this.producto.impuesto.id = this.impuestos[0].id;
         this.impuesto = this.impuestos[0];
       },
-      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
+      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     );
     this.tipoGastoService.consultar().subscribe(
       res => {
         this.tiposGastos = res.resultado as TipoGasto[];
         this.producto.tipoGasto.id = this.tiposGastos[0].id;
       },
-      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
+      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     );
     this.medidaService.consultar().subscribe(
       res => {
         this.medidas = res.resultado as Medida[];
       },
-      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
+      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     );
     this.segmentoService.consultar().subscribe(
       res => {
         this.segmentos = res.resultado as Segmento[];
       },
-      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
+      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
-
-  /*nuevo(event) {
-    if (event != null)
-      event.preventDefault();
-    let indice_tab_activo = this.tab_activo();
-    this.tabService.removeTab(indice_tab_activo);
-    this.tabService.addNewTab(ProductoComponent, constantes.tab_crear_producto);
-  }*/
 
   crear(event: any) {
     if (event != null)
       event.preventDefault();
     if (this.producto.grupoProducto.id == 0) {
-      Swal.fire(constantes.error, constantes.error_grupo_producto, constantes.error_swal);
+      Swal.fire(error, mensajes.error_grupo_producto, error_swal);
       return;
     }
     if (this.producto.nombre == '') {
-      Swal.fire(constantes.error, constantes.error_nombre_producto, constantes.error_swal);
+      Swal.fire(error, mensajes.error_nombre_producto, error_swal);
       return;
     }
     if (this.producto.medidaKardex.id == 0) {
-      Swal.fire(constantes.error, constantes.error_medida_kardex, constantes.error_swal);
+      Swal.fire(error, mensajes.error_medida_kardex, error_swal);
       return;
     }
     if (!this.deshabilitarSaldoInicial) {
-      Swal.fire(constantes.error, constantes.error_saldo_inicial, constantes.error_swal);
+      Swal.fire(error, mensajes.error_saldo_inicial, error_swal);
       return;
     }
 
@@ -215,13 +206,13 @@ export class ProductoComponent implements OnInit {
     console.log(this.producto);
     this.productoService.crear(this.producto).subscribe({
       next: (res) => {
-        Swal.fire({ icon: constantes.exito_swal, title: constantes.exito, text: res.mensaje });
+        Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
         this.producto = res.resultado as Producto;
         this.limpiar();
         this.consultar();
       },
       error: (err) => {
-        Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
+        Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
       }
     });
   }
@@ -257,35 +248,35 @@ export class ProductoComponent implements OnInit {
     if (event != null)
       event.preventDefault();
     if (this.producto.grupoProducto.id == 0) {
-      Swal.fire(constantes.error, constantes.error_grupo_producto, constantes.error_swal);
+      Swal.fire(error, mensajes.error_grupo_producto, error_swal);
       return;
     }
     if (this.producto.nombre == '') {
-      Swal.fire(constantes.error, constantes.error_nombre_producto, constantes.error_swal);
+      Swal.fire(error, mensajes.error_nombre_producto, error_swal);
       return;
     }
     if (this.producto.impuesto.id == 0) {
-      Swal.fire(constantes.error, constantes.error_impuesto, constantes.error_swal);
+      Swal.fire(error, mensajes.error_impuesto, error_swal);
       return;
     }
     if (this.producto.tipoGasto.id == 0) {
-      Swal.fire(constantes.error, constantes.error_tipo_gasto, constantes.error_swal);
+      Swal.fire(error, mensajes.error_tipo_gasto, error_swal);
       return;
     }
     if (this.producto.categoriaProducto.id == 0) {
-      Swal.fire(constantes.error, constantes.error_tipo_producto, constantes.error_swal);
+      Swal.fire(error, mensajes.error_tipo_producto, error_swal);
       return;
     }
     this.producto.precios = this.tablaPrecios;
     console.log(this.producto);
     this.productoService.actualizar(this.producto).subscribe({
       next: (res) => {
-        Swal.fire({ icon: constantes.exito_swal, title: constantes.exito, text: res.mensaje });
+        Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
         this.limpiar();
         this.consultar();
       },
       error: (err) => {
-        Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
+        Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
       }
     });
   }
@@ -295,10 +286,10 @@ export class ProductoComponent implements OnInit {
       event.preventDefault();
     this.productoService.eliminar(this.producto).subscribe({
       next: (res) => {
-        Swal.fire({ icon: constantes.exito_swal, title: constantes.exito, text: res.mensaje });
+        Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
         this.consultar();
       },
-      error: (err) => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.message })
+      error: (err) => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.message })
     });
   }
 
@@ -308,7 +299,7 @@ export class ProductoComponent implements OnInit {
         this.productos = res.resultado as Producto[];
         this.llenarDataSourceProducto(this.productos);
       },
-      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
+      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
 
@@ -361,7 +352,7 @@ export class ProductoComponent implements OnInit {
         this.medidas = res.resultado as Medida[];
       },
       error: (err) => {
-        Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
+        Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
       }
     });
     this.kardexInicial.cantidad = kardex[0].cantidad;
@@ -432,7 +423,7 @@ export class ProductoComponent implements OnInit {
         this.producto.medidaKardex = res.resultado as Medida;
       },
       error: (err) => {
-        Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
+        Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
       }
   });
   }
@@ -444,7 +435,7 @@ export class ProductoComponent implements OnInit {
         //console.log(this.porcentaje_impuesto);
       },
       err => {
-        Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
+        Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
       }
     );
 
@@ -453,14 +444,12 @@ export class ProductoComponent implements OnInit {
   cargarSaldoInicial() {
     if (this.producto.categoriaProducto.id == 1) { //Para bienes
       if (this.producto.medidaKardex.id == 0) {
-        Swal.fire(constantes.error, constantes.error_medida, constantes.error_swal);
+        Swal.fire(error, mensajes.error_medida, error_swal);
         return;
       }
       //console.log(this.kardex_inicial.cantidad);
       if (this.kardexInicial.cantidad == 0) {
-        Swal.fire({
-          title: constantes.advertencia, text: constantes.mensaje_kardex_inicial, icon: constantes.advertencia_swal,
-          showCancelButton: true, confirmButtonColor: '#3085d6', cancelButtonColor: '#d33', confirmButtonText: constantes.si_seguro
+        Swal.fire({ title: warning, text: mensajes.mensaje_kardex_inicial, icon: warning_swal, showCancelButton: true, confirmButtonColor: '#3085d6', cancelButtonColor: '#d33', confirmButtonText: si_seguro
         }).then((result) => {
           if (result.isConfirmed) {
             this.crearKardexPrecios();
@@ -474,7 +463,7 @@ export class ProductoComponent implements OnInit {
       }
     } else { // Para Sevicios y A.F.
       if (this.precioServicioAF == 0) {
-        Swal.fire(constantes.error, constantes.error_precio, constantes.error_swal);
+        Swal.fire(error, mensajes.error_precio, error_swal);
         return;
       }
       // Obtengo medida Unidad
@@ -485,7 +474,7 @@ export class ProductoComponent implements OnInit {
           //console.log(this.producto.medidaKardex);
         },
         err => {
-          Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
+          Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
         }
       );
       this.kardexInicial.cantidad = 1;
@@ -496,16 +485,16 @@ export class ProductoComponent implements OnInit {
 
   crearKardexPrecios() {
     if (this.kardexInicial.cantidad < 0 || this.kardexInicial.cantidad == null) {
-      Swal.fire(constantes.error, constantes.error_cantidad, constantes.error_swal);
+      Swal.fire(error, mensajes.error_cantidad, error_swal);
       return;
     }
     if (this.kardexInicial.costoPromedio < 0 || this.kardexInicial.costoPromedio == null) {
-      Swal.fire(constantes.error, constantes.error_costo_unitario, constantes.error_swal);
+      Swal.fire(error, mensajes.error_costo_unitario, error_swal);
       return;
     }
     this.kardexInicial.costoTotal = Number((this.kardexInicial.cantidad * this.kardexInicial.costoPromedio).toFixed(2));
 // Falta Crear y traer de la tabla operaciones_kardex
-    this.kardexInicial.operacion = constantes.operacion_inicial_kardex;
+    this.kardexInicial.operacion = valores.vacio;
     this.kardexFinal = this.kardexInicial;
     this.producto.stockTotal = this.kardexInicial.cantidad;
     this.producto.kardexs.push(this.kardexInicial);
@@ -603,11 +592,11 @@ export class ProductoComponent implements OnInit {
 
   agregarPrecio() {
     if (this.kardexFinal.costoPromedio < 0) {
-      Swal.fire(constantes.error, constantes.error_costo, constantes.error_swal);
+      Swal.fire(error, mensajes.error_costo, error_swal);
       return;
     }
     if (this.medidaEquivalenteSeleccionada.id == 0) {
-      Swal.fire(constantes.error, constantes.error_medida, constantes.error_swal);
+      Swal.fire(error, mensajes.error_medida, error_swal);
       return;
     }
     this.llenarTablaPrecios(this.medidaEquivalenteSeleccionada.medida2);
@@ -615,8 +604,6 @@ export class ProductoComponent implements OnInit {
   }
  
   eliminarMedidaPrecio(i: number){
-    //console.log(i);
-    //console.log(this.medidasPrecios);
     this.medidasPrecios.splice(i,1);
     this.observablePrecios = new BehaviorSubject(this.medidaPrecio.precios);
     this.datos.splice(i, 1);
@@ -625,8 +612,6 @@ export class ProductoComponent implements OnInit {
     this.actualizarAbrirPanel();
     this.buscarMedidasEquivalentes(this.producto.medidaKardex.id);
     this.actualizarTablaPrecios();  
-    //console.log(this.medidasPrecios);
-    //console.log(this.tablaPrecios);
   }
 
   activarControles(i: number) {
@@ -708,28 +693,6 @@ export class ProductoComponent implements OnInit {
       }
     }
   }
-/*
-  actualizar_precios(fieldName) {
-    for (let i = 0; i < this.medidas_precios.length; i++) {
-      for (let j = 0; j < this.medidas_precios[i].precios.length; j++) {
-        this.medidas_precios[i].precios[j].precio_sin_iva = Number((this.medidas_precios[i].precios[j].costo / (1 - (this.medidas_precios[i].precios[j].margen_ganancia / 100))).toFixed(4));
-        //this.medidas_precios[i].precios[j].precio_venta_publico = Number(this.producto.medidas_precios[i].precios[j].precio_venta_publico.toFixed(2));
-        //console.log(this.porcentaje_impuesto.porcentaje);
-        this.medidas_precios[i].precios[j].precio_venta_publico = Number((this.medidas_precios[i].precios[j].precio_sin_iva + (this.medidas_precios[i].precios[j].precio_sin_iva * (this.porcentaje_impuesto.porcentaje / 100))).toFixed(4));
-        //console.log(this.medidas_precios[i].precios[j].precio_venta_publico);
-        //this.medidas_precios[i].precios[j].precio_venta_publico_iva = Number(this.producto.medidas_precios[i].precios[j].precio_venta_publico_iva.toFixed(2));
-        if (fieldName == 'margen_ganancia') {
-          this.medidas_precios[i].precios[j].precio_venta_publico_manual = this.medidas_precios[i].precios[j].precio_venta_publico;
-        } else {
-          this.medidasPrecios[i].precios[j].precioVentaPublicoManual = this.medidasPrecios[i].precios[j].precioVentaPublicoManual;
-        }
-        this.medidasPrecios[i].precios[j].utilidad = Number(((this.medidasPrecios[i].precios[j].precioVentaPublicoManual * 100 / (100 + this.producto.impuesto.porcentaje)) - this.medidasPrecios[i].precios[j].costo).toFixed(2));
-        //this.medidas_precios[i].precios[j].utilidad = Number(this.producto.medidas_precios[i].precios[j].utilidad.toFixed(2));
-        this.medidasPrecios[i].precios[j].utilidadPorcentaje = Number((this.medidasPrecios[i].precios[j].utilidad / (this.medidasPrecios[i].precios[j].precioVentaPublicoManual * 100 / (100 + this.producto.impuesto.porcentaje)) * 100).toFixed(2));
-        //this.medidas_precios[i].precios[j].utilidad_porcentaje = Number(this.producto.medidas_precios[i].precios[j].utilidad_porcentaje.toFixed(2));
-      }
-    }
-  }*/
 
   buscarMedidasEquivalentes(medidaKardexId: number) {
     // cambiar por producto.medida_kardex.id
@@ -748,7 +711,7 @@ export class ProductoComponent implements OnInit {
         }
       },
       err => {
-        Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
+        Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
       }
     );
   }
@@ -802,11 +765,8 @@ export class ProductoComponent implements OnInit {
       //console.log('El dialogo para selección de grupo producto fue cerrado');
       if (result) {
         this.producto.grupoProducto = result as GrupoProducto;
-        this.producto.nombre = this.producto.grupoProducto.linea + constantes.espacio +
-          this.producto.grupoProducto.sublinea + constantes.espacio + this.producto.grupoProducto.presentacion;
-        //this.ver_acordeon_precios = true;
-        //this.usuario = result;
-        //console.log(this.producto.grupo_producto);
+        this.producto.nombre = this.producto.grupoProducto.linea + valores.espacio +
+          this.producto.grupoProducto.sublinea + valores.espacio + this.producto.grupoProducto.presentacion;
       }
     });
   }

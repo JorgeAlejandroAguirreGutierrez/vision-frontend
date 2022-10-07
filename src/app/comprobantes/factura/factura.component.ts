@@ -1,7 +1,6 @@
 import { Router } from '@angular/router';
 import { Component, HostListener, OnInit, ViewChild } from '@angular/core';
 import { FormControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import * as util from '../../util';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatStepper } from '@angular/material/stepper';
@@ -9,25 +8,25 @@ import {Observable} from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
 import Swal from 'sweetalert2';
-import { Factura } from '../../modelos/factura';
-import { ClienteService } from '../../servicios/cliente.service';
-import { Cliente } from '../../modelos/cliente';
-import { Sesion } from '../../modelos/sesion';
-import { SesionService } from '../../servicios/sesion.service';
-import { FacturaDetalle } from '../../modelos/factura-detalle';
-import { ProductoService } from '../../servicios/producto.service';
-import { Producto } from '../../modelos/producto';
-import { ImpuestoService } from '../../servicios/impuesto.service';
-import { Impuesto } from '../../modelos/impuesto';
-import { FacturaService } from '../../servicios/factura.service';
-import { DependienteService } from '../../servicios/dependiente.service';
-import { Dependiente } from '../../modelos/dependiente';
-import { Caracteristica } from '../../modelos/caracteristica';
-import { Bodega } from '../../modelos/bodega';
-import { BodegaService } from '../../servicios/bodega.service';
-import { Precio } from '../../modelos/precio';
-import * as constantes from '../../constantes';
-import { FacturaDetalleService } from '../../servicios/factura-detalle.service';
+import { Factura } from '../../modelos/comprobante/factura';
+import { ClienteService } from '../../servicios/cliente/cliente.service';
+import { Cliente } from '../../modelos/cliente/cliente';
+import { Sesion } from '../../modelos/usuario/sesion';
+import { SesionService } from '../../servicios/usuario/sesion.service';
+import { FacturaDetalle } from '../../modelos/comprobante/factura-detalle';
+import { ProductoService } from '../../servicios/inventario/producto.service';
+import { Producto } from '../../modelos/inventario/producto';
+import { ImpuestoService } from '../../servicios/inventario/impuesto.service';
+import { Impuesto } from '../../modelos/inventario/impuesto';
+import { FacturaService } from '../../servicios/comprobante/factura.service';
+import { DependienteService } from '../../servicios/cliente/dependiente.service';
+import { Dependiente } from '../../modelos/cliente/dependiente';
+import { Caracteristica } from '../../modelos/inventario/caracteristica';
+import { Bodega } from '../../modelos/inventario/bodega';
+import { BodegaService } from '../../servicios/inventario/bodega.service';
+import { Precio } from '../../modelos/inventario/precio';
+import { valores, mensajes, validarSesion, tab_activo, exito, exito_swal, error, error_swal } from '../../constantes';
+import { FacturaDetalleService } from '../../servicios/comprobante/factura-detalle.service';
 import { MatSort } from '@angular/material/sort';
 import { TabService } from 'src/app/componentes/services/tab.service';
 
@@ -45,11 +44,11 @@ export class FacturaComponent implements OnInit {
   isLinear = false;
   isEditable=false;
   completed=false;
-  categoriaProducto="B";
-  estado="EMITIDA";
-  facturaDetalleIndice=0;
-  facturaDetalleEntregado="";
-  serieBuscar:string="";
+  categoriaProducto= "B";
+  estado= "EMITIDA";
+  facturaDetalleIndice = valores.cero;
+  facturaDetalleEntregado = valores.vacio;
+  serieBuscar = valores.vacio;
 
   panelOpenState=false;
   seleccionDependiente: boolean =false;
@@ -115,33 +114,32 @@ export class FacturaComponent implements OnInit {
   impuestos: Impuesto[];
 
   //VARIABLES MUESTRA
-  primerTelefonoCliente: string = "";
-  primerCelularCliente: string = "";
-  primerCorreoCliente: string = "";
+  primerTelefonoCliente: string = valores.vacio;
+  primerCelularCliente: string = valores.vacio;
+  primerCorreoCliente: string = valores.vacio;
 
-  primerTelefonoDependiente: string = "";
-  primerCelularDependiente: string = "";
-  primerCorreoDependiente: string = "";
+  primerTelefonoDependiente: string = valores.vacio;
+  primerCelularDependiente: string = valores.vacio;
+  primerCorreoDependiente: string = valores.vacio;
 
-  primerTelefonoClienteFactura: string = "";
-  primerCelularClienteFactura: string = "";
-  primerCorreoClienteFactura: string = "";
+  primerTelefonoClienteFactura: string = valores.vacio;
+  primerCelularClienteFactura: string = valores.vacio;
+  primerCorreoClienteFactura: string = valores.vacio;
 
-  caracteristica: string="";
+  caracteristica: string= valores.vacio;
 
-  habilitarSeleccionDependiente=true;
-  habilitarFacturar=false;
+  habilitarSeleccionDependiente= true;
+  habilitarFacturar= false;
 
-  dependienteIndice=-1;
+  dependienteIndice= -1;
   dependiente: Dependiente= null;
 
-  saldoTotal=0;
-  saldo=0;
-
-  costoUnitario=0;
-  costoPromedio=0;
-  productoIndice=0;
-  cantidadTransferencia=0;
+  saldoTotal= valores.cero;
+  saldo= valores.cero;
+  costoUnitario= valores.cero;
+  costoPromedio= valores.cero;
+  productoIndice= valores.cero;
+  cantidadTransferencia= valores.cero;
   facturaDetalle: FacturaDetalle=new FacturaDetalle();
   
 
@@ -156,7 +154,7 @@ export class FacturaComponent implements OnInit {
   }
 
   async ngOnInit() {
-    this.sesion=util.validarSesion(this.sesionService, this.router);
+    this.sesion=validarSesion(this.sesionService, this.router);
     this.consultar();
     this.consultarClientes();
     this.construirFactura();
@@ -320,7 +318,7 @@ export class FacturaComponent implements OnInit {
         this.dataSourceFactura.paginator = this.paginator;
         this.dataSourceFactura.sort = this.sort;
       },
-      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
+      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
 
@@ -329,7 +327,7 @@ export class FacturaComponent implements OnInit {
       res => {
         this.clientes = res.resultado as Cliente[]
       },
-      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
+      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
 
@@ -338,7 +336,7 @@ export class FacturaComponent implements OnInit {
       res => {
         this.impuestos = res.resultado as Impuesto[]
       },
-      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
+      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
   consultarBodegas(){
@@ -346,7 +344,7 @@ export class FacturaComponent implements OnInit {
       res => {
         this.bodegas = res.resultado as Bodega[]
       },
-      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
+      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
 
@@ -357,7 +355,7 @@ export class FacturaComponent implements OnInit {
       res => {
         this.productos = res.resultado as Producto[]
       },
-      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
+      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
   consultarServicios(event) {
@@ -367,7 +365,7 @@ export class FacturaComponent implements OnInit {
       res => {
         this.productos = res.resultado as Producto[]
       },
-      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
+      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
   consultarActivosFijos(event) {
@@ -377,7 +375,7 @@ export class FacturaComponent implements OnInit {
       res => {
         this.productos = res.resultado as Producto[]
       },
-      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
+      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
 
@@ -411,13 +409,13 @@ export class FacturaComponent implements OnInit {
         this.habilitarClienteTce=false;
         this.verAcordeonFacturaDetalle=true;
       },
-      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
+      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     );
     this.dependienteService.consultarClienteID(this.dependienteBuscar).subscribe(
       res => {
         this.dependientes = res.resultado as Dependiente[]
       },
-      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
+      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
 
@@ -450,13 +448,13 @@ export class FacturaComponent implements OnInit {
         }
         this.habilitarClienteTce=false;
       },
-      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
+      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     );
     this.dependienteService.consultarClienteID(this.dependienteBuscar).subscribe(
       res => {
         this.dependientes = res.resultado as Dependiente[]
       },
-      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
+      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
 
@@ -476,7 +474,7 @@ export class FacturaComponent implements OnInit {
           this.primerCorreoClienteFactura= this.factura.clienteFactura.correos[0].email;
         this.habilitarClienteFacturaTce=false;
       },
-      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
+      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
 
@@ -496,7 +494,7 @@ export class FacturaComponent implements OnInit {
           this.primerCorreoClienteFactura= this.factura.clienteFactura.correos[0].email;
         this.habilitarClienteFacturaTce=false;
       },
-      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
+      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
 
@@ -558,7 +556,7 @@ export class FacturaComponent implements OnInit {
     this.facturaDetalle.producto=this.seleccionProducto.value;
     if(this.facturaDetalle.producto.kardexs.length==0){
       this.facturaDetalle.producto=new Producto();
-      Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: constantes.error_kardex_VACIO, footer: constantes.error_kardex_VACIO_MENSAJE });
+      Swal.fire({ icon: error_swal, title: error, text: mensajes.error_kardex_vacio, footer: mensajes.error_kardex_vacio_mensaje });
       return;
     }
     this.costoPromedio=this.facturaDetalle.producto.kardexs[this.facturaDetalle.producto.kardexs.length-1].costoPromedio;
@@ -571,7 +569,7 @@ export class FacturaComponent implements OnInit {
       res => {
         this.facturaDetalle = res.resultado as FacturaDetalle;
       },
-      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
+      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
 
@@ -709,9 +707,9 @@ export class FacturaComponent implements OnInit {
         this.factura = res.resultado as Factura;
         this.limpiarProducto();
         this.dataFacturaDetalle = new MatTableDataSource<FacturaDetalle>(this.factura.facturaDetalles);
-        Swal.fire({ icon: constantes.exito_swal, title: constantes.exito, text: res.mensaje });
+        Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
       },
-      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
+      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
 
@@ -725,9 +723,9 @@ export class FacturaComponent implements OnInit {
         this.factura = res.resultado as Factura;
         this.facturaService.enviarEventoRecaudacion(this.factura);
         this.stepper.next();
-        Swal.fire({ icon: constantes.exito_swal, title: constantes.exito, text: res.mensaje });
+        Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
       },
-      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
+      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
 
@@ -739,9 +737,9 @@ export class FacturaComponent implements OnInit {
         this.factura = res.resultado as Factura;
         this.facturaService.enviarEventoRecaudacion(this.factura);
         this.stepper.next();
-        Swal.fire({ icon: constantes.exito_swal, title: constantes.exito, text: res.mensaje });
+        Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
       },
-      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
+      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
 
@@ -828,7 +826,7 @@ export class FacturaComponent implements OnInit {
       res => {
         this.dependientes = res.resultado as Dependiente[]
       },
-      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.message })
+      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.message })
     );
   }
   limpiarIdentificacionCliente(){
@@ -891,7 +889,7 @@ export class FacturaComponent implements OnInit {
         this.dataFacturaDetalle = new MatTableDataSource<FacturaDetalle>(this.factura.facturaDetalles);
 
       },
-      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.message })
+      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.message })
     );
   }
 

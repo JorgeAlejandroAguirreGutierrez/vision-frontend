@@ -46,15 +46,11 @@ import { TransferenciaBodegaComponent } from './inventarios/transferencia-bodega
 import { EquivalenciaMedidaComponent } from './inventarios/equivalencia-medida/equivalencia-medida.component';
 
 //Módulo de Recaudaciones
-import { FinanciamientoComponent } from './recaudacion/financiamiento/financiamiento.component';
 import { RecaudacionComponent } from './recaudacion/recaudacion/recaudacion.component';
 import { BancoComponent } from './recaudacion/banco/banco.component';
-import { DepositoTransferenciaComponent } from './recaudacion/deposito-transferencia/deposito-transferencia.component';
 import { TarjetaCreditoComponent } from './recaudacion/tarjeta-credito/tarjeta-credito.component';
 import { TarjetaDebitoComponent } from './recaudacion/tarjeta-debito/tarjeta-debito.component';
 import { CompensacionComponent } from './recaudacion/compensacion/compensacion.component';
-import { ChequeComponent } from './recaudacion/cheque/cheque.component';
-
 // Módulo de Comprobantes
 import { FacturaComponent } from './comprobantes/factura/factura.component';
 import { EgresoComponent } from './comprobantes/egreso/egreso.component';
@@ -88,7 +84,6 @@ import { PerfilComponent } from './usuarios/perfil/perfil.component';
 //Módulo de Configuraciones
 import { EmpresaComponent, DialogoMapaEmpresaComponent } from './configuraciones/empresa/empresa.component';
 import { UbicacionComponent } from './configuraciones/ubicacion/ubicacion.component';
-import { DatoAdicionalComponent } from './configuraciones/dato-adicional/dato-adicional.component';
 
 // Otros - borrar al final
 import { DashboardComponent } from './componentes/pages/dashboard/dashboard.component';
@@ -105,9 +100,8 @@ const routes: Routes = [
   { path: 'main', component: MainComponent },
   { path: 'menu', component: MenuComponent },
   // Rutas del Modulo de configuración
-  { path: 'cliente/ubicacion', component: UbicacionComponent },
-  { path: 'cliente/empresa', component: EmpresaComponent },
-  { path: 'cliente/datoadicional', component: DatoAdicionalComponent },
+  {path: 'cliente/ubicacion', component: UbicacionComponent},
+  {path: 'cliente/empresa', component: EmpresaComponent},
   // Rutas para el modulo de usuarios
   { path: 'usuario', component: UsuarioComponent },
   { path: 'usuario/establecimiento', component: EstablecimientoComponent },
@@ -209,14 +203,11 @@ export const RoutingComponents = [
   TransportistaComponent,
   VehiculoTransporteComponent,
   // Recaudación
-  FinanciamientoComponent,
   RecaudacionComponent,
   BancoComponent,
-  DepositoTransferenciaComponent,
   TarjetaCreditoComponent,
   TarjetaDebitoComponent,
   CompensacionComponent,
-  ChequeComponent,
   //Comprobantes
   FacturaComponent,
   EgresoComponent,
@@ -242,7 +233,6 @@ export const RoutingComponents = [
   // configuración
   EmpresaComponent,
   DialogoMapaEmpresaComponent,
-  DatoAdicionalComponent,
   TipoRetencionComponent,
   UbicacionComponent,
   //otros

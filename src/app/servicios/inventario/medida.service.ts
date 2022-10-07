@@ -1,0 +1,76 @@
+import { Injectable } from '@angular/core';
+import { Medida } from '../../modelos/inventario/medida';
+import { Respuesta } from '../../respuesta';
+import { urn, options } from '../../constantes';
+import { HttpClient } from '@angular/common/http';
+import { map, catchError } from 'rxjs/operators';
+import { BehaviorSubject, Observable, throwError, lastValueFrom } from 'rxjs';
+import { environment } from '../../../environments/environment';
+
+@Injectable({
+  providedIn: 'root'
+})
+export class MedidaService {
+
+  constructor(private http: HttpClient) { }
+
+  private messageSource = new BehaviorSubject(0);
+  currentMessage = this.messageSource.asObservable();
+
+  enviar(medida_id: number) {
+    this.messageSource.next(medida_id);
+  }
+
+  crear(medida: Medida): Observable<Respuesta> {
+    return this.http.post(environment.host + urn.ruta + urn.medida, medida, options).pipe(
+      map(response => response as Respuesta),
+      catchError(err => {
+        return throwError(()=>err);
+      })
+    );
+  }
+
+  obtener(medida_id: number): Observable<Respuesta> {
+    return this.http.get<Respuesta>(environment.host + urn.ruta + urn.medida + '/' + medida_id, options).pipe(
+      map(response => response as Respuesta),
+      catchError(err => {
+        return throwError(()=>err);
+      })
+    );
+  }
+
+  consultar(): Observable<Respuesta> {
+    return this.http.get(environment.host + urn.ruta + urn.medida, options).pipe(
+      map(response => response as Respuesta),
+      catchError(err => {
+        return throwError(()=>err);
+      }));
+  }
+
+  actualizar(medida: Medida): Observable<Respuesta> {
+    return this.http.put(environment.host + urn.ruta + urn.medida, medida, options).pipe(
+      map(response => response as Respuesta),
+      catchError(err => {
+        return throwError(()=>err);
+      })
+    );
+  }
+
+  eliminar(medida: Medida): Observable<Respuesta> {
+    return this.http.delete(environment.host + urn.ruta + urn.producto + '/' + medida.id, options).pipe(
+      map(response => response as Respuesta),
+      catchError(err => {
+        return throwError(()=>err);
+      })
+    );
+  }
+
+  eliminarPersonalizado(medida: Medida): Observable<Respuesta> {
+    return this.http.delete(environment.host + urn.ruta + urn.bodega + urn.personalizado + '/' + medida.id, options).pipe(
+      map(response => response as Respuesta),
+      catchError(err => {
+        return throwError(()=>err);
+      })
+    );
+  }
+}

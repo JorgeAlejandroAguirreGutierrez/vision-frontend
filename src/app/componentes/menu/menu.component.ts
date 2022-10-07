@@ -1,13 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { Type } from '@angular/core';
-import { Sesion } from '../../modelos/sesion';
-import { SesionService } from '../../servicios/sesion.service';
-import { EmpresaService } from '../../servicios/empresa.service';
-import { Empresa } from '../../modelos/empresa';
+import { Sesion } from '../../modelos/usuario/sesion';
+import { SesionService } from '../../servicios/usuario/sesion.service';
+import { EmpresaService } from '../../servicios/configuracion/empresa.service';
+import { Empresa } from '../../modelos/configuracion/empresa';
 import { environment } from '../../../environments/environment';
 import { TabService } from "../services/tab.service";
 import { FooterComponent } from "../footer/footer.component";
-import * as util from '../../util';
+import { validarSesion } from '../../constantes';
 import { Router } from '@angular/router';
 
 @Component({
@@ -51,35 +51,35 @@ export class MenuComponent implements OnInit {
 
   url_logo: string ="";
   nombre_empresa: string="";
-  url_avatar: string= environment.prefijo_url_imagenes+"avatar/avatar1.png";
+  url_avatar: string= environment.prefijoUrlImagenes+"avatar/avatar1.png";
 
-  ico_cliente: string = environment.prefijo_url_imagenes+"iconos/icoclientes.jpg";
-  ico_proveedor: string = environment.prefijo_url_imagenes+"iconos/icoproveedores.png";
-  ico_facturacion: string = environment.prefijo_url_imagenes+"iconos/icofacturacion.png";
-  ico_inventario: string = environment.prefijo_url_imagenes+"iconos/icoinventarios.png";
-  ico_caja_bancos: string = environment.prefijo_url_imagenes+"iconos/icocajabancos.png";
-  ico_cuentasxcobrar: string = environment.prefijo_url_imagenes+"iconos/icocuentasxcobrar.png";
-  ico_cuentasxpagar: string = environment.prefijo_url_imagenes+"iconos/icocuentasxpagar.png";
-  ico_contabilidad: string = environment.prefijo_url_imagenes+"iconos/icocontabilidad.png";
-  ico_financiero: string = environment.prefijo_url_imagenes+"iconos/icofinanciero.png";
-  ico_activosfijos: string = environment.prefijo_url_imagenes+"iconos/icoactivosfijos.png";
-  ico_talentohumano: string = environment.prefijo_url_imagenes+"iconos/icotalentohumano.png";
-  ico_produccion: string = environment.prefijo_url_imagenes+"iconos/icoproduccion.png";
-  ico_importacion: string = environment.prefijo_url_imagenes+"iconos/icoimportacion.png";
-  ico_reportes: string = environment.prefijo_url_imagenes+"iconos/icoreportes.png";
+  ico_cliente: string = environment.prefijoUrlImagenes+"iconos/icoclientes.jpg";
+  ico_proveedor: string = environment.prefijoUrlImagenes+"iconos/icoproveedores.png";
+  ico_facturacion: string = environment.prefijoUrlImagenes+"iconos/icofacturacion.png";
+  ico_inventario: string = environment.prefijoUrlImagenes+"iconos/icoinventarios.png";
+  ico_caja_bancos: string = environment.prefijoUrlImagenes+"iconos/icocajabancos.png";
+  ico_cuentasxcobrar: string = environment.prefijoUrlImagenes+"iconos/icocuentasxcobrar.png";
+  ico_cuentasxpagar: string = environment.prefijoUrlImagenes+"iconos/icocuentasxpagar.png";
+  ico_contabilidad: string = environment.prefijoUrlImagenes+"iconos/icocontabilidad.png";
+  ico_financiero: string = environment.prefijoUrlImagenes+"iconos/icofinanciero.png";
+  ico_activosfijos: string = environment.prefijoUrlImagenes+"iconos/icoactivosfijos.png";
+  ico_talentohumano: string = environment.prefijoUrlImagenes+"iconos/icotalentohumano.png";
+  ico_produccion: string = environment.prefijoUrlImagenes+"iconos/icoproduccion.png";
+  ico_importacion: string = environment.prefijoUrlImagenes+"iconos/icoimportacion.png";
+  ico_reportes: string = environment.prefijoUrlImagenes+"iconos/icoreportes.png";
 
-  ico_accesos: string = environment.prefijo_url_imagenes+"iconos/icoacceso.png";
-  ico_configuracion: string = environment.prefijo_url_imagenes+"iconos/icoconfiguraciones.png";
-  ico_estadistica: string = environment.prefijo_url_imagenes+"iconos/icoestadisticas.png";
-  ico_organismoscontrol: string = environment.prefijo_url_imagenes+"iconos/icoorganismoscontrol.png";
-  ico_auditoria: string = environment.prefijo_url_imagenes+"iconos/icoauditoria.png";
-  ico_tutoriales: string = environment.prefijo_url_imagenes+"iconos/icotutoriales.png";
+  ico_accesos: string = environment.prefijoUrlImagenes+"iconos/icoacceso.png";
+  ico_configuracion: string = environment.prefijoUrlImagenes+"iconos/icoconfiguraciones.png";
+  ico_estadistica: string = environment.prefijoUrlImagenes+"iconos/icoestadisticas.png";
+  ico_organismoscontrol: string = environment.prefijoUrlImagenes+"iconos/icoorganismoscontrol.png";
+  ico_auditoria: string = environment.prefijoUrlImagenes+"iconos/icoauditoria.png";
+  ico_tutoriales: string = environment.prefijoUrlImagenes+"iconos/icotutoriales.png";
 
 
   constructor(private sesionService: SesionService, private empresaService: EmpresaService, public tabService: TabService, private router: Router) { }
 
   ngOnInit() {
-    this.sesion=util.validarSesion(this.sesionService, this.router);
+    this.sesion=validarSesion(this.sesionService, this.router);
     this.obtenerEmpresa();
     // FINANCIERO
     this.permiso_clientes=this.obtenerPermiso('CLIENTES');
@@ -111,7 +111,7 @@ export class MenuComponent implements OnInit {
     this.empresaService.obtener(empresaId).subscribe(
       res => {
         let empresa= res.resultado as Empresa
-        this.url_logo=environment.prefijo_url_imagenes+"logos/"+empresa.logo;
+        this.url_logo=environment.prefijoUrlImagenes+"logos/"+empresa.logo;
         this.nombre_empresa=empresa.razonSocial;
       }
     );

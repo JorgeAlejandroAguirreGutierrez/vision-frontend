@@ -1,17 +1,16 @@
 import { Component, OnInit, Input, Output, EventEmitter, ElementRef, Renderer2 } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import Swal from 'sweetalert2';
-import * as constantes from '../../../constantes';
-import * as util from '../../../util';
-import { GrupoProducto } from '../../../modelos/grupo-producto';
-import { GrupoProductoService } from '../../../servicios/grupo-producto.service';
+import { validarSesion, error, error_swal } from '../../../constantes';
+import { GrupoProducto } from '../../../modelos/inventario/grupo-producto';
+import { GrupoProductoService } from '../../../servicios/inventario/grupo-producto.service';
 import { ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { SesionService } from 'src/app/servicios/sesion.service';
+import { SesionService } from 'src/app/servicios/usuario/sesion.service';
 import { Router } from '@angular/router';
-import { Sesion } from 'src/app/modelos/sesion';
+import { Sesion } from 'src/app/modelos/usuario/sesion';
 
 @Component({
   selector: 'app-tabla-grupo-producto',
@@ -47,7 +46,7 @@ export class TablaGrupoProductoComponent implements OnInit {
     private grupoProductoService: GrupoProductoService) { }
 
   ngOnInit() {
-    this.sesion=util.validarSesion(this.sesionService, this.router);
+    this.sesion=validarSesion(this.sesionService, this.router);
     this.consultarGrupoProductos();
   }
 
@@ -69,7 +68,7 @@ export class TablaGrupoProductoComponent implements OnInit {
         this.gruposProductos = res.resultado as GrupoProducto[];
         this.llenarDataSourceGrupoProducto(this.gruposProductos);
       },
-      error: err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
+      error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     });
   }
 

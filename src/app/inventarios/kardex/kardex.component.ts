@@ -6,17 +6,19 @@ import { Observable } from 'rxjs';
 import { startWith, map } from 'rxjs/operators';
 import Swal from 'sweetalert2';
 import * as constantes from '../../constantes';
+import { valores, mensajes, validarSesion, exito, exito_swal, error, error_swal } from '../../constantes';
+
 import * as util from '../../util';
-import { Producto } from '../../modelos/producto';
-import { ProductoService } from '../../servicios/producto.service';
-import { Kardex } from '../../modelos/kardex';
-import { KardexService } from '../../servicios/kardex.service';
+import { Producto } from '../../modelos/inventario/producto';
+import { ProductoService } from '../../servicios/inventario/producto.service';
+import { Kardex } from '../../modelos/inventario/kardex';
+import { KardexService } from '../../servicios/inventario/kardex.service';
 
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { Sesion } from 'src/app/modelos/sesion';
-import { SesionService } from 'src/app/servicios/sesion.service';
+import { Sesion } from '../../modelos/usuario/sesion';
+import { SesionService } from '../../servicios/usuario/sesion.service';
 import { Router } from '@angular/router';
 
 @Component({
@@ -97,7 +99,7 @@ export class KardexComponent implements OnInit {
     if (event!=null)
       event.preventDefault();
     if (this.producto.nombre == '') {
-        Swal.fire(constantes.error, constantes.error_nombre_producto, constantes.error_swal);
+        Swal.fire(error, mensajes.error_producto_proveedor, error_swal);
         return;
     }
     console.log(this.producto);

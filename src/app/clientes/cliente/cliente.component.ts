@@ -4,53 +4,53 @@ import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
 import { MouseEvent } from '@agm/core'; 
 import { Router } from '@angular/router'; 
 import Swal from 'sweetalert2';
-import * as constantes from '../../constantes';
-import * as util from '../../util';
-
+import { valores, mensajes, otras, tabs, validarSesion, tab_activo, exito, exito_swal, error, error_swal } from '../../constantes';
 import { environment } from '../../../environments/environment';
-import { Empresa } from '../../modelos/empresa';
-import { EmpresaService } from '../../servicios/empresa.service';
-import { Sesion } from '../../modelos/sesion';
-import { SesionService } from '../../servicios/sesion.service';
+import { Empresa } from '../../modelos/configuracion/empresa';
+import { EmpresaService } from '../../servicios/configuracion/empresa.service';
+import { Sesion } from '../../modelos/usuario/sesion';
+import { SesionService } from '../../servicios/usuario/sesion.service';
 import { TabService } from '../../componentes/services/tab.service';
-import { Cliente } from '../../modelos/cliente';
-import { ClienteService } from '../../servicios/cliente.service';
-import { TipoContribuyente } from '../../modelos/tipo-contribuyente';
-import { TipoContribuyenteService } from '../../servicios/tipo-contribuyente.service';
-import { SegmentoService } from '../../servicios/segmento.service';
-import { Segmento } from '../../modelos/segmento';
-import { GrupoCliente } from '../../modelos/grupo-cliente'
-import { GrupoClienteService } from '../../servicios/grupo-cliente.service';
-import { Ubicacion } from '../../modelos/ubicacion';
-import { UbicacionService } from '../../servicios/ubicacion.service';
-import { Telefono } from '../../modelos/telefono';
-import { Celular } from '../../modelos/celular';
-import { Correo } from '../../modelos/correo';
-import { Coordenada } from '../../modelos/coordenada';
-import { Dependiente } from '../../modelos/dependiente';
-import { TelefonoDependiente } from '../../modelos/telefono-dependiente';
-import { CorreoDependiente } from '../../modelos/correo-dependiente';
-import { CelularDependiente } from '../../modelos/celular-dependiente';
-import { Genero } from '../../modelos/genero';
-import { GeneroService } from '../../servicios/genero.service';
-import { EstadoCivil } from '../../modelos/estado-civil';
-import { EstadoCivilService } from '../../servicios/estado-civil.service';
-import { OrigenIngreso } from '../../modelos/origen-ingreso';
-import { OrigenIngresoService } from '../../servicios/origen-ingreso.service';
-import { CalificacionCliente } from '../../modelos/calificacion-cliente';
-import { CalificacionClienteService } from '../../servicios/calificacion-cliente.service';
-import { PlazoCredito } from '../../modelos/plazo-credito';
-import { PlazoCreditoService } from '../../servicios/plazo-credito.service';
-import { FormaPago } from '../../modelos/forma-pago';
-import { FormaPagoService } from '../../servicios/forma-pago.service';
-import { TipoPago } from '../../modelos/tipo-pago';
-import { TipoPagoService } from '../../servicios/tipo-pago.service';
-import { TipoRetencion } from '../../modelos/tipo-retencion';
-import { TipoRetencionService } from '../../servicios/tipo-retencion.service';
+import { Cliente } from '../../modelos/cliente/cliente';
+import { ClienteService } from '../../servicios/cliente/cliente.service';
+import { TipoContribuyente } from '../../modelos/cliente/tipo-contribuyente';
+import { TipoContribuyenteService } from '../../servicios/cliente/tipo-contribuyente.service';
+import { SegmentoService } from '../../servicios/inventario/segmento.service';
+import { Segmento } from '../../modelos/inventario/segmento';
+import { GrupoCliente } from '../../modelos/cliente/grupo-cliente'
+import { GrupoClienteService } from '../../servicios/cliente/grupo-cliente.service';
+import { Ubicacion } from '../../modelos/configuracion/ubicacion';
+import { UbicacionService } from '../../servicios/configuracion/ubicacion.service';
+import { Telefono } from '../../modelos/cliente/telefono';
+import { Celular } from '../../modelos/cliente/celular';
+import { Correo } from '../../modelos/cliente/correo';
+import { Coordenada } from '../../modelos/configuracion/coordenada';
+import { Dependiente } from '../../modelos/cliente/dependiente';
+import { TelefonoDependiente } from '../../modelos/cliente/telefono-dependiente';
+import { CorreoDependiente } from '../../modelos/cliente/correo-dependiente';
+import { CelularDependiente } from '../../modelos/cliente/celular-dependiente';
+import { Genero } from '../../modelos/cliente/genero';
+import { GeneroService } from '../../servicios/cliente/genero.service';
+import { EstadoCivil } from '../../modelos/cliente/estado-civil';
+import { EstadoCivilService } from '../../servicios/cliente/estado-civil.service';
+import { OrigenIngreso } from '../../modelos/cliente/origen-ingreso';
+import { OrigenIngresoService } from '../../servicios/cliente/origen-ingreso.service';
+import { CalificacionCliente } from '../../modelos/cliente/calificacion-cliente';
+import { CalificacionClienteService } from '../../servicios/cliente/calificacion-cliente.service';
+import { PlazoCredito } from '../../modelos/cliente/plazo-credito';
+import { PlazoCreditoService } from '../../servicios/cliente/plazo-credito.service';
+import { FormaPago } from '../../modelos/cliente/forma-pago';
+import { FormaPagoService } from '../../servicios/cliente/forma-pago.service';
+import { TipoPago } from '../../modelos/cliente/tipo-pago';
+import { TipoPagoService } from '../../servicios/cliente/tipo-pago.service';
+import { TipoRetencion } from '../../modelos/configuracion/tipo-retencion';
+import { TipoRetencionService } from '../../servicios/configuracion/tipo-retencion.service';
 
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
+import { TipoIdentificacion } from 'src/app/modelos/configuracion/tipo-identificacion';
+import { TipoIdentificacionService } from 'src/app/servicios/configuracion/tipo-identificacion.service';
 
 @Component({
   selector: 'app-cliente',
@@ -64,7 +64,7 @@ export class ClienteComponent implements OnInit {
 
   urlLogo: string = "";
   nombreEmpresa: string = "";
-  urlAvatar: string = environment.prefijo_url_imagenes + "avatar/avatar1.png";
+  urlAvatar: string = environment.prefijoUrlImagenes + "avatar/avatar1.png";
 
   abrirPanelCliente: boolean = true;
   abrirPanelUbicacion: boolean = false;
@@ -77,6 +77,7 @@ export class ClienteComponent implements OnInit {
 
   cliente: Cliente = new Cliente();
   clientes: Cliente[];
+  tiposIdentificaciones: TipoIdentificacion[];
   segmento: Segmento = new Segmento();
   segmentos: Segmento[] = [];
   dependiente: Dependiente = new Dependiente();
@@ -161,7 +162,7 @@ export class ClienteComponent implements OnInit {
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
-  constructor(public dialog: MatDialog, private clienteService: ClienteService, private generoService: GeneroService,
+  constructor(public dialog: MatDialog, private clienteService: ClienteService, private tipoIdentificacionService: TipoIdentificacionService, private generoService: GeneroService,
     private estadoCivilService: EstadoCivilService, private origenIngresoService: OrigenIngresoService,
     private calificacionClienteService: CalificacionClienteService, private plazoCreditoService: PlazoCreditoService,
     private tipoPagoService: TipoPagoService, private formaPagoService: FormaPagoService,
@@ -185,16 +186,24 @@ export class ClienteComponent implements OnInit {
     }
 
   ngOnInit() {
-    this.sesion = util.validarSesion(this.sesionService, this.router);
+    this.sesion = validarSesion(this.sesionService, this.router);
     this.obtenerEmpresa();
     this.obtenerSesion();
     this.consultar();
+    this.tipoIdentificacionService.consultar().subscribe({
+      next: (res) => {
+        this.tiposIdentificaciones = res.resultado as TipoIdentificacion[];
+      },
+      error: (err) => {
+        Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje });
+      }
+    });
     this.tipoContribuyenteService.consultar().subscribe({
       next: (res) => {
         this.tiposContribuyentes = res.resultado as TipoContribuyente[];
       },
       error: (err) => {
-        Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje });
+        Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje });
       }
     });
     this.segmentoService.consultar().subscribe({
@@ -202,7 +211,7 @@ export class ClienteComponent implements OnInit {
         this.segmentos = res.resultado as Segmento[];
       },
       error: (err) => {
-        Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje });
+        Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje });
       }
     });
     this.grupoClienteService.consultar().subscribe({
@@ -210,7 +219,7 @@ export class ClienteComponent implements OnInit {
         this.gruposClientes = res.resultado as GrupoCliente[]
       },
       error: (err) => {
-        Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje });
+        Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje });
       }
     });
     this.generoService.consultar().subscribe({
@@ -218,7 +227,7 @@ export class ClienteComponent implements OnInit {
         this.generos = res.resultado as Genero[]
       },
       error: (err) => {
-        Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje });
+        Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje });
       }
     });
     this.estadoCivilService.consultar().subscribe({
@@ -226,7 +235,7 @@ export class ClienteComponent implements OnInit {
         this.estadosCiviles = res.resultado as EstadoCivil[]
       },
       error: (err) => {
-        Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje });
+        Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje });
       }
     });
     this.origenIngresoService.consultar().subscribe({
@@ -234,7 +243,7 @@ export class ClienteComponent implements OnInit {
         this.origenesIngresos = res.resultado as OrigenIngreso[];
       },
       error: (err) => {
-        Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje });
+        Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje });
       }
     });
     this.calificacionClienteService.consultar().subscribe(
@@ -242,7 +251,7 @@ export class ClienteComponent implements OnInit {
         this.calificacionesClientes = res.resultado as CalificacionCliente[]
       },
       err => {
-        Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje });
+        Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje });
       }
     );
     this.plazoCreditoService.consultar().subscribe(
@@ -250,7 +259,7 @@ export class ClienteComponent implements OnInit {
         this.plazosCreditos = res.resultado as PlazoCredito[]
       },
       err => {
-        Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje });
+        Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje });
       }
     );
     this.tipoPagoService.consultar().subscribe(
@@ -258,7 +267,7 @@ export class ClienteComponent implements OnInit {
         this.tiposPagos = res.resultado as TipoPago[]
       },
       err => {
-        Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje });
+        Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje });
       }
     );
     this.formaPagoService.consultar().subscribe(
@@ -266,7 +275,7 @@ export class ClienteComponent implements OnInit {
         this.formasPagos = res.resultado as FormaPago[]
       },
       err => {
-        Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje });
+        Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje });
       }
     );
     this.ubicacionService.obtenerProvincias().subscribe(
@@ -275,7 +284,7 @@ export class ClienteComponent implements OnInit {
         this.dependienteProvincias = res.resultado as Ubicacion[]
       },
       err => {
-        Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje });
+        Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje });
       }
     );
     this.tipoRetencionService.obtenerIvaBien().subscribe(
@@ -283,15 +292,16 @@ export class ClienteComponent implements OnInit {
         this.tiposRetencionesIvaBien = res.resultado as TipoRetencion[]
       },
       err => {
-        Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje });
+        Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje });
       }
     );
     this.tipoRetencionService.obtenerIvaServicio().subscribe(
       res => {
         this.tiposRetencionesIvaServicio = res.resultado as TipoRetencion[]
+        
       },
       err => {
-        Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje });
+        Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje });
       }
     );
     this.tipoRetencionService.obtenerRentaBien().subscribe(
@@ -299,15 +309,16 @@ export class ClienteComponent implements OnInit {
         this.tiposRetencionesRentaBien = res.resultado as TipoRetencion[]
       },
       err => {
-        Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje });
+        Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje });
       }
     );
     this.tipoRetencionService.obtenerRentaServicio().subscribe(
       res => {
         this.tiposRetencionesRentaServicio = res.resultado as TipoRetencion[]
+        console.log(this.tiposRetencionesIvaServicio);
       },
       err => {
-        Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje });
+        Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje });
       }
     );
   }
@@ -333,11 +344,11 @@ export class ClienteComponent implements OnInit {
     this.empresaService.obtener(empresaId).subscribe(
       res => {
         let empresa = res.resultado as Empresa
-        this.urlLogo = environment.prefijo_url_imagenes + "logos/" + empresa.logo;
+        this.urlLogo = environment.prefijoUrlImagenes + "logos/" + empresa.logo;
         this.nombreEmpresa = empresa.razonSocial;
       },
       err => {
-        Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje });
+        Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje });
       }
     );
   }
@@ -361,11 +372,11 @@ export class ClienteComponent implements OnInit {
     if (event != null)
       event.preventDefault();
     //AGREGAR AUXILIAR
-    if (this.dependienteTelefono.numero != constantes.vacio)
+    if (this.dependienteTelefono.numero != valores.vacio)
       this.dependiente.telefonos.push(this.dependienteTelefono);
-    if (this.dependienteTelefono.numero != constantes.vacio)
+    if (this.dependienteTelefono.numero != valores.vacio)
       this.dependiente.celulares.push(this.dependienteCelular);
-    if (this.dependienteCorreo.email != constantes.vacio)
+    if (this.dependienteCorreo.email != valores.vacio)
       this.dependiente.correos.push(this.dependienteCorreo);
     let ubicacion: Ubicacion = new Ubicacion();
     ubicacion.provincia = this.dependienteProvincia;
@@ -373,21 +384,20 @@ export class ClienteComponent implements OnInit {
     ubicacion.parroquia = this.dependienteParroquia;
     this.dependiente.direccion.ubicacion = ubicacion;
     this.cliente.puntoVenta = this.sesion.usuario.puntoVenta;
-    if (this.telefono.numero != constantes.vacio)
+    if (this.telefono.numero != valores.vacio)
       this.cliente.telefonos.push(this.telefono);
-    if (this.celular.numero != constantes.vacio)
+    if (this.celular.numero != valores.vacio)
       this.cliente.celulares.push(this.celular);
-    if (this.correo.email != constantes.vacio)
+    if (this.correo.email != valores.vacio)
       this.cliente.correos.push(this.correo);
-    console.log(this.cliente);
     this.clienteService.crear(this.cliente).subscribe(
       res => {
         this.cliente = res.resultado as Cliente;
-        Swal.fire({ icon: constantes.exito_swal, title: constantes.exito, text: res.mensaje });
+        Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
         this.nuevo(null);
         this.consultar();
       },
-      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
+      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
 
@@ -402,19 +412,19 @@ export class ClienteComponent implements OnInit {
     ubicacion.provincia = this.dependienteProvincia;
     ubicacion.canton = this.dependienteCanton;
     ubicacion.parroquia = this.dependienteParroquia;
-    if (ubicacion.provincia != "" && ubicacion.canton != "" && ubicacion.parroquia != "") {
+    if (ubicacion.provincia != valores.vacio && ubicacion.canton != valores.vacio && ubicacion.parroquia != valores.vacio) {
       this.cliente.dependientes.push(this.dependiente);
       this.llenarDataSourceDependiente(this.cliente.dependientes);
       this.dependiente = new Dependiente();
       this.habilitarCelularTelefonoCorreoDependiente = false;
-      this.dependienteProvincia = "";
-      this.dependienteCanton = "";
-      this.dependienteParroquia = "";
+      this.dependienteProvincia = valores.vacio;
+      this.dependienteCanton = valores.vacio;
+      this.dependienteParroquia = valores.vacio;
       this.dependienteTelefono = new TelefonoDependiente();
       this.dependienteCelular = new CelularDependiente();
       this.dependienteCorreo = new CorreoDependiente();
     } else {
-      Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: constantes.error_agregar_dependiente});
+      Swal.fire({ icon: error_swal, title: error, text: mensajes.error_agregar_dependiente});
     }
   }
 
@@ -424,7 +434,6 @@ export class ClienteComponent implements OnInit {
     this.llenarDataSourceDependiente(this.cliente.dependientes);
     if (this.cliente.dependientes.length < 1)
       this.habilitarCelularTelefonoCorreoDependiente = true;
-    console.log(this.cliente.dependientes);
   }
 
   editarDependiente(dependienteSeleccionado: Dependiente) {
@@ -440,41 +449,40 @@ export class ClienteComponent implements OnInit {
     if (event != null)
       event.preventDefault();
     //AGREGAR AUXILIARES
-    if (this.dependiente.razonSocial != constantes.vacio) {
-      if (this.dependienteTelefono.numero != constantes.vacio)
+    if (this.dependiente.razonSocial != valores.vacio) {
+      if (this.dependienteTelefono.numero != valores.vacio)
         this.dependiente.telefonos.push(this.dependienteTelefono);
-      if (this.dependienteTelefono.numero != constantes.vacio)
+      if (this.dependienteTelefono.numero != valores.vacio)
         this.dependiente.celulares.push(this.dependienteCelular);
-      if (this.dependienteCorreo.email != constantes.vacio)
+      if (this.dependienteCorreo.email != valores.vacio)
         this.dependiente.correos.push(this.dependienteCorreo);
       let ubicacion: Ubicacion = new Ubicacion();
       ubicacion.provincia = this.dependienteProvincia;
       ubicacion.canton = this.dependienteCanton;
       ubicacion.parroquia = this.dependienteParroquia;
-      if (ubicacion.provincia != constantes.vacio && ubicacion.canton != constantes.vacio && ubicacion.parroquia != constantes.vacio) {
+      if (ubicacion.provincia != valores.vacio && ubicacion.canton != valores.vacio && ubicacion.parroquia != valores.vacio) {
         await this.ubicacionService.obtenerUbicacionID(ubicacion).then(
           res => {
             this.dependiente.direccion.ubicacion = res.resultado as Ubicacion;
           },
-          err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
+          err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
         );
       }
       this.cliente.dependientes.push(this.dependiente);
     }
     //CLIENTE
-    console.log(this.cliente);
-    if (this.cliente.direccion.ubicacion.provincia != "" && this.cliente.direccion.ubicacion.canton != "" && this.cliente.direccion.ubicacion.parroquia != "") {
+    if (this.cliente.direccion.ubicacion.provincia != valores.vacio && this.cliente.direccion.ubicacion.canton != valores.vacio && this.cliente.direccion.ubicacion.parroquia != valores.vacio) {
       await this.ubicacionService.obtenerUbicacionID(this.cliente.direccion.ubicacion).then(
         res => {
           this.cliente.direccion.ubicacion = res.resultado as Ubicacion;
         },
-        err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
+        err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
       );
     }
 
     this.clienteService.actualizar(this.cliente).subscribe(
       res => {
-        Swal.fire({ icon: constantes.exito_swal, title: constantes.exito, text: res.mensaje });
+        Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
         this.cliente = res.resultado as Cliente;
         this.dependienteCantones = [];
         this.dependienteParroquias = [];
@@ -486,7 +494,7 @@ export class ClienteComponent implements OnInit {
         this.dependienteCorreo = new CorreoDependiente();
         this.dependiente = new Dependiente();
       },
-      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
+      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
 
@@ -495,12 +503,12 @@ export class ClienteComponent implements OnInit {
       event.preventDefault();
     this.clienteService.eliminarPersonalizado(this.cliente).subscribe(
       res => {
-        Swal.fire({ icon: constantes.exito_swal, title: constantes.exito, text: res.mensaje });
-        let indiceTabActivo = constantes.tab_activo(this.tabService);
+        Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
+        let indiceTabActivo = tab_activo(this.tabService);
         this.tabService.removeTab(indiceTabActivo);
-        this.tabService.addNewTab(ClienteComponent, constantes.tab_cliente);
+        this.tabService.addNewTab(ClienteComponent, tabs.tab_cliente);
       },
-      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
+      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
 
@@ -510,7 +518,7 @@ export class ClienteComponent implements OnInit {
         this.clientes = res.resultado as Cliente[]
         this.llenarDataSourceCliente(this.clientes);
       },
-      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
+      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
 
@@ -571,7 +579,6 @@ export class ClienteComponent implements OnInit {
   }
 
   seleccionDependiente(dependienteSeleccionado: Dependiente) {
-    console.log(dependienteSeleccionado);
     this.dependiente = dependienteSeleccionado;
     if (!this.filaSeleccionada.has(dependienteSeleccionado)) {
       this.filaSeleccionada.clear();
@@ -580,14 +587,6 @@ export class ClienteComponent implements OnInit {
     } else {
       this.filaSeleccionada.clear();
       this.dependiente = new Dependiente();
-    }
-  }
-
-  cambiarEstado() {
-    if (this.estadoCliente) {
-      this.cliente.estado = 'ACTIVO';
-    } else {
-      this.cliente.estado = 'INACTIVO';
     }
   }
 
@@ -606,7 +605,6 @@ export class ClienteComponent implements OnInit {
       next: (res) => {
         this.clienteService.validarIdentificacion(this.cliente.identificacion).subscribe({
           next: (res) => {
-            console.log(res);
             this.cliente.tipoIdentificacion = res.resultado.tipoIdentificacion;
             this.cliente.tipoContribuyente = res.resultado.tipoContribuyente as TipoContribuyente;
             if (this.cliente.tipoContribuyente == null) {
@@ -621,16 +619,16 @@ export class ClienteComponent implements OnInit {
             this.validarSexoEstadoCivilOrigenIngreso();
           },
           error: (err) => {
-            this.cliente.tipoIdentificacion = '';
+            this.cliente.tipoIdentificacion = null;
             this.cliente.tipoContribuyente = new TipoContribuyente();
-            Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje });
+            Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje });
           }
         });
       },
       error: (err) => {
-        this.cliente.tipoIdentificacion = '';
+        this.cliente.tipoIdentificacion = null;
         this.cliente.tipoContribuyente = new TipoContribuyente();
-        Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje });
+        Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje });
       }
     });
   }
@@ -647,7 +645,7 @@ export class ClienteComponent implements OnInit {
   }
 
   cambiarRazonSocialDependiente() {
-    if (this.dependiente.razonSocial != "") {
+    if (this.dependiente.razonSocial != valores.vacio) {
       this.habilitarCelularTelefonoCorreoDependiente = false;
     }
   }
@@ -662,18 +660,18 @@ export class ClienteComponent implements OnInit {
   }
 
   crearTelefono() {
-    if (this.telefono.numero.length != 0) {
+    if (this.telefono.numero.length != valores.cero) {
       this.cliente.telefonos.push(this.telefono);
       this.telefono = new Telefono();
     } else {
-      Swal.fire(constantes.error, "Ingrese un número telefónico válido", constantes.error_swal);
+      Swal.fire({ icon: error_swal, title: error, text: mensajes.error_telefono_ingresado });
     }
   }
   validarTelefono() {
     let digito = this.telefono.numero.substr(0, 1);
     if (this.telefono.numero.length != 11 || digito != "0") {
-      this.telefono.numero = "";
-      Swal.fire(constantes.error, "Telefono Invalido", constantes.error_swal);
+      this.telefono.numero = valores.vacio;
+      Swal.fire({ icon: error_swal, title: error, text: mensajes.error_telefono_invalido });
     }
   }
   eliminarTelefono(i: number) {
@@ -685,14 +683,14 @@ export class ClienteComponent implements OnInit {
       this.cliente.celulares.push(this.celular);
       this.celular = new Celular();
     } else {
-      Swal.fire(constantes.error, "Ingrese un número de celular válido", constantes.error_swal);
+      Swal.fire({ icon: error_swal, title: error, text: mensajes.error_celular_ingresado });
     }
   }
   validarCelular() {
     let digito = this.celular.numero.substr(0, 2);
     if (this.celular.numero.length != 12 || digito != "09") {
-      this.celular.numero = "";
-      Swal.fire(constantes.error, "Celular Invalido", constantes.error_swal);
+      this.celular.numero = valores.vacio;
+      Swal.fire({ icon: error_swal, title: error, text: mensajes.error_celular_invalido });
     }
   }
   eliminarCelular(i: number) {
@@ -700,18 +698,18 @@ export class ClienteComponent implements OnInit {
   }
 
   crearCorreo() {
-    if (this.correo.email.length != 0) {
+    if (this.correo.email.length != valores.cero) {
       this.cliente.correos.push(this.correo);
       this.correo = new Correo();
     } else {
-      Swal.fire(constantes.error, "Ingrese un correo válido", constantes.error_swal);
+      Swal.fire({ icon: error_swal, title: error, text: mensajes.error_correo_ingresado });
     }
   }
   validarCorreo() {
     let arroba = this.correo.email.includes("@");
     if (!arroba) {
-      this.correo.email = "";
-      Swal.fire(constantes.error, "Correo Invalido", constantes.error_swal);
+      this.correo.email = valores.vacio;
+      Swal.fire({ icon: error_swal, title: error, text: mensajes.error_correo_invalido });
     }
   }
   eliminarCorreo(i: number) {
@@ -719,8 +717,8 @@ export class ClienteComponent implements OnInit {
   }
 
   crearTelefonoDependiente() {
-    if (this.dependienteTelefono.numero.length != 0) {
-      if (this.cliente.dependientes.length > 0 && this.dependiente.razonSocial == "") {
+    if (this.dependienteTelefono.numero.length != valores.cero) {
+      if (this.cliente.dependientes.length > valores.cero && this.dependiente.razonSocial == valores.vacio) {
         this.cliente.dependientes.slice(-1)[0].telefonos.push(this.dependienteTelefono);
       } else {
         this.dependiente.telefonos.push(this.dependienteTelefono);
@@ -731,8 +729,8 @@ export class ClienteComponent implements OnInit {
   validarTelefonoDependiente() {
     let digito = this.dependienteTelefono.numero.substr(0, 1);
     if (this.dependienteTelefono.numero.length != 11 || digito != "0") {
-      this.dependienteTelefono.numero = "";
-      Swal.fire(constantes.error, "Telefono Invalido", constantes.error_swal);
+      this.dependienteTelefono.numero = valores.vacio;
+      Swal.fire({ icon: error_swal, title: error, text: mensajes.error_telefono_invalido });
     }
   }
   eliminarTelefonoDependiente(i: number) {
@@ -742,7 +740,7 @@ export class ClienteComponent implements OnInit {
 
   crearCelularDependiente() {
     if (this.dependienteCelular.numero.length != 0) {
-      if (this.cliente.dependientes.length > 0 && this.dependiente.razonSocial == "") {
+      if (this.cliente.dependientes.length > 0 && this.dependiente.razonSocial == valores.vacio) {
         this.cliente.dependientes.slice(-1)[0].celulares.push(this.dependienteCelular);
       }
       else {
@@ -754,8 +752,8 @@ export class ClienteComponent implements OnInit {
   validarCelularDependiente() {
     let digito = this.dependienteCelular.numero.substr(0, 2);
     if (this.dependienteCelular.numero.length != 12 || digito != "09") {
-      this.dependienteCelular.numero = "";
-      Swal.fire(constantes.error, "Celular Invalido", constantes.error_swal);
+      this.dependienteCelular.numero = valores.vacio;
+      Swal.fire({ icon: error_swal, title: error, text: mensajes.error_celular_invalido });
     }
   }
   eliminarCelularDependiente(i: number) {
@@ -776,8 +774,8 @@ export class ClienteComponent implements OnInit {
   validarCorreoDependiente() {
     let arroba = this.dependienteCorreo.email.includes("@");
     if (!arroba) {
-      this.dependienteCorreo.email = "";
-      Swal.fire(constantes.error, "Correo Invalido", constantes.error_swal);
+      this.dependienteCorreo.email = valores.vacio;
+      Swal.fire({ icon: error_swal, title: error, text: mensajes.error_correo_invalido });
     }
   }
   eliminarCorreoDependiente(i: number) {
@@ -790,13 +788,9 @@ export class ClienteComponent implements OnInit {
     this.cliente.direccion.ubicacion.provincia = provincia;
     this.ubicacionService.obtenerCantones(provincia).subscribe({
       next: res => {
-        if (res.resultado != null) {
-          this.cantones = res.resultado as Ubicacion[];
-        } else {
-          Swal.fire(constantes.error, res.mensaje, constantes.error_swal);
-        }
+        this.cantones = res.resultado as Ubicacion[];
       },
-      error: err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
+      error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     });
   }
 
@@ -804,13 +798,9 @@ export class ClienteComponent implements OnInit {
     this.dependiente.direccion.ubicacion.provincia = provincia;
     this.ubicacionService.obtenerCantones(provincia).subscribe(
       res => {
-        if (res.resultado != null) {
-          this.dependienteCantones = res.resultado as Ubicacion[];
-        } else {
-          Swal.fire(constantes.error, res.mensaje, constantes.error_swal);
-        }
+        this.dependienteCantones = res.resultado as Ubicacion[];
       },
-      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
+      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
 
@@ -818,13 +808,9 @@ export class ClienteComponent implements OnInit {
     this.cliente.direccion.ubicacion.canton = canton;
     this.ubicacionService.obtenerParroquias(canton).subscribe({
       next: res => {
-        if (res.resultado != null) {
-          this.parroquias = res.resultado as Ubicacion[];
-        } else {
-          Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: res.mensaje })
-        }
+        this.parroquias = res.resultado as Ubicacion[];
       },
-      error: err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
+      error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     });
   }
 
@@ -832,13 +818,9 @@ export class ClienteComponent implements OnInit {
     this.dependiente.direccion.ubicacion.provincia = canton;
     this.ubicacionService.obtenerParroquias(canton).subscribe(
       res => {
-        if (res.resultado != null) {
-          this.dependienteParroquias = res.resultado as Ubicacion[];
-        } else {
-          Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: res.mensaje })
-        }
+        this.dependienteParroquias = res.resultado as Ubicacion[];
       },
-      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
+      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
 
@@ -851,7 +833,7 @@ export class ClienteComponent implements OnInit {
   }
 
   validarSexoEstadoCivilOrigenIngreso() {
-    if (this.cliente.tipoContribuyente.tipo == constantes.tipo_contribuyente_juridica) {
+    if (this.cliente.tipoContribuyente.tipo == otras.tipoContribuyenteJuridica) {
       this.activacion_s_es_oi = true;
     } else {
       this.activacion_s_es_oi = false;
@@ -875,10 +857,10 @@ export class ClienteComponent implements OnInit {
         if (res.resultado != null) {
           this.dependienteCantones = res.resultado as Ubicacion[];
         } else {
-          Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: res.mensaje })
+          Swal.fire({ icon: error_swal, title: error, text: res.mensaje })
         }
       },
-      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
+      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
 
@@ -903,7 +885,6 @@ export class ClienteComponent implements OnInit {
   }
 
 }
-
 
 @Component({
   selector: 'dialogo-mapa',

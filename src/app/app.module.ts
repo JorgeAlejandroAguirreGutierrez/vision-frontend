@@ -13,7 +13,7 @@ import { MaterialModule } from './componentes/material-module';
 import { AgmCoreModule } from '@agm/core';
 
 import { AppComponent } from './app.component';
-import { ModeloService } from './servicios/modelo.service';
+import { ModeloService } from './servicios/administracion/modelo.service';
 
 // Componentes generales para las pestañas
 import { TabContentComponent } from "./componentes/tab-content.component";
@@ -33,27 +33,26 @@ import { LocationStrategy, PathLocationStrategy } from '@angular/common';
 import { FlexLayoutModule } from '@angular/flex-layout';
 
 //Servicios
-import { DatoAdicionalService} from './servicios/dato-adicional.service';
-import { PlazoCreditoService} from './servicios/plazo-credito.service';
-import { ImpuestoService } from './servicios/impuesto.service';
-import { RetencionService } from './servicios/retencion-cliente.service';
-import { TransportistaService } from './servicios/transportista.service';
-import { UbicacionService } from './servicios/ubicacion.service';
-import { TipoContribuyenteService } from './servicios/tipo-contribuyente.service';
-import { VehiculoTransporteService } from './servicios/vehiculo-transporte.service';
-import { EmpresaService } from './servicios/empresa.service';
-import { EstablecimientoService } from './servicios/establecimiento.service';
-import { PuntoVentaService } from './servicios/punto-venta.service';
-import { UsuarioService } from './servicios/usuario.service';
-import { ClienteService } from './servicios/cliente.service';
-import { FacturaService } from './servicios/factura.service';
-import { EquivalenciaMedidaService } from './servicios/equivalencia-medida.service';
-import { GrupoProductoService } from './servicios/grupo-producto.service';
+import { PlazoCreditoService} from './servicios/cliente/plazo-credito.service';
+import { ImpuestoService } from './servicios/inventario/impuesto.service';
+import { RetencionService } from './servicios/cliente/retencion-cliente.service';
+import { TransportistaService } from './servicios/entrega/transportista.service';
+import { UbicacionService } from './servicios/configuracion/ubicacion.service';
+import { TipoContribuyenteService } from './servicios/cliente/tipo-contribuyente.service';
+import { VehiculoTransporteService } from './servicios/entrega/vehiculo-transporte.service';
+import { EmpresaService } from './servicios/configuracion/empresa.service';
+import { EstablecimientoService } from './servicios/usuario/establecimiento.service';
+import { PuntoVentaService } from './servicios/usuario/punto-venta.service';
+import { UsuarioService } from './servicios/usuario/usuario.service';
+import { ClienteService } from './servicios/cliente/cliente.service';
+import { FacturaService } from './servicios/comprobante/factura.service';
+import { EquivalenciaMedidaService } from './servicios/inventario/equivalencia-medida.service';
+import { GrupoProductoService } from './servicios/inventario/grupo-producto.service';
 
 // Importar las Rutas
 import { AppRoutingModule } from './app-routing.module';
 import { RoutingComponents } from './app-routing.module';
-import { TipoRetencionService } from './servicios/tipo-retencion.service';
+import { TipoRetencionService } from './servicios/configuracion/tipo-retencion.service';
 
 @NgModule({
   declarations: [
@@ -81,7 +80,7 @@ import { TipoRetencionService } from './servicios/tipo-retencion.service';
     AgmCoreModule.forRoot({apiKey: 'AIzaSyBmbDYyXuK6PzbmJDoadvlJU7UtcgDJQZM'}),
     AppRoutingModule
   ],
-  providers: [DatoAdicionalService, PlazoCreditoService, ImpuestoService, RetencionService, ModeloService,
+  providers: [PlazoCreditoService, ImpuestoService, RetencionService, ModeloService,
               TransportistaService, UbicacionService, TipoContribuyenteService, VehiculoTransporteService,
               EmpresaService, EstablecimientoService, PuntoVentaService, UsuarioService, DatePipe,
               ClienteService, FacturaService, TipoRetencionService, TabService,

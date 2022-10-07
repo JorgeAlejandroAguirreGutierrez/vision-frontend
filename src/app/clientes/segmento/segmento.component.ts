@@ -1,14 +1,13 @@
 import { Component, OnInit, HostListener, ElementRef, Renderer2 } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
-import * as constantes from '../../constantes';
-import * as util from '../../util';
+import { valores, validarSesion, tab_activo, exito, exito_swal, error, error_swal } from '../../constantes';
 import Swal from 'sweetalert2';
 
 import { Router } from '@angular/router';
-import { Sesion } from '../../modelos/sesion';
-import { SesionService } from '../../servicios/sesion.service';
-import { Segmento } from '../../modelos/segmento';
-import { SegmentoService } from '../../servicios/segmento.service';
+import { Sesion } from '../../modelos/usuario/sesion';
+import { SesionService } from '../../servicios/usuario/sesion.service';
+import { Segmento } from '../../modelos/inventario/segmento';
+import { SegmentoService } from '../../servicios/inventario/segmento.service';
 
 import { ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
@@ -23,8 +22,8 @@ import { MatTableDataSource } from '@angular/material/table';
 
 export class SegmentoComponent implements OnInit {
 
-  estadoActivo: string = constantes.estadoActivo;
-  estadoInactivo: string = constantes.estadoInactivo;
+  activo: string = valores.activo;
+  inactivo: string = valores.inactivo;
 
   abrirPanelNuevoSegmento: boolean = true;
   abrirPanelAdminSegmento: boolean = false;
@@ -55,7 +54,7 @@ export class SegmentoComponent implements OnInit {
     private sesionService: SesionService, private router: Router) { }
 
   ngOnInit() {
-    this.sesion = util.validarSesion(this.sesionService, this.router);
+    this.sesion = validarSesion(this.sesionService, this.router);
     this.consultarSegmentos();
   }
 
@@ -88,11 +87,11 @@ export class SegmentoComponent implements OnInit {
     this.segmentoService.crear(this.segmento).subscribe({
       next: res => {
         this.segmento = res.resultado as Segmento;
-        Swal.fire({ icon: constantes.exito_swal, title: constantes.exito, text: res.mensaje });
+        Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
         this.segmentos.push(this.segmento);
         this.llenarTablaSegmento(this.segmentos);
       },
-      error: err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
+      error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     });
   }
 
@@ -108,10 +107,10 @@ export class SegmentoComponent implements OnInit {
     this.segmentoService.actualizar(this.segmento).subscribe({
       next: res => {
         this.segmento = res.resultado as Segmento;
-        Swal.fire({ icon: constantes.exito_swal, title: constantes.exito, text: res.mensaje });
+        Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
         this.limpiar();
       },
-      error: err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
+      error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     });
   }
 
@@ -120,10 +119,10 @@ export class SegmentoComponent implements OnInit {
       event.preventDefault();
     this.segmentoService.eliminarPersonalizado(this.segmento).subscribe({
       next: res => {
-        Swal.fire({ icon: constantes.exito_swal, title: constantes.exito, text: res.mensaje });
+        Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
         this.limpiar();
       },
-      error: err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
+      error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     });
   }
 
@@ -133,7 +132,7 @@ export class SegmentoComponent implements OnInit {
         this.segmentos = res.resultado as Segmento[]
         this.llenarTablaSegmento(this.segmentos);
       },
-      error: err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
+      error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     });
   }
 

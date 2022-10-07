@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { MouseEvent } from '@agm/core'; 
-import { Coordenada } from "../../../modelos/coordenada";
+import { Coordenada } from "../../../modelos/configuracion/coordenada";
 
 
 @Component({

@@ -1,16 +1,15 @@
 import { Component, OnInit, Type } from '@angular/core';
 import Swal from 'sweetalert2';
-import * as constantes from '../../../constantes';
-import * as util from '../../../util';
-import { MovimientoContableService } from '../../../servicios/movimiento-contable.service';
-import { MovimientoContable } from '../../../modelos/movimiento-contable';
+import { valores, validarSesion, tab_activo, exito, exito_swal, error, error_swal } from '../../../constantes';
+import { MovimientoContableService } from '../../../servicios/contabilidad/movimiento-contable.service';
+import { MovimientoContable } from '../../../modelos/contabilidad/movimiento-contable';
 
 import { ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { Sesion } from 'src/app/modelos/sesion';
-import { SesionService } from 'src/app/servicios/sesion.service';
+import { Sesion } from 'src/app/modelos/usuario/sesion';
+import { SesionService } from 'src/app/servicios/usuario/sesion.service';
 import { Router } from '@angular/router';
 
 @Component({
@@ -45,7 +44,7 @@ export class TablaMovimientoContableComponent implements OnInit {
   constructor(private sesionService: SesionService, private router: Router, private movimientoContableService: MovimientoContableService) { }
 
   ngOnInit() {
-    this.sesion=util.validarSesion(this.sesionService, this.router);
+    this.sesion=validarSesion(this.sesionService, this.router);
     this.consultar();
   }
 
@@ -65,7 +64,7 @@ export class TablaMovimientoContableComponent implements OnInit {
         this.dataSourceMovimientoContable.paginator = this.paginator;
         this.dataSourceMovimientoContable.sort = this.sort;
       },
-      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
+      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
 

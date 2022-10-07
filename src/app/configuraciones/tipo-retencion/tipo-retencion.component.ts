@@ -1,15 +1,14 @@
 import { Component, OnInit, ViewChild, HostListener } from '@angular/core';
 import Swal from 'sweetalert2';
-import * as constantes from '../../constantes';
-import * as util from '../../util';
-import { SesionService } from 'src/app/servicios/sesion.service';
-import { Sesion } from 'src/app/modelos/sesion';
+import { valores, validarSesion, tab_activo, exito, exito_swal, error, error_swal } from '../../constantes';
+import { SesionService } from 'src/app/servicios/usuario/sesion.service';
+import { Sesion } from 'src/app/modelos/usuario/sesion';
 import { Router } from '@angular/router';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
-import { TipoRetencion } from 'src/app/modelos/tipo-retencion';
-import { TipoRetencionService } from 'src/app/servicios/tipo-retencion.service';
+import { TipoRetencion } from 'src/app/modelos/configuracion/tipo-retencion';
+import { TipoRetencionService } from 'src/app/servicios/configuracion/tipo-retencion.service';
 
 @Component({
   selector: 'app-tipo-retencion',
@@ -46,7 +45,7 @@ export class TipoRetencionComponent implements OnInit {
     private sesionService: SesionService,private router: Router) { }
 
   ngOnInit() {
-    this.sesion=util.validarSesion(this.sesionService, this.router);
+    this.sesion=validarSesion(this.sesionService, this.router);
     this.consultar();
   }
   
@@ -71,11 +70,11 @@ export class TipoRetencionComponent implements OnInit {
       event.preventDefault();
     this.tipoRetencionService.crear(this.tipoRetencion).subscribe(
       res => {
-        Swal.fire({ icon: constantes.exito_swal, title: constantes.exito, text: res.mensaje });
+        Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
         this.tipoRetencion=res.resultado as TipoRetencion;
         this.consultar();
       },
-      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
+      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
 
@@ -84,11 +83,11 @@ export class TipoRetencionComponent implements OnInit {
       event.preventDefault();
     this.tipoRetencionService.actualizar(this.tipoRetencion).subscribe(
       res => {
-        Swal.fire({ icon: constantes.exito_swal, title: constantes.exito, text: res.mensaje });
+        Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
         this.tipoRetencion=res.resultado as TipoRetencion;
         this.consultar();
       },
-      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
+      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
 
@@ -97,11 +96,11 @@ export class TipoRetencionComponent implements OnInit {
       event.preventDefault();
     this.tipoRetencionService.eliminar(this.tipoRetencion).subscribe(
       res => {
-        Swal.fire({ icon: constantes.exito_swal, title: constantes.exito, text: res.mensaje });
+        Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
         this.nuevo(null);
         this.consultar();
       },
-      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
+      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
   
@@ -113,7 +112,7 @@ export class TipoRetencionComponent implements OnInit {
         this.dataSourceTipoRetencion.paginator = this.paginator;
         this.dataSourceTipoRetencion.sort = this.sort;
       },
-      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
+      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
 

@@ -1,12 +1,11 @@
 import { Component, HostListener, OnInit, ViewChild } from '@angular/core';
-import { VehiculoTransporteService } from '../../servicios/vehiculo-transporte.service';
-import { VehiculoTransporte } from '../../modelos/vehiculo-transporte';
+import { VehiculoTransporteService } from '../../servicios/entrega/vehiculo-transporte.service';
+import { VehiculoTransporte } from '../../modelos/entrega/vehiculo-transporte';
 import Swal from 'sweetalert2';
-import * as constantes from '../../constantes';
-import * as util from '../../util';
-import { SesionService } from 'src/app/servicios/sesion.service';
+import { valores, validarSesion, exito, exito_swal, error, error_swal } from '../../constantes';
+import { SesionService } from 'src/app/servicios/usuario/sesion.service';
 import { Router } from '@angular/router';
-import { Sesion } from 'src/app/modelos/sesion';
+import { Sesion } from 'src/app/modelos/usuario/sesion';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
@@ -48,7 +47,7 @@ export class VehiculoTransporteComponent implements OnInit {
     private sesionService: SesionService,private router: Router) { }
 
   ngOnInit() {
-    this.sesion=util.validarSesion(this.sesionService, this.router);
+    this.sesion=validarSesion(this.sesionService, this.router);
     this.consultar();
   }
   
@@ -73,11 +72,11 @@ export class VehiculoTransporteComponent implements OnInit {
       event.preventDefault();
     this.vehiculoTransporteService.crear(this.vehiculoTransporte).subscribe(
       res => {
-        Swal.fire({ icon: constantes.exito_swal, title: constantes.exito, text: res.mensaje });
+        Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
         this.vehiculoTransporte=res.resultado as VehiculoTransporte;
         this.consultar();
       },
-      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
+      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
 
@@ -86,11 +85,11 @@ export class VehiculoTransporteComponent implements OnInit {
       event.preventDefault();
     this.vehiculoTransporteService.actualizar(this.vehiculoTransporte).subscribe(
       res => {
-        Swal.fire({ icon: constantes.exito_swal, title: constantes.exito, text: res.mensaje });
+        Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
         this.vehiculoTransporte=res.resultado as VehiculoTransporte;
         this.consultar();
       },
-      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
+      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
 
@@ -99,11 +98,11 @@ export class VehiculoTransporteComponent implements OnInit {
       event.preventDefault();
     this.vehiculoTransporteService.eliminar(this.vehiculoTransporte).subscribe(
       res => {
-        Swal.fire({ icon: constantes.exito_swal, title: constantes.exito, text: res.mensaje });
+        Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
         this.nuevo(null);
         this.consultar();
       },
-      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
+      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
   
@@ -115,7 +114,7 @@ export class VehiculoTransporteComponent implements OnInit {
         this.dataSourceVehiculoTransporte.paginator = this.paginator;
         this.dataSourceVehiculoTransporte.sort = this.sort;
       },
-      err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
+      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
 
