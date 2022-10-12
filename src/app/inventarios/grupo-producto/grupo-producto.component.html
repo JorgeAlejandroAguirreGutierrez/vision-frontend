@@ -129,16 +129,16 @@
                     <div class="col-6">
                         <mat-form-field appearance="standard">
                             <mat-label>Estado</mat-label>
-                            <mat-select [(ngModel)]="estado" class="form-control-sm" [disabled]="!editarGrupoProducto">
-                                <mat-option [value]="estadoActivo">{{estadoActivo}}</mat-option>
-                                <mat-option [value]="estadoInactivo">{{estadoInactivo}}</mat-option>
+                            <mat-select [(ngModel)]="grupoProducto.estado" class="form-control-sm" [disabled]="!editarGrupoProducto">
+                                <mat-option [value]="activo">{{activo}}</mat-option>
+                                <mat-option [value]="inactivo">{{inactivo}}</mat-option>
                             </mat-select>
                         </mat-form-field>
                     </div>
                     <div class="col-8">
                         <mat-form-field appearance="standard">
                             <mat-label>Cod. Movimiento Contable</mat-label>
-                            <input matInput type="text" [(ngModel)]="grupoProducto.afectacionContable.descripcion" disabled
+                            <input matInput type="text" [(ngModel)]="grupoProducto.movimientoContable.codigo" disabled
                                 oninput="this.value = this.value.toUpperCase()" class="form-control-sm">
                         </mat-form-field>
                     </div>

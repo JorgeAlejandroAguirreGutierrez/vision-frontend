@@ -15,7 +15,7 @@ import { Cliente } from '../../modelos/cliente/cliente';
 import { ClienteService } from '../../servicios/cliente/cliente.service';
 import { TipoContribuyente } from '../../modelos/cliente/tipo-contribuyente';
 import { TipoContribuyenteService } from '../../servicios/cliente/tipo-contribuyente.service';
-import { SegmentoService } from '../../servicios/inventario/segmento.service';
+import { SegmentoService } from '../../servicios/cliente/segmento.service';
 import { Segmento } from '../../modelos/inventario/segmento';
 import { GrupoCliente } from '../../modelos/cliente/grupo-cliente'
 import { GrupoClienteService } from '../../servicios/cliente/grupo-cliente.service';

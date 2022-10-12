@@ -3,7 +3,7 @@ import { BehaviorSubject } from 'rxjs';
 import { FormControl } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { startWith, map } from 'rxjs/operators';
-import { validarSesion, tabs, tab_activo, exito, exito_swal, error, error_swal } from '../../constantes';
+import { valores, validarSesion, tab_activo, exito, exito_swal, error, error_swal } from '../../constantes';
 import * as util from '../../util';
 import Swal from 'sweetalert2';
 
@@ -38,12 +38,12 @@ export interface DialogData {
 })
 export class GrupoProductoComponent implements OnInit {
 
-  estadoActivo: string = "ACTIVO";
-  estadoInactivo: string = "INACTIVO";
+  activo: string = valores.activo;
+  inactivo: string = valores.inactivo;
 
   usuario: string = "";
   clave: string = "";
-  estado: string = "ACTIVO";
+  //estado: string = "ACTIVO";
 
   abrirPanelNuevoGrupo: boolean = true;
   abrirPanelAdminGrupo: boolean = false;
@@ -213,7 +213,7 @@ export class GrupoProductoComponent implements OnInit {
   crear(event: any) {
     if (event != null)
       event.preventDefault();
-    this.grupoProducto.afectacionContable.id = 1;
+    this.grupoProducto.movimientoContable.id = 1;
     console.log(this.grupoProducto);
     this.grupoProductoService.crear(this.grupoProducto).subscribe({
       next: res => {
@@ -414,9 +414,9 @@ export class GrupoProductoComponent implements OnInit {
   private filtroSeccion(value: string): string[] {
     //this.grupoProducto.seccion = value.toUpperCase();
     this.seleccionarSeccion();
-    if (this.secciones.indexOf(value) > -1) { // Si encuentra la sección
+    //if (this.secciones.indexOf(value) > -1) { // Si encuentra la sección
       //this.consultarMovimientoContable(); //
-    }
+    //}
     if (this.secciones.length > 0) {
       const filterValue = value.toLowerCase();
       return this.secciones.filter(seccion => seccion.toLowerCase().includes(filterValue));

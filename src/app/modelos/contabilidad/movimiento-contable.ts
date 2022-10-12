@@ -1,29 +1,31 @@
 import { AfectacionContable } from "./afectacion-contable";
+import { CuentaContable } from "./cuenta-contable"
 import { valores } from "../../constantes";
+
 export class MovimientoContable {
     id:number;
     codigo: string;
-    inventario: string;
-    costoVenta: number;
-    devolucionCompra: number;
-    descuentoCompra: number;
-    venta: string;
-    devolucionVenta: number;
-    descuentoVenta: number;
-    devolucionCostoVenta: number;
+    inventario: CuentaContable;
+    costoVenta: CuentaContable;
+    devolucionCompra: CuentaContable;
+    descuentoCompra: CuentaContable;
+    venta: CuentaContable;
+    devolucionVenta: CuentaContable;
+    descuentoVenta: CuentaContable;
+    devolucionCostoVenta: CuentaContable;
     afectacionContable: AfectacionContable;
 
     constructor() {
         this.id = valores.cero;
         this.codigo = valores.vacio;
-        this.inventario = valores.vacio;
-        this.costoVenta = valores.cero;
-        this.devolucionCompra = valores.cero;
-        this.descuentoCompra = valores.cero;
-        this.venta = valores.vacio;
-        this.devolucionVenta = valores.cero;
-        this.descuentoVenta = valores.cero;
-        this.devolucionCostoVenta = valores.cero;
+        this.inventario = new CuentaContable();
+        this.costoVenta = new CuentaContable();
+        this.devolucionCompra = new CuentaContable();
+        this.descuentoCompra = new CuentaContable();
+        this.venta = new CuentaContable();
+        this.devolucionVenta = new CuentaContable();
+        this.descuentoVenta = new CuentaContable();
+        this.devolucionCostoVenta = new CuentaContable();
         this.afectacionContable = new AfectacionContable();
     }
     

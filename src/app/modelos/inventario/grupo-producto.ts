@@ -1,4 +1,4 @@
-import { AfectacionContable } from "../../modelos/contabilidad/afectacion-contable";
+import { MovimientoContable } from "../../modelos/contabilidad/movimiento-contable";
 import { CategoriaProducto } from "./categoria-producto";
 import { valores } from "../../constantes";
 
@@ -12,8 +12,9 @@ export class GrupoProducto {
     sublinea: string;
     presentacion: string;
     presentacionBien: number;
-    afectacionContable: AfectacionContable;
+    estado: string;
     categoriaProducto: CategoriaProducto;
+    movimientoContable: MovimientoContable;
 
     constructor() {
         this.id=valores.cero;
@@ -24,7 +25,8 @@ export class GrupoProducto {
         this.linea=valores.vacio;
         this.sublinea=valores.vacio;
         this.presentacion=valores.vacio;
-        this.afectacionContable = new AfectacionContable();
+        this.estado=valores.activo;
         this.categoriaProducto = new CategoriaProducto();
+        this.movimientoContable = new MovimientoContable();
     }
 }

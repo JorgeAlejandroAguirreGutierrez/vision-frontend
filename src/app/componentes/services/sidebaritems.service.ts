@@ -42,6 +42,7 @@ import { UsuarioComponent } from '../../usuarios/usuario/usuario.component';
 import { EstablecimientoComponent } from '../../usuarios/establecimiento/establecimiento.component';
 import { PuntoVentaComponent } from '../../usuarios/punto-venta/punto-venta.component';
 import { PerfilComponent } from '../../usuarios/perfil/perfil.component';
+import { PermisoComponent } from '../../usuarios/permiso/permiso.component';
 
 //CONFIGURACIONES
 import { EmpresaComponent } from '../../configuraciones/empresa/empresa.component';
@@ -104,6 +105,7 @@ export class SidebarItemsService {
     if (tabNombre == modulos.modulo_inventarios) {
       this.llenarOpciones(GrupoProductoComponent,tabs.tab_grupo_producto, items.item_grupo_producto, icos.ico_grupo_producto);
       this.llenarOpciones(ProductoComponent,tabs.tab_producto, items.item_producto, icos.ico_producto);
+      this.llenarOpciones(KardexComponent,tabs.tab_kardex, items.item_kardex, icos.ico_kardex);
       this.llenarOpciones(PromocionComponent,tabs.tab_promociones,items.item_promociones,icos.ico_promociones);
       this.llenarOpciones(ProveedorProductoComponent,tabs.tab_proveedor_producto, items.item_proveedor_producto, icos.ico_proveedor_producto);
       this.llenarOpciones(TransferenciaBodegaComponent,tabs.tab_transferencia_bodega, items.item_transferencia_bodega, icos.ico_transferencia_bodega);
@@ -138,6 +140,8 @@ export class SidebarItemsService {
       this.llenarOpciones(UsuarioComponent, tabs.tab_usuario, items.item_usuario, icos.ico_usuario);
       this.llenarOpciones(EstablecimientoComponent, tabs.tab_establecimiento, items.item_establecimiento, icos.ico_establecimiento);
       this.llenarOpciones(PuntoVentaComponent, tabs.tab_punto_venta, items.item_punto_venta, icos.ico_punto_venta);
+      this.llenarOpciones(PerfilComponent, tabs.tab_perfil, items.item_perfil, icos.ico_perfil);
+      this.llenarOpciones(PermisoComponent, tabs.tab_permiso, items.item_permiso, icos.ico_permiso);
     }
 
     if (tabNombre == modulos.modulo_configuracion) {

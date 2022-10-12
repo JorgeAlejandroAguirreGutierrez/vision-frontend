@@ -32,6 +32,7 @@ export class TablaGrupoProductoComponent implements OnInit {
     { nombreColumna: 'linea', cabecera: 'Línea', celda: (row: GrupoProducto) => `${row.linea}`},
     { nombreColumna: 'sublinea', cabecera: 'Sublínea', celda: (row: GrupoProducto) => `${row.sublinea}`},
     { nombreColumna: 'presentacion', cabecera: 'Presentación', celda: (row: GrupoProducto) => `${row.presentacion}`},
+    { nombreColumna: 'estado', cabecera: 'Estado', celda: (row: GrupoProducto) => `${row.estado}`},
   ];
   cabeceraGrupoProducto: string[]  = this.columnasGrupoProducto.map(titulo => titulo.nombreColumna);
   dataSourceGrupoProducto: MatTableDataSource<GrupoProducto>;
@@ -74,10 +75,12 @@ export class TablaGrupoProductoComponent implements OnInit {
 
   llenarDataSourceGrupoProducto(gruposProductos : GrupoProducto[]){
     this.ordenarAsc(gruposProductos, 'id');
+    //console.log(gruposProductos);
     this.dataSourceGrupoProducto = new MatTableDataSource(gruposProductos);
     this.dataSourceGrupoProducto.filterPredicate = (data: GrupoProducto, filter: string): boolean =>
       data.codigo.toUpperCase().includes(filter) || data.grupo.toUpperCase().includes(filter) || data.subgrupo.toUpperCase().includes(filter) ||
-      data.seccion.toUpperCase().includes(filter) || data.linea.toUpperCase().includes(filter) || data.sublinea.toUpperCase().includes(filter) || data.presentacion.toUpperCase().includes(filter);
+      data.seccion.toUpperCase().includes(filter) || data.linea.toUpperCase().includes(filter) || data.sublinea.toUpperCase().includes(filter) || 
+      data.presentacion.toUpperCase().includes(filter) || data.estado.toUpperCase().includes(filter);
     this.dataSourceGrupoProducto.paginator = this.paginator;
     this.dataSourceGrupoProducto.sort = this.sort;
     this.observableDSGrupoProducto.next(this.dataSourceGrupoProducto);

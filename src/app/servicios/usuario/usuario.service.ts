@@ -75,6 +75,15 @@ export class UsuarioService {
     );
   }
 
+  eliminarPersonalizado(usuario: Usuario): Observable<Respuesta> {
+    return this.http.put(environment.host + urn.ruta + urn.usuario, usuario, options).pipe(
+      map(response => response as Respuesta),
+      catchError(err => {
+        return throwError(()=>err);
+      })
+    );
+  }
+
   buscar(usuario: Usuario): Observable<Respuesta> {
     return this.http.get(environment.host + urn.ruta + urn.usuario + urn.buscar + '/' + usuario.codigo + '/' + usuario.nombre + '/' + usuario.correo, options).pipe(
       map(response => response as Respuesta),

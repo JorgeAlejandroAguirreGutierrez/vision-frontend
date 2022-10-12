@@ -73,7 +73,7 @@ export const urn =
      consultarGrupos: "/consultarGrupos",
      consultarSubgrupos: "/consultarSubgrupos",
      consultarSecciones: "/consultarSecciones",
-     consultarLineas: "/consultarlineas",
+     consultarLineas: "/consultarLineas",
      consultarSublineas: "/consultarSublineas",
      consultarPresentaciones: "/consultarPresentaciones",
      consultarMovimientoContable: "/consultarMovimientoContable",
@@ -275,6 +275,8 @@ export const tabs = {
      tab_usuario: "Usuario",
      tab_establecimiento: "Establecimiento",
      tab_punto_venta: "Punto de Venta",
+     tab_perfil: "Pefil",
+     tab_permiso: "Permiso",
      tab_grupo_producto: "Grupo de Producto",
      tab_segmento: "Segmentos",
      tab_movimiento_contable: "Movimiento contable",
@@ -337,6 +339,8 @@ export const items = {
      item_usuario : "Usuario",
      item_establecimiento : "Establecimiento",
      item_punto_venta : "Punto de Venta",
+     item_perfil : "Perfil",
+     item_permiso : "Permiso",
      item_grupo_producto : "Grupo Producto",
      item_grupo_servicio : "Grupo de Servicio",
      item_segmento : "Segmento",
@@ -391,16 +395,18 @@ export const icos = {
      ico_vehiculo_transporte : 'fa fa-file-text-o',
      ico_activo_fijo : 'fa fa-file-text-o',
      ico_bodega : 'fa fa-archive',
-     ico_kardex : 'fa fa-file-text-o',
+     ico_kardex : 'fa fa-table',
      ico_medida : 'fa fa-medium',
      ico_producto : 'fa fa-shopping-basket',
      ico_servicio : 'fa fa-child',
      ico_promocion : 'fa fa-product-hunt',
      ico_proveedor_bodega : 'fa fa-bus',
      ico_equivalencia_medida : 'fa fa-exchange',
-     ico_usuario : 'fa fa-file-text-o',
-     ico_establecimiento : 'fa fa-file-text-o',
-     ico_punto_venta : 'fa fa-file-text-o',
+     ico_usuario : 'fa fa-user',
+     ico_establecimiento : 'fa fa-home',
+     ico_punto_venta : 'fa fa-product-hunt',
+     ico_perfil : 'fa fa-database',
+     ico_permiso : 'fa fa-check-square',
      ico_grupo_producto : 'fa fa-object-group',
      ico_segmento : 'fa fa-th-list',
      ico_movimiento_contable : 'fa fa-retweet',
@@ -436,7 +442,7 @@ export const optionsGenerarArchivo = {headers: headers, responseType: "blob" as 
 
 export function validarSesion(sesionService : SesionService, router: Router) : Sesion{
     let sesion: Sesion = sesionService.getSesion();
-    console.log(sesion);
+    //console.log(sesion);
     sesionService.validar(sesion).subscribe({
         next: res => {
             sesion = res.resultado as Sesion;

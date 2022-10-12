@@ -16,7 +16,7 @@ import { ImpuestoService } from '../../servicios/inventario/impuesto.service';
 import { Medida } from '../../modelos/inventario/medida';
 import { MedidaService } from '../../servicios/inventario/medida.service';
 import { Precio } from '../../modelos/inventario/precio';
-import { SegmentoService } from '../../servicios/inventario/segmento.service';
+import { SegmentoService } from '../../servicios/cliente/segmento.service';
 import { Segmento } from '../../modelos/inventario/segmento';
 import { ProductoService } from '../../servicios/inventario/producto.service';
 import { CategoriaProductoService } from '../../servicios/inventario/categoria-producto.service';
