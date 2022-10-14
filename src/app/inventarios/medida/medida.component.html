@@ -37,28 +37,28 @@
             </mat-expansion-panel-header>
             <hr>
             <div class="form-group form-row">
-                <div class="col-3">
+                <div class="col-2">
                     <mat-form-field appearance="standard">
                         <mat-label>Codigo</mat-label>
                         <input matInput type="text" [(ngModel)]="medida.codigo" class="form-control-sm"
                             [disabled]="true">
                     </mat-form-field>
                 </div>
-                <div class="col-7">
+                <div class="col-2">
                     <mat-form-field appearance="standard">
                         <mat-label>Tipo</mat-label>
                         <input matInput type="text" [(ngModel)]="medida.tipo"
                             oninput="this.value = this.value.toUpperCase()" class="form-control-sm">
                     </mat-form-field>
                 </div>
-                <div class="col-7">
+                <div class="col-4">
                     <mat-form-field appearance="standard">
                         <mat-label>Descripcion</mat-label>
                         <input matInput type="text" [(ngModel)]="medida.descripcion"
                             oninput="this.value = this.value.toUpperCase()" class="form-control-sm">
                     </mat-form-field>
                 </div>
-                <div class="col-7">
+                <div class="col-2">
                     <mat-form-field appearance="standard">
                         <mat-label>Abreviatura</mat-label>
                         <input matInput type="text" [(ngModel)]="medida.abreviatura"

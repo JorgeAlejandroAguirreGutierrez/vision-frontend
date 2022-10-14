@@ -105,7 +105,7 @@
             </button>
             </mat-form-field>
             <div class="mat-elevation-z8">
-                <table mat-table [dataSource]="dataSourceGrupoCliente" matSort>
+                <table mat-table [dataSource]="observableDSGrupoCliente.value" matSort>
                     <!-- Columnas Dinamicas -->
                     <ng-container *ngFor="let columna of columnasGrupoCliente" [matColumnDef]="columna.nombreColumna">
                         <th mat-header-cell *matHeaderCellDef mat-sort-header> {{ columna.cabecera }} </th>

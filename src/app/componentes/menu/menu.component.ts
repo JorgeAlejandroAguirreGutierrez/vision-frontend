@@ -37,12 +37,12 @@ export class MenuComponent implements OnInit {
   permiso_importacion: boolean;
   permiso_reportes: boolean;
 
+  permiso_accesos: boolean;
+  permiso_configuraciones: boolean;
   permiso_estadisticas: boolean;
   permiso_control: boolean;
   permiso_auditorias: boolean;
   permiso_tutoriales: boolean;
-  permiso_configuraciones: boolean;
-  permiso_usuarios: boolean;
 
 
   perfil_contador: boolean;
@@ -68,11 +68,13 @@ export class MenuComponent implements OnInit {
   ico_importacion: string = environment.prefijoUrlImagenes+"iconos/icoimportacion.png";
   ico_reportes: string = environment.prefijoUrlImagenes+"iconos/icoreportes.png";
 
+  ico_accesos: string = environment.prefijoUrlImagenes+"iconos/icoacceso.png";
+  ico_configuracion: string = environment.prefijoUrlImagenes+"iconos/icoconfiguraciones.png";
   ico_estadistica: string = environment.prefijoUrlImagenes+"iconos/icoestadisticas.png";
   ico_organismoscontrol: string = environment.prefijoUrlImagenes+"iconos/icoorganismoscontrol.png";
   ico_auditoria: string = environment.prefijoUrlImagenes+"iconos/icoauditoria.png";
-  ico_usuarios: string = environment.prefijoUrlImagenes+"iconos/icotutoriales.png";
-  ico_configuracion: string = environment.prefijoUrlImagenes+"iconos/icoconfiguraciones.png";
+  ico_tutoriales: string = environment.prefijoUrlImagenes+"iconos/icotutoriales.png";
+
 
   constructor(private sesionService: SesionService, private empresaService: EmpresaService, public tabService: TabService, private router: Router) { }
 
@@ -96,11 +98,12 @@ export class MenuComponent implements OnInit {
     this.permiso_reportes= this.obtenerPermiso('REPORTES');
     
     // ADMINISTRACION  
+    this.permiso_accesos=this.obtenerPermiso('USUARIOS');
+    this.permiso_configuraciones=this.obtenerPermiso('CONFIGURACIONES');
     this.permiso_estadisticas=this.obtenerPermiso('ESTADISTICAS');
     this.permiso_control=this.obtenerPermiso('ORGANISMOS_CONTROL');
     this.permiso_auditorias=this.obtenerPermiso('AUDITORIA');
-    this.permiso_usuarios=this.obtenerPermiso('USUARIOS');
-    this.permiso_configuraciones=this.obtenerPermiso('CONFIGURACIONES');
+    this.permiso_tutoriales=this.obtenerPermiso('TUTORIALES');
   }
 
   obtenerEmpresa(){

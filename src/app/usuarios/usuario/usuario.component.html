@@ -1,99 +1,210 @@
 <nav class="navbar-light nav-fijo">
     <ul class="navbar-nav">
-        <li class="nav-item">
-            <a class="nav-link" href="#" role="button" (click)="nuevo($event)">
-                <mat-icon>file</mat-icon>
+        <li class="nav-item" *ngIf="usuario.id==0">
+            <a class="nav-link" title="Guardar" role="button" (click)="crear($event)">
+                <mat-icon>save</mat-icon>
             </a>
         </li>
+        <ng-container *ngIf="usuario.id!=0">
+            <li class="nav-item" *ngIf="!editarUsuario">
+                <a class="nav-link" title="Actualizar" role="button" (click)="editar($event)">
+                    <mat-icon>edit</mat-icon>
+                </a>
+            </li>
+            <li class="nav-item" *ngIf="editarUsuario">
+                <a class="nav-link" title="Actualizar" role="button" (click)="actualizar($event)">
+                    <mat-icon>update</mat-icon>
+                </a>
+            </li>
+        </ng-container>
         <li class="nav-item">
-            <ng-container *ngIf="usuario.id==0">
-                <a class="nav-link" href="#" role="button" (click)="crear($event)">
-                    <mat-icon>save</mat-icon>
-                </a>
-            </ng-container>
-            <ng-container *ngIf="usuario.id!=0">
-                <a class="nav-link" href="#" role="button" (click)="actualizar($event)">
-                    <mat-icon>save</mat-icon>
-                </a>
-            </ng-container>
+            <a class="nav-link" title="Nuevo" role="button" (click)="nuevo($event)">
+                <mat-icon>file_copy</mat-icon>
+            </a>
+        </li>
+        <li class="nav-item" *ngIf="usuario.id!=0">
+            <a class="nav-link" title="Eliminar" role="button" (click)="eliminar($event)">
+                <mat-icon>delete</mat-icon>
+            </a>
         </li>
     </ul>
 </nav>
 <div class="contenedor">
-    <div class="row">
-        <div class="col-12">
-            <div class="card">
-                <div class="card-header">
-                    &nbsp;&nbsp;&nbsp;&nbsp;<i><u>CREAR USUARIO</u></i>
-                </div>
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col-12">
-                            <div class="form-row">
-                                <div class="form-group col-4">
-                                    <mat-form-field appearance="standard">
-                                        <mat-label>Codigo</mat-label>
-                                        <input matInput type="text" [(ngModel)]="usuario.codigo" class="form-control-sm" [disabled]="true">
-                                    </mat-form-field>
-                                </div>
-                                <div class="form-group col-4">
-                                    <mat-form-field appearance="standard">
-                                        <mat-label>Nombre</mat-label>
-                                        <input matInput type="text" [(ngModel)]="usuario.nombre" oninput="this.value = this.value.toUpperCase()" class="form-control-sm">
-                                    </mat-form-field>
-                                </div>
-                                <div class="form-group col-4">
-                                    <mat-form-field appearance="standard">
-                                        <mat-label>Correo</mat-label>
-                                        <input matInput type="text" [(ngModel)]="usuario.correo" oninput="this.value = this.value.toUpperCase()" class="form-control-sm">
-                                    </mat-form-field>
-                                </div>
-                            </div>
-                            <div class="form-row">
-                                <div class="form-group col-4">
-                                    <mat-form-field appearance="standard">
-                                        <mat-label>Contraseña</mat-label>
-                                        <input matInput type="text" [(ngModel)]="usuario.contrasena" class="form-control-sm" [disabled]="true">
-                                    </mat-form-field>
-                                </div>
-                                <div class="form-group col-4">
-                                    <mat-form-field appearance="standard">
-                                        <mat-label>Identificacion</mat-label>
-                                        <input matInput type="text" [(ngModel)]="usuario.identificacion" class="form-control-sm">
-                                    </mat-form-field>
-                                </div>
-                                <div class="form-group col-4">
-                                    <mat-checkbox [(ngModel)]="usuario.activo"
-                                    class="form-control-sm" color="primary">Activo.</mat-checkbox>
-                                </div>
-                            </div>
-                            <div class="form-row">
-                                <div class="form-group col-6">
-                                    <mat-form-field appearance="standard">
-                                        <mat-label>Punto de Venta</mat-label>
-                                        <mat-select [(ngModel)]="usuario.puntoVenta" [compareWith]="compareFn" class="form-control-sm">
-                                            <mat-option *ngFor="let puntoVenta of puntosVentas"
-                                                [value]="puntoVenta">
-                                                {{puntoVenta.descripcion}}
-                                            </mat-option>
-                                        </mat-select>
-                                    </mat-form-field>
-                                </div>
-                                <div class="form-group col-6">
-                                    <mat-form-field appearance="standard">
-                                        <mat-label>Perfil</mat-label>
-                                        <mat-select [(ngModel)]="usuario.perfil" [compareWith]="compareFn" class="form-control-sm">
-                                            <mat-option *ngFor="let perfil of perfiles" [value]="perfil">
-                                                {{perfil.descripcion}}
-                                            </mat-option>
-                                        </mat-select>
-                                    </mat-form-field>
-                                </div>
-                            </div>
-                        </div>
+    <mat-accordion class="headers-align">
+        <mat-expansion-panel (opened)="abrirPanelNuevoUsuario = true" (closed)="abrirPanelNuevoUsuario = false"
+            [expanded]="abrirPanelNuevoUsuario">
+            <mat-expansion-panel-header>
+                <mat-panel-title>
+                    <i><u>USUARIOS</u></i>
+                </mat-panel-title>
+                <mat-panel-description>
+                    {{abrirPanelNuevoUsuario ? 'Ocultar crear usuario' : 'Crear nuevo usuario'}}
+                    <mat-icon>playlist_add</mat-icon>
+                </mat-panel-description>
+            </mat-expansion-panel-header>
+            <hr>
+            <div class="form-group form-row">
+                <div class="form-row col-3 mr-2">
+                    <div class="col-12">
+                        <mat-form-field appearance="standard">
+                            <mat-label>Usuario</mat-label>
+                            <input matInput type="text" [(ngModel)]="usuario.usuario" class="form-control-sm">
+                        </mat-form-field>
+                    </div>
+                    <div class="col-12">
+                        <mat-form-field appearance="standard">
+                            <mat-label>Contraseña</mat-label>
+                            <input matInput [type]="hide ? 'password' : 'text'" [(ngModel)]="usuario.contrasena">
+                            <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide">
+                              <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+                            </button>
+                        </mat-form-field>
+                    </div>
+                    <div class="col-12">
+                        <mat-form-field appearance="standard">
+                            <mat-label>Repita Contraseña</mat-label>
+                            <input matInput [type]="hide ? 'password' : 'text'" [(ngModel)]="contrasena2">
+                            <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide">
+                              <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+                            </button>
+                        </mat-form-field>
                     </div>
                 </div>
+                <div class="form-row col-7 linea-vertical">
+                    <div class="col-2">
+                        <mat-form-field appearance="standard">
+                            <mat-label>Identificacion</mat-label>
+                            <input matInput type="text" [(ngModel)]="usuario.identificacion" class="form-control-sm">
+                        </mat-form-field>
+                    </div>
+                    <div class="col-8">
+                        <mat-form-field appearance="standard">
+                            <mat-label>Nombre</mat-label>
+                            <input matInput type="text" [(ngModel)]="usuario.nombre"
+                                oninput="this.value = this.value.toUpperCase()" [disabled]="!editarUsuario"
+                                oninput="this.value = this.value.toUpperCase()" class="form-control-sm">
+                        </mat-form-field>
+                    </div>
+                    <div class="col-2">
+                        <mat-form-field appearance="standard">
+                            <mat-label>Código</mat-label>
+                            <input matInput type="text" [(ngModel)]="usuario.codigo" class="form-control-sm"
+                                [disabled]="true">
+                        </mat-form-field>
+                    </div>
+                     <div class="col-5">
+                        <mat-form-field appearance="standard">
+                            <mat-label>Correo</mat-label>
+                            <input matInput placeholder="ejemplo@futuristic.com" [formControl]="email" class="form-control-sm"
+                                oninput="this.value = this.value.toLowerCase()" [disabled]="!editarUsuario" required>
+                                <mat-error *ngIf="email.invalid">{{getErrorMessage()}}</mat-error>    
+                        </mat-form-field>
+                    </div>
+                    <div class="col-4">
+                        <mat-form-field appearance="standard">
+                            <mat-label>Celular</mat-label>
+                            <b matPrefix>+593 </b>
+                            <input matInput type="tel" [(ngModel)]="usuario.celular" class="form-control-sm"
+                                (change)="validarCelular()" placeholder="09-9999-1234" oninput="this.value = this.value.replace
+                                        ( /^(\d{2})(\d{4})(\d{4})$/, '$1-$2-$3')">
+                        </mat-form-field>
+                    </div>
+                    <div class="col-3">
+                        <mat-form-field appearance="standard">
+                            <mat-label>Estado</mat-label>
+                            <mat-select [(ngModel)]="usuario.activo" [disabled]="!editarUsuario"
+                                class="form-control-sm">
+                                <mat-option [value]="activo">{{activo}}</mat-option>
+                                <mat-option [value]="inactivo">{{inactivo}}</mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                    <div class="col-4">
+                        <mat-form-field appearance="standard">
+                            <mat-label>Perfil</mat-label>
+                            <mat-select [(ngModel)]="usuario.perfil" [compareWith]="compareFn" class="form-control-sm">
+                                <mat-option *ngFor="let perfil of perfiles" [value]="perfil">
+                                    {{perfil.descripcion}}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                    <div class="col-4">
+                        <mat-form-field appearance="standard">
+                            <mat-label>Establecimiento</mat-label>
+                            <mat-select [(ngModel)]="usuario.perfil" [compareWith]="compareFn" class="form-control-sm">
+                                <mat-option *ngFor="let perfil of perfiles" [value]="perfil">
+                                    {{perfil.descripcion}}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                    <div class="col-4">
+                        <mat-form-field appearance="standard">
+                            <mat-label>Punto de Venta</mat-label>
+                            <mat-select [(ngModel)]="usuario.puntoVenta" [compareWith]="compareFn"
+                                class="form-control-sm">
+                                <mat-option *ngFor="let puntoVenta of puntosVentas" [value]="puntoVenta">
+                                    {{puntoVenta.descripcion}}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                </div>
+                <div class="col-2">
+                    <mat-card class="foto">
+                        FOTO
+                    </mat-card>
+                </div>
             </div>
-        </div>
-    </div>
+        </mat-expansion-panel>
+    </mat-accordion>
+    <mat-accordion class="headers-align">
+        <mat-expansion-panel (opened)="abrirPanelAdminUsuario = true" (closed)="abrirPanelAdminUsuario = false"
+            [expanded]="abrirPanelAdminUsuario">
+            <mat-expansion-panel-header>
+                <mat-panel-title>
+                    <i><u>GESTIONAR USUARIOS</u></i>
+                </mat-panel-title>
+                <mat-panel-description>
+                    {{abrirPanelAdminUsuario ? 'Ocultar administrador de usuarios' : 'Editar usuario existente'}}
+                    <mat-icon>playlist_add_check</mat-icon>
+                </mat-panel-description>
+            </mat-expansion-panel-header>
+            <hr>
+            <mat-form-field appearance="standard">
+                <mat-label>Buscar usuario</mat-label>
+                <input matInput (keyup)="filtroUsuario($event)" #inputFiltroUsuario>
+                <button mat-button *ngIf="inputFiltroUsuario.value" matSuffix mat-icon-button
+                    (click)="borrarFiltroUsuario()">
+                    <mat-icon>close</mat-icon>
+                </button>
+            </mat-form-field>
+            <div class="mat-elevation-z8">
+                <table mat-table [dataSource]="observableDSUsuario.value" matSort>
+                    <!-- Columnas Dinamicas -->
+                    <ng-container *ngFor="let columna of columnasUsuario" [matColumnDef]="columna.nombreColumna">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> {{ columna.cabecera }} </th>
+                        <td mat-cell *matCellDef="let row"> {{ columna.celda(row) }} </td>
+                    </ng-container>
+                    <tr mat-header-row *matHeaderRowDef="cabeceraUsuario"></tr>
+                    <tr mat-row (click)="seleccion(row)" [class.selected-row]="clickedRows.has(row)"
+                        *matRowDef="let row; columns: cabeceraUsuario;"></tr>
+                    <!-- Row shown when there is no matching data. -->
+                    <tr class="mat-row" *matNoDataRow>
+                        <td class="mat-cell" colspan="6">No hay datos que coincidan con el usuario:
+                            "{{inputFiltroUsuario.value}}"
+                        </td>
+                    </tr>
+                </table>
+                <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
+            </div>
+            <div class="azul" *ngIf="!clickedRows.size">
+                Seleccione una fila para editar
+            </div>
+            <div class="azul" *ngFor="let clickedRow of clickedRows">
+                Id: {{clickedRow.id}} seleccionado
+            </div>
+        </mat-expansion-panel>
+    </mat-accordion>
 </div>

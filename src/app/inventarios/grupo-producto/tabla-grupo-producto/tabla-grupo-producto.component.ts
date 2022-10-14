@@ -1,4 +1,5 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, ElementRef, Renderer2 } from '@angular/core';
+import { BehaviorSubject } from 'rxjs';
 import Swal from 'sweetalert2';
 import { validarSesion, error, error_swal } from '../../../constantes';
 import { GrupoProducto } from '../../../modelos/inventario/grupo-producto';
@@ -19,7 +20,7 @@ import { Sesion } from 'src/app/modelos/usuario/sesion';
 export class TablaGrupoProductoComponent implements OnInit {
 
   sesion: Sesion=null;
-  @Output() grupo_producto_seleccionado = new EventEmitter();
+  @Output() grupoProductoSeleccionado = new EventEmitter();
   gruposProductos: GrupoProducto[];
 
   columnasGrupoProducto: any[] = [
@@ -31,19 +32,23 @@ export class TablaGrupoProductoComponent implements OnInit {
     { nombreColumna: 'linea', cabecera: 'Línea', celda: (row: GrupoProducto) => `${row.linea}`},
     { nombreColumna: 'sublinea', cabecera: 'Sublínea', celda: (row: GrupoProducto) => `${row.sublinea}`},
     { nombreColumna: 'presentacion', cabecera: 'Presentación', celda: (row: GrupoProducto) => `${row.presentacion}`},
+    { nombreColumna: 'estado', cabecera: 'Estado', celda: (row: GrupoProducto) => `${row.estado}`},
   ];
   cabeceraGrupoProducto: string[]  = this.columnasGrupoProducto.map(titulo => titulo.nombreColumna);
   dataSourceGrupoProducto: MatTableDataSource<GrupoProducto>;
-  clickedRows = new Set<GrupoProducto>();
+  observableDSGrupoProducto: BehaviorSubject<MatTableDataSource<GrupoProducto>> = new BehaviorSubject<MatTableDataSource<GrupoProducto>>(null);
+  @Input() clickedRows = new Set<GrupoProducto>();
   
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
+  @ViewChild("inputFiltroGrupoProducto") inputFiltroGrupoProducto: ElementRef;
 
-  constructor(private sesionService: SesionService, private router: Router, private grupoProductoService: GrupoProductoService) { }
+  constructor(private renderer: Renderer2, private sesionService: SesionService, private router: Router, 
+    private grupoProductoService: GrupoProductoService) { }
 
   ngOnInit() {
     this.sesion=validarSesion(this.sesionService, this.router);
-    this.consultar();
+    this.consultarGrupoProductos();
   }
 
   filtroGrupoProducto(event: Event) {
@@ -53,38 +58,50 @@ export class TablaGrupoProductoComponent implements OnInit {
       this.dataSourceGrupoProducto.paginator.firstPage();
     }
   }
+  borrarFiltroGrupoProducto() {
+    this.renderer.setProperty(this.inputFiltroGrupoProducto.nativeElement, 'value', '');
+    this.dataSourceGrupoProducto.filter = '';
+  }
 
-  consultar() {
-    this.grupoProductoService.consultar().subscribe(
-      res => {
+  consultarGrupoProductos() {
+    this.grupoProductoService.consultar().subscribe({
+      next: res => {
         this.gruposProductos = res.resultado as GrupoProducto[];
         this.llenarDataSourceGrupoProducto(this.gruposProductos);
       },
-      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
-    );
+      error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+    });
   }
 
   llenarDataSourceGrupoProducto(gruposProductos : GrupoProducto[]){
+    this.ordenarAsc(gruposProductos, 'id');
+    //console.log(gruposProductos);
     this.dataSourceGrupoProducto = new MatTableDataSource(gruposProductos);
     this.dataSourceGrupoProducto.filterPredicate = (data: GrupoProducto, filter: string): boolean =>
       data.codigo.toUpperCase().includes(filter) || data.grupo.toUpperCase().includes(filter) || data.subgrupo.toUpperCase().includes(filter) ||
-      data.seccion.toUpperCase().includes(filter) || data.linea.toUpperCase().includes(filter) || data.sublinea.toUpperCase().includes(filter) || data.presentacion.toUpperCase().includes(filter);
+      data.seccion.toUpperCase().includes(filter) || data.linea.toUpperCase().includes(filter) || data.sublinea.toUpperCase().includes(filter) || 
+      data.presentacion.toUpperCase().includes(filter) || data.estado.toUpperCase().includes(filter);
     this.dataSourceGrupoProducto.paginator = this.paginator;
     this.dataSourceGrupoProducto.sort = this.sort;
+    this.observableDSGrupoProducto.next(this.dataSourceGrupoProducto);
+  }
+
+  ordenarAsc(arrayJson: any, pKey: any) {
+    arrayJson.sort(function (a: any, b: any) {
+      return a[pKey] > b[pKey];
+    });
   }
 
   seleccion(grupoProductoSeleccionado: GrupoProducto) {
     if (!this.clickedRows.has(grupoProductoSeleccionado)){
       this.clickedRows.clear();
       this.clickedRows.add(grupoProductoSeleccionado);
-      this.grupo_producto_seleccionado.emit(
-        { grupoProductoSeleccionado }
-      );
     } else {
       this.clickedRows.clear();
-      this.grupo_producto_seleccionado.emit(
-         new GrupoProducto()
-      );
+      grupoProductoSeleccionado = new GrupoProducto();
     }
+    this.grupoProductoSeleccionado.emit(
+      { grupoProductoSeleccionado }
+    );
   }
 }

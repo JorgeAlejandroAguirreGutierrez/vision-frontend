@@ -1,178 +1,158 @@
-import { Component, OnInit, HostListener  } from '@angular/core';
-import Swal from 'sweetalert2';
+import { Component, OnInit, HostListener, ElementRef, Renderer2 } from '@angular/core';
+import { BehaviorSubject } from 'rxjs';
 import { valores, validarSesion, tab_activo, exito, exito_swal, error, error_swal } from '../../constantes';
+import Swal from 'sweetalert2';
+
+import { Router } from '@angular/router';
 import { Sesion } from '../../modelos/usuario/sesion';
 import { SesionService } from '../../servicios/usuario/sesion.service';
-import { CuentaContableService } from '../../servicios/contabilidad/cuenta-contable.service';
 import { CuentaContable } from '../../modelos/contabilidad/cuenta-contable';
+import { CuentaContableService } from '../../servicios/contabilidad/cuenta-contable.service';
 
 import { ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-cuenta-contable',
   templateUrl: './cuenta-contable.component.html',
   styleUrls: ['./cuenta-contable.component.scss']
 })
+
 export class CuentaContableComponent implements OnInit {
 
-  abrirPanelCuentaContable: boolean = true;
-  abrirPanelAdminCuentaContable:boolean = false;
+  activo: string = valores.activo;
+  inactivo: string = valores.inactivo;
 
-  sesion: Sesion;
-  estado: string= valores.activo; // Quitar cuando se aumente el campo en la tabla segmento
+  abrirPanelNuevoCuentaContable: boolean = true;
+  abrirPanelAdminCuentaContable: boolean = false;
+  editarCuentaContable: boolean = true;
 
-  cuentaContable: CuentaContable= new CuentaContable();
+  sesion: Sesion = null;
+  cuentaContable: CuentaContable = new CuentaContable();
   cuentasContables: CuentaContable[];
-  cuentaContableActualizar: CuentaContable= new CuentaContable();
-  cuentaContableBuscar: CuentaContable=new CuentaContable();
 
-  columnasCuentaContable: string[] = ['id', 'cuenta', 'descripcion', 'clasificacion', 'nivel', 'fe'];
+  columnasCuentaContable: any[] = [
+    { nombreColumna: 'id', cabecera: 'ID', celda: (row: CuentaContable) => `${row.id}` },
+    { nombreColumna: 'cuenta', cabecera: 'Cuenta', celda: (row: CuentaContable) => `${row.cuenta}` },
+    { nombreColumna: 'descripcion', cabecera: 'Descripción', celda: (row: CuentaContable) => `${row.descripcion}` },
+    { nombreColumna: 'clasificacion', cabecera: 'Clasificación', celda: (row: CuentaContable) => `${row.clasificacion}` },
+    { nombreColumna: 'nivel', cabecera: 'Nivel', celda: (row: CuentaContable) => `${row.nivel}` },
+    { nombreColumna: 'estado', cabecera: 'Estado', celda: (row: CuentaContable) => `${row.estado}` }
+  ];
+  cabeceraCuentaContable: string[] = this.columnasCuentaContable.map(titulo => titulo.nombreColumna);
   dataSourceCuentaContable: MatTableDataSource<CuentaContable>;
+  observableDSCuentaContable: BehaviorSubject<MatTableDataSource<CuentaContable>> = new BehaviorSubject<MatTableDataSource<CuentaContable>>(null);
   clickedRows = new Set<CuentaContable>();
-  
+
+
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
+  @ViewChild("inputFiltroCuentaContable") inputFiltroCuentaContable: ElementRef;
 
-  constructor(private sesionService: SesionService, private router: Router,
-        private cuentaContableService: CuentaContableService) { }
+  constructor(private renderer: Renderer2, private cuentaContableService: CuentaContableService,
+    private sesionService: SesionService, private router: Router) { }
 
   ngOnInit() {
-    this.sesion=validarSesion(this.sesionService, this.router);
-    this.construirCuentaContable();
-    this.consultar();
+    this.sesion = validarSesion(this.sesionService, this.router);
+    this.consultarCuentasContables();
   }
 
   @HostListener('window:keypress', ['$event'])
   keyEvent($event: KeyboardEvent) {
-    if (($event.shiftKey || $event.metaKey) && $event.key == "G") //SHIFT + G
+    if (($event.shiftKey || $event.metaKey) && $event.key == 'G') //SHIFT + G
       this.crear(null);
-    if (($event.shiftKey || $event.metaKey) && $event.key == "N") //ASHIFT + N
+    if (($event.shiftKey || $event.metaKey) && $event.key == 'N') //ASHIFT + N
       this.nuevo(null);
-    if (($event.shiftKey || $event.metaKey) && $event.key == "E") // SHIFT + E
+    if (($event.shiftKey || $event.metaKey) && $event.key == 'E') // SHIFT + E
       this.eliminar(null);
   }
 
-  async construirCuentaContable() {
-    let cuentaContableId=0;
-    this.cuentaContableService.currentMessage.subscribe(message => cuentaContableId = message);
-    if (cuentaContableId!= 0) {
-      await this.cuentaContableService.obtenerAsync(cuentaContableId).then(
-        res => {
-          Object.assign(this.cuentaContable, res.resultado as CuentaContable);
-          this.cuentaContableService.enviar(0);
-        },
-        err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
-      );
-    }
+  limpiar() {
+    this.cuentaContable = new CuentaContable();
+    this.editarCuentaContable = true;
+    this.clickedRows.clear();
+    this.borrarFiltroCuentaContable();
   }
 
   nuevo(event) {
-    if (event!=null)
+    if (event != null)
       event.preventDefault();
-    this.cuentaContable=new CuentaContable();
-  }
-
-  borrar(event){
-    if (event!=null){
-      event.preventDefault()};
-      if(this.cuentaContable.id!=0){
-        let id=this.cuentaContable.id;
-        let cuenta=this.cuentaContable.cuenta;
-        this.cuentaContable=new CuentaContable();
-        this.cuentaContable.id=id;
-        this.cuentaContable.cuenta=cuenta;
-      }
-      else{
-        this.cuentaContable=new CuentaContable();
-      }
+    this.limpiar();
   }
 
   crear(event) {
-    if (event!=null)
+    if (event != null)
       event.preventDefault();
-    this.cuentaContableService.crear(this.cuentaContable).subscribe(
-      res => {
+    this.cuentaContableService.crear(this.cuentaContable).subscribe({
+      next: res => {
+        this.cuentaContable = res.resultado as CuentaContable;
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
-        this.cuentaContable=new CuentaContable();
-        this.nuevo(null);
-        this.consultar();
+        this.cuentasContables.push(this.cuentaContable);
+        this.llenarTablaCuentaContable(this.cuentasContables);
       },
-      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
-    );
+      error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+    });
+  }
+
+  editar(event) {
+    if (event != null)
+      event.preventDefault();
+    this.editarCuentaContable = true;
   }
 
   actualizar(event) {
-    if (event!=null)
+    if (event != null)
       event.preventDefault();
-    this.cuentaContableService.actualizar(this.cuentaContable).subscribe(
-      res => {
+    this.cuentaContableService.actualizar(this.cuentaContable).subscribe({
+      next: res => {
+        this.cuentaContable = res.resultado as CuentaContable;
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
-        this.cuentaContable=new CuentaContable();
-        this.consultar();
+        this.limpiar();
       },
-      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
-    );
+      error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+    });
   }
 
-  actualizarLeer(event){
-    if (event!=null)
+  eliminar(event: any) {
+    if (event != null)
       event.preventDefault();
-      this.abrirPanelCuentaContable = true;
-      this.abrirPanelAdminCuentaContable = false;
-      if(this.cuentaContableActualizar.id!=0){
-        this.cuentaContable={... this.cuentaContableActualizar};
-        this.cuentaContableActualizar=new CuentaContable();
-      }
-  }
-
-  eliminar(event) {
-    if (event!=null)
-      event.preventDefault();
-    this.cuentaContableService.eliminar(this.cuentaContable).subscribe(
-      res => {
+    this.cuentaContableService.eliminarPersonalizado(this.cuentaContable).subscribe({
+      next: res => {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
-        this.cuentaContable = res.resultado as CuentaContable;     
+        this.limpiar();
       },
-      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
-    );
+      error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+    });
   }
 
-  consultar() {
-    this.cuentaContableService.consultar().subscribe(
-      res => {
+  consultarCuentasContables() {
+    this.cuentaContableService.consultar().subscribe({
+      next: res => {
         this.cuentasContables = res.resultado as CuentaContable[]
-        this.dataSourceCuentaContable = new MatTableDataSource(this.cuentasContables);
-        this.dataSourceCuentaContable.paginator = this.paginator;
-        this.dataSourceCuentaContable.sort = this.sort;
+        this.llenarTablaCuentaContable(this.cuentasContables);
       },
-      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
-    );
+      error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+    });
   }
 
-  buscar(event) {
-    if (event!=null)
-      event.preventDefault();
-    this.cuentaContableService.buscar(this.cuentaContableBuscar).subscribe(
-      res => {
-          this.cuentasContables = res.resultado as CuentaContable[]
-      },
-      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
-    );
+  llenarTablaCuentaContable(cuentasContables: CuentaContable[]) {
+    this.ordenarAsc(cuentasContables, 'id');
+    this.dataSourceCuentaContable = new MatTableDataSource(cuentasContables);
+    this.dataSourceCuentaContable.paginator = this.paginator;
+    this.dataSourceCuentaContable.sort = this.sort;
+    this.observableDSCuentaContable.next(this.dataSourceCuentaContable);
   }
 
-  seleccion(cuentaContableSeleccionado: CuentaContable) {
-    if (!this.clickedRows.has(cuentaContableSeleccionado)){
+  seleccion(cuentaContable: CuentaContable) {
+    if (!this.clickedRows.has(cuentaContable)) {
       this.clickedRows.clear();
-      this.clickedRows.add(cuentaContableSeleccionado);
-      this.cuentaContable = cuentaContableSeleccionado;
-      this.cuentaContableActualizar=cuentaContableSeleccionado;
+      this.clickedRows.add(cuentaContable);
+      this.cuentaContable = cuentaContable;
+      this.editarCuentaContable = false;
     } else {
-      this.clickedRows.clear();
-      this.cuentaContable = new CuentaContable();
+      this.limpiar();
     }
   }
 
@@ -183,17 +163,14 @@ export class CuentaContableComponent implements OnInit {
       this.dataSourceCuentaContable.paginator.firstPage();
     }
   }
-
-  cambiarBuscarCodigo(){
-    this.buscar(null);
+  borrarFiltroCuentaContable() {
+    this.renderer.setProperty(this.inputFiltroCuentaContable.nativeElement, 'value', '');
+    this.dataSourceCuentaContable.filter = '';
   }
 
-  cambiarBuscarDescripcion(){
-    this.buscar(null);
+  ordenarAsc(arrayJson: any, pKey: any) {
+    arrayJson.sort(function (a: any, b: any) {
+      return a[pKey] > b[pKey];
+    });
   }
-
-  cambiarBuscarAbreviatura(){
-    this.buscar(null);
-  }
-
 }

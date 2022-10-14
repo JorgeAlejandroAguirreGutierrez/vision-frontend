@@ -77,6 +77,15 @@ export class CuentaContableService {
     );
   }
 
+  eliminarPersonalizado(cuentaContable: CuentaContable): Observable<Respuesta> {
+    return this.http.put(environment.host + urn.ruta + urn.cuentaContable, cuentaContable, options).pipe(
+      map(response => response as Respuesta),
+      catchError(err => {
+        return throwError(()=>err);
+      })
+    );
+  }
+
   buscar(cuentaContable: CuentaContable): Observable<Respuesta> {
     return this.http.get(environment.host + urn.ruta + urn.cuentaContable + urn.buscar + '/' + cuentaContable.cuenta + '/' + cuentaContable.descripcion + '/' + cuentaContable.nivel, options).pipe(
       map(response => response as Respuesta),

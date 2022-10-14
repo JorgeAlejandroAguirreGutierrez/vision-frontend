@@ -14,14 +14,6 @@ import { InicioSesionComponent, CambioCredencialesComponent } from './componente
 import { MainComponent } from './componentes/main/main.component';
 import { MenuComponent } from './componentes/menu/menu.component';
 
-// Módulo de Usuarios
-import { SesionComponent } from './usuarios/sesion/sesion.component';
-import { PermisoComponent } from './usuarios/permiso/permiso.component';
-import { UsuarioComponent } from './usuarios/usuario/usuario.component';
-import { EstablecimientoComponent } from './usuarios/establecimiento/establecimiento.component';
-import { PuntoVentaComponent } from './usuarios/punto-venta/punto-venta.component';
-import { PerfilComponent } from './usuarios/perfil/perfil.component';
-
 // Molulo de Clientes
 import { ClienteComponent, DialogoMapaComponent } from './clientes/cliente/cliente.component';
 import { SegmentoComponent } from './clientes/segmento/segmento.component';
@@ -81,6 +73,14 @@ import { CuentaContableComponent } from './contabilidad/cuenta-contable/cuenta-c
 import { MovimientoContableComponent } from './contabilidad/movimiento-contable/movimiento-contable.component';
 import { TablaMovimientoContableComponent } from './contabilidad/movimiento-contable/tabla-movimiento-contable/tabla-movimiento-contable.component';
 
+// Módulo de Usuarios
+import { SesionComponent } from './usuarios/sesion/sesion.component';
+import { PermisoComponent } from './usuarios/permiso/permiso.component';
+import { UsuarioComponent } from './usuarios/usuario/usuario.component';
+import { EstablecimientoComponent } from './usuarios/establecimiento/establecimiento.component';
+import { PuntoVentaComponent } from './usuarios/punto-venta/punto-venta.component';
+import { PerfilComponent } from './usuarios/perfil/perfil.component';
+
 //Módulo de Configuraciones
 import { EmpresaComponent, DialogoMapaEmpresaComponent } from './configuraciones/empresa/empresa.component';
 import { UbicacionComponent } from './configuraciones/ubicacion/ubicacion.component';
@@ -94,61 +94,61 @@ import { TipoRetencionComponent } from './configuraciones/tipo-retencion/tipo-re
 
 
 const routes: Routes = [
-  {path: '',   redirectTo: '/iniciosesion', pathMatch: 'full'},
-  {path: 'index', redirectTo: '/iniciosesion', pathMatch: 'full'},
-  {path: 'iniciosesion', component: InicioSesionComponent},
-  {path: 'main', component: MainComponent},
-  {path: 'menu', component: MenuComponent},
+  { path: '', redirectTo: '/iniciosesion', pathMatch: 'full' },
+  { path: 'index', redirectTo: '/iniciosesion', pathMatch: 'full' },
+  { path: 'iniciosesion', component: InicioSesionComponent },
+  { path: 'main', component: MainComponent },
+  { path: 'menu', component: MenuComponent },
   // Rutas del Modulo de configuración
   {path: 'cliente/ubicacion', component: UbicacionComponent},
   {path: 'cliente/empresa', component: EmpresaComponent},
   // Rutas para el modulo de usuarios
-  {path: 'usuario', component: UsuarioComponent},
-  {path: 'usuario/establecimiento', component: EstablecimientoComponent},
-  {path: 'usuario/puntoventa', component: PuntoVentaComponent},
+  { path: 'usuario', component: UsuarioComponent },
+  { path: 'usuario/establecimiento', component: EstablecimientoComponent },
+  { path: 'usuario/puntoventa', component: PuntoVentaComponent },
   // Rutas para el modulo de clientes
-  {path: 'cliente', component: ClienteComponent},
-  {path: 'cliente/plazocredito', component: PlazoCreditoComponent},
-  {path: 'cliente/impuesto', component: ImpuestoComponent},
-  {path: 'cliente/grupocliente', component: GrupoClienteComponent},
-  {path: 'cliente/genero', component: GeneroComponent},
-  {path: 'cliente/estadocivil', component: EstadoCivilComponent},
-  {path: 'cliente/calificacioncliente', component: CalificacionClienteComponent},
-  {path: 'cliente/origeningreso', component: OrigenIngresoComponent},
-  {path: 'cliente/formapago', component: FormaPagoComponent},
-  {path: 'cliente/tipopago', component: TipoPagoComponent},
+  { path: 'cliente', component: ClienteComponent },
+  { path: 'cliente/plazocredito', component: PlazoCreditoComponent },
+  { path: 'cliente/impuesto', component: ImpuestoComponent },
+  { path: 'cliente/grupocliente', component: GrupoClienteComponent },
+  { path: 'cliente/genero', component: GeneroComponent },
+  { path: 'cliente/estadocivil', component: EstadoCivilComponent },
+  { path: 'cliente/calificacioncliente', component: CalificacionClienteComponent },
+  { path: 'cliente/origeningreso', component: OrigenIngresoComponent },
+  { path: 'cliente/formapago', component: FormaPagoComponent },
+  { path: 'cliente/tipopago', component: TipoPagoComponent },
   // Rutas para el Modulo de inventarios
-  {path: 'producto', component: ProductoComponent},
-  {path: 'inventario/medida', component: MedidaComponent},
-  {path: 'inventario/grupoproducto', component: GrupoProductoComponent},
-  {path: 'promocion', component: PromocionComponent},
-  {path: 'inventario/tablaequivalenciamedida', component: EquivalenciaMedidaComponent},
+  { path: 'producto', component: ProductoComponent },
+  { path: 'inventario/medida', component: MedidaComponent },
+  { path: 'inventario/grupoproducto', component: GrupoProductoComponent },
+  { path: 'promocion', component: PromocionComponent },
+  { path: 'inventario/tablaequivalenciamedida', component: EquivalenciaMedidaComponent },
   // Rutas para el modulo de entregas
-  {path: 'entrega', component: EntregaComponent},
-  {path: 'cliente/vehiculotransporte', component: VehiculoTransporteComponent},
+  { path: 'entrega', component: EntregaComponent },
+  { path: 'cliente/vehiculotransporte', component: VehiculoTransporteComponent },
   // Rutas para el modulo de recaudación
-  {path: 'recaudacion', component: RecaudacionComponent},
+  { path: 'recaudacion', component: RecaudacionComponent },
   // Rutas para el modulo de compras
-  {path: 'proveedor', component: ProveedorComponent},
-  {path: 'factura-compra', component: FacturaCompraComponent},
+  { path: 'proveedor', component: ProveedorComponent },
+  { path: 'factura-compra', component: FacturaCompraComponent },
   // Rutas para el módulo de comprobantes
-  {path: 'factura', component: FacturaComponent},
+  { path: 'factura', component: FacturaComponent },
   // Estos no se usa, borrar al final
-  {path: 'dashboard', component: DashboardComponent},
-  {path: 'forms', component: FormsComponent},
-  {path: 'tables', component: TablesComponent},
-  {path: 'typography', component: TypographyComponent},
-  {path: 'maps', component: MapsComponent},
-  {path: 'proforma', component: ProformaComponent},
+  { path: 'dashboard', component: DashboardComponent },
+  { path: 'forms', component: FormsComponent },
+  { path: 'tables', component: TablesComponent },
+  { path: 'typography', component: TypographyComponent },
+  { path: 'maps', component: MapsComponent },
+  { path: 'proforma', component: ProformaComponent },
 ];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes, { relativeLinkResolution: 'legacy' })],
   exports: [RouterModule],
-  entryComponents: [DialogoMapaComponent, DialogoMovimientoContableComponent, 
+  entryComponents: [DialogoMapaComponent, DialogoMovimientoContableComponent,
     DialogoGrupoProductoComponent, CambioCredencialesComponent, UsuarioComponent, PuntoVentaComponent, TipoRetencionComponent,
-    EstablecimientoComponent, ClienteComponent, GrupoClienteComponent, CalificacionClienteComponent, EstadoCivilComponent, 
-    GeneroComponent, OrigenIngresoComponent, PlazoCreditoComponent, FormaPagoComponent, TipoPagoComponent, BodegaComponent, 
+    EstablecimientoComponent, ClienteComponent, GrupoClienteComponent, CalificacionClienteComponent, EstadoCivilComponent,
+    GeneroComponent, OrigenIngresoComponent, PlazoCreditoComponent, FormaPagoComponent, TipoPagoComponent, BodegaComponent,
     DialogComponente, EquivalenciaMedidaComponent, MedidaComponent, FacturaComponent, ProformaComponent, ImportarComponent, ExportarComponent
   ],
   bootstrap: [ProformaComponent],
@@ -166,13 +166,6 @@ export const RoutingComponents = [
   MainComponent,
   MenuComponent,
   CambioCredencialesComponent,
-  //Usuarios
-  SesionComponent,
-  PermisoComponent,
-  UsuarioComponent,
-  EstablecimientoComponent,
-  PuntoVentaComponent,
-  PerfilComponent,
   // Clientes
   ClienteComponent,
   DialogoMapaComponent,
@@ -201,7 +194,7 @@ export const RoutingComponents = [
   DialogComponente,
   TablaPromoIndComponent,
   TablaPromoGrupComponent,
-  TablaComboComponent, 
+  TablaComboComponent,
   TablaComponenteComponent,
   EquivalenciaMedidaComponent,
   FiltroSerie,
@@ -230,6 +223,13 @@ export const RoutingComponents = [
   CuentaContableComponent,
   MovimientoContableComponent,
   TablaMovimientoContableComponent,
+  //Usuarios
+  SesionComponent,
+  PermisoComponent,
+  UsuarioComponent,
+  EstablecimientoComponent,
+  PuntoVentaComponent,
+  PerfilComponent,
   // configuración
   EmpresaComponent,
   DialogoMapaEmpresaComponent,

@@ -38,6 +38,7 @@ export class FormaPagoComponent implements OnInit {
     { nombreColumna: 'codigo', cabecera: 'Código', celda: (row: FormaPago) => `${row.codigo}` },
     { nombreColumna: 'descripcion', cabecera: 'Descripción', celda: (row: FormaPago) => `${row.descripcion}` },
     { nombreColumna: 'abreviatura', cabecera: 'Abreviatura', celda: (row: FormaPago) => `${row.abreviatura}` },
+    { nombreColumna: 'codigoSri', cabecera: 'Código SRI', celda: (row: FormaPago) => `${row.codigoSri}` },
     { nombreColumna: 'estado', cabecera: 'Estado', celda: (row: FormaPago) => `${row.estado}` }
   ];
   cabeceraFormaPago: string[] = this.columnasFormaPago.map(titulo => titulo.nombreColumna);
@@ -128,7 +129,8 @@ export class FormaPagoComponent implements OnInit {
   consultarFormaPagos() {
     this.formaPagoService.consultar().subscribe({
       next: res => {
-        this.formaPagos = res.resultado as FormaPago[]
+        this.formaPagos = res.resultado as FormaPago[];
+        //console.log(this.formaPagos);
         this.llenarTablaFormaPago(this.formaPagos);
       },
       error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })

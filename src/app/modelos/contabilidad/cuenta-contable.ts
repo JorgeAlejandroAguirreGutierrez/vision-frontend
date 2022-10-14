@@ -9,6 +9,7 @@ export class CuentaContable {
     fe:boolean;
     casillero:string;
     mapeo:string;
+    estado: string;
 
     constructor(){
         this.id = valores.cero;
@@ -19,5 +20,6 @@ export class CuentaContable {
         this.fe = false;
         this.casillero=valores.vacio;
         this.mapeo=valores.vacio;
+        this.estado=valores.activo;
     }
 }

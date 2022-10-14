@@ -46,22 +46,29 @@
             <div class="form-group form-row">
                 <div class="col-3">
                     <mat-form-field appearance="standard">
-                        <mat-label>Codigo</mat-label>
+                        <mat-label>Código</mat-label>
                         <input matInput type="text" [(ngModel)]="formaPago.codigo" class="form-control-sm"
                             [disabled]="true">
                     </mat-form-field>
                 </div>
                 <div class="col-5">
                     <mat-form-field appearance="standard">
-                        <mat-label>Descripcion</mat-label>
+                        <mat-label>Descripción</mat-label>
                         <input matInput type="text" [(ngModel)]="formaPago.descripcion" [disabled]="!editarFormaPago"
                             oninput="this.value = this.value.toUpperCase()" class="form-control-sm">
                     </mat-form-field>
                 </div>
-                <div class="col-2">
+                <div class="col-1">
                     <mat-form-field appearance="standard">
                         <mat-label>Abreviatura</mat-label>
                         <input matInput type="text" [(ngModel)]="formaPago.abreviatura" [disabled]="!editarFormaPago"
+                            oninput="this.value = this.value.toUpperCase()" class="form-control-sm">
+                    </mat-form-field>
+                </div>
+                <div class="col-1">
+                    <mat-form-field appearance="standard">
+                        <mat-label>Código SRI</mat-label>
+                        <input matInput type="text" [(ngModel)]="formaPago.codigoSri" [disabled]="!editarFormaPago"
                             oninput="this.value = this.value.toUpperCase()" class="form-control-sm">
                     </mat-form-field>
                 </div>

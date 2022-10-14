@@ -3,38 +3,48 @@ import { modulos, tabs, items, icos } from '../../constantes';
 import { SidebarItem } from "../../modelos/sidebar-item.model";
 import { MapsComponent } from '../pages/maps/maps.component';
 
-import { UsuarioComponent } from '../../usuarios/usuario/usuario.component';
-import { EstablecimientoComponent } from '../../usuarios/establecimiento/establecimiento.component';
-import { PuntoVentaComponent } from '../../usuarios/punto-venta/punto-venta.component';
-
+//CLIENTES
 import { ClienteComponent } from "../../clientes/cliente/cliente.component";
 import { GrupoClienteComponent } from '../../clientes/grupo-cliente/grupo-cliente.component';
+import { SegmentoComponent } from '../../clientes/segmento/segmento.component';
 import { CalificacionClienteComponent } from '../../clientes/calificacion-cliente/calificacion-cliente.component';
 import { FormaPagoComponent } from '../../clientes/forma-pago/forma-pago.component';
 import { OrigenIngresoComponent } from '../../clientes/origen-ingreso/origen-ingreso.component';
 import { PlazoCreditoComponent } from '../../clientes/plazo-credito/plazo-credito.component';
 
+//COMPRAS
 import { ProveedorComponent } from '../../compras/proveedor/proveedor.component';
 import { FacturaCompraComponent } from '../../compras/factura-compra/factura-compra.component';
 
+//VENTAS
 import { FacturaComponent } from "../../comprobantes/factura/factura.component";
 import { PedidoComponent } from "../../comprobantes/pedido/pedido.component";
 import { ProformaComponent } from "../../comprobantes/proforma/proforma.component";
 import { EgresoComponent } from "../../comprobantes/egreso/egreso.component";
 
+//INVENTARIOS
+import { GrupoProductoComponent } from '../../inventarios/grupo-producto/grupo-producto.component';
 import { ProductoComponent } from "../../inventarios/producto/producto.component";
+import { KardexComponent } from "../../inventarios/kardex/kardex.component";
 import { PromocionComponent } from "../../inventarios/promocion/promocion.component";
 import { ProveedorProductoComponent } from '../../inventarios/proveedor-producto/proveedor-producto.component';
 import { TransferenciaBodegaComponent } from '../../inventarios/transferencia-bodega/transferencia-bodega.component';
 import { BodegaComponent } from "../../inventarios/bodega/bodega.component";
+import { MedidaComponent } from '../../inventarios/medida/medida.component';
+import { EquivalenciaMedidaComponent } from '../../inventarios/equivalencia-medida/equivalencia-medida.component';
+
 
 import { TransportistaComponent } from '../../entregas/transportista/transportista.component';
 import { VehiculoTransporteComponent } from '../../entregas/vehiculo-transporte/vehiculo-transporte.component';
 
-import { MedidaComponent } from '../../inventarios/medida/medida.component';
-import { EquivalenciaMedidaComponent } from '../../inventarios/equivalencia-medida/equivalencia-medida.component';
-import { GrupoProductoComponent } from '../../inventarios/grupo-producto/grupo-producto.component';
+//ACCESOS
+import { UsuarioComponent } from '../../usuarios/usuario/usuario.component';
+import { EstablecimientoComponent } from '../../usuarios/establecimiento/establecimiento.component';
+import { PuntoVentaComponent } from '../../usuarios/punto-venta/punto-venta.component';
+import { PerfilComponent } from '../../usuarios/perfil/perfil.component';
+import { PermisoComponent } from '../../usuarios/permiso/permiso.component';
 
+//CONFIGURACIONES
 import { EmpresaComponent } from '../../configuraciones/empresa/empresa.component';
 import { UbicacionComponent } from '../../configuraciones/ubicacion/ubicacion.component';
 import { EstadoCivilComponent } from '../../configuraciones/estado-civil/estado-civil.component';
@@ -43,13 +53,15 @@ import { TipoPagoComponent } from '../../configuraciones/tipo-pago/tipo-pago.com
 import { GeneroComponent } from '../../configuraciones/genero/genero.component';
 import { ImportarComponent } from '../../configuraciones/importar/importar.component';
 import { ExportarComponent } from '../../configuraciones/exportar/exportar.component';
+import { TipoRetencionComponent } from '../../configuraciones/tipo-retencion/tipo-retencion.component';
 
+//INDICADORES
 import { DashboardComponent } from '../../componentes/pages/dashboard/dashboard.component';
 
-import { SegmentoComponent } from '../../clientes/segmento/segmento.component';
+//CONTABILIDAD
 import { MovimientoContableComponent } from '../../contabilidad/movimiento-contable/movimiento-contable.component';
 import { CuentaContableComponent } from '../../contabilidad/cuenta-contable/cuenta-contable.component';
-import { TipoRetencionComponent } from 'src/app/configuraciones/tipo-retencion/tipo-retencion.component';
+
 
 @Injectable({
   providedIn: 'root'
@@ -93,6 +105,7 @@ export class SidebarItemsService {
     if (tabNombre == modulos.modulo_inventarios) {
       this.llenarOpciones(GrupoProductoComponent,tabs.tab_grupo_producto, items.item_grupo_producto, icos.ico_grupo_producto);
       this.llenarOpciones(ProductoComponent,tabs.tab_producto, items.item_producto, icos.ico_producto);
+      this.llenarOpciones(KardexComponent,tabs.tab_kardex, items.item_kardex, icos.ico_kardex);
       this.llenarOpciones(PromocionComponent,tabs.tab_promociones,items.item_promociones,icos.ico_promociones);
       this.llenarOpciones(ProveedorProductoComponent,tabs.tab_proveedor_producto, items.item_proveedor_producto, icos.ico_proveedor_producto);
       this.llenarOpciones(TransferenciaBodegaComponent,tabs.tab_transferencia_bodega, items.item_transferencia_bodega, icos.ico_transferencia_bodega);
@@ -123,6 +136,14 @@ export class SidebarItemsService {
     if (tabNombre == modulos.modulo_importacion) {
     }
 
+    if (tabNombre == modulos.modulo_accesos) {
+      this.llenarOpciones(UsuarioComponent, tabs.tab_usuario, items.item_usuario, icos.ico_usuario);
+      this.llenarOpciones(EstablecimientoComponent, tabs.tab_establecimiento, items.item_establecimiento, icos.ico_establecimiento);
+      this.llenarOpciones(PuntoVentaComponent, tabs.tab_punto_venta, items.item_punto_venta, icos.ico_punto_venta);
+      this.llenarOpciones(PerfilComponent, tabs.tab_perfil, items.item_perfil, icos.ico_perfil);
+      this.llenarOpciones(PermisoComponent, tabs.tab_permiso, items.item_permiso, icos.ico_permiso);
+    }
+
     if (tabNombre == modulos.modulo_configuracion) {
       this.llenarOpciones(EmpresaComponent, tabs.tab_empresa, items.item_empresa, icos.ico_empresa);
       this.llenarOpciones(UbicacionComponent, tabs.tab_ubicacion, items.item_ubicacion, icos.ico_ubicacion);
@@ -145,11 +166,6 @@ export class SidebarItemsService {
     if (tabNombre == modulos.modulo_auditoria) {
     }
 
-    if (tabNombre == modulos.modulo_usuarios) {
-      this.llenarOpciones(UsuarioComponent, tabs.tab_usuario, items.item_usuario, icos.ico_usuario);
-      this.llenarOpciones(EstablecimientoComponent, tabs.tab_establecimiento, items.item_establecimiento, icos.ico_establecimiento);
-      this.llenarOpciones(PuntoVentaComponent, tabs.tab_punto_venta, items.item_punto_venta, icos.ico_punto_venta);
-    }
     return this.opciones;
   }  
 }

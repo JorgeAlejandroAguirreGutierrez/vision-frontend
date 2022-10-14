@@ -1,13 +1,13 @@
 import { Component, OnInit, HostListener, ElementRef, Renderer2 } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
-import { valores, validarSesion, tab_activo, exito, exito_swal, error, error_swal } from '../../constantes';
+import { valores, validarSesion, exito, exito_swal, error, error_swal } from '../../constantes';
 import Swal from 'sweetalert2';
 
 import { Router } from '@angular/router';
 import { Sesion } from '../../modelos/usuario/sesion';
 import { SesionService } from '../../servicios/usuario/sesion.service';
 import { Segmento } from '../../modelos/inventario/segmento';
-import { SegmentoService } from '../../servicios/inventario/segmento.service';
+import { SegmentoService } from '../../servicios/cliente/segmento.service';
 
 import { ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
