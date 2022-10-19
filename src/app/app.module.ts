@@ -9,9 +9,6 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 // Componentes de Angular Material
 import { MaterialModule } from './componentes/material-module';
 
-// Componete para google maps
-import { AgmCoreModule } from '@agm/core';
-
 import { AppComponent } from './app.component';
 import { ModeloService } from './servicios/administracion/modelo.service';
 
@@ -19,14 +16,6 @@ import { ModeloService } from './servicios/administracion/modelo.service';
 import { TabContentComponent } from "./componentes/tab-content.component";
 import { ContentContainerDirective } from "./componentes/content-container.directive";
 import { TabService } from "./componentes/services/tab.service";
-
-// Diseño de tabla editable
-import { TablaEditableComponent } from './componentes/tabla-editable/tabla-editable.component';
-import { EditableComponent } from './componentes/tabla-editable/editable/editable.component';
-import { ViewModeDirective } from './componentes/tabla-editable/editable/view-mode.directive';
-import { EditModeDirective } from './componentes/tabla-editable/editable/edit-mode.directive';
-import { FocusableDirective } from './componentes/tabla-editable/focusable.directive';
-import { EditableOnEnterDirective } from './componentes/tabla-editable/editable/edit-on-enter.directive';
 
 //Tienda - Estructura: Cabecera y Menu
 import { LocationStrategy, PathLocationStrategy } from '@angular/common';
@@ -59,12 +48,6 @@ import { TipoRetencionService } from './servicios/configuracion/tipo-retencion.s
     AppComponent,
     TabContentComponent,
     ContentContainerDirective,
-    TablaEditableComponent,
-    EditableComponent,
-    ViewModeDirective,
-    EditModeDirective,
-    FocusableDirective, 
-    EditableOnEnterDirective,
     RoutingComponents
   ],
   imports: [
@@ -77,7 +60,6 @@ import { TipoRetencionService } from './servicios/configuracion/tipo-retencion.s
     NgbModule,
     FlexLayoutModule,
     MaterialModule,
-    AgmCoreModule.forRoot({apiKey: 'AIzaSyBmbDYyXuK6PzbmJDoadvlJU7UtcgDJQZM'}),
     AppRoutingModule
   ],
   providers: [PlazoCreditoService, ImpuestoService, RetencionService, ModeloService,

@@ -332,15 +332,7 @@
                                 <ng-container matColumnDef="margenGanancia">
                                     <th mat-header-cell *matHeaderCellDef>MG%</th>
                                     <td mat-cell *matCellDef="let precio;let index = index">
-                                        <editable (update)="actualizarCalculosPrecios(i, index, 'margenGanancia')">
-                                            <ng-template viewMode>
-                                                {{precio.margenGanancia}}
-                                            </ng-template>
-                                            <ng-template editMode>
-                                                <input [formControl]="getControl(i, index, 'margenGanancia')" focusable
-                                                    editableOnEnter>
-                                            </ng-template>
-                                        </editable>
+                                        {{precio.margenGanancia}}
                                     </td>
                                 </ng-container>
                                 <!-- PVP Column -->
@@ -367,17 +359,7 @@
                                 <ng-container matColumnDef="precioVentaPublicoManual">
                                     <th mat-header-cell *matHeaderCellDef>PVP MAN</th>
                                     <td mat-cell *matCellDef="let precio;let index = index">
-                                        <editable
-                                            (update)="actualizarCalculosPrecios(i, index, 'precioVentaPublicoManual')">
-                                            <ng-template viewMode>
-                                                {{precio.precioVentaPublicoManual}}
-                                            </ng-template>
-                                            <ng-template editMode>
-                                                <input
-                                                    [formControl]="getControl(i, index, 'precioVentaPublicoManual')"
-                                                    focusable editableOnEnter>
-                                            </ng-template>
-                                        </editable>
+                                        {{precio.precioVentaPublicoManual}}
                                     </td>
                                 </ng-container>
                                 <!-- Segmento Column -->

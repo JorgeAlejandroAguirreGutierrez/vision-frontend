@@ -15,7 +15,7 @@ import { MainComponent } from './componentes/main/main.component';
 import { MenuComponent } from './componentes/menu/menu.component';
 
 // Molulo de Clientes
-import { ClienteComponent, DialogoMapaComponent } from './clientes/cliente/cliente.component';
+import { ClienteComponent } from './clientes/cliente/cliente.component';
 import { SegmentoComponent } from './clientes/segmento/segmento.component';
 import { GrupoClienteComponent } from './clientes/grupo-cliente/grupo-cliente.component';
 import { OrigenIngresoComponent } from './clientes/origen-ingreso/origen-ingreso.component';
@@ -26,7 +26,6 @@ import { PlazoCreditoComponent } from './clientes/plazo-credito/plazo-credito.co
 import { ImpuestoComponent } from './configuraciones/impuesto/impuesto.component';
 import { FormaPagoComponent } from './clientes/forma-pago/forma-pago.component';
 import { TipoPagoComponent } from './configuraciones/tipo-pago/tipo-pago.component';
-import { MapsComponent } from './componentes/pages/maps/maps.component';
 
 //Módulo de Inventarios
 import { BodegaComponent } from './inventarios/bodega/bodega.component';
@@ -63,7 +62,7 @@ import { TransportistaComponent } from './entregas/transportista/transportista.c
 import { VehiculoTransporteComponent } from './entregas/vehiculo-transporte/vehiculo-transporte.component';
 
 //Módulo de Compras
-import { ProveedorComponent, DialogoMapaProveedorComponent } from './compras/proveedor/proveedor.component';
+import { ProveedorComponent } from './compras/proveedor/proveedor.component';
 import { FacturaCompraComponent } from './compras/factura-compra/factura-compra.component';
 import { PagoCompraComponent } from './compras/pago-compra/pago-compra.component';
 
@@ -82,7 +81,7 @@ import { PuntoVentaComponent } from './usuarios/punto-venta/punto-venta.componen
 import { PerfilComponent } from './usuarios/perfil/perfil.component';
 
 //Módulo de Configuraciones
-import { EmpresaComponent, DialogoMapaEmpresaComponent } from './configuraciones/empresa/empresa.component';
+import { EmpresaComponent } from './configuraciones/empresa/empresa.component';
 import { UbicacionComponent } from './configuraciones/ubicacion/ubicacion.component';
 
 // Otros - borrar al final
@@ -138,14 +137,13 @@ const routes: Routes = [
   { path: 'forms', component: FormsComponent },
   { path: 'tables', component: TablesComponent },
   { path: 'typography', component: TypographyComponent },
-  { path: 'maps', component: MapsComponent },
   { path: 'proforma', component: ProformaComponent },
 ];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes, { relativeLinkResolution: 'legacy' })],
   exports: [RouterModule],
-  entryComponents: [DialogoMapaComponent, DialogoMovimientoContableComponent,
+  entryComponents: [DialogoMovimientoContableComponent,
     DialogoGrupoProductoComponent, CambioCredencialesComponent, UsuarioComponent, PuntoVentaComponent, TipoRetencionComponent,
     EstablecimientoComponent, ClienteComponent, GrupoClienteComponent, CalificacionClienteComponent, EstadoCivilComponent,
     GeneroComponent, OrigenIngresoComponent, PlazoCreditoComponent, FormaPagoComponent, TipoPagoComponent, BodegaComponent,
@@ -168,7 +166,6 @@ export const RoutingComponents = [
   CambioCredencialesComponent,
   // Clientes
   ClienteComponent,
-  DialogoMapaComponent,
   SegmentoComponent,
   GrupoClienteComponent,
   PlazoCreditoComponent,
@@ -215,7 +212,6 @@ export const RoutingComponents = [
   ProformaComponent,
   // Compras
   ProveedorComponent,
-  DialogoMapaProveedorComponent,
   FacturaCompraComponent,
   PagoCompraComponent,
   // Contabilidad
@@ -232,13 +228,11 @@ export const RoutingComponents = [
   PerfilComponent,
   // configuración
   EmpresaComponent,
-  DialogoMapaEmpresaComponent,
   TipoRetencionComponent,
   UbicacionComponent,
   //otros
   DashboardComponent,
   TablesComponent,
   FormsComponent,
-  TypographyComponent,
-  MapsComponent
+  TypographyComponent
 ];

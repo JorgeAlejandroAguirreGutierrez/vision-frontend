@@ -1,7 +1,6 @@
 import { Component, OnInit, HostListener, Type, ViewChild, Inject } from '@angular/core';
-import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
-import { MouseEvent } from '@agm/core'; 
+import { MatDialog} from '@angular/material/dialog';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Router } from '@angular/router'; 
 import Swal from 'sweetalert2';
 import { valores, mensajes, otras, tabs, validarSesion, tab_activo, exito, exito_swal, error, error_swal } from '../../constantes';
@@ -320,17 +319,6 @@ export class ClienteComponent implements OnInit {
         Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje });
       }
     );
-  }
-
-  mapClicked($event: MouseEvent){
-    let coordenada = new Coordenada($event.coords.lat, $event.coords.lng);
-    this.coordenadas.push(coordenada);
-  }
-
-  getCurrentPosition(){
-    navigator.geolocation.getCurrentPosition(position => {
-      this.ubicacionCentral = new Coordenada(position.coords.latitude, position.coords.longitude);
-    })
   }
 
   obtenerSesion() {
@@ -869,54 +857,4 @@ export class ClienteComponent implements OnInit {
     );
   }
 
-  dialogoMapas(): void {
-    //console.log('El dialogo para selección de grupo producto fue abierto');
-    const dialogRef = this.dialog.open(DialogoMapaComponent, {
-      width: '80%',
-      // Para enviar datos
-      //data: { usuario: this.usuario, clave: this.clave, grupo_producto_recibido: "" }
-      data: this.ubicacionGeografica as Coordenada
-    });
-
-    dialogRef.afterClosed().subscribe(result => {
-      //console.log('El dialogo para selección de coordenada fue cerrado');
-      console.log(result);
-      if (result) {
-        this.ubicacionGeografica = result as Coordenada;
-        this.ubicacionCentral = this.ubicacionGeografica;
-       //console.log(result);
-      }
-    });
-  }
-
-}
-
-@Component({
-  selector: 'dialogo-mapa',
-  templateUrl: 'dialogo-mapa.component.html',
-})
-export class DialogoMapaComponent {
-
-  mapa: string[] = [];
-
-  constructor(
-    public dialogRef: MatDialogRef<DialogoMapaComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: Coordenada) { }
-
-  onNoClick(): void {
-    this.dialogRef.close();
-    //console.log('El dialogo para selección de coordenada fue cancelado');
-    this.data = new Coordenada(0,0);
-  }
-
-  coordenadaSeleccionada(event: any) {
-    //console.log(event);
-    if (event && event.latitud != 0) {
-      this.data = event as Coordenada;
-      //this.producto.grupo_producto = grupoProductoRecibido;
-      console.log(this.data);
-    } else {
-      this.data = new Coordenada(0,0);
-    }
-  }
 }
