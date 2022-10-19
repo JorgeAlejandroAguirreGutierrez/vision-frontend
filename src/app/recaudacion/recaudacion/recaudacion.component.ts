@@ -181,7 +181,7 @@ export class RecaudacionComponent implements OnInit {
     this.consultarFranquiciasTarjetas();
     this.consultarOperadoresTarjetasCreditos();
     this.consultarOperadoresTarjetasDebitos();
-    this.consultarModelosAmortizaciones();
+    this.consultarAmortizaciones();
     this.consultarPeriodicidades();
     this.consultarTiposComprobantes();
     this.consultarBancosCheques();
@@ -332,9 +332,9 @@ export class RecaudacionComponent implements OnInit {
       err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
-  consultarModelosAmortizaciones(){
+  consultarAmortizaciones(){
     let parametro=new Parametro();
-    parametro.tipo= otras.modeloAmortizacion;
+    parametro.tipo= otras.amortizacion;
     this.parametroService.consultarTipo(parametro).subscribe(
       res => {
         this.modelosAmortizaciones = res.resultado as Parametro[]
@@ -908,7 +908,8 @@ export class RecaudacionComponent implements OnInit {
     }
     this.recaudacionService.crear(this.recaudacion).subscribe(
       res => {
-        let recaudacion = res.resultado as Recaudacion;
+        let recaudacion=new Recaudacion();
+        Object.assign(recaudacion, res.resultado as Recaudacion);
         recaudacion.normalizar();
         this.recaudacion=recaudacion;
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });

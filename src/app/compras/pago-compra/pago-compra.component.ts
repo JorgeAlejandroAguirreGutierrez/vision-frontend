@@ -272,7 +272,7 @@ export class PagoCompraComponent implements OnInit {
   }
   consultarModelosAmortizaciones(){
     let parametro=new Parametro();
-    parametro.tipo = otras.modeloAmortizacion;
+    parametro.tipo = otras.amortizacion;
     this.parametroService.consultarTipo(parametro).subscribe(
       res => {
         this.modelosAmortizaciones = res.resultado as Parametro[]
