@@ -36,6 +36,7 @@ export const urn =
      tipoIdentificacion: "/tipoIdentificacion",
      cliente: "/cliente",
      factura: "/factura",
+     facturacionEletronica: "/facturacionEletronica",
      facturaDetalle: "/facturaDetalle",
      tipoRetencion: "/tipoRetencion",
      servicio: "/servicio",

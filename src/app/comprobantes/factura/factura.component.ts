@@ -25,10 +25,11 @@ import { Caracteristica } from '../../modelos/inventario/caracteristica';
 import { Bodega } from '../../modelos/inventario/bodega';
 import { BodegaService } from '../../servicios/inventario/bodega.service';
 import { Precio } from '../../modelos/inventario/precio';
-import { valores, mensajes, validarSesion, tab_activo, exito, exito_swal, error, error_swal } from '../../constantes';
+import { valores, mensajes, validarSesion, exito, exito_swal, error, error_swal } from '../../constantes';
 import { FacturaDetalleService } from '../../servicios/comprobante/factura-detalle.service';
 import { MatSort } from '@angular/material/sort';
 import { TabService } from 'src/app/componentes/services/tab.service';
+import { FacturacionElectronicaService } from 'src/app/servicios/comprobante/facturacion-eletronica.service';
 
 @Component({
   selector: 'app-factura',
@@ -92,7 +93,8 @@ export class FacturaComponent implements OnInit {
 
   constructor(private clienteService: ClienteService, private dependienteService: DependienteService, private sesionService: SesionService, 
     private impuestoService: ImpuestoService, private facturaDetalleService: FacturaDetalleService, private router: Router,
-    private facturaService: FacturaService, private productoService: ProductoService, private bodegaService: BodegaService, private tabService: TabService,
+    private facturaService: FacturaService, private facturacionElectronicaService: FacturacionElectronicaService,
+    private productoService: ProductoService, private bodegaService: BodegaService, private tabService: TabService,
     private modalService: NgbModal, private _formBuilder: FormBuilder) { }
 
   factura: Factura = new Factura();
@@ -906,8 +908,15 @@ export class FacturaComponent implements OnInit {
     this.calcular();   
   }
 
-  transferir(caracteristica: Caracteristica){
-
+  crearFacturaElectronica(event){
+    if (event != null)
+      event.preventDefault();
+    this.facturacionElectronicaService.crear(this.factura).subscribe(
+      res => {
+        Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
+      },
+      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.message })
+    );
   }
 
   abrirTabProducto(event){

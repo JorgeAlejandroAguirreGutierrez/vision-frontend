@@ -11,7 +11,7 @@
                             </a>
                         </ng-container>
                         <ng-container *ngIf="factura.id!=0">
-                            <a class="nav-link" title="Guardar" role="button" (click)="actualizar($event)">
+                            <a class="nav-link" title="Actualizar" role="button" (click)="actualizar($event)">
                                 <mat-icon>update</mat-icon>
                             </a>
                         </ng-container>
@@ -24,29 +24,29 @@
                         </ng-container>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#" role="button" (click)="consultarBienes($event)">
-                            <mat-icon>business</mat-icon>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#" role="button" (click)="consultarServicios($event)">
-                            <mat-icon>room_service</mat-icon>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#" role="button" (click)="consultarActivosFijos($event)">
-                            <mat-icon>weekend</mat-icon>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#" role="button" (click)="$event.preventDefault()">
+                        <a class="nav-link" title="Consultar Bienes" role="button" (click)="consultarBienes($event)">
                             <mat-icon>archive</mat-icon>
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#" role="button" (click)="$event.preventDefault()">
-                            <mat-icon>publish</mat-icon>
+                        <a class="nav-link" title="Consultar Servicios" role="button"
+                            (click)="consultarServicios($event)">
+                            <mat-icon>archive</mat-icon>
                         </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" title="Consultar Activos Fijos" role="button"
+                            (click)="consultarActivosFijos($event)">
+                            <mat-icon>archive</mat-icon>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <ng-container *ngIf="factura.id!=0">
+                            <a class="nav-link" title="Crear Factura Electronica" role="button"
+                                (click)="crearFacturaElectronica($event)">
+                                <mat-icon>publish</mat-icon>
+                            </a>
+                        </ng-container>
                     </li>
                 </ul>
             </nav>
@@ -964,7 +964,7 @@
                                 {{caracteristica.seleccionado}
                             </td>
                             <td>
-                                <button (click)="transferir(caracteristica)" class="btn btn-primary btn-circle ">
+                                <button class="btn btn-primary btn-circle ">
                                     <mat-icon>transfer_within_a_station</mat-icon>
                                 </button>
                             </td>
