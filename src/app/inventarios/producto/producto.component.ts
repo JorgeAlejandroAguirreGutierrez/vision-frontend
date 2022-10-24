@@ -26,7 +26,7 @@ import { Kardex } from '../../modelos/inventario/kardex';
 import { MedidaPrecio } from '../../modelos/inventario/medida-precio';
 import { EquivalenciaMedidaService } from '../../servicios/inventario/equivalencia-medida.service';
 import { EquivalenciaMedida } from '../../modelos/inventario/equivalencia-medida'
-import { Proveedor } from '../../modelos/proveedor/proveedor';
+import { Proveedor } from '../../modelos/compra/proveedor';
 import { Bodega } from '../../modelos/inventario/bodega';
 import { ProductoBodega } from '../../modelos/inventario/producto-bodega';
 
@@ -116,7 +116,7 @@ export class ProductoComponent implements OnInit {
     { nombreColumna: 'nombre', cabecera: 'Nombre', celda: (row: Producto) => `${row.nombre}` },
     { nombreColumna: 'medidaKardex', cabecera: 'Medida Kardex', celda: (row: Producto) => `${row.medidaKardex.descripcion}` },
     { nombreColumna: 'categoriaProducto', cabecera: 'Categoria', celda: (row: Producto) => `${row.categoriaProducto.descripcion}` },
-    { nombreColumna: 'tipoGasto', cabecera: 'Tipo Gasto', celda: (row: Producto) => `${row.tipoGasto.nombre}` },
+    { nombreColumna: 'tipoGasto', cabecera: 'Tipo Gasto', celda: (row: Producto) => `${row.tipoGasto.descripcion}` },
     { nombreColumna: 'estado', cabecera: 'Estado', celda: (row: Producto) => `${row.estado}` }
   ];
   cabeceraProducto: string[] = this.columnasProducto.map(titulo => titulo.nombreColumna);
@@ -306,7 +306,7 @@ export class ProductoComponent implements OnInit {
   llenarDataSourceProducto(productos: Producto[]) {
     this.dataSourceProducto = new MatTableDataSource(productos);
     this.dataSourceProducto.filterPredicate = (data: Producto, filter: string): boolean =>
-      data.codigo.toUpperCase().includes(filter) || data.nombre.toUpperCase().includes(filter) || data.tipoGasto.nombre.toUpperCase().includes(filter) ||
+      data.codigo.toUpperCase().includes(filter) || data.nombre.toUpperCase().includes(filter) || data.tipoGasto.descripcion.toUpperCase().includes(filter) ||
       data.categoriaProducto.descripcion.toUpperCase().includes(filter) || data.estado.toUpperCase().includes(filter);
     this.dataSourceProducto.paginator = this.paginator;
     this.dataSourceProducto.paginator.firstPage();
@@ -599,8 +599,8 @@ export class ProductoComponent implements OnInit {
       Swal.fire(error, mensajes.error_medida, error_swal);
       return;
     }
-    this.llenarTablaPrecios(this.medidaEquivalenteSeleccionada.medida2);
-    this.eliminarMedidaEquivalente(this.medidaEquivalenteSeleccionada.medida2);
+    this.llenarTablaPrecios(this.medidaEquivalenteSeleccionada.medidaEqui);
+    this.eliminarMedidaEquivalente(this.medidaEquivalenteSeleccionada.medidaEqui);
   }
  
   eliminarMedidaPrecio(i: number){
@@ -719,7 +719,7 @@ export class ProductoComponent implements OnInit {
   eliminarMedidaEquivalente(medidaAgregada: Medida) {
     //console.log(this.medidas_equivalentes.length);
     for (let i = 0; i < this.medidasEquivalentes.length; i++) {
-      if (this.medidasEquivalentes[i].medida2.id == medidaAgregada.id) {
+      if (this.medidasEquivalentes[i].medidaEqui.id == medidaAgregada.id) {
         this.medidasEquivalentes.splice(i, 1);
         //console.log('elim', this.medidas_equivalentes);
       }
@@ -731,7 +731,7 @@ export class ProductoComponent implements OnInit {
     //console.log(this.medidas_precios);
     for (let i = 0; i < this.medidasPrecios.length; i++) {
       for (let j = 0; j < this.medidasEquivalentes.length; j++) {
-        if (this.medidasEquivalentes[j].medida2.id == this.medidasPrecios[i].medida.id) {
+        if (this.medidasEquivalentes[j].medidaEqui.id == this.medidasPrecios[i].medida.id) {
           this.medidasEquivalentes.splice(j, 1);
           //console.log('elim_act', this.medidas_equivalentes);
         }

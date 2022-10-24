@@ -10,7 +10,7 @@ import { Bodega } from '../../modelos/inventario/bodega';
 import { BodegaService } from '../../servicios/inventario/bodega.service';
 import { ProductoBodega } from '../../modelos/inventario/producto-bodega';
 //Solo por el error
-import { Proveedor } from '../../modelos/proveedor/proveedor';
+import { Proveedor } from '../../modelos/compra/proveedor';
 
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';

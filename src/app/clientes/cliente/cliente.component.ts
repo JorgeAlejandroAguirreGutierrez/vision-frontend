@@ -1,11 +1,12 @@
 import { Component, OnInit, HostListener, Type, ViewChild, Inject } from '@angular/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
-import { MouseEvent } from '@agm/core'; 
+import { MapInfoWindow, MapMarker } from '@angular/google-maps';
 import { Router } from '@angular/router'; 
 import Swal from 'sweetalert2';
 import { valores, mensajes, otras, tabs, validarSesion, tab_activo, exito, exito_swal, error, error_swal } from '../../constantes';
 import { environment } from '../../../environments/environment';
+
 import { Empresa } from '../../modelos/configuracion/empresa';
 import { EmpresaService } from '../../servicios/configuracion/empresa.service';
 import { Sesion } from '../../modelos/usuario/sesion';
@@ -51,6 +52,7 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { TipoIdentificacion } from 'src/app/modelos/configuracion/tipo-identificacion';
 import { TipoIdentificacionService } from 'src/app/servicios/configuracion/tipo-identificacion.service';
+import { Content } from '@angular/compiler/src/render3/r3_ast';
 
 @Component({
   selector: 'app-cliente',
@@ -129,10 +131,20 @@ export class ClienteComponent implements OnInit {
   //Mapa
   latitud: number = -1.6705413480437092; //Tomar de configuación y poner en el init
   longitud: number = -78.64974203645144;
-  ubicacionCentral: Coordenada = new Coordenada(this.latitud, this.longitud);
-  ubicacionGeografica: Coordenada;
-  mapTypeId: string = 'hybrid';
-  coordenadas: Coordenada[] = [];
+  posicionCentralDireccion: Coordenada = new Coordenada(this.latitud, this.longitud);
+  posicionCentralDependiente: Coordenada = new Coordenada(this.latitud, this.longitud);
+  posicionGeograficaDireccion: Coordenada;
+  posicionGeograficaDependiente: Coordenada;
+  //coordenadas: Coordenada[] = [];
+  options: google.maps.MapOptions = {
+    mapTypeId: 'hybrid',
+    zoomControl: true,
+    scrollwheel: true,
+    disableDoubleClickZoom: false,
+    maxZoom: 20,
+    minZoom: 12,
+  };
+ // @ViewChild(MapInfoWindow) infoWindowDireccion: MapInfoWindow;
 
   columnasCliente: any[] = [
     { nombreColumna: 'id', cabecera: 'ID', celda: (row: Cliente) => `${row.id}` },
@@ -323,15 +335,15 @@ export class ClienteComponent implements OnInit {
     );
   }
 
-  mapClicked($event: MouseEvent){
-    let coordenada = new Coordenada($event.coords.lat, $event.coords.lng);
-    this.coordenadas.push(coordenada);
+  mapClicked($event: google.maps.MapMouseEvent){
+    let coordenada = new Coordenada($event.latLng.lat(), $event.latLng.lng());
+    //this.coordenadas.push(coordenada);
   }
 
   getCurrentPosition(){
     navigator.geolocation.getCurrentPosition(position => {
-      this.ubicacionCentral = new Coordenada(position.coords.latitude, position.coords.longitude);
-      console.log(this.ubicacionCentral);
+      this.posicionCentralDireccion = new Coordenada(position.coords.latitude, position.coords.longitude);
+      console.log(this.posicionCentralDireccion);
     })
   }
 
@@ -864,21 +876,43 @@ export class ClienteComponent implements OnInit {
     );
   }
 
-  dialogoMapas(): void {
+  openInfoWindow(marker: MapMarker, infoWindow: MapInfoWindow) {
+    infoWindow.open(marker);
+  }
+
+  dialogoMapasDireccion(): void {
     //console.log('El dialogo para selección de grupo producto fue abierto');
     const dialogRef = this.dialog.open(DialogoMapaComponent, {
       width: '80%',
       // Para enviar datos
       //data: { usuario: this.usuario, clave: this.clave, grupo_producto_recibido: "" }
-      data: this.ubicacionGeografica as Coordenada
+      data: this.posicionGeograficaDireccion as Coordenada
     });
 
     dialogRef.afterClosed().subscribe(result => {
       //console.log('El dialogo para selección de coordenada fue cerrado');
       console.log(result);
       if (result) {
-        this.ubicacionGeografica = result as Coordenada;
-        this.ubicacionCentral = this.ubicacionGeografica;
+        this.posicionGeograficaDireccion = result as Coordenada;
+        this.posicionCentralDireccion = this.posicionGeograficaDireccion;
+       //console.log(result);
+      }
+    });
+  }
+
+  dialogoMapasDependiente(): void {
+    //console.log('El dialogo para selección de grupo producto fue abierto');
+    const dialogRef = this.dialog.open(DialogoMapaComponent, {
+      width: '80%',
+      data: this.posicionGeograficaDependiente as Coordenada
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      //console.log('El dialogo para selección de coordenada fue cerrado');
+      console.log(result);
+      if (result) {
+        this.posicionGeograficaDependiente = result as Coordenada;
+        this.posicionCentralDependiente = this.posicionGeograficaDependiente;
        //console.log(result);
       }
     });

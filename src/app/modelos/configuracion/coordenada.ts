@@ -1,9 +1,9 @@
 export class Coordenada {
-    latitud: number;
-    longitud: number;
+    lat: number;
+    lng: number;
 
-    constructor(lat: number, long: number){
-        this.latitud=lat;
-        this.longitud=long;
+    constructor(lat: number, lng: number){
+        this.lat=lat;
+        this.lng=lng;
     }
 }

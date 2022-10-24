@@ -77,7 +77,7 @@ export class EquivalenciaMedidaService {
   }
 
   buscarMedidasEquivalentes(medidaId: number): Observable<Respuesta> {
-    return this.http.get(environment.host + urn.ruta + urn.equivalenciaMedida + urn.buscarEquivalenciaMedida + '/' + medidaId, options).pipe(
+    return this.http.get(environment.host + urn.ruta + urn.equivalenciaMedida + urn.buscarMedidasEquivalentes + '/' + medidaId, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);

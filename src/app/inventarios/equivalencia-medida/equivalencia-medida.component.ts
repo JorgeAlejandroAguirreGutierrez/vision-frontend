@@ -34,9 +34,9 @@ export class EquivalenciaMedidaComponent implements OnInit {
   columnas: any[] = [
     { nombreColumna: 'id', cabecera: 'ID', celda: (row: EquivalenciaMedida) => `${row.id}`},
     { nombreColumna: 'codigo', cabecera: 'Código', celda: (row: EquivalenciaMedida) => `${row.codigo}`},
-    { nombreColumna: 'medidaIni', cabecera: 'Medida Ini', celda: (row: EquivalenciaMedida) => `${row.medida1.descripcion}`},
+    { nombreColumna: 'medidaIni', cabecera: 'Medida Ini', celda: (row: EquivalenciaMedida) => `${row.medidaIni.descripcion}`},
     { nombreColumna: 'equivalencia', cabecera: 'Valor Equiv', celda: (row: EquivalenciaMedida) => `${row.equivalencia}`},
-    { nombreColumna: 'medidaFin', cabecera: 'Medida Equiv', celda: (row: EquivalenciaMedida) => `${row.medida2.descripcion}`},
+    { nombreColumna: 'medidaFin', cabecera: 'Medida Equiv', celda: (row: EquivalenciaMedida) => `${row.medidaEqui.descripcion}`},
     { nombreColumna: 'estado', cabecera: 'Estado', celda: (row: EquivalenciaMedida) => `${row.estado ? row.estado : ''}`}
   ];
   columnasEquivalenciaMedida: string[]  = this.columnas.map(titulo => titulo.nombreColumna);
@@ -204,7 +204,7 @@ export class EquivalenciaMedidaComponent implements OnInit {
   llenarDataSourceEquivalenciaMedida(equivalenciasMedidas : EquivalenciaMedida[]){
     this.dataSourceEquivalenciaMedida = new MatTableDataSource(equivalenciasMedidas);
     this.dataSourceEquivalenciaMedida.filterPredicate = (data: EquivalenciaMedida, filter: string): boolean =>
-      data.codigo.toUpperCase().includes(filter) || data.medida1.descripcion.toUpperCase().includes(filter) || data.medida2.descripcion.toUpperCase().includes(filter);
+      data.codigo.toUpperCase().includes(filter) || data.medidaIni.descripcion.toUpperCase().includes(filter) || data.medidaEqui.descripcion.toUpperCase().includes(filter);
     this.dataSourceEquivalenciaMedida.paginator = this.paginator;
     this.dataSourceEquivalenciaMedida.sort = this.sort;
   }

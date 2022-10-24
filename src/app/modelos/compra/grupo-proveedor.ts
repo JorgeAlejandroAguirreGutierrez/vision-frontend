@@ -6,7 +6,6 @@ export class GrupoProveedor {
     descripcion:string;
     abreviatura:string;
     estado:string;
-    cuentaContable: CuentaContable;
 
     constructor() {
         this.id=valores.cero;
@@ -14,6 +13,5 @@ export class GrupoProveedor {
         this.descripcion=valores.vacio;
         this.abreviatura=valores.vacio;
         this.estado=valores.activo;
-        this.cuentaContable=new CuentaContable();
     }
 }

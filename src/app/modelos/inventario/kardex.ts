@@ -1,4 +1,4 @@
-import { Proveedor } from '../proveedor/proveedor';
+import { Proveedor } from '../compra/proveedor';
 import { Producto } from './producto';
 import { valores } from "../../constantes";
 export class Kardex {

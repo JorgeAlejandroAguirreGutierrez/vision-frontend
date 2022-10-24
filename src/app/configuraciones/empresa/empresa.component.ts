@@ -56,8 +56,15 @@ export class EmpresaComponent implements OnInit {
   longitud: number = -78.64974203645144;
   ubicacionCentral: Coordenada = new Coordenada(this.latitud, this.longitud);
   ubicacionGeografica: Coordenada;
-  mapTypeId: string = 'hybrid';
   coordenadas: Coordenada[] = [];
+  options: google.maps.MapOptions = {
+    mapTypeId: 'hybrid',
+    zoomControl: true,
+    scrollwheel: true,
+    disableDoubleClickZoom: false,
+    maxZoom: 20,
+    minZoom: 12,
+  };
 
   columnasEmpresa: any[] = [
     { nombreColumna: 'id', cabecera: 'ID', celda: (row: Empresa) => `${row.id}` },

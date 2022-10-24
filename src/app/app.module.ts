@@ -10,7 +10,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MaterialModule } from './componentes/material-module';
 
 // Componete para google maps
-import { AgmCoreModule } from '@agm/core';
+import { GoogleMapsModule } from '@angular/google-maps'; 
 
 import { AppComponent } from './app.component';
 import { ModeloService } from './servicios/administracion/modelo.service';
@@ -77,7 +77,8 @@ import { TipoRetencionService } from './servicios/configuracion/tipo-retencion.s
     NgbModule,
     FlexLayoutModule,
     MaterialModule,
-    AgmCoreModule.forRoot({apiKey: 'AIzaSyBmbDYyXuK6PzbmJDoadvlJU7UtcgDJQZM'}),
+    GoogleMapsModule,
+    //AgmCoreModule.forRoot({apiKey: 'AIzaSyBmbDYyXuK6PzbmJDoadvlJU7UtcgDJQZM'}),
     AppRoutingModule
   ],
   providers: [PlazoCreditoService, ImpuestoService, RetencionService, ModeloService,

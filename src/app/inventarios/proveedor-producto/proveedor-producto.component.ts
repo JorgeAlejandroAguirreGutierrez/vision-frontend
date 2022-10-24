@@ -6,8 +6,8 @@ import Swal from 'sweetalert2';
 import { valores, mensajes, validarSesion, exito, exito_swal, error, error_swal } from '../../constantes';
 import { Producto } from '../../modelos/inventario/producto';
 import { ProductoService } from '../../servicios/inventario/producto.service';
-import { Proveedor } from '../../modelos/proveedor/proveedor';
-import { ProveedorService } from '../../servicios/proveedor/proveedor.service';
+import { Proveedor } from '../../modelos/compra/proveedor';
+import { ProveedorService } from '../../servicios/compra/proveedor.service';
 import { ProductoProveedor } from '../../modelos/inventario/producto-proveedor';
 import { ProductoProveedorService } from '../../servicios/inventario/producto-proveedor.service';
 

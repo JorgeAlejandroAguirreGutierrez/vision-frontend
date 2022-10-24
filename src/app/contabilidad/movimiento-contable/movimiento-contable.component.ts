@@ -1,10 +1,12 @@
-import { Component, OnInit, HostListener  } from '@angular/core';
+import { Component, OnInit, HostListener } from '@angular/core';
 import Swal from 'sweetalert2';
 import { valores, validarSesion, tab_activo, exito, exito_swal, error, error_swal } from '../../constantes';
+
 import { Sesion } from '../../modelos/usuario/sesion';
 import { SesionService } from '../../servicios/usuario/sesion.service';
-import { MovimientoContableService } from '../../servicios/contabilidad/movimiento-contable.service';
 import { MovimientoContable } from '../../modelos/contabilidad/movimiento-contable';
+import { MovimientoContableService } from '../../servicios/contabilidad/movimiento-contable.service';
+import { TablaMovimientoContableComponent } from '../../contabilidad/movimiento-contable/tabla-movimiento-contable/tabla-movimiento-contable.component';
 import { AfectacionContable } from '../../modelos/contabilidad/afectacion-contable';
 import { AfectacionContableService } from '../../servicios/contabilidad/afectacion-contable.service';
 
@@ -24,40 +26,18 @@ export class MovimientoContableComponent implements OnInit {
 
   abrirPanelNuevoMovimientoContable = true;
   abrirPanelAdminMovimientoContable = false;
+  editarMovimientoContable: boolean = true;
 
-  sesion: Sesion=null;
-  movimientoContable= new MovimientoContable();
+  sesion: Sesion = null;
+  movimientoContable = new MovimientoContable();
   movimientosContables: MovimientoContable[];
   afectacionesContables: AfectacionContable[];
-  
-  columnasMovimientoContable: any[] = [
-    { nombreColumna: 'id', cabecera: 'ID', celda: (row: MovimientoContable) => `${row.id}`},
-    { nombreColumna: 'inventario', cabecera: 'Inventario', celda: (row: MovimientoContable) => `${row.codigo}`},
-    { nombreColumna: 'costoVenta', cabecera: 'Costo Venta', celda: (row: MovimientoContable) => `${row.costoVenta.cuenta}`},
-    { nombreColumna: 'devolucionCompra', cabecera: 'Dev. Compra', celda: (row: MovimientoContable) => `${row.devolucionCompra.cuenta}`},
-    { nombreColumna: 'descuentoCompra', cabecera: 'Des. Compra', celda: (row: MovimientoContable) => `${row.descuentoCompra.cuenta}`},
-    { nombreColumna: 'venta', cabecera: 'Venta', celda: (row: MovimientoContable) => `${row.venta.cuenta}`},
-    { nombreColumna: 'devolucionVenta', cabecera: 'Dev. Venta', celda: (row: MovimientoContable) => `${row.devolucionVenta.cuenta}`},
-    { nombreColumna: 'descuentoVenta', cabecera: 'Des. Venta', celda: (row: MovimientoContable) => `${row.descuentoVenta.cuenta}`},
-    { nombreColumna: 'devolucionCostoVenta', cabecera: 'Dev Const Venta', celda: (row: MovimientoContable) => `${row.devolucionCostoVenta.cuenta}`},
-  ];
 
-  cabeceraMovimientoContable: string[] = this.columnasMovimientoContable.map(titulo => titulo.nombreColumna);
-  dataSourceMovimientoContable: MatTableDataSource<MovimientoContable>;
-  clickedRows = new Set<MovimientoContable>();
-  
-  @ViewChild(MatPaginator) paginator: MatPaginator;
-  @ViewChild(MatSort) sort: MatSort;
+  @ViewChild(TablaMovimientoContableComponent) TablaMovimientoContable: TablaMovimientoContableComponent;
 
   constructor(private movimientoContableService: MovimientoContableService, private afectacionContableService: AfectacionContableService,
-    private sesionService: SesionService,private router: Router) { }
+    private sesionService: SesionService, private router: Router) { }
 
-  ngOnInit() {
-    this.sesion=validarSesion(this.sesionService, this.router);
-    this.consultar();
-    this.consultarAfectacionesContables();
-  }
-  
   @HostListener('window:keypress', ['$event'])
   keyEvent($event: KeyboardEvent) {
     if (($event.shiftKey || $event.metaKey) && $event.key == 'G') //SHIFT + G
@@ -68,87 +48,93 @@ export class MovimientoContableComponent implements OnInit {
       this.eliminar(null);
   }
 
+  ngOnInit() {
+    this.sesion = validarSesion(this.sesionService, this.router);
+    this.consultarAfectacionesContables();
+  }
+
+  limpiar() {
+    this.movimientoContable = new MovimientoContable();
+    //this.grupoProducto.categoriaProducto.id = this.categoriasProductos[0].id;
+    //this.editar();
+
+    this.TablaMovimientoContable.clickedRows.clear();
+    this.TablaMovimientoContable.borrarFiltroMovimientoContable();
+    if (this.TablaMovimientoContable.dataSourceMovimientoContable.paginator) {
+      this.TablaMovimientoContable.dataSourceMovimientoContable.paginator.firstPage();
+    }
+  }
+
   nuevo(event) {
-    if (event!=null)
+    if (event != null)
       event.preventDefault();
     this.movimientoContable = new MovimientoContable();
   }
 
   crear(event) {
-    if (event!=null)
+    if (event != null)
       event.preventDefault();
-    this.movimientoContableService.crear(this.movimientoContable).subscribe(
-      res => {
+    this.movimientoContableService.crear(this.movimientoContable).subscribe({
+      next: res => {
+        this.movimientoContable = res.resultado as MovimientoContable;
+        this.TablaMovimientoContable.consultarMovimientoContable();
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
-        this.movimientoContable=res.resultado as MovimientoContable;
-        this.consultar();
+        this.limpiar();
       },
-      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
-    );
+      error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+    });
+  }
+
+  editar() {
+    //this.habilitarControles();
+    //this.validarCategoria();
+    this.editarMovimientoContable = true;
   }
 
   actualizar(event) {
-    if (event!=null)
+    if (event != null)
       event.preventDefault();
     this.movimientoContableService.actualizar(this.movimientoContable).subscribe(
       res => {
+        this.movimientoContable = res.resultado as MovimientoContable;
+        this.TablaMovimientoContable.consultarMovimientoContable();
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
-        this.movimientoContable=res.resultado as MovimientoContable;
-        this.consultar();
-      },
-      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
-    );
-  }
-
-  eliminar(event:any) {
-    if (event!=null)
-      event.preventDefault();
-    this.movimientoContableService.eliminar(this.movimientoContable).subscribe(
-      res => {
-        Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
-        this.consultar();
+        this.limpiar();
       },
       err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
   
-  consultar() {
-    this.movimientoContableService.consultar().subscribe(
+  eliminar(event: any) {
+    if (event != null)
+      event.preventDefault();
+    this.movimientoContableService.eliminar(this.movimientoContable).subscribe(
       res => {
-        this.movimientosContables = res.resultado as MovimientoContable[]
-        this.dataSourceMovimientoContable = new MatTableDataSource(this.movimientosContables);
-        this.dataSourceMovimientoContable.paginator = this.paginator;
-        this.dataSourceMovimientoContable.sort = this.sort;
+        Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
       },
       err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
 
-  seleccion(movimientoContable: MovimientoContable) {
-    if (!this.clickedRows.has(movimientoContable)){
-      this.clickedRows.clear();
-      this.clickedRows.add(movimientoContable);
-      this.movimientoContable = movimientoContable;
+  seleccion(event: any) {
+    //console.log(event.grupoProductoSeleccionado);
+    this.movimientoContable = event.movimientoContableSeleccionado as MovimientoContable;
+    if (this.movimientoContable.id != 0) {
+      //this.llenarMovimientoContable();
+      //this.inhabilitarControles();
+      this.editarMovimientoContable = false;
     } else {
-      this.clickedRows.clear();
-      this.movimientoContable = new MovimientoContable();
+      this.limpiar();
     }
-  }
-
-  filtroMovimientoContable(event: Event) {
-    const filterValue = (event.target as HTMLInputElement).value;
-    this.dataSourceMovimientoContable.filter = filterValue.trim().toUpperCase();
-    if (this.dataSourceMovimientoContable.paginator) {
-      this.dataSourceMovimientoContable.paginator.firstPage();
-    }
+    //console.log(this.grupoProducto.codigo);
   }
 
   consultarAfectacionesContables() {
-    this.afectacionContableService.consultar().subscribe(
-      res => {
+    this.afectacionContableService.consultar().subscribe({
+      next: res => {
         this.afectacionesContables = res.resultado as AfectacionContable[]
       },
-      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
-    );
+      error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+    });
   }
 }

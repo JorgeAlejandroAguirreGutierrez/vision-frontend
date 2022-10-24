@@ -3,17 +3,17 @@ import { valores } from "../../constantes";
 export class EquivalenciaMedida {
     id: number;
     codigo: string;
-    medida1: Medida;
-    medida2: Medida;
+    medidaIni: Medida;
+    medidaEqui: Medida;
     equivalencia: number;
     estado: string;
 
     constructor() {
         this.id=valores.cero;
         this.codigo=valores.vacio;
-        this.medida1= new Medida();
-        this.medida2=new Medida();
+        this.medidaIni= new Medida();
+        this.medidaEqui=new Medida();
         this.equivalencia=valores.cero;
-        this.estado=valores.vacio;
+        this.estado=valores.activo;
     }
 }

@@ -15,6 +15,7 @@ import { PlazoCreditoComponent } from '../../clientes/plazo-credito/plazo-credit
 //COMPRAS
 import { ProveedorComponent } from '../../compras/proveedor/proveedor.component';
 import { FacturaCompraComponent } from '../../compras/factura-compra/factura-compra.component';
+import { GrupoProveedorComponent } from '../../compras/grupo-proveedor/grupo-proveedor.component';
 
 //VENTAS
 import { FacturaComponent } from "../../comprobantes/factura/factura.component";
@@ -91,6 +92,8 @@ export class SidebarItemsService {
 
     if (tabNombre == modulos.modulo_compras) {
       this.llenarOpciones(ProveedorComponent, tabs.tab_proveedor, items.item_proveedor, icos.ico_proveedor);
+      this.llenarOpciones(FacturaCompraComponent, tabs.tab_factura_compra, items.item_factura_compra, icos.ico_factura_compra);     
+      this.llenarOpciones(GrupoProveedorComponent, tabs.tab_grupo_proveedor, items.item_grupo_proveedor, icos.ico_grupo_proveedor);
     }
 
     if (tabNombre == modulos.modulo_ventas) {

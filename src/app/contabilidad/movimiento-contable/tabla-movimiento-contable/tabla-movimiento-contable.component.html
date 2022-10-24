@@ -1,25 +1,28 @@
 <div>
     <mat-form-field appearance="standard">
         <mat-label>Buscar en movimientos contables</mat-label>
-        <input matInput (keyup)="filtroMovimientoContable($event)" placeholder="Ej. SE" #input>
+        <input matInput (keyup)="filtroMovimientoContable($event)" placeholder="Ej. SE" #inputFiltroMovimientoContable>
+        <button mat-button *ngIf="inputFiltroMovimientoContable.value" matSuffix mat-icon-button
+            (click)="borrarFiltroMovimientoContable()">
+            <mat-icon>close</mat-icon>
+        </button>
     </mat-form-field>
     <div class="mat-elevation-z8">
-        <table mat-table [dataSource]="dataSourceMovimientoContable" matSort>
+        <table mat-table [dataSource]="observableDSMovimientoContable.value" matSort>
 
             <!-- Columnas Dinamicas -->
-            <ng-container *ngFor="let columna of columnas" [matColumnDef]="columna.nombreColumna">
+            <ng-container *ngFor="let columna of columnasMovimientoContable" [matColumnDef]="columna.nombreColumna">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header> {{ columna.cabecera }} </th>
                 <td mat-cell *matCellDef="let row"> {{ columna.celda(row) }} </td>
             </ng-container>
 
-            <tr mat-header-row *matHeaderRowDef="columnasMovimientoContable"></tr>
+            <tr mat-header-row *matHeaderRowDef="cabeceraMovimientoContable"></tr>
             <tr mat-row (click)="seleccion(row)" [class.selected-row]="clickedRows.has(row)"
-                *matRowDef="let row; columns: columnasMovimientoContable;"></tr>
+                *matRowDef="let row; columns: cabeceraMovimientoContable;"></tr>
 
             <!-- Row shown when there is no matching data. -->
             <tr class="mat-row" *matNoDataRow>
-                <td class="mat-cell" colspan="9">No hay datos que coincidan con el movimiento contable
-                    "{{input.value}}"</td>
+                <td class="mat-cell" colspan="7">No hay datos que coincidan con el movimieto contable "{{inputFiltroMovimientoContable.value}}"</td>
             </tr>
         </table>
         <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
