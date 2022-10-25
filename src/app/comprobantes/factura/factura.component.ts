@@ -43,10 +43,10 @@ export class FacturaComponent implements OnInit {
 
   collapsed = true;
   isLinear = false;
-  isEditable=false;
-  completed=false;
-  categoriaProducto= "B";
-  estado= "EMITIDA";
+  isEditable = false;
+  completed = false;
+  categoriaProducto = "B";
+  estado = "EMITIDA";
   facturaDetalleIndice = valores.cero;
   facturaDetalleEntregado = valores.vacio;
   serieBuscar = valores.vacio;
@@ -85,7 +85,7 @@ export class FacturaComponent implements OnInit {
   abrirPanelAdminFactura = false;
   facturas: Factura[];
   deshabilitarAgregarFacturaDetalle: boolean=false;
-  verAcordeonFacturaDetalle: boolean = false;
+  verAcordeonFacturaDetalle: boolean = true;
   
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild('paginatorFacturas') paginatorFacturas: MatPaginator;
@@ -287,7 +287,6 @@ export class FacturaComponent implements OnInit {
   construirFactura() {
     if (this.factura.id != 0) {
         this.factura.normalizar();
-        this.estado = this.factura.estado? "EMITIDA": "ANULADA";
         this.seleccionIdentificacionCliente.patchValue(this.factura.cliente);
         this.seleccionRazonSocialCliente.patchValue(this.factura.cliente);
         this.primerTelefonoCliente= this.factura.cliente.telefonos.length>0? this.factura.cliente.telefonos[0].numero: "";
@@ -913,7 +912,8 @@ export class FacturaComponent implements OnInit {
       event.preventDefault();
     this.facturacionElectronicaService.crear(this.factura).subscribe(
       res => {
-        Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
+        let respuesta = res.resultado as String;
+        Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje, footer: respuesta });
       },
       err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.message })
     );

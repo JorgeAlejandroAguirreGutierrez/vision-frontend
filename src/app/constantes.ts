@@ -114,7 +114,11 @@ export const valores ={
      inactivo : "INACTIVO",
      pendiente : "PENDIENTE",
      norecaudado : "NO RECAUDADO",
-     recaudado : "RECAUDADO"
+     recaudado : "RECAUDADO",
+     emitida : "EMITIDA",
+     anulada: "ANULADA",
+     facturada: "FACTURADA",
+     nofacturada: "NO FACTURADA"
 }
     
 export const mensajes = {

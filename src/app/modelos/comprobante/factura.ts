@@ -47,7 +47,7 @@ export class Factura {
     this.id=valores.cero;
     this.secuencia=valores.vacio;
     this.fecha=new Date();
-    this.estado=valores.activo;
+    this.estado=valores.emitida;
     this.eliminado=false;
     this.cliente=new Cliente();
     this.clienteFactura=new Cliente();

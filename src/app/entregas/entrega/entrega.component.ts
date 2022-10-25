@@ -16,6 +16,7 @@ import { FacturaService } from '../../servicios/comprobante/factura.service';
 import { valores, validarSesion, tab_activo, exito, exito_swal, error, error_swal } from '../../constantes';
 import { MatTableDataSource } from '@angular/material/table';
 import { FacturaDetalle } from '../../modelos/comprobante/factura-detalle';
+import { FacturacionElectronicaService } from 'src/app/servicios/comprobante/facturacion-eletronica.service';
 
 @Component({
   selector: 'app-entrega',
@@ -39,7 +40,7 @@ export class EntregaComponent implements OnInit {
   dataFacturaDetalle = new MatTableDataSource<FacturaDetalle>(this.entrega.factura.facturaDetalles);
 
   constructor(private transportistaService: TransportistaService, private sesionService: SesionService, private router: Router,
-    private facturaService: FacturaService, private modalService: NgbModal,
+    private facturaService: FacturaService, private facturacionElectronicaService: FacturacionElectronicaService, private modalService: NgbModal,
     private ubicacionService: UbicacionService, private entregaService: EntregaService) { }
 
   ngOnInit() {
@@ -220,6 +221,18 @@ export class EntregaComponent implements OnInit {
 
   despachar(){
 
+  }
+
+  crearFacturaElectronica(event){
+    if (event != null)
+      event.preventDefault();
+    this.facturacionElectronicaService.crear(this.entrega.factura).subscribe(
+      res => {
+        let respuesta = res.resultado as String;
+        Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje, footer: respuesta });
+      },
+      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.message })
+    );
   }
 
   generarPdf(event: any){

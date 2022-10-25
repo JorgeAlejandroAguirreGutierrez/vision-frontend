@@ -48,6 +48,7 @@ import { valores, mensajes, otras, validarSesion, exito, exito_swal, error, erro
 import { CreditoService } from '../../servicios/recaudacion/credito.service';
 import { Credito } from '../../modelos/recaudacion/credito';
 import { MatStepper } from '@angular/material/stepper';
+import { FacturacionElectronicaService } from 'src/app/servicios/comprobante/facturacion-eletronica.service';
 
 @Component({
   selector: 'app-recaudacion',
@@ -74,7 +75,7 @@ export class RecaudacionComponent implements OnInit {
   panelCredito=false;
   deshabilitarTabla=true;
 
-  constructor(private facturaService: FacturaService, private clienteService: ClienteService, private bancoService: BancoService, private sesionService: SesionService,
+  constructor(private facturaService: FacturaService, private facturacionElectronicaService: FacturacionElectronicaService, private clienteService: ClienteService, private bancoService: BancoService, private sesionService: SesionService,
     private cuentaPropiaService: CuentaPropiaService, private operadorTarjetaService: OperadorTarjetaService, private datePipe: DatePipe,
     private franquiciaTarjetaService: FranquiciaTarjetaService, private formaPagoService: FormaPagoService, private creditoService: CreditoService,
     private parametroService: ParametroService, private establecimientoService: EstablecimientoService, private puntoVentaService: PuntoVentaService,
@@ -1026,6 +1027,18 @@ export class RecaudacionComponent implements OnInit {
 
   sinIntereses(){
     this.recaudacion.credito.tipo="";
+  }
+
+  crearFacturaElectronica(event){
+    if (event != null)
+      event.preventDefault();
+    this.facturacionElectronicaService.crear(this.factura).subscribe(
+      res => {
+        let respuesta = res.resultado as String;
+        Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje, footer: respuesta });
+      },
+      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.message })
+    );
   }
 
   private getDismissReason(reason: any): string {
