@@ -520,19 +520,19 @@
                                 <ng-container matColumnDef="descuento">
                                     <th mat-header-cell *matHeaderCellDef mat-sort-header> Desc. </th>
                                     <td mat-cell *matCellDef="let facturaDetalle">
-                                        {{facturaDetalle.valorDescuentoLinea}} </td>
+                                        ${{facturaDetalle.valorDescuentoLinea}} </td>
                                 </ng-container>
                                 <!-- Descuento% Columna -->
                                 <ng-container matColumnDef="descuentoPorcentaje">
                                     <th mat-header-cell *matHeaderCellDef mat-sort-header> Desc% </th>
                                     <td mat-cell *matCellDef="let facturaDetalle">
-                                        {{facturaDetalle.porcentajeDescuentoLinea}} </td>
+                                        {{facturaDetalle.porcentajeDescuentoLinea}}% </td>
                                 </ng-container>
                                 <!-- Impuesto Columna -->
                                 <ng-container matColumnDef="impuesto">
                                     <th mat-header-cell *matHeaderCellDef mat-sort-header> IVA </th>
                                     <td mat-cell *matCellDef="let facturaDetalle">
-                                        {{facturaDetalle.impuesto.porcentaje}} </td>
+                                        {{facturaDetalle.impuesto.porcentaje}}% </td>
                                 </ng-container>
                                 <!-- Total Columna -->
                                 <ng-container matColumnDef="total">
@@ -621,8 +621,8 @@
                                         </div>
                                         <div class="col-5">
                                             <mat-form-field appearance="standard">
-                                                <input matInput type="text " [(ngModel)]="factura.subtotalSinDescuento"
-                                                    class="form-control-sm " disabled>
+                                                <input matInput type="text" [(ngModel)]="factura.subtotalSinDescuento"
+                                                    class="form-control-sm" disabled>
                                             </mat-form-field>
                                         </div>
                                         <div class="col-7 negrita centrar-vertical-izq">

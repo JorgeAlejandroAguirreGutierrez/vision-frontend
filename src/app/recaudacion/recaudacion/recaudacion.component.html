@@ -94,7 +94,7 @@
                                 <mat-form-field appearance="standard">
                                     <mat-label>Crédito</mat-label>
                                     <input matInput type="text" class="form-control-sm"
-                                        [value]="factura.totalConDescuento-recaudacion.total" disabled>
+                                        [value]="recaudacion.credito.saldo" disabled>
                                 </mat-form-field>
                             </div>
                             <div class="col-3">
@@ -873,7 +873,7 @@
                     </div>
                     <div class="col-1">
                         <br>
-                        <mat-checkbox [(ngModel)]="tarjetaDebito.titular" (change)="asignarTitularTarjetaCredito()"
+                        <mat-checkbox [(ngModel)]="tarjetaDebito.titular" (change)="asignarTitularTarjetaDebito()"
                             class="form-control-sm" color="primary">
                             Titular</mat-checkbox>
                     </div>

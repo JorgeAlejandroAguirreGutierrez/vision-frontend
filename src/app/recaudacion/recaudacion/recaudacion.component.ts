@@ -873,6 +873,7 @@ export class RecaudacionComponent implements OnInit {
     this.recaudacionService.calcular(this.recaudacion).subscribe(
       res => {
         this.recaudacion = res.resultado as Recaudacion;
+        console.log(this.recaudacion);
         this.cheque.valor=this.recaudacion.credito.saldo;
 	      this.deposito.valor=this.recaudacion.credito.saldo;
 	      this.transferencia.valor=this.recaudacion.credito.saldo;
@@ -883,10 +884,6 @@ export class RecaudacionComponent implements OnInit {
   }
 
   seleccionarEfectivo(){
-    if (this.recaudacion.efectivo>=this.factura.totalConDescuento){
-      this.recaudacion.cambio=Number(this.recaudacion.efectivo)-Number(this.factura.totalConDescuento);
-      this.recaudacion.cambio=Number(this.recaudacion.cambio.toFixed(2));
-    }
     this.calcular();
   }
 
@@ -981,7 +978,7 @@ export class RecaudacionComponent implements OnInit {
     if (this.tarjetaDebito.titular){
       this.tarjetaDebito.identificacion=this.factura.cliente.identificacion;
       this.tarjetaDebito.nombre=this.factura.cliente.razonSocial;
-      this.habilitarEditarTarjetaDebito=true;
+      this.habilitarTitularTarjetaDebito=true;
     } else{
       this.tarjetaDebito.identificacion="";
       this.tarjetaDebito.nombre="";
