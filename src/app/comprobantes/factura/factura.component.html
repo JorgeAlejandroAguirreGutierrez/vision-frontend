@@ -16,38 +16,42 @@
                             </a>
                         </ng-container>
                     </li>
-                    <li class="nav-item">
-                        <ng-container *ngIf="factura.id==0">
+                    <ng-container *ngIf="factura.id==0">
+                        <li class="nav-item">
                             <a class="nav-link" title="Nuevo" role="button" (click)="nuevo($event)">
                                 <mat-icon>file_copy</mat-icon>
                             </a>
-                        </ng-container>
-                    </li>
+                        </li>
+                    </ng-container>
                     <li class="nav-item">
                         <a class="nav-link" title="Consultar Bienes" role="button" (click)="consultarBienes($event)">
                             <mat-icon>archive</mat-icon>
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" title="Consultar Servicios" role="button"
-                            (click)="consultarServicios($event)">
+                        <a class="nav-link" title="Consultar Servicios" role="button" (click)="consultarServicios($event)">
                             <mat-icon>archive</mat-icon>
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" title="Consultar Activos Fijos" role="button"
-                            (click)="consultarActivosFijos($event)">
+                        <a class="nav-link" title="Consultar Activos Fijos" role="button" (click)="consultarActivosFijos($event)">
                             <mat-icon>archive</mat-icon>
                         </a>
                     </li>
-                    <li class="nav-item">
-                        <ng-container *ngIf="factura.id!=0">
-                            <a class="nav-link" title="Crear Factura Electronica" role="button"
-                                (click)="crearFacturaElectronica($event)">
+                    <ng-container *ngIf="factura.id!=0">
+                        <li class="nav-item">
+                            <a class="nav-link" title="Crear Factura Electronica" role="button" (click)="crearFacturaElectronica($event)">
                                 <mat-icon>publish</mat-icon>
                             </a>
-                        </ng-container>
-                    </li>
+                        </li>
+                    </ng-container>
+                    <ng-container *ngIf="factura.id!=0">
+                        <li class="nav-item">
+                            <a class="nav-link" title="Crear Factura Fisica" role="button" (click)="crearFacturaFisica($event)">
+                                <mat-icon>download</mat-icon>
+                            </a>
+                        </li>
+                    </ng-container>
                 </ul>
             </nav>
             <ng-template matStepLabel>Facturación</ng-template>
@@ -156,14 +160,14 @@
                                 <mat-form-field appearance="standard">
                                     <mat-label>Estab.</mat-label>
                                     <input matInput type="text" class="form-control-sm"
-                                        [(ngModel)]="factura.vendedor.puntoVenta.establecimiento.codigo" disabled>
+                                        [(ngModel)]="factura.sesion.usuario.puntoVenta.establecimiento.codigo" disabled>
                                 </mat-form-field>
                             </div>
                             <div class="col-3">
                                 <mat-form-field appearance="standard">
                                     <mat-label>Punto V.</mat-label>
                                     <input matInput type="text" class="form-control-sm"
-                                        [(ngModel)]="factura.vendedor.puntoVenta.codigo" disabled>
+                                        [(ngModel)]="factura.sesion.usuario.puntoVenta.codigo" disabled>
                                 </mat-form-field>
                             </div>
                             <div class="col-6">
@@ -184,7 +188,7 @@
                                 <mat-form-field appearance="standard">
                                     <mat-label>Vendedor</mat-label>
                                     <input matInput type="text" class="form-control-sm"
-                                        [(ngModel)]="factura.vendedor.nombre" disabled>
+                                        [(ngModel)]="factura.sesion.usuario.nombre" disabled>
                                 </mat-form-field>
                             </div>
                             <div class="col-4">

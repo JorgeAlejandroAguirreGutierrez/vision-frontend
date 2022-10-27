@@ -48,7 +48,7 @@ import { valores, mensajes, otras, validarSesion, exito, exito_swal, error, erro
 import { CreditoService } from '../../servicios/recaudacion/credito.service';
 import { Credito } from '../../modelos/recaudacion/credito';
 import { MatStepper } from '@angular/material/stepper';
-import { FacturacionElectronicaService } from 'src/app/servicios/comprobante/facturacion-eletronica.service';
+import { FacturacionElectronicaService } from 'src/app/servicios/comprobante/factura-eletronica.service';
 
 @Component({
   selector: 'app-recaudacion',

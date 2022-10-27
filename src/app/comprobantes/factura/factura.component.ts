@@ -29,7 +29,8 @@ import { valores, mensajes, validarSesion, exito, exito_swal, error, error_swal 
 import { FacturaDetalleService } from '../../servicios/comprobante/factura-detalle.service';
 import { MatSort } from '@angular/material/sort';
 import { TabService } from 'src/app/componentes/services/tab.service';
-import { FacturacionElectronicaService } from 'src/app/servicios/comprobante/facturacion-eletronica.service';
+import { FacturacionElectronicaService } from 'src/app/servicios/comprobante/factura-eletronica.service';
+import { FacturaFisicaService } from 'src/app/servicios/comprobante/factura-fisica.service';
 
 @Component({
   selector: 'app-factura',
@@ -93,7 +94,7 @@ export class FacturaComponent implements OnInit {
 
   constructor(private clienteService: ClienteService, private dependienteService: DependienteService, private sesionService: SesionService, 
     private impuestoService: ImpuestoService, private facturaDetalleService: FacturaDetalleService, private router: Router,
-    private facturaService: FacturaService, private facturacionElectronicaService: FacturacionElectronicaService,
+    private facturaService: FacturaService, private facturacionElectronicaService: FacturacionElectronicaService, private facturaFisicaService: FacturaFisicaService,
     private productoService: ProductoService, private bodegaService: BodegaService, private tabService: TabService,
     private modalService: NgbModal, private _formBuilder: FormBuilder) { }
 
@@ -718,7 +719,6 @@ export class FacturaComponent implements OnInit {
     if (event!=null)
       event.preventDefault();
     this.factura.sesion=this.sesion;
-    this.factura.vendedor=this.sesion.usuario;
     this.facturaService.crear(this.factura).subscribe(
       res => {
         this.factura = res.resultado as Factura;
@@ -916,6 +916,19 @@ export class FacturaComponent implements OnInit {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje, footer: respuesta });
       },
       err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.message })
+    );
+  }
+
+  crearFacturaFisica(event: any){
+    if (event!=null)
+      event.preventDefault();
+    this.facturaFisicaService.crear(this.factura).subscribe(
+      res => {
+        let file = new Blob([res], { type: 'application/pdf' });            
+        var fileURL = URL.createObjectURL(file);
+        window.open(fileURL);
+      },
+      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
 

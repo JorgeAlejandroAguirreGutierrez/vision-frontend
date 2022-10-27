@@ -16,7 +16,7 @@ import { FacturaService } from '../../servicios/comprobante/factura.service';
 import { valores, validarSesion, tab_activo, exito, exito_swal, error, error_swal } from '../../constantes';
 import { MatTableDataSource } from '@angular/material/table';
 import { FacturaDetalle } from '../../modelos/comprobante/factura-detalle';
-import { FacturacionElectronicaService } from 'src/app/servicios/comprobante/facturacion-eletronica.service';
+import { FacturacionElectronicaService } from 'src/app/servicios/comprobante/factura-eletronica.service';
 
 @Component({
   selector: 'app-entrega',
@@ -232,19 +232,6 @@ export class EntregaComponent implements OnInit {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje, footer: respuesta });
       },
       err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.message })
-    );
-  }
-
-  generarPdf(event: any){
-    if (event!=null)
-      event.preventDefault();
-    this.facturaService.generar_pdf(this.entrega.factura.id).subscribe(
-      res => {
-        let file = new Blob([res], { type: 'application/pdf' });            
-        var fileURL = URL.createObjectURL(file);
-        window.open(fileURL);
-      },
-      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
 }
