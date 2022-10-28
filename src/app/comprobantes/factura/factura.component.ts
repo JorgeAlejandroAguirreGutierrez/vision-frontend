@@ -30,7 +30,6 @@ import { FacturaDetalleService } from '../../servicios/comprobante/factura-detal
 import { MatSort } from '@angular/material/sort';
 import { TabService } from 'src/app/componentes/services/tab.service';
 import { FacturacionElectronicaService } from 'src/app/servicios/comprobante/factura-eletronica.service';
-import { FacturaFisicaService } from 'src/app/servicios/comprobante/factura-fisica.service';
 
 @Component({
   selector: 'app-factura',
@@ -94,7 +93,7 @@ export class FacturaComponent implements OnInit {
 
   constructor(private clienteService: ClienteService, private dependienteService: DependienteService, private sesionService: SesionService, 
     private impuestoService: ImpuestoService, private facturaDetalleService: FacturaDetalleService, private router: Router,
-    private facturaService: FacturaService, private facturacionElectronicaService: FacturacionElectronicaService, private facturaFisicaService: FacturaFisicaService,
+    private facturaService: FacturaService, private facturacionElectronicaService: FacturacionElectronicaService,
     private productoService: ProductoService, private bodegaService: BodegaService, private tabService: TabService,
     private modalService: NgbModal, private _formBuilder: FormBuilder) { }
 
@@ -910,25 +909,19 @@ export class FacturaComponent implements OnInit {
   crearFacturaElectronica(event){
     if (event != null)
       event.preventDefault();
-    this.facturacionElectronicaService.crear(this.factura).subscribe(
+    this.facturacionElectronicaService.enviarSri(this.factura).subscribe(
       res => {
         let respuesta = res.resultado as String;
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje, footer: respuesta });
+        this.facturacionElectronicaService.enviarCorreo(this.factura).subscribe(
+          res => {
+            let respuesta = res.resultado as String;
+            Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje, footer: respuesta });
+          },
+          err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.message })
+        );
       },
       err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.message })
-    );
-  }
-
-  crearFacturaFisica(event: any){
-    if (event!=null)
-      event.preventDefault();
-    this.facturaFisicaService.crear(this.factura).subscribe(
-      res => {
-        let file = new Blob([res], { type: 'application/pdf' });            
-        var fileURL = URL.createObjectURL(file);
-        window.open(fileURL);
-      },
-      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
 

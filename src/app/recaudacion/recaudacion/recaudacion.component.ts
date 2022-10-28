@@ -1029,10 +1029,17 @@ export class RecaudacionComponent implements OnInit {
   crearFacturaElectronica(event){
     if (event != null)
       event.preventDefault();
-    this.facturacionElectronicaService.crear(this.factura).subscribe(
+    this.facturacionElectronicaService.enviarSri(this.factura).subscribe(
       res => {
         let respuesta = res.resultado as String;
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje, footer: respuesta });
+        this.facturacionElectronicaService.enviarCorreo(this.factura).subscribe(
+          res => {
+            let respuesta = res.resultado as String;
+            Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje, footer: respuesta });
+          },
+          err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.message })
+        );
       },
       err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.message })
     );

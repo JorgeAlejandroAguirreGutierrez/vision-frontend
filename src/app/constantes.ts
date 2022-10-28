@@ -37,6 +37,8 @@ export const urn =
      cliente: "/cliente",
      factura: "/factura",
      facturaEletronica: "/facturaEletronica",
+     enviarSri : "/enviarSri",
+     enviarCorreo : "/enviarCorreo",
      facturaFisica: "/facturaFisica",
      facturaDetalle: "/facturaDetalle",
      tipoRetencion: "/tipoRetencion",

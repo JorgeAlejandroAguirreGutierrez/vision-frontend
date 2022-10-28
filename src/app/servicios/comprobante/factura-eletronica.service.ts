@@ -14,8 +14,16 @@ export class FacturacionElectronicaService {
 
   constructor(private http: HttpClient, private router: Router) { }
 
-  crear(factura: Factura): Observable<Respuesta> {
-    return this.http.post(environment.host + urn.ruta + urn.facturaEletronica, factura, options).pipe(
+  enviarSri(factura: Factura): Observable<Respuesta> {
+    return this.http.post(environment.host + urn.ruta + urn.facturaEletronica + urn.enviarSri, factura, options).pipe(
+      map(response => response as Respuesta),
+      catchError(err => {
+        return throwError(err);
+      })
+    );
+  }
+  enviarCorreo(factura: Factura): Observable<Respuesta> {
+    return this.http.post(environment.host + urn.ruta + urn.facturaEletronica + urn.enviarCorreo, factura, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(err);
