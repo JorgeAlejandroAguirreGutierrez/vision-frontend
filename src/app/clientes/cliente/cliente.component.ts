@@ -383,7 +383,6 @@ export class ClienteComponent implements OnInit {
     ubicacion.parroquia = this.clienteParroquia;
     this.dependiente.direccion.ubicacion = dependienteUbicacion;
     this.cliente.direccion.ubicacion= ubicacion;
-    console.log(this.cliente);
     this.clienteService.crear(this.cliente).subscribe(
       res => {
         this.cliente = res.resultado as Cliente;

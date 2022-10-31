@@ -873,7 +873,6 @@ export class RecaudacionComponent implements OnInit {
     this.recaudacionService.calcular(this.recaudacion).subscribe(
       res => {
         this.recaudacion = res.resultado as Recaudacion;
-        console.log(this.recaudacion);
         this.cheque.valor=this.recaudacion.credito.saldo;
 	      this.deposito.valor=this.recaudacion.credito.saldo;
 	      this.transferencia.valor=this.recaudacion.credito.saldo;
@@ -1029,17 +1028,10 @@ export class RecaudacionComponent implements OnInit {
   crearFacturaElectronica(event){
     if (event != null)
       event.preventDefault();
-    this.facturacionElectronicaService.enviarSri(this.factura).subscribe(
+    this.facturacionElectronicaService.enviar(this.factura).subscribe(
       res => {
         let respuesta = res.resultado as String;
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje, footer: respuesta });
-        this.facturacionElectronicaService.enviarCorreo(this.factura).subscribe(
-          res => {
-            let respuesta = res.resultado as String;
-            Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje, footer: respuesta });
-          },
-          err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.message })
-        );
       },
       err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.message })
     );

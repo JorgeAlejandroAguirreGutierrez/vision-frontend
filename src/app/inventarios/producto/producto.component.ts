@@ -203,7 +203,6 @@ export class ProductoComponent implements OnInit {
     this.producto.precios = this.tablaPrecios;
     this.bodega.id 
     this.producto.productosBodegas.push(); 
-    console.log(this.producto);
     this.productoService.crear(this.producto).subscribe({
       next: (res) => {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
@@ -268,7 +267,6 @@ export class ProductoComponent implements OnInit {
       return;
     }
     this.producto.precios = this.tablaPrecios;
-    console.log(this.producto);
     this.productoService.actualizar(this.producto).subscribe({
       next: (res) => {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
@@ -327,7 +325,6 @@ export class ProductoComponent implements OnInit {
       this.limpiar();
       this.clickedRows.add(productoSeleccionado);
       this.producto = productoSeleccionado;
-      //console.log(this.producto);
       this.construirProducto(this.producto);
     } else {
       this.limpiar();
@@ -417,7 +414,6 @@ export class ProductoComponent implements OnInit {
   }
 
   medidaSeleccionada(event: number) {
-    //console.log(event);
     this.medidaService.obtener(event).subscribe({
       next: (res) => {
         this.producto.medidaKardex = res.resultado as Medida;
@@ -432,7 +428,6 @@ export class ProductoComponent implements OnInit {
     this.impuestoService.obtener(event).subscribe(
       res => {
         this.impuesto = res.resultado as Impuesto;
-        //console.log(this.porcentaje_impuesto);
       },
       err => {
         Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
@@ -447,14 +442,12 @@ export class ProductoComponent implements OnInit {
         Swal.fire(error, mensajes.error_medida, error_swal);
         return;
       }
-      //console.log(this.kardex_inicial.cantidad);
       if (this.kardexInicial.cantidad == 0) {
         Swal.fire({ title: warning, text: mensajes.mensaje_kardex_inicial, icon: warning_swal, showCancelButton: true, confirmButtonColor: '#3085d6', cancelButtonColor: '#d33', confirmButtonText: si_seguro
         }).then((result) => {
           if (result.isConfirmed) {
             this.crearKardexPrecios();
           } else {
-            //console.log("No crear");
             return;
           }
         })
@@ -471,7 +464,6 @@ export class ProductoComponent implements OnInit {
         res => {
           this.producto.medidaKardex = res.resultado as Medida;
           this.crearKardexPrecios();
-          //console.log(this.producto.medidaKardex);
         },
         err => {
           Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
@@ -527,10 +519,8 @@ export class ProductoComponent implements OnInit {
     this.medidaPrecio.medida = medida;
     this.medidaPrecio.precios = this.precios;
     this.medidasPrecios.push(this.medidaPrecio);
-    //console.log(this.medidasPrecios);
     this.observablePrecios = new BehaviorSubject(this.medidaPrecio.precios);
     this.datos.push(this.observablePrecios);
-    //console.log(this.datos);
     this.activarControles(this.datos.length - 1);
   }
 
@@ -572,12 +562,10 @@ export class ProductoComponent implements OnInit {
         this.abrirPanelPrecios[i] = false;
         }
       }
-      //console.log(this.abrirPanelPrecios);
     }
   }
 
   cambiarAbrirPanelPrecios(index: number){
-    //console.log("Abierto: " + index);
     if (this.abrirPanelPrecios.length > 0) {
       for (let i = 0; i < this.abrirPanelPrecios.length; i++) {
         if (i == index){
@@ -586,7 +574,6 @@ export class ProductoComponent implements OnInit {
         this.abrirPanelPrecios[i] = false;
         }
       }
-      //console.log(this.abrirPanelPrecios);
     }
   }
 
@@ -616,7 +603,6 @@ export class ProductoComponent implements OnInit {
 
   activarControles(i: number) {
     const toGroups = this.datos[i].value.map((entity:any) => {
-      //console.log(entity.precioVentaPublicoManual);
       return new FormGroup({
         margenGanancia: new FormControl(entity.margenGanancia, Validators.required),
         precioVentaPublicoManual: new FormControl(entity.precioVentaPublicoManual, Validators.required),
@@ -624,7 +610,6 @@ export class ProductoComponent implements OnInit {
       
     });
     this.controls.push(new FormArray(toGroups));
-    //console.log(this.controls);
   }
 
   actualizarControles(i: number) {
@@ -648,13 +633,10 @@ export class ProductoComponent implements OnInit {
 
   getControl(i: number, index: number, fieldName: string) {
     const a = this.controls[i].at(index).get(fieldName) as FormControl;
-    //console.log('a');
-    //console.log(a);
-    return a; //this.controls[i].at(index).get(fieldName) as FormControl;
+    return a;
   }
 
   update(i: number, index: number, field: string, value: number) {
-    //console.log(i, index, field, value);
     this.medidasPrecios[i].precios = this.medidasPrecios[i].precios.map((e, i) => {
       if (index === i) {
         if (field == 'margenGanancia') {
@@ -695,19 +677,14 @@ export class ProductoComponent implements OnInit {
   }
 
   buscarMedidasEquivalentes(medidaKardexId: number) {
-    // cambiar por producto.medida_kardex.id
-    //console.log(medida_kardex_id);
     this.equivalenciaMedidaService.buscarMedidasEquivalentes(medidaKardexId).subscribe(
       res => {
         this.medidasEquivalentes = res.resultado as EquivalenciaMedida[];
-        //console.log(this.medidasEquivalentes);
-        //console.log('med_pre', this.medidas_precios);
         if (this.medidasPrecios.length > 1) {
           this.actualizarMedidasEquivalentes()
         }
         else {
           this.eliminarMedidaEquivalente(this.producto.medidaKardex);
-          //console.log(this.medidas_equivalentes);
         }
       },
       err => {
@@ -717,23 +694,18 @@ export class ProductoComponent implements OnInit {
   }
 
   eliminarMedidaEquivalente(medidaAgregada: Medida) {
-    //console.log(this.medidas_equivalentes.length);
     for (let i = 0; i < this.medidasEquivalentes.length; i++) {
       if (this.medidasEquivalentes[i].medida2.id == medidaAgregada.id) {
         this.medidasEquivalentes.splice(i, 1);
-        //console.log('elim', this.medidas_equivalentes);
       }
     }
   }
 
   actualizarMedidasEquivalentes() {
-    //console.log(this.medidas_equivalentes);
-    //console.log(this.medidas_precios);
     for (let i = 0; i < this.medidasPrecios.length; i++) {
       for (let j = 0; j < this.medidasEquivalentes.length; j++) {
         if (this.medidasEquivalentes[j].medida2.id == this.medidasPrecios[i].medida.id) {
           this.medidasEquivalentes.splice(j, 1);
-          //console.log('elim_act', this.medidas_equivalentes);
         }
       }
     }
@@ -747,22 +719,16 @@ export class ProductoComponent implements OnInit {
   }
 
   grupoSeleccionado(event: any) {
-    //console.log(event);
     let grupoProductoRecibido = event.grupoProductoSeleccionado as GrupoProducto;
     this.producto.grupoProducto = grupoProductoRecibido;
-    //console.log(grupoProductoRecibido.codigo);
   }
 
   dialogoGruposProductos(): void {
-    //console.log('El dialogo para selección de grupo producto fue abierto');
     const dialogRef = this.dialog.open(DialogoGrupoProductoComponent, {
       width: '80%',
-      // Para enviar datos
-      //data: { usuario: this.usuario, clave: this.clave, grupo_producto_recibido: "" }
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      //console.log('El dialogo para selección de grupo producto fue cerrado');
       if (result) {
         this.producto.grupoProducto = result as GrupoProducto;
         this.producto.nombre = this.producto.grupoProducto.linea + valores.espacio +
@@ -787,16 +753,12 @@ export class DialogoGrupoProductoComponent {
 
   onNoClick(): void {
     this.dialogRef.close();
-    //console.log('El dialogo para selección de grupo producto fue cancelado');
     this.data = new GrupoProducto;
   }
 
   grupoSeleccionado(event: any) {
-    //console.log(event);
     if (event && event.id != 0) {
       this.data = event.grupoProductoSeleccionado as GrupoProducto;
-      //this.producto.grupo_producto = grupoProductoRecibido;
-      //console.log(this.data.codigo);
     } else {
       this.data = new GrupoProducto;
     }

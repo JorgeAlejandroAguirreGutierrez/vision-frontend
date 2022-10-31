@@ -113,7 +113,6 @@ export class ProveedorProductoComponent implements OnInit {
         Swal.fire(error, mensajes.error_nombre_producto, error_swal);
         return;
     }
-    console.log(this.producto);
     this.producto.kardexs[0].proveedor = new Proveedor;
     this.productoService.actualizar(this.producto).subscribe({
       next: (res) => {
@@ -183,9 +182,7 @@ export class ProveedorProductoComponent implements OnInit {
     this.producto.productosProveedores = this.productoProveedores;
     this.llenarDataSourceProductoProveedor(this.productoProveedores);
     this.verActualizarProducto = true;
-    //this.deshabilitarFiltroProveedores = false;
     this.limpiarProveedor();
-    //console.log(this.producto); 
   }
 
   llenarDataSourceProductoProveedor(productoProveedores : ProductoProveedor[]){
@@ -253,8 +250,6 @@ export class ProveedorProductoComponent implements OnInit {
     this.productoProveedor.codigoEquivalente = this.codigoEquivalente;
     this.verActualizarProducto = true;
     this.limpiarProveedor();
-    //console.log(this.productoProveedores);
-    //console.log(this.producto.productosProveedores);
   }
 
   eliminarProveedor(event: any, i:number) {
@@ -297,7 +292,6 @@ export class ProveedorProductoComponent implements OnInit {
   } 
   seleccionarProveedor(){
     this.proveedor = this.controlProveedor.value as Proveedor;
-    //console.log(this.proveedor.razonSocial);
   }
 
 }

@@ -112,8 +112,6 @@ export class GrupoProductoComponent implements OnInit {
   async ngOnInit() {
     this.sesion=validarSesion(this.sesionService, this.router);
     this.construirGrupoProducto();
-    //this.consultarGrupoProductos();
-    //console.log(this.gruposProductos);
     this.categoriaProductoService.consultar().subscribe({
       next: res => {
         this.categoriasProductos = res.resultado as CategoriaProducto[];
@@ -214,7 +212,6 @@ export class GrupoProductoComponent implements OnInit {
     if (event != null)
       event.preventDefault();
     this.grupoProducto.movimientoContable.id = 1;
-    console.log(this.grupoProducto);
     this.grupoProductoService.crear(this.grupoProducto).subscribe({
       next: res => {
         this.grupoProducto = res.resultado as GrupoProducto;
@@ -270,7 +267,6 @@ export class GrupoProductoComponent implements OnInit {
   }
 
   seleccion(event: any) {
-    //console.log(event.grupoProductoSeleccionado);
     this.grupoProducto = event.grupoProductoSeleccionado as GrupoProducto;
     if (this.grupoProducto.id != 0) {
       this.llenarGrupoProducto();
@@ -278,11 +274,9 @@ export class GrupoProductoComponent implements OnInit {
     } else {
       this.limpiar();
     }
-    //console.log(this.grupoProducto.codigo);
   }
 
   llenarGrupoProducto() {
-    //console.log(this.categoriasProductos[0]);
     this.grupoProducto.categoriaProducto = this.categoriasProductos[0]; //Bien o servicio
     this.controlGrupo.setValue(this.grupoProducto.grupo);
     this.controlSubgrupo.setValue(this.grupoProducto.subgrupo);
@@ -380,7 +374,6 @@ export class GrupoProductoComponent implements OnInit {
         }
       }
     }
-    //console.log(this.grupoProducto.grupo);
   }
 
   private filtroSubgrupo(value: string): string[] {
@@ -515,7 +508,6 @@ export class GrupoProductoComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      console.log('El dialogo para movimientos contables fue cerrado');
       this.usuario = result;
     });
   }

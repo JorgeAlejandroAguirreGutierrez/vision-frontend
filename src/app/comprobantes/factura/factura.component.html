@@ -488,7 +488,7 @@
                             </div>
                         </div>
                         <div class="mat-elevation-z8 col-12">
-                            <table mat-table [dataSource]="dataFacturaDetalle" matSort>
+                            <table mat-table [dataSource]="dataSourceFacturaDetalle" matSort>
                                 <!-- Nombre Columna -->
                                 <ng-container matColumnDef="nombre">
                                     <th mat-header-cell *matHeaderCellDef mat-sort-header> Producto </th>
@@ -558,8 +558,7 @@
                                 <tr mat-row *matRowDef="let row; columns: columnasDetalleFactura;"></tr>
                             </table>
                             <ng-container>
-                                <mat-paginator #paginatorFactura [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons>
-                                </mat-paginator>
+                                <mat-paginator #paginatorFacturaDetalle [pageSizeOptions]="[5, 10, 25, 100]"> </mat-paginator>
                             </ng-container>
                         </div>
                         <mat-divider></mat-divider>
@@ -716,7 +715,7 @@
                                     "{{input.value}}"</td>
                             </tr>
                         </table>
-                        <mat-paginator #paginatorFacturas [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
+                        <mat-paginator #paginatorFactura [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
                     </div>
                     <div class="azul" *ngIf="!clickedRows.size">
                         Seleccione una fila para editar

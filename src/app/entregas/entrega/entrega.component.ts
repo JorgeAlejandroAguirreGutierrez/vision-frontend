@@ -101,7 +101,6 @@ export class EntregaComponent implements OnInit {
     if (event!=null)
       event.preventDefault();
     this.entrega.normalizar();
-    console.log(this.entrega);
     this.entregaService.crear(this.entrega).subscribe(
       res => {
         this.entrega = res.resultado as Entrega;
@@ -115,7 +114,6 @@ export class EntregaComponent implements OnInit {
     if (event!=null)
       event.preventDefault();
     this.entrega.normalizar();
-    console.log(this.entrega);
     this.entregaService.actualizar(this.entrega).subscribe(
       res => {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
@@ -226,17 +224,10 @@ export class EntregaComponent implements OnInit {
   crearFacturaElectronica(event){
     if (event != null)
       event.preventDefault();
-    this.facturacionElectronicaService.enviarSri(this.entrega.factura).subscribe(
+    this.facturacionElectronicaService.enviar(this.entrega.factura).subscribe(
       res => {
         let respuesta = res.resultado as String;
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje, footer: respuesta });
-        this.facturacionElectronicaService.enviarCorreo(this.entrega.factura).subscribe(
-          res => {
-            let respuesta = res.resultado as String;
-            Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje, footer: respuesta });
-          },
-          err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.message })
-        );
       },
       err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.message })
     );

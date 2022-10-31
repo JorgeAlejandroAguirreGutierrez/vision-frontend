@@ -37,8 +37,6 @@ export const urn =
      cliente: "/cliente",
      factura: "/factura",
      facturaEletronica: "/facturaEletronica",
-     enviarSri : "/enviarSri",
-     enviarCorreo : "/enviarCorreo",
      facturaFisica: "/facturaFisica",
      facturaDetalle: "/facturaDetalle",
      tipoRetencion: "/tipoRetencion",
@@ -451,7 +449,6 @@ export const optionsGenerarArchivo = {headers: headers, responseType: "blob" as 
 
 export function validarSesion(sesionService : SesionService, router: Router) : Sesion{
     let sesion: Sesion = sesionService.getSesion();
-    //console.log(sesion);
     sesionService.validar(sesion).subscribe({
         next: res => {
             sesion = res.resultado as Sesion;

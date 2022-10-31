@@ -340,7 +340,6 @@ export class ProveedorComponent implements OnInit {
           this.cliente.normalizar();
           this.validarSexoEstadoCivilOrigenIngreso();
           this.ubicacionNormalizarActualizar();
-          console.log(this.proveedor);
           this.proveedorService.enviar(0);
         },
         error: err => {
@@ -407,7 +406,6 @@ export class ProveedorComponent implements OnInit {
       this.proveedor.celulares.push(this.celular);
     if (this.correo.email != valores.vacio)
       this.proveedor.correos.push(this.correo);
-    console.log(this.proveedor);
     this.proveedorService.crear(this.proveedor).subscribe({
       next: res => {
         this.proveedor = res.resultado as Proveedor;
@@ -455,7 +453,6 @@ export class ProveedorComponent implements OnInit {
     this.proveedor.dependientes.splice(index, 1);
     if (this.proveedor.dependientes.length < 1)
       this.habilitarCelularTelefonoCorreoDependiente = true;
-    console.log(this.proveedor.dependientes);  
   }
 
   editarDependiente(dependiente: Dependiente){
@@ -493,7 +490,6 @@ export class ProveedorComponent implements OnInit {
       this.proveedor.dependientes.push(this.dependiente);
     }
     //proveedor
-    console.log(this.proveedor);
     if (this.proveedor.direccion.ubicacion.provincia != valores.vacio && this.proveedor.direccion.ubicacion.canton != valores.vacio && this.cliente.direccion.ubicacion.parroquia != valores.vacio) {
       await this.ubicacionService.obtenerUbicacionID(this.proveedor.direccion.ubicacion).then(
         res => {
