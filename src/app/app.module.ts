@@ -47,37 +47,36 @@ import { RoutingComponents } from './app-routing.module';
 import { TipoRetencionService } from './servicios/configuracion/tipo-retencion.service';
 
 @NgModule({
-  declarations: [
-    AppComponent,
-    TabContentComponent,
-    ContentContainerDirective,
-    RoutingComponents
-  ],
-  imports: [
-    BrowserModule,
-    FormsModule,
-    ReactiveFormsModule,
-    CommonModule,
-    BrowserAnimationsModule,
-    HttpClientModule,
-    NgbModule,
-    FlexLayoutModule,
-    MaterialModule,
-    GoogleMapsModule,
-    //AgmCoreModule.forRoot({apiKey: 'AIzaSyBmbDYyXuK6PzbmJDoadvlJU7UtcgDJQZM'}),
-    AppRoutingModule
-  ],
-  providers: [PlazoCreditoService, ImpuestoService, RetencionService, ModeloService,
-              TransportistaService, UbicacionService, TipoContribuyenteService, VehiculoTransporteService,
-              EmpresaService, EstablecimientoService, PuntoVentaService, UsuarioService, DatePipe,
-              ClienteService, FacturaService, TipoRetencionService, TabService,
-              EquivalenciaMedidaService, GrupoProductoService,
-              {
-                provide: LocationStrategy, 
-                useClass: PathLocationStrategy
-              }],
-  bootstrap: [AppComponent],
-  entryComponents: [ ]
+    declarations: [
+        AppComponent,
+        TabContentComponent,
+        ContentContainerDirective,
+        RoutingComponents
+    ],
+    imports: [
+        BrowserModule,
+        FormsModule,
+        ReactiveFormsModule,
+        CommonModule,
+        BrowserAnimationsModule,
+        HttpClientModule,
+        NgbModule,
+        FlexLayoutModule,
+        MaterialModule,
+        GoogleMapsModule,
+        //AgmCoreModule.forRoot({apiKey: 'AIzaSyBmbDYyXuK6PzbmJDoadvlJU7UtcgDJQZM'}),
+        AppRoutingModule
+    ],
+    providers: [PlazoCreditoService, ImpuestoService, RetencionService, ModeloService,
+        TransportistaService, UbicacionService, TipoContribuyenteService, VehiculoTransporteService,
+        EmpresaService, EstablecimientoService, PuntoVentaService, UsuarioService, DatePipe,
+        ClienteService, FacturaService, TipoRetencionService, TabService,
+        EquivalenciaMedidaService, GrupoProductoService,
+        {
+            provide: LocationStrategy,
+            useClass: PathLocationStrategy
+        }],
+    bootstrap: [AppComponent]
 })
 export class AppModule {
 }

@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild, ElementRef, Renderer2 } from '@angular/core';
-import { FormControl } from '@angular/forms';
+import { UntypedFormControl } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { startWith, map } from 'rxjs/operators';
 import Swal from 'sweetalert2';
@@ -45,12 +45,12 @@ export class TransferenciaBodegaComponent implements OnInit {
 
   //Variables para los autocomplete
   productos: Producto[] = [];
-  controlProducto = new FormControl();
+  controlProducto = new UntypedFormControl();
   filtroProductos: Observable<Producto[]> = new Observable<Producto[]>();
 
   bodegas: Bodega[] = [];
   bodegasDestino: Bodega[] = [];
-  controlBodegaDestino = new FormControl();
+  controlBodegaDestino = new UntypedFormControl();
   filtroBodegasDestino: Observable<Bodega[]> = new Observable<Bodega[]>();
 
   @ViewChild("inputFiltroProductoBodega") inputFiltroProductoBodega: ElementRef;

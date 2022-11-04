@@ -1,6 +1,6 @@
 import { Component, OnInit, HostListener, Type, Inject } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
-import { FormControl } from '@angular/forms';
+import { UntypedFormControl } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { startWith, map } from 'rxjs/operators';
 import { valores, validarSesion, exito, exito_swal, error, error_swal, error_formulario } from '../../constantes';
@@ -61,27 +61,27 @@ export class GrupoProductoComponent implements OnInit {
   categoriasProductos: CategoriaProducto[] = [];
 
   grupos: string[] = [];
-  controlGrupo = new FormControl();
+  controlGrupo = new UntypedFormControl();
   filtroGrupos: Observable<string[]> = new Observable<string[]>();
 
   subgrupos: string[] = [];
-  controlSubgrupo = new FormControl();
+  controlSubgrupo = new UntypedFormControl();
   filtroSubgrupos: Observable<string[]> = new Observable<string[]>();
 
   secciones: string[] = [];
-  controlSeccion = new FormControl();
+  controlSeccion = new UntypedFormControl();
   filtroSecciones: Observable<string[]> = new Observable<string[]>();
 
   lineas: string[] = [];
-  controlLinea = new FormControl();
+  controlLinea = new UntypedFormControl();
   filtroLineas: Observable<string[]> = new Observable<string[]>();
 
   sublineas: string[] = [];
-  controlSublinea = new FormControl();
+  controlSublinea = new UntypedFormControl();
   filtroSublineas: Observable<string[]> = new Observable<string[]>();
 
   presentaciones: string[] = [];
-  controlPresentacion = new FormControl();
+  controlPresentacion = new UntypedFormControl();
   filtroPresentaciones: Observable<string[]> = new Observable<string[]>();
 
   //cabeceraGrupoProducto: string[] = ['id', 'grupo', 'subgrupo', 'seccion', 'linea', 'sublinea', 'presentacion'];

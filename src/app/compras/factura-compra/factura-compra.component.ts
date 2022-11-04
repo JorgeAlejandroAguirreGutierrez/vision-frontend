@@ -1,6 +1,6 @@
 import { Router } from '@angular/router';
 import { Component, OnInit, HostListener, Input, ViewChild } from '@angular/core';
-import { FormControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormControl, FormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatStepper } from '@angular/material/stepper';
@@ -125,15 +125,15 @@ export class FacturaCompraComponent implements OnInit {
   seleccionDependiente: boolean =false;
   seleccionFacturar: boolean =false;
 
-  firstFormGroup: FormGroup;
-  secondFormGroup: FormGroup;
-  thirdFormGroup: FormGroup;
+  firstFormGroup: UntypedFormGroup;
+  secondFormGroup: UntypedFormGroup;
+  thirdFormGroup: UntypedFormGroup;
 
-  seleccionProducto = new FormControl();
-  seleccionIdentificacionCliente = new FormControl();
-  seleccionRazonSocialCliente = new FormControl();
-  seleccionIdentificacionClienteFactura = new FormControl();
-  seleccionRazonSocialClienteFactura = new FormControl();
+  seleccionProducto = new UntypedFormControl();
+  seleccionIdentificacionCliente = new UntypedFormControl();
+  seleccionRazonSocialCliente = new UntypedFormControl();
+  seleccionIdentificacionClienteFactura = new UntypedFormControl();
+  seleccionRazonSocialClienteFactura = new UntypedFormControl();
 
   costoUltimo: number;
   costoPromedio: number;

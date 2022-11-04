@@ -1,23 +1,23 @@
 import { Injectable } from '@angular/core';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { UntypedFormGroup, UntypedFormControl, Validators } from '@angular/forms';
 //import { ValidatorService } from 'angular4-material-table';
 
 @Injectable()
 export class PromoIndValidatorService //implements ValidatorService 
 {
-  getRowValidator(): FormGroup {
-    return new FormGroup({
+  getRowValidator(): UntypedFormGroup {
+    return new UntypedFormGroup({
 /*      'id': new FormControl(),*/
-      'fecha_ini': new FormControl(),
-      'fecha_fin': new FormControl(),
-      'segmento_id': new FormControl(null, Validators.required),
-      'rango_ini': new FormControl(),
-      'rango_fin': new FormControl(),
-      'producto_promo_id': new FormControl(null, Validators.required), 
-      'medida_promo_id': new FormControl(null, Validators.required),
-      'cantidad_promo': new FormControl(null, Validators.required), 
-      'descuento_promo': new FormControl(null, Validators.required),
-      'precio_fin': new FormControl(null, Validators.required),
+      'fecha_ini': new UntypedFormControl(),
+      'fecha_fin': new UntypedFormControl(),
+      'segmento_id': new UntypedFormControl(null, Validators.required),
+      'rango_ini': new UntypedFormControl(),
+      'rango_fin': new UntypedFormControl(),
+      'producto_promo_id': new UntypedFormControl(null, Validators.required), 
+      'medida_promo_id': new UntypedFormControl(null, Validators.required),
+      'cantidad_promo': new UntypedFormControl(null, Validators.required), 
+      'descuento_promo': new UntypedFormControl(null, Validators.required),
+      'precio_fin': new UntypedFormControl(null, Validators.required),
       });
   }
 }

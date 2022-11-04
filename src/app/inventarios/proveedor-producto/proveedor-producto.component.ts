@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild, ElementRef, Renderer2 } from '@angular/core';
-import { FormControl } from '@angular/forms';
+import { UntypedFormControl } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { startWith, map } from 'rxjs/operators';
 import Swal from 'sweetalert2';
@@ -43,11 +43,11 @@ export class ProveedorProductoComponent implements OnInit {
 
   //Variables para los autocomplete
   productos: Producto[]=[];
-  controlProducto = new FormControl();
+  controlProducto = new UntypedFormControl();
   filtroProductos: Observable<Producto[]> = new Observable<Producto[]>();
 
   proveedores: Proveedor[] = [];
-  controlProveedor = new FormControl();
+  controlProveedor = new UntypedFormControl();
   filtroProveedores: Observable<Proveedor[]> = new Observable<Proveedor[]>();
 
   @ViewChild("inputFiltroProductoProveedor") inputFiltroProductoProveedor: ElementRef;

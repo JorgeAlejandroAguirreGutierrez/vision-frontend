@@ -52,7 +52,7 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { TipoIdentificacion } from 'src/app/modelos/configuracion/tipo-identificacion';
 import { TipoIdentificacionService } from 'src/app/servicios/configuracion/tipo-identificacion.service';
-import { Content } from '@angular/compiler/src/render3/r3_ast';
+//import { Content } from '@angular/compiler/src/render3/r3_ast';
 
 @Component({
   selector: 'app-cliente',

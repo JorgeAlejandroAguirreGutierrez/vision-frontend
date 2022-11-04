@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild, ElementRef, Renderer2 } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { BehaviorSubject } from 'rxjs';
-import { FormControl } from '@angular/forms';
+import { UntypedFormControl } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { startWith, map } from 'rxjs/operators';
 import Swal from 'sweetalert2';
@@ -45,7 +45,7 @@ export class KardexComponent implements OnInit {
 
   //Variables para los autocomplete
   productos: Producto[]=[];
-  controlProducto = new FormControl();
+  controlProducto = new UntypedFormControl();
   filtroProductos: Observable<Producto[]> = new Observable<Producto[]>();
 
   @ViewChild(MatPaginator) paginator: MatPaginator;

@@ -1,5 +1,5 @@
 import { Component, OnInit, Type, Inject } from '@angular/core';
-import { FormControl, FormArray, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormControl, UntypedFormArray, UntypedFormGroup, Validators } from '@angular/forms';
 import { BehaviorSubject } from 'rxjs';
 import Swal from 'sweetalert2';
 import { valores, mensajes, validarSesion, exito, exito_swal, error, error_swal, warning, warning_swal, si_seguro } from '../../constantes';
@@ -87,9 +87,9 @@ export class ProductoComponent implements OnInit {
   medidasEquivalentes: EquivalenciaMedida[] = [];
 
   //Validacion de formulario
-  formKardexInicial = new FormGroup({
-    controlSaldoInicial: new FormControl('', [Validators.required]),
-    controlCostoTotal: new FormControl('', [Validators.required])
+  formKardexInicial = new UntypedFormGroup({
+    controlSaldoInicial: new UntypedFormControl('', [Validators.required]),
+    controlCostoTotal: new UntypedFormControl('', [Validators.required])
   });
   get controlSaldoInicial(): any {
     return this.formKardexInicial.get('controlSaldoInicial');
@@ -108,7 +108,7 @@ export class ProductoComponent implements OnInit {
 
   observablePrecios: BehaviorSubject<Precio[]> = new BehaviorSubject<Precio[]>([]);
   datos: any = [];
-  controls: FormArray[] = [];
+  controls: UntypedFormArray[] = [];
 
   columnasProducto: any[] = [
     { nombreColumna: 'id', cabecera: 'ID', celda: (row: Producto) => `${row.id}` },
@@ -603,24 +603,24 @@ export class ProductoComponent implements OnInit {
 
   activarControles(i: number) {
     const toGroups = this.datos[i].value.map((entity:any) => {
-      return new FormGroup({
-        margenGanancia: new FormControl(entity.margenGanancia, Validators.required),
-        precioVentaPublicoManual: new FormControl(entity.precioVentaPublicoManual, Validators.required),
+      return new UntypedFormGroup({
+        margenGanancia: new UntypedFormControl(entity.margenGanancia, Validators.required),
+        precioVentaPublicoManual: new UntypedFormControl(entity.precioVentaPublicoManual, Validators.required),
       }, { updateOn: "blur" });
       
     });
-    this.controls.push(new FormArray(toGroups));
+    this.controls.push(new UntypedFormArray(toGroups));
   }
 
   actualizarControles(i: number) {
     const toGroups = this.datos[i].value.map((entity:any) => {
-      return new FormGroup({
-        margenGanancia: new FormControl(entity.margenGanancia, Validators.required),
-        precioVentaPublicoManual: new FormControl(entity.precioVentaPublicoManual, Validators.required),
+      return new UntypedFormGroup({
+        margenGanancia: new UntypedFormControl(entity.margenGanancia, Validators.required),
+        precioVentaPublicoManual: new UntypedFormControl(entity.precioVentaPublicoManual, Validators.required),
       }, { updateOn: "blur" });
       
     });
-    this.controls[i]=(new FormArray(toGroups));
+    this.controls[i]=(new UntypedFormArray(toGroups));
   }
 
   actualizarCalculosPrecios(i: number, index: number, field: string) {
@@ -632,7 +632,7 @@ export class ProductoComponent implements OnInit {
   }
 
   getControl(i: number, index: number, fieldName: string) {
-    const a = this.controls[i].at(index).get(fieldName) as FormControl;
+    const a = this.controls[i].at(index).get(fieldName) as UntypedFormControl;
     return a;
   }
 
