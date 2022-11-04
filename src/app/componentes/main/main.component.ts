@@ -81,13 +81,11 @@ export class MainComponent implements OnInit {
 
   //El Tab se refiere al tab interno, es decir el secundario, relacionado al sideBar 
   public tabChanged(event) {
-    //console.log("tab interno changed");
     this.tabService.activarTab(event);
   }
 
   //El Tab1 se refiere al tab externo, es decir al principal
   public tabChanged1(event) {
-    //console.log("Cambió el tab externo");
     this.istabMenu = event.index == 0 ? true : false; 
     this.tabService.activarTab1(event);
     // Carga las opciones en el slide bar de acuerdo al titulo de la pestaña

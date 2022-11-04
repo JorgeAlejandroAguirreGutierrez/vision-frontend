@@ -48,6 +48,7 @@ import { valores, mensajes, otras, validarSesion, exito, exito_swal, error, erro
 import { CreditoService } from '../../servicios/recaudacion/credito.service';
 import { Credito } from '../../modelos/recaudacion/credito';
 import { MatStepper } from '@angular/material/stepper';
+import { FacturacionElectronicaService } from 'src/app/servicios/comprobante/factura-eletronica.service';
 
 @Component({
   selector: 'app-recaudacion',
@@ -74,7 +75,7 @@ export class RecaudacionComponent implements OnInit {
   panelCredito=false;
   deshabilitarTabla=true;
 
-  constructor(private facturaService: FacturaService, private clienteService: ClienteService, private bancoService: BancoService, private sesionService: SesionService,
+  constructor(private facturaService: FacturaService, private facturacionElectronicaService: FacturacionElectronicaService, private clienteService: ClienteService, private bancoService: BancoService, private sesionService: SesionService,
     private cuentaPropiaService: CuentaPropiaService, private operadorTarjetaService: OperadorTarjetaService, private datePipe: DatePipe,
     private franquiciaTarjetaService: FranquiciaTarjetaService, private formaPagoService: FormaPagoService, private creditoService: CreditoService,
     private parametroService: ParametroService, private establecimientoService: EstablecimientoService, private puntoVentaService: PuntoVentaService,
@@ -181,7 +182,7 @@ export class RecaudacionComponent implements OnInit {
     this.consultarFranquiciasTarjetas();
     this.consultarOperadoresTarjetasCreditos();
     this.consultarOperadoresTarjetasDebitos();
-    this.consultarModelosAmortizaciones();
+    this.consultarAmortizaciones();
     this.consultarPeriodicidades();
     this.consultarTiposComprobantes();
     this.consultarBancosCheques();
@@ -332,9 +333,9 @@ export class RecaudacionComponent implements OnInit {
       err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
-  consultarModelosAmortizaciones(){
+  consultarAmortizaciones(){
     let parametro=new Parametro();
-    parametro.tipo= otras.modeloAmortizacion;
+    parametro.tipo= otras.amortizacion;
     this.parametroService.consultarTipo(parametro).subscribe(
       res => {
         this.modelosAmortizaciones = res.resultado as Parametro[]
@@ -882,10 +883,6 @@ export class RecaudacionComponent implements OnInit {
   }
 
   seleccionarEfectivo(){
-    if (this.recaudacion.efectivo>=this.factura.totalConDescuento){
-      this.recaudacion.cambio=Number(this.recaudacion.efectivo)-Number(this.factura.totalConDescuento);
-      this.recaudacion.cambio=Number(this.recaudacion.cambio.toFixed(2));
-    }
     this.calcular();
   }
 
@@ -908,7 +905,8 @@ export class RecaudacionComponent implements OnInit {
     }
     this.recaudacionService.crear(this.recaudacion).subscribe(
       res => {
-        let recaudacion = res.resultado as Recaudacion;
+        let recaudacion=new Recaudacion();
+        Object.assign(recaudacion, res.resultado as Recaudacion);
         recaudacion.normalizar();
         this.recaudacion=recaudacion;
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
@@ -979,7 +977,7 @@ export class RecaudacionComponent implements OnInit {
     if (this.tarjetaDebito.titular){
       this.tarjetaDebito.identificacion=this.factura.cliente.identificacion;
       this.tarjetaDebito.nombre=this.factura.cliente.razonSocial;
-      this.habilitarEditarTarjetaDebito=true;
+      this.habilitarTitularTarjetaDebito=true;
     } else{
       this.tarjetaDebito.identificacion="";
       this.tarjetaDebito.nombre="";
@@ -1025,6 +1023,18 @@ export class RecaudacionComponent implements OnInit {
 
   sinIntereses(){
     this.recaudacion.credito.tipo="";
+  }
+
+  crearFacturaElectronica(event){
+    if (event != null)
+      event.preventDefault();
+    this.facturacionElectronicaService.enviar(this.factura).subscribe(
+      res => {
+        let respuesta = res.resultado as String;
+        Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje, footer: respuesta });
+      },
+      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.message })
+    );
   }
 
   private getDismissReason(reason: any): string {

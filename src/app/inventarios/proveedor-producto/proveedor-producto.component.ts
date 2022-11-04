@@ -183,9 +183,7 @@ export class ProveedorProductoComponent implements OnInit {
     this.producto.productosProveedores = this.productoProveedores;
     this.llenarDataSourceProductoProveedor(this.productoProveedores);
     this.verActualizarProducto = true;
-    //this.deshabilitarFiltroProveedores = false;
     this.limpiarProveedor();
-    //console.log(this.producto); 
   }
 
   llenarDataSourceProductoProveedor(productoProveedores : ProductoProveedor[]){
@@ -253,8 +251,6 @@ export class ProveedorProductoComponent implements OnInit {
     this.productoProveedor.codigoEquivalente = this.codigoEquivalente;
     this.verActualizarProducto = true;
     this.limpiarProveedor();
-    //console.log(this.productoProveedores);
-    //console.log(this.producto.productosProveedores);
   }
 
   eliminarProveedor(event: any, i:number) {
@@ -297,7 +293,6 @@ export class ProveedorProductoComponent implements OnInit {
   } 
   seleccionarProveedor(){
     this.proveedor = this.controlProveedor.value as Proveedor;
-    //console.log(this.proveedor.razonSocial);
   }
 
 }

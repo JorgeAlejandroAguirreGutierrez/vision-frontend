@@ -117,7 +117,6 @@ export class InicioSesionComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      console.log('El dialogo para cambio de contraseña fue cerrado');
       this.usuario = result;
     });
   }

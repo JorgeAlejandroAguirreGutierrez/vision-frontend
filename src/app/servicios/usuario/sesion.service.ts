@@ -25,7 +25,6 @@ export class SesionService {
   }
 
   crear(sesion: Sesion): Observable<Respuesta> {
-    console.log(sesion);
     return this.http.post(environment.host + urn.ruta + urn.sesion, sesion, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {

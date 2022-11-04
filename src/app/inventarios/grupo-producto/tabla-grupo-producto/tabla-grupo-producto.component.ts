@@ -76,7 +76,6 @@ export class TablaGrupoProductoComponent implements OnInit {
 
   llenarDataSourceGrupoProducto(gruposProductos : GrupoProducto[]){
     this.ordenarAsc(gruposProductos, 'id');
-    //console.log(gruposProductos);
     this.dataSourceGrupoProducto = new MatTableDataSource(gruposProductos);
     this.dataSourceGrupoProducto.filterPredicate = (data: GrupoProducto, filter: string): boolean =>
       data.codigo.toUpperCase().includes(filter) || data.grupo.toUpperCase().includes(filter) || data.subgrupo.toUpperCase().includes(filter) ||

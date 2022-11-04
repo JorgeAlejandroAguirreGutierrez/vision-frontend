@@ -8,8 +8,8 @@
                     </a>
                 </ng-container>
                 <ng-container *ngIf="recaudacion.id!=0">
-                    <a class="nav-link" href="#" role="button" (click)="actualizar($event)">
-                        <mat-icon>save</mat-icon>
+                    <a class="nav-link" title="Guardar" role="button" (click)="actualizar($event)">
+                        <mat-icon>update</mat-icon>
                     </a>
                 </ng-container>
             </li>
@@ -21,14 +21,12 @@
                 </ng-container>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="#" role="button" (click)="$event.preventDefault()">
-                    <mat-icon>archive</mat-icon>
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="#" role="button" (click)="$event.preventDefault()">
-                    <mat-icon>publish</mat-icon>
-                </a>
+                <ng-container *ngIf="factura.id!=0">
+                    <a class="nav-link" title="Crear Factura Electronica" role="button"
+                        (click)="crearFacturaElectronica($event)">
+                        <mat-icon>publish</mat-icon>
+                    </a>
+                </ng-container>
             </li>
         </ul>
     </nav>
@@ -96,7 +94,7 @@
                                 <mat-form-field appearance="standard">
                                     <mat-label>Crédito</mat-label>
                                     <input matInput type="text" class="form-control-sm"
-                                        [value]="factura.totalConDescuento-recaudacion.total" disabled>
+                                        [value]="recaudacion.credito.saldo" disabled>
                                 </mat-form-field>
                             </div>
                             <div class="col-3">
@@ -168,14 +166,6 @@
                 </div>
                 <div class="form-row col-2 linea-vertical">
                     <br>
-                    <!--div class="col-6">
-                        <mat-form-field appearance="standard">
-                            <mat-label>P. venta</mat-label>
-                            <input matInput type="text" class="form-control-sm"
-                                [(ngModel)]="factura.vendedor.puntoVenta.codigo" [ngModelOptions]="{standalone: true}"
-                                disabled>
-                        </mat-form-field>
-                    </div-->
                     <div class="col-12">
                         <mat-form-field appearance="standard">
                             <mat-label>Fecha</mat-label>
@@ -183,14 +173,6 @@
                                 class="form-control-sm" disabled>
                         </mat-form-field>
                     </div>
-
-                    <!--div class="col-4">
-                        <mat-form-field appearance="standard">
-                            <mat-label>Factura</mat-label>
-                            <input matInput type="text" class="form-control-sm" [(ngModel)]="factura.secuencia"
-                                [ngModelOptions]="{standalone: true}" disabled>
-                        </mat-form-field>
-                    </div-->
                     <div class="col-12">
                         <mat-form-field appearance="standard">
                             <mat-label>Estado</mat-label>
@@ -201,24 +183,6 @@
                             </mat-select>
                         </mat-form-field>
                     </div>
-                    <!--div class="col-8">
-                        <mat-form-field appearance="standard">
-                            <mat-label>Cliente</mat-label>
-                            <input matInput type="text" [value]="factura.cliente?.razonSocial"
-                                oninput="this.value = this.value.toUpperCase()" class="form-control-sm" disabled>
-                        </mat-form-field>
-                    </div>
-                    <div class="col-4">
-                        <mat-form-field appearance="standard">
-                            <mat-label>Forma de Pago</mat-label>
-                            <mat-select [(ngModel)]="formaPagoSelecionada">
-                                <mat-option *ngFor="let formaPago of formasPagoLista" [value]="formaPago"
-                                    (click)="habilitarSeccionPago(formaPago)">
-                                    {{formaPago}}
-                                </mat-option>
-                            </mat-select>
-                        </mat-form-field>
-                    </div-->
                 </div>
             </div>
         </mat-expansion-panel>
@@ -909,7 +873,7 @@
                     </div>
                     <div class="col-1">
                         <br>
-                        <mat-checkbox [(ngModel)]="tarjetaDebito.titular" (change)="asignarTitularTarjetaCredito()"
+                        <mat-checkbox [(ngModel)]="tarjetaDebito.titular" (change)="asignarTitularTarjetaDebito()"
                             class="form-control-sm" color="primary">
                             Titular</mat-checkbox>
                     </div>

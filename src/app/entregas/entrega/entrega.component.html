@@ -19,19 +19,12 @@
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="#" role="button" (click)="$event.preventDefault()">
-                    <mat-icon>archive</mat-icon>
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="#" role="button" (click)="$event.preventDefault()">
-                    <mat-icon>publish</mat-icon>
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="#" role="button" (click)="generarPdf($event)">
-                    <mat-icon>picture_as_pdf</mat-icon>
-                </a>
+                <ng-container *ngIf="entrega.factura.id!=0">
+                    <a class="nav-link" title="Crear Factura Electronica" role="button"
+                        (click)="crearFacturaElectronica($event)">
+                        <mat-icon>publish</mat-icon>
+                    </a>
+                </ng-container>
             </li>
         </ul>
     </nav>

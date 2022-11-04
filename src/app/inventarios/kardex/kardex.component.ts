@@ -102,13 +102,10 @@ export class KardexComponent implements OnInit {
         Swal.fire(error, mensajes.error_producto_proveedor, error_swal);
         return;
     }
-    console.log(this.producto);
-    //this.producto.kardexs[0].proveedor = new Proveedor;
     this.productoService.actualizar(this.producto).subscribe({
       next: (res) => {
         Swal.fire({ icon: constantes.exito_swal, title: constantes.exito, text: res.mensaje });
         this.limpiar();
-        //this.consultar();
       },
       error: (err) => {
         Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })

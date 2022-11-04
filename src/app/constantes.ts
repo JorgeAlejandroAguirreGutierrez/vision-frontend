@@ -36,6 +36,8 @@ export const urn =
      tipoIdentificacion: "/tipoIdentificacion",
      cliente: "/cliente",
      factura: "/factura",
+     facturaEletronica: "/facturaEletronica",
+     facturaFisica: "/facturaFisica",
      facturaDetalle: "/facturaDetalle",
      tipoRetencion: "/tipoRetencion",
      servicio: "/servicio",
@@ -43,6 +45,7 @@ export const urn =
      bien: "/bien",
      activoFijo: "/activoFijo",
      tipo: "/tipo",
+     consultarTipo: "/consultarTipo",
      producto: "/producto",
      medida: "/medida",
      buscar: "/buscar",
@@ -113,7 +116,11 @@ export const valores ={
      inactivo : "INACTIVO",
      pendiente : "PENDIENTE",
      norecaudado : "NO RECAUDADO",
-     recaudado : "RECAUDADO"
+     recaudado : "RECAUDADO",
+     emitida : "EMITIDA",
+     anulada: "ANULADA",
+     facturada: "FACTURADA",
+     nofacturada: "NO FACTURADA"
 }
     
 export const mensajes = {
@@ -176,7 +183,7 @@ export const otras ={
      tipoContribuyentePublica : "PUBLICA",
      tablaAmortizacionFrancesa : "FRANCESA",
      tablaAmortizacionAlemana : "ALEMANA",
-     modeloAmortizacion : "MODELO_AMORTIZACION",
+     amortizacion : "AMORTIZACION",
      periodicidad : "PERIODICIDAD",
      periodo : "PERIODO",
      operacionInicialKardex : 'INVENTARIO INICIAL',
@@ -447,7 +454,6 @@ export const optionsGenerarArchivo = {headers: headers, responseType: "blob" as 
 
 export function validarSesion(sesionService : SesionService, router: Router) : Sesion{
     let sesion: Sesion = sesionService.getSesion();
-    //console.log(sesion);
     sesionService.validar(sesion).subscribe({
         next: res => {
             sesion = res.resultado as Sesion;

@@ -1,6 +1,6 @@
 import { Component, OnInit, HostListener, Type, ViewChild, Inject } from '@angular/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { MapInfoWindow, MapMarker } from '@angular/google-maps';
 import { Router } from '@angular/router'; 
 import Swal from 'sweetalert2';
@@ -326,8 +326,7 @@ export class ClienteComponent implements OnInit {
     );
     this.tipoRetencionService.obtenerRentaServicio().subscribe(
       res => {
-        this.tiposRetencionesRentaServicio = res.resultado as TipoRetencion[]
-        console.log(this.tiposRetencionesIvaServicio);
+        this.tiposRetencionesRentaServicio = res.resultado as TipoRetencion[];
       },
       err => {
         Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje });
@@ -390,18 +389,25 @@ export class ClienteComponent implements OnInit {
       this.dependiente.celulares.push(this.dependienteCelular);
     if (this.dependienteCorreo.email != valores.vacio)
       this.dependiente.correos.push(this.dependienteCorreo);
-    let ubicacion: Ubicacion = new Ubicacion();
-    ubicacion.provincia = this.dependienteProvincia;
-    ubicacion.canton = this.dependienteCanton;
-    ubicacion.parroquia = this.dependienteParroquia;
-    this.dependiente.direccion.ubicacion = ubicacion;
-    this.cliente.puntoVenta = this.sesion.usuario.puntoVenta;
+    let dependienteUbicacion: Ubicacion = new Ubicacion();
+    dependienteUbicacion.provincia = this.dependienteProvincia;
+    dependienteUbicacion.canton = this.dependienteCanton;
+    dependienteUbicacion.parroquia = this.dependienteParroquia;
+    this.dependiente.direccion.ubicacion = dependienteUbicacion;
+    
     if (this.telefono.numero != valores.vacio)
       this.cliente.telefonos.push(this.telefono);
     if (this.celular.numero != valores.vacio)
       this.cliente.celulares.push(this.celular);
     if (this.correo.email != valores.vacio)
       this.cliente.correos.push(this.correo);
+    this.cliente.puntoVenta = this.sesion.usuario.puntoVenta;
+    let ubicacion: Ubicacion = new Ubicacion();
+    ubicacion.provincia = this.clienteProvincia;
+    ubicacion.canton = this.clienteCanton;
+    ubicacion.parroquia = this.clienteParroquia;
+    this.dependiente.direccion.ubicacion = dependienteUbicacion;
+    this.cliente.direccion.ubicacion= ubicacion;
     this.clienteService.crear(this.cliente).subscribe(
       res => {
         this.cliente = res.resultado as Cliente;
@@ -559,7 +565,6 @@ export class ClienteComponent implements OnInit {
       Object.assign(cliente, clienteSeleccionado as Cliente);
       cliente.normalizar();
       this.cliente = cliente;
-      console.log(this.cliente);
       this.clienteProvincia = this.cliente.direccion.ubicacion.provincia;
       this.provincia(this.clienteProvincia);
       this.clienteCanton = this.cliente.direccion.ubicacion.canton;

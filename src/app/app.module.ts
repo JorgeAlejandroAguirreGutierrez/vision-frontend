@@ -20,14 +20,6 @@ import { TabContentComponent } from "./componentes/tab-content.component";
 import { ContentContainerDirective } from "./componentes/content-container.directive";
 import { TabService } from "./componentes/services/tab.service";
 
-// Diseño de tabla editable
-import { TablaEditableComponent } from './componentes/tabla-editable/tabla-editable.component';
-import { EditableComponent } from './componentes/tabla-editable/editable/editable.component';
-import { ViewModeDirective } from './componentes/tabla-editable/editable/view-mode.directive';
-import { EditModeDirective } from './componentes/tabla-editable/editable/edit-mode.directive';
-import { FocusableDirective } from './componentes/tabla-editable/focusable.directive';
-import { EditableOnEnterDirective } from './componentes/tabla-editable/editable/edit-on-enter.directive';
-
 //Tienda - Estructura: Cabecera y Menu
 import { LocationStrategy, PathLocationStrategy } from '@angular/common';
 import { FlexLayoutModule } from '@angular/flex-layout';
@@ -59,12 +51,6 @@ import { TipoRetencionService } from './servicios/configuracion/tipo-retencion.s
     AppComponent,
     TabContentComponent,
     ContentContainerDirective,
-    TablaEditableComponent,
-    EditableComponent,
-    ViewModeDirective,
-    EditModeDirective,
-    FocusableDirective, 
-    EditableOnEnterDirective,
     RoutingComponents
   ],
   imports: [

@@ -1,7 +1,6 @@
 import { Injectable, Type } from '@angular/core';
 import { modulos, tabs, items, icos } from '../../constantes';
 import { SidebarItem } from "../../modelos/sidebar-item.model";
-import { MapsComponent } from '../pages/maps/maps.component';
 
 //CLIENTES
 import { ClienteComponent } from "../../clientes/cliente/cliente.component";
@@ -87,7 +86,6 @@ export class SidebarItemsService {
       this.llenarOpciones(FormaPagoComponent, tabs.tab_forma_pago, items.item_forma_pago, icos.ico_forma_pago);
       this.llenarOpciones(OrigenIngresoComponent, tabs.tab_origen_ingreso, items.item_origen_ingreso, icos.ico_origen_ingreso);
       this.llenarOpciones(PlazoCreditoComponent, tabs.tab_plazo_credito, items.item_plazo_credito, icos.ico_plazo_credito);
-      this.llenarOpciones(MapsComponent, tabs.tab_mapa_cliente, items.item_mapa_cliente, icos.ico_mapa_cliente);
     }
 
     if (tabNombre == modulos.modulo_compras) {

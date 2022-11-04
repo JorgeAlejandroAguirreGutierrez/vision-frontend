@@ -26,7 +26,6 @@ import { PlazoCreditoComponent } from './clientes/plazo-credito/plazo-credito.co
 import { ImpuestoComponent } from './configuraciones/impuesto/impuesto.component';
 import { FormaPagoComponent } from './clientes/forma-pago/forma-pago.component';
 import { TipoPagoComponent } from './configuraciones/tipo-pago/tipo-pago.component';
-import { MapsComponent } from './componentes/pages/maps/maps.component';
 
 //Módulo de Inventarios
 import { BodegaComponent } from './inventarios/bodega/bodega.component';
@@ -90,6 +89,7 @@ import { UbicacionComponent } from './configuraciones/ubicacion/ubicacion.compon
 import { DashboardComponent } from './componentes/pages/dashboard/dashboard.component';
 import { TablesComponent } from './componentes/pages/tables/tables.component';
 import { FormsComponent } from './componentes/pages/forms/forms.component';
+import { MapsComponent } from './componentes/pages/maps/maps.component';
 import { TypographyComponent } from './componentes/pages/typography/typography.component';
 import { TipoRetencionComponent } from './configuraciones/tipo-retencion/tipo-retencion.component';
 
@@ -137,16 +137,16 @@ const routes: Routes = [
   // Estos no se usa, borrar al final
   { path: 'dashboard', component: DashboardComponent },
   { path: 'forms', component: FormsComponent },
+  { path: 'maps', component: MapsComponent },
   { path: 'tables', component: TablesComponent },
   { path: 'typography', component: TypographyComponent },
-  { path: 'maps', component: MapsComponent },
   { path: 'proforma', component: ProformaComponent },
 ];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes, { relativeLinkResolution: 'legacy' })],
   exports: [RouterModule],
-  entryComponents: [DialogoMapaComponent, DialogoMovimientoContableComponent,
+  entryComponents: [DialogoMovimientoContableComponent,
     DialogoGrupoProductoComponent, CambioCredencialesComponent, UsuarioComponent, PuntoVentaComponent, TipoRetencionComponent,
     EstablecimientoComponent, ClienteComponent, GrupoClienteComponent, CalificacionClienteComponent, EstadoCivilComponent,
     GeneroComponent, OrigenIngresoComponent, PlazoCreditoComponent, FormaPagoComponent, TipoPagoComponent, BodegaComponent,
@@ -241,6 +241,6 @@ export const RoutingComponents = [
   DashboardComponent,
   TablesComponent,
   FormsComponent,
-  TypographyComponent,
-  MapsComponent
+  MapsComponent,
+  TypographyComponent
 ];

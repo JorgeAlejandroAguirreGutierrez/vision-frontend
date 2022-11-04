@@ -11,43 +11,40 @@
                             </a>
                         </ng-container>
                         <ng-container *ngIf="factura.id!=0">
-                            <a class="nav-link" title="Guardar" role="button" (click)="actualizar($event)">
+                            <a class="nav-link" title="Actualizar" role="button" (click)="actualizar($event)">
                                 <mat-icon>update</mat-icon>
                             </a>
                         </ng-container>
                     </li>
-                    <li class="nav-item">
-                        <ng-container *ngIf="factura.id==0">
+                    <ng-container *ngIf="factura.id==0">
+                        <li class="nav-item">
                             <a class="nav-link" title="Nuevo" role="button" (click)="nuevo($event)">
                                 <mat-icon>file_copy</mat-icon>
                             </a>
-                        </ng-container>
-                    </li>
+                        </li>
+                    </ng-container>
                     <li class="nav-item">
-                        <a class="nav-link" href="#" role="button" (click)="consultarBienes($event)">
-                            <mat-icon>business</mat-icon>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#" role="button" (click)="consultarServicios($event)">
-                            <mat-icon>room_service</mat-icon>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#" role="button" (click)="consultarActivosFijos($event)">
-                            <mat-icon>weekend</mat-icon>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#" role="button" (click)="$event.preventDefault()">
+                        <a class="nav-link" title="Consultar Bienes" role="button" (click)="consultarBienes($event)">
                             <mat-icon>archive</mat-icon>
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#" role="button" (click)="$event.preventDefault()">
-                            <mat-icon>publish</mat-icon>
+                        <a class="nav-link" title="Consultar Servicios" role="button" (click)="consultarServicios($event)">
+                            <mat-icon>archive</mat-icon>
                         </a>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link" title="Consultar Activos Fijos" role="button" (click)="consultarActivosFijos($event)">
+                            <mat-icon>archive</mat-icon>
+                        </a>
+                    </li>
+                    <ng-container *ngIf="factura.id!=0">
+                        <li class="nav-item">
+                            <a class="nav-link" title="Crear Factura Electronica" role="button" (click)="crearFacturaElectronica($event)">
+                                <mat-icon>download</mat-icon>
+                            </a>
+                        </li>
+                    </ng-container>
                 </ul>
             </nav>
             <ng-template matStepLabel>Facturación</ng-template>
@@ -156,14 +153,14 @@
                                 <mat-form-field appearance="standard">
                                     <mat-label>Estab.</mat-label>
                                     <input matInput type="text" class="form-control-sm"
-                                        [(ngModel)]="factura.vendedor.puntoVenta.establecimiento.codigo" disabled>
+                                        [(ngModel)]="factura.sesion.usuario.puntoVenta.establecimiento.codigo" disabled>
                                 </mat-form-field>
                             </div>
                             <div class="col-3">
                                 <mat-form-field appearance="standard">
                                     <mat-label>Punto V.</mat-label>
                                     <input matInput type="text" class="form-control-sm"
-                                        [(ngModel)]="factura.vendedor.puntoVenta.codigo" disabled>
+                                        [(ngModel)]="factura.sesion.usuario.puntoVenta.codigo" disabled>
                                 </mat-form-field>
                             </div>
                             <div class="col-6">
@@ -184,7 +181,7 @@
                                 <mat-form-field appearance="standard">
                                     <mat-label>Vendedor</mat-label>
                                     <input matInput type="text" class="form-control-sm"
-                                        [(ngModel)]="factura.vendedor.nombre" disabled>
+                                        [(ngModel)]="factura.sesion.usuario.nombre" disabled>
                                 </mat-form-field>
                             </div>
                             <div class="col-4">
@@ -204,9 +201,11 @@
                             <div class="col-5">
                                 <mat-form-field appearance="standard">
                                     <mat-label>Estado</mat-label>
-                                    <mat-select class="form-control-sm" [(ngModel)]="estado">
+                                    <mat-select class="form-control-sm" [(ngModel)]="factura.estado" [disabled]="true">
                                         <mat-option value="EMITIDA">EMITIDA</mat-option>
                                         <mat-option value="ANULADA">ANULADA</mat-option>
+                                        <mat-option value="FACTURADA">FACTURADA</mat-option>
+                                        <mat-option value="NO FACTURADA">FACTURADA</mat-option>
                                     </mat-select>
                                 </mat-form-field>
                             </div>
@@ -489,7 +488,7 @@
                             </div>
                         </div>
                         <div class="mat-elevation-z8 col-12">
-                            <table mat-table [dataSource]="dataFacturaDetalle" matSort>
+                            <table mat-table [dataSource]="dataSourceFacturaDetalle" matSort>
                                 <!-- Nombre Columna -->
                                 <ng-container matColumnDef="nombre">
                                     <th mat-header-cell *matHeaderCellDef mat-sort-header> Producto </th>
@@ -518,19 +517,19 @@
                                 <ng-container matColumnDef="descuento">
                                     <th mat-header-cell *matHeaderCellDef mat-sort-header> Desc. </th>
                                     <td mat-cell *matCellDef="let facturaDetalle">
-                                        {{facturaDetalle.valorDescuentoLinea}} </td>
+                                        ${{facturaDetalle.valorDescuentoLinea}} </td>
                                 </ng-container>
                                 <!-- Descuento% Columna -->
                                 <ng-container matColumnDef="descuentoPorcentaje">
                                     <th mat-header-cell *matHeaderCellDef mat-sort-header> Desc% </th>
                                     <td mat-cell *matCellDef="let facturaDetalle">
-                                        {{facturaDetalle.porcentajeDescuentoLinea}} </td>
+                                        {{facturaDetalle.porcentajeDescuentoLinea}}% </td>
                                 </ng-container>
                                 <!-- Impuesto Columna -->
                                 <ng-container matColumnDef="impuesto">
                                     <th mat-header-cell *matHeaderCellDef mat-sort-header> IVA </th>
                                     <td mat-cell *matCellDef="let facturaDetalle">
-                                        {{facturaDetalle.impuesto.porcentaje}} </td>
+                                        {{facturaDetalle.impuesto.porcentaje}}% </td>
                                 </ng-container>
                                 <!-- Total Columna -->
                                 <ng-container matColumnDef="total">
@@ -559,8 +558,7 @@
                                 <tr mat-row *matRowDef="let row; columns: columnasDetalleFactura;"></tr>
                             </table>
                             <ng-container>
-                                <mat-paginator #paginatorFactura [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons>
-                                </mat-paginator>
+                                <mat-paginator #paginatorFacturaDetalle [pageSizeOptions]="[5, 10, 25, 100]"> </mat-paginator>
                             </ng-container>
                         </div>
                         <mat-divider></mat-divider>
@@ -619,8 +617,8 @@
                                         </div>
                                         <div class="col-5">
                                             <mat-form-field appearance="standard">
-                                                <input matInput type="text " [(ngModel)]="factura.subtotalSinDescuento"
-                                                    class="form-control-sm " disabled>
+                                                <input matInput type="text" [(ngModel)]="factura.subtotalSinDescuento"
+                                                    class="form-control-sm" disabled>
                                             </mat-form-field>
                                         </div>
                                         <div class="col-7 negrita centrar-vertical-izq">
@@ -717,7 +715,7 @@
                                     "{{input.value}}"</td>
                             </tr>
                         </table>
-                        <mat-paginator #paginatorFacturas [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
+                        <mat-paginator #paginatorFactura [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
                     </div>
                     <div class="azul" *ngIf="!clickedRows.size">
                         Seleccione una fila para editar
@@ -964,7 +962,7 @@
                                 {{caracteristica.seleccionado}
                             </td>
                             <td>
-                                <button (click)="transferir(caracteristica)" class="btn btn-primary btn-circle ">
+                                <button class="btn btn-primary btn-circle ">
                                     <mat-icon>transfer_within_a_station</mat-icon>
                                 </button>
                             </td>

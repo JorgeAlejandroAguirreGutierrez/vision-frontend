@@ -6,7 +6,6 @@ import { map, catchError } from 'rxjs/operators';
 import { Observable, throwError } from 'rxjs';
 import { Router } from '@angular/router';
 import { urn, options } from '../../constantes';
-import { optionsGenerarArchivo } from '../../constantes';
 import { environment } from '../../../environments/environment';
 import { FacturaDetalle } from '../../modelos/comprobante/factura-detalle';
 
@@ -98,15 +97,5 @@ export class FacturaService {
         return throwError(err);
       })
     );
-  }
-
-  generar_pdf(facturaId: number){
-    return this.http.get(environment.host + urn.ruta + urn.factura + urn.generar + urn.pdf+'/'+facturaId, optionsGenerarArchivo).pipe(
-      map(response => response as Blob),
-      catchError(err => {
-        return throwError(err);
-      })
-    );
-  }
-  
+  }  
 }

@@ -1,5 +1,6 @@
 import { Component, OnInit, HostListener, ElementRef, Renderer2, Inject } from '@angular/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MapInfoWindow, MapMarker } from '@angular/google-maps';
 import { BehaviorSubject } from 'rxjs';
 import { valores, validarSesion, tab_activo, exito, exito_swal, error, error_swal } from '../../constantes';
 import Swal from 'sweetalert2';
@@ -54,8 +55,8 @@ export class EmpresaComponent implements OnInit {
   //Mapa
   latitud: number = -1.6705413480437092; //Tomar de configuación y poner en el init
   longitud: number = -78.64974203645144;
-  ubicacionCentral: Coordenada = new Coordenada(this.latitud, this.longitud);
-  ubicacionGeografica: Coordenada;
+  posicionCentral: Coordenada = new Coordenada(this.latitud, this.longitud);
+  posicionGeografica: Coordenada;
   coordenadas: Coordenada[] = [];
   options: google.maps.MapOptions = {
     mapTypeId: 'hybrid',
@@ -302,21 +303,26 @@ export class EmpresaComponent implements OnInit {
     this.empresa.correos.splice(i, 1);
   }
 
+  
+  openInfoWindow(marker: MapMarker, infoWindow: MapInfoWindow) {
+    infoWindow.open(marker);
+  }
+
   dialogoMapas(): void {
     //console.log('El dialogo para selección de grupo producto fue abierto');
     const dialogRef = this.dialog.open(DialogoMapaEmpresaComponent, {
       width: '80%',
       // Para enviar datos
       //data: { usuario: this.usuario, clave: this.clave, grupo_producto_recibido: "" }
-      data: this.ubicacionGeografica as Coordenada
+      data: this.posicionGeografica as Coordenada
     });
 
     dialogRef.afterClosed().subscribe(result => {
       //console.log('El dialogo para selección de coordenada fue cerrado');
       console.log(result);
       if (result) {
-        this.ubicacionGeografica = result as Coordenada;
-        this.ubicacionCentral = this.ubicacionGeografica;
+        this.posicionGeografica = result as Coordenada;
+        this.posicionCentral = this.posicionGeografica;
        //console.log(result);
       }
     });
@@ -324,11 +330,11 @@ export class EmpresaComponent implements OnInit {
 
 }
 
-
 @Component({
   selector: 'dialogo-mapa-empresa',
   templateUrl: 'dialogo-mapa-empresa.component.html',
 })
+
 export class DialogoMapaEmpresaComponent {
 
   mapa: string[] = [];
@@ -353,4 +359,4 @@ export class DialogoMapaEmpresaComponent {
       this.data = new Coordenada(0,0);
     }
   }
-}  
+}

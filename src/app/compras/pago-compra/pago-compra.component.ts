@@ -272,7 +272,7 @@ export class PagoCompraComponent implements OnInit {
   }
   consultarModelosAmortizaciones(){
     let parametro=new Parametro();
-    parametro.tipo = otras.modeloAmortizacion;
+    parametro.tipo = otras.amortizacion;
     this.parametroService.consultarTipo(parametro).subscribe(
       res => {
         this.modelosAmortizaciones = res.resultado as Parametro[]
@@ -515,7 +515,6 @@ export class PagoCompraComponent implements OnInit {
   }
 
   agregarDeposito() {
-    console.log(this.recaudacion.total+Number(this.deposito.valor));
     if (this.recaudacion.total+Number(this.deposito.valor)<=this.factura.totalConDescuento){
       this.deposito.banco=this.seleccionBancoDeposito.value;
       this.recaudacion.depositos.push(this.deposito);
@@ -524,7 +523,6 @@ export class PagoCompraComponent implements OnInit {
       this.dataDepositos = new MatTableDataSource<Deposito>(this.recaudacion.depositos);
       this.dataDepositos.sort = this.sort;
       this.dataDepositos.paginator = this.paginator;
-      //this.recaudacion.calcularTotales();
       this.seleccionarValorPagado();
     } else {
       Swal.fire(error, "Valor supera el monto de cobro de la factura", error_swal);
@@ -897,9 +895,7 @@ export class PagoCompraComponent implements OnInit {
     if (event!=null)
       event.preventDefault();
     this.recaudacion.sesion = this.sesion;
-    //this.recaudacion.estado = this.estado=="RECAUDADO"? true: false;
     this.recaudacion.factura = this.factura;
-    console.log(this.recaudacion);
     if (this.factura.totalConDescuento-this.recaudacion.total>0){
       if(this.recaudacion.credito.periodicidad=="" || this.recaudacion.credito.cuotas<1 
       || this.recaudacion.credito.fechaPrimeraCuota==null){

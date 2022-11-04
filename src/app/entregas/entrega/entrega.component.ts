@@ -16,6 +16,7 @@ import { FacturaService } from '../../servicios/comprobante/factura.service';
 import { valores, validarSesion, tab_activo, exito, exito_swal, error, error_swal } from '../../constantes';
 import { MatTableDataSource } from '@angular/material/table';
 import { FacturaDetalle } from '../../modelos/comprobante/factura-detalle';
+import { FacturacionElectronicaService } from 'src/app/servicios/comprobante/factura-eletronica.service';
 
 @Component({
   selector: 'app-entrega',
@@ -39,7 +40,7 @@ export class EntregaComponent implements OnInit {
   dataFacturaDetalle = new MatTableDataSource<FacturaDetalle>(this.entrega.factura.facturaDetalles);
 
   constructor(private transportistaService: TransportistaService, private sesionService: SesionService, private router: Router,
-    private facturaService: FacturaService, private modalService: NgbModal,
+    private facturaService: FacturaService, private facturacionElectronicaService: FacturacionElectronicaService, private modalService: NgbModal,
     private ubicacionService: UbicacionService, private entregaService: EntregaService) { }
 
   ngOnInit() {
@@ -100,7 +101,6 @@ export class EntregaComponent implements OnInit {
     if (event!=null)
       event.preventDefault();
     this.entrega.normalizar();
-    console.log(this.entrega);
     this.entregaService.crear(this.entrega).subscribe(
       res => {
         this.entrega = res.resultado as Entrega;
@@ -114,7 +114,6 @@ export class EntregaComponent implements OnInit {
     if (event!=null)
       event.preventDefault();
     this.entrega.normalizar();
-    console.log(this.entrega);
     this.entregaService.actualizar(this.entrega).subscribe(
       res => {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
@@ -222,16 +221,15 @@ export class EntregaComponent implements OnInit {
 
   }
 
-  generarPdf(event: any){
-    if (event!=null)
+  crearFacturaElectronica(event){
+    if (event != null)
       event.preventDefault();
-    this.facturaService.generar_pdf(this.entrega.factura.id).subscribe(
+    this.facturacionElectronicaService.enviar(this.entrega.factura).subscribe(
       res => {
-        let file = new Blob([res], { type: 'application/pdf' });            
-        var fileURL = URL.createObjectURL(file);
-        window.open(fileURL);
+        let respuesta = res.resultado as String;
+        Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje, footer: respuesta });
       },
-      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.message })
     );
   }
 }

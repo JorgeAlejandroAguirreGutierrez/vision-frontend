@@ -68,7 +68,7 @@ export class ParametroService {
     );
   }
   consultarTipo(parametro: Parametro): Observable<Respuesta> {
-    return this.http.get<Respuesta>(environment.host + urn.ruta + urn.parametro + urn.tipo + '/' + parametro.tipo, options).pipe(
+    return this.http.get<Respuesta>(environment.host + urn.ruta + urn.parametro + urn.consultarTipo + '/' + parametro.tipo, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(err);

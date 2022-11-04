@@ -112,7 +112,6 @@ export class TransferenciaBodegaComponent implements OnInit {
       Swal.fire(error, mensajes.error_nombre_producto, error_swal);
       return;
     }
-    console.log(this.producto);
     // Corregir este error
     //this.producto.kardexs[0].proveedor = new Proveedor;
     this.productoService.actualizar(this.producto).subscribe({
@@ -254,7 +253,6 @@ export class TransferenciaBodegaComponent implements OnInit {
     for (let i = 0; i < this.bodegasDestino.length; i++) {
       if (this.bodegasDestino[i].id == bodegaSeleccionada.id) {
         this.bodegasDestino.splice(i, 1);
-        //console.log('elim', this.bodegas);
       }
     }
   }

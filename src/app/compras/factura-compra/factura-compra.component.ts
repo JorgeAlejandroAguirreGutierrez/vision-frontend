@@ -306,7 +306,6 @@ export class FacturaCompraComponent implements OnInit {
         Swal.fire('Error', err.error.mensaje, 'error')
       }
     );
-    console.log(this.cliente);
   }
 
   @HostListener('window:keypress', ['$event'])
@@ -334,7 +333,6 @@ export class FacturaCompraComponent implements OnInit {
           this.cliente.normalizar();
           this.validarSexoEstadoCivilOrigenIngreso();
           this.ubicacionNormalizarActualizar();
-          console.log(this.cliente);
           this.clienteService.enviar(0);
         },
         err => {
@@ -593,7 +591,6 @@ export class FacturaCompraComponent implements OnInit {
       this.cliente.celulares.push(this.celular);
     if (this.correo.email!=undefined)
       this.cliente.correos.push(this.correo);
-    console.log(this.cliente);
     this.clienteService.crear(this.cliente).subscribe(
       res => {
         if (res.resultado!= null) {
@@ -652,7 +649,6 @@ export class FacturaCompraComponent implements OnInit {
       this.cliente.dependientes.push(this.dependiente);
     }
     //CLIENTE
-    console.log(this.cliente);
     if (this.cliente.direccion.ubicacion.provincia != "" && this.cliente.direccion.ubicacion.canton != "" && this.cliente.direccion.ubicacion.parroquia != ""){
       await this.ubicacionService.obtenerUbicacionID(this.cliente.direccion.ubicacion).then(
         res => {

@@ -130,7 +130,6 @@ export class FormaPagoComponent implements OnInit {
     this.formaPagoService.consultar().subscribe({
       next: res => {
         this.formaPagos = res.resultado as FormaPago[];
-        //console.log(this.formaPagos);
         this.llenarTablaFormaPago(this.formaPagos);
       },
       error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
