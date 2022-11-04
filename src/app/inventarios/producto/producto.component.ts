@@ -363,7 +363,7 @@ export class ProductoComponent implements OnInit {
     this.kardexFinal.costoPromedio = kardex[ultimoKardex].costoPromedio;
     this.kardexFinal.costoTotal = kardex[ultimoKardex].costoTotal;
     // Esta linea da problemas, hay que eliminar proveedor de kardex
-    this.producto.kardexs[0].proveedor = new Proveedor;
+    //this.producto.kardexs[0].proveedor = new Proveedor;
   }
 
   deshabilitarMedidaKardex() {

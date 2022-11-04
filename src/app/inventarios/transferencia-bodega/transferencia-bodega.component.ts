@@ -114,7 +114,7 @@ export class TransferenciaBodegaComponent implements OnInit {
     }
     console.log(this.producto);
     // Corregir este error
-    this.producto.kardexs[0].proveedor = new Proveedor;
+    //this.producto.kardexs[0].proveedor = new Proveedor;
     this.productoService.actualizar(this.producto).subscribe({
       next: (res) => {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
