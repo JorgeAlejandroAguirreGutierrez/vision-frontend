@@ -30,7 +30,7 @@
             "tsConfig": "tsconfig.app.json",
             "inlineStyleLanguage": "scss",
             "allowedCommonJsDependencies": [
-              "lodash"
+              "sweetalert2"
             ],
             "assets": [
               "src/favicon.ico",
