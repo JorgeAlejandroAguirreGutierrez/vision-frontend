@@ -82,7 +82,7 @@ import { PuntoVentaComponent } from './usuarios/punto-venta/punto-venta.componen
 import { PerfilComponent } from './usuarios/perfil/perfil.component';
 
 //Módulo de Configuraciones
-import { EmpresaComponent, DialogoMapaEmpresaComponent } from './configuraciones/empresa/empresa.component';
+import { EmpresaComponent, DialogoMapaEmpresaComponent } from './usuarios/empresa/empresa.component';
 import { UbicacionComponent } from './configuraciones/ubicacion/ubicacion.component';
 
 // Otros - borrar al final

@@ -36,7 +36,7 @@ import { SesionService } from '../../servicios/usuario/sesion.service';
 import { Sesion } from '../../modelos/usuario/sesion';
 import { Dependiente } from '../../modelos/cliente/dependiente';
 import { EmpresaService } from '../../servicios/configuracion/empresa.service';
-import { Empresa } from '../../modelos/configuracion/empresa';
+import { Empresa } from '../../modelos/usuario/empresa';
 import { environment } from '../../../environments/environment';
 import { TipoContribuyenteService } from '../../servicios/cliente/tipo-contribuyente.service';
 import { TelefonoDependiente } from '../../modelos/cliente/telefono-dependiente';
@@ -758,14 +758,14 @@ export class FacturaCompraComponent implements OnInit {
   }
 
   validarTelefono() {
-    let digito=this.telefono.numero.substr(0,1);
+    let digito=this.telefono.numero.substring(0,1);
     if (this.telefono.numero.length!=11 || digito!="0") {
       this.telefono.numero="";
       Swal.fire('Error', "Telefono Invalido", 'error');
     }
   }
   validarTelefonoDependiente() {
-    let digito=this.dependienteTelefono.numero.substr(0,1);
+    let digito=this.dependienteTelefono.numero.substring(0,1);
     if (this.dependienteTelefono.numero.length!=11 || digito!="0") {
       this.dependienteTelefono.numero="";
       Swal.fire('Error', "Telefono Invalido", 'error');
@@ -773,7 +773,7 @@ export class FacturaCompraComponent implements OnInit {
   }
 
   validarCelular() {
-    let digito=this.celular.numero.substr(0,2);
+    let digito=this.celular.numero.substring(0,2);
     if (this.celular.numero.length!=12 || digito!="09") {
       this.celular.numero="";
       Swal.fire('Error', "Celular Invalido", 'error');
@@ -781,7 +781,7 @@ export class FacturaCompraComponent implements OnInit {
   }
 
   validarCelularDependiente() {
-    let digito=this.dependienteCelular.numero.substr(0,2);
+    let digito=this.dependienteCelular.numero.substring(0,2);
     if (this.dependienteCelular.numero.length!=12 || digito!="09") {
       this.dependienteCelular.numero="";
       Swal.fire('Error', "Celular Invalido", 'error');

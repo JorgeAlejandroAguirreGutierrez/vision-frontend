@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Empresa } from '../../modelos/configuracion/empresa';
+import { Empresa } from '../../modelos/usuario/empresa';
 import { Respuesta } from '../../respuesta';
 import { urn, options } from '../../constantes';
 import {HttpClient} from '@angular/common/http';

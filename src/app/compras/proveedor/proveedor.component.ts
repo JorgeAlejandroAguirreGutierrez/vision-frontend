@@ -7,7 +7,7 @@ import { valores, validarSesion, otras, tabs, tab_activo, exito, exito_swal, err
 import { Router } from '@angular/router'; 
 import { environment } from '../../../environments/environment';
 
-import { Empresa } from '../../modelos/configuracion/empresa';
+import { Empresa } from '../../modelos/usuario/empresa';
 import { EmpresaService } from '../../servicios/configuracion/empresa.service';
 import { Sesion } from '../../modelos/usuario/sesion';
 import { SesionService } from '../../servicios/usuario/sesion.service';
@@ -132,8 +132,8 @@ export class ProveedorComponent implements OnInit {
   value = 'Clear me';
 
   //Mapa
-  latitud: number = -1.6705413480437092; //Tomar de configuación y poner en el init
-  longitud: number = -78.64974203645144;
+  latitud: number = valores.latCiudad; //Tomar de configuación y poner en el init
+  longitud: number = valores.lngCiudad;
   posicionCentral: Coordenada = new Coordenada(this.latitud, this.longitud);
   posicionGeografica: Coordenada;
   //mapTypeId: string = 'hybrid';
@@ -716,7 +716,7 @@ export class ProveedorComponent implements OnInit {
     }
   }
   validarTelefono() {
-    let digito = this.telefono.numero.substr(0, 1);
+    let digito = this.telefono.numero.substring(0, 1);
     if (this.telefono.numero.length != 11 || digito != "0") {
       this.telefono.numero = valores.vacio;
       Swal.fire(error, "Telefono Invalido", error_swal);
@@ -735,7 +735,7 @@ export class ProveedorComponent implements OnInit {
       }
   }
   validarCelular() {
-    let digito = this.celular.numero.substr(0, 2);
+    let digito = this.celular.numero.substring(0, 2);
     if (this.celular.numero.length != 12 || digito != "09") {
       this.celular.numero = valores.vacio;
       Swal.fire(error, "Celular Invalido", error_swal);
@@ -775,7 +775,7 @@ export class ProveedorComponent implements OnInit {
     }
   }
   validarTelefonoDependiente() {
-    let digito = this.dependienteTelefono.numero.substr(0, 1);
+    let digito = this.dependienteTelefono.numero.substring(0, 1);
     if (this.dependienteTelefono.numero.length != 11 || digito != "0") {
       this.dependienteTelefono.numero = "";
       Swal.fire(error, "Telefono Invalido", error_swal);
@@ -798,7 +798,7 @@ export class ProveedorComponent implements OnInit {
     }
   }
   validarCelularDependiente() {
-    let digito = this.dependienteCelular.numero.substr(0, 2);
+    let digito = this.dependienteCelular.numero.substring(0, 2);
     if (this.dependienteCelular.numero.length != 12 || digito != "09") {
       this.dependienteCelular.numero = "";
       Swal.fire(error, "Celular Invalido", error_swal);

@@ -227,7 +227,7 @@ export class UsuarioComponent implements OnInit {
   }
 
   validarCelular() {
-    let digito = this.usuario.celular.substr(0, 2);
+    let digito = this.usuario.celular.substring(0, 2);
     if (this.usuario.celular.length != 12 || digito != "09") {
       this.usuario.celular = valores.vacio;
       Swal.fire({ icon: error_swal, title: error, text: mensajes.error_celular_invalido });

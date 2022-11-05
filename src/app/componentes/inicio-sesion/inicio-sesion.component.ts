@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import Swal from 'sweetalert2';
 import { Sesion } from '../../modelos/usuario/sesion';
 import { SesionService } from '../../servicios/usuario/sesion.service';
-import { Empresa } from '../../modelos/configuracion/empresa';
+import { Empresa } from '../../modelos/usuario/empresa';
 import { Parametro } from '../../modelos/configuracion/parametro';
 import { EmpresaService } from '../../servicios/configuracion/empresa.service';
 import { ParametroService } from '../../servicios/configuracion/parametro.service';

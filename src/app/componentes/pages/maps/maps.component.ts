@@ -1,7 +1,7 @@
 import { Component, OnInit, Input, Output, EventEmitter, ViewChild } from '@angular/core';
 import { MapInfoWindow, MapMarker } from '@angular/google-maps';
 import { Coordenada } from "../../../modelos/configuracion/coordenada";
-
+import { valores } from "../../../constantes";
 
 @Component({
   selector: 'app-maps',
@@ -21,7 +21,7 @@ export class MapsComponent implements OnInit {
   //mapTypeId: string = 'hybrid';
 
   // Configuración de Google Maps 
-    center: google.maps.LatLngLiteral = {lat: -1.6705413480437092, lng: -78.64974203645144};
+    center: google.maps.LatLngLiteral = {lat: valores.latCiudad, lng: valores.lngCiudad};
     markerPosiciones: google.maps.LatLngLiteral[] = [];
     zoom = 15;
     display?: google.maps.LatLngLiteral;
@@ -40,7 +40,7 @@ export class MapsComponent implements OnInit {
 
   ngOnInit() {
     if (!this.posicionGeografica){
-      this.posicionCentral = new Coordenada(-1.6705413480437092, -78.64974203645144);
+      this.posicionCentral = new Coordenada(valores.latCiudad, valores.lngCiudad);
       //this.posicionSeleccionada = this.posicionCentral;
     }else{
       this.posicionCentral = this.posicionGeografica;

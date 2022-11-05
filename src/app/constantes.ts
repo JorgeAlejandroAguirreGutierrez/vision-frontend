@@ -120,7 +120,9 @@ export const valores ={
      emitida : "EMITIDA",
      anulada: "ANULADA",
      facturada: "FACTURADA",
-     nofacturada: "NO FACTURADA"
+     nofacturada: "NO FACTURADA",
+     latCiudad: -1.6705413480437092,
+     lngCiudad: -78.64974203645144
 }
     
 export const mensajes = {
@@ -166,6 +168,10 @@ export const mensajes = {
      error_eliminar_bodega : "NO PUEDE ELIMINAR UNA BODEGA CON SALDO",
      error_agregar_recaudacion : "VALOR SUPERA EL MONTO DE COBRO DE LA FACTURA",
      error_agregar_dependiente : "ERROR AL AGREGAR EL DEPENDIENTE",
+     error_identificacion : "INGRESE UNA IDENTIFICACIÓN",
+     error_razon_social : "ERROR EN RAZON SOCIAL",
+     error_direccion : "ERROR EN DIRECCIÓN",
+     error_ubicacion : "ERROR EN PROVINCIA, CANTON O PARROQUIA",
      mensaje_kardex_inicial : "INICIALIZAR KARDEX CON SALDO 0",
      error_medida_kardex : "ERROR MEDIDA KARDEX",
      si : "SI",

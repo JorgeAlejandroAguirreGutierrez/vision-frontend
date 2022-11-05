@@ -7,7 +7,7 @@ import Swal from 'sweetalert2';
 import { valores, mensajes, otras, tabs, validarSesion, tab_activo, exito, exito_swal, error, error_swal } from '../../constantes';
 import { environment } from '../../../environments/environment';
 
-import { Empresa } from '../../modelos/configuracion/empresa';
+import { Empresa } from '../../modelos/usuario/empresa';
 import { EmpresaService } from '../../servicios/configuracion/empresa.service';
 import { Sesion } from '../../modelos/usuario/sesion';
 import { SesionService } from '../../servicios/usuario/sesion.service';
@@ -50,8 +50,8 @@ import { TipoRetencionService } from '../../servicios/configuracion/tipo-retenci
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { TipoIdentificacion } from 'src/app/modelos/configuracion/tipo-identificacion';
-import { TipoIdentificacionService } from 'src/app/servicios/configuracion/tipo-identificacion.service';
+import { TipoIdentificacion } from '../../modelos/configuracion/tipo-identificacion';
+import { TipoIdentificacionService } from '../../servicios/configuracion/tipo-identificacion.service';
 //import { Content } from '@angular/compiler/src/render3/r3_ast';
 
 @Component({
@@ -129,8 +129,8 @@ export class ClienteComponent implements OnInit {
   value = 'Clear me';
 
   //Mapa
-  latitud: number = -1.6705413480437092; //Tomar de configuación y poner en el init
-  longitud: number = -78.64974203645144;
+  latitud: number = valores.latCiudad; //Tomar de configuación y poner en el init
+  longitud: number = valores.lngCiudad;
   posicionCentralDireccion: Coordenada = new Coordenada(this.latitud, this.longitud);
   posicionCentralDependiente: Coordenada = new Coordenada(this.latitud, this.longitud);
   posicionGeograficaDireccion: Coordenada;
@@ -685,9 +685,9 @@ export class ClienteComponent implements OnInit {
     }
   }
   validarTelefono() {
-    let digito = this.telefono.numero.substr(0, 1);
+    let digito = this.telefono.numero.substring(0, 1);
     if (this.telefono.numero.length != 11 || digito != "0") {
-      this.telefono.numero = valores.vacio;
+      //this.telefono.numero = valores.vacio;
       Swal.fire({ icon: error_swal, title: error, text: mensajes.error_telefono_invalido });
     }
   }
@@ -704,9 +704,9 @@ export class ClienteComponent implements OnInit {
     }
   }
   validarCelular() {
-    let digito = this.celular.numero.substr(0, 2);
+    let digito = this.celular.numero.substring(0, 2);
     if (this.celular.numero.length != 12 || digito != "09") {
-      this.celular.numero = valores.vacio;
+      //this.celular.numero = valores.vacio;
       Swal.fire({ icon: error_swal, title: error, text: mensajes.error_celular_invalido });
     }
   }
@@ -717,7 +717,7 @@ export class ClienteComponent implements OnInit {
   crearCorreo() {
     if (this.correo.email.length != valores.cero) {
       this.cliente.correos.push(this.correo);
-      this.correo = new Correo();
+      //this.correo = new Correo();
     } else {
       Swal.fire({ icon: error_swal, title: error, text: mensajes.error_correo_ingresado });
     }
@@ -744,7 +744,7 @@ export class ClienteComponent implements OnInit {
     }
   }
   validarTelefonoDependiente() {
-    let digito = this.dependienteTelefono.numero.substr(0, 1);
+    let digito = this.dependienteTelefono.numero.substring(0, 1);
     if (this.dependienteTelefono.numero.length != 11 || digito != "0") {
       this.dependienteTelefono.numero = valores.vacio;
       Swal.fire({ icon: error_swal, title: error, text: mensajes.error_telefono_invalido });
@@ -767,7 +767,7 @@ export class ClienteComponent implements OnInit {
     }
   }
   validarCelularDependiente() {
-    let digito = this.dependienteCelular.numero.substr(0, 2);
+    let digito = this.dependienteCelular.numero.substring(0, 2);
     if (this.dependienteCelular.numero.length != 12 || digito != "09") {
       this.dependienteCelular.numero = valores.vacio;
       Swal.fire({ icon: error_swal, title: error, text: mensajes.error_celular_invalido });

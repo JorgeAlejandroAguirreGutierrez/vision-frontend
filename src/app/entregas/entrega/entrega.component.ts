@@ -152,7 +152,7 @@ export class EntregaComponent implements OnInit {
   }
 
   validarTelefono() {
-    let digito=this.entrega.telefono.substr(0,1);
+    let digito=this.entrega.telefono.substring(0,1);
     if (this.entrega.telefono.length!=11 || digito!= "0") {
       this.entrega.telefono= valores.vacio;
       Swal.fire(error, "Telefono Invalido", error_swal);
@@ -160,7 +160,7 @@ export class EntregaComponent implements OnInit {
   }
 
   validarCelular() {
-    let digito=this.entrega.celular.substr(0,2);
+    let digito=this.entrega.celular.substring(0,2);
     if (this.entrega.celular.length!=12 || digito!="09") {
       this.entrega.celular= valores.vacio;
       Swal.fire(error, "Celular Invalido", error_swal);

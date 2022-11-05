@@ -1,5 +1,5 @@
 import { Ubicacion } from '../configuracion/ubicacion';
-import { Empresa } from '../configuracion/empresa';
+import { Empresa } from './empresa';
 import { valores } from "../../constantes";
 export class Establecimiento {
     id: number;
