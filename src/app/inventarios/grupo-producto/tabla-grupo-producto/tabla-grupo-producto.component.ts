@@ -61,6 +61,7 @@ export class TablaGrupoProductoComponent implements OnInit {
   borrarFiltroGrupoProducto() {
     this.renderer.setProperty(this.inputFiltroGrupoProducto.nativeElement, 'value', '');
     this.dataSourceGrupoProducto.filter = '';
+    this.clickedRows.clear;
   }
 
   consultarGrupoProductos() {

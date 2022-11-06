@@ -6,7 +6,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { map, catchError } from 'rxjs/operators';
 import { Observable, throwError, lastValueFrom } from 'rxjs';
 import { environment } from '../../../environments/environment';
-import { Proveedor } from '../../modelos/proveedor/proveedor';
+import { Proveedor } from '../../modelos/compra/proveedor';
 
 @Injectable({
   providedIn: 'root'
@@ -85,7 +85,7 @@ export class ProveedorService {
   }
 
   obtenerIdentificacion(identificacion: string): Observable<Respuesta> {
-    return this.http.get<Respuesta>(environment.host + urn.ruta + urn.cliente + urn.identificacion + '/' + identificacion, options).pipe(
+    return this.http.get<Respuesta>(environment.host + urn.ruta + urn.proveedor + urn.identificacion + '/' + identificacion, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);
@@ -93,7 +93,7 @@ export class ProveedorService {
   }
 
   validarIdentificacion(identificacion: string): Observable<Respuesta> {
-    return this.http.get(environment.host + urn.ruta + urn.cliente + '/identificacion/validar/' + identificacion, options).pipe(
+    return this.http.get(environment.host + urn.ruta + urn.proveedor + '/identificacion/validar/' + identificacion, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);

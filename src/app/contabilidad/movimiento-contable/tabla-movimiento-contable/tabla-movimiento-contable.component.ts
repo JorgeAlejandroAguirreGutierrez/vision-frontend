@@ -1,4 +1,5 @@
-import { Component, OnInit, Type } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter, ElementRef, Renderer2 } from '@angular/core';
+import { BehaviorSubject } from 'rxjs';
 import Swal from 'sweetalert2';
 import { valores, validarSesion, tab_activo, exito, exito_swal, error, error_swal } from '../../../constantes';
 import { MovimientoContableService } from '../../../servicios/contabilidad/movimiento-contable.service';
@@ -19,33 +20,38 @@ import { Router } from '@angular/router';
 })
 export class TablaMovimientoContableComponent implements OnInit {
 
-  movimientoContable: MovimientoContable= new MovimientoContable();
-  movimientosContables: MovimientoContable[];
   sesion: Sesion=null;
+  @Output() movimientoContableSeleccionado = new EventEmitter();
+  movimientosContables: MovimientoContable[];
 
-  columnas: any[] = [
+  columnasMovimientoContable: any[] = [
     { nombreColumna: 'id', cabecera: 'ID', celda: (row: MovimientoContable) => `${row.id}`},
-    { nombreColumna: 'inventario', cabecera: 'Inventario', celda: (row: MovimientoContable) => `${row.codigo}`},
+    { nombreColumna: 'codigo', cabecera: 'Código', celda: (row: MovimientoContable) => `${row.codigo}`},
+    { nombreColumna: 'afectacion', cabecera: 'Afectación', celda: (row: MovimientoContable) => `${row.afectacionContable.abreviatura}`},
+    { nombreColumna: 'inventario', cabecera: 'Inventario', celda: (row: MovimientoContable) => `${row.inventario.cuenta}`},
     { nombreColumna: 'costo_Venta', cabecera: 'Costo Venta', celda: (row: MovimientoContable) => `${row.costoVenta.cuenta}`},
     { nombreColumna: 'devolucionCompra', cabecera: 'Dev. Compra', celda: (row: MovimientoContable) => `${row.devolucionCompra.cuenta}`},
     { nombreColumna: 'descuentoCompra', cabecera: 'Des. Compra', celda: (row: MovimientoContable) => `${row.descuentoCompra.cuenta}`},
     { nombreColumna: 'venta', cabecera: 'Venta', celda: (row: MovimientoContable) => `${row.venta.cuenta}`},
     { nombreColumna: 'devolucionVenta', cabecera: 'Dev. Venta', celda: (row: MovimientoContable) => `${row.devolucionVenta.cuenta}`},
     { nombreColumna: 'descuentoVenta', cabecera: 'Des. Venta', celda: (row: MovimientoContable) => `${row.descuentoVenta.cuenta}`},
-    { nombreColumna: 'devolucionCostoVenta', cabecera: 'Dev Const Venta', celda: (row: MovimientoContable) => `${row.devolucionCostoVenta.cuenta}`},
+    { nombreColumna: 'devolucionCostoVenta', cabecera: 'Dev. Costo Venta', celda: (row: MovimientoContable) => `${row.devolucionCostoVenta.cuenta}`},
   ];
-  columnasMovimientoContable: string[]  = this.columnas.map(titulo => titulo.nombreColumna);
+  cabeceraMovimientoContable: string[]  = this.columnasMovimientoContable.map(titulo => titulo.nombreColumna);
   dataSourceMovimientoContable: MatTableDataSource<MovimientoContable>;
+  observableDSMovimientoContable: BehaviorSubject<MatTableDataSource<MovimientoContable>> = new BehaviorSubject<MatTableDataSource<MovimientoContable>>(null);
   clickedRows = new Set<MovimientoContable>();
   
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
+  @ViewChild("inputFiltroMovimientoContable") inputFiltroMovimientoContable: ElementRef;
 
-  constructor(private sesionService: SesionService, private router: Router, private movimientoContableService: MovimientoContableService) { }
+  constructor(private renderer: Renderer2, private sesionService: SesionService, private router: Router, 
+    private movimientoContableService: MovimientoContableService) { }
 
   ngOnInit() {
     this.sesion=validarSesion(this.sesionService, this.router);
-    this.consultar();
+    this.consultarMovimientoContable();
   }
 
   filtroMovimientoContable(event: Event) {
@@ -55,27 +61,51 @@ export class TablaMovimientoContableComponent implements OnInit {
       this.dataSourceMovimientoContable.paginator.firstPage();
     }
   }
+  borrarFiltroMovimientoContable() {
+    this.renderer.setProperty(this.inputFiltroMovimientoContable.nativeElement, 'value', '');
+    this.dataSourceMovimientoContable.filter = '';
+    this.clickedRows.clear;
+  }
 
-  consultar() {
-    this.movimientoContableService.consultar().subscribe(
-      res => {
+  consultarMovimientoContable() {
+    this.movimientoContableService.consultar().subscribe({
+      next: res => {
         this.movimientosContables = res.resultado as MovimientoContable[]
-        this.dataSourceMovimientoContable = new MatTableDataSource(this.movimientosContables);
-        this.dataSourceMovimientoContable.paginator = this.paginator;
-        this.dataSourceMovimientoContable.sort = this.sort;
+        this.llenarDataSourceMovimientoContable(this.movimientosContables);
       },
-      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
-    );
+      error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+    });
+  }
+
+  llenarDataSourceMovimientoContable(movimientosContables : MovimientoContable[]){
+    this.ordenarAsc(movimientosContables, 'id');
+    //console.log(gruposProductos);
+    this.dataSourceMovimientoContable = new MatTableDataSource(this.movimientosContables);
+    this.dataSourceMovimientoContable.filterPredicate = (data: MovimientoContable, filter: string): boolean =>
+      data.codigo.toUpperCase().includes(filter) || data.afectacionContable.abreviatura.toUpperCase().includes(filter) || data.inventario.cuenta.toUpperCase().includes(filter) || data.costoVenta.cuenta.toUpperCase().includes(filter) || 
+      data.devolucionCompra.cuenta.toUpperCase().includes(filter) || data.descuentoCompra.cuenta.toUpperCase().includes(filter) || data.venta.cuenta.toUpperCase().includes(filter) || 
+      data.devolucionVenta.cuenta.toUpperCase().includes(filter) || data.descuentoVenta.cuenta.toUpperCase().includes(filter) || data.devolucionCostoVenta.cuenta.toUpperCase().includes(filter);
+    this.dataSourceMovimientoContable.paginator = this.paginator;
+     this.dataSourceMovimientoContable.sort = this.sort;
+    this.observableDSMovimientoContable.next(this.dataSourceMovimientoContable);
+  }
+
+  ordenarAsc(arrayJson: any, pKey: any) {
+    arrayJson.sort(function (a: any, b: any) {
+      return a[pKey] > b[pKey];
+    });
   }
 
   seleccion(movimientoContableSeleccionado: MovimientoContable) {
     if (!this.clickedRows.has(movimientoContableSeleccionado)){
       this.clickedRows.clear();
       this.clickedRows.add(movimientoContableSeleccionado);
-      this.movimientoContable = movimientoContableSeleccionado;
     } else {
       this.clickedRows.clear();
-      this.movimientoContable = new MovimientoContable();
+      movimientoContableSeleccionado = new MovimientoContable();
     }
+    this.movimientoContableSeleccionado.emit(
+      { movimientoContableSeleccionado }
+    );
   }
 }

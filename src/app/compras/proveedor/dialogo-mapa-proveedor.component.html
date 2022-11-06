@@ -1,0 +1,9 @@
+<h1 mat-dialog-title class="text-muted">GEOREFERENCIA</h1>
+<!--para ingresar datos {{data.latitud}}-->
+<div mat-dialog-content>
+  <app-maps [posicionGeografica]="data" (coordenadaSeleccionada)="coordenadaSeleccionada($event)"></app-maps>
+</div>
+<div mat-dialog-actions>
+  <button mat-button (click)="onNoClick()">Cancelar</button>
+  <button mat-button [mat-dialog-close]="data" cdkFocusInitial>Guardar</button>
+</div>

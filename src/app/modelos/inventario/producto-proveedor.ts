@@ -1,5 +1,5 @@
 import { Producto } from "./producto";
-import { Proveedor } from "../proveedor/proveedor";
+import { Proveedor } from "../compra/proveedor";
 import { valores } from "../../constantes";
 export class ProductoProveedor {
     id:number;

@@ -4,7 +4,7 @@ import { Establecimiento } from '../../modelos/usuario/establecimiento';
 import Swal from 'sweetalert2';
 import { TabService } from '../../componentes/services/tab.service';
 import { valores, validarSesion, tab_activo, exito, exito_swal, error, error_swal } from '../../constantes';
-import { Empresa } from '../../modelos/configuracion/empresa';
+import { Empresa } from '../../modelos/usuario/empresa';
 import { EmpresaService } from '../../servicios/configuracion/empresa.service';
 import { Sesion } from 'src/app/modelos/usuario/sesion';
 import { SesionService } from 'src/app/servicios/usuario/sesion.service';

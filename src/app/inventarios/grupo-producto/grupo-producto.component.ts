@@ -1,10 +1,9 @@
 import { Component, OnInit, HostListener, Type, Inject } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
-import { FormControl } from '@angular/forms';
+import { UntypedFormControl } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { startWith, map } from 'rxjs/operators';
-import { valores, validarSesion, tab_activo, exito, exito_swal, error, error_swal } from '../../constantes';
-import * as util from '../../util';
+import { valores, validarSesion, exito, exito_swal, error, error_swal, error_formulario } from '../../constantes';
 import Swal from 'sweetalert2';
 
 import { Router } from '@angular/router';
@@ -49,8 +48,7 @@ export class GrupoProductoComponent implements OnInit {
   abrirPanelAdminGrupo: boolean = false;
   deshabilitarPresentacion: boolean = false;
   editarGrupoProducto: boolean = true;
-
-  ComponenteGrupoProducto: Type<any> = GrupoProductoComponent;
+  formularioValidado: boolean = false;
 
   sesion: Sesion;
   grupoProducto: GrupoProducto = new GrupoProducto();
@@ -63,27 +61,27 @@ export class GrupoProductoComponent implements OnInit {
   categoriasProductos: CategoriaProducto[] = [];
 
   grupos: string[] = [];
-  controlGrupo = new FormControl();
+  controlGrupo = new UntypedFormControl();
   filtroGrupos: Observable<string[]> = new Observable<string[]>();
 
   subgrupos: string[] = [];
-  controlSubgrupo = new FormControl();
+  controlSubgrupo = new UntypedFormControl();
   filtroSubgrupos: Observable<string[]> = new Observable<string[]>();
 
   secciones: string[] = [];
-  controlSeccion = new FormControl();
+  controlSeccion = new UntypedFormControl();
   filtroSecciones: Observable<string[]> = new Observable<string[]>();
 
   lineas: string[] = [];
-  controlLinea = new FormControl();
+  controlLinea = new UntypedFormControl();
   filtroLineas: Observable<string[]> = new Observable<string[]>();
 
   sublineas: string[] = [];
-  controlSublinea = new FormControl();
+  controlSublinea = new UntypedFormControl();
   filtroSublineas: Observable<string[]> = new Observable<string[]>();
 
   presentaciones: string[] = [];
-  controlPresentacion = new FormControl();
+  controlPresentacion = new UntypedFormControl();
   filtroPresentaciones: Observable<string[]> = new Observable<string[]>();
 
   //cabeceraGrupoProducto: string[] = ['id', 'grupo', 'subgrupo', 'seccion', 'linea', 'sublinea', 'presentacion'];
@@ -152,18 +150,7 @@ export class GrupoProductoComponent implements OnInit {
   }
 
   limpiar() {
-    //if (this.grupoProducto.id != 0) {
-    //let id = this.grupoProducto.id;
-    //let codigo = this.grupoProducto.codigo;
     this.grupoProducto = new GrupoProducto();
-    //this.grupoProducto.id = id;
-    //this.grupoProducto.codigo = codigo;
-    //}
-    //else {
-    //this.TablaGrupoProducto.name.clickedRows.clear()
-
-    //  this.grupoProducto = new GrupoProducto();
-    //}
     this.grupoProducto.categoriaProducto.id = this.categoriasProductos[0].id;
     this.editar();
     this.controlGrupo.setValue('');
@@ -211,16 +198,22 @@ export class GrupoProductoComponent implements OnInit {
   crear(event: any) {
     if (event != null)
       event.preventDefault();
-    this.grupoProducto.movimientoContable.id = 1;
-    this.grupoProductoService.crear(this.grupoProducto).subscribe({
-      next: res => {
-        this.grupoProducto = res.resultado as GrupoProducto;
-        this.TablaGrupoProducto.consultarGrupoProductos();
-        Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
-        this.limpiar();
-      },
-      error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
-    });
+    this.validarFormulario();  
+    //this.grupoProducto.movimientoContable.id = 1;
+    console.log(this.grupoProducto);
+    if (this.formularioValidado) {
+      this.grupoProductoService.crear(this.grupoProducto).subscribe({
+        next: res => {
+          this.grupoProducto = res.resultado as GrupoProducto;
+          this.TablaGrupoProducto.consultarGrupoProductos();
+          Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
+          this.limpiar();
+        },
+        error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+      });
+    } else {
+      Swal.fire({ icon: error_swal, title: error, text: error_formulario });
+    }
 
   }
 
@@ -294,6 +287,11 @@ export class GrupoProductoComponent implements OnInit {
       },
       err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     );
+  }
+
+  validarFormulario(){
+    //validar que los campos esten llenos antes de guardar
+    this.formularioValidado = true;
   }
 
   inhabilitarControles() {
@@ -501,14 +499,25 @@ export class GrupoProductoComponent implements OnInit {
     }
   }
 
+  // Para capturar la imformación del Mat-dialog
+  movimientoContableSeleccionado(event: any) {
+    //console.log(event);
+    let movimientoContableRecibido = event.movimientoContableSeleccionado as MovimientoContable;
+    this.grupoProducto.movimientoContable = movimientoContableRecibido;
+    //console.log(grupoProductoRecibido.codigo);
+  }
+
   dialogoMovimientosContables(): void {
     const dialogRef = this.dialog.open(DialogoMovimientoContableComponent, {
       width: '80%',
-      data: { usuario: this.usuario, clave: this.clave }
+      //data: { usuario: this.usuario, clave: this.clave }
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      this.usuario = result;
+      //console.log('El dialogo para selección de grupo producto fue cerrado');
+      if (result) {
+        this.grupoProducto.movimientoContable = result as MovimientoContable;
+      }
     });
   }
 }
@@ -519,15 +528,24 @@ export class GrupoProductoComponent implements OnInit {
 })
 export class DialogoMovimientoContableComponent {
 
-  sesion = new Sesion();
-  repetirContrasena: string;
+  movimientoContable: string[] = [];
 
   constructor(
     public dialogRef: MatDialogRef<DialogoMovimientoContableComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: DialogData) { }
+    @Inject(MAT_DIALOG_DATA) public data: MovimientoContable) { }
 
   onNoClick(): void {
     this.dialogRef.close();
   }
 
+  // Para capturar la imformación del Mat-dialog
+  movimientoContableSeleccionado(event: any) {
+    //console.log(event);
+    if (event && event.id != 0) {
+      this.data = event.movimientoContableSeleccionado as MovimientoContable;
+      //console.log(this.data.codigo);
+    } else {
+      this.data = new MovimientoContable;
+    }
+  }
 }

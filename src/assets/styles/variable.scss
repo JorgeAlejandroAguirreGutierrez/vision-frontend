@@ -9,7 +9,7 @@ File: variable.scss
 $bodyfont: 'Poppins', 'Roboto', 'Helvetica Neue', sans-serif, 'Open sans';
 $headingfont: 'Poppins', sans-serif;
 
-@import '~@angular/material/theming';
+@import '@angular/material/theming';
 
 /*Material Theme Colors*/
 

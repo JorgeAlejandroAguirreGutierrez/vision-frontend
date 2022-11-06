@@ -15,7 +15,7 @@ import { MainComponent } from './componentes/main/main.component';
 import { MenuComponent } from './componentes/menu/menu.component';
 
 // Molulo de Clientes
-import { ClienteComponent } from './clientes/cliente/cliente.component';
+import { ClienteComponent, DialogoMapaComponent } from './clientes/cliente/cliente.component';
 import { SegmentoComponent } from './clientes/segmento/segmento.component';
 import { GrupoClienteComponent } from './clientes/grupo-cliente/grupo-cliente.component';
 import { OrigenIngresoComponent } from './clientes/origen-ingreso/origen-ingreso.component';
@@ -62,9 +62,10 @@ import { TransportistaComponent } from './entregas/transportista/transportista.c
 import { VehiculoTransporteComponent } from './entregas/vehiculo-transporte/vehiculo-transporte.component';
 
 //Módulo de Compras
-import { ProveedorComponent } from './compras/proveedor/proveedor.component';
+import { ProveedorComponent, DialogoMapaProveedorComponent } from './compras/proveedor/proveedor.component';
 import { FacturaCompraComponent } from './compras/factura-compra/factura-compra.component';
 import { PagoCompraComponent } from './compras/pago-compra/pago-compra.component';
+import { GrupoProveedorComponent } from './compras/grupo-proveedor/grupo-proveedor.component';
 
 //Módulo de Contabilidad
 import { ContabilizacionComponent } from './contabilidad/contabilizacion/contabilizacion.component';
@@ -81,13 +82,14 @@ import { PuntoVentaComponent } from './usuarios/punto-venta/punto-venta.componen
 import { PerfilComponent } from './usuarios/perfil/perfil.component';
 
 //Módulo de Configuraciones
-import { EmpresaComponent } from './configuraciones/empresa/empresa.component';
+import { EmpresaComponent, DialogoMapaEmpresaComponent } from './usuarios/empresa/empresa.component';
 import { UbicacionComponent } from './configuraciones/ubicacion/ubicacion.component';
 
 // Otros - borrar al final
 import { DashboardComponent } from './componentes/pages/dashboard/dashboard.component';
 import { TablesComponent } from './componentes/pages/tables/tables.component';
 import { FormsComponent } from './componentes/pages/forms/forms.component';
+import { MapsComponent } from './componentes/pages/maps/maps.component';
 import { TypographyComponent } from './componentes/pages/typography/typography.component';
 import { TipoRetencionComponent } from './configuraciones/tipo-retencion/tipo-retencion.component';
 
@@ -121,7 +123,7 @@ const routes: Routes = [
   { path: 'inventario/medida', component: MedidaComponent },
   { path: 'inventario/grupoproducto', component: GrupoProductoComponent },
   { path: 'promocion', component: PromocionComponent },
-  { path: 'inventario/tablaequivalenciamedida', component: EquivalenciaMedidaComponent },
+  { path: 'inventario/equivalenciamedida', component: EquivalenciaMedidaComponent },
   // Rutas para el modulo de entregas
   { path: 'entrega', component: EntregaComponent },
   { path: 'cliente/vehiculotransporte', component: VehiculoTransporteComponent },
@@ -135,21 +137,16 @@ const routes: Routes = [
   // Estos no se usa, borrar al final
   { path: 'dashboard', component: DashboardComponent },
   { path: 'forms', component: FormsComponent },
+  { path: 'maps', component: MapsComponent },
   { path: 'tables', component: TablesComponent },
   { path: 'typography', component: TypographyComponent },
   { path: 'proforma', component: ProformaComponent },
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes, { relativeLinkResolution: 'legacy' })],
-  exports: [RouterModule],
-  entryComponents: [DialogoMovimientoContableComponent,
-    DialogoGrupoProductoComponent, CambioCredencialesComponent, UsuarioComponent, PuntoVentaComponent, TipoRetencionComponent,
-    EstablecimientoComponent, ClienteComponent, GrupoClienteComponent, CalificacionClienteComponent, EstadoCivilComponent,
-    GeneroComponent, OrigenIngresoComponent, PlazoCreditoComponent, FormaPagoComponent, TipoPagoComponent, BodegaComponent,
-    DialogComponente, EquivalenciaMedidaComponent, MedidaComponent, FacturaComponent, ProformaComponent, ImportarComponent, ExportarComponent
-  ],
-  bootstrap: [ProformaComponent],
+    imports: [RouterModule.forRoot(routes, { relativeLinkResolution: 'legacy' })],
+    exports: [RouterModule],
+    bootstrap: [ProformaComponent]
 })
 export class AppRoutingModule { }
 export const RoutingComponents = [
@@ -166,6 +163,7 @@ export const RoutingComponents = [
   CambioCredencialesComponent,
   // Clientes
   ClienteComponent,
+  DialogoMapaComponent,
   SegmentoComponent,
   GrupoClienteComponent,
   PlazoCreditoComponent,
@@ -212,8 +210,10 @@ export const RoutingComponents = [
   ProformaComponent,
   // Compras
   ProveedorComponent,
+  DialogoMapaProveedorComponent,
   FacturaCompraComponent,
   PagoCompraComponent,
+  GrupoProveedorComponent,
   // Contabilidad
   ContabilizacionComponent,
   CuentaContableComponent,
@@ -228,11 +228,13 @@ export const RoutingComponents = [
   PerfilComponent,
   // configuración
   EmpresaComponent,
+  DialogoMapaEmpresaComponent,
   TipoRetencionComponent,
   UbicacionComponent,
   //otros
   DashboardComponent,
   TablesComponent,
   FormsComponent,
+  MapsComponent,
   TypographyComponent
 ];

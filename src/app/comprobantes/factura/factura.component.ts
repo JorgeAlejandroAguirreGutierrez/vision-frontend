@@ -1,6 +1,6 @@
 import { Router } from '@angular/router';
 import { Component, HostListener, OnInit, ViewChild } from '@angular/core';
-import { FormControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormControl, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatStepper } from '@angular/material/stepper';
@@ -54,15 +54,15 @@ export class FacturaComponent implements OnInit {
   seleccionDependiente: boolean =false;
   seleccionFacturar: boolean =false;
 
-  firstFormGroup: FormGroup;
-  secondFormGroup: FormGroup;
-  thirdFormGroup: FormGroup;
+  firstFormGroup: UntypedFormGroup;
+  secondFormGroup: UntypedFormGroup;
+  thirdFormGroup: UntypedFormGroup;
 
-  seleccionProducto = new FormControl();
-  seleccionIdentificacionCliente = new FormControl();
-  seleccionRazonSocialCliente = new FormControl();
-  seleccionIdentificacionClienteFactura = new FormControl();
-  seleccionRazonSocialClienteFactura = new FormControl();
+  seleccionProducto = new UntypedFormControl();
+  seleccionIdentificacionCliente = new UntypedFormControl();
+  seleccionRazonSocialCliente = new UntypedFormControl();
+  seleccionIdentificacionClienteFactura = new UntypedFormControl();
+  seleccionRazonSocialClienteFactura = new UntypedFormControl();
 
   filtroProductos: Observable<Producto[]> = new Observable<Producto[]>();
   filtroIdentificacionClientes: Observable<Cliente[]> = new Observable<Cliente[]>();
@@ -94,7 +94,7 @@ export class FacturaComponent implements OnInit {
     private impuestoService: ImpuestoService, private facturaDetalleService: FacturaDetalleService, private router: Router,
     private facturaService: FacturaService, private facturacionElectronicaService: FacturacionElectronicaService,
     private productoService: ProductoService, private bodegaService: BodegaService, private tabService: TabService,
-    private modalService: NgbModal, private _formBuilder: FormBuilder) { }
+    private modalService: NgbModal, private _formBuilder: UntypedFormBuilder) { }
 
   factura: Factura = new Factura();
   dependienteBuscar: Dependiente=new Dependiente();
@@ -163,24 +163,24 @@ export class FacturaComponent implements OnInit {
     this.consultarImpuestos();
     this.consultarBodegas();
 
-    this.firstFormGroup = new FormGroup({
-      firstCtrl: new FormControl()
+    this.firstFormGroup = new UntypedFormGroup({
+      firstCtrl: new UntypedFormControl()
     });
 
     this.firstFormGroup = this._formBuilder.group({
       firstCtrl: ['', Validators.required]
     });
 
-    this.secondFormGroup = new FormGroup({
-      secondCtrl: new FormControl()
+    this.secondFormGroup = new UntypedFormGroup({
+      secondCtrl: new UntypedFormControl()
     });
 
     this.secondFormGroup = this._formBuilder.group({
       secondCtrl: ['', Validators.required]
     });
 
-    this.thirdFormGroup = new FormGroup({
-      thirdCtrl: new FormControl()
+    this.thirdFormGroup = new UntypedFormGroup({
+      thirdCtrl: new UntypedFormControl()
     });
 
     this.thirdFormGroup = this._formBuilder.group({

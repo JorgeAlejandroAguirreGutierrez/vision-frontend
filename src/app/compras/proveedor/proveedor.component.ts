@@ -1,11 +1,13 @@
 import { Component, OnInit, HostListener, Type, ViewChild, Inject, ɵConsole } from '@angular/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MapInfoWindow, MapMarker } from '@angular/google-maps';
 import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
 import Swal from 'sweetalert2';
 import { valores, validarSesion, otras, tabs, tab_activo, exito, exito_swal, error, error_swal } from '../../constantes';
 import { Router } from '@angular/router'; 
 import { environment } from '../../../environments/environment';
-import { Empresa } from '../../modelos/configuracion/empresa';
+
+import { Empresa } from '../../modelos/usuario/empresa';
 import { EmpresaService } from '../../servicios/configuracion/empresa.service';
 import { Sesion } from '../../modelos/usuario/sesion';
 import { SesionService } from '../../servicios/usuario/sesion.service';
@@ -44,8 +46,8 @@ import { TipoPago } from '../../modelos/cliente/tipo-pago';
 import { TipoPagoService } from '../../servicios/cliente/tipo-pago.service';
 import { TipoRetencion } from '../../modelos/configuracion/tipo-retencion';
 import { TipoRetencionService } from '../../servicios/configuracion/tipo-retencion.service';
-import { Proveedor } from '../../modelos/proveedor/proveedor';
-import { ProveedorService } from '../../servicios/proveedor/proveedor.service';
+import { Proveedor } from '../../modelos/compra/proveedor';
+import { ProveedorService } from '../../servicios/compra/proveedor.service';
 
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
@@ -130,12 +132,20 @@ export class ProveedorComponent implements OnInit {
   value = 'Clear me';
 
   //Mapa
-  latitud: number = -1.6705413480437092; //Tomar de configuación y poner en el init
-  longitud: number = -78.64974203645144;
-  ubicacionCentral: Coordenada = new Coordenada(this.latitud, this.longitud);
-  ubicacionGeografica: Coordenada;
-  mapTypeId: string = 'hybrid';
-  coordenadas: Coordenada[] = [];
+  latitud: number = valores.latCiudad; //Tomar de configuación y poner en el init
+  longitud: number = valores.lngCiudad;
+  posicionCentral: Coordenada = new Coordenada(this.latitud, this.longitud);
+  posicionGeografica: Coordenada;
+  //mapTypeId: string = 'hybrid';
+  //coordenadas: Coordenada[] = [];
+  options: google.maps.MapOptions = {
+    mapTypeId: 'hybrid',
+    zoomControl: true,
+    scrollwheel: true,
+    disableDoubleClickZoom: false,
+    maxZoom: 20,
+    minZoom: 12,
+  };
 
   columnasProveedor: any[] = [
     { nombreColumna: 'id', cabecera: 'ID', celda: (row: Proveedor) => `${row.id}`},
@@ -175,31 +185,6 @@ export class ProveedorComponent implements OnInit {
         console.log('SHIFT + A');
     }
   
-  validar_sesion() {
-    this.sesion = this.sesionService.getSesion();
-    if (this.sesion == undefined)
-      this.router.navigate(['/iniciosesion']);
-  }
-
-  obtener_sesion() {
-    this.sesion = this.sesionService.getSesion();
-  }
-
-  obtenerEmpresa() {
-    let empresa = new Empresa();
-    empresa.id = 1;
-    this.empresaService.obtener(empresa.id).subscribe({
-      next:(res) => {
-        empresa = res.resultado as Empresa
-        this.urlLogo = environment.prefijoUrlImagenes + "logos/" + empresa.logo;
-        this.nombreEmpresa = empresa.razonSocial;
-      },
-      error:(err) => {
-        Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.message });
-      }
-    });
-  }
-
   ngOnInit() {
     this.proveedor = new Proveedor();
     this.validar_sesion();
@@ -325,6 +310,66 @@ export class ProveedorComponent implements OnInit {
         this.tiposRetencionesRentaServicio = res.resultado as TipoRetencion[]
       },
       error: err => {
+        Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.message });
+      }
+    });
+  }
+
+  validar_sesion() {
+    this.sesion = this.sesionService.getSesion();
+    if (this.sesion == undefined)
+      this.router.navigate(['/iniciosesion']);
+  }
+
+  obtener_sesion() {
+    this.sesion = this.sesionService.getSesion();
+  }
+
+  obtenerEmpresa() {
+    let empresa = new Empresa();
+    empresa.id = 1;
+    this.empresaService.obtener(empresa.id).subscribe({
+      next:(res) => {
+        empresa = res.resultado as Empresa
+        this.urlLogo = environment.prefijoUrlImagenes + "logos/" + empresa.logo;
+        this.nombreEmpresa = empresa.razonSocial;
+      },
+      error:(err) => {
+        Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.message });
+      }
+    });
+  }
+
+  
+  validarIdentificacion() {
+    this.proveedorService.obtenerIdentificacion(this.proveedor.identificacion).subscribe({
+      next: res => {
+        this.proveedorService.validarIdentificacion(this.proveedor.identificacion).subscribe({
+          next: res => {
+            console.log(res.resultado);
+            this.proveedor.tipoIdentificacion = res.resultado.tipo_identificacion;
+            this.proveedor.tipoContribuyente = res.resultado.tipo_contribuyente as TipoContribuyente
+            if (this.proveedor.tipoContribuyente == null) {
+              this.habilitarTipoContribuyente = true;
+            } else {
+              this.proveedor.tipoContribuyente = this.obtenerTipoContribuyente();
+            }
+            this.proveedor.segmento.id = 1;
+            this.proveedor.grupoProveedor.id = 1;
+            this.proveedor.financiamiento.formaPago.id = 1;
+            this.cambiarFormaPago();
+            this.validarSexoEstadoCivilOrigenIngreso();
+          },
+          error: err => {
+            this.proveedor.tipoIdentificacion = valores.vacio;
+            this.proveedor.tipoContribuyente = new TipoContribuyente();
+            Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.message });
+          }
+        });
+      },
+      error: err => {
+        this.proveedor.tipoIdentificacion = valores.vacio;
+        this.proveedor.tipoContribuyente = new TipoContribuyente();
         Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.message });
       }
     });
@@ -634,38 +679,6 @@ export class ProveedorComponent implements OnInit {
     this.canton(this.proveedorCanton);
   }
 
-  validarIdentificacion() {
-    this.proveedorService.obtenerIdentificacion(this.proveedor.identificacion).subscribe({
-      next: res => {
-        this.proveedorService.validarIdentificacion(this.proveedor.identificacion).subscribe({
-          next: res => {
-            this.proveedor.tipoIdentificacion = res.resultado.tipo_identificacion;
-            this.proveedor.tipoContribuyente = res.resultado.tipo_contribuyente as TipoContribuyente
-            if (this.proveedor.tipoContribuyente == null) {
-              this.habilitarTipoContribuyente = true;
-            } else {
-              this.proveedor.tipoContribuyente = this.obtenerTipoContribuyente();
-            }
-            this.proveedor.segmento.id = 1;
-            this.proveedor.grupoProveedor.id = 1;
-            this.proveedor.financiamiento.formaPago.id = 1;
-            this.cambiarFormaPago();
-            this.validarSexoEstadoCivilOrigenIngreso();
-          },
-          error: err => {
-            this.proveedor.tipoIdentificacion = valores.vacio;
-            this.proveedor.tipoContribuyente = new TipoContribuyente();
-            Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.message });
-          }
-        });
-      },
-      error: err => {
-        this.proveedor.tipoIdentificacion = valores.vacio;
-        this.proveedor.tipoContribuyente = new TipoContribuyente();
-        Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.message });
-      }
-    });
-  }
 
   validarTipoContribuyente() {
     this.proveedor.tipoContribuyente = this.tiposContribuyentes[this.indiceTipoContribuyente];
@@ -703,7 +716,7 @@ export class ProveedorComponent implements OnInit {
     }
   }
   validarTelefono() {
-    let digito = this.telefono.numero.substr(0, 1);
+    let digito = this.telefono.numero.substring(0, 1);
     if (this.telefono.numero.length != 11 || digito != "0") {
       this.telefono.numero = valores.vacio;
       Swal.fire(error, "Telefono Invalido", error_swal);
@@ -722,7 +735,7 @@ export class ProveedorComponent implements OnInit {
       }
   }
   validarCelular() {
-    let digito = this.celular.numero.substr(0, 2);
+    let digito = this.celular.numero.substring(0, 2);
     if (this.celular.numero.length != 12 || digito != "09") {
       this.celular.numero = valores.vacio;
       Swal.fire(error, "Celular Invalido", error_swal);
@@ -762,7 +775,7 @@ export class ProveedorComponent implements OnInit {
     }
   }
   validarTelefonoDependiente() {
-    let digito = this.dependienteTelefono.numero.substr(0, 1);
+    let digito = this.dependienteTelefono.numero.substring(0, 1);
     if (this.dependienteTelefono.numero.length != 11 || digito != "0") {
       this.dependienteTelefono.numero = "";
       Swal.fire(error, "Telefono Invalido", error_swal);
@@ -785,7 +798,7 @@ export class ProveedorComponent implements OnInit {
     }
   }
   validarCelularDependiente() {
-    let digito = this.dependienteCelular.numero.substr(0, 2);
+    let digito = this.dependienteCelular.numero.substring(0, 2);
     if (this.dependienteCelular.numero.length != 12 || digito != "09") {
       this.dependienteCelular.numero = "";
       Swal.fire(error, "Celular Invalido", error_swal);
@@ -913,5 +926,60 @@ export class ProveedorComponent implements OnInit {
       },
       err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.message })
     );
+  }
+
+  openInfoWindow(marker: MapMarker, infoWindow: MapInfoWindow) {
+    infoWindow.open(marker);
+  }
+
+  dialogoMapas(): void {
+    //console.log('El dialogo para selección de grupo producto fue abierto');
+    const dialogRef = this.dialog.open(DialogoMapaProveedorComponent, {
+      width: '80%',
+      // Para enviar datos
+      //data: { usuario: this.usuario, clave: this.clave, grupo_producto_recibido: "" }
+      data: this.posicionGeografica as Coordenada
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      //console.log('El dialogo para selección de coordenada fue cerrado');
+      console.log(result);
+      if (result) {
+        this.posicionGeografica = result as Coordenada;
+        this.posicionCentral = this.posicionGeografica;
+       //console.log(result);
+      }
+    });
+  }
+
+}
+
+@Component({
+  selector: 'dialogo-mapa-proveedor',
+  templateUrl: 'dialogo-mapa-proveedor.component.html',
+})
+export class DialogoMapaProveedorComponent {
+
+  mapa: string[] = [];
+
+  constructor(
+    public dialogRef: MatDialogRef<DialogoMapaProveedorComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: Coordenada) { }
+
+  onNoClick(): void {
+    this.dialogRef.close();
+    //console.log('El dialogo para selección de coordenada fue cancelado');
+    this.data = new Coordenada(0,0);
+  }
+
+  coordenadaSeleccionada(event: any) {
+    //console.log(event);
+    if (event && event.latitud != 0) {
+      this.data = event as Coordenada;
+      //this.producto.grupo_producto = grupoProductoRecibido;
+      console.log(this.data);
+    } else {
+      this.data = new Coordenada(0,0);
+    }
   }
 }

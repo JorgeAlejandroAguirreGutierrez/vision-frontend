@@ -1,5 +1,5 @@
 import { Component, OnInit, Type, Inject } from '@angular/core';
-import { FormControl, FormArray, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormControl, UntypedFormArray, UntypedFormGroup, Validators } from '@angular/forms';
 import { BehaviorSubject } from 'rxjs';
 import Swal from 'sweetalert2';
 import { valores, mensajes, validarSesion, exito, exito_swal, error, error_swal, warning, warning_swal, si_seguro } from '../../constantes';
@@ -26,7 +26,7 @@ import { Kardex } from '../../modelos/inventario/kardex';
 import { MedidaPrecio } from '../../modelos/inventario/medida-precio';
 import { EquivalenciaMedidaService } from '../../servicios/inventario/equivalencia-medida.service';
 import { EquivalenciaMedida } from '../../modelos/inventario/equivalencia-medida'
-import { Proveedor } from '../../modelos/proveedor/proveedor';
+import { Proveedor } from '../../modelos/compra/proveedor';
 import { Bodega } from '../../modelos/inventario/bodega';
 import { ProductoBodega } from '../../modelos/inventario/producto-bodega';
 
@@ -87,9 +87,9 @@ export class ProductoComponent implements OnInit {
   medidasEquivalentes: EquivalenciaMedida[] = [];
 
   //Validacion de formulario
-  formKardexInicial = new FormGroup({
-    controlSaldoInicial: new FormControl('', [Validators.required]),
-    controlCostoTotal: new FormControl('', [Validators.required])
+  formKardexInicial = new UntypedFormGroup({
+    controlSaldoInicial: new UntypedFormControl('', [Validators.required]),
+    controlCostoTotal: new UntypedFormControl('', [Validators.required])
   });
   get controlSaldoInicial(): any {
     return this.formKardexInicial.get('controlSaldoInicial');
@@ -108,7 +108,7 @@ export class ProductoComponent implements OnInit {
 
   observablePrecios: BehaviorSubject<Precio[]> = new BehaviorSubject<Precio[]>([]);
   datos: any = [];
-  controls: FormArray[] = [];
+  controls: UntypedFormArray[] = [];
 
   columnasProducto: any[] = [
     { nombreColumna: 'id', cabecera: 'ID', celda: (row: Producto) => `${row.id}` },
@@ -116,7 +116,7 @@ export class ProductoComponent implements OnInit {
     { nombreColumna: 'nombre', cabecera: 'Nombre', celda: (row: Producto) => `${row.nombre}` },
     { nombreColumna: 'medidaKardex', cabecera: 'Medida Kardex', celda: (row: Producto) => `${row.medidaKardex.descripcion}` },
     { nombreColumna: 'categoriaProducto', cabecera: 'Categoria', celda: (row: Producto) => `${row.categoriaProducto.descripcion}` },
-    { nombreColumna: 'tipoGasto', cabecera: 'Tipo Gasto', celda: (row: Producto) => `${row.tipoGasto.nombre}` },
+    { nombreColumna: 'tipoGasto', cabecera: 'Tipo Gasto', celda: (row: Producto) => `${row.tipoGasto.descripcion}` },
     { nombreColumna: 'estado', cabecera: 'Estado', celda: (row: Producto) => `${row.estado}` }
   ];
   cabeceraProducto: string[] = this.columnasProducto.map(titulo => titulo.nombreColumna);
@@ -304,7 +304,7 @@ export class ProductoComponent implements OnInit {
   llenarDataSourceProducto(productos: Producto[]) {
     this.dataSourceProducto = new MatTableDataSource(productos);
     this.dataSourceProducto.filterPredicate = (data: Producto, filter: string): boolean =>
-      data.codigo.toUpperCase().includes(filter) || data.nombre.toUpperCase().includes(filter) || data.tipoGasto.nombre.toUpperCase().includes(filter) ||
+      data.codigo.toUpperCase().includes(filter) || data.nombre.toUpperCase().includes(filter) || data.tipoGasto.descripcion.toUpperCase().includes(filter) ||
       data.categoriaProducto.descripcion.toUpperCase().includes(filter) || data.estado.toUpperCase().includes(filter);
     this.dataSourceProducto.paginator = this.paginator;
     this.dataSourceProducto.paginator.firstPage();
@@ -360,7 +360,7 @@ export class ProductoComponent implements OnInit {
     this.kardexFinal.costoPromedio = kardex[ultimoKardex].costoPromedio;
     this.kardexFinal.costoTotal = kardex[ultimoKardex].costoTotal;
     // Esta linea da problemas, hay que eliminar proveedor de kardex
-    this.producto.kardexs[0].proveedor = new Proveedor;
+    //this.producto.kardexs[0].proveedor = new Proveedor;
   }
 
   deshabilitarMedidaKardex() {
@@ -586,8 +586,8 @@ export class ProductoComponent implements OnInit {
       Swal.fire(error, mensajes.error_medida, error_swal);
       return;
     }
-    this.llenarTablaPrecios(this.medidaEquivalenteSeleccionada.medida2);
-    this.eliminarMedidaEquivalente(this.medidaEquivalenteSeleccionada.medida2);
+    this.llenarTablaPrecios(this.medidaEquivalenteSeleccionada.medidaEqui);
+    this.eliminarMedidaEquivalente(this.medidaEquivalenteSeleccionada.medidaEqui);
   }
  
   eliminarMedidaPrecio(i: number){
@@ -603,24 +603,24 @@ export class ProductoComponent implements OnInit {
 
   activarControles(i: number) {
     const toGroups = this.datos[i].value.map((entity:any) => {
-      return new FormGroup({
-        margenGanancia: new FormControl(entity.margenGanancia, Validators.required),
-        precioVentaPublicoManual: new FormControl(entity.precioVentaPublicoManual, Validators.required),
+      return new UntypedFormGroup({
+        margenGanancia: new UntypedFormControl(entity.margenGanancia, Validators.required),
+        precioVentaPublicoManual: new UntypedFormControl(entity.precioVentaPublicoManual, Validators.required),
       }, { updateOn: "blur" });
       
     });
-    this.controls.push(new FormArray(toGroups));
+    this.controls.push(new UntypedFormArray(toGroups));
   }
 
   actualizarControles(i: number) {
     const toGroups = this.datos[i].value.map((entity:any) => {
-      return new FormGroup({
-        margenGanancia: new FormControl(entity.margenGanancia, Validators.required),
-        precioVentaPublicoManual: new FormControl(entity.precioVentaPublicoManual, Validators.required),
+      return new UntypedFormGroup({
+        margenGanancia: new UntypedFormControl(entity.margenGanancia, Validators.required),
+        precioVentaPublicoManual: new UntypedFormControl(entity.precioVentaPublicoManual, Validators.required),
       }, { updateOn: "blur" });
       
     });
-    this.controls[i]=(new FormArray(toGroups));
+    this.controls[i]=(new UntypedFormArray(toGroups));
   }
 
   actualizarCalculosPrecios(i: number, index: number, field: string) {
@@ -632,7 +632,7 @@ export class ProductoComponent implements OnInit {
   }
 
   getControl(i: number, index: number, fieldName: string) {
-    const a = this.controls[i].at(index).get(fieldName) as FormControl;
+    const a = this.controls[i].at(index).get(fieldName) as UntypedFormControl;
     return a;
   }
 
@@ -695,7 +695,7 @@ export class ProductoComponent implements OnInit {
 
   eliminarMedidaEquivalente(medidaAgregada: Medida) {
     for (let i = 0; i < this.medidasEquivalentes.length; i++) {
-      if (this.medidasEquivalentes[i].medida2.id == medidaAgregada.id) {
+      if (this.medidasEquivalentes[i].medidaEqui.id == medidaAgregada.id) {
         this.medidasEquivalentes.splice(i, 1);
       }
     }
@@ -704,7 +704,7 @@ export class ProductoComponent implements OnInit {
   actualizarMedidasEquivalentes() {
     for (let i = 0; i < this.medidasPrecios.length; i++) {
       for (let j = 0; j < this.medidasEquivalentes.length; j++) {
-        if (this.medidasEquivalentes[j].medida2.id == this.medidasPrecios[i].medida.id) {
+        if (this.medidasEquivalentes[j].medidaEqui.id == this.medidasPrecios[i].medida.id) {
           this.medidasEquivalentes.splice(j, 1);
         }
       }

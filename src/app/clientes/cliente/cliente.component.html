@@ -131,158 +131,177 @@
             </mat-expansion-panel-header>
             <hr>
             <div class="form-group form-row">
-                <div class="col-9">
-                    <mat-form-field appearance="standard">
-                        <mat-label>Direccion</mat-label>
-                        <input matInput type="text" [(ngModel)]="cliente.direccion.direccion"
-                            oninput="this.value = this.value.toUpperCase()" class="form-control-sm">
-                        <button mat-button *ngIf="cliente.direccion.direccion" matSuffix mat-icon-button
-                            (click)="cliente.direccion.direccion=''">
-                            <mat-icon>close</mat-icon>
-                        </button>
-                    </mat-form-field>
-                </div>
-                <div class="col-1">
-                    <mat-checkbox [(ngModel)]="dirEstablecida">Act.</mat-checkbox>
-                </div>
-                <div class="col-4">
-                    <mat-form-field appearance="standard">
-                        <mat-label>Provincia</mat-label>
-                        <mat-select type="text" [(ngModel)]="clienteProvincia"
-                            (selectionChange)="provincia($event.value)" class="form-control-sm">
-                            <mat-option *ngFor="let provincia of provincias" [value]="provincia.provincia">
-                                {{provincia.provincia}}
-                            </mat-option>
-                        </mat-select>
-                    </mat-form-field>
-                </div>
-                <div class="col-4">
-                    <mat-form-field appearance="standard">
-                        <mat-label>Canton</mat-label>
-                        <mat-select type="text" [(ngModel)]="clienteCanton" (selectionChange)="canton($event.value)"
-                            class="form-control-sm">
-                            <mat-option *ngFor="let canton of cantones" [value]="canton.canton">
-                                {{canton.canton}}
-                            </mat-option>
-                        </mat-select>
-                    </mat-form-field>
-                </div>
-                <div class="col-4">
-                    <mat-form-field appearance="standard">
-                        <mat-label>Parroquia</mat-label>
-                        <mat-select type="text" [(ngModel)]="clienteParroquia" class="form-control-sm"
-                            (selectionChange)="parroquia($event.value)">
-                            <mat-option *ngFor="let parroquia of parroquias" [value]="parroquia.parroquia">
-                                {{parroquia.parroquia}}
-                            </mat-option>
-                        </mat-select>
-                    </mat-form-field>
-                </div>
-                <section class="form-row">
-                    <div class="form-row col-4">
-                        <div class="col-9">
-                            <mat-form-field appearance="standard">
-                                <mat-label>Teléfono</mat-label>
-                                <b matPrefix>+593 &nbsp;</b>
-                                <input matInput type="tel" [(ngModel)]="telefono.numero" class="form-control-sm"
-                                    (change)="validarTelefono()" placeholder="03-2999-123" oninput="this.value = this.value.replace
-                                        ( /^(\d{2})(\d{4})(\d{3})$/, '$1-$2-$3')">
-                            </mat-form-field>
-                        </div>
-                        <div class="col-3 iconos">
-                            <button mat-icon-button>
-                                <mat-icon (click)="crearTelefono()">add</mat-icon>
+                <div class="form-row col-8 mr-0">
+                    <div class="col-11">
+                        <mat-form-field appearance="standard">
+                            <mat-label>Direccion</mat-label>
+                            <input matInput type="text" [(ngModel)]="cliente.direccion.direccion"
+                                oninput="this.value = this.value.toUpperCase()" class="form-control-sm">
+                            <button mat-button *ngIf="cliente.direccion.direccion" matSuffix mat-icon-button
+                                (click)="cliente.direccion.direccion=''">
+                                <mat-icon>close</mat-icon>
                             </button>
-                        </div>
-                        <ng-container *ngFor="let telefono of cliente.telefonos; let i=index ">
+                        </mat-form-field>
+                    </div>
+                    <div class="col-1">
+                        <mat-checkbox [(ngModel)]="dirEstablecida">Act.</mat-checkbox>
+                    </div>
+                    <div class="col-4">
+                        <mat-form-field appearance="standard">
+                            <mat-label>Provincia</mat-label>
+                            <mat-select type="text" [(ngModel)]="clienteProvincia"
+                                (selectionChange)="provincia($event.value)" class="form-control-sm">
+                                <mat-option *ngFor="let provincia of provincias" [value]="provincia.provincia">
+                                    {{provincia.provincia}}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                    <div class="col-4">
+                        <mat-form-field appearance="standard">
+                            <mat-label>Canton</mat-label>
+                            <mat-select type="text" [(ngModel)]="clienteCanton" (selectionChange)="canton($event.value)"
+                                class="form-control-sm">
+                                <mat-option *ngFor="let canton of cantones" [value]="canton.canton">
+                                    {{canton.canton}}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                    <div class="col-4">
+                        <mat-form-field appearance="standard">
+                            <mat-label>Parroquia</mat-label>
+                            <mat-select type="text" [(ngModel)]="clienteParroquia" class="form-control-sm"
+                                (selectionChange)="parroquia($event.value)">
+                                <mat-option *ngFor="let parroquia of parroquias" [value]="parroquia.parroquia">
+                                    {{parroquia.parroquia}}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                    <section class="form-row">
+                        <div class="form-row col-4">
                             <div class="col-9">
                                 <mat-form-field appearance="standard">
                                     <mat-label>Teléfono</mat-label>
                                     <b matPrefix>+593 &nbsp;</b>
-                                    <input matInput type="tel" [value]="telefono.numero" class="form-control-sm"
-                                        disabled (change)="validarTelefono()" placeholder="03-2999-123" oninput="this.value = this.value.replace
+                                    <input matInput type="tel" [(ngModel)]="telefono.numero" class="form-control-sm"
+                                        (change)="validarTelefono()" placeholder="03-2999-123" oninput="this.value = this.value.replace
                                         ( /^(\d{2})(\d{4})(\d{3})$/, '$1-$2-$3')">
                                 </mat-form-field>
                             </div>
                             <div class="col-3 iconos">
                                 <button mat-icon-button>
-                                    <mat-icon class="iconos-peque">edit</mat-icon>
-                                </button>
-                                <button mat-icon-button>
-                                    <mat-icon class="iconos-peque" (click)="eliminarTelefono(i)">close</mat-icon>
+                                    <mat-icon (click)="crearTelefono()">add</mat-icon>
                                 </button>
                             </div>
-                        </ng-container>
-                    </div>
-                    <div class="form-row col-4">
-                        <div class="col-9">
-                            <mat-form-field appearance="standard">
-                                <mat-label>Celular</mat-label>
-                                <b matPrefix>+593 </b>
-                                <input matInput type="tel" [(ngModel)]="celular.numero" class="form-control-sm"
-                                    (change)="validarCelular()" placeholder="09-9999-1234" oninput="this.value = this.value.replace
-                                            ( /^(\d{2})(\d{4})(\d{4})$/, '$1-$2-$3')">
-                            </mat-form-field>
+                            <ng-container *ngFor="let telefono of cliente.telefonos; let i=index ">
+                                <div class="col-9">
+                                    <mat-form-field appearance="standard">
+                                        <mat-label>Teléfono</mat-label>
+                                        <b matPrefix>+593 &nbsp;</b>
+                                        <input matInput type="tel" [value]="telefono.numero" class="form-control-sm"
+                                            disabled (change)="validarTelefono()" placeholder="03-2999-123" oninput="this.value = this.value.replace
+                                        ( /^(\d{2})(\d{4})(\d{3})$/, '$1-$2-$3')">
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-3 iconos">
+                                    <button mat-icon-button>
+                                        <mat-icon class="iconos-peque">edit</mat-icon>
+                                    </button>
+                                    <button mat-icon-button>
+                                        <mat-icon class="iconos-peque" (click)="eliminarTelefono(i)">close</mat-icon>
+                                    </button>
+                                </div>
+                            </ng-container>
                         </div>
-                        <div class="col-3 iconos">
-                            <button mat-icon-button>
-                                <mat-icon (click)="crearCelular()">add</mat-icon>
-                            </button>
-                        </div>
-                        <ng-container *ngFor="let celular of cliente.celulares; let i=index ">
+                        <div class="form-row col-4">
                             <div class="col-9">
                                 <mat-form-field appearance="standard">
                                     <mat-label>Celular</mat-label>
-                                    <b matPrefix>+593 &nbsp;</b>
-                                    <input matInput type="tel" [value]="celular.numero" class="form-control-sm" disabled
+                                    <b matPrefix>+593 </b>
+                                    <input matInput type="tel" [(ngModel)]="celular.numero" class="form-control-sm"
                                         (change)="validarCelular()" placeholder="09-9999-1234" oninput="this.value = this.value.replace
-                                        ( /^(\d{2})(\d{4})(\d{4})$/, '$1-$2-$3')">
+                                            ( /^(\d{2})(\d{4})(\d{4})$/, '$1-$2-$3')">
                                 </mat-form-field>
                             </div>
                             <div class="col-3 iconos">
                                 <button mat-icon-button>
-                                    <mat-icon class="iconos-peque">edit</mat-icon>
-                                </button>
-                                <button mat-icon-button>
-                                    <mat-icon class="iconos-peque" (click)="eliminarCelular(i)">close</mat-icon>
+                                    <mat-icon (click)="crearCelular()">add</mat-icon>
                                 </button>
                             </div>
-                        </ng-container>
-                    </div>
-                    <div class="form-row col-4">
-                        <div class="col-9">
-                            <mat-form-field appearance="standard">
-                                <mat-label>Correo electrónico</mat-label>
-                                <input matInput type="text " [(ngModel)]="correo.email"
-                                    oninput="this.value = this.value.toUpperCase()" class="form-control-sm "
-                                    (change)="validarCorreo()" placeholder="ejemplo@siice.com">
-                            </mat-form-field>
+                            <ng-container *ngFor="let celular of cliente.celulares; let i=index ">
+                                <div class="col-9">
+                                    <mat-form-field appearance="standard">
+                                        <mat-label>Celular</mat-label>
+                                        <b matPrefix>+593 &nbsp;</b>
+                                        <input matInput type="tel" [value]="celular.numero" class="form-control-sm"
+                                            disabled (change)="validarCelular()" placeholder="09-9999-1234" oninput="this.value = this.value.replace
+                                        ( /^(\d{2})(\d{4})(\d{4})$/, '$1-$2-$3')">
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-3 iconos">
+                                    <button mat-icon-button>
+                                        <mat-icon class="iconos-peque">edit</mat-icon>
+                                    </button>
+                                    <button mat-icon-button>
+                                        <mat-icon class="iconos-peque" (click)="eliminarCelular(i)">close</mat-icon>
+                                    </button>
+                                </div>
+                            </ng-container>
                         </div>
-                        <div class="col-3 iconos">
-                            <button mat-icon-button>
-                                <mat-icon (click)="crearCorreo()">add</mat-icon>
-                            </button>
-                        </div>
-                        <ng-container *ngFor="let correo of cliente.correos; let i=index ">
+                        <div class="form-row col-4">
                             <div class="col-9">
                                 <mat-form-field appearance="standard">
                                     <mat-label>Correo electrónico</mat-label>
                                     <input matInput type="text " [(ngModel)]="correo.email"
-                                        oninput="this.value = this.value.toUpperCase()" class="form-control-sm "
-                                        (change)="validarCorreo()" placeholder="ejemplo@futiristic.com">
+                                        oninput="this.value = this.value.toLowerCase()" class="form-control-sm "
+                                        (change)="validarCorreo()" placeholder="ejemplo@siice.com">
                                 </mat-form-field>
                             </div>
                             <div class="col-3 iconos">
                                 <button mat-icon-button>
-                                    <mat-icon class="iconos-peque">edit</mat-icon>
-                                </button>
-                                <button mat-icon-button>
-                                    <mat-icon class="iconos-peque" (click)="eliminarCorreo(i)">close</mat-icon>
+                                    <mat-icon (click)="crearCorreo()">add</mat-icon>
                                 </button>
                             </div>
-                        </ng-container>
-                    </div>
-                </section>
+                            <ng-container *ngFor="let correo of cliente.correos; let i=index ">
+                                <div class="col-9">
+                                    <mat-form-field appearance="standard">
+                                        <mat-label>Correo electrónico</mat-label>
+                                        <input matInput type="text " [(ngModel)]="correo.email"
+                                            oninput="this.value = this.value.toLowerCase()" class="form-control-sm "
+                                            (change)="validarCorreo()" placeholder="ejemplo@futiristic.com">
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-3 iconos">
+                                    <button mat-icon-button>
+                                        <mat-icon class="iconos-peque">edit</mat-icon>
+                                    </button>
+                                    <button mat-icon-button>
+                                        <mat-icon class="iconos-peque" (click)="eliminarCorreo(i)">close</mat-icon>
+                                    </button>
+                                </div>
+                            </ng-container>
+                        </div>
+                    </section>
+                </div>
+                <div class="col-4 text-center linea-vertical">
+                    <!--mat-label>Georeferencia</mat-label-->
+                    <mat-card title="Doble click para maximizar">
+                        <google-map width="100%" [height]="180" [center]="posicionCentralDireccion" [zoom]="15" [options]="options"
+                            (dblclick)="dialogoMapasDireccion()">
+                            <map-marker #markerDireccion="mapMarker" *ngIf="posicionGeograficaDireccion"
+                                [position]="posicionGeograficaDireccion" (mapClick)="openInfoWindow(markerDireccion, infoWindowDireccion)">
+                            </map-marker>
+                            <map-info-window #infoWindowDireccion="mapInfoWindow">
+                                <div>
+                                    <p>Latitud: {{ posicionGeograficaDireccion?.lat }}</p>
+                                    <p>Longitud: {{ posicionGeograficaDireccion?.lng }}</p>
+                                </div>
+                            </map-info-window>
+                        </google-map>
+                    </mat-card>
+                </div>
             </div>
         </mat-expansion-panel>
         <mat-expansion-panel (opened)="abrirPanelDependiente = true" (closed)="abrirPanelDependiente = false"
@@ -475,6 +494,34 @@
                             </ng-container>
                         </div>
                     </section>
+                </div>
+                <div class="form-row col-4 linea-vertical">
+                    <div class="col-11">
+                        <mat-card title="Doble click para maximizar">
+                            <google-map width="100%" [height]="180" [center]="posicionCentralDependiente" [zoom]="15" [options]="options"
+                                (dblclick)="dialogoMapasDependiente()">
+                                <map-marker #markerDependiente="mapMarker" *ngIf="posicionGeograficaDependiente"
+                                    [position]="posicionGeograficaDependiente" (mapClick)="openInfoWindow(markerDependiente, infoWindowDependiente)">
+                                </map-marker>
+                                <map-info-window #infoWindowDependiente="mapInfoWindow">
+                                    <div>
+                                        <p>Latitud: {{ posicionGeograficaDependiente?.lat }}</p>
+                                        <p>Longitud: {{ posicionGeograficaDependiente?.lng }}</p>
+                                    </div>
+                                </map-info-window>
+                            </google-map>
+                        </mat-card>
+                    </div>
+                    <div class="col-1 iconos linea-vertical centrar-vertical">
+                        <mat-icon (click)="agregarDependiente()">add</mat-icon>
+                    </div>
+                    <!--div class="col-2">
+                        <mat-label>Georeferencia</mat-label>
+                        <iframe class="img-responsive"
+                            src="https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d26828.783791134218!2d-78.64974203645144!3d-1.6705413480437092!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1ses-419!2sec!4v1582431206351!5m2!1ses-419!2sec"
+                            frameborder="0" style="border:0;" allowfullscreen="">
+                        </iframe>
+                    </div-->
                 </div>
             </div>
 

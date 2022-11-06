@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild, ElementRef, Renderer2 } from '@angular/core';
-import { FormControl } from '@angular/forms';
+import { UntypedFormControl } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { startWith, map } from 'rxjs/operators';
 import Swal from 'sweetalert2';
@@ -10,7 +10,7 @@ import { Bodega } from '../../modelos/inventario/bodega';
 import { BodegaService } from '../../servicios/inventario/bodega.service';
 import { ProductoBodega } from '../../modelos/inventario/producto-bodega';
 //Solo por el error
-import { Proveedor } from '../../modelos/proveedor/proveedor';
+import { Proveedor } from '../../modelos/compra/proveedor';
 
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
@@ -45,12 +45,12 @@ export class TransferenciaBodegaComponent implements OnInit {
 
   //Variables para los autocomplete
   productos: Producto[] = [];
-  controlProducto = new FormControl();
+  controlProducto = new UntypedFormControl();
   filtroProductos: Observable<Producto[]> = new Observable<Producto[]>();
 
   bodegas: Bodega[] = [];
   bodegasDestino: Bodega[] = [];
-  controlBodegaDestino = new FormControl();
+  controlBodegaDestino = new UntypedFormControl();
   filtroBodegasDestino: Observable<Bodega[]> = new Observable<Bodega[]>();
 
   @ViewChild("inputFiltroProductoBodega") inputFiltroProductoBodega: ElementRef;
@@ -113,7 +113,7 @@ export class TransferenciaBodegaComponent implements OnInit {
       return;
     }
     // Corregir este error
-    this.producto.kardexs[0].proveedor = new Proveedor;
+    //this.producto.kardexs[0].proveedor = new Proveedor;
     this.productoService.actualizar(this.producto).subscribe({
       next: (res) => {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });

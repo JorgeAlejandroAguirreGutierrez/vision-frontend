@@ -1,11 +1,13 @@
 import { Component, OnInit, HostListener, Type, ViewChild, Inject } from '@angular/core';
-import { MatDialog} from '@angular/material/dialog';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { MapInfoWindow, MapMarker } from '@angular/google-maps';
 import { Router } from '@angular/router'; 
 import Swal from 'sweetalert2';
 import { valores, mensajes, otras, tabs, validarSesion, tab_activo, exito, exito_swal, error, error_swal } from '../../constantes';
 import { environment } from '../../../environments/environment';
-import { Empresa } from '../../modelos/configuracion/empresa';
+
+import { Empresa } from '../../modelos/usuario/empresa';
 import { EmpresaService } from '../../servicios/configuracion/empresa.service';
 import { Sesion } from '../../modelos/usuario/sesion';
 import { SesionService } from '../../servicios/usuario/sesion.service';
@@ -48,8 +50,9 @@ import { TipoRetencionService } from '../../servicios/configuracion/tipo-retenci
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { TipoIdentificacion } from 'src/app/modelos/configuracion/tipo-identificacion';
-import { TipoIdentificacionService } from 'src/app/servicios/configuracion/tipo-identificacion.service';
+import { TipoIdentificacion } from '../../modelos/configuracion/tipo-identificacion';
+import { TipoIdentificacionService } from '../../servicios/configuracion/tipo-identificacion.service';
+//import { Content } from '@angular/compiler/src/render3/r3_ast';
 
 @Component({
   selector: 'app-cliente',
@@ -126,12 +129,22 @@ export class ClienteComponent implements OnInit {
   value = 'Clear me';
 
   //Mapa
-  latitud: number = -1.6705413480437092; //Tomar de configuación y poner en el init
-  longitud: number = -78.64974203645144;
-  ubicacionCentral: Coordenada = new Coordenada(this.latitud, this.longitud);
-  ubicacionGeografica: Coordenada;
-  mapTypeId: string = 'hybrid';
-  coordenadas: Coordenada[] = [];
+  latitud: number = valores.latCiudad; //Tomar de configuación y poner en el init
+  longitud: number = valores.lngCiudad;
+  posicionCentralDireccion: Coordenada = new Coordenada(this.latitud, this.longitud);
+  posicionCentralDependiente: Coordenada = new Coordenada(this.latitud, this.longitud);
+  posicionGeograficaDireccion: Coordenada;
+  posicionGeograficaDependiente: Coordenada;
+  //coordenadas: Coordenada[] = [];
+  options: google.maps.MapOptions = {
+    mapTypeId: 'hybrid',
+    zoomControl: true,
+    scrollwheel: true,
+    disableDoubleClickZoom: false,
+    maxZoom: 20,
+    minZoom: 12,
+  };
+ // @ViewChild(MapInfoWindow) infoWindowDireccion: MapInfoWindow;
 
   columnasCliente: any[] = [
     { nombreColumna: 'id', cabecera: 'ID', celda: (row: Cliente) => `${row.id}` },
@@ -319,6 +332,18 @@ export class ClienteComponent implements OnInit {
         Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje });
       }
     );
+  }
+
+  mapClicked($event: google.maps.MapMouseEvent){
+    let coordenada = new Coordenada($event.latLng.lat(), $event.latLng.lng());
+    //this.coordenadas.push(coordenada);
+  }
+
+  getCurrentPosition(){
+    navigator.geolocation.getCurrentPosition(position => {
+      this.posicionCentralDireccion = new Coordenada(position.coords.latitude, position.coords.longitude);
+      console.log(this.posicionCentralDireccion);
+    })
   }
 
   obtenerSesion() {
@@ -660,9 +685,9 @@ export class ClienteComponent implements OnInit {
     }
   }
   validarTelefono() {
-    let digito = this.telefono.numero.substr(0, 1);
+    let digito = this.telefono.numero.substring(0, 1);
     if (this.telefono.numero.length != 11 || digito != "0") {
-      this.telefono.numero = valores.vacio;
+      //this.telefono.numero = valores.vacio;
       Swal.fire({ icon: error_swal, title: error, text: mensajes.error_telefono_invalido });
     }
   }
@@ -679,9 +704,9 @@ export class ClienteComponent implements OnInit {
     }
   }
   validarCelular() {
-    let digito = this.celular.numero.substr(0, 2);
+    let digito = this.celular.numero.substring(0, 2);
     if (this.celular.numero.length != 12 || digito != "09") {
-      this.celular.numero = valores.vacio;
+      //this.celular.numero = valores.vacio;
       Swal.fire({ icon: error_swal, title: error, text: mensajes.error_celular_invalido });
     }
   }
@@ -692,7 +717,7 @@ export class ClienteComponent implements OnInit {
   crearCorreo() {
     if (this.correo.email.length != valores.cero) {
       this.cliente.correos.push(this.correo);
-      this.correo = new Correo();
+      //this.correo = new Correo();
     } else {
       Swal.fire({ icon: error_swal, title: error, text: mensajes.error_correo_ingresado });
     }
@@ -719,7 +744,7 @@ export class ClienteComponent implements OnInit {
     }
   }
   validarTelefonoDependiente() {
-    let digito = this.dependienteTelefono.numero.substr(0, 1);
+    let digito = this.dependienteTelefono.numero.substring(0, 1);
     if (this.dependienteTelefono.numero.length != 11 || digito != "0") {
       this.dependienteTelefono.numero = valores.vacio;
       Swal.fire({ icon: error_swal, title: error, text: mensajes.error_telefono_invalido });
@@ -742,7 +767,7 @@ export class ClienteComponent implements OnInit {
     }
   }
   validarCelularDependiente() {
-    let digito = this.dependienteCelular.numero.substr(0, 2);
+    let digito = this.dependienteCelular.numero.substring(0, 2);
     if (this.dependienteCelular.numero.length != 12 || digito != "09") {
       this.dependienteCelular.numero = valores.vacio;
       Swal.fire({ icon: error_swal, title: error, text: mensajes.error_celular_invalido });
@@ -856,4 +881,76 @@ export class ClienteComponent implements OnInit {
     );
   }
 
+  openInfoWindow(marker: MapMarker, infoWindow: MapInfoWindow) {
+    infoWindow.open(marker);
+  }
+
+  dialogoMapasDireccion(): void {
+    //console.log('El dialogo para selección de grupo producto fue abierto');
+    const dialogRef = this.dialog.open(DialogoMapaComponent, {
+      width: '80%',
+      // Para enviar datos
+      //data: { usuario: this.usuario, clave: this.clave, grupo_producto_recibido: "" }
+      data: this.posicionGeograficaDireccion as Coordenada
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      //console.log('El dialogo para selección de coordenada fue cerrado');
+      console.log(result);
+      if (result) {
+        this.posicionGeograficaDireccion = result as Coordenada;
+        this.posicionCentralDireccion = this.posicionGeograficaDireccion;
+       //console.log(result);
+      }
+    });
+  }
+
+  dialogoMapasDependiente(): void {
+    //console.log('El dialogo para selección de grupo producto fue abierto');
+    const dialogRef = this.dialog.open(DialogoMapaComponent, {
+      width: '80%',
+      data: this.posicionGeograficaDependiente as Coordenada
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      //console.log('El dialogo para selección de coordenada fue cerrado');
+      console.log(result);
+      if (result) {
+        this.posicionGeograficaDependiente = result as Coordenada;
+        this.posicionCentralDependiente = this.posicionGeograficaDependiente;
+       //console.log(result);
+      }
+    });
+  }
+
+}
+
+@Component({
+  selector: 'dialogo-mapa',
+  templateUrl: 'dialogo-mapa.component.html',
+})
+export class DialogoMapaComponent {
+
+  mapa: string[] = [];
+
+  constructor(
+    public dialogRef: MatDialogRef<DialogoMapaComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: Coordenada) { }
+
+  onNoClick(): void {
+    this.dialogRef.close();
+    //console.log('El dialogo para selección de coordenada fue cancelado');
+    this.data = new Coordenada(0,0);
+  }
+
+  coordenadaSeleccionada(event: any) {
+    //console.log(event);
+    if (event && event.latitud != 0) {
+      this.data = event as Coordenada;
+      //this.producto.grupo_producto = grupoProductoRecibido;
+      console.log(this.data);
+    } else {
+      this.data = new Coordenada(0,0);
+    }
+  }
 }

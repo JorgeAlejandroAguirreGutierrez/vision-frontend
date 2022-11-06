@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, ViewChild} from '@angular/core';
 import { DatePipe } from '@angular/common';
-import { FormControl } from '@angular/forms';
+import { UntypedFormControl } from '@angular/forms';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
@@ -104,22 +104,22 @@ export class RecaudacionComponent implements OnInit {
   establecimientos: Establecimiento[]=[];
   puntosVentas: PuntoVenta[]=[];
 
-  seleccionRazonSocialCliente = new FormControl();
+  seleccionRazonSocialCliente = new UntypedFormControl();
   filtroRazonSocialClientes: Observable<Cliente[]> = new Observable<Cliente[]>();
   bancosCheques: Banco[]=[];
-  seleccionBancoCheque = new FormControl();
+  seleccionBancoCheque = new UntypedFormControl();
   filtroBancosCheques: Observable<Banco[]> = new Observable<Banco[]>();
   bancosDepositos: Banco[]=[];
-  seleccionBancoDeposito = new FormControl();
+  seleccionBancoDeposito = new UntypedFormControl();
   filtroBancosDepositos: Observable<Banco[]> = new Observable<Banco[]>();
   bancosTransferencias: Banco[]=[];
-  seleccionBancoTransferencia = new FormControl();
+  seleccionBancoTransferencia = new UntypedFormControl();
   filtroBancosTransferencias: Observable<Banco[]> = new Observable<Banco[]>();
   bancosTarjetasCreditos: Banco[]=[];
-  seleccionBancoTarjetaCredito = new FormControl();
+  seleccionBancoTarjetaCredito = new UntypedFormControl();
   filtroBancosTarjetasCreditos: Observable<Banco[]> = new Observable<Banco[]>();
   bancosTarjetasDebitos: Banco[]=[];
-  seleccionBancoTarjetaDebito = new FormControl();
+  seleccionBancoTarjetaDebito = new UntypedFormControl();
   filtroBancosTarjetasDebitos: Observable<Banco[]> = new Observable<Banco[]>();
   formasPagoLista: string[] = otras.formasPagos
   formaPagoSelecionada:string="";

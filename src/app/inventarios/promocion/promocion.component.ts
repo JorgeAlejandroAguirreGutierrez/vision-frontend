@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
 import {MatDialog} from '@angular/material/dialog';
-import { FormControl, FormGroup } from '@angular/forms';
+import { UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 import { MatDatepickerInputEvent } from '@angular/material/datepicker';
 import {animate, state, style, transition, trigger} from '@angular/animations';
 
@@ -30,9 +30,9 @@ export class PromocionComponent implements OnInit {
   auxiliar_parroquias: any[]=[];
   grupos_clientes: any[]=[];
 
-  rango_promocion = new FormGroup({
-    inicio: new FormControl(),
-    fin: new FormControl()
+  rango_promocion = new UntypedFormGroup({
+    inicio: new UntypedFormControl(),
+    fin: new UntypedFormControl()
   });
 
   dataSource = ELEMENT_DATA;

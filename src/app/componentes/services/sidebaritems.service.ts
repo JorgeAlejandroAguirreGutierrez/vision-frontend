@@ -14,6 +14,7 @@ import { PlazoCreditoComponent } from '../../clientes/plazo-credito/plazo-credit
 //COMPRAS
 import { ProveedorComponent } from '../../compras/proveedor/proveedor.component';
 import { FacturaCompraComponent } from '../../compras/factura-compra/factura-compra.component';
+import { GrupoProveedorComponent } from '../../compras/grupo-proveedor/grupo-proveedor.component';
 
 //VENTAS
 import { FacturaComponent } from "../../comprobantes/factura/factura.component";
@@ -44,7 +45,7 @@ import { PerfilComponent } from '../../usuarios/perfil/perfil.component';
 import { PermisoComponent } from '../../usuarios/permiso/permiso.component';
 
 //CONFIGURACIONES
-import { EmpresaComponent } from '../../configuraciones/empresa/empresa.component';
+import { EmpresaComponent } from '../../usuarios/empresa/empresa.component';
 import { UbicacionComponent } from '../../configuraciones/ubicacion/ubicacion.component';
 import { EstadoCivilComponent } from '../../configuraciones/estado-civil/estado-civil.component';
 import { ImpuestoComponent } from '../../configuraciones/impuesto/impuesto.component';
@@ -89,6 +90,8 @@ export class SidebarItemsService {
 
     if (tabNombre == modulos.modulo_compras) {
       this.llenarOpciones(ProveedorComponent, tabs.tab_proveedor, items.item_proveedor, icos.ico_proveedor);
+      this.llenarOpciones(FacturaCompraComponent, tabs.tab_factura_compra, items.item_factura_compra, icos.ico_factura_compra);     
+      this.llenarOpciones(GrupoProveedorComponent, tabs.tab_grupo_proveedor, items.item_grupo_proveedor, icos.ico_grupo_proveedor);
     }
 
     if (tabNombre == modulos.modulo_ventas) {
@@ -135,6 +138,7 @@ export class SidebarItemsService {
     }
 
     if (tabNombre == modulos.modulo_accesos) {
+      this.llenarOpciones(EmpresaComponent, tabs.tab_empresa, items.item_empresa, icos.ico_empresa);
       this.llenarOpciones(UsuarioComponent, tabs.tab_usuario, items.item_usuario, icos.ico_usuario);
       this.llenarOpciones(EstablecimientoComponent, tabs.tab_establecimiento, items.item_establecimiento, icos.ico_establecimiento);
       this.llenarOpciones(PuntoVentaComponent, tabs.tab_punto_venta, items.item_punto_venta, icos.ico_punto_venta);
@@ -143,7 +147,6 @@ export class SidebarItemsService {
     }
 
     if (tabNombre == modulos.modulo_configuracion) {
-      this.llenarOpciones(EmpresaComponent, tabs.tab_empresa, items.item_empresa, icos.ico_empresa);
       this.llenarOpciones(UbicacionComponent, tabs.tab_ubicacion, items.item_ubicacion, icos.ico_ubicacion);
       this.llenarOpciones(EstadoCivilComponent, tabs.tab_estado_civil, items.item_estado_civil, icos.ico_estado_civil);
       this.llenarOpciones(ImpuestoComponent, tabs.tab_impuesto, items.item_impuesto, icos.ico_impuesto);

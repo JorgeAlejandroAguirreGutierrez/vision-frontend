@@ -1,4 +1,4 @@
-import { Proveedor } from '../proveedor/proveedor';
+import { Proveedor } from '../compra/proveedor';
 import { Producto } from './producto';
 import { valores } from "../../constantes";
 export class Kardex {
@@ -15,7 +15,7 @@ export class Kardex {
     cantidad: number;
     costoPromedio: number;
     costoTotal: number;
-    proveedor: Proveedor;
+    //proveedor: Proveedor;
     producto: Producto;
 
     constructor() {
@@ -32,7 +32,7 @@ export class Kardex {
         this.debe=valores.cero;
         this.haber=valores.cero;
         this.cantidad=valores.cero;
-        this.proveedor=new Proveedor();
+        //this.proveedor=new Proveedor();
         this.producto=new Producto();
     }
     

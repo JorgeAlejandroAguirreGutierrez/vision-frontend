@@ -72,6 +72,7 @@ export const urn =
      entrega: "/entrega",
      grupoProducto: "/grupoProducto",
      proveedor: "/proveedor",
+     grupoProveedor: "/grupoProveedor",
      productoProveedor: "/productoProveedor",
      consultarGrupos: "/consultarGrupos",
      consultarSubgrupos: "/consultarSubgrupos",
@@ -98,8 +99,8 @@ export const urn =
      ivaServicio: "/ivaServicio",
      rentaBien: "/rentaBien",
      rentaServicio: "/rentaServicio",
-     equivalenciaMedida: "/equivalenciaMedida",
-     buscarEquivalenciaMedida: "/buscarEquivalenciaMedida",
+     equivalenciaMedida: "/tablaEquivalenciaMedida",
+     buscarMedidasEquivalentes: "/buscarMedidasEquivalentes",
      personalizado: "/personalizado",
      generar: "/generar",
      pdf: "/pdf"
@@ -119,7 +120,9 @@ export const valores ={
      emitida : "EMITIDA",
      anulada: "ANULADA",
      facturada: "FACTURADA",
-     nofacturada: "NO FACTURADA"
+     nofacturada: "NO FACTURADA",
+     latCiudad: -1.6705413480437092,
+     lngCiudad: -78.64974203645144
 }
     
 export const mensajes = {
@@ -165,6 +168,10 @@ export const mensajes = {
      error_eliminar_bodega : "NO PUEDE ELIMINAR UNA BODEGA CON SALDO",
      error_agregar_recaudacion : "VALOR SUPERA EL MONTO DE COBRO DE LA FACTURA",
      error_agregar_dependiente : "ERROR AL AGREGAR EL DEPENDIENTE",
+     error_identificacion : "INGRESE UNA IDENTIFICACIÓN",
+     error_razon_social : "ERROR EN RAZON SOCIAL",
+     error_direccion : "ERROR EN DIRECCIÓN",
+     error_ubicacion : "ERROR EN PROVINCIA, CANTON O PARROQUIA",
      mensaje_kardex_inicial : "INICIALIZAR KARDEX CON SALDO 0",
      error_medida_kardex : "ERROR MEDIDA KARDEX",
      si : "SI",
@@ -254,6 +261,7 @@ export const tabs = {
      tab_factura_compra: "Factura de Compra",
      tab_pago_compra: "Pago de Compra",
      tab_proveedor: "Proveedor",
+     tab_grupo_proveedor: "Grupo Proveedor",
      tab_proveedor_bodega: "Proveedor Bodega",
      tab_proveedor_producto: "Proveedor Producto",
      tab_egreso: " Egreso",
@@ -320,6 +328,7 @@ export const items = {
      item_factura_compra : "Factura de Compra",
      item_pago_compra : "Pago de Compra",
      item_proveedor : "Proveedor",
+     item_grupo_proveedor : "Grupo Proveedor",
      item_proveedor_bodega : "Proveedor de Bodega",
      item_egreso : "Egreso", 
      item_factura : "Factura",
@@ -383,9 +392,10 @@ export const icos = {
      ico_tipo_contribuyente : 'fa fa-file-text-o',
      ico_tipo_pago : 'fa fa-ticket',
      ico_tipo_retencion : 'fa fa-retweet',
-     ico_factura_compra : 'fa fa-file-text-o',
+     ico_factura_compra : 'fa fa-cart-arrow-down',
      ico_pago_compra : 'fa fa-file-text-o',
      ico_proveedor : 'fa fa-truck',
+     ico_grupo_proveedor : 'fa fa-suitcase',
      ico_egreso : 'fa fa-file-text-o',
      ico_factura : 'fa fa-clipboard',
      ico_pedido : 'fa fa-file-text-o',
@@ -398,8 +408,8 @@ export const icos = {
      ico_contabilizacion : 'fa fa-file-text-o',
      ico_cuenta : 'fa fa-file-text-o',
      ico_entrega : 'fa fa-file-text-o',
-     ico_transportista : 'fa fa-file-text-o',
-     ico_vehiculo_transporte : 'fa fa-file-text-o',
+     ico_transportista : 'fa fa-id-card',
+     ico_vehiculo_transporte : 'fa fa-truck',
      ico_activo_fijo : 'fa fa-file-text-o',
      ico_bodega : 'fa fa-archive',
      ico_kardex : 'fa fa-table',
@@ -433,6 +443,7 @@ export const error_swal = 'error';
 export const warning_swal = 'warning';
 export const warning = "WARNING";
 export const si_seguro = "SI, ESTOY SEGURO";
+export const error_formulario = "FORMULARIO INCOMPLETO"
 
 //CAMPOS PARA CONSULTAS DINAMICAS
 export const descripcion = "descripcion";

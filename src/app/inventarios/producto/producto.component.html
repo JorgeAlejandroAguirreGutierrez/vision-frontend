@@ -156,7 +156,7 @@
                             <mat-label>Tipo de Gasto</mat-label>
                             <mat-select [(ngModel)]="producto.tipoGasto.id" class="form-control-sm">
                                 <mat-option *ngFor="let tipoGasto of tiposGastos" [value]="tipoGasto.id">
-                                    {{tipoGasto.nombre}}</mat-option>
+                                    {{tipoGasto.descripcion}}</mat-option>
                             </mat-select>
                         </mat-form-field>
                     </div>
@@ -275,7 +275,7 @@
                                         [disabled]="deshabilitarOtrasMedidas">
                                         <mat-option *ngFor="let medidaEquivalente of medidasEquivalentes"
                                             [value]="medidaEquivalente">
-                                            {{medidaEquivalente.medida2.descripcion}}</mat-option>
+                                            {{medidaEquivalente.medidaEqui.descripcion}}</mat-option>
                                     </mat-select>
                                 </mat-form-field>
                             </div>

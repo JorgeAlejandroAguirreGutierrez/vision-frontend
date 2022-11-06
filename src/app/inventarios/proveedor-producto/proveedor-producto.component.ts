@@ -1,13 +1,13 @@
 import { Component, OnInit, ViewChild, ElementRef, Renderer2 } from '@angular/core';
-import { FormControl } from '@angular/forms';
+import { UntypedFormControl } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { startWith, map } from 'rxjs/operators';
 import Swal from 'sweetalert2';
 import { valores, mensajes, validarSesion, exito, exito_swal, error, error_swal } from '../../constantes';
 import { Producto } from '../../modelos/inventario/producto';
 import { ProductoService } from '../../servicios/inventario/producto.service';
-import { Proveedor } from '../../modelos/proveedor/proveedor';
-import { ProveedorService } from '../../servicios/proveedor/proveedor.service';
+import { Proveedor } from '../../modelos/compra/proveedor';
+import { ProveedorService } from '../../servicios/compra/proveedor.service';
 import { ProductoProveedor } from '../../modelos/inventario/producto-proveedor';
 import { ProductoProveedorService } from '../../servicios/inventario/producto-proveedor.service';
 
@@ -43,11 +43,11 @@ export class ProveedorProductoComponent implements OnInit {
 
   //Variables para los autocomplete
   productos: Producto[]=[];
-  controlProducto = new FormControl();
+  controlProducto = new UntypedFormControl();
   filtroProductos: Observable<Producto[]> = new Observable<Producto[]>();
 
   proveedores: Proveedor[] = [];
-  controlProveedor = new FormControl();
+  controlProveedor = new UntypedFormControl();
   filtroProveedores: Observable<Proveedor[]> = new Observable<Proveedor[]>();
 
   @ViewChild("inputFiltroProductoProveedor") inputFiltroProductoProveedor: ElementRef;
@@ -113,7 +113,8 @@ export class ProveedorProductoComponent implements OnInit {
         Swal.fire(error, mensajes.error_nombre_producto, error_swal);
         return;
     }
-    this.producto.kardexs[0].proveedor = new Proveedor;
+    console.log(this.producto);
+    //this.producto.kardexs[0].proveedor = new Proveedor;
     this.productoService.actualizar(this.producto).subscribe({
       next: (res) => {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });

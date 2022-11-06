@@ -1,5 +1,5 @@
 import { Component, OnInit, HostListener, ElementRef, Renderer2 } from '@angular/core';
-import {FormControl, Validators} from '@angular/forms';
+import {UntypedFormControl, Validators} from '@angular/forms';
 import { BehaviorSubject } from 'rxjs';
 import { valores, mensajes, validarSesion, exito_swal, error_swal, exito, error } from '../../constantes';
 import Swal from 'sweetalert2';
@@ -45,7 +45,7 @@ export class UsuarioComponent implements OnInit {
   perfiles: Perfil[]=[];
   puntosVentas: PuntoVenta[]=[];
 
-  email = new FormControl('', [Validators.required, Validators.email]);
+  email = new UntypedFormControl('', [Validators.required, Validators.email]);
 
   columnasUsuario: any[] = [
     { nombreColumna: 'id', cabecera: 'ID', celda: (row: Usuario) => `${row.id}` },
@@ -227,7 +227,7 @@ export class UsuarioComponent implements OnInit {
   }
 
   validarCelular() {
-    let digito = this.usuario.celular.substr(0, 2);
+    let digito = this.usuario.celular.substring(0, 2);
     if (this.usuario.celular.length != 12 || digito != "09") {
       this.usuario.celular = valores.vacio;
       Swal.fire({ icon: error_swal, title: error, text: mensajes.error_celular_invalido });

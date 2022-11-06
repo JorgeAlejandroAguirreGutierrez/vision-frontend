@@ -9,6 +9,9 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 // Componentes de Angular Material
 import { MaterialModule } from './componentes/material-module';
 
+// Componete para google maps
+import { GoogleMapsModule } from '@angular/google-maps'; 
+
 import { AppComponent } from './app.component';
 import { ModeloService } from './servicios/administracion/modelo.service';
 
@@ -44,35 +47,36 @@ import { RoutingComponents } from './app-routing.module';
 import { TipoRetencionService } from './servicios/configuracion/tipo-retencion.service';
 
 @NgModule({
-  declarations: [
-    AppComponent,
-    TabContentComponent,
-    ContentContainerDirective,
-    RoutingComponents
-  ],
-  imports: [
-    BrowserModule,
-    FormsModule,
-    ReactiveFormsModule,
-    CommonModule,
-    BrowserAnimationsModule,
-    HttpClientModule,
-    NgbModule,
-    FlexLayoutModule,
-    MaterialModule,
-    AppRoutingModule
-  ],
-  providers: [PlazoCreditoService, ImpuestoService, RetencionService, ModeloService,
-              TransportistaService, UbicacionService, TipoContribuyenteService, VehiculoTransporteService,
-              EmpresaService, EstablecimientoService, PuntoVentaService, UsuarioService, DatePipe,
-              ClienteService, FacturaService, TipoRetencionService, TabService,
-              EquivalenciaMedidaService, GrupoProductoService,
-              {
-                provide: LocationStrategy, 
-                useClass: PathLocationStrategy
-              }],
-  bootstrap: [AppComponent],
-  entryComponents: [ ]
+    declarations: [
+        AppComponent,
+        TabContentComponent,
+        ContentContainerDirective,
+        RoutingComponents
+    ],
+    imports: [
+        BrowserModule,
+        FormsModule,
+        ReactiveFormsModule,
+        CommonModule,
+        BrowserAnimationsModule,
+        HttpClientModule,
+        NgbModule,
+        FlexLayoutModule,
+        MaterialModule,
+        GoogleMapsModule,
+        //AgmCoreModule.forRoot({apiKey: 'AIzaSyBmbDYyXuK6PzbmJDoadvlJU7UtcgDJQZM'}),
+        AppRoutingModule
+    ],
+    providers: [PlazoCreditoService, ImpuestoService, RetencionService, ModeloService,
+        TransportistaService, UbicacionService, TipoContribuyenteService, VehiculoTransporteService,
+        EmpresaService, EstablecimientoService, PuntoVentaService, UsuarioService, DatePipe,
+        ClienteService, FacturaService, TipoRetencionService, TabService,
+        EquivalenciaMedidaService, GrupoProductoService,
+        {
+            provide: LocationStrategy,
+            useClass: PathLocationStrategy
+        }],
+    bootstrap: [AppComponent]
 })
 export class AppModule {
 }
