@@ -114,6 +114,8 @@ export const valores ={
      espacio : " ",
      activo : "ACTIVO",
      inactivo : "INACTIVO",
+     abierto : "ABIERTO",
+     cerrado : "CERRADO",
      pendiente : "PENDIENTE",
      norecaudado : "NO RECAUDADO",
      recaudado : "RECAUDADO",

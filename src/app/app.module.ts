@@ -32,7 +32,7 @@ import { TransportistaService } from './servicios/entrega/transportista.service'
 import { UbicacionService } from './servicios/configuracion/ubicacion.service';
 import { TipoContribuyenteService } from './servicios/cliente/tipo-contribuyente.service';
 import { VehiculoTransporteService } from './servicios/entrega/vehiculo-transporte.service';
-import { EmpresaService } from './servicios/configuracion/empresa.service';
+import { EmpresaService } from './servicios/usuario/empresa.service';
 import { EstablecimientoService } from './servicios/usuario/establecimiento.service';
 import { PuntoVentaService } from './servicios/usuario/punto-venta.service';
 import { UsuarioService } from './servicios/usuario/usuario.service';

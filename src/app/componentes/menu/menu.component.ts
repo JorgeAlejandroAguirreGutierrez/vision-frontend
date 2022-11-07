@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Type } from '@angular/core';
 import { Sesion } from '../../modelos/usuario/sesion';
 import { SesionService } from '../../servicios/usuario/sesion.service';
-import { EmpresaService } from '../../servicios/configuracion/empresa.service';
+import { EmpresaService } from '../../servicios/usuario/empresa.service';
 import { Empresa } from '../../modelos/usuario/empresa';
 import { environment } from '../../../environments/environment';
 import { TabService } from "../services/tab.service";

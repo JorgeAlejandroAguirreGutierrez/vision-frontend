@@ -8,7 +8,7 @@ import { Router } from '@angular/router';
 import { environment } from '../../../environments/environment';
 
 import { Empresa } from '../../modelos/usuario/empresa';
-import { EmpresaService } from '../../servicios/configuracion/empresa.service';
+import { EmpresaService } from '../../servicios/usuario/empresa.service';
 import { Sesion } from '../../modelos/usuario/sesion';
 import { SesionService } from '../../servicios/usuario/sesion.service';
 import { TabService } from '../../componentes/services/tab.service';

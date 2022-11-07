@@ -11,6 +11,10 @@ import { TabService } from '../../componentes/services/tab.service';
 
 import { Usuario } from '../../modelos/usuario/usuario';
 import { UsuarioService } from '../../servicios/usuario/usuario.service';
+import { Empresa } from '../../modelos/usuario/empresa';
+import { EmpresaService } from '../../servicios/usuario/empresa.service';
+import { EstablecimientoService } from '../../servicios/usuario/establecimiento.service';
+import { Establecimiento } from '../../modelos/usuario/establecimiento';
 import { Perfil } from '../../modelos/usuario/perfil';
 import { PerfilService } from '../../servicios/usuario/perfil-service.service';
 import { PuntoVenta } from '../../modelos/usuario/punto-venta';
@@ -41,9 +45,14 @@ export class UsuarioComponent implements OnInit {
   hide: boolean = true;
 
   usuario: Usuario = new Usuario();
+  empresa: Empresa = new Empresa();
+  establecimiento: Establecimiento = new Establecimiento();
+
   usuarios: Usuario[];
-  perfiles: Perfil[]=[];
+  empresas: Empresa[];
+  establecimientos: Establecimiento[];
   puntosVentas: PuntoVenta[]=[];
+  perfiles: Perfil[]=[];
 
   email = new UntypedFormControl('', [Validators.required, Validators.email]);
 
@@ -52,6 +61,9 @@ export class UsuarioComponent implements OnInit {
     { nombreColumna: 'codigo', cabecera: 'Código', celda: (row: Usuario) => `${row.codigo}` },
     { nombreColumna: 'identificacion', cabecera: 'Identificación', celda: (row: Usuario) => `${row.identificacion}` },
     { nombreColumna: 'nombre', cabecera: 'Nombre', celda: (row: Usuario) => `${row.nombre}` },
+    { nombreColumna: 'establecimiento', cabecera: 'Establecimiento', celda: (row: Usuario) => `${row.puntoVenta.establecimiento.nombre}` },
+    { nombreColumna: 'punto_venta', cabecera: 'Pto. Venta', celda: (row: Usuario) => `${row.puntoVenta.descripcion}` },
+    { nombreColumna: 'perfil', cabecera: 'Perfil', celda: (row: Usuario) => `${row.perfil.descripcion}` },
     { nombreColumna: 'estado', cabecera: 'Estado', celda: (row: Usuario) => `${row.activo}` }
   ];
   cabeceraUsuario: string[] = this.columnasUsuario.map(titulo => titulo.nombreColumna);
@@ -65,11 +77,13 @@ export class UsuarioComponent implements OnInit {
   @ViewChild("inputFiltroUsuario") inputFiltroUsuario: ElementRef;
 
   constructor(private renderer: Renderer2, private tabService: TabService,private usuarioService: UsuarioService, 
-    private perfilService: PerfilService, private puntoVentaService: PuntoVentaService, private sesionService: SesionService, private router: Router) { }
+    private perfilService: PerfilService, private puntoVentaService: PuntoVentaService, private sesionService: SesionService, 
+    private empresaService: EmpresaService, private establecimientoService: EstablecimientoService, private router: Router) { }
 
   ngOnInit() {
     this.sesion=validarSesion(this.sesionService, this.router);
     this.consultarUsuarios();
+    this.consultarEmpresas();
     this.consultarPerfiles();
     this.consultarPuntosVentas();
     //this.construirUsuario();
@@ -181,6 +195,32 @@ export class UsuarioComponent implements OnInit {
     });
   }
 
+  consultarEmpresas() {
+    this.empresaService.consultar().subscribe({
+      next: (res) => {
+        this.empresas = res.resultado as Empresa[]
+      },
+      error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+      }
+    );
+  }
+
+  consultarEstablecimientos(establecimientoId: number) {
+    //this.establecimiento.ubicacion.provincia = provincia;
+    //this.establecimientoService.obtener(establecimientoId).subscribe({
+    this.establecimientoService.consultar().subscribe({
+      next: res => {
+        console.log("estable");
+        if (res.resultado != null) {
+          this.establecimientos = res.resultado as Establecimiento[];
+        } else {
+          Swal.fire(error, res.mensaje, error_swal);
+        }
+      },
+      error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+    });
+  }
+
   async construirUsuario() {
     let usuarioId=0;
     this.usuarioService.currentMessage.subscribe(message => usuarioId = message);
@@ -226,6 +266,25 @@ export class UsuarioComponent implements OnInit {
     return this.email.hasError('email') ? 'Correo no válido' : '';
   }
 
+  crearTelefono() {
+    if (this.usuario.telefono.length != valores.cero) {
+      //this.usuario.telefonos.push(this.telefono);
+      //this.telefono = new Telefono();
+    } else {
+      Swal.fire(error, "Ingrese un número telefónico válido", error_swal);
+    }
+  }
+  validarTelefono() {
+    let digito = this.usuario.telefono.substring(0, 1);
+    if (this.usuario.telefono.length != 11 || digito != "0") {
+      //this.telefono.numero = valores.vacio;
+      Swal.fire(error, "Telefono Invalido", error_swal);
+    }
+  }
+  eliminarTelefono(i: number) {
+    //this.usuario.telefono.splice(i, 1);
+  }
+
   validarCelular() {
     let digito = this.usuario.celular.substring(0, 2);
     if (this.usuario.celular.length != 12 || digito != "09") {
@@ -233,4 +292,33 @@ export class UsuarioComponent implements OnInit {
       Swal.fire({ icon: error_swal, title: error, text: mensajes.error_celular_invalido });
     }
   }
+
+  capturarFile(event : any) : any{
+    const archivoCapturado = event.target.files[0];
+    //console.log(archivoCapturado);
+    this.extrarBase64(archivoCapturado).then((imagen: any) => {
+      this.usuario.foto = imagen.base;
+      //console.log(imagen);
+    });
+  }
+
+  extrarBase64 = async ($event: any) => new Promise((resolve) => {
+    try {
+      const reader = new FileReader();
+      reader.readAsDataURL($event);
+      reader.onload = () => {
+        resolve({
+          base: reader.result
+        })
+      };
+      reader.onerror = error => {
+        resolve({
+          base: reader.result
+        })
+      };
+    } catch (e) {
+      return null;
+    }
+  }); 
+
 }

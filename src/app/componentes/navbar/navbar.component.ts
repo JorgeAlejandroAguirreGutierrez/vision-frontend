@@ -1,6 +1,6 @@
 import { SidebarService } from '../../componentes/services/sidebar.service';
 import { Component, OnInit, Input } from '@angular/core';
-import { EmpresaService } from '../../servicios/configuracion/empresa.service';
+import { EmpresaService } from '../../servicios/usuario/empresa.service';
 import { Empresa } from '../../modelos/usuario/empresa';
 import { environment } from '../../../environments/environment';
 

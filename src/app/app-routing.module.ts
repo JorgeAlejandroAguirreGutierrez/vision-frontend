@@ -75,14 +75,14 @@ import { TablaMovimientoContableComponent } from './contabilidad/movimiento-cont
 
 // Módulo de Usuarios
 import { SesionComponent } from './usuarios/sesion/sesion.component';
+import { EmpresaComponent } from './usuarios/empresa/empresa.component';
 import { PermisoComponent } from './usuarios/permiso/permiso.component';
 import { UsuarioComponent } from './usuarios/usuario/usuario.component';
-import { EstablecimientoComponent } from './usuarios/establecimiento/establecimiento.component';
+import { EstablecimientoComponent, DialogoMapaEstablecimientoComponent } from './usuarios/establecimiento/establecimiento.component';
 import { PuntoVentaComponent } from './usuarios/punto-venta/punto-venta.component';
 import { PerfilComponent } from './usuarios/perfil/perfil.component';
 
 //Módulo de Configuraciones
-import { EmpresaComponent, DialogoMapaEmpresaComponent } from './usuarios/empresa/empresa.component';
 import { UbicacionComponent } from './configuraciones/ubicacion/ubicacion.component';
 
 // Otros - borrar al final
@@ -224,11 +224,11 @@ export const RoutingComponents = [
   PermisoComponent,
   UsuarioComponent,
   EstablecimientoComponent,
+  DialogoMapaEstablecimientoComponent,
   PuntoVentaComponent,
   PerfilComponent,
   // configuración
   EmpresaComponent,
-  DialogoMapaEmpresaComponent,
   TipoRetencionComponent,
   UbicacionComponent,
   //otros

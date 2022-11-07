@@ -48,7 +48,7 @@
                     <div class="col-12">
                         <mat-form-field appearance="standard">
                             <mat-label>Usuario</mat-label>
-                            <input matInput type="text" [(ngModel)]="usuario.usuario" class="form-control-sm">
+                            <input matInput type="text" [(ngModel)]="usuario.apodo" class="form-control-sm">
                         </mat-form-field>
                     </div>
                     <div class="col-12">
@@ -71,13 +71,13 @@
                     </div>
                 </div>
                 <div class="form-row col-7 linea-vertical">
-                    <div class="col-2">
+                    <div class="col-3">
                         <mat-form-field appearance="standard">
                             <mat-label>Identificacion</mat-label>
                             <input matInput type="text" [(ngModel)]="usuario.identificacion" class="form-control-sm">
                         </mat-form-field>
                     </div>
-                    <div class="col-8">
+                    <div class="col-9">
                         <mat-form-field appearance="standard">
                             <mat-label>Nombre</mat-label>
                             <input matInput type="text" [(ngModel)]="usuario.nombre"
@@ -85,19 +85,13 @@
                                 oninput="this.value = this.value.toUpperCase()" class="form-control-sm">
                         </mat-form-field>
                     </div>
-                    <div class="col-2">
+                    <div class="col-4">
                         <mat-form-field appearance="standard">
-                            <mat-label>Código</mat-label>
-                            <input matInput type="text" [(ngModel)]="usuario.codigo" class="form-control-sm"
-                                [disabled]="true">
-                        </mat-form-field>
-                    </div>
-                     <div class="col-5">
-                        <mat-form-field appearance="standard">
-                            <mat-label>Correo</mat-label>
-                            <input matInput placeholder="ejemplo@futuristic.com" [formControl]="email" class="form-control-sm"
-                                oninput="this.value = this.value.toLowerCase()" [disabled]="!editarUsuario" required>
-                                <mat-error *ngIf="email.invalid">{{getErrorMessage()}}</mat-error>    
+                            <mat-label>Teléfono</mat-label>
+                            <b matPrefix>+593 &nbsp;</b>
+                            <input matInput type="tel" [(ngModel)]="usuario.telefono" class="form-control-sm"
+                                (change)="validarTelefono()" placeholder="03-2999-123" oninput="this.value = this.value.replace
+                                ( /^(\d{2})(\d{4})(\d{3})$/, '$1-$2-$3')">
                         </mat-form-field>
                     </div>
                     <div class="col-4">
@@ -109,22 +103,21 @@
                                         ( /^(\d{2})(\d{4})(\d{4})$/, '$1-$2-$3')">
                         </mat-form-field>
                     </div>
-                    <div class="col-3">
+                    <div class="col-4">
                         <mat-form-field appearance="standard">
-                            <mat-label>Estado</mat-label>
-                            <mat-select [(ngModel)]="usuario.activo" [disabled]="!editarUsuario"
-                                class="form-control-sm">
-                                <mat-option [value]="activo">{{activo}}</mat-option>
-                                <mat-option [value]="inactivo">{{inactivo}}</mat-option>
-                            </mat-select>
+                            <mat-label>Correo</mat-label>
+                            <input matInput placeholder="ejemplo@futuristic.com" [formControl]="email" class="form-control-sm"
+                                oninput="this.value = this.value.toLowerCase()" [disabled]="!editarUsuario" required>
+                                <mat-error *ngIf="email.invalid">{{getErrorMessage()}}</mat-error>    
                         </mat-form-field>
                     </div>
                     <div class="col-4">
                         <mat-form-field appearance="standard">
-                            <mat-label>Perfil</mat-label>
-                            <mat-select [(ngModel)]="usuario.perfil" [compareWith]="compareFn" class="form-control-sm">
-                                <mat-option *ngFor="let perfil of perfiles" [value]="perfil">
-                                    {{perfil.descripcion}}
+                            <mat-label>Empresa</mat-label>
+                            <mat-select [(ngModel)]="usuario.puntoVenta.establecimiento.empresa" [compareWith]="compareFn" 
+                                (selectionChange)="consultarEstablecimientos($event.value.id)" class="form-control-sm">
+                                <mat-option *ngFor="let empresa of empresas" [value]="empresa">
+                                    {{empresa.razonSocial}}
                                 </mat-option>
                             </mat-select>
                         </mat-form-field>
@@ -132,9 +125,10 @@
                     <div class="col-4">
                         <mat-form-field appearance="standard">
                             <mat-label>Establecimiento</mat-label>
-                            <mat-select [(ngModel)]="usuario.perfil" [compareWith]="compareFn" class="form-control-sm">
-                                <mat-option *ngFor="let perfil of perfiles" [value]="perfil">
-                                    {{perfil.descripcion}}
+                            <mat-select [(ngModel)]="usuario.puntoVenta.establecimiento" [compareWith]="compareFn" 
+                                 class="form-control-sm">
+                                <mat-option *ngFor="let establecimiento of establecimientos" [value]="establecimiento">
+                                    {{establecimiento.codigo}}
                                 </mat-option>
                             </mat-select>
                         </mat-form-field>
@@ -150,11 +144,41 @@
                             </mat-select>
                         </mat-form-field>
                     </div>
+                    <div class="col-4">
+                        <mat-form-field appearance="standard">
+                            <mat-label>Perfil</mat-label>
+                            <mat-select [(ngModel)]="usuario.perfil" [compareWith]="compareFn" class="form-control-sm">
+                                <mat-option *ngFor="let perfil of perfiles" [value]="perfil">
+                                    {{perfil.descripcion}}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                    <div class="col-4">
+                        <mat-form-field appearance="standard">
+                            <mat-label>Estado</mat-label>
+                            <mat-select [(ngModel)]="usuario.activo" [disabled]="!editarUsuario"
+                                class="form-control-sm">
+                                <mat-option [value]="activo">{{activo}}</mat-option>
+                                <mat-option [value]="inactivo">{{inactivo}}</mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                    <div class="col-4">
+                        <mat-form-field appearance="standard">
+                            <mat-label>Código</mat-label>
+                            <input matInput type="text" [(ngModel)]="usuario.codigo" class="form-control-sm"
+                                [disabled]="true">
+                        </mat-form-field>
+                    </div>
+
                 </div>
                 <div class="col-2">
                     <mat-card class="foto">
-                        FOTO
+                        <img *ngIf="!usuario.foto" width="100%" height="100%" src="assets/images/users/avatar.jpg"> 
+                        <img *ngIf="usuario.foto" width="100%" height="100%" [src]="usuario.foto"> 
                     </mat-card>
+                    <input type="file" (change)="capturarFile($event)">
                 </div>
             </div>
         </mat-expansion-panel>
