@@ -1,4 +1,5 @@
 import { valores } from "../../constantes";
+
 export class CorreoEstablecimiento {
     id : number;
     codigo : string;

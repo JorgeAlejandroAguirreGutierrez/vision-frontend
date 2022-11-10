@@ -7,7 +7,7 @@ import { Genero } from './genero';
 import { EstadoCivil } from './estado-civil';
 import { CalificacionCliente } from './calificacion-cliente';
 import { OrigenIngreso } from './origen-ingreso';
-import { PuntoVenta } from '../usuario/punto-venta';
+import { Estacion } from '../usuario/estacion';
 import { Telefono } from './telefono';
 import { Celular } from './celular';
 import { Correo } from './correo';
@@ -29,7 +29,7 @@ export class Cliente {
    estado:string;
    obligadoContabilidad: string;
    tipoIdentificacion: TipoIdentificacion;
-   puntoVenta: PuntoVenta;
+   estacion: Estacion;
    grupoCliente: GrupoCliente;
    tipoContribuyente: TipoContribuyente;
    segmento: Segmento;
@@ -53,7 +53,7 @@ export class Cliente {
       this.estado=valores.activo;
       this.especial=false;
       this.tipoIdentificacion=new TipoIdentificacion();
-      this.puntoVenta=new PuntoVenta();
+      this.estacion=new Estacion();
       this.tipoContribuyente=new TipoContribuyente();
       this.segmento=new Segmento();
       this.grupoCliente=new GrupoCliente();

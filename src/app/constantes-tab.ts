@@ -30,6 +30,6 @@ export const crear_usuario: string='CREAR USUARIO';
 export const buscar_usuario: string='BUSCAR USUARIO';
 export const crear_establecimiento: string='CREAR ESTABLECIMIENTO';
 export const buscar_establecimiento: string='BUSCAR ESTABLECIMIENTO';
-export const crear_punto_venta: string='CREAR PUNTO DE VENTA';
-export const buscar_punto_venta: string='BUSCAR PUNTO DE VENTA';
+export const crear_estacion: string='CREAR ESTACION';
+export const buscar_estacion: string='BUSCAR ESTACION';
 

@@ -7,7 +7,7 @@ import { Router } from '@angular/router';
 import { Sesion } from '../../modelos/usuario/sesion';
 import { SesionService } from '../../servicios/usuario/sesion.service';
 import { Perfil } from '../../modelos/usuario/perfil';
-import { PerfilService } from '../../servicios/usuario/perfil-service.service';
+import { PerfilService } from '../../servicios/usuario/perfil.service';
 
 import { ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
@@ -25,7 +25,7 @@ export class PerfilComponent implements OnInit {
   inactivo: string = valores.inactivo;
 
   abrirPanelNuevoPerfil: boolean = true;
-  abrirPanelAdminPerfil: boolean = false;
+  abrirPanelAdminPerfil: boolean = true;
   editarPerfil: boolean = true;
 
   sesion: Sesion = null;

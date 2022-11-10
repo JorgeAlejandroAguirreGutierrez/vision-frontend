@@ -54,18 +54,18 @@
                     <div class="col-12">
                         <mat-form-field appearance="standard">
                             <mat-label>Contraseña</mat-label>
-                            <input matInput [type]="hide ? 'password' : 'text'" [(ngModel)]="usuario.contrasena">
-                            <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide">
-                              <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+                            <input matInput [type]="ocultarContrasena ? 'password' : 'text'" [(ngModel)]="usuario.contrasena">
+                            <button mat-icon-button matSuffix (click)="ocultarContrasena = !ocultarContrasena" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="ocultarContrasena">
+                              <mat-icon>{{ocultarContrasena ? 'visibility_off' : 'visibility'}}</mat-icon>
                             </button>
                         </mat-form-field>
                     </div>
                     <div class="col-12">
                         <mat-form-field appearance="standard">
                             <mat-label>Repita Contraseña</mat-label>
-                            <input matInput [type]="hide ? 'password' : 'text'" [(ngModel)]="contrasena2">
-                            <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide">
-                              <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+                            <input matInput [type]="ocultarContrasena2 ? 'password' : 'text'" [(ngModel)]="contrasena2">
+                            <button mat-icon-button matSuffix (click)="ocultarContrasena2 = !ocultarContrasena2" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="ocultarContrasena2">
+                              <mat-icon>{{ocultarContrasena2 ? 'visibility_off' : 'visibility'}}</mat-icon>
                             </button>
                         </mat-form-field>
                     </div>
@@ -113,39 +113,6 @@
                     </div>
                     <div class="col-4">
                         <mat-form-field appearance="standard">
-                            <mat-label>Empresa</mat-label>
-                            <mat-select [(ngModel)]="usuario.puntoVenta.establecimiento.empresa" [compareWith]="compareFn" 
-                                (selectionChange)="consultarEstablecimientos($event.value.id)" class="form-control-sm">
-                                <mat-option *ngFor="let empresa of empresas" [value]="empresa">
-                                    {{empresa.razonSocial}}
-                                </mat-option>
-                            </mat-select>
-                        </mat-form-field>
-                    </div>
-                    <div class="col-4">
-                        <mat-form-field appearance="standard">
-                            <mat-label>Establecimiento</mat-label>
-                            <mat-select [(ngModel)]="usuario.puntoVenta.establecimiento" [compareWith]="compareFn" 
-                                 class="form-control-sm">
-                                <mat-option *ngFor="let establecimiento of establecimientos" [value]="establecimiento">
-                                    {{establecimiento.codigo}}
-                                </mat-option>
-                            </mat-select>
-                        </mat-form-field>
-                    </div>
-                    <div class="col-4">
-                        <mat-form-field appearance="standard">
-                            <mat-label>Punto de Venta</mat-label>
-                            <mat-select [(ngModel)]="usuario.puntoVenta" [compareWith]="compareFn"
-                                class="form-control-sm">
-                                <mat-option *ngFor="let puntoVenta of puntosVentas" [value]="puntoVenta">
-                                    {{puntoVenta.descripcion}}
-                                </mat-option>
-                            </mat-select>
-                        </mat-form-field>
-                    </div>
-                    <div class="col-4">
-                        <mat-form-field appearance="standard">
                             <mat-label>Perfil</mat-label>
                             <mat-select [(ngModel)]="usuario.perfil" [compareWith]="compareFn" class="form-control-sm">
                                 <mat-option *ngFor="let perfil of perfiles" [value]="perfil">
@@ -157,7 +124,7 @@
                     <div class="col-4">
                         <mat-form-field appearance="standard">
                             <mat-label>Estado</mat-label>
-                            <mat-select [(ngModel)]="usuario.activo" [disabled]="!editarUsuario"
+                            <mat-select [(ngModel)]="usuario.estado" [disabled]="!editarUsuario"
                                 class="form-control-sm">
                                 <mat-option [value]="activo">{{activo}}</mat-option>
                                 <mat-option [value]="inactivo">{{inactivo}}</mat-option>
@@ -175,8 +142,8 @@
                 </div>
                 <div class="col-2">
                     <mat-card class="foto">
-                        <img *ngIf="!usuario.foto" width="100%" height="100%" src="assets/images/users/avatar.jpg"> 
-                        <img *ngIf="usuario.foto" width="100%" height="100%" [src]="usuario.foto"> 
+                        <img *ngIf="!usuario.avatar" width="100%" height="100%" src="assets/images/users/avatar.jpg"> 
+                        <img *ngIf="usuario.avatar" width="100%" height="100%" [src]="usuario.avatar"> 
                     </mat-card>
                     <input type="file" (change)="capturarFile($event)">
                 </div>

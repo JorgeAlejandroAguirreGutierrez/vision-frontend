@@ -401,7 +401,7 @@ export class ClienteComponent implements OnInit {
       this.cliente.celulares.push(this.celular);
     if (this.correo.email != valores.vacio)
       this.cliente.correos.push(this.correo);
-    this.cliente.puntoVenta = this.sesion.usuario.puntoVenta;
+    this.cliente.estacion = this.sesion.estacion;
     let ubicacion: Ubicacion = new Ubicacion();
     ubicacion.provincia = this.clienteProvincia;
     ubicacion.canton = this.clienteCanton;

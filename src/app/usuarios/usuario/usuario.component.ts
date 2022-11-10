@@ -7,18 +7,11 @@ import Swal from 'sweetalert2';
 import { Router } from '@angular/router';
 import { Sesion } from 'src/app/modelos/usuario/sesion';
 import { SesionService } from 'src/app/servicios/usuario/sesion.service';
-import { TabService } from '../../componentes/services/tab.service';
 
 import { Usuario } from '../../modelos/usuario/usuario';
 import { UsuarioService } from '../../servicios/usuario/usuario.service';
-import { Empresa } from '../../modelos/usuario/empresa';
-import { EmpresaService } from '../../servicios/usuario/empresa.service';
-import { EstablecimientoService } from '../../servicios/usuario/establecimiento.service';
-import { Establecimiento } from '../../modelos/usuario/establecimiento';
 import { Perfil } from '../../modelos/usuario/perfil';
-import { PerfilService } from '../../servicios/usuario/perfil-service.service';
-import { PuntoVenta } from '../../modelos/usuario/punto-venta';
-import { PuntoVentaService } from '../../servicios/usuario/punto-venta.service';
+import { PerfilService } from '../../servicios/usuario/perfil.service';
 
 import { ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
@@ -33,61 +26,49 @@ import { MatTableDataSource } from '@angular/material/table';
 
 export class UsuarioComponent implements OnInit {
 
-  sesion: Sesion = null;
-
   activo: string = valores.activo;
   inactivo: string = valores.inactivo;
   contrasena2: string = valores.vacio;
 
   abrirPanelNuevoUsuario: boolean = true;
-  abrirPanelAdminUsuario: boolean = false;
+  abrirPanelAdminUsuario: boolean = true;
   editarUsuario: boolean = true;
-  hide: boolean = true;
+  ocultarContrasena: boolean = true;
+  ocultarContrasena2: boolean = true;
 
+  sesion: Sesion = null;
   usuario: Usuario = new Usuario();
-  empresa: Empresa = new Empresa();
-  establecimiento: Establecimiento = new Establecimiento();
-
-  usuarios: Usuario[];
-  empresas: Empresa[];
-  establecimientos: Establecimiento[];
-  puntosVentas: PuntoVenta[]=[];
-  perfiles: Perfil[]=[];
 
   email = new UntypedFormControl('', [Validators.required, Validators.email]);
+
+  usuarios: Usuario[];
+  perfiles: Perfil[]=[];
 
   columnasUsuario: any[] = [
     { nombreColumna: 'id', cabecera: 'ID', celda: (row: Usuario) => `${row.id}` },
     { nombreColumna: 'codigo', cabecera: 'Código', celda: (row: Usuario) => `${row.codigo}` },
     { nombreColumna: 'identificacion', cabecera: 'Identificación', celda: (row: Usuario) => `${row.identificacion}` },
     { nombreColumna: 'nombre', cabecera: 'Nombre', celda: (row: Usuario) => `${row.nombre}` },
-    { nombreColumna: 'establecimiento', cabecera: 'Establecimiento', celda: (row: Usuario) => `${row.puntoVenta.establecimiento.nombre}` },
-    { nombreColumna: 'punto_venta', cabecera: 'Pto. Venta', celda: (row: Usuario) => `${row.puntoVenta.descripcion}` },
     { nombreColumna: 'perfil', cabecera: 'Perfil', celda: (row: Usuario) => `${row.perfil.descripcion}` },
-    { nombreColumna: 'estado', cabecera: 'Estado', celda: (row: Usuario) => `${row.activo}` }
+    { nombreColumna: 'estado', cabecera: 'Estado', celda: (row: Usuario) => `${row.estado}` }
   ];
   cabeceraUsuario: string[] = this.columnasUsuario.map(titulo => titulo.nombreColumna);
   dataSourceUsuario: MatTableDataSource<Usuario>;
   observableDSUsuario: BehaviorSubject<MatTableDataSource<Usuario>> = new BehaviorSubject<MatTableDataSource<Usuario>>(null);
   clickedRows = new Set<Usuario>();
 
-
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
   @ViewChild("inputFiltroUsuario") inputFiltroUsuario: ElementRef;
 
-  constructor(private renderer: Renderer2, private tabService: TabService,private usuarioService: UsuarioService, 
-    private perfilService: PerfilService, private puntoVentaService: PuntoVentaService, private sesionService: SesionService, 
-    private empresaService: EmpresaService, private establecimientoService: EstablecimientoService, private router: Router) { }
+  constructor(private renderer: Renderer2, private usuarioService: UsuarioService, 
+    private perfilService: PerfilService, private sesionService: SesionService, private router: Router) { }
 
   ngOnInit() {
     this.sesion=validarSesion(this.sesionService, this.router);
     this.consultarUsuarios();
-    this.consultarEmpresas();
     this.consultarPerfiles();
-    this.consultarPuntosVentas();
     //this.construirUsuario();
-    
   }
 
   limpiar() {
@@ -195,32 +176,6 @@ export class UsuarioComponent implements OnInit {
     });
   }
 
-  consultarEmpresas() {
-    this.empresaService.consultar().subscribe({
-      next: (res) => {
-        this.empresas = res.resultado as Empresa[]
-      },
-      error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
-      }
-    );
-  }
-
-  consultarEstablecimientos(establecimientoId: number) {
-    //this.establecimiento.ubicacion.provincia = provincia;
-    //this.establecimientoService.obtener(establecimientoId).subscribe({
-    this.establecimientoService.consultar().subscribe({
-      next: res => {
-        console.log("estable");
-        if (res.resultado != null) {
-          this.establecimientos = res.resultado as Establecimiento[];
-        } else {
-          Swal.fire(error, res.mensaje, error_swal);
-        }
-      },
-      error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
-    });
-  }
-
   async construirUsuario() {
     let usuarioId=0;
     this.usuarioService.currentMessage.subscribe(message => usuarioId = message);
@@ -236,24 +191,15 @@ export class UsuarioComponent implements OnInit {
   }
 
   consultarPerfiles(){
-    this.perfilService.consultar().subscribe(
-      res => {
+    this.perfilService.consultar().subscribe({
+      next: res => {
         //Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
         this.perfiles=res.resultado as Perfil[]
       },
-      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
-    );
+      error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+    });
   }
 
-  consultarPuntosVentas(){
-    this.puntoVentaService.consultar().subscribe(
-      res => {
-        //Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
-        this.puntosVentas=res.resultado as PuntoVenta[]
-      },
-      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
-    );
-  }
 
   compareFn(a: any, b: any) {
     return a && b && a.id == b.id;
@@ -297,7 +243,7 @@ export class UsuarioComponent implements OnInit {
     const archivoCapturado = event.target.files[0];
     //console.log(archivoCapturado);
     this.extrarBase64(archivoCapturado).then((imagen: any) => {
-      this.usuario.foto = imagen.base;
+      this.usuario.avatar = imagen.base;
       //console.log(imagen);
     });
   }

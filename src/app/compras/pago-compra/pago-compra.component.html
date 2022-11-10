@@ -38,7 +38,7 @@
                 <mat-form-field appearance="standard">
                     <mat-label>Tipo</mat-label>
                     <input matInput type="text" class="form-control-sm"
-                        [(ngModel)]="factura.sesion.usuario.puntoVenta.codigo" [ngModelOptions]="{standalone: true}"
+                        [(ngModel)]="factura.sesion.estacion.codigo" [ngModelOptions]="{standalone: true}"
                         disabled>
                 </mat-form-field>
             </div>
@@ -426,9 +426,9 @@
             <div class="form-group col-4">
                 <mat-form-field appearance="standard">
                     <mat-label>Punto Venta</mat-label>
-                    <mat-select class="form-control-sm" [(ngModel)]="retencionVenta.puntoVenta">
-                        <mat-option *ngFor="let puntoVenta of puntosVentas" [value]="puntoVenta">
-                            {{puntoVenta.codigo}}
+                    <mat-select class="form-control-sm" [(ngModel)]="retencionVenta.estacion">
+                        <mat-option *ngFor="let estacion of estaciones" [value]="estacion">
+                            {{estacion.codigo}}
                         </mat-option>
                     </mat-select>
                 </mat-form-field>

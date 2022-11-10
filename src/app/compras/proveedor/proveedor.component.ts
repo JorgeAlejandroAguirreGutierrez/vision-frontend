@@ -444,7 +444,7 @@ export class ProveedorComponent implements OnInit {
         err => Swal.fire(error, err.error.mensaje, error_swal)
       );
     }
-    this.proveedor.puntoVenta = this.sesion.usuario.puntoVenta;
+    //this.proveedor.estacion = this.sesion.estacion;
     if (this.telefono.numero != valores.vacio)
       this.proveedor.telefonos.push(this.telefono);
     if (this.celular.numero != valores.vacio)
