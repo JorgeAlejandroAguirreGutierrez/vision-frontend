@@ -75,14 +75,15 @@ import { TablaMovimientoContableComponent } from './contabilidad/movimiento-cont
 
 // Módulo de Usuarios
 import { SesionComponent } from './usuarios/sesion/sesion.component';
-import { PermisoComponent } from './usuarios/permiso/permiso.component';
 import { UsuarioComponent } from './usuarios/usuario/usuario.component';
-import { EstablecimientoComponent } from './usuarios/establecimiento/establecimiento.component';
-import { PuntoVentaComponent } from './usuarios/punto-venta/punto-venta.component';
+import { EstacionUsuarioComponent } from './usuarios/estacion-usuario/estacion-usuario.component';
+import { EmpresaComponent } from './usuarios/empresa/empresa.component';
+import { EstablecimientoComponent, DialogoMapaEstablecimientoComponent } from './usuarios/establecimiento/establecimiento.component';
+import { EstacionComponent } from './usuarios/estacion/estacion.component';
 import { PerfilComponent } from './usuarios/perfil/perfil.component';
+import { PermisoComponent } from './usuarios/permiso/permiso.component';
 
 //Módulo de Configuraciones
-import { EmpresaComponent, DialogoMapaEmpresaComponent } from './usuarios/empresa/empresa.component';
 import { UbicacionComponent } from './configuraciones/ubicacion/ubicacion.component';
 
 // Otros - borrar al final
@@ -106,7 +107,7 @@ const routes: Routes = [
   // Rutas para el modulo de usuarios
   { path: 'usuario', component: UsuarioComponent },
   { path: 'usuario/establecimiento', component: EstablecimientoComponent },
-  { path: 'usuario/puntoventa', component: PuntoVentaComponent },
+  { path: 'usuario/estacion', component: EstacionComponent },
   // Rutas para el modulo de clientes
   { path: 'cliente', component: ClienteComponent },
   { path: 'cliente/plazocredito', component: PlazoCreditoComponent },
@@ -221,14 +222,15 @@ export const RoutingComponents = [
   TablaMovimientoContableComponent,
   //Usuarios
   SesionComponent,
-  PermisoComponent,
   UsuarioComponent,
-  EstablecimientoComponent,
-  PuntoVentaComponent,
-  PerfilComponent,
-  // configuración
+  EstacionUsuarioComponent,
   EmpresaComponent,
-  DialogoMapaEmpresaComponent,
+  EstablecimientoComponent,
+  DialogoMapaEstablecimientoComponent,
+  EstacionComponent,
+  PerfilComponent,
+  PermisoComponent,
+  // configuración
   TipoRetencionComponent,
   UbicacionComponent,
   //otros

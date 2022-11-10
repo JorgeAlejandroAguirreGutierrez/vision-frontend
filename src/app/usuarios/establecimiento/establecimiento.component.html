@@ -1,66 +1,333 @@
-<p>punto-venta works!</p>
 <nav class="navbar-light nav-fijo">
     <ul class="navbar-nav">
-        <li class="nav-item">
-            <a class="nav-link" href="#" role="button" (click)="nuevo($event)">
-                <mat-icon>file</mat-icon>
-            </a>
-        </li>
-        <li class="nav-item">
-            <ng-container *ngIf="establecimiento.id==0">
-                <a class="nav-link" href="#" role="button" (click)="crear($event)">
+        <ng-container *ngIf="abrirPanelAsignarEstablecimiento">
+            <li class="nav-item" *ngIf="!verActualizarEmpresa">
+                <a class="nav-link" title="Guardar" role="button" (click)="actualizarEmpresa($event)">
                     <mat-icon>save</mat-icon>
                 </a>
-            </ng-container>
-            <ng-container *ngIf="establecimiento.id!=0">
-                <a class="nav-link" href="#" role="button" (click)="actualizar($event)">
-                    <mat-icon>save</mat-icon>
+            </li>
+            <li class="nav-item" *ngIf="verActualizarEmpresa">
+                <a class="nav-link" title="Actualizar" role="button" (click)="actualizarEmpresa($event)">
+                    <mat-icon>update</mat-icon>
                 </a>
-            </ng-container>
-        </li>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" title="Borrar" role="button" (click)="limpiar()">
+                    <mat-icon>file_copy</mat-icon>
+                </a>
+            </li>
+        </ng-container>
     </ul>
 </nav>
 <div class="contenedor">
-    <div class="row">
-        <div class="col-12">
-            <div class="card">
-                <div class="card-header">
-                    &nbsp;&nbsp;&nbsp;&nbsp;<i><u>CREAR ESTABLECIMIENTO</u></i>
-                </div>
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col-12">
-                            <div class="form-row">
-                                <div class="form-group col-4">
-                                    <mat-form-field appearance="standard">
-                                        <mat-label>Codigo</mat-label>
-                                        <input matInput type="text" [(ngModel)]="establecimiento.codigo" class="form-control-sm" [disabled]="true">
-                                    </mat-form-field>
-                                </div>
-                                <div class="form-group col-4">
-                                    <mat-form-field appearance="standard">
-                                        <mat-label>Direccion</mat-label>
-                                        <input matInput type="text" [(ngModel)]="establecimiento.direccion" oninput="this.value = this.value.toUpperCase()" class="form-control-sm">
-                                    </mat-form-field>
-                                </div>
-                            </div>
-                            <div class="form-row">
-                                <div class="form-group col-4">
-                                    <mat-form-field appearance="standard">
-                                        <mat-label>Empresa</mat-label>
-                                        <mat-select [(ngModel)]="establecimiento.empresa" [compareWith]="compareFn" class="form-control-sm">
-                                            <mat-option *ngFor="let empresa of empresas"
-                                                [value]="empresa">
-                                                {{empresa.razonSocial}}
-                                            </mat-option>
-                                        </mat-select>
-                                    </mat-form-field>
-                                </div>
-                            </div>
-                        </div>
+    <div class="form-group form-row">
+        <div class="card col-12">
+            <div class="card-header">
+                &nbsp;&nbsp;&nbsp;<i><u>EMPRESA</u></i>
+            </div>
+            <div class="card-body">
+                <div class="form-group form-row">
+                    <div class="col-12">
+                        <mat-form-field appearance="standard">
+                            <mat-label>Empresa</mat-label>
+                            <input matInput type="text" aria-label="Establecimiento" class="form-control-sm"
+                                [formControl]="controlEmpresa" [matAutocomplete]="empresa" #autocompleteEmpresa>
+                            <mat-autocomplete autoActiveFirstOption #empresa="matAutocomplete"
+                                [displayWith]="verEmpresa" (optionSelected)="seleccionarEmpresa()">
+                                <mat-option *ngFor="let empresa of filtroEmpresas | async" [value]="empresa">
+                                    {{empresa.nombreComercial}}
+                                </mat-option>
+                            </mat-autocomplete>
+                            <button mat-button *ngIf="autocompleteEmpresa.value" matSuffix mat-icon-button
+                                (click)="limpiar()">
+                                <mat-icon>close</mat-icon>
+                            </button>
+                        </mat-form-field>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+    <mat-accordion class="headers-align">
+        <mat-expansion-panel (opened)="abrirPanelUbicacionEstablecimiento = true"
+            (closed)="abrirPanelUbicacionEstablecimiento = false" [expanded]="abrirPanelUbicacionEstablecimiento">
+            <mat-expansion-panel-header>
+                <mat-panel-title>
+                    <i><u>ESTABLECIMIENTO</u></i>
+                </mat-panel-title>
+                <mat-panel-description>
+                    {{abrirPanelUbicacionEstablecimiento ? 'Ocultar crear direcciones' : 'Crear direcciones del establecimiento'}}
+                    <mat-icon>location_on</mat-icon>
+                </mat-panel-description>
+            </mat-expansion-panel-header>
+            <hr>
+            <div class="form-group form-row">
+                <div class="form-row col-8">
+                    <div class="col-9">
+                        <mat-form-field appearance="standard">
+                            <mat-label>Nombre</mat-label>
+                            <input matInput type="text" [(ngModel)]="establecimiento.nombre"
+                                oninput="this.value = this.value.toUpperCase()" class="form-control-sm">
+                            <button mat-button *ngIf="establecimiento.nombre" matSuffix mat-icon-button
+                                (click)="establecimiento.nombre=''">
+                                <mat-icon>close</mat-icon>
+                            </button>
+                        </mat-form-field>
+                    </div>
+                    <div class="col-3">
+                        <mat-form-field appearance="standard">
+                            <mat-label>Código</mat-label>
+                            <input matInput type="text" disabled [(ngModel)]="establecimiento.codigo"
+                                class="form-control-sm">
+                        </mat-form-field>
+                    </div>
+                    <div class="col-9">
+                        <mat-form-field appearance="standard">
+                            <mat-label>Direccion</mat-label>
+                            <input matInput type="text" [(ngModel)]="establecimiento.direccion"
+                                oninput="this.value = this.value.toUpperCase()" class="form-control-sm">
+                            <button mat-button *ngIf="establecimiento.direccion" matSuffix mat-icon-button
+                                (click)="establecimiento.direccion=''">
+                                <mat-icon>close</mat-icon>
+                            </button>
+                        </mat-form-field>
+                    </div>
+                    <div class="col-1">
+                        <mat-form-field appearance="standard">
+                            <mat-label>#Fact</mat-label>
+                            <input matInput type="text" [(ngModel)]="establecimiento.codigoSRI" class="form-control-sm">
+                        </mat-form-field>
+                    </div>
+                    <div class="col-2">
+                        <mat-form-field appearance="standard">
+                            <mat-label>Estado</mat-label>
+                            <mat-select [(ngModel)]="establecimiento.estado" [disabled]="!editarEstablecimiento"
+                                class="form-control-sm">
+                                <mat-option [value]="abierto">{{abierto}}</mat-option>
+                                <mat-option [value]="cerrado">{{cerrado}}</mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                    <div class="col-4">
+                        <mat-form-field appearance="standard">
+                            <mat-label>Provincia</mat-label>
+                            <mat-select type="text" [(ngModel)]="establecimientoProvincia"
+                                (selectionChange)="provincia($event.value)" class="form-control-sm">
+                                <mat-option *ngFor="let provincia of provincias" [value]="provincia.provincia">
+                                    {{provincia.provincia}}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                    <div class="col-4">
+                        <mat-form-field appearance="standard">
+                            <mat-label>Canton</mat-label>
+                            <mat-select type="text" [(ngModel)]="establecimientoCanton"
+                                (selectionChange)="canton($event.value)" class="form-control-sm">
+                                <mat-option *ngFor="let canton of cantones" [value]="canton.canton">
+                                    {{canton.canton}}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                    <div class="col-4">
+                        <mat-form-field appearance="standard">
+                            <mat-label>Parroquia</mat-label>
+                            <mat-select type="text" [(ngModel)]="establecimientoParroquia" class="form-control-sm"
+                                (selectionChange)="parroquia($event.value)">
+                                <mat-option *ngFor="let parroquia of parroquias" [value]="parroquia.parroquia">
+                                    {{parroquia.parroquia}}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                    <section class="form-row">
+                        <div class="form-row col-4">
+                            <div class="col-9">
+                                <mat-form-field appearance="standard">
+                                    <mat-label>Teléfono</mat-label>
+                                    <b matPrefix>+593 &nbsp;</b>
+                                    <input matInput type="tel" [(ngModel)]="telefono.numero" class="form-control-sm"
+                                        (change)="validarTelefono()" placeholder="03-2999-123" oninput="this.value = this.value.replace
+                                        ( /^(\d{2})(\d{4})(\d{3})$/, '$1-$2-$3')">
+                                </mat-form-field>
+                            </div>
+                            <div class="col-3 iconos">
+                                <button mat-icon-button>
+                                    <mat-icon (click)="crearTelefono()">add</mat-icon>
+                                </button>
+                            </div>
+                            <ng-container *ngFor="let telefono of establecimiento.telefonos; let i=index ">
+                                <div class="col-9">
+                                    <mat-form-field appearance="standard">
+                                        <mat-label>Teléfono</mat-label>
+                                        <b matPrefix>+593 &nbsp;</b>
+                                        <input matInput type="tel" [value]="telefono.numero" class="form-control-sm"
+                                            disabled (change)="validarTelefono()" placeholder="03-2999-123" oninput="this.value = this.value.replace
+                                        ( /^(\d{2})(\d{4})(\d{3})$/, '$1-$2-$3')">
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-3 iconos">
+                                    <button mat-icon-button>
+                                        <mat-icon class="iconos-peque">edit</mat-icon>
+                                    </button>
+                                    <button mat-icon-button>
+                                        <mat-icon class="iconos-peque" (click)="eliminarTelefono(i)">close</mat-icon>
+                                    </button>
+                                </div>
+                            </ng-container>
+                        </div>
+                        <div class="form-row col-4">
+                            <div class="col-9">
+                                <mat-form-field appearance="standard">
+                                    <mat-label>Celular</mat-label>
+                                    <b matPrefix>+593 </b>
+                                    <input matInput type="tel" [(ngModel)]="celular.numero" class="form-control-sm"
+                                        (change)="validarCelular()" placeholder="09-9999-1234" oninput="this.value = this.value.replace
+                                            ( /^(\d{2})(\d{4})(\d{4})$/, '$1-$2-$3')">
+                                </mat-form-field>
+                            </div>
+                            <div class="col-3 iconos">
+                                <button mat-icon-button>
+                                    <mat-icon (click)="crearCelular()">add</mat-icon>
+                                </button>
+                            </div>
+                            <ng-container *ngFor="let celular of establecimiento.celulares; let i=index ">
+                                <div class="col-9">
+                                    <mat-form-field appearance="standard">
+                                        <mat-label>Celular</mat-label>
+                                        <b matPrefix>+593 &nbsp;</b>
+                                        <input matInput type="tel" [value]="celular.numero" class="form-control-sm"
+                                            disabled (change)="validarCelular()" placeholder="09-9999-1234" oninput="this.value = this.value.replace
+                                        ( /^(\d{2})(\d{4})(\d{4})$/, '$1-$2-$3')">
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-3 iconos">
+                                    <button mat-icon-button>
+                                        <mat-icon class="iconos-peque">edit</mat-icon>
+                                    </button>
+                                    <button mat-icon-button>
+                                        <mat-icon class="iconos-peque" (click)="eliminarCelular(i)">close</mat-icon>
+                                    </button>
+                                </div>
+                            </ng-container>
+                        </div>
+                        <div class="form-row col-4">
+                            <div class="col-9">
+                                <mat-form-field appearance="standard">
+                                    <mat-label>Correo electrónico</mat-label>
+                                    <input matInput placeholder="ejemplo@futiristic.com" [formControl]="correoEmpresa"
+                                        oninput="this.value = this.value.toLowerCase()" class="form-control-sm ">
+                                    <mat-error *ngIf="correoEmpresa.invalid">{{getErrorMessage()}}</mat-error>
+                                </mat-form-field>
+                            </div>
+                            <div class="col-3 iconos">
+                                <button mat-icon-button>
+                                    <mat-icon (click)="crearCorreo()">add</mat-icon>
+                                </button>
+                            </div>
+                            <ng-container *ngFor="let correo of establecimiento.correos; let i=index ">
+                                <div class="col-9">
+                                    <mat-form-field appearance="standard">
+                                        <mat-label>Correo electrónico</mat-label>
+                                        <input matInput type="text " [value]="correo.email"
+                                            oninput="this.value = this.value.toLowerCase()" class="form-control-sm"
+                                            disabled (change)="validarCorreo()" placeholder="ejemplo@futiristic.com">
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-3 iconos">
+                                    <button mat-icon-button>
+                                        <mat-icon class="iconos-peque">edit</mat-icon>
+                                    </button>
+                                    <button mat-icon-button>
+                                        <mat-icon class="iconos-peque" (click)="eliminarCorreo(i)">close</mat-icon>
+                                    </button>
+                                </div>
+                            </ng-container>
+                        </div>
+                    </section>
+                </div>
+                <div class="col-4 text-center linea-vertical">
+                    <!--mat-label>Georeferencia</mat-label-->
+                    <mat-card title="Doble click para maximizar">
+                        <google-map width="100%" [height]="180" [center]="posicionCentral" [zoom]="15"
+                            [options]="options" (dblclick)="dialogoMapas()">
+                            <map-marker #markerEmpresa="mapMarker" *ngIf="posicionGeografica"
+                                [position]="posicionGeografica"
+                                (mapClick)="openInfoWindow(markerEmpresa, infoWindowEmpresa)"></map-marker>
+                            <map-info-window #infoWindowEmpresa="mapInfoWindow">
+                                <div>
+                                    <p>Latitud: {{ posicionGeografica?.lat }}</p>
+                                    <p>Longitud: {{ posicionGeografica?.lng }}</p>
+                                </div>
+                            </map-info-window>
+                        </google-map>
+                    </mat-card>
+                </div>
+            </div>
+        </mat-expansion-panel>
+    </mat-accordion>
+    <mat-accordion class="headers-align">
+        <mat-expansion-panel (opened)="abrirPanelAsignarEstablecimiento = true"
+            (closed)="abrirPanelAsignarEstablecimiento = false" [expanded]="abrirPanelAsignarEstablecimiento">
+            <mat-expansion-panel-header>
+                <mat-panel-title>
+                    <i><u>GESTIONAR ESTABLECIMIENTOS</u></i>
+                </mat-panel-title>
+                <mat-panel-description>
+                    {{abrirPanelAsignarEstablecimiento ? 'Ocultar asignar establecimientos' : 'Gestionar establecimientos de la empresa'}}
+                    <mat-icon>playlist_add</mat-icon>
+                </mat-panel-description>
+            </mat-expansion-panel-header>
+            <hr>
+            <mat-form-field appearance="standard">
+                <mat-label>Buscar establecimientos</mat-label>
+                <input matInput [disabled]="deshabilitarFiltroEstablecimientos" (keyup)="filtroEstablecimiento($event)"
+                    placeholder="Ej. MATRIZ" oninput="this.value = this.value.toUpperCase()" #inputFiltroEstablecimiento>
+                <button mat-button *ngIf="inputFiltroEstablecimiento.value" matSuffix mat-icon-button
+                    (click)="borrarFiltroEstablecimiento()">
+                    <mat-icon>close</mat-icon>
+                </button>
+            </mat-form-field>
+            <div class="mat-elevation-z8">
+                <table mat-table [dataSource]="dataSourceEstablecimiento" matSort>
+                    <!-- Columnas Dinamicas -->
+                    <ng-container *ngFor="let columna of columnasEstablecimiento"
+                        [matColumnDef]="columna.nombreColumna">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> {{ columna.cabecera }} </th>
+                        <ng-container *ngIf="columna.nombreColumna != 'acciones'">
+                            <td mat-cell *matCellDef="let row"> {{ columna.celda(row) }} </td>
+                        </ng-container>
+                        <ng-container *ngIf="columna.nombreColumna == 'acciones'">
+                            <td mat-cell *matCellDef="let i=index">
+                                <button mat-icon-button color="warn" aria-label="Eliminar" focusable="false"
+                                    (click)="eliminarEstablecimiento($event, i)">
+                                    <i class="fa fa-times mat-icon"></i>
+                                </button>
+                            </td>
+                            <td mat-footer-cell *matFooterCellDef></td>
+                        </ng-container>
+                    </ng-container>
+                    <tr mat-header-row *matHeaderRowDef="cabeceraEstablecimiento"></tr>
+                    <tr mat-row (click)="seleccionEstablecimiento(row)"
+                        [class.selected-row]="clickedRowsEstablecimiento.has(row)"
+                        *matRowDef="let row; columns: cabeceraEstablecimiento;"></tr>
+
+                    <!-- Row shown when there is no matching data. -->
+                    <tr class="mat-row" *matNoDataRow>
+                        <td class="mat-cell" colspan="4">No hay datos que coincidan con el establecimiento
+                            "{{inputFiltroEstablecimiento.value}}"
+                        </td>
+                    </tr>
+                </table>
+                <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
+            </div>
+            <div class="azul" *ngIf="!clickedRowsEstablecimiento.size">
+                Seleccione una fila para editar
+            </div>
+            <div class="azul" *ngFor="let clickedRowEstablecimiento of clickedRowsEstablecimiento">
+                Id: {{clickedRowEstablecimiento.id}} seleccionado
+            </div>
+        </mat-expansion-panel>
+    </mat-accordion>
 </div>

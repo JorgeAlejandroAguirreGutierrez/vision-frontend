@@ -7,7 +7,7 @@ import { Genero } from '../cliente/genero';
 import { EstadoCivil } from '../cliente/estado-civil';
 import { CalificacionCliente } from '../cliente/calificacion-cliente';
 import { OrigenIngreso } from '../cliente/origen-ingreso';
-import { PuntoVenta } from '../usuario/punto-venta';
+import { Estacion } from '../usuario/estacion';
 import { Telefono } from '../cliente/telefono';
 import { Celular } from '../cliente/celular';
 import { Correo } from '../cliente/correo';
@@ -26,7 +26,7 @@ export class Proveedor {
     obligadoContabilidad: boolean;
     estado: string;
     
-    puntoVenta: PuntoVenta;
+    estacion: Estacion;
     grupoProveedor: GrupoProveedor;
     tipoContribuyente: TipoContribuyente;
     segmento: Segmento;
@@ -54,7 +54,7 @@ export class Proveedor {
         this.obligadoContabilidad=false;
         this.estado=valores.activo;
         this.especial=false;
-        this.puntoVenta=new PuntoVenta();
+        this.estacion=new Estacion();
         this.tipoContribuyente=new TipoContribuyente();
         this.segmento=new Segmento();
         this.grupoProveedor=new GrupoProveedor();

@@ -66,6 +66,15 @@ export class PerfilService {
     );
   }
 
+  eliminarPersonalizado(perfil: Perfil): Observable<Respuesta> {
+    return this.http.put(environment.host + urn.ruta + urn.perfil, perfil, options).pipe(
+      map(response => response as Respuesta),
+      catchError(err => {
+        return throwError(()=>err);
+      })
+    );
+  }
+
   eliminar(perfil: Perfil): Observable<Respuesta> {
     return this.http.delete(environment.host + urn.ruta + urn.perfil + '/' + perfil.id, options).pipe(
       map(response => response as Respuesta),

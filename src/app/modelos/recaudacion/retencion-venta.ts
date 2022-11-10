@@ -1,5 +1,5 @@
 import { RetencionCliente } from '../cliente/retencion-cliente';
-import { PuntoVenta } from '../usuario/punto-venta';
+import { Estacion } from '../usuario/estacion';
 import { Establecimiento } from '../usuario/establecimiento';
 import { valores } from "../../constantes";
 
@@ -13,7 +13,7 @@ export class RetencionVenta {
     porcentaje: number;
     retencionCliente: RetencionCliente;
     establecimiento: Establecimiento;
-    puntoVenta: PuntoVenta;
+    estacion: Estacion;
 
     constructor() {
         this.id=valores.cero;
@@ -24,6 +24,6 @@ export class RetencionVenta {
         this.valor=valores.cero;
         this.porcentaje=valores.cero;
         this.retencionCliente=new RetencionCliente();
-        this.puntoVenta=new PuntoVenta();
+        this.estacion=new Estacion();
     }
 }

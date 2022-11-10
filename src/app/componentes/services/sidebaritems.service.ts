@@ -39,13 +39,15 @@ import { VehiculoTransporteComponent } from '../../entregas/vehiculo-transporte/
 
 //ACCESOS
 import { UsuarioComponent } from '../../usuarios/usuario/usuario.component';
+import { EstacionUsuarioComponent } from '../../usuarios/estacion-usuario/estacion-usuario.component';
+import { EmpresaComponent } from '../../usuarios/empresa/empresa.component';
 import { EstablecimientoComponent } from '../../usuarios/establecimiento/establecimiento.component';
-import { PuntoVentaComponent } from '../../usuarios/punto-venta/punto-venta.component';
+import { EstacionComponent } from '../../usuarios/estacion/estacion.component';
 import { PerfilComponent } from '../../usuarios/perfil/perfil.component';
 import { PermisoComponent } from '../../usuarios/permiso/permiso.component';
 
 //CONFIGURACIONES
-import { EmpresaComponent } from '../../usuarios/empresa/empresa.component';
+
 import { UbicacionComponent } from '../../configuraciones/ubicacion/ubicacion.component';
 import { EstadoCivilComponent } from '../../configuraciones/estado-civil/estado-civil.component';
 import { ImpuestoComponent } from '../../configuraciones/impuesto/impuesto.component';
@@ -138,10 +140,11 @@ export class SidebarItemsService {
     }
 
     if (tabNombre == modulos.modulo_accesos) {
-      this.llenarOpciones(EmpresaComponent, tabs.tab_empresa, items.item_empresa, icos.ico_empresa);
       this.llenarOpciones(UsuarioComponent, tabs.tab_usuario, items.item_usuario, icos.ico_usuario);
+      this.llenarOpciones(EstacionUsuarioComponent, tabs.tab_estacion_usuario, items.item_estacion_usuario, icos.ico_estacion_usuario);
+      this.llenarOpciones(EmpresaComponent, tabs.tab_empresa, items.item_empresa, icos.ico_empresa);
       this.llenarOpciones(EstablecimientoComponent, tabs.tab_establecimiento, items.item_establecimiento, icos.ico_establecimiento);
-      this.llenarOpciones(PuntoVentaComponent, tabs.tab_punto_venta, items.item_punto_venta, icos.ico_punto_venta);
+      this.llenarOpciones(EstacionComponent, tabs.tab_estacion, items.item_estacion, icos.ico_estacion);
       this.llenarOpciones(PerfilComponent, tabs.tab_perfil, items.item_perfil, icos.ico_perfil);
       this.llenarOpciones(PermisoComponent, tabs.tab_permiso, items.item_permiso, icos.ico_permiso);
     }

@@ -5,7 +5,7 @@ import { Sesion } from '../../modelos/usuario/sesion';
 import { SesionService } from '../../servicios/usuario/sesion.service';
 import { Empresa } from '../../modelos/usuario/empresa';
 import { Parametro } from '../../modelos/configuracion/parametro';
-import { EmpresaService } from '../../servicios/configuracion/empresa.service';
+import { EmpresaService } from '../../servicios/usuario/empresa.service';
 import { ParametroService } from '../../servicios/configuracion/parametro.service';
 import { valores, exito, exito_swal, error, error_swal } from '../../constantes';
 import { environment } from '../../../environments/environment';

@@ -8,7 +8,7 @@ import { valores, mensajes, otras, tabs, validarSesion, tab_activo, exito, exito
 import { environment } from '../../../environments/environment';
 
 import { Empresa } from '../../modelos/usuario/empresa';
-import { EmpresaService } from '../../servicios/configuracion/empresa.service';
+import { EmpresaService } from '../../servicios/usuario/empresa.service';
 import { Sesion } from '../../modelos/usuario/sesion';
 import { SesionService } from '../../servicios/usuario/sesion.service';
 import { TabService } from '../../componentes/services/tab.service';
@@ -401,7 +401,7 @@ export class ClienteComponent implements OnInit {
       this.cliente.celulares.push(this.celular);
     if (this.correo.email != valores.vacio)
       this.cliente.correos.push(this.correo);
-    this.cliente.puntoVenta = this.sesion.usuario.puntoVenta;
+    this.cliente.estacion = this.sesion.estacion;
     let ubicacion: Ubicacion = new Ubicacion();
     ubicacion.provincia = this.clienteProvincia;
     ubicacion.canton = this.clienteCanton;
@@ -717,7 +717,7 @@ export class ClienteComponent implements OnInit {
   crearCorreo() {
     if (this.correo.email.length != valores.cero) {
       this.cliente.correos.push(this.correo);
-      //this.correo = new Correo();
+      this.correo = new Correo();
     } else {
       Swal.fire({ icon: error_swal, title: error, text: mensajes.error_correo_ingresado });
     }

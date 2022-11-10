@@ -7,14 +7,11 @@ import Swal from 'sweetalert2';
 import { Router } from '@angular/router';
 import { Sesion } from 'src/app/modelos/usuario/sesion';
 import { SesionService } from 'src/app/servicios/usuario/sesion.service';
-import { TabService } from '../../componentes/services/tab.service';
 
 import { Usuario } from '../../modelos/usuario/usuario';
 import { UsuarioService } from '../../servicios/usuario/usuario.service';
 import { Perfil } from '../../modelos/usuario/perfil';
-import { PerfilService } from '../../servicios/usuario/perfil-service.service';
-import { PuntoVenta } from '../../modelos/usuario/punto-venta';
-import { PuntoVentaService } from '../../servicios/usuario/punto-venta.service';
+import { PerfilService } from '../../servicios/usuario/perfil.service';
 
 import { ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
@@ -29,51 +26,49 @@ import { MatTableDataSource } from '@angular/material/table';
 
 export class UsuarioComponent implements OnInit {
 
-  sesion: Sesion = null;
-
   activo: string = valores.activo;
   inactivo: string = valores.inactivo;
   contrasena2: string = valores.vacio;
 
   abrirPanelNuevoUsuario: boolean = true;
-  abrirPanelAdminUsuario: boolean = false;
+  abrirPanelAdminUsuario: boolean = true;
   editarUsuario: boolean = true;
-  hide: boolean = true;
+  ocultarContrasena: boolean = true;
+  ocultarContrasena2: boolean = true;
 
+  sesion: Sesion = null;
   usuario: Usuario = new Usuario();
-  usuarios: Usuario[];
-  perfiles: Perfil[]=[];
-  puntosVentas: PuntoVenta[]=[];
 
   email = new UntypedFormControl('', [Validators.required, Validators.email]);
+
+  usuarios: Usuario[];
+  perfiles: Perfil[]=[];
 
   columnasUsuario: any[] = [
     { nombreColumna: 'id', cabecera: 'ID', celda: (row: Usuario) => `${row.id}` },
     { nombreColumna: 'codigo', cabecera: 'Código', celda: (row: Usuario) => `${row.codigo}` },
     { nombreColumna: 'identificacion', cabecera: 'Identificación', celda: (row: Usuario) => `${row.identificacion}` },
     { nombreColumna: 'nombre', cabecera: 'Nombre', celda: (row: Usuario) => `${row.nombre}` },
-    { nombreColumna: 'estado', cabecera: 'Estado', celda: (row: Usuario) => `${row.activo}` }
+    { nombreColumna: 'perfil', cabecera: 'Perfil', celda: (row: Usuario) => `${row.perfil.descripcion}` },
+    { nombreColumna: 'estado', cabecera: 'Estado', celda: (row: Usuario) => `${row.estado}` }
   ];
   cabeceraUsuario: string[] = this.columnasUsuario.map(titulo => titulo.nombreColumna);
   dataSourceUsuario: MatTableDataSource<Usuario>;
   observableDSUsuario: BehaviorSubject<MatTableDataSource<Usuario>> = new BehaviorSubject<MatTableDataSource<Usuario>>(null);
   clickedRows = new Set<Usuario>();
 
-
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
   @ViewChild("inputFiltroUsuario") inputFiltroUsuario: ElementRef;
 
-  constructor(private renderer: Renderer2, private tabService: TabService,private usuarioService: UsuarioService, 
-    private perfilService: PerfilService, private puntoVentaService: PuntoVentaService, private sesionService: SesionService, private router: Router) { }
+  constructor(private renderer: Renderer2, private usuarioService: UsuarioService, 
+    private perfilService: PerfilService, private sesionService: SesionService, private router: Router) { }
 
   ngOnInit() {
     this.sesion=validarSesion(this.sesionService, this.router);
     this.consultarUsuarios();
     this.consultarPerfiles();
-    this.consultarPuntosVentas();
     //this.construirUsuario();
-    
   }
 
   limpiar() {
@@ -196,24 +191,15 @@ export class UsuarioComponent implements OnInit {
   }
 
   consultarPerfiles(){
-    this.perfilService.consultar().subscribe(
-      res => {
+    this.perfilService.consultar().subscribe({
+      next: res => {
         //Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
         this.perfiles=res.resultado as Perfil[]
       },
-      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
-    );
+      error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+    });
   }
 
-  consultarPuntosVentas(){
-    this.puntoVentaService.consultar().subscribe(
-      res => {
-        //Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
-        this.puntosVentas=res.resultado as PuntoVenta[]
-      },
-      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
-    );
-  }
 
   compareFn(a: any, b: any) {
     return a && b && a.id == b.id;
@@ -226,6 +212,25 @@ export class UsuarioComponent implements OnInit {
     return this.email.hasError('email') ? 'Correo no válido' : '';
   }
 
+  crearTelefono() {
+    if (this.usuario.telefono.length != valores.cero) {
+      //this.usuario.telefonos.push(this.telefono);
+      //this.telefono = new Telefono();
+    } else {
+      Swal.fire(error, "Ingrese un número telefónico válido", error_swal);
+    }
+  }
+  validarTelefono() {
+    let digito = this.usuario.telefono.substring(0, 1);
+    if (this.usuario.telefono.length != 11 || digito != "0") {
+      //this.telefono.numero = valores.vacio;
+      Swal.fire(error, "Telefono Invalido", error_swal);
+    }
+  }
+  eliminarTelefono(i: number) {
+    //this.usuario.telefono.splice(i, 1);
+  }
+
   validarCelular() {
     let digito = this.usuario.celular.substring(0, 2);
     if (this.usuario.celular.length != 12 || digito != "09") {
@@ -233,4 +238,33 @@ export class UsuarioComponent implements OnInit {
       Swal.fire({ icon: error_swal, title: error, text: mensajes.error_celular_invalido });
     }
   }
+
+  capturarFile(event : any) : any{
+    const archivoCapturado = event.target.files[0];
+    //console.log(archivoCapturado);
+    this.extrarBase64(archivoCapturado).then((imagen: any) => {
+      this.usuario.avatar = imagen.base;
+      //console.log(imagen);
+    });
+  }
+
+  extrarBase64 = async ($event: any) => new Promise((resolve) => {
+    try {
+      const reader = new FileReader();
+      reader.readAsDataURL($event);
+      reader.onload = () => {
+        resolve({
+          base: reader.result
+        })
+      };
+      reader.onerror = error => {
+        resolve({
+          base: reader.result
+        })
+      };
+    } catch (e) {
+      return null;
+    }
+  }); 
+
 }

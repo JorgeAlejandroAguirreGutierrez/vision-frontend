@@ -1,31 +1,36 @@
 import { Perfil } from './perfil';
-import { PuntoVenta } from './punto-venta';
+import { EstacionUsuario } from './estacion-usuario';
 import { valores } from "../../constantes";
+
 export class Usuario {
     id: number;
     codigo: string;
-    usuario: string;
+    apodo: string;
     contrasena: string;
     identificacion: string;
     nombre: string;
-    correo: string;
+    telefono: string;
     celular: string;
-    activo: string;
-    puntoVenta: PuntoVenta;
+    correo: string;
+    avatar: string;
+    estado: string;
     perfil: Perfil;
+    estacionesUsuarios: EstacionUsuario[];
 
     constructor() {
       this.id = valores.cero;
       this.codigo = valores.vacio;
-      this.usuario = valores.vacio;
+      this.apodo = valores.vacio;
       this.contrasena = valores.vacio;
       this.identificacion = valores.vacio;
       this.nombre = valores.vacio;
-      this.correo = valores.vacio;
+      this.telefono = valores.vacio;
       this.celular = valores.vacio;
-      this.activo = valores.activo;
-      this.puntoVenta = new PuntoVenta();
+      this.correo = valores.vacio;
+      this.avatar = valores.vacio;
+      this.estado = valores.activo;
       this.perfil = new Perfil();
+      this.estacionesUsuarios = [];
     }
     
 }

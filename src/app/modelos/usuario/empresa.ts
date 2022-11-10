@@ -1,7 +1,3 @@
-import { Direccion } from '../cliente/direccion';
-import { Telefono } from '../cliente/telefono';
-import { Celular } from '../cliente/celular';
-import { Correo } from '../cliente/correo';
 //import { TipoIdentificacion } from '../configuracion/tipo-identificacion';
 import { valores } from "../../constantes";
 
@@ -15,10 +11,6 @@ export class Empresa {
     logo: string;
     estado: string;
     //tipoIdentificacion: TipoIdentificacion;
-    direccion: Direccion;
-    telefonos: Telefono[];
-    celulares: Celular[];
-    correos: Correo[];
     
     constructor() {
         this.id=valores.cero;
@@ -30,9 +22,5 @@ export class Empresa {
         this.logo=valores.vacio;
         this.estado=valores.activo;
         //this.tipoIdentificacion=new TipoIdentificacion();
-        this.direccion=new Direccion();
-        this.telefonos=[];
-        this.celulares=[];
-        this.correos=[];
     }
 }

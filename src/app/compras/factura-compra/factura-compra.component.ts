@@ -35,7 +35,7 @@ import { TipoRetencion } from '../../modelos/configuracion/tipo-retencion';
 import { SesionService } from '../../servicios/usuario/sesion.service';
 import { Sesion } from '../../modelos/usuario/sesion';
 import { Dependiente } from '../../modelos/cliente/dependiente';
-import { EmpresaService } from '../../servicios/configuracion/empresa.service';
+import { EmpresaService } from '../../servicios/usuario/empresa.service';
 import { Empresa } from '../../modelos/usuario/empresa';
 import { environment } from '../../../environments/environment';
 import { TipoContribuyenteService } from '../../servicios/cliente/tipo-contribuyente.service';
@@ -584,7 +584,7 @@ export class FacturaCompraComponent implements OnInit {
       );
     }
     this.sesion= this.sesionService.getSesion();
-    this.cliente.puntoVenta=this.sesion.usuario.puntoVenta;
+    this.cliente.estacion=this.sesion.estacion;
     if (this.telefono.numero!=undefined)
       this.cliente.telefonos.push(this.telefono);
     if (this.celular.numero!=undefined)

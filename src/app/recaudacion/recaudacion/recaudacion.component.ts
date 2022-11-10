@@ -40,8 +40,8 @@ import { RecaudacionService } from '../../servicios/recaudacion/recaudacion.serv
 import { RetencionVenta } from '../../modelos/recaudacion/retencion-venta';
 import { EstablecimientoService } from '../../servicios/usuario/establecimiento.service';
 import { Establecimiento } from '../../modelos/usuario/establecimiento';
-import { PuntoVenta } from '../../modelos/usuario/punto-venta';
-import { PuntoVentaService } from '../../servicios/usuario/punto-venta.service';
+import { Estacion } from '../../modelos/usuario/estacion';
+import { EstacionService } from '../../servicios/usuario/estacion.service';
 import { Parametro } from '../../modelos/configuracion/parametro';
 import { ParametroService } from '../../servicios/configuracion/parametro.service';
 import { valores, mensajes, otras, validarSesion, exito, exito_swal, error, error_swal } from '../../constantes';
@@ -78,7 +78,7 @@ export class RecaudacionComponent implements OnInit {
   constructor(private facturaService: FacturaService, private facturacionElectronicaService: FacturacionElectronicaService, private clienteService: ClienteService, private bancoService: BancoService, private sesionService: SesionService,
     private cuentaPropiaService: CuentaPropiaService, private operadorTarjetaService: OperadorTarjetaService, private datePipe: DatePipe,
     private franquiciaTarjetaService: FranquiciaTarjetaService, private formaPagoService: FormaPagoService, private creditoService: CreditoService,
-    private parametroService: ParametroService, private establecimientoService: EstablecimientoService, private puntoVentaService: PuntoVentaService,
+    private parametroService: ParametroService, private establecimientoService: EstablecimientoService, private estacionService: EstacionService,
     private tipoComprobanteService: TipoComprobanteService, private recaudacionService: RecaudacionService, private modalService: NgbModal, private router: Router) { }
 
   factura: Factura= new Factura();
@@ -102,7 +102,7 @@ export class RecaudacionComponent implements OnInit {
   operadoresTarjetasDebitos: OperadorTarjeta[]=[];
   tiposComprobantes: TipoComprobante[]=[];
   establecimientos: Establecimiento[]=[];
-  puntosVentas: PuntoVenta[]=[];
+  estaciones: Estacion[]=[];
 
   seleccionRazonSocialCliente = new UntypedFormControl();
   filtroRazonSocialClientes: Observable<Cliente[]> = new Observable<Cliente[]>();
@@ -292,9 +292,9 @@ export class RecaudacionComponent implements OnInit {
   }
 
   consultarPuntosVentas(){
-    this.puntoVentaService.consultarEstablecimiento(this.retencionVenta.establecimiento.id).subscribe(
+    this.estacionService.consultarEstablecimiento(this.retencionVenta.establecimiento.id).subscribe(
       res => {
-        this.puntosVentas = res.resultado as PuntoVenta[]
+        this.estaciones = res.resultado as Estacion[]
       },
       err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     );
