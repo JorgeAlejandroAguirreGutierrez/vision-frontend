@@ -99,7 +99,7 @@ export class EstablecimientoComponent implements OnInit {
     { nombreColumna: 'id', cabecera: 'ID', celda: (row: Establecimiento) => `${row.id}`},
     { nombreColumna: 'codigo_propio', cabecera: 'Código propio', celda: (row: Establecimiento) => `${row.codigo}`},
     { nombreColumna: 'codigo_factura', cabecera: 'Código factura', celda: (row: Establecimiento) => `${row.codigoSRI}`},
-    { nombreColumna: 'nombre', cabecera: 'Nombre', celda: (row: Establecimiento) => `${row.nombre}`},
+    { nombreColumna: 'nombre', cabecera: 'Nombre', celda: (row: Establecimiento) => `${row.descripcion}`},
     { nombreColumna: 'direccion', cabecera: 'Dirección', celda: (row: Establecimiento) => `${row.direccion}`},
     { nombreColumna: 'estado', cabecera: 'Estado', celda: (row: Establecimiento) => `${row.estado}`}
   ];
@@ -229,7 +229,7 @@ export class EstablecimientoComponent implements OnInit {
     this.dataSourceEstablecimiento = new MatTableDataSource(establecimientos);
     this.dataSourceEstablecimiento.filterPredicate = (data: Establecimiento, filter: string): boolean =>
       data.codigo.toUpperCase().includes(filter) || data.codigoSRI.toUpperCase().includes(filter) ||
-      data.nombre.toUpperCase().includes(filter) ||data.direccion.toUpperCase().includes(filter) || data.estado.toUpperCase().includes(filter);
+      data.descripcion.toUpperCase().includes(filter) ||data.direccion.toUpperCase().includes(filter) || data.estado.toUpperCase().includes(filter);
     this.dataSourceEstablecimiento.paginator = this.paginator;
     this.dataSourceEstablecimiento.sort = this.sort;
   }

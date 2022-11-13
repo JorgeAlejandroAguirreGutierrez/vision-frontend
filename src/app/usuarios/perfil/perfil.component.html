@@ -44,7 +44,7 @@
             </mat-expansion-panel-header>
             <hr>
             <div class="form-group form-row">
-                <div class="col-2">
+                <div class="col-3">
                     <mat-form-field appearance="standard">
                         <mat-label>Código</mat-label>
                         <input matInput type="text" [(ngModel)]="perfil.codigo" class="form-control-sm"
@@ -65,11 +65,13 @@
                             class="form-control-sm">
                     </mat-form-field>
                 </div>
-                <div class="col-2">
+                <div class="col-1">
                     <mat-form-field appearance="standard">
-                        <mat-label>Control Acceso</mat-label>
-                        <input matInput type="text" [(ngModel)]="perfil.controlAcceso.descripcion" [disabled]="!editarPerfil"
-                            class="form-control-sm">
+                        <mat-label>Mutiempresa</mat-label>
+                            <mat-select [(ngModel)]="perfil.multiempresa" [disabled]="!editarPerfil" class="form-control-sm">
+                                <mat-option value="SI">SI</mat-option>
+                                <mat-option value="NO">NO</mat-option>
+                            </mat-select>    
                     </mat-form-field>
                 </div>
                 <div class="col-2">

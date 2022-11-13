@@ -68,8 +68,8 @@ export class EstablecimientoService {
     );
   }
 
-  buscar(establecimiento: Establecimiento): Observable<Respuesta> {
-    return this.http.get(environment.host + urn.ruta + urn.usuario + urn.buscar + '/' + establecimiento.codigo + '/' + establecimiento.direccion, options).pipe(
+  buscarEmpresa(establecimientoId: number): Observable<Respuesta> {
+    return this.http.get(environment.host + urn.ruta + urn.establecimiento + urn.buscar + '/' + establecimientoId, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);

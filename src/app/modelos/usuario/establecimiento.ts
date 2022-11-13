@@ -9,7 +9,7 @@ export class Establecimiento {
     id: number;
     codigo: string;
     codigoSRI: string;
-    nombre: string;
+    descripcion: string;
     direccion: string;
     latitud: number;
     longitud: number;
@@ -24,7 +24,7 @@ export class Establecimiento {
         this.id = valores.cero;
         this.codigo = valores.vacio;
         this.codigoSRI = valores.vacio;
-        this.nombre = valores.vacio;
+        this.descripcion = valores.vacio;
         this.direccion = valores.vacio;
         this.latitud = valores.cero;
         this.latitud = valores.cero;
