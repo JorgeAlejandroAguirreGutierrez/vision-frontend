@@ -15,7 +15,7 @@
     width: 20%;
 }
 
-.mat-icon {
+.iconos-grande {
     font-size: 40px;
     width: 60px;
     height: 40px;
@@ -23,6 +23,13 @@
 }
 
 //.texto{font-size: 22px;font-weight: bold; } // Para cuando tenia texto los iconos
+.foto{
+    border: 2px solid #5b6582 !important;
+    border-radius: 10px !important;
+    padding: 0 8px !important;
+    margin: 5px;
+    height: 150px;
+}
 
 .centrar-ico{
     //padding: 0;

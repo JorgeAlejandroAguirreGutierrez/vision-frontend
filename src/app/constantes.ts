@@ -130,6 +130,16 @@ export const valores ={
      latCiudad: -1.6705413480437092,
      lngCiudad: -78.64974203645144
 }
+
+export const preguntas = [
+    /**
+     * Preguntas de seguridad para usuarios
+     */
+    { pregunta: '¿Cúal es el nombre de tu mascota?' },
+    { pregunta: '¿Cúal es el apellido de tu Abuela materna?' },
+    { pregunta: '¿Cúal es el nombre de tu equipo preferido?' },
+    { pregunta: '¿Cúal es tu marca de vehículo preferido?' },
+]
     
 export const mensajes = {
     /**

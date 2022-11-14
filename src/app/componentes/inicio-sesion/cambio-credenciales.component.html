@@ -1,27 +1,19 @@
-<h1 mat-dialog-title>Hola {{data.usuario}}, Cree su nuevo Usuarios</h1>
+<h1 mat-dialog-title>Recuperar su usuario y contraseña</h1>
 <div mat-dialog-content>
   <mat-form-field>
     <mat-label>Identificación</mat-label>
-    <input matInput [(ngModel)]="sesion.usuario.identificacion">
+    <input matInput [(ngModel)]="data.identificacion">
   </mat-form-field>
   <mat-form-field>
     <mat-label>Correo</mat-label>
-    <input matInput [(ngModel)]="sesion.usuario.correo">
+    <input matInput [(ngModel)]="data.correo">
   </mat-form-field>
   <mat-form-field>
-    <mat-label>Contraseña</mat-label>
-    <input type="password" matInput [(ngModel)]="sesion.usuario.contrasena">
-  </mat-form-field>
-  <mat-form-field>
-    <mat-label>Repita la Contraseña</mat-label>
-    <input type="password" matInput [(ngModel)]="repetir_contrasena">
-  </mat-form-field>
-  <mat-form-field>
-    <mat-label>Clave</mat-label>
-    <input matInput [(ngModel)]="data.clave">
+    <mat-label>Pregunta</mat-label>
+    <input type="text" matInput [(ngModel)]="data.respuesta">
   </mat-form-field>
 </div>
 <div mat-dialog-actions>
   <button mat-button (click)="onNoClick()">Cancelar</button>
-  <button mat-button [mat-dialog-close]="data.clave" cdkFocusInitial>Guardar</button>
+  <button mat-button [mat-dialog-close]="data.identificacion" cdkFocusInitial>Recuperar</button>
 </div>

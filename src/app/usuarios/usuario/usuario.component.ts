@@ -1,7 +1,7 @@
 import { Component, OnInit, HostListener, ElementRef, Renderer2 } from '@angular/core';
-import { UntypedFormControl, Validators, AbstractControl, ValidationErrors, ValidatorFn, FormGroup, FormBuilder } from '@angular/forms';
+import { UntypedFormControl, Validators, AbstractControl, ValidationErrors, ValidatorFn, FormGroup} from '@angular/forms';
 import { BehaviorSubject } from 'rxjs';
-import { valores, mensajes, validarSesion, exito_swal, error_swal, exito, error } from '../../constantes';
+import { valores, mensajes, preguntas, validarSesion, exito_swal, error_swal, exito, error } from '../../constantes';
 import Swal from 'sweetalert2';
 
 import { Router } from '@angular/router';
@@ -37,6 +37,7 @@ export class UsuarioComponent implements OnInit {
   editarUsuario: boolean = true;
   ocultarContrasena: boolean = true;
   ocultarContrasena2: boolean = true;
+  cambiarContrasena: boolean = false;
   formularioValido: boolean = true;
 
   sesion: Sesion = null;
@@ -44,6 +45,7 @@ export class UsuarioComponent implements OnInit {
 
   usuarios: Usuario[];
   perfiles: Perfil[] = [];
+  preguntas: any[] = preguntas;
 
   email = new UntypedFormControl('', [Validators.required, Validators.email]);
   formGroupContrasena = new FormGroup(
@@ -71,7 +73,7 @@ export class UsuarioComponent implements OnInit {
   @ViewChild(MatSort) sort: MatSort;
   @ViewChild("inputFiltroUsuario") inputFiltroUsuario: ElementRef;
 
-  constructor(private formBuilder: FormBuilder, private renderer: Renderer2, private usuarioService: UsuarioService,
+  constructor(private renderer: Renderer2, private usuarioService: UsuarioService,
     private perfilService: PerfilService, private sesionService: SesionService, private router: Router) { }
 
   ngOnInit() {
@@ -223,6 +225,16 @@ export class UsuarioComponent implements OnInit {
       },
       error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     });
+  }
+
+  cambiarSiNo(){
+    this.cambiarContrasena = !this.cambiarContrasena;
+    if (this.cambiarContrasena){
+      this.usuario.cambiarContrasena = valores.si;
+    } else {
+      this.usuario.cambiarContrasena = valores.no;
+    }
+    //console.log(this.usuario.cambiarContrasena);
   }
 
   compareFn(a: any, b: any) {
