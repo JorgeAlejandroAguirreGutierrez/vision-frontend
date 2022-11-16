@@ -7,7 +7,7 @@ export class Perfil {
     descripcion: string;
     abreviatura: string;
     estado: string;
-    multiempresa: string;
+    multiempresa: boolean;
     permisos: Permiso[];
 
     constructor() {
@@ -16,7 +16,7 @@ export class Perfil {
         this.descripcion=valores.vacio;
         this.abreviatura=valores.vacio;
         this.estado=valores.activo;
-        this.multiempresa= valores.no;
+        this.multiempresa= false;
         this.permisos=[];
     }
 }

@@ -16,7 +16,7 @@ export class Usuario {
     cambiarContrasena: string;
     pregunta: string;
     respuesta: string;
-    estado: string;
+    activo: string;
     perfil: Perfil;
     estacionesUsuarios: EstacionUsuario[];
 
@@ -34,7 +34,7 @@ export class Usuario {
       this.cambiarContrasena = valores.si;
       this.pregunta = valores.vacio;
       this.respuesta = valores.vacio;
-      this.estado = valores.activo;
+      this.activo = valores.activo;
       this.perfil = new Perfil();
       this.estacionesUsuarios = [];
     }

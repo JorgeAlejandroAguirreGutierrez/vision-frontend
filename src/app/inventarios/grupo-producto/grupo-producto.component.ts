@@ -1,4 +1,4 @@
-import { Component, OnInit, HostListener, Type, Inject } from '@angular/core';
+import { Component, OnInit, HostListener, Inject } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { UntypedFormControl } from '@angular/forms';
 import { Observable } from 'rxjs';

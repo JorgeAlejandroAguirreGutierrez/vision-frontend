@@ -26,7 +26,7 @@ export class SegmentoComponent implements OnInit {
   inactivo: string = valores.inactivo;
 
   abrirPanelNuevoSegmento: boolean = true;
-  abrirPanelAdminSegmento: boolean = false;
+  abrirPanelAdminSegmento: boolean = true;
   editarSegmento: boolean = true;
 
   sesion: Sesion = null;

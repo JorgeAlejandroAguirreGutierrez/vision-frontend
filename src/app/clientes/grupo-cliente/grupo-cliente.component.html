@@ -58,16 +58,21 @@
                             oninput="this.value = this.value.toUpperCase()" class="form-control-sm">
                     </mat-form-field>
                 </div>
-                <div class="col-1">
+                <div class="col-2">
                     <mat-form-field appearance="standard">
-                        <mat-label>Abreviatura</mat-label>
-                        <input matInput type="text" [(ngModel)]="grupoCliente.abreviatura" [disabled]="!editarGrupoCliente"
+                        <mat-label>Cuenta Contable</mat-label>
+                        <input matInput type="text" [(ngModel)]="grupoCliente.cuentaContable.cuenta" [disabled]="!editarGrupoCliente"
                             oninput="this.value = this.value.toUpperCase()" class="form-control-sm">
                     </mat-form-field>
                 </div>
-                <div class="col-3">
+                <div class="col-1 iconos">
+                    <button mat-icon-button aria-label="Mov. Conta" [disabled]="!editarGrupoCliente" (click)="dialogoCuentasContables()">
+                        <mat-icon >search</mat-icon>
+                    </button>
+                </div>
+                <div class="col-1">
                     <mat-form-field appearance="standard">
-                        <mat-label>Cuenta Contable</mat-label>
+                        <mat-label>Abreviatura</mat-label>
                         <input matInput type="text" [(ngModel)]="grupoCliente.abreviatura" [disabled]="!editarGrupoCliente"
                             oninput="this.value = this.value.toUpperCase()" class="form-control-sm">
                     </mat-form-field>
@@ -85,7 +90,8 @@
         </mat-expansion-panel>
     </mat-accordion>    
     <mat-accordion class="headers-align">
-        <mat-expansion-panel (opened)="abrirPanelAdminGrupoCliente = true" (closed)="abrirPanelAdminGrupoCliente = false">
+        <mat-expansion-panel (opened)="abrirPanelAdminGrupoCliente = true" (closed)="abrirPanelAdminGrupoCliente = false"
+            [expanded]="abrirPanelAdminGrupoCliente">
             <mat-expansion-panel-header>
                 <mat-panel-title>
                     <i><u>GESTIONAR GRUPOS DE CLIENTES</u></i>

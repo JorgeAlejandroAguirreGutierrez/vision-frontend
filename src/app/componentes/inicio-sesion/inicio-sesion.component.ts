@@ -1,19 +1,21 @@
 import { Component, OnInit, Inject } from '@angular/core';
-import { UntypedFormControl, Validators, AbstractControl, ValidationErrors, ValidatorFn, FormGroup} from '@angular/forms';
+import { UntypedFormControl, Validators, AbstractControl, ValidationErrors, ValidatorFn, FormGroup } from '@angular/forms';
+import { environment } from '../../../environments/environment';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { valores, mensajes, exito, exito_swal, error, error_swal } from '../../constantes';
 import { Router } from '@angular/router';
 import Swal from 'sweetalert2';
 
 import { Parametro } from '../../modelos/configuracion/parametro';
+import { ParametroService } from '../../servicios/configuracion/parametro.service';
 import { Sesion } from '../../modelos/usuario/sesion';
 import { SesionService } from '../../servicios/usuario/sesion.service';
 import { Usuario } from '../../modelos/usuario/usuario';
 import { UsuarioService } from '../../servicios/usuario/usuario.service';
 import { Empresa } from '../../modelos/usuario/empresa';
 import { EmpresaService } from '../../servicios/usuario/empresa.service';
-import { ParametroService } from '../../servicios/configuracion/parametro.service';
-import { valores, exito, exito_swal, error, error_swal } from '../../constantes';
-import { environment } from '../../../environments/environment';
-import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { Estacion } from '../../modelos/usuario/estacion';
+import { EstacionService } from '../../servicios/usuario/estacion.service';
 
 
 @Component({
@@ -23,18 +25,22 @@ import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dial
 })
 export class InicioSesionComponent implements OnInit {
 
-  minContrasena = 8;
+  minContrasena: number = 8;
+  ip: string;
 
   ocultarContrasena: boolean = true;
   ocultarNuevaContrasena: boolean = true;
   ocultarConfirmarContrasena: boolean = true;
   cambiarContrasena: boolean = false;
   multiEmpresa: boolean = false;
+  formularioValido: boolean = true;
 
   sesion = new Sesion();
 
-  usuario = new Usuario();
-  empresa = new Empresa();
+  usuario: Usuario = new Usuario();
+  empresa: Empresa = new Empresa();
+  estacion: Estacion = new Estacion();
+
   empresas: Empresa[] = [];
 
   urlLogo: string = "";
@@ -48,11 +54,11 @@ export class InicioSesionComponent implements OnInit {
       password: new UntypedFormControl('', [Validators.required, Validators.minLength(this.minContrasena)]),
       confirmPassword: new UntypedFormControl('', [Validators.required])
     },
-    [ this.MatchValidator('password', 'confirmPassword') ]
+    [this.MatchValidator('password', 'confirmPassword')]
   );
 
-  constructor(private sesionService: SesionService, private usuarioService: UsuarioService, private empresaService: EmpresaService,
-    private parametroService: ParametroService, private router: Router, public dialog: MatDialog) { }
+  constructor(private parametroService: ParametroService, private sesionService: SesionService, private usuarioService: UsuarioService, 
+    private empresaService: EmpresaService, private estacionService: EstacionService, private router: Router, public dialog: MatDialog) { }
 
   ngOnInit() {
     this.obtenerEmpresa();
@@ -60,24 +66,67 @@ export class InicioSesionComponent implements OnInit {
     this.consultarEmpresas();
   }
 
-  iniciarSesion() {
-    this.sesionService.obtenerIP().subscribe({
+  buscarUsuario() {
+    //Pasar el apodo, llenar usuario, estacion y empresa para sesion
+    this.usuarioService.buscarApodo(this.usuario.apodo).subscribe({
       next: res => {
-        this.sesion.sesionIp = res;
-        this.sesionService.crear(this.sesion).subscribe(
-          res => {
-            this.sesion = res.resultado as Sesion;
-            this.sesionService.setSesion(this.sesion);
-            Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
-            this.navegarExito();
+        //console.log(this.sesion.usuario);
+        this.usuario = res.resultado as Usuario
+        if (this.usuario.cambiarContrasena == valores.si) {
+          this.cambiarContrasena = true;
+          return;
+        }
+        this.estacionService.obtenerIP().subscribe({
+          next: res => {
+            this.ip = res;
+            this.estacionService.buscarIP(this.ip).subscribe({
+              next: res => {
+                this.estacion = res.resultado as Estacion;
+                if (this.usuario.perfil.multiempresa) { // Si tiene perfil es (ADMIN)
+                  this.obtenerEmpresa(); //Obtener empresas de la tabla Estacion_Usuario para mostrar en el combo
+                  if (this.estacion.id == 0) {
+                    this.estacion.id = 1; // para ingresar con cualquier estacion
+                  }
+                } else {
+                  if (this.estacion.id != 0) {
+                    this.empresa = this.estacion.establecimiento.empresa;
+                  }
+                }
+              },
+              error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+            });
           },
-          err => {
-            Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
-            this.navegarError();
-          }
-        );
+          error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+        });
       },
       error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+    });
+  }
+
+  iniciarSesion() {
+    this.usuario.id = 1; //Borrar
+    this.usuario.identificacion = this.usuario.apodo; // Barrar cuando se cambie ident por apodo
+    this.estacion.id = 1; //Borrar
+    this.empresa.id = 1; //Borrar, esta solo para validar
+    this.validarFormulario();
+    if (!this.formularioValido)
+      return;  
+    this.sesion.usuario = this.usuario;
+    this.sesion.estacion = this.estacion;
+    this.sesion.empresa = this.empresa;
+    console.log(this.sesion);
+    this.sesionService.crear(this.sesion).subscribe({
+      next: res => {
+        this.sesion = res.resultado as Sesion;
+        //console.log(this.sesion);
+        this.sesionService.setSesion(this.sesion);
+        Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
+        this.navegarExito();
+      },
+      error: err => {
+        Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+        this.navegarError();
+      }
     });
   }
 
@@ -124,25 +173,28 @@ export class InicioSesionComponent implements OnInit {
     );
   }
 
-  buscarUsuario() {
-    //Pasar el apodo
-    this.usuarioService.buscar(this.sesion.usuario).subscribe({
-      next: res => {
-        this.usuario = res.resultado as Usuario
-        if (this.usuario.cambiarContrasena == valores.si) {
-          this.cambiarContrasena = true;
-        } else {
-          if (this.usuario.perfil.multiempresa == valores.si) {
-            this.multiEmpresa = true;
-            this.obtenerEmpresa(); //Obtener empresas de la tabla Estacion_Usuario y mostrar en el combo
-          } else {
-            this.multiEmpresa = false;
-            // Obtener empresa desde la estacion que estoy iniciando sesion
-          }
-        }
-      },
-      error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
-    });
+  validarFormulario(){
+    this.formularioValido = true;
+    if (this.usuario.apodo == '') {
+      Swal.fire(error, mensajes.error_usuario, error_swal);
+      this.formularioValido = false;
+      return;
+    }
+    if (this.usuario.id == 0) {
+      Swal.fire(error, mensajes.error_usuario_no_existe, error_swal);
+      this.formularioValido = false;
+      return;
+    }
+    if (this.estacion.id == 0) {
+      Swal.fire(error, mensajes.error_estacion_permiso, error_swal);
+      this.formularioValido = false;
+      return;
+    }
+    if (this.empresa.id == 0) {
+      Swal.fire(error, mensajes.error_empresa, error_swal);
+      this.formularioValido = false;
+      return;
+    }
   }
 
   // PARA VALIDACION DE CONFIRMACIÓN DE CONTRASEÑA

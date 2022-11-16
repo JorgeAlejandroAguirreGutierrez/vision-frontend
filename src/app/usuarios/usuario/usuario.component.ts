@@ -62,7 +62,7 @@ export class UsuarioComponent implements OnInit {
     { nombreColumna: 'identificacion', cabecera: 'Identificación', celda: (row: Usuario) => `${row.identificacion}` },
     { nombreColumna: 'nombre', cabecera: 'Nombre', celda: (row: Usuario) => `${row.nombre}` },
     { nombreColumna: 'perfil', cabecera: 'Perfil', celda: (row: Usuario) => `${row.perfil.descripcion}` },
-    { nombreColumna: 'estado', cabecera: 'Estado', celda: (row: Usuario) => `${row.estado}` }
+    { nombreColumna: 'estado', cabecera: 'Estado', celda: (row: Usuario) => `${row.activo}` }
   ];
   cabeceraUsuario: string[] = this.columnasUsuario.map(titulo => titulo.nombreColumna);
   dataSourceUsuario: MatTableDataSource<Usuario>;

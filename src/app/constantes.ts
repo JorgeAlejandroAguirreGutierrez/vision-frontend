@@ -150,9 +150,12 @@ export const mensajes = {
      exito_actualizar_factura : "SE ACTUALIZO LA FACTURA",
     // Mensajes de Error
      error_usuario : "INGRESE UN USUARIO",
+     error_estacion_permiso : "NO TIENE PERMISOS PARA INGRESAR DESDE ESTE DISPOSITIVO",
+     error_usuario_no_existe : "USUARIO NO EXISTE",
      error_usuario_existe : "USUARIO YA EXISTE",
      error_contrasena : "CONTRASEÑA INVÁLIDA",
      error_confirmar_contrasena : "CONFIRME LA CONTRASEÑA",
+     error_empresa : "SELECCIONE UNA EMPRESA VÁLIDA",
      error_nombre : "INGRESE EL NOMBRE", 
      error_telefono_ingresado : "INGRESE UN NUMERO DE TELEFONO",
      error_telefono_invalido : "NUMERO DE TELEFONO INVALIDO",

@@ -15,15 +15,6 @@ export class SesionService {
 
   constructor(private http: HttpClient, private router: Router) { }
 
-  obtenerIP(): Observable<string> {
-    return this.http.get('https://api.ipify.org?format=json').pipe(
-      map(response => response['ip'] as string),
-      catchError(err => {
-        return throwError(()=>err);
-      })
-    );
-  }
-
   crear(sesion: Sesion): Observable<Respuesta> {
     return this.http.post(environment.host + urn.ruta + urn.sesion, sesion, options).pipe(
       map(response => response as Respuesta),
