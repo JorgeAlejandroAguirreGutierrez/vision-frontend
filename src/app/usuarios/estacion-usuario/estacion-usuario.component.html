@@ -1,12 +1,12 @@
 <nav class="navbar-light nav-fijo">
     <ul class="navbar-nav">
         <ng-container *ngIf="abrirPanelAsignarEstacion">
-            <li class="nav-item" *ngIf="!verActualizarUsuario">
+            <li class="nav-item" *ngIf="!verOpcionActualizarUsuario">
                 <a class="nav-link" title="Guardar" role="button" (click)="actualizarUsuario($event)">
                     <mat-icon>save</mat-icon>
                 </a>
             </li>
-            <li class="nav-item" *ngIf="verActualizarUsuario">
+            <li class="nav-item" *ngIf="verOpcionActualizarUsuario">
                 <a class="nav-link" title="Actualizar" role="button" (click)="actualizarUsuario($event)">
                     <mat-icon>update</mat-icon>
                 </a>
@@ -53,10 +53,10 @@
             [expanded]="abrirPanelAsignarEstacion">
             <mat-expansion-panel-header>
                 <mat-panel-title>
-                    <i><u>PERMISOS</u></i>
+                    <i><u>ESTACIONES</u></i>
                 </mat-panel-title>
                 <mat-panel-description>
-                    {{abrirPanelAsignarEstacion ? 'Ocultar asignar estaciones' : 'Asignar estaciones de trabajo al usuario'}}
+                    {{abrirPanelAsignarEstacion ? 'Ocultar asignar estaciones' : 'Asignar estaciones final al usuario'}}
                     <mat-icon>playlist_add</mat-icon>
                 </mat-panel-description>
             </mat-expansion-panel-header>
@@ -71,8 +71,8 @@
                         <div class="col-4">
                             <mat-form-field appearance="standard">
                                 <mat-label>Empresa</mat-label>
-                                <mat-select [(ngModel)]="empresa" [compareWith]="compareFn" 
-                                    (selectionChange)="consultarEstablecimientos($event.value.id)" class="form-control-sm">
+                                <mat-select [(ngModel)]="estacionUsuario.estacion.establecimiento.empresa" [compareWith]="compareFn" 
+                                    (selectionChange)="consultarEstablecimientos($event.value.id)" [disabled]="deshabilitarEditarEstacion" class="form-control-sm">
                                     <mat-option *ngFor="let empresa of empresas" [value]="empresa">
                                         {{empresa.razonSocial}}
                                     </mat-option>
@@ -82,8 +82,8 @@
                         <div class="col-4">
                             <mat-form-field appearance="standard">
                                 <mat-label>Establecimiento</mat-label>
-                                <mat-select [(ngModel)]="establecimiento" [compareWith]="compareFn" 
-                                     class="form-control-sm">
+                                <mat-select [(ngModel)]="estacionUsuario.estacion.establecimiento" [compareWith]="compareFn" 
+                                    (selectionChange)="consultarEstaciones($event.value.id)" [disabled]="deshabilitarEditarEstacion" class="form-control-sm">
                                     <mat-option *ngFor="let establecimiento of establecimientos" [value]="establecimiento">
                                         {{establecimiento.codigo}}
                                     </mat-option>
@@ -92,9 +92,9 @@
                         </div>
                         <div class="col-3">
                             <mat-form-field appearance="standard">
-                                <mat-label>Punto de Venta</mat-label>
-                                <mat-select [(ngModel)]="establecimiento" [compareWith]="compareFn"
-                                    class="form-control-sm">
+                                <mat-label>Estación Final</mat-label>
+                                <mat-select [(ngModel)]="estacionUsuario.estacion" [compareWith]="compareFn"
+                                    [disabled]="deshabilitarEditarEstacion" class="form-control-sm">
                                     <mat-option *ngFor="let estacion of estaciones" [value]="estacion">
                                         {{estacion.descripcion}}
                                     </mat-option>
@@ -104,11 +104,11 @@
                         <div class="col-1 iconos">
                             <button mat-icon-button mat-button *ngIf="verBotones">
                                 <mat-icon title="Agregar"
-                                    *ngIf="!deshabilitarEditarEstacion && !verActualizarEstacion"
+                                    *ngIf="!deshabilitarEditarEstacion && !verBotonActualizarEstacion"
                                     (click)="agregarEstacionUsuario()">add</mat-icon>
                                 <mat-icon title="Editar" *ngIf="deshabilitarEditarEstacion" 
                                     (click)="editarEstacionUsuario()">edit</mat-icon>
-                                <mat-icon title="Actualizar" *ngIf="verActualizarEstacion"
+                                <mat-icon title="Actualizar" *ngIf="verBotonActualizarEstacion"
                                     (click)="actualizarEstacionUsuario()">update</mat-icon>
                             </button>
                         </div>

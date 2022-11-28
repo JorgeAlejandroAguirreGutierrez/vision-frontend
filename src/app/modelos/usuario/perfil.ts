@@ -1,6 +1,5 @@
 import { Permiso } from './permiso';
 import { valores } from "../../constantes";
-import { ControlAcceso } from './control-acceso';
 
 export class Perfil {
     id: number;
@@ -8,7 +7,7 @@ export class Perfil {
     descripcion: string;
     abreviatura: string;
     estado: string;
-    controlAcceso: ControlAcceso;
+    multiempresa: boolean;
     permisos: Permiso[];
 
     constructor() {
@@ -17,7 +16,7 @@ export class Perfil {
         this.descripcion=valores.vacio;
         this.abreviatura=valores.vacio;
         this.estado=valores.activo;
-        this.controlAcceso= new ControlAcceso();
+        this.multiempresa= false;
         this.permisos=[];
     }
 }

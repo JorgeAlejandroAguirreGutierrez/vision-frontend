@@ -13,7 +13,10 @@ export class Usuario {
     celular: string;
     correo: string;
     avatar: string;
-    estado: string;
+    cambiarContrasena: string;
+    pregunta: string;
+    respuesta: string;
+    activo: string;
     perfil: Perfil;
     estacionesUsuarios: EstacionUsuario[];
 
@@ -28,7 +31,10 @@ export class Usuario {
       this.celular = valores.vacio;
       this.correo = valores.vacio;
       this.avatar = valores.vacio;
-      this.estado = valores.activo;
+      this.cambiarContrasena = valores.si;
+      this.pregunta = valores.vacio;
+      this.respuesta = valores.vacio;
+      this.activo = valores.activo;
       this.perfil = new Perfil();
       this.estacionesUsuarios = [];
     }

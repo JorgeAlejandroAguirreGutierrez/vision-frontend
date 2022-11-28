@@ -102,4 +102,23 @@ export class EstacionService {
       })
     );
   }
+
+  buscarIP(ip: String): Observable<Respuesta> {
+    return this.http.get(environment.host + urn.ruta + urn.usuario + urn.buscar + '/' + ip, options).pipe(
+      map(response => response as Respuesta),
+      catchError(err => {
+        return throwError(()=>err);
+      })
+    );
+  }
+
+  obtenerIP(): Observable<string> {
+    return this.http.get('https://api.ipify.org?format=json').pipe(
+      map(response => response['ip'] as string),
+      catchError(err => {
+        return throwError(()=>err);
+      })
+    );
+  }
+
 }

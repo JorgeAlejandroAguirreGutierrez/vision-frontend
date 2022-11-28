@@ -2,7 +2,7 @@ import { Component, OnInit, HostListener, Type, ViewChild, Inject } from '@angul
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { MapInfoWindow, MapMarker } from '@angular/google-maps';
-import { Router } from '@angular/router'; 
+import { Router } from '@angular/router';
 import Swal from 'sweetalert2';
 import { valores, mensajes, otras, tabs, validarSesion, tab_activo, exito, exito_swal, error, error_swal } from '../../constantes';
 import { environment } from '../../../environments/environment';
@@ -64,11 +64,11 @@ export class ClienteComponent implements OnInit {
   sesion: Sesion;
   ComponenteCliente: Type<any> = ClienteComponent;
 
-  urlLogo: string = "";
-  nombreEmpresa: string = "";
-  urlAvatar: string = environment.prefijoUrlImagenes + "avatar/avatar1.png";
+  indiceTipoContribuyente: number = -1;
+  activo: string = valores.activo;
+  inactivo: string = valores.inactivo;
 
-  abrirPanelCliente: boolean = true;
+  abrirPanelNuevoCliente: boolean = true;
   abrirPanelUbicacion: boolean = false;
   abrirPanelDependiente: boolean = false;
   abrirPanelDatoAdicional: boolean = false;
@@ -76,13 +76,39 @@ export class ClienteComponent implements OnInit {
   estadoCliente: boolean = true;
   editing: boolean = false;
   dirEstablecida: boolean = true;
+  activacion_s_es_oi: boolean = true;
+  activacionPlazoCredito: boolean = false;
+  deshabilitarTipoContribuyente: boolean = true;
+  deshabilitarCliente: boolean = false;
+  deshabilitarDireccion: boolean = false;
+  deshabilitarDependiente: boolean = false;
+  deshabilitarDatoAdicional: boolean = false;
+  verOpcionEditarCliente: boolean = false;
+
+
+  urlLogo: string = "";
+  nombreEmpresa: string = "";
+  clienteProvincia: string = "";
+  clienteCanton: string = "";
+  clienteParroquia: string = "";
+  dependienteProvincia: string = "";
+  dependienteCanton: string = "";
+  dependienteParroquia: string = "";
+  urlAvatar: string = environment.prefijoUrlImagenes + "avatar/avatar1.png";
 
   cliente: Cliente = new Cliente();
+  telefono: Telefono = new Telefono();
+  celular: Celular = new Celular();
+  correo: Correo = new Correo();
+  dependienteTelefono: TelefonoDependiente = new TelefonoDependiente();
+  dependienteCelular: CelularDependiente = new CelularDependiente();
+  dependienteCorreo: CorreoDependiente = new CorreoDependiente();
+  segmento: Segmento = new Segmento();
+  dependiente: Dependiente = new Dependiente();
+
   clientes: Cliente[];
   tiposIdentificaciones: TipoIdentificacion[];
-  segmento: Segmento = new Segmento();
   segmentos: Segmento[] = [];
-  dependiente: Dependiente = new Dependiente();
   gruposClientes: GrupoCliente[];
   generos: Genero[];
   estadosCiviles: EstadoCivil[];
@@ -93,46 +119,23 @@ export class ClienteComponent implements OnInit {
   formasPagos: FormaPago[];
   tiposContribuyentes: TipoContribuyente[] = [];
 
-  clienteProvincia: string = "";
-  clienteCanton: string = "";
-  clienteParroquia: string = "";
-  dependienteProvincia: string = "";
-  dependienteCanton: string = "";
-  dependienteParroquia: string = "";
-  telefono = new Telefono();
-  celular = new Celular();
-  correo = new Correo();
-  dependienteTelefono = new TelefonoDependiente();
-  dependienteCelular = new CelularDependiente();
-  dependienteCorreo = new CorreoDependiente();
-
   provincias: Ubicacion[];
   cantones: Ubicacion[];
   parroquias: Ubicacion[];
   dependienteProvincias: Ubicacion[];
   dependienteCantones: Ubicacion[];
   dependienteParroquias: Ubicacion[];
-  activacion_s_es_oi: boolean = true;
-  activacionPlazoCredito: boolean = false;
 
   tiposRetencionesIvaBien: TipoRetencion[];
   tiposRetencionesIvaServicio: TipoRetencion[];
   tiposRetencionesRentaBien: TipoRetencion[];
   tiposRetencionesRentaServicio: TipoRetencion[];
 
-  habilitarTipoContribuyente = false;
-  indiceTipoContribuyente: number = -1;
-  habilitarCelularTelefonoCorreoDependiente = true;
-
   archivoImportar: File;
-  panelOpenState = false;
-  value = 'Clear me';
 
-  //Mapa
-  latitud: number = valores.latCiudad; //Tomar de configuación y poner en el init
-  longitud: number = valores.lngCiudad;
-  posicionCentralDireccion: Coordenada = new Coordenada(this.latitud, this.longitud);
-  posicionCentralDependiente: Coordenada = new Coordenada(this.latitud, this.longitud);
+  //Mapa //Tomar ubicacion de configuación y poner en el init
+  posicionCentralDireccion: Coordenada = new Coordenada(valores.latCiudad, valores.lngCiudad);
+  posicionCentralDependiente: Coordenada = new Coordenada(valores.latCiudad, valores.lngCiudad);
   posicionGeograficaDireccion: Coordenada;
   posicionGeograficaDependiente: Coordenada;
   //coordenadas: Coordenada[] = [];
@@ -144,7 +147,7 @@ export class ClienteComponent implements OnInit {
     maxZoom: 20,
     minZoom: 12,
   };
- // @ViewChild(MapInfoWindow) infoWindowDireccion: MapInfoWindow;
+  // @ViewChild(MapInfoWindow) infoWindowDireccion: MapInfoWindow;
 
   columnasCliente: any[] = [
     { nombreColumna: 'id', cabecera: 'ID', celda: (row: Cliente) => `${row.id}` },
@@ -152,6 +155,8 @@ export class ClienteComponent implements OnInit {
     { nombreColumna: 'identificacion', cabecera: 'Indentificación', celda: (row: Cliente) => `${row.identificacion}` },
     { nombreColumna: 'razonSocial', cabecera: 'Razón Social', celda: (row: Cliente) => `${row.razonSocial}` },
     { nombreColumna: 'direccion', cabecera: 'Direccion', celda: (row: Cliente) => `${row.direccion.direccion}` },
+    { nombreColumna: 'obligado', cabecera: 'Obligado', celda: (row: Cliente) => `${row.tipoContribuyente.obligadoContabilidad? "SI": "NO"}` },
+    { nombreColumna: 'especial', cabecera: 'Especial', celda: (row: Cliente) => `${row.especial? "SI": "NO"}` },
     { nombreColumna: 'estado', cabecera: 'Estado', celda: (row: Cliente) => `${row.estado}` }
   ];
   cabeceraCliente: string[] = this.columnasCliente.map(titulo => titulo.nombreColumna);
@@ -164,15 +169,25 @@ export class ClienteComponent implements OnInit {
     { nombreColumna: 'provincia', cabecera: 'Provincia', celda: (row: Dependiente) => `${row.direccion.ubicacion.provincia}` },
     { nombreColumna: 'canton', cabecera: 'Cantón', celda: (row: Dependiente) => `${row.direccion.ubicacion.canton}` },
     { nombreColumna: 'parroquia', cabecera: 'Parroquia', celda: (row: Dependiente) => `${row.direccion.ubicacion.parroquia}` },
-    { nombreColumna: 'estado', cabecera: 'Estado', celda: (row: Dependiente) => `${row.estado}` },
+    //{ nombreColumna: 'estado', cabecera: 'Estado', celda: (row: Dependiente) => `${row.estado}` },
     { nombreColumna: 'acciones', cabecera: 'Acciones' }
   ];
   cabeceraDependientes: string[] = this.columnasDependiente.map(titulo => titulo.nombreColumna);
   dataSourceDependiente: MatTableDataSource<Dependiente>;
-  filaSeleccionada = new Set<Dependiente>();
+  clickedRowsDependiente = new Set<Dependiente>();
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
+
+  @HostListener('window:keypress', ['$event'])
+  keyEvent($event: KeyboardEvent) {
+    if (($event.shiftKey || $event.metaKey) && $event.key == "G")
+      this.crear(null);
+    if (($event.shiftKey || $event.metaKey) && $event.key == "N")
+      this.limpiar();
+    if (($event.shiftKey || $event.metaKey) && $event.key == "E")
+      console.log('SHIFT + E');
+  }
 
   constructor(public dialog: MatDialog, private clienteService: ClienteService, private tipoIdentificacionService: TipoIdentificacionService, private generoService: GeneroService,
     private estadoCivilService: EstadoCivilService, private origenIngresoService: OrigenIngresoService,
@@ -183,25 +198,11 @@ export class ClienteComponent implements OnInit {
     private sesionService: SesionService, private empresaService: EmpresaService, private segmentoService: SegmentoService,
     private tipoContribuyenteService: TipoContribuyenteService, private modalService: NgbModal) { }
 
-    @HostListener('window:keypress', ['$event'])
-    keyEvent($event: KeyboardEvent) {
-      if (($event.shiftKey || $event.metaKey) && $event.key == "G")
-        this.crear(null);
-      if (($event.shiftKey || $event.metaKey) && $event.key == "N")
-        this.nuevo(null);
-      if (($event.shiftKey || $event.metaKey) && $event.key == "E")
-        console.log('SHIFT + E');
-      if (($event.shiftKey || $event.metaKey) && $event.key == "B")
-        console.log('SHIFT + B');
-      if (($event.shiftKey || $event.metaKey) && $event.key == "A")
-        console.log('SHIFT + A');
-    }
-
   ngOnInit() {
     this.sesion = validarSesion(this.sesionService, this.router);
-    this.obtenerEmpresa();
     this.obtenerSesion();
-    this.consultar();
+    this.obtenerEmpresa();
+    this.consultarClientes();
     this.tipoIdentificacionService.consultar().subscribe({
       next: (res) => {
         this.tiposIdentificaciones = res.resultado as TipoIdentificacion[];
@@ -258,98 +259,87 @@ export class ClienteComponent implements OnInit {
         Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje });
       }
     });
-    this.calificacionClienteService.consultar().subscribe(
-      res => {
+    this.calificacionClienteService.consultar().subscribe({
+      next: res => {
         this.calificacionesClientes = res.resultado as CalificacionCliente[]
       },
-      err => {
+      error: err => {
         Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje });
       }
-    );
-    this.plazoCreditoService.consultar().subscribe(
-      res => {
+    });
+    this.plazoCreditoService.consultar().subscribe({
+      next: res => {
         this.plazosCreditos = res.resultado as PlazoCredito[]
       },
-      err => {
+      error: err => {
         Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje });
       }
-    );
-    this.tipoPagoService.consultar().subscribe(
-      res => {
+    });
+    this.tipoPagoService.consultar().subscribe({
+      next: res => {
         this.tiposPagos = res.resultado as TipoPago[]
       },
-      err => {
+      error: err => {
         Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje });
       }
-    );
-    this.formaPagoService.consultar().subscribe(
-      res => {
+    });
+    this.formaPagoService.consultar().subscribe({
+      next: res => {
         this.formasPagos = res.resultado as FormaPago[]
       },
-      err => {
+      error: err => {
         Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje });
       }
-    );
-    this.ubicacionService.obtenerProvincias().subscribe(
-      res => {
+    });
+    this.ubicacionService.obtenerProvincias().subscribe({
+      next: res => {
         this.provincias = res.resultado as Ubicacion[];
         this.dependienteProvincias = res.resultado as Ubicacion[]
       },
-      err => {
+      error: err => {
         Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje });
       }
-    );
-    this.tipoRetencionService.obtenerIvaBien().subscribe(
-      res => {
+    });
+    this.tipoRetencionService.obtenerIvaBien().subscribe({
+      next: res => {
         this.tiposRetencionesIvaBien = res.resultado as TipoRetencion[]
       },
-      err => {
+      error: err => {
         Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje });
       }
-    );
-    this.tipoRetencionService.obtenerIvaServicio().subscribe(
-      res => {
+    });
+    this.tipoRetencionService.obtenerIvaServicio().subscribe({
+      next: res => {
         this.tiposRetencionesIvaServicio = res.resultado as TipoRetencion[]
-        
+
       },
-      err => {
+      error: err => {
         Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje });
       }
-    );
-    this.tipoRetencionService.obtenerRentaBien().subscribe(
-      res => {
+    });
+    this.tipoRetencionService.obtenerRentaBien().subscribe({
+      next: res => {
         this.tiposRetencionesRentaBien = res.resultado as TipoRetencion[]
       },
-      err => {
+      error: err => {
         Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje });
       }
-    );
-    this.tipoRetencionService.obtenerRentaServicio().subscribe(
-      res => {
+    });
+    this.tipoRetencionService.obtenerRentaServicio().subscribe({
+      next: res => {
         this.tiposRetencionesRentaServicio = res.resultado as TipoRetencion[];
       },
-      err => {
+      error: err => {
         Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje });
       }
-    );
-  }
-
-  mapClicked($event: google.maps.MapMouseEvent){
-    let coordenada = new Coordenada($event.latLng.lat(), $event.latLng.lng());
-    //this.coordenadas.push(coordenada);
-  }
-
-  getCurrentPosition(){
-    navigator.geolocation.getCurrentPosition(position => {
-      this.posicionCentralDireccion = new Coordenada(position.coords.latitude, position.coords.longitude);
-      console.log(this.posicionCentralDireccion);
-    })
+    });
   }
 
   obtenerSesion() {
     this.sesion = this.sesionService.getSesion();
   }
 
+  //NO hace falta, obtener empresa de sesion
   obtenerEmpresa() {
     let empresaId = 1;
     this.empresaService.obtener(empresaId).subscribe(
@@ -364,59 +354,79 @@ export class ClienteComponent implements OnInit {
     );
   }
 
-  nuevo(event: any) {
-    if (event != null)
-      event.preventDefault();
+  limpiar() {
+    this.clienteProvincia = valores.vacio;
+    this.clienteCanton = valores.vacio;
+    this.clienteParroquia = valores.vacio;
     this.cliente = new Cliente();
+    this.telefono = new Telefono();
+    this.celular = new Celular();
+    this.correo = new Correo();
+    this.limpiarDependiente();
+    this.habilitarFormulario();
+    this.clickedRows.clear();
   }
 
-  open(content: any, event: any) {
-    if (event != null)
-      event.preventDefault();
-    this.modalService.open(content, { size: 'lg' }).result.then((result) => {
-    }, (reason) => {
-
-    });
+  limpiarDependiente(){
+    this.dependienteProvincia = valores.vacio;
+    this.dependienteCanton = valores.vacio;
+    this.dependienteParroquia = valores.vacio;
+    this.dependiente = new Dependiente();
+    this.dependienteTelefono = new TelefonoDependiente();
+    this.dependienteCelular = new CelularDependiente();
+    this.dependienteCorreo = new CorreoDependiente();
   }
 
   crear(event: any) {
     if (event != null)
       event.preventDefault();
-    //AGREGAR AUXILIAR
-    if (this.dependienteTelefono.numero != valores.vacio)
-      this.dependiente.telefonos.push(this.dependienteTelefono);
-    if (this.dependienteTelefono.numero != valores.vacio)
-      this.dependiente.celulares.push(this.dependienteCelular);
-    if (this.dependienteCorreo.email != valores.vacio)
-      this.dependiente.correos.push(this.dependienteCorreo);
-    let dependienteUbicacion: Ubicacion = new Ubicacion();
-    dependienteUbicacion.provincia = this.dependienteProvincia;
-    dependienteUbicacion.canton = this.dependienteCanton;
-    dependienteUbicacion.parroquia = this.dependienteParroquia;
-    this.dependiente.direccion.ubicacion = dependienteUbicacion;
-    
+    this.cliente.estacion = this.sesion.estacion;  
+    this.llenarUbicacion();
+    this.clienteService.crear(this.cliente).subscribe({
+      next: res => {
+        this.cliente = res.resultado as Cliente;
+        Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
+        this.limpiar();
+        this.consultarClientes();
+      },
+      error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+    });
+  }
+
+  editar(event) {
+    if (event != null)
+      event.preventDefault();
+    this.habilitarFormulario();
+  }
+
+  llenarUbicacion(){
+    // AGREGAR UBICACION CLIENTE  
     if (this.telefono.numero != valores.vacio)
       this.cliente.telefonos.push(this.telefono);
     if (this.celular.numero != valores.vacio)
       this.cliente.celulares.push(this.celular);
     if (this.correo.email != valores.vacio)
       this.cliente.correos.push(this.correo);
-    this.cliente.estacion = this.sesion.estacion;
+
     let ubicacion: Ubicacion = new Ubicacion();
     ubicacion.provincia = this.clienteProvincia;
     ubicacion.canton = this.clienteCanton;
     ubicacion.parroquia = this.clienteParroquia;
+    this.cliente.direccion.ubicacion = ubicacion;
+
+    //AGREGAR UBICACION DEPENDIENTE
+    if (this.dependienteTelefono.numero != valores.vacio)
+      this.dependiente.telefonos.push(this.dependienteTelefono);
+    if (this.dependienteCelular.numero != valores.vacio)
+      this.dependiente.celulares.push(this.dependienteCelular);
+    if (this.dependienteCorreo.email != valores.vacio)
+      this.dependiente.correos.push(this.dependienteCorreo);
+
+    let dependienteUbicacion: Ubicacion = new Ubicacion();
+    dependienteUbicacion.provincia = this.dependienteProvincia;
+    dependienteUbicacion.canton = this.dependienteCanton;
+    dependienteUbicacion.parroquia = this.dependienteParroquia;
     this.dependiente.direccion.ubicacion = dependienteUbicacion;
-    this.cliente.direccion.ubicacion= ubicacion;
-    this.clienteService.crear(this.cliente).subscribe(
-      res => {
-        this.cliente = res.resultado as Cliente;
-        Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
-        this.nuevo(null);
-        this.consultar();
-      },
-      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
-    );
   }
 
   agregarDependiente() {
@@ -433,16 +443,10 @@ export class ClienteComponent implements OnInit {
     if (ubicacion.provincia != valores.vacio && ubicacion.canton != valores.vacio && ubicacion.parroquia != valores.vacio) {
       this.cliente.dependientes.push(this.dependiente);
       this.llenarDataSourceDependiente(this.cliente.dependientes);
-      this.dependiente = new Dependiente();
-      this.habilitarCelularTelefonoCorreoDependiente = false;
-      this.dependienteProvincia = valores.vacio;
-      this.dependienteCanton = valores.vacio;
-      this.dependienteParroquia = valores.vacio;
-      this.dependienteTelefono = new TelefonoDependiente();
-      this.dependienteCelular = new CelularDependiente();
-      this.dependienteCorreo = new CorreoDependiente();
+      this.deshabilitarDependiente = true;
+      this.limpiarDependiente();
     } else {
-      Swal.fire({ icon: error_swal, title: error, text: mensajes.error_agregar_dependiente});
+      Swal.fire({ icon: error_swal, title: error, text: mensajes.error_agregar_dependiente });
     }
   }
 
@@ -451,7 +455,7 @@ export class ClienteComponent implements OnInit {
     this.cliente.dependientes.splice(index, 1);
     this.llenarDataSourceDependiente(this.cliente.dependientes);
     if (this.cliente.dependientes.length < 1)
-      this.habilitarCelularTelefonoCorreoDependiente = true;
+      this.deshabilitarDependiente = false;
   }
 
   editarDependiente(dependienteSeleccionado: Dependiente) {
@@ -504,13 +508,7 @@ export class ClienteComponent implements OnInit {
         this.cliente = res.resultado as Cliente;
         this.dependienteCantones = [];
         this.dependienteParroquias = [];
-        this.dependienteProvincia = "";
-        this.dependienteCanton = "";
-        this.dependienteParroquia = "";
-        this.dependienteTelefono = new TelefonoDependiente();
-        this.dependienteCelular = new CelularDependiente();
-        this.dependienteCorreo = new CorreoDependiente();
-        this.dependiente = new Dependiente();
+        this.limpiarDependiente();
       },
       err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     );
@@ -530,14 +528,14 @@ export class ClienteComponent implements OnInit {
     );
   }
 
-  consultar() {
-    this.clienteService.consultar().subscribe(
-      res => {
+  consultarClientes() {
+    this.clienteService.consultar().subscribe({
+      next: res => {
         this.clientes = res.resultado as Cliente[]
         this.llenarDataSourceCliente(this.clientes);
       },
-      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
-    );
+      error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+    });
   }
 
   filtroCliente(event: Event) {
@@ -565,16 +563,52 @@ export class ClienteComponent implements OnInit {
       Object.assign(cliente, clienteSeleccionado as Cliente);
       cliente.normalizar();
       this.cliente = cliente;
+      console.log(this.cliente);
+      // this.cliente = clienteSeleccionado;
       this.clienteProvincia = this.cliente.direccion.ubicacion.provincia;
-      this.provincia(this.clienteProvincia);
+      this.seleccionarProvincia(this.clienteProvincia);
       this.clienteCanton = this.cliente.direccion.ubicacion.canton;
-      this.canton(this.clienteCanton);
+      this.seleccionarCanton(this.clienteCanton);
       this.clienteParroquia = this.cliente.direccion.ubicacion.parroquia;
       this.cambiarFormaPago();
       this.llenarDataSourceDependiente(this.cliente.dependientes);
+      this.deshabilitarFormulario();
     } else {
-      this.clickedRows.clear();
-      this.cliente = new Cliente();
+      this.limpiar();
+    }
+  }
+
+  deshabilitarFormulario(){
+    this.deshabilitarCliente = true;
+    this.deshabilitarDireccion = true;
+    this.deshabilitarDependiente = true;
+    this.deshabilitarDatoAdicional = true;
+    this.verOpcionEditarCliente = true;
+  }
+
+  habilitarFormulario(){
+    this.deshabilitarCliente = false;
+    this.deshabilitarDireccion = false;
+    this.deshabilitarDependiente = false;
+    this.deshabilitarDatoAdicional = false;
+    this.verOpcionEditarCliente = false;
+  }
+
+  seleccionDependiente(dependienteSeleccionado: Dependiente) {
+    //this.dependiente = dependienteSeleccionado;
+    if (!this.clickedRowsDependiente.has(dependienteSeleccionado)) {
+      this.clickedRowsDependiente.clear();
+      this.clickedRowsDependiente.add(dependienteSeleccionado);
+      this.dependiente = dependienteSeleccionado;
+      console.log(this.dependiente);
+      this.dependienteProvincia = this.dependiente.direccion.ubicacion.provincia;
+      this.seleccionarDependienteProvincia(this.dependienteProvincia);
+      this.dependienteCanton = this.dependiente.direccion.ubicacion.canton;
+      this.seleccionarDependienteCanton(this.dependienteCanton);
+      this.dependienteParroquia = this.dependiente.direccion.ubicacion.parroquia;
+    } else {
+      this.clickedRowsDependiente.clear();
+      this.dependiente = new Dependiente();
     }
   }
 
@@ -590,21 +624,9 @@ export class ClienteComponent implements OnInit {
     this.dataSourceDependiente = new MatTableDataSource(dependientes);
     this.dataSourceDependiente.filterPredicate = (data: Dependiente, filter: string): boolean =>
       data.razonSocial.toUpperCase().includes(filter) || data.direccion.direccion.toUpperCase().includes(filter) ||
-      data.direccion.ubicacion.provincia.toUpperCase().includes(filter);
+      data.direccion.ubicacion.provincia.toUpperCase().includes(filter) || data.direccion.ubicacion.canton.toUpperCase().includes(filter);
     this.dataSourceDependiente.paginator = this.paginator;
     this.dataSourceDependiente.sort = this.sort;
-  }
-
-  seleccionDependiente(dependienteSeleccionado: Dependiente) {
-    this.dependiente = dependienteSeleccionado;
-    if (!this.filaSeleccionada.has(dependienteSeleccionado)) {
-      this.filaSeleccionada.clear();
-      this.filaSeleccionada.add(dependienteSeleccionado);
-      this.dependiente = dependienteSeleccionado;
-    } else {
-      this.filaSeleccionada.clear();
-      this.dependiente = new Dependiente();
-    }
   }
 
   ubicacionNormalizarActualizar() {
@@ -613,8 +635,8 @@ export class ClienteComponent implements OnInit {
       this.clienteCanton = this.cliente.direccion.ubicacion.canton;
       this.clienteParroquia = this.cliente.direccion.ubicacion.parroquia;
     }
-    this.provincia(this.clienteProvincia);
-    this.canton(this.clienteCanton);
+    this.seleccionarProvincia(this.clienteProvincia);
+    this.seleccionarCanton(this.clienteCanton);
   }
 
   validarIdentificacion() {
@@ -625,7 +647,7 @@ export class ClienteComponent implements OnInit {
             this.cliente.tipoIdentificacion = res.resultado.tipoIdentificacion;
             this.cliente.tipoContribuyente = res.resultado.tipoContribuyente as TipoContribuyente;
             if (this.cliente.tipoContribuyente == null) {
-              this.habilitarTipoContribuyente = true;
+              this.deshabilitarTipoContribuyente = false;
             } else {
               this.cliente.tipoContribuyente = this.obtenerTipoContribuyente() as TipoContribuyente;
             }
@@ -658,12 +680,6 @@ export class ClienteComponent implements OnInit {
     for (let i = 0; i < this.tiposContribuyentes.length; i++) {
       if (this.cliente.tipoContribuyente.id == this.tiposContribuyentes[i].id)
         return this.tiposContribuyentes[i];
-    }
-  }
-
-  cambiarRazonSocialDependiente() {
-    if (this.dependiente.razonSocial != valores.vacio) {
-      this.habilitarCelularTelefonoCorreoDependiente = false;
     }
   }
 
@@ -801,7 +817,7 @@ export class ClienteComponent implements OnInit {
   }
 
 
-  provincia(provincia: string) {
+  seleccionarProvincia(provincia: string) {
     this.cliente.direccion.ubicacion.provincia = provincia;
     this.ubicacionService.obtenerCantones(provincia).subscribe({
       next: res => {
@@ -821,7 +837,7 @@ export class ClienteComponent implements OnInit {
     );
   }
 
-  canton(canton: string) {
+  seleccionarCanton(canton: string) {
     this.cliente.direccion.ubicacion.canton = canton;
     this.ubicacionService.obtenerParroquias(canton).subscribe({
       next: res => {
@@ -841,7 +857,7 @@ export class ClienteComponent implements OnInit {
     );
   }
 
-  parroquia(parroquia: string) {
+  seleccionarParroquia(parroquia: string) {
     this.cliente.direccion.ubicacion.parroquia = parroquia;
   }
 
@@ -861,6 +877,18 @@ export class ClienteComponent implements OnInit {
         this.cliente.calificacionCliente = this.calificacionesClientes[0];
       }
     }
+  }
+
+  mapClicked($event: google.maps.MapMouseEvent) {
+    let coordenada = new Coordenada($event.latLng.lat(), $event.latLng.lng());
+    //this.coordenadas.push(coordenada);
+  }
+
+  getCurrentPosition() {
+    navigator.geolocation.getCurrentPosition(position => {
+      this.posicionCentralDireccion = new Coordenada(position.coords.latitude, position.coords.longitude);
+      console.log(this.posicionCentralDireccion);
+    })
   }
 
   compareFn(a: any, b: any) {
@@ -900,7 +928,7 @@ export class ClienteComponent implements OnInit {
       if (result) {
         this.posicionGeograficaDireccion = result as Coordenada;
         this.posicionCentralDireccion = this.posicionGeograficaDireccion;
-       //console.log(result);
+        //console.log(result);
       }
     });
   }
@@ -918,7 +946,7 @@ export class ClienteComponent implements OnInit {
       if (result) {
         this.posicionGeograficaDependiente = result as Coordenada;
         this.posicionCentralDependiente = this.posicionGeograficaDependiente;
-       //console.log(result);
+        //console.log(result);
       }
     });
   }
@@ -940,7 +968,7 @@ export class DialogoMapaComponent {
   onNoClick(): void {
     this.dialogRef.close();
     //console.log('El dialogo para selección de coordenada fue cancelado');
-    this.data = new Coordenada(0,0);
+    this.data = new Coordenada(0, 0);
   }
 
   coordenadaSeleccionada(event: any) {
@@ -950,7 +978,7 @@ export class DialogoMapaComponent {
       //this.producto.grupo_producto = grupoProductoRecibido;
       console.log(this.data);
     } else {
-      this.data = new Coordenada(0,0);
+      this.data = new Coordenada(0, 0);
     }
   }
 }

@@ -17,7 +17,7 @@ import { MenuComponent } from './componentes/menu/menu.component';
 // Molulo de Clientes
 import { ClienteComponent, DialogoMapaComponent } from './clientes/cliente/cliente.component';
 import { SegmentoComponent } from './clientes/segmento/segmento.component';
-import { GrupoClienteComponent } from './clientes/grupo-cliente/grupo-cliente.component';
+import { GrupoClienteComponent, DialogoCuentaContableComponent } from './clientes/grupo-cliente/grupo-cliente.component';
 import { OrigenIngresoComponent } from './clientes/origen-ingreso/origen-ingreso.component';
 import { CalificacionClienteComponent } from './clientes/calificacion-cliente/calificacion-cliente.component';
 import { EstadoCivilComponent } from './configuraciones/estado-civil/estado-civil.component';
@@ -71,6 +71,7 @@ import { GrupoProveedorComponent } from './compras/grupo-proveedor/grupo-proveed
 import { ContabilizacionComponent } from './contabilidad/contabilizacion/contabilizacion.component';
 import { CuentaContableComponent } from './contabilidad/cuenta-contable/cuenta-contable.component';
 import { MovimientoContableComponent } from './contabilidad/movimiento-contable/movimiento-contable.component';
+import { TablaCuentaContableComponent } from './contabilidad/cuenta-contable/tabla-cuenta-contable/tabla-cuenta-contable.component';
 import { TablaMovimientoContableComponent } from './contabilidad/movimiento-contable/tabla-movimiento-contable/tabla-movimiento-contable.component';
 
 // Módulo de Usuarios
@@ -106,6 +107,7 @@ const routes: Routes = [
   {path: 'cliente/empresa', component: EmpresaComponent},
   // Rutas para el modulo de usuarios
   { path: 'usuario', component: UsuarioComponent },
+  { path: 'permiso', component: PermisoComponent },
   { path: 'usuario/establecimiento', component: EstablecimientoComponent },
   { path: 'usuario/estacion', component: EstacionComponent },
   // Rutas para el modulo de clientes
@@ -167,6 +169,7 @@ export const RoutingComponents = [
   DialogoMapaComponent,
   SegmentoComponent,
   GrupoClienteComponent,
+  DialogoCuentaContableComponent,
   PlazoCreditoComponent,
   ImpuestoComponent,
   OrigenIngresoComponent,
@@ -219,6 +222,7 @@ export const RoutingComponents = [
   ContabilizacionComponent,
   CuentaContableComponent,
   MovimientoContableComponent,
+  TablaCuentaContableComponent,
   TablaMovimientoContableComponent,
   //Usuarios
   SesionComponent,

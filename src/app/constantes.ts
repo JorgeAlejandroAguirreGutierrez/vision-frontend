@@ -125,23 +125,45 @@ export const valores ={
      anulada: "ANULADA",
      facturada: "FACTURADA",
      nofacturada: "NO FACTURADA",
+     si : "SI",
+     no : "NO",
      latCiudad: -1.6705413480437092,
      lngCiudad: -78.64974203645144
 }
+
+export const preguntas = [
+    /**
+     * Preguntas de seguridad para usuarios
+     */
+    { pregunta: '¿Cúal es el nombre de tu mascota?' },
+    { pregunta: '¿Cúal es el apellido de tu Abuela materna?' },
+    { pregunta: '¿Cúal es el nombre de tu equipo preferido?' },
+    { pregunta: '¿Cúal es tu marca de vehículo preferido?' },
+]
     
 export const mensajes = {
     /**
-     * MENSAJES
+     * Mensajes de Éxito
      */
      exito_agregar_detalle_factura : "SE AGREGO EL DETALLE",
      exito_crear_factura : "SE CREO LA FACTURA",
      exito_actualizar_factura : "SE ACTUALIZO LA FACTURA",
+    // Mensajes de Error
+     error_usuario : "INGRESE UN USUARIO",
+     error_estacion_permiso : "NO TIENE PERMISOS PARA INGRESAR DESDE ESTE DISPOSITIVO",
+     error_usuario_no_existe : "USUARIO NO EXISTE",
+     error_usuario_existe : "USUARIO YA EXISTE",
+     error_contrasena : "CONTRASEÑA INVÁLIDA",
+     error_confirmar_contrasena : "CONFIRME LA CONTRASEÑA",
+     error_empresa : "SELECCIONE UNA EMPRESA VÁLIDA",
+     error_nombre : "INGRESE EL NOMBRE", 
      error_telefono_ingresado : "INGRESE UN NUMERO DE TELEFONO",
      error_telefono_invalido : "NUMERO DE TELEFONO INVALIDO",
      error_celular_ingresado : "INGRESE UN NUMERO DE CELULAR",
      error_celular_invalido : "NUMERO DE CELULAR INVALIDO",
-     error_correo_ingresado : "INGRESE UN NUMERO DE CORREO",
-     error_correo_invalido : "NUMERO DE CORREO INVALIDO",
+     error_correo_ingresado : "INGRESE UN CORREO ELECTRÓNICO",
+     error_correo_invalido : "CORREO INVALIDO",
+     error_perfil : "SELECCIONE UN PERFIL",
      error_unidad_kardex : "ERROR EN UNIDAD KARDEX",
      error_impuesto : "ERROR EN IMPUESTO",
      error_costo : "ERROR EN COSTO",
@@ -164,6 +186,8 @@ export const mensajes = {
      error_precio : "INGRESE UN PRECIO",
      error_producto : "ERROR EN EL PRODUCTO",
      error_producto_proveedor : "PROVEEDOR YA EXISTE PARA ESTE PRODUCTO",
+     error_estacion : "ERROR EN LA ESTACIÓN",
+     error_estacion_usuario : "EL USUARIO YA FUE ASIGNADO A LA ESTACIÓN",
      error_kardex : "ERROR KARDEX EXISTENTE",
      error_kardex_vacio : "ERROR KARDEX VACIO",
      error_kardex_vacio_mensaje : "INGRESA UN KARDEX",

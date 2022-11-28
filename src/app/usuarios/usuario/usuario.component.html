@@ -51,23 +51,35 @@
                             <input matInput type="text" [(ngModel)]="usuario.apodo" class="form-control-sm">
                         </mat-form-field>
                     </div>
-                    <div class="col-12">
+                    <div class="col-12" [formGroup]="formGroupContrasena">
                         <mat-form-field appearance="standard">
                             <mat-label>Contraseña</mat-label>
-                            <input matInput [type]="ocultarContrasena ? 'password' : 'text'" [(ngModel)]="usuario.contrasena">
-                            <button mat-icon-button matSuffix (click)="ocultarContrasena = !ocultarContrasena" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="ocultarContrasena">
-                              <mat-icon>{{ocultarContrasena ? 'visibility_off' : 'visibility'}}</mat-icon>
+                            <input matInput [type]="ocultarContrasena ? 'password' : 'text'" formControlName="password">
+                            <button mat-icon-button matSuffix (click)="ocultarContrasena = !ocultarContrasena"
+                                [attr.aria-label]="'Ocultar password'" [attr.aria-pressed]="ocultarContrasena">
+                                <mat-icon>{{ocultarContrasena ? 'visibility_off' : 'visibility'}}</mat-icon>
                             </button>
+                            <mat-error *ngIf="formGroupContrasena.get('password').invalid">
+                                {{mensajeErrorContrasena()}}
+                            </mat-error>
                         </mat-form-field>
                     </div>
-                    <div class="col-12">
+                    <div class="col-12" [formGroup]="formGroupContrasena">
                         <mat-form-field appearance="standard">
-                            <mat-label>Repita Contraseña</mat-label>
-                            <input matInput [type]="ocultarContrasena2 ? 'password' : 'text'" [(ngModel)]="contrasena2">
-                            <button mat-icon-button matSuffix (click)="ocultarContrasena2 = !ocultarContrasena2" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="ocultarContrasena2">
-                              <mat-icon>{{ocultarContrasena2 ? 'visibility_off' : 'visibility'}}</mat-icon>
+                            <mat-label>Confirmar Contraseña</mat-label>
+                            <input matInput [type]="ocultarContrasena2 ? 'password' : 'text'"
+                                formControlName="confirmPassword" (input)="onPasswordInput()">
+                            <button mat-icon-button matSuffix (click)="ocultarContrasena2 = !ocultarContrasena2"
+                                [attr.aria-label]="'Ocultar password2'" [attr.aria-pressed]="ocultarContrasena2">
+                                <mat-icon>{{ocultarContrasena2 ? 'visibility_off' : 'visibility'}}</mat-icon>
                             </button>
+                            <mat-error *ngIf="formGroupContrasena.get('confirmPassword').invalid">
+                                {{mensajeErrorConfirmarContrasena()}}</mat-error>
                         </mat-form-field>
+                    </div>
+                    <div class="col-12 centrar labelBeforeSlide">
+                        <mat-label class="mr-2">Cambiar Contraseña : </mat-label>
+                        <mat-slide-toggle color="primary" [checked]="cambiarContrasena" (toggleChange)="cambiarSiNo()"></mat-slide-toggle>
                     </div>
                 </div>
                 <div class="form-row col-7 linea-vertical">
@@ -80,9 +92,8 @@
                     <div class="col-9">
                         <mat-form-field appearance="standard">
                             <mat-label>Nombre</mat-label>
-                            <input matInput type="text" [(ngModel)]="usuario.nombre"
-                                oninput="this.value = this.value.toUpperCase()" [disabled]="!editarUsuario"
-                                oninput="this.value = this.value.toUpperCase()" class="form-control-sm">
+                            <input matInput type="text" [(ngModel)]="usuario.nombre" class="form-control-sm"
+                                oninput="this.value = this.value.toUpperCase()" [disabled]="!editarUsuario">
                         </mat-form-field>
                     </div>
                     <div class="col-4">
@@ -106,9 +117,10 @@
                     <div class="col-4">
                         <mat-form-field appearance="standard">
                             <mat-label>Correo</mat-label>
-                            <input matInput placeholder="ejemplo@futuristic.com" [formControl]="email" class="form-control-sm"
-                                oninput="this.value = this.value.toLowerCase()" [disabled]="!editarUsuario" required>
-                                <mat-error *ngIf="email.invalid">{{getErrorMessage()}}</mat-error>    
+                            <input matInput placeholder="ejemplo@futuristic.com" [formControl]="email"
+                                class="form-control-sm" oninput="this.value = this.value.toLowerCase()"
+                                [disabled]="!editarUsuario" required>
+                            <mat-error *ngIf="email.invalid">{{mensajeErrorCorreo()}}</mat-error>
                         </mat-form-field>
                     </div>
                     <div class="col-4">
@@ -124,7 +136,7 @@
                     <div class="col-4">
                         <mat-form-field appearance="standard">
                             <mat-label>Estado</mat-label>
-                            <mat-select [(ngModel)]="usuario.estado" [disabled]="!editarUsuario"
+                            <mat-select [(ngModel)]="usuario.activo" [disabled]="!editarUsuario"
                                 class="form-control-sm">
                                 <mat-option [value]="activo">{{activo}}</mat-option>
                                 <mat-option [value]="inactivo">{{inactivo}}</mat-option>
@@ -138,12 +150,29 @@
                                 [disabled]="true">
                         </mat-form-field>
                     </div>
-
+                    <div class="col-7">
+                        <mat-form-field appearance="standard">
+                            <mat-label>Pregunta de Seguridad</mat-label>
+                            <mat-select [(ngModel)]="usuario.pregunta" [compareWith]="compareFn"
+                                class="form-control-sm">
+                                <mat-option *ngFor="let pregunta of preguntas" [value]="pregunta">
+                                    {{pregunta.pregunta}}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                    <div class="col-5">
+                        <mat-form-field appearance="standard">
+                            <mat-label>Respuesta</mat-label>
+                            <input matInput type="text" [(ngModel)]="usuario.respuesta" class="form-control-sm"
+                                oninput="this.value = this.value.toUpperCase()" [disabled]="!editarUsuario">
+                        </mat-form-field>
+                    </div>
                 </div>
                 <div class="col-2">
                     <mat-card class="foto">
-                        <img *ngIf="!usuario.avatar" width="100%" height="100%" src="assets/images/users/avatar.jpg"> 
-                        <img *ngIf="usuario.avatar" width="100%" height="100%" [src]="usuario.avatar"> 
+                        <img *ngIf="!usuario.avatar" width="100%" height="100%" src="assets/images/users/avatar.jpg">
+                        <img *ngIf="usuario.avatar" width="100%" height="100%" [src]="usuario.avatar">
                     </mat-card>
                     <input type="file" (change)="capturarFile($event)">
                 </div>

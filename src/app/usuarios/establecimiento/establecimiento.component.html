@@ -66,10 +66,10 @@
                     <div class="col-9">
                         <mat-form-field appearance="standard">
                             <mat-label>Nombre</mat-label>
-                            <input matInput type="text" [(ngModel)]="establecimiento.nombre"
+                            <input matInput type="text" [(ngModel)]="establecimiento.descripcion"
                                 oninput="this.value = this.value.toUpperCase()" class="form-control-sm">
-                            <button mat-button *ngIf="establecimiento.nombre" matSuffix mat-icon-button
-                                (click)="establecimiento.nombre=''">
+                            <button mat-button *ngIf="establecimiento.descripcion" matSuffix mat-icon-button
+                                (click)="establecimiento.descripcion=''">
                                 <mat-icon>close</mat-icon>
                             </button>
                         </mat-form-field>
@@ -141,7 +141,6 @@
                             </mat-select>
                         </mat-form-field>
                     </div>
-                    <section class="form-row">
                         <div class="form-row col-4">
                             <div class="col-9">
                                 <mat-form-field appearance="standard">
@@ -245,7 +244,6 @@
                                 </div>
                             </ng-container>
                         </div>
-                    </section>
                 </div>
                 <div class="col-4 text-center linea-vertical">
                     <!--mat-label>Georeferencia</mat-label-->

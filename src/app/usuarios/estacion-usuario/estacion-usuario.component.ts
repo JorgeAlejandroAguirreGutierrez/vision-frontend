@@ -30,33 +30,30 @@ import { Router } from '@angular/router';
 export class EstacionUsuarioComponent implements OnInit {
 
   sesion: Sesion=null;
-  verBotones: boolean = false;
   abrirPanelAsignarEstacion: boolean = true;
   deshabilitarEditarEstacion: boolean = true;
   deshabilitarFiltroEstaciones: boolean = true;
-  verActualizarEstacion: boolean = false;
-  verActualizarUsuario: boolean = false;
+  verOpcionActualizarUsuario: boolean = false;
+  verBotonActualizarEstacion: boolean = false;
+  verBotones: boolean = false;
+  formularioValido: boolean = true;
+  formularioEstacionValido: boolean = true;
 
   usuario: Usuario = new Usuario();
+  empresa: Empresa = new Empresa();
+  establecimiento: Establecimiento = new Establecimiento();
   estacion: Estacion = new Estacion();
   estacionUsuario: EstacionUsuario = new EstacionUsuario();
 
-  codigoEquivalente: string = "";
   empresas: Empresa[];
   establecimientos: Establecimiento[];
-
-  estacionUsuarios: EstacionUsuario[] = [];
-  empresa: Empresa = new Empresa();
-  establecimiento: Establecimiento = new Establecimiento();
+  estaciones: Estacion[] = [];
+  estacionesUsuarios: EstacionUsuario[] = [];
 
   //Variables para los autocomplete
   usuarios: Usuario[]=[];
   controlUsuario = new UntypedFormControl();
   filtroUsuarios: Observable<Usuario[]> = new Observable<Usuario[]>();
-
-  estaciones: Estacion[] = [];
-  controlEstacion = new UntypedFormControl();
-  filtroEstaciones: Observable<Estacion[]> = new Observable<Estacion[]>();
 
   @ViewChild("inputFiltroEstacionUsuario") inputFiltroEstacionUsuario: ElementRef;
   @ViewChild(MatPaginator) paginator: MatPaginator;
@@ -64,9 +61,10 @@ export class EstacionUsuarioComponent implements OnInit {
 
   columnasEstacionUsuario: any[] = [
     { nombreColumna: 'id', cabecera: 'ID', celda: (row: EstacionUsuario) => `${row.estacion.id}`},
-    { nombreColumna: 'codigo_propio', cabecera: 'Código propio', celda: (row: EstacionUsuario) => `${row.estacion.codigo}`},
+    { nombreColumna: 'codigo', cabecera: 'Código', celda: (row: EstacionUsuario) => `${row.estacion.codigo}`},
+    { nombreColumna: 'empresa', cabecera: 'Empresa', celda: (row: EstacionUsuario) => `${row.estacion.establecimiento.empresa.nombreComercial}`},
+    { nombreColumna: 'establecimiento', cabecera: 'Establecimiento', celda: (row: EstacionUsuario) => `${row.estacion.establecimiento.codigo}`}, // cambiar por descripcion y en filtro tambien
     { nombreColumna: 'estacion', cabecera: 'Estación', celda: (row: EstacionUsuario) => `${row.estacion.descripcion}`},
-    //{ nombreColumna: 'codigo_local', cabecera: 'Código local', celda: (row: ProductoProveedor) => `${row.proveedor.codigo}`},
     { nombreColumna: 'estado', cabecera: 'Estado', celda: (row: EstacionUsuario) => `${row.estado}`},
     { nombreColumna: 'acciones', cabecera: 'Acciones', celda: (row: any) => ''}
   ];
@@ -79,23 +77,14 @@ export class EstacionUsuarioComponent implements OnInit {
 
   ngOnInit() {
     this.sesion=validarSesion(this.sesionService, this.router);
-    this.controlEstacion.disable();
-    this.consultarEmpresas();
     this.consultarUsuarios();
-    //this.consultarProveedores();
-    this.consultarEstaciones();
+    this.consultarEmpresas();
+
     this.filtroUsuarios = this.controlUsuario.valueChanges
       .pipe(
         startWith(''),
         map(value => typeof value === 'string' || value==null ? value : value.id),
         map(usuario => typeof usuario === 'string' ? this.filtroUsuario(usuario) : this.usuarios.slice())
-      );
-
-    this.filtroEstaciones = this.controlEstacion.valueChanges
-      .pipe(
-        startWith(''),
-        map(value => typeof value === 'string' || value==null ? value : value.id),
-        map(estacion => typeof estacion === 'string' ? this.filtroEstacion(estacion) : this.estaciones.slice())
       );
   }
 
@@ -103,13 +92,12 @@ export class EstacionUsuarioComponent implements OnInit {
     this.usuario = new Usuario();
     this.abrirPanelAsignarEstacion = true;
     this.deshabilitarFiltroEstaciones = true;
-    this.controlEstacion.disable();
     this.verBotones = false;
     this.deshabilitarEditarEstacion = false;
-    this.verActualizarUsuario = false;
+    this.verOpcionActualizarUsuario = false;
     this.controlUsuario.patchValue('');
     this.estacionUsuario = new EstacionUsuario();
-    this.estacionUsuarios = [];
+    this.estacionesUsuarios = [];
     this.limpiarEstacion();
     this.dataSourceEstacionUsuario = new MatTableDataSource();
     this.clickedRowsEstacionUsuario = new Set<EstacionUsuario>();
@@ -119,10 +107,11 @@ export class EstacionUsuarioComponent implements OnInit {
   actualizarUsuario(event: any){
     if (event!=null)
       event.preventDefault();
-    if (this.usuario.nombre == valores.vacio) {
-        Swal.fire(error, mensajes.error_nombre_producto, error_swal);
-        return;
-    }
+
+    this.validarFormulario()
+    if (!this.formularioEstacionValido)
+      return;
+    this.usuario.estacionesUsuarios = this.estacionesUsuarios;   
     console.log(this.usuario);
     //this.producto.kardexs[0].proveedor = new Proveedor;
     this.usuarioService.actualizar(this.usuario).subscribe({
@@ -158,49 +147,41 @@ export class EstacionUsuarioComponent implements OnInit {
   }
   seleccionarUsuario(){
     this.usuario = this.controlUsuario.value as Usuario;
-    //this.productoProveedores = this.usuario.productosProveedores;
+    this.deshabilitarEditarEstacion= false;
     this.verBotones = true;
-    this.controlEstacion.enable();
-    this.deshabilitarEditarEstacion = false;
-    if (this.estacionUsuarios.length > 0) {
-      this.llenarDataSourceEstacionUsuario(this.estacionUsuarios);
+    if (this.estacionesUsuarios.length > 0) {
+      this.llenarDataSourceEstacionUsuario(this.estacionesUsuarios);
     }
   }
 
-  // CODIGO PARA PROVEEDOR
+  // CODIGO PARA ESTACIÓN
   limpiarEstacion(){
-    this.estacion = new Estacion();
-    this.controlEstacion.patchValue("");
-    this.controlEstacion.enable();
+    this.estacionUsuario = new EstacionUsuario();
     this.deshabilitarEditarEstacion = false;
-    this.codigoEquivalente = "";
-    this.verActualizarEstacion = false;
+    this.verBotonActualizarEstacion = false;
     this.clickedRowsEstacionUsuario.clear();
   }
 
   agregarEstacionUsuario(){
-    let existe: boolean;
-    existe = this.existeEstacionUsuario();
-    if (existe) {
-      Swal.fire(error, mensajes.error_producto_proveedor, error_swal);
-      return;
-    }
-    this.estacionUsuario = new EstacionUsuario();
+    this.validarFormularioEstacion()
+    if (!this.formularioEstacionValido)
+      return;  
+    //this.estacionUsuario = new EstacionUsuario();
     this.estacionUsuario.usuario.id = this.usuario.id
-    this.estacionUsuario.estacion = this.estacion;
-    //this.estacionUsuario.codigoEquivalente = this.codigoEquivalente;
-    this.estacionUsuarios.push(this.estacionUsuario);
+    console.log(this.estacionUsuario);
+    this.estacionesUsuarios.push(this.estacionUsuario);
     //this.usuario.productosProveedores = this.productoProveedores;
-    this.llenarDataSourceEstacionUsuario(this.estacionUsuarios);
-    this.verActualizarUsuario = true;
+    this.llenarDataSourceEstacionUsuario(this.estacionesUsuarios);
+    this.verOpcionActualizarUsuario = true;
+    this.deshabilitarFiltroEstaciones = false;
     this.limpiarEstacion();
   }
 
   llenarDataSourceEstacionUsuario(estacionUsuarios : EstacionUsuario[]){
     this.dataSourceEstacionUsuario = new MatTableDataSource(estacionUsuarios);
     this.dataSourceEstacionUsuario.filterPredicate = (data: EstacionUsuario, filter: string): boolean =>
-      data.estacion.codigo.toUpperCase().includes(filter) || data.estacion.descripcion.toUpperCase().includes(filter) ||
-      data.estacion.estado.toUpperCase().includes(filter);
+      data.estacion.codigo.toUpperCase().includes(filter) || data.estacion.establecimiento.empresa.nombreComercial.toUpperCase().includes(filter) || 
+      data.estacion.establecimiento.codigo.toUpperCase().includes(filter) || data.estacion.descripcion.toUpperCase().includes(filter) || data.estado.toUpperCase().includes(filter);
     this.dataSourceEstacionUsuario.paginator = this.paginator;
     this.dataSourceEstacionUsuario.sort = this.sort;
   }
@@ -235,8 +216,6 @@ export class EstacionUsuarioComponent implements OnInit {
       this.estacionUsuario = estacionUsuarioSeleccionado;
       this.estacion = this.estacionUsuario.estacion;
       //this.controlProveedor.patchValue(this.proveedor.razonSocial);
-      this.controlEstacion.patchValue({descripcion: this.estacion.descripcion});
-      this.controlEstacion.disable();
       //this.codigoEquivalente = this.estacionUsuario.codigoEquivalente;
       this.deshabilitarEditarEstacion = true;
       //this.actualizar_precios();
@@ -244,8 +223,9 @@ export class EstacionUsuarioComponent implements OnInit {
   }
 
   existeEstacionUsuario():boolean{
-    for (let i = 0; i < this.usuario.estacionesUsuarios.length; i++) {
-      if (this.estacion.id == this.usuario.estacionesUsuarios[i].estacion.id){
+    for (let i = 0; i < this.estacionesUsuarios.length; i++) {
+      //if (this.estacionUsuario.estacion.id == this.usuario.estacionesUsuarios[i].estacion.id){
+      if (this.estacionUsuario.estacion.id == this.estacionesUsuarios[i].estacion.id){
         return true;
       }
     }
@@ -253,21 +233,21 @@ export class EstacionUsuarioComponent implements OnInit {
   }
 
   editarEstacionUsuario(){
-    this.verActualizarEstacion = true;
+    this.verBotonActualizarEstacion = true;
     this.deshabilitarEditarEstacion = false;
   }
   
   actualizarEstacionUsuario(){
     //this.productoProveedor.codigoEquivalente = this.codigoEquivalente;
-    this.verActualizarUsuario = true;
+    this.verOpcionActualizarUsuario = true;
     this.limpiarEstacion();
   }
 
   eliminarUsuario(event: any, i:number) {
     if (event != null)
     event.preventDefault();
-    this.estacionUsuarios.splice(i, 1);
-    this.llenarDataSourceEstacionUsuario(this.estacionUsuarios);
+    this.estacionesUsuarios.splice(i, 1);
+    this.llenarDataSourceEstacionUsuario(this.estacionesUsuarios);
     //this.producto.productosProveedores = this.productoProveedores;
     if (confirm("Realmente quiere eliminar la estación del usuario?")) {
     this.estacionUsuarioService.eliminar(this.estacionUsuario).subscribe({
@@ -280,35 +260,6 @@ export class EstacionUsuarioComponent implements OnInit {
     }
   }
 
-  // Metodos para los autocomplete
-  consultarProveedores(){
-    this.estacionService.consultar().subscribe(
-      res => {
-        this.estaciones = res.resultado as Estacion[];
-      },
-      err => {
-        Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
-      }
-    );
-  }
-  private filtroEstacion(value: string): Estacion[] {
-    if(this.usuarios.length>0) {
-      const filterValue = value.toLowerCase();
-      return this.estaciones.filter(estacion => estacion.descripcion.toLowerCase().includes(filterValue));
-    }
-    return [];
-  }
-  verProveedor(estacion: Estacion): string {
-    return estacion && estacion.descripcion ? estacion.descripcion : '';
-  } 
-  seleccionarEstacion(){
-    this.estacion = this.controlEstacion.value as Estacion;
-  }
-
-  compareFn(a: any, b: any) {
-    return a && b && a.id == b.id;
-  }
-
   consultarEmpresas() {
     this.empresaService.consultar().subscribe({
       next: (res) => {
@@ -319,22 +270,12 @@ export class EstacionUsuarioComponent implements OnInit {
     );
   }
 
-  consultarEstaciones(){
-    this.estacionService.consultar().subscribe(
-      res => {
-        //Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
-        this.estaciones=res.resultado as Estacion[]
-      },
-      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
-    );
-  }
-
-  consultarEstablecimientos(establecimientoId: number) {
-    //this.establecimiento.ubicacion.provincia = provincia;
-    //this.establecimientoService.obtener(establecimientoId).subscribe({
+  consultarEstablecimientos(empresaId: number) {
+    //Reemplazar la fila comentada por la siguiente
+    //this.establecimientoService.buscarEmpresa(empresaId).subscribe({
     this.establecimientoService.consultar().subscribe({
       next: res => {
-        console.log("estable");
+        //console.log("estable");
         if (res.resultado != null) {
           this.establecimientos = res.resultado as Establecimiento[];
         } else {
@@ -343,5 +284,59 @@ export class EstacionUsuarioComponent implements OnInit {
       },
       error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     });
+  }
+
+  // Metodos para los autocomplete
+  consultarEstaciones(empresaId: number){
+    this.estacionService.consultar().subscribe({
+      next: res => {
+        this.estaciones = res.resultado as Estacion[];
+      },
+      error: err => {
+        Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+      }
+    });
+  }
+
+  compareFn(a: any, b: any) {
+    return a && b && a.id == b.id;
+  }
+
+  validarFormularioEstacion(){
+    this.formularioEstacionValido = true;
+    if (this.estacionUsuario.estacion.id == 0) {
+      Swal.fire(error, mensajes.error_estacion, error_swal);
+      this.formularioEstacionValido = false;
+      return;
+    } else { 
+      if (this.existeEstacionUsuario()) {
+        Swal.fire(error, mensajes.error_estacion_usuario, error_swal);
+        this.formularioEstacionValido = false;
+        return;
+      }
+    }
+    if (this.usuario.id == 0) {
+      Swal.fire(error, mensajes.error_usuario, error_swal);
+      this.formularioEstacionValido = false;
+      return;
+    }
+  }
+
+  validarFormulario(){
+    if (this.usuario.id == 0) {
+      Swal.fire(error, mensajes.error_usuario, error_swal);
+      this.formularioValido = false;
+      return;
+    }
+    if (this.usuario.nombre == valores.vacio) {
+      Swal.fire(error, mensajes.error_usuario, error_swal);
+      return;
+    }
+    if (this.estacionesUsuarios.length == 0) {
+      Swal.fire(error, mensajes.error_usuario, error_swal);
+      this.formularioValido = false;
+      return;
+    }
+    // Falta validar si hay cambios en estacionUsuario
   }
 }

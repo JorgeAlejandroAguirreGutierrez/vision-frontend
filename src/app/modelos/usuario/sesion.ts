@@ -7,7 +7,7 @@ export class Sesion {
     id:number;
     codigo: string;
     estado:boolean;
-    sesionIp:string;
+    //sesionIp:string;
     fechaApertura: Date;
     fechaCierre: Date;
     usuario: Usuario;
@@ -18,7 +18,7 @@ export class Sesion {
         this.id = valores.cero;
         this.codigo = valores.vacio;
         this.estado = true;
-        this.sesionIp = valores.vacio;
+        //this.sesionIp = valores.vacio;
         this.fechaApertura = new Date();
         this.fechaCierre = new Date();
         this.usuario = new Usuario(); 

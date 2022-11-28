@@ -1,5 +1,6 @@
-import { Component, OnInit, HostListener, ElementRef, Renderer2 } from '@angular/core';
+import { Component, OnInit, HostListener, ElementRef, Inject, Renderer2 } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { valores, validarSesion, tab_activo, exito, exito_swal, error, error_swal } from '../../constantes';
 import Swal from 'sweetalert2';
 
@@ -8,6 +9,8 @@ import { Sesion } from '../../modelos/usuario/sesion';
 import { SesionService } from '../../servicios/usuario/sesion.service';
 import { GrupoClienteService } from '../../servicios/cliente/grupo-cliente.service';
 import { GrupoCliente } from '../../modelos/cliente/grupo-cliente';
+import { CuentaContable } from '../../modelos/contabilidad/cuenta-contable';
+import { CuentaContableService } from '../../servicios/contabilidad/cuenta-contable.service';
 
 import { ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
@@ -26,7 +29,7 @@ export class GrupoClienteComponent implements OnInit {
   inactivo: string = valores.inactivo;
 
   abrirPanelNuevoGrupoCliente: boolean = true;
-  abrirPanelAdminGrupoCliente: boolean = false;
+  abrirPanelAdminGrupoCliente: boolean = true;
   editarGrupoCliente: boolean = true;
 
   sesion: Sesion=null;
@@ -49,7 +52,7 @@ export class GrupoClienteComponent implements OnInit {
   @ViewChild(MatSort) sort: MatSort;
   @ViewChild("inputFiltroGrupoCliente") inputFiltroGrupoCliente: ElementRef;
 
-  constructor(private renderer: Renderer2, private grupoClienteService: GrupoClienteService,
+  constructor(public dialog: MatDialog, private renderer: Renderer2, private grupoClienteService: GrupoClienteService,
     private sesionService: SesionService,private router: Router) { }
 
   ngOnInit() {
@@ -171,4 +174,55 @@ export class GrupoClienteComponent implements OnInit {
       return a[pKey] > b[pKey];
     });
   }
+
+
+  // Para capturar la imformación del Mat-dialog
+  cuentaContableSeleccionado(event: any) {
+    //console.log(event);
+    let cuentaContableRecibido = event.movimientoContableSeleccionado as CuentaContable;
+    this.grupoCliente.cuentaContable = cuentaContableRecibido;
+    //console.log(grupoProductoRecibido.codigo);
+  }
+
+  dialogoCuentasContables(): void {
+    const dialogRef = this.dialog.open(DialogoCuentaContableComponent, {
+      width: '80%',
+      //data: { usuario: this.usuario, clave: this.clave }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      //console.log('El dialogo para selección de grupo producto fue cerrado');
+      if (result) {
+        this.grupoCliente.cuentaContable = result as CuentaContable;
+      }
+    });
+  }
 }
+
+@Component({
+  selector: 'dialogo-cuenta-contable',
+  templateUrl: 'dialogo-cuenta-contable.component.html',
+})
+export class DialogoCuentaContableComponent {
+
+  movimientoContable: string[] = [];
+
+  constructor(
+    public dialogRef: MatDialogRef<DialogoCuentaContableComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: CuentaContable) { }
+
+  onNoClick(): void {
+    this.dialogRef.close();
+  }
+
+  // Para capturar la imformación del Mat-dialog
+  cuentaContableSeleccionado(event: any) {
+    //console.log(event);
+    if (event && event.id != 0) {
+      this.data = event.movimientoContableSeleccionado as CuentaContable;
+      //console.log(this.data.codigo);
+    } else {
+      this.data = new CuentaContable;
+    }
+  }
+}  
