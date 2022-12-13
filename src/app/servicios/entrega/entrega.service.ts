@@ -24,7 +24,7 @@ export class EntregaService {
   }
 
   obtener(id: number): Observable<Respuesta> {
-    return this.http.get<Respuesta>(environment.host + urn.ruta + urn.entrega + '/' + id, options).pipe(
+    return this.http.get<Respuesta>(environment.host + urn.ruta + urn.entrega + urn.slash + id, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);
@@ -33,7 +33,7 @@ export class EntregaService {
   }
 
   obtenerPorFactura(facturaId: number): Observable<Respuesta> {
-    return this.http.get(environment.host + urn.ruta + urn.entrega + urn.factura + "/" + facturaId, options).pipe(
+    return this.http.get(environment.host + urn.ruta + urn.entrega + urn.factura + urn.slash + facturaId, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);
@@ -50,15 +50,6 @@ export class EntregaService {
 
   actualizar(entrega: Entrega): Observable<Respuesta> {
     return this.http.put(environment.host + urn.ruta + urn.entrega, entrega, options).pipe(
-      map(response => response as Respuesta),
-      catchError(err => {
-        return throwError(()=>err);
-      })
-    );
-  }
-
-  eliminar(id: Entrega): Observable<Respuesta> {
-    return this.http.delete(environment.host + urn.ruta + urn.entrega + '/' + id, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);

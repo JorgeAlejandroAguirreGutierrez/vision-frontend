@@ -739,6 +739,30 @@ export class FacturaComponent implements OnInit {
     );
   }
 
+  activar(event) {
+    if (event != null)
+      event.preventDefault();
+    this.facturaService.activar(this.factura).subscribe({
+      next: res => {
+        Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
+        this.consultar();
+      },
+      error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+    });
+  }
+
+  inactivar(event) {
+    if (event != null)
+      event.preventDefault();
+    this.facturaService.inactivar(this.factura).subscribe({
+      next: res => {
+        Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
+        this.consultar();
+      },
+      error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+    });
+  }
+
   consultarProductos(){
     if (this.categoriaProducto== "B"){
       this.consultarBienes(null);

@@ -42,7 +42,7 @@ export class FacturaDetalleService {
   }
 
   obtener(facturaDetalleId: number): Observable<Respuesta> {
-    return this.http.get(environment.host + urn.ruta + urn.factura+ '/' + facturaDetalleId, options).pipe(
+    return this.http.get(environment.host + urn.ruta + urn.factura+ urn.slash + facturaDetalleId, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(err);
@@ -59,7 +59,7 @@ export class FacturaDetalleService {
   }
 
   eliminar(facturaDetalleId: number): Observable<Respuesta> {
-    return this.http.delete(environment.host + urn.ruta + urn.facturaDetalle + '/' + facturaDetalleId, options).pipe(
+    return this.http.delete(environment.host + urn.ruta + urn.facturaDetalle + urn.slash + facturaDetalleId, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(err);

@@ -55,8 +55,6 @@ export class TipoRetencionComponent implements OnInit {
       this.crear(null);
     if (($event.shiftKey || $event.metaKey) && $event.key == 'N') //ASHIFT + N
       this.nuevo(null);
-    if (($event.shiftKey || $event.metaKey) && $event.key == 'E') // SHIFT + E
-      this.eliminar(null);
   }
 
   nuevo(event) {
@@ -91,17 +89,28 @@ export class TipoRetencionComponent implements OnInit {
     );
   }
 
-  eliminar(event:any) {
-    if (event!=null)
+  activar(event) {
+    if (event != null)
       event.preventDefault();
-    this.tipoRetencionService.eliminar(this.tipoRetencion).subscribe(
-      res => {
+    this.tipoRetencionService.activar(this.tipoRetencion).subscribe({
+      next: res => {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
-        this.nuevo(null);
         this.consultar();
       },
-      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
-    );
+      error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+    });
+  }
+
+  inactivar(event) {
+    if (event != null)
+      event.preventDefault();
+    this.tipoRetencionService.inactivar(this.tipoRetencion).subscribe({
+      next: res => {
+        Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
+        this.consultar();
+      },
+      error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+    });
   }
   
   consultar() {

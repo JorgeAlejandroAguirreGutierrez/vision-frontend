@@ -23,7 +23,7 @@ export class FormaPagoService {
   }
 
   crear(formaPago: FormaPago): Observable<Respuesta> {
-    return this.http.post(environment.host + urn.ruta + urn.formaPago, JSON.stringify(formaPago), options).pipe(
+    return this.http.post(environment.host + urn.ruta + urn.formaPago, formaPago, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);
@@ -32,7 +32,7 @@ export class FormaPagoService {
   }
 
   obtener(formaPagoId: number): Observable<Respuesta> {
-    return this.http.get<Respuesta>(environment.host + urn.ruta + urn.formaPago + '/' + formaPagoId, options).pipe(
+    return this.http.get<Respuesta>(environment.host + urn.ruta + urn.formaPago + urn.slash + formaPagoId, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);
@@ -49,7 +49,7 @@ export class FormaPagoService {
   }
 
   actualizar(formaPago: FormaPago): Observable<Respuesta> {
-    return this.http.put(environment.host + urn.ruta + urn.formaPago, JSON.stringify(formaPago), options).pipe(
+    return this.http.put(environment.host + urn.ruta + urn.formaPago, formaPago, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);
@@ -57,8 +57,8 @@ export class FormaPagoService {
     );
   }
 
-  eliminar(formaPago: FormaPago): Observable<Respuesta> {
-    return this.http.delete(environment.host + urn.ruta + urn.formaPago + '/' + formaPago.id, options).pipe(
+  activar(formaPago: FormaPago): Observable<Respuesta> {
+    return this.http.patch(environment.host + urn.ruta + urn.formaPago + urn.activar, formaPago, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);
@@ -66,8 +66,8 @@ export class FormaPagoService {
     );
   }
 
-  eliminarPersonalizado(formaPago: FormaPago): Observable<Respuesta> {
-    return this.http.put(environment.host + urn.ruta + urn.formaPago, JSON.stringify(formaPago), options).pipe(
+  inactivar(formaPago: FormaPago): Observable<Respuesta> {
+    return this.http.patch(environment.host + urn.ruta + urn.formaPago + urn.inactivar, formaPago, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);

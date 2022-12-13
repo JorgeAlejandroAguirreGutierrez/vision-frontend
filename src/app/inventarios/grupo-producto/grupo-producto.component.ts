@@ -103,8 +103,6 @@ export class GrupoProductoComponent implements OnInit {
       this.crear(null);
     if (($event.shiftKey || $event.metaKey) && $event.key == 'N') //ASHIFT + N
       this.limpiar();
-    if (($event.shiftKey || $event.metaKey) && $event.key == 'E') // SHIFT + E
-      this.eliminarLeer(null);
   }
 
   async ngOnInit() {
@@ -117,7 +115,7 @@ export class GrupoProductoComponent implements OnInit {
       },
       error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     });
-    await this.consultarGruposAsync();
+    this.consultar();
     this.filtroGrupos = this.controlGrupo.valueChanges
       .pipe(
         startWith(''),
@@ -237,23 +235,25 @@ export class GrupoProductoComponent implements OnInit {
     });
   }
 
-  eliminar(grupo_producto: GrupoProducto) {
-    this.grupoProductoService.eliminar(grupo_producto).subscribe(
-      res => {
-        Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
-        this.grupoProducto = res.resultado as GrupoProducto
-      },
-      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
-    );
-  }
-
-  eliminarLeer(event: any) {
+  activar(event) {
     if (event != null)
       event.preventDefault();
-    this.grupoProductoService.eliminar(this.grupoProducto).subscribe({
+    this.grupoProductoService.activar(this.grupoProducto).subscribe({
       next: res => {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
-        //this.consultarGrupoProductos();
+        this.consultar();
+      },
+      error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+    });
+  }
+
+  inactivar(event) {
+    if (event != null)
+      event.preventDefault();
+    this.grupoProductoService.inactivar(this.grupoProducto).subscribe({
+      next: res => {
+        Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
+        this.consultar();
       },
       error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     });
@@ -336,8 +336,8 @@ export class GrupoProductoComponent implements OnInit {
     }
   }
 
-  async consultarGruposAsync() {
-    await this.grupoProductoService.consultarGruposAsync().then(
+  consultar() {
+    this.grupoProductoService.consultar().subscribe(
       res => {
         this.grupos = res.resultado as string[];
       },

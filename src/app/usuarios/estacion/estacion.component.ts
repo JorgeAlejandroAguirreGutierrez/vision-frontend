@@ -41,7 +41,6 @@ export class EstacionComponent implements OnInit {
   establecimientos: Establecimiento[]=[];
 
   columnasEstacion: any[] = [
-    { nombreColumna: 'id', cabecera: 'ID', celda: (row: Estacion) => `${row.id}` },
     { nombreColumna: 'codigo', cabecera: 'Código', celda: (row: Estacion) => `${row.codigo}` },
     { nombreColumna: 'descripcion', cabecera: 'Estación', celda: (row: Estacion) => `${row.descripcion}` },
     { nombreColumna: 'nombre_pc', cabecera: 'Nombre PC', celda: (row: Estacion) => `${row.nombrePC}` },
@@ -63,8 +62,6 @@ export class EstacionComponent implements OnInit {
       this.crear(null);
     if (($event.shiftKey || $event.metaKey) && $event.key == 'N') //ASHIFT + N
       this.nuevo(null);
-    if (($event.shiftKey || $event.metaKey) && $event.key == 'E') // SHIFT + E
-      this.eliminar(null);
   }
 
   constructor(private renderer: Renderer2, private sesionService: SesionService, private empresaService: EmpresaService, private establecimientoService: EstablecimientoService, 
@@ -73,9 +70,7 @@ export class EstacionComponent implements OnInit {
   ngOnInit() {
     this.sesion=validarSesion(this.sesionService, this.router);
     this.consultarEmpresas();
-    //this.consultarEstablecimientos();
-    this.construirEstacion();
-    
+    this.consultar();
   }
 
   limpiar() {
@@ -124,19 +119,31 @@ export class EstacionComponent implements OnInit {
     });
   }
 
-  eliminar(event: any) {
+  activar(event) {
     if (event != null)
       event.preventDefault();
-    this.estacionService.eliminarPersonalizado(this.estacion).subscribe({
+    this.estacionService.activar(this.estacion).subscribe({
       next: res => {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
-        this.limpiar();
+        this.consultar();
       },
       error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     });
   }
 
-  consultarEstaciones() {
+  inactivar(event) {
+    if (event != null)
+      event.preventDefault();
+    this.estacionService.inactivar(this.estacion).subscribe({
+      next: res => {
+        Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
+        this.consultar();
+      },
+      error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+    });
+  }
+
+  consultar() {
     this.estacionService.consultar().subscribe({
       next: res => {
         this.estaciones = res.resultado as Estacion[]
@@ -183,20 +190,6 @@ export class EstacionComponent implements OnInit {
     });
   }
 
-  async construirEstacion() {
-    let estacionId=0;
-    this.estacionService.currentMessage.subscribe(message => estacionId = message);
-    if (estacionId!= 0) {
-      await this.estacionService.obtenerAsync(estacionId).then(
-        res => {
-          Object.assign(this.estacion, res.resultado as Estacion);
-          this.estacionService.enviar(0);
-        },
-        err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
-      );
-    }
-  }
-
   consultarEmpresas() {
     this.empresaService.consultar().subscribe({
       next: (res) => {
@@ -206,16 +199,6 @@ export class EstacionComponent implements OnInit {
       }
     );
   }
-
- /* consultarEstablecimientos1(){
-    this.establecimientoService.consultar().subscribe(
-      res => {
-        //Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
-        this.establecimientos=res.resultado as Establecimiento[]
-      },
-      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
-    );
-  }*/
 
   consultarEstablecimientos(establecimientoId: number) {
     //this.establecimiento.ubicacion.provincia = provincia;

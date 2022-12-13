@@ -50,7 +50,7 @@ export class ClienteService {
   }
 
   async obtenerAsync(clienteId: number): Promise<Respuesta> {
-    return await lastValueFrom(this.http.get<Respuesta>(environment.host + urn.ruta + urn.cliente + '/' + clienteId, options).pipe(
+    return await lastValueFrom(this.http.get<Respuesta>(environment.host + urn.ruta + urn.cliente + urn.slash + clienteId, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);
@@ -66,7 +66,7 @@ export class ClienteService {
   }
 
   obtenerIdentificacion(identificacion: string): Observable<Respuesta> {
-    return this.http.get<Respuesta>(environment.host + urn.ruta + urn.cliente + urn.identificacion+'/'+identificacion, options).pipe(
+    return this.http.get<Respuesta>(environment.host + urn.ruta + urn.cliente + urn.identificacion + urn.slash + identificacion, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);
@@ -74,7 +74,7 @@ export class ClienteService {
   }
 
   actualizar(cliente: Cliente): Observable<Respuesta> {
-    return this.http.put(environment.host + urn.ruta + urn.cliente, JSON.stringify(cliente), options).pipe(
+    return this.http.put(environment.host + urn.ruta + urn.cliente, cliente, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);
@@ -82,8 +82,8 @@ export class ClienteService {
     );
   }
 
-  eliminar(cliente: Cliente): Observable<Respuesta> {
-    return this.http.delete(environment.host + urn.ruta + urn.cliente + '/' + cliente.id, options).pipe(
+  activar(cliente: Cliente): Observable<Respuesta> {
+    return this.http.patch(environment.host + urn.ruta + urn.cliente + urn.activar, cliente, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);
@@ -91,8 +91,8 @@ export class ClienteService {
     );
   }
 
-  eliminarPersonalizado(cliente: Cliente): Observable<Respuesta> {
-    return this.http.delete(environment.host + urn.ruta + urn.cliente + urn.personalizado + '/' + cliente.id, options).pipe(
+  inactivar(cliente: Cliente): Observable<Respuesta> {
+    return this.http.patch(environment.host + urn.ruta + urn.cliente + urn.inactivar, cliente, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);

@@ -34,7 +34,7 @@ export class ImpuestoService {
   }
 
   obtener(impuestoId: number): Observable<Respuesta> {
-    return this.http.get<Respuesta>(environment.host + urn.ruta + urn.impuesto + '/' + impuestoId, options).pipe(
+    return this.http.get<Respuesta>(environment.host + urn.ruta + urn.impuesto + urn.slash + impuestoId, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);
@@ -42,7 +42,7 @@ export class ImpuestoService {
   }
 
   obtenerImpuestoPorcentaje(porcentaje: number): Observable<Respuesta> {
-    return this.http.get<Respuesta>(environment.host + urn.ruta + urn.impuesto + urn.porcentaje+'/'+porcentaje, options).pipe(
+    return this.http.get<Respuesta>(environment.host + urn.ruta + urn.impuesto + urn.porcentaje + urn.slash + porcentaje, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);
@@ -58,8 +58,17 @@ export class ImpuestoService {
     );
   }
 
-  eliminar(impuesto: Impuesto): Observable<Respuesta> {
-    return this.http.delete(environment.host + urn.ruta + urn.impuesto + '/' + impuesto.id, options).pipe(
+  activar(impuesto: Impuesto): Observable<Respuesta> {
+    return this.http.patch(environment.host + urn.ruta + urn.impuesto + urn.activar, impuesto, options).pipe(
+      map(response => response as Respuesta),
+      catchError(err => {
+        return throwError(()=>err);
+      })
+    );
+  }
+
+  inactivar(impuesto: Impuesto): Observable<Respuesta> {
+    return this.http.patch(environment.host + urn.ruta + urn.impuesto + urn.inactivar, impuesto, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);

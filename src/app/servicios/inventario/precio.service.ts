@@ -26,7 +26,7 @@ export class PrecioService {
   }
 
   obtener(precioId: number): Observable<Respuesta> {
-    return this.http.get<Respuesta>(environment.host + urn.ruta + urn.precio + '/' + precioId, options).pipe(
+    return this.http.get<Respuesta>(environment.host + urn.ruta + urn.precio + urn.slash + precioId, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);
@@ -51,8 +51,17 @@ export class PrecioService {
     );
   }
 
-  eliminar(precio: Precio): Observable<Respuesta> {
-    return this.http.delete(environment.host + urn.ruta + urn.modelo + '/' + precio.id, options).pipe(
+  activar(precio: Precio): Observable<Respuesta> {
+    return this.http.patch(environment.host + urn.ruta + urn.precio + urn.activar, precio, options).pipe(
+      map(response => response as Respuesta),
+      catchError(err => {
+        return throwError(()=>err);
+      })
+    );
+  }
+
+  inactivar(precio: Precio): Observable<Respuesta> {
+    return this.http.patch(environment.host + urn.ruta + urn.precio + urn.inactivar, precio, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);
@@ -63,7 +72,7 @@ export class PrecioService {
   importar(archivo: File, modelo: Modelo): Observable<Respuesta> {
     const formData: FormData = new FormData();
     formData.append('archivo', archivo, archivo.name);
-    return this.http.post(environment.host + urn.ruta + '/'+modelo.endpoint + urn.importar, formData, optionsCargarArchivo).pipe(
+    return this.http.post(environment.host + urn.ruta + urn.slash + modelo.endpoint + urn.importar, formData, optionsCargarArchivo).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);
@@ -72,7 +81,7 @@ export class PrecioService {
   }
 
   exportar(modelo: Modelo): Observable<Respuesta> {
-    return this.http.get(environment.host + urn.ruta + '/' + modelo.endpoint + urn.importar, options).pipe(
+    return this.http.get(environment.host + urn.ruta + urn.slash + modelo.endpoint + urn.importar, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);

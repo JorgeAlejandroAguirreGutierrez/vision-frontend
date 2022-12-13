@@ -24,7 +24,7 @@
                     <div class="col-6 centrar">
                         <mat-form-field appearance="standard">
                             <mat-label>Cúal es su usuario?</mat-label>
-                            <input matInput [(ngModel)]="usuario.apodo" (change)="buscarUsuario()">
+                            <input matInput [(ngModel)]="sesion.usuario.apodo" (change)="obtenerPorApodo()">
                         </mat-form-field>
                     </div>
                     <ng-container *ngIf="!cambiarContrasena">
@@ -36,7 +36,7 @@
                             <mat-form-field appearance="standard">
                                 <mat-label>Contraseña</mat-label>
                                 <input matInput [type]="ocultarContrasena ? 'password' : 'text'"
-                                    [(ngModel)]="usuario.contrasena" (keyup.enter)="iniciarSesion()">
+                                    [(ngModel)]="sesion.usuario.contrasena" (keyup.enter)="iniciarSesion()">
                                 <button mat-icon-button matSuffix (click)="ocultarContrasena = !ocultarContrasena"
                                     [attr.aria-label]="'Ocultar password'" [attr.aria-pressed]="ocultarContrasena">
                                     <mat-icon>{{ocultarContrasena ? 'visibility_off' : 'visibility'}}</mat-icon>
@@ -51,7 +51,7 @@
                             <div class="col-6 centrar">
                                 <mat-form-field appearance="standard">
                                     <mat-label>Empresa</mat-label>
-                                    <mat-select [(ngModel)]="empresa.id" name="empresa">
+                                    <mat-select>
                                         <mat-option *ngFor="let empresa of empresas" [value]="empresa.id">
                                             {{empresa.razonSocial}}
                                         </mat-option>
@@ -79,7 +79,7 @@
                             <mat-form-field appearance="standard">
                                 <mat-label>Contraseña actual</mat-label>
                                 <input matInput [type]="ocultarContrasena ? 'password' : 'text'"
-                                    [(ngModel)]="usuario.contrasena">
+                                    [(ngModel)]="sesion.usuario.contrasena">
                                 <button mat-icon-button matSuffix (click)="ocultarContrasena = !ocultarContrasena"
                                     [attr.aria-label]="'Ocultar password'" [attr.aria-pressed]="ocultarContrasena">
                                     <mat-icon>{{ocultarContrasena ? 'visibility_off' : 'visibility'}}</mat-icon>
@@ -134,8 +134,8 @@
                 <div class="form-row col-5 ml-1">
                     <div class="col-8">
                         <mat-card class="foto">
-                            <img *ngIf="!usuario.avatar" width="100%" height="100%" src="assets/images/users/avatar.jpg">
-                            <img *ngIf="usuario.avatar" width="100%" height="100%" [src]="usuario.avatar">
+                            <img *ngIf="!sesion.usuario.avatar" width="100%" height="100%" src="assets/images/users/avatar.jpg">
+                            <img *ngIf="sesion.usuario.avatar" width="100%" height="100%" [src]="sesion.usuario.avatar">
                         </mat-card>
                     </div>
                     <div class="col-4"></div>

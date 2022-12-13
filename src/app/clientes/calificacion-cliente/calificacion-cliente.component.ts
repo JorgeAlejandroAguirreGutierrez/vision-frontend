@@ -31,7 +31,7 @@ export class CalificacionClienteComponent implements OnInit {
 
   sesion: Sesion=null;
   calificacionCliente= new CalificacionCliente();
-  calificacionClientes: CalificacionCliente[];
+  calificacionesClientes: CalificacionCliente[];
 
   columnasCalificacionCliente: any[] = [
     { nombreColumna: 'id', cabecera: 'ID', celda: (row: CalificacionCliente) => `${row.id}` },
@@ -54,7 +54,7 @@ export class CalificacionClienteComponent implements OnInit {
 
   ngOnInit() {
     this.sesion=validarSesion(this.sesionService, this.router);
-    this.consultarCalificacionClientes();
+    this.consultar();
   }
   
   @HostListener('window:keypress', ['$event'])
@@ -63,8 +63,6 @@ export class CalificacionClienteComponent implements OnInit {
       this.crear(null);
     if (($event.shiftKey || $event.metaKey) && $event.key == 'N') //ASHIFT + N
       this.nuevo(null);
-    if (($event.shiftKey || $event.metaKey) && $event.key == 'E') // SHIFT + E
-      this.eliminar(null);
   }
 
   limpiar() {
@@ -87,8 +85,8 @@ export class CalificacionClienteComponent implements OnInit {
       next: res => {
         this.calificacionCliente = res.resultado as CalificacionCliente;
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
-        this.calificacionClientes.push(this.calificacionCliente);
-        this.llenarTablaCalificacionCliente(this.calificacionClientes);
+        this.calificacionesClientes.push(this.calificacionCliente);
+        this.llenarTablaCalificacionCliente(this.calificacionesClientes);
       },
       error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     });
@@ -113,23 +111,35 @@ export class CalificacionClienteComponent implements OnInit {
     });
   }
 
-  eliminar(event: any) {
+  activar(event) {
     if (event != null)
       event.preventDefault();
-    this.calificacionClienteService.eliminarPersonalizado(this.calificacionCliente).subscribe({
+    this.calificacionClienteService.activar(this.calificacionCliente).subscribe({
       next: res => {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
-        this.limpiar();
+        this.consultar();
       },
       error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     });
   }
 
-  consultarCalificacionClientes() {
+  inactivar(event) {
+    if (event != null)
+      event.preventDefault();
+    this.calificacionClienteService.inactivar(this.calificacionCliente).subscribe({
+      next: res => {
+        Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
+        this.consultar();
+      },
+      error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+    });
+  }
+
+  consultar() {
     this.calificacionClienteService.consultar().subscribe({
       next: res => {
-        this.calificacionClientes = res.resultado as CalificacionCliente[]
-        this.llenarTablaCalificacionCliente(this.calificacionClientes);
+        this.calificacionesClientes = res.resultado as CalificacionCliente[]
+        this.llenarTablaCalificacionCliente(this.calificacionesClientes);
       },
       error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     });

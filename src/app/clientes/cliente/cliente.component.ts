@@ -202,7 +202,7 @@ export class ClienteComponent implements OnInit {
     this.sesion = validarSesion(this.sesionService, this.router);
     this.obtenerSesion();
     this.obtenerEmpresa();
-    this.consultarClientes();
+    this.consultar();
     this.tipoIdentificacionService.consultar().subscribe({
       next: (res) => {
         this.tiposIdentificaciones = res.resultado as TipoIdentificacion[];
@@ -387,7 +387,7 @@ export class ClienteComponent implements OnInit {
         this.cliente = res.resultado as Cliente;
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
         this.limpiar();
-        this.consultarClientes();
+        this.consultar();
       },
       error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     });
@@ -514,21 +514,31 @@ export class ClienteComponent implements OnInit {
     );
   }
 
-  eliminar(event: any) {
+  activar(event) {
     if (event != null)
       event.preventDefault();
-    this.clienteService.eliminarPersonalizado(this.cliente).subscribe(
-      res => {
+    this.clienteService.activar(this.cliente).subscribe({
+      next: res => {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
-        let indiceTabActivo = tab_activo(this.tabService);
-        this.tabService.removeTab(indiceTabActivo);
-        this.tabService.addNewTab(ClienteComponent, tabs.tab_cliente);
+        this.consultar();
       },
-      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
-    );
+      error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+    });
   }
 
-  consultarClientes() {
+  inactivar(event) {
+    if (event != null)
+      event.preventDefault();
+    this.clienteService.inactivar(this.cliente).subscribe({
+      next: res => {
+        Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
+        this.consultar();
+      },
+      error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+    });
+  }
+
+  consultar() {
     this.clienteService.consultar().subscribe({
       next: res => {
         this.clientes = res.resultado as Cliente[]

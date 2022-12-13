@@ -3,7 +3,7 @@ import { PlazoCredito } from '../../modelos/cliente/plazo-credito';
 import { Respuesta } from '../../respuesta';
 import { HttpClient } from '@angular/common/http';
 import { map, catchError } from 'rxjs/operators';
-import { Observable, throwError, BehaviorSubject, lastValueFrom } from 'rxjs';
+import { Observable, throwError, BehaviorSubject } from 'rxjs';
 import { Router } from '@angular/router';
 import { urn, options } from '../../constantes';
 import { environment } from '../../../environments/environment';
@@ -32,7 +32,7 @@ export class PlazoCreditoService {
   }
 
   obtener(plazoCreditoId: number): Observable<Respuesta> {
-    return this.http.get<Respuesta>(environment.host + urn.ruta + urn.plazoCredito + '/' + plazoCreditoId, options).pipe(
+    return this.http.get<Respuesta>(environment.host + urn.ruta + urn.plazoCredito + urn.slash + plazoCreditoId, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);
@@ -57,8 +57,8 @@ export class PlazoCreditoService {
     );
   }
 
-  eliminar(plazoCredito: PlazoCredito): Observable<Respuesta> {
-    return this.http.delete(environment.host + urn.ruta + urn.plazoCredito + '/' + plazoCredito.id, options).pipe(
+  activar(plazoCredito: PlazoCredito): Observable<Respuesta> {
+    return this.http.patch(environment.host + urn.ruta + urn.plazoCredito + urn.activar, plazoCredito, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);
@@ -66,8 +66,8 @@ export class PlazoCreditoService {
     );
   }
 
-  eliminarPersonalizado(plazoCredito: PlazoCredito): Observable<Respuesta> {
-    return this.http.delete(environment.host + urn.ruta + urn.plazoCredito + urn.personalizado + '/' + plazoCredito.id, options).pipe( 
+  inactivar(plazoCredito: PlazoCredito): Observable<Respuesta> {
+    return this.http.patch(environment.host + urn.ruta + urn.plazoCredito + urn.inactivar, plazoCredito, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);
@@ -76,7 +76,7 @@ export class PlazoCreditoService {
   }
 
   buscar(plazoCredito: PlazoCredito): Observable<Respuesta> {
-    return this.http.get(environment.host + urn.ruta + urn.plazoCredito + urn.buscar+'/'+plazoCredito.codigo + '/'+plazoCredito.descripcion+'/'+plazoCredito.plazo, options).pipe(
+    return this.http.get(environment.host + urn.ruta + urn.plazoCredito + urn.buscar + urn.slash + plazoCredito.codigo + urn.slash + plazoCredito.descripcion + urn.slash + plazoCredito.plazo, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);

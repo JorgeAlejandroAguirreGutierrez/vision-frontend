@@ -243,23 +243,6 @@ export class EstacionUsuarioComponent implements OnInit {
     this.limpiarEstacion();
   }
 
-  eliminarUsuario(event: any, i:number) {
-    if (event != null)
-    event.preventDefault();
-    this.estacionesUsuarios.splice(i, 1);
-    this.llenarDataSourceEstacionUsuario(this.estacionesUsuarios);
-    //this.producto.productosProveedores = this.productoProveedores;
-    if (confirm("Realmente quiere eliminar la estación del usuario?")) {
-    this.estacionUsuarioService.eliminar(this.estacionUsuario).subscribe({
-      next: (res) => {
-        Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
-        //this.consultar();
-      },
-      error: (err) => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
-    });
-    }
-  }
-
   consultarEmpresas() {
     this.empresaService.consultar().subscribe({
       next: (res) => {

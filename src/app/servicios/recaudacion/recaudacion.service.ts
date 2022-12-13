@@ -34,7 +34,7 @@ export class RecaudacionService {
   }
 
   obtener(recaudacion: Recaudacion): Observable<Respuesta> {
-    return this.http.get(environment.host + urn.ruta + urn.recaudacion + "/" + recaudacion.id, options).pipe(
+    return this.http.get(environment.host + urn.ruta + urn.recaudacion + urn.slash + recaudacion.id, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);
@@ -50,17 +50,8 @@ export class RecaudacionService {
     );
   }
 
-  eliminar(recaudacion: Recaudacion): Observable<Respuesta> {
-    return this.http.delete(environment.host + urn.ruta + urn.recaudacion + '/' + recaudacion.id, options).pipe(
-      map(response => response as Respuesta),
-      catchError(err => {
-        return throwError(()=>err);
-      })
-    );
-  }
-
   obtenerPorFactura(facturaId: number): Observable<Respuesta> {
-    return this.http.get(environment.host + urn.ruta + urn.recaudacion + urn.factura + "/" + facturaId, options).pipe(
+    return this.http.get(environment.host + urn.ruta + urn.recaudacion + urn.factura + urn.slash + facturaId, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);

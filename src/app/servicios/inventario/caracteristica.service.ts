@@ -26,7 +26,7 @@ export class CaracteristicaService {
   }
 
   obtener(caracteristicaId: number): Observable<Respuesta> {
-    return this.http.get<Respuesta>(environment.host + urn.ruta + urn.caracteristica + '/' + caracteristicaId, options).pipe(
+    return this.http.get<Respuesta>(environment.host + urn.ruta + urn.caracteristica + urn.slash + caracteristicaId, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);
@@ -51,23 +51,16 @@ export class CaracteristicaService {
     );
   }
 
-  eliminar(caracteristica: Caracteristica): Observable<Respuesta> {
-    return this.http.delete(environment.host + urn.ruta + urn.caracteristica + '/' + caracteristica.id, options).pipe(
-      map(response => response as Respuesta),
-      catchError(err => {
-        return throwError(()=>err);
-      })
-    );
-  }
   consultarBienExistencias(producto: Producto): Observable<Respuesta> {
-    return this.http.get(environment.host + urn.ruta + urn.caracteristica + urn.tipo + urn.bien + "/" + producto.id + urn.existencias, options).pipe(
+    return this.http.get(environment.host + urn.ruta + urn.caracteristica + urn.tipo + urn.bien + urn.slash + producto.id + urn.existencias, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);
       }));
   }
+  
   consultarBienExistenciasBodega(producto: Producto, bodega: Bodega): Observable<Respuesta> {
-    return this.http.get(environment.host + urn.ruta + urn.caracteristica + urn.tipo + urn.bien + "/" + producto.id + urn.existencias + "/" + bodega.id, options).pipe(
+    return this.http.get(environment.host + urn.ruta + urn.caracteristica + urn.tipo + urn.bien + urn.slash + producto.id + urn.existencias + urn.slash + bodega.id, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);

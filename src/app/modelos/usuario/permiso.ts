@@ -6,7 +6,8 @@ export class Permiso {
   modulo: string;
   opcion: string;
   operacion: string;
-  habilitado: boolean;
+  habilitado: string;
+  estado: string;
   perfil: Perfil;
 
   constructor(){
@@ -15,7 +16,7 @@ export class Permiso {
     this.modulo=valores.vacio;
     this.opcion=valores.vacio;
     this.operacion=valores.vacio;
-    this.habilitado=true;
+    this.habilitado=valores.si;
     this.perfil=new Perfil();
   }
 }

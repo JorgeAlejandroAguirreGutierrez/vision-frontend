@@ -6,7 +6,6 @@ import { HttpClient } from '@angular/common/http';
 import { map, catchError } from 'rxjs/operators';
 import { Observable, throwError, BehaviorSubject, lastValueFrom } from 'rxjs';
 import { environment } from '../../../environments/environment';
-import { Modelo } from '../../modelos/administracion/modelo';
 import { MovimientoContable } from '../../modelos/contabilidad/movimiento-contable';
 
 @Injectable({
@@ -20,8 +19,8 @@ export class MovimientoContableService {
 
   constructor(private http: HttpClient) { }
 
-  enviar(movimiento_contable_id: number) {
-    this.messageSource.next(movimiento_contable_id);
+  enviar(movimientoContableId: number) {
+    this.messageSource.next(movimientoContableId);
   }
 
   crear(movimientoContable: MovimientoContable): Observable<Respuesta> {
@@ -34,21 +33,12 @@ export class MovimientoContableService {
   }
 
   obtener(movimientoContableId: number): Observable<Respuesta> {
-    return this.http.get<Respuesta>(environment.host + urn.ruta + urn.movimientoContable + '/' + movimientoContableId, options).pipe(
+    return this.http.get<Respuesta>(environment.host + urn.ruta + urn.movimientoContable + urn.slash + movimientoContableId, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);
       })
     );
-  }
-
-  async obtenerAsync(movimiento_contable_id: number): Promise<Respuesta> {
-    return await lastValueFrom(this.http.get<Respuesta>(environment.host + urn.ruta + urn.movimientoContable + '/' + movimiento_contable_id, options).pipe(
-      map(response => response as Respuesta),
-      catchError(err => {
-        return throwError(()=>err);
-      })
-    ));
   }
 
   consultar(): Observable<Respuesta> {
@@ -68,8 +58,8 @@ export class MovimientoContableService {
     );
   }
 
-  eliminar(movimientoContable: MovimientoContable): Observable<Respuesta> {
-    return this.http.delete(environment.host + urn.ruta + urn.movimientoContable + '/' + movimientoContable.id, options).pipe(
+  activar(movimientoContable: MovimientoContable): Observable<Respuesta> {
+    return this.http.patch(environment.host + urn.ruta + urn.movimientoContable + urn.activar, movimientoContable, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);
@@ -77,8 +67,8 @@ export class MovimientoContableService {
     );
   }
 
-  buscar(movimiento_contable: MovimientoContable): Observable<Respuesta> {
-    return this.http.get(environment.host + urn.ruta + urn.movimientoContable + urn.buscar + '/' + movimiento_contable.codigo + '/' + movimiento_contable.costoVenta+'/'+movimiento_contable.descuentoCompra, options).pipe(
+  inactivar(movimientoContable: MovimientoContable): Observable<Respuesta> {
+    return this.http.patch(environment.host + urn.ruta + urn.calificacionCliente + urn.inactivar, movimientoContable, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);
@@ -86,25 +76,13 @@ export class MovimientoContableService {
     );
   }
 
-  importar(archivo: File, modelo: Modelo): Observable<Respuesta> {
-    const formData: FormData = new FormData();
-    formData.append('archivo', archivo, archivo.name);
-    return this.http.post(environment.host + urn.ruta + '/' + modelo.endpoint + urn.importar, formData, optionsCargarArchivo).pipe(
+  buscar(movimientoContable: MovimientoContable): Observable<Respuesta> {
+    return this.http.get(environment.host + urn.ruta + urn.movimientoContable + urn.buscar + urn.slash + movimientoContable.codigo + urn.slash + movimientoContable.costoVenta + urn.slash + movimientoContable.descuentoCompra, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);
       })
     );
   }
-
-  exportar(modelo: Modelo): Observable<Respuesta> {
-    return this.http.get(environment.host + urn.ruta + '/' + modelo.endpoint + urn.importar, options).pipe(
-      map(response => response as Respuesta),
-      catchError(err => {
-        return throwError(()=>err);
-      })
-    );
-  }
-
 
 }

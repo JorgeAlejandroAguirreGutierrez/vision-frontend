@@ -24,7 +24,7 @@ export class AmortizacionService {
   }
 
   obtener(amortizacionId: number): Observable<Respuesta> {
-    return this.http.get<Respuesta>(environment.host + urn.ruta + urn.amortizacion + '/' + amortizacionId, options).pipe(
+    return this.http.get<Respuesta>(environment.host + urn.ruta + urn.amortizacion + urn.slash + amortizacionId, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);
@@ -45,15 +45,6 @@ export class AmortizacionService {
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(err);
-      })
-    );
-  }
-
-  eliminar(amortizacion: Amortizacion): Observable<Respuesta> {
-    return this.http.delete(environment.host + urn.ruta + urn.amortizacion + '/' + amortizacion.id, options).pipe(
-      map(response => response as Respuesta),
-      catchError(err => {
-        return throwError(()=>err);
       })
     );
   }

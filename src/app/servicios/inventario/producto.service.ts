@@ -31,20 +31,12 @@ export class ProductoService {
   }
 
   obtener(productoId: number): Observable<Respuesta> {
-    return this.http.get<Respuesta>(environment.host + urn.ruta + urn.producto + '/' + productoId, options).pipe(
+    return this.http.get<Respuesta>(environment.host + urn.ruta + urn.producto + urn.slash + productoId, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);
       })
     );
-  }
-
-  async obtenerAsync(productoId: number): Promise<Respuesta> {
-    return await lastValueFrom(this.http.get<Respuesta>(environment.host + urn.ruta + urn.producto + '/' + productoId, options).pipe(
-      map(response => response as Respuesta),
-      catchError(err => {
-        return throwError(()=>err);
-      })));
   }
 
   consultar(): Observable<Respuesta> {
@@ -98,8 +90,17 @@ export class ProductoService {
     );
   }
 
-  eliminar(producto: Producto): Observable<Respuesta> {
-    return this.http.delete(environment.host + urn.ruta + urn.producto + '/' + producto.id, options).pipe(
+  activar(producto: Producto): Observable<Respuesta> {
+    return this.http.patch(environment.host + urn.ruta + urn.producto + urn.activar, producto, options).pipe(
+      map(response => response as Respuesta),
+      catchError(err => {
+        return throwError(()=>err);
+      })
+    );
+  }
+
+  inactivar(producto: Producto): Observable<Respuesta> {
+    return this.http.patch(environment.host + urn.ruta + urn.producto + urn.inactivar, producto, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);

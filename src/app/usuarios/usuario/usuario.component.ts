@@ -78,9 +78,8 @@ export class UsuarioComponent implements OnInit {
 
   ngOnInit() {
     this.sesion = validarSesion(this.sesionService, this.router);
-    this.consultarUsuarios();
+    this.consultar();
     this.consultarPerfiles();
-    //this.construirUsuario();
   }
 
   limpiar() {
@@ -134,19 +133,31 @@ export class UsuarioComponent implements OnInit {
     });
   }
 
-  eliminar(event: any) {
+  activar(event) {
     if (event != null)
       event.preventDefault();
-    this.usuarioService.eliminarPersonalizado(this.usuario).subscribe({
+    this.usuarioService.activar(this.usuario).subscribe({
       next: res => {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
-        this.limpiar();
+        this.consultar();
       },
       error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     });
   }
 
-  consultarUsuarios() {
+  inactivar(event) {
+    if (event != null)
+      event.preventDefault();
+    this.usuarioService.inactivar(this.usuario).subscribe({
+      next: res => {
+        Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
+        this.consultar();
+      },
+      error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+    });
+  }
+
+  consultar() {
     this.usuarioService.consultar().subscribe({
       next: res => {
         this.usuarios = res.resultado as Usuario[]
@@ -203,24 +214,9 @@ export class UsuarioComponent implements OnInit {
     });
   }
 
-  async construirUsuario() {
-    let usuarioId = 0;
-    this.usuarioService.currentMessage.subscribe(message => usuarioId = message);
-    if (usuarioId != 0) {
-      await this.usuarioService.obtenerAsync(usuarioId).then(
-        res => {
-          Object.assign(this.usuario, res.resultado as Usuario);
-          this.usuarioService.enviar(0);
-        },
-        err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
-      );
-    }
-  }
-
   consultarPerfiles() {
     this.perfilService.consultar().subscribe({
       next: res => {
-        //Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
         this.perfiles = res.resultado as Perfil[]
       },
       error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
@@ -234,7 +230,6 @@ export class UsuarioComponent implements OnInit {
     } else {
       this.usuario.cambiarContrasena = valores.no;
     }
-    //console.log(this.usuario.cambiarContrasena);
   }
 
   compareFn(a: any, b: any) {
@@ -243,7 +238,6 @@ export class UsuarioComponent implements OnInit {
 
   // PARA VALIDACION DE CONFIRMACIÓN DE CONTRASEÑA
   MatchValidator(source: string, target: string): ValidatorFn {
-    //console.log(source);
     return (control: AbstractControl): ValidationErrors | null => {
       const sourceCtrl = control.get(source);
       const targetCtrl = control.get(target);

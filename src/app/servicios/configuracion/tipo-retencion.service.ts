@@ -59,7 +59,7 @@ export class TipoRetencionService {
   }
 
   obtener(tipoRetencionId: number): Observable<Respuesta> {
-    return this.http.get<Respuesta>(environment.host + urn.ruta + urn.tipoRetencion + '/' + tipoRetencionId, options).pipe(
+    return this.http.get<Respuesta>(environment.host + urn.ruta + urn.tipoRetencion + urn.slash + tipoRetencionId, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);
@@ -93,8 +93,17 @@ export class TipoRetencionService {
     );
   }
 
-  eliminar(tipoRetencion: TipoRetencion): Observable<Respuesta> {
-    return this.http.delete(environment.host + urn.ruta + urn.tipoRetencion + '/' + tipoRetencion.id, options).pipe(
+  activar(tipoRetencion: TipoRetencion): Observable<Respuesta> {
+    return this.http.patch(environment.host + urn.ruta + urn.tipoRetencion + urn.activar, tipoRetencion, options).pipe(
+      map(response => response as Respuesta),
+      catchError(err => {
+        return throwError(()=>err);
+      })
+    );
+  }
+
+  inactivar(tipoRetencion: TipoRetencion): Observable<Respuesta> {
+    return this.http.patch(environment.host + urn.ruta + urn.tipoRetencion + urn.inactivar, tipoRetencion, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);

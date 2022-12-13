@@ -43,13 +43,11 @@ import { TablaComponenteComponent } from './inventarios/promocion/tabla-componen
 import { ProveedorProductoComponent } from './inventarios/proveedor-producto/proveedor-producto.component';
 import { TransferenciaBodegaComponent } from './inventarios/transferencia-bodega/transferencia-bodega.component';
 import { EquivalenciaMedidaComponent } from './inventarios/equivalencia-medida/equivalencia-medida.component';
+import { TipoRetencionComponent } from './configuraciones/tipo-retencion/tipo-retencion.component';
 
 //Módulo de Recaudaciones
 import { RecaudacionComponent } from './recaudacion/recaudacion/recaudacion.component';
 import { BancoComponent } from './recaudacion/banco/banco.component';
-import { TarjetaCreditoComponent } from './recaudacion/tarjeta-credito/tarjeta-credito.component';
-import { TarjetaDebitoComponent } from './recaudacion/tarjeta-debito/tarjeta-debito.component';
-import { CompensacionComponent } from './recaudacion/compensacion/compensacion.component';
 // Módulo de Comprobantes
 import { FacturaComponent } from './comprobantes/factura/factura.component';
 import { EgresoComponent } from './comprobantes/egreso/egreso.component';
@@ -93,7 +91,6 @@ import { TablesComponent } from './componentes/pages/tables/tables.component';
 import { FormsComponent } from './componentes/pages/forms/forms.component';
 import { MapsComponent } from './componentes/pages/maps/maps.component';
 import { TypographyComponent } from './componentes/pages/typography/typography.component';
-import { TipoRetencionComponent } from './configuraciones/tipo-retencion/tipo-retencion.component';
 
 
 const routes: Routes = [
@@ -204,9 +201,6 @@ export const RoutingComponents = [
   // Recaudación
   RecaudacionComponent,
   BancoComponent,
-  TarjetaCreditoComponent,
-  TarjetaDebitoComponent,
-  CompensacionComponent,
   //Comprobantes
   FacturaComponent,
   EgresoComponent,

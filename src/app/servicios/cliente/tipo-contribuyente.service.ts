@@ -16,7 +16,7 @@ export class TipoContribuyenteService {
   constructor(private http: HttpClient, private router: Router) { }
 
   crear(tipoContribuyente: TipoContribuyente): Observable<Respuesta> {
-    return this.http.post(environment.host + urn.ruta + urn.tipoContribuyente, JSON.stringify(tipoContribuyente), options).pipe(
+    return this.http.post(environment.host + urn.ruta + urn.tipoContribuyente, tipoContribuyente, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(err);
@@ -25,7 +25,7 @@ export class TipoContribuyenteService {
   }
 
   obtener(tipo_contribuyente_id: number): Observable<Respuesta> {
-    return this.http.get<Respuesta>(environment.host + urn.ruta + urn.tipoContribuyente + '/' + tipo_contribuyente_id, options).pipe(
+    return this.http.get<Respuesta>(environment.host + urn.ruta + urn.tipoContribuyente + urn.slash + tipo_contribuyente_id, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(err);
@@ -51,7 +51,7 @@ export class TipoContribuyenteService {
   }
 
   eliminar(tipoContribuyente: TipoContribuyente): Observable<Respuesta> {
-    return this.http.delete(environment.host + urn.ruta + urn.servicio + '/' + tipoContribuyente.id, options).pipe(
+    return this.http.delete(environment.host + urn.ruta + urn.servicio + urn.slash + tipoContribuyente.id, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(err);

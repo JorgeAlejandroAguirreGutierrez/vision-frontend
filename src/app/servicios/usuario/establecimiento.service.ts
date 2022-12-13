@@ -41,7 +41,7 @@ export class EstablecimientoService {
   }
 
   obtener(establecimientoId: number): Observable<Respuesta> {
-    return this.http.get<Respuesta>(environment.host + urn.ruta + urn.establecimiento + '/' + establecimientoId, options).pipe(
+    return this.http.get<Respuesta>(environment.host + urn.ruta + urn.establecimiento + urn.slash + establecimientoId, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);
@@ -59,8 +59,17 @@ export class EstablecimientoService {
     );
   }
 
-  eliminar(establecimiento: Establecimiento): Observable<Respuesta> {
-    return this.http.delete(environment.host + urn.ruta + urn.servicio + '/' + establecimiento.id, options).pipe(
+  activar(establecimiento: Establecimiento): Observable<Respuesta> {
+    return this.http.patch(environment.host + urn.ruta + urn.establecimiento + urn.activar, establecimiento, options).pipe(
+      map(response => response as Respuesta),
+      catchError(err => {
+        return throwError(()=>err);
+      })
+    );
+  }
+
+  inactivar(establecimiento: Establecimiento): Observable<Respuesta> {
+    return this.http.patch(environment.host + urn.ruta + urn.establecimiento + urn.inactivar, establecimiento, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);
@@ -69,20 +78,11 @@ export class EstablecimientoService {
   }
 
   buscarEmpresa(establecimientoId: number): Observable<Respuesta> {
-    return this.http.get(environment.host + urn.ruta + urn.establecimiento + urn.buscar + '/' + establecimientoId, options).pipe(
+    return this.http.get(environment.host + urn.ruta + urn.establecimiento + urn.buscar + urn.slash + establecimientoId, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);
       })
     );
-  }
-
-  async obtenerAsync(establecimientoId: number): Promise<Respuesta> {
-    return await lastValueFrom(this.http.get<Respuesta>(environment.host + urn.ruta + urn.establecimiento + '/' + establecimientoId, options).pipe(
-      map(response => response as Respuesta),
-      catchError(err => {
-        return throwError(()=>err);
-      })
-    ));
   }
 }

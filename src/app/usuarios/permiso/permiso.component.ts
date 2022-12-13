@@ -47,17 +47,16 @@ export class PermisoComponent implements OnInit {
   @ViewChild("inputFiltroPermiso") inputFiltroPermiso: ElementRef;
   
   columnasPermiso: any[] = [
-    { nombreColumna: 'select', cabecera: 'select', celda: (row: any) => ''},
-    { nombreColumna: 'id', cabecera: 'ID', celda: (row: Permiso) => `${row.id}`},
     { nombreColumna: 'codigo', cabecera: 'Código', celda: (row: Permiso) => `${row.codigo}`},
     { nombreColumna: 'modulo', cabecera: 'Módulo', celda: (row: Permiso) => `${row.modulo}`},
     { nombreColumna: 'opcion', cabecera: 'Opcion', celda: (row: Permiso) => `${row.opcion}`},
     { nombreColumna: 'operacion', cabecera: 'Operacion', celda: (row: Permiso) => `${row.operacion}`},
-    //{ nombreColumna: 'acciones', cabecera: 'Acciones', celda: (row: any) => ''}
+    { nombreColumna: 'estado', cabecera: 'Estado', celda: (row: Permiso) => `${row.estado}`},
   ];
   cabeceraPermiso: string[]  = this.columnasPermiso.map(titulo => titulo.nombreColumna);
   dataSourcePermiso: MatTableDataSource<Permiso>;
   clickedRowsPermiso = new Set<Permiso>();
+  observableDSPermiso: BehaviorSubject<MatTableDataSource<Permiso>> = new BehaviorSubject<MatTableDataSource<Permiso>>(null);
   selection = new SelectionModel<Permiso>(true, []);
 
   /** Whether the number of selected elements matches the total number of rows. */
@@ -93,7 +92,7 @@ export class PermisoComponent implements OnInit {
     private perfilService: PerfilService, private permisoService: PermisoService) { }
 
   ngOnInit() {
-    this.consultarPermisos();
+    this.consultar();
     this.consultarPerfiles();
     this.filtroPerfiles = this.controlPerfil.valueChanges
     .pipe(
@@ -107,7 +106,6 @@ export class PermisoComponent implements OnInit {
     this.perfil = new Perfil();
     this.editarPermiso = true;
     this.clickedRowsPermiso.clear();
-    //this.borrarFiltroPermiso();
   }
 
   nuevo(event) {
@@ -149,13 +147,25 @@ export class PermisoComponent implements OnInit {
     });
   }
 
-  eliminar(event: any) {
+  activar(event) {
     if (event != null)
       event.preventDefault();
-    this.permisoService.eliminarPersonalizado(this.permiso).subscribe({
+    this.permisoService.activar(this.permiso).subscribe({
       next: res => {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
-        this.limpiar();
+        this.consultar();
+      },
+      error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+    });
+  }
+
+  inactivar(event) {
+    if (event != null)
+      event.preventDefault();
+    this.permisoService.inactivar(this.permiso).subscribe({
+      next: res => {
+        Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
+        this.consultar();
       },
       error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     });
@@ -182,11 +192,8 @@ export class PermisoComponent implements OnInit {
   }
   seleccionarPerfil(){
     this.perfil = this.controlPerfil.value as Perfil;
-    //this.productoProveedores = this.usuario.productosProveedores;
-    //this.verBotones = true;
     this.controlPerfil.enable();
-    //this.deshabilitarEditarPerfil = false;
-    this.consultarPermisos();
+    this.consultar();
     if (this.perfiles.length > 0) {
       this.llenarDataSourcePermiso(this.permisos);
     }
@@ -221,20 +228,25 @@ export class PermisoComponent implements OnInit {
     });
   }
 
-  consultarPermisos() {
-    //let select: Permiso[] = [];
+  consultar() {
     this.permisoService.consultar().subscribe({
       next: (res) => {
         this.permisos = res.resultado as Permiso[];
-        //select = this.permisos;
-        this.llenarDataSourcePermiso(this.permisos);
-        this.selection.select(...this.permisos.filter(permiso => permiso.habilitado.valueOf()));
-        console.log(this.permisos);
+        this.llenarTabla(this.permisos);
       },
       error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
       }
     );
   }
+
+  llenarTabla(permisos: Permiso[]) {
+    this.ordenarAsc(this.permisos, 'codigo');
+    this.dataSourcePermiso = new MatTableDataSource(this.permisos);
+    this.dataSourcePermiso.paginator = this.paginator;
+    this.dataSourcePermiso.sort = this.sort;
+    this.observableDSPermiso.next(this.dataSourcePermiso);
+  }
+  
 
   seleccion(permiso: Permiso) {
     if (!this.clickedRowsPermiso.has(permiso)) {

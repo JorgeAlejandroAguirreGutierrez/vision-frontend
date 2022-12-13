@@ -64,7 +64,6 @@ import { TipoRetencionService } from './servicios/configuracion/tipo-retencion.s
         FlexLayoutModule,
         MaterialModule,
         GoogleMapsModule,
-        //AgmCoreModule.forRoot({apiKey: 'AIzaSyBmbDYyXuK6PzbmJDoadvlJU7UtcgDJQZM'}),
         AppRoutingModule
     ],
     providers: [PlazoCreditoService, ImpuestoService, RetencionService, ModeloService,

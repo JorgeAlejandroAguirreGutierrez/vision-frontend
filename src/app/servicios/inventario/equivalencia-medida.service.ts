@@ -32,21 +32,21 @@ export class EquivalenciaMedidaService {
     );
   }
 
-  async obtenerAsync(equivalenciaMedidaId: number): Promise<Respuesta> {
-    return await lastValueFrom(this.http.get<Respuesta>(environment.host + urn.ruta + urn.equivalenciaMedida + '/' + equivalenciaMedidaId, options).pipe(
-      map(response => response as Respuesta),
-      catchError(err => {
-        return throwError(()=>err);
-      })
-    ));
-  }
-
   consultar(): Observable<Respuesta> {
     return this.http.get(environment.host + urn.ruta + urn.equivalenciaMedida, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);
       }));
+  }
+
+  obtener(equivalenciaMedidaId: number): Observable<Respuesta> {
+    return this.http.get<Respuesta>(environment.host + urn.ruta + urn.equivalenciaMedida + urn.slash + equivalenciaMedidaId, options).pipe(
+      map(response => response as Respuesta),
+      catchError(err => {
+        return throwError(()=>err);
+      })
+    );
   }
 
   actualizar(equivalenciaMedida: EquivalenciaMedida): Observable<Respuesta> {
@@ -58,8 +58,17 @@ export class EquivalenciaMedidaService {
     );
   }
 
-  eliminar(equivalenciaMedida: EquivalenciaMedida): Observable<Respuesta> {
-    return this.http.delete(environment.host + urn.ruta + urn.equivalenciaMedida + '/' + equivalenciaMedida.id, options).pipe(
+  activar(equivalenciaMedida: EquivalenciaMedida): Observable<Respuesta> {
+    return this.http.patch(environment.host + urn.ruta + urn.equivalenciaMedida + urn.activar, equivalenciaMedida, options).pipe(
+      map(response => response as Respuesta),
+      catchError(err => {
+        return throwError(()=>err);
+      })
+    );
+  }
+
+  inactivar(equivalenciaMedida: EquivalenciaMedida): Observable<Respuesta> {
+    return this.http.patch(environment.host + urn.ruta + urn.equivalenciaMedida + urn.inactivar, equivalenciaMedida, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);
@@ -68,7 +77,7 @@ export class EquivalenciaMedidaService {
   }
 
   obtenerMedida1Medida2(medidaIni: Medida, medidaFin: Medida): Observable<Respuesta> {
-    return this.http.get(environment.host + urn.ruta + urn.equivalenciaMedida + '/' + medidaIni.id + '/' + medidaFin.id, options).pipe(
+    return this.http.get(environment.host + urn.ruta + urn.equivalenciaMedida + urn.slash + medidaIni.id + urn.slash + medidaFin.id, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);
@@ -77,7 +86,7 @@ export class EquivalenciaMedidaService {
   }
 
   buscarMedidasEquivalentes(medidaId: number): Observable<Respuesta> {
-    return this.http.get(environment.host + urn.ruta + urn.equivalenciaMedida + urn.buscarMedidasEquivalentes + '/' + medidaId, options).pipe(
+    return this.http.get(environment.host + urn.ruta + urn.equivalenciaMedida + urn.buscarMedidasEquivalentes + urn.slash + medidaId, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);

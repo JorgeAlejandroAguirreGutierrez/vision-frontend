@@ -24,7 +24,7 @@ export class TipoGastoService {
   }
 
   obtener(tipoGasto: TipoGasto): Observable<Respuesta> {
-    return this.http.get<Respuesta>(environment.host + urn.ruta + urn.tipoGasto + '/' + tipoGasto.id, options).pipe(
+    return this.http.get<Respuesta>(environment.host + urn.ruta + urn.tipoGasto + urn.slash + tipoGasto.id, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);
@@ -49,8 +49,17 @@ export class TipoGastoService {
     );
   }
 
-  eliminar(tipoGasto: TipoGasto): Observable<Respuesta> {
-    return this.http.delete(environment.host + urn.ruta + urn.tipoGasto + '/' + tipoGasto.id, options).pipe(
+  activar(tipoGasto: TipoGasto): Observable<Respuesta> {
+    return this.http.patch(environment.host + urn.ruta + urn.tipoGasto + urn.activar, tipoGasto, options).pipe(
+      map(response => response as Respuesta),
+      catchError(err => {
+        return throwError(()=>err);
+      })
+    );
+  }
+
+  inactivar(tipoGasto: TipoGasto): Observable<Respuesta> {
+    return this.http.patch(environment.host + urn.ruta + urn.tipoGasto + urn.inactivar, tipoGasto, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);

@@ -33,7 +33,7 @@ export class GrupoProveedorService {
   }
 
   obtener(grupoProveedorId: number): Observable<Respuesta> {
-    return this.http.get<Respuesta>(environment.host + urn.ruta + urn.grupoProveedor + '/' + grupoProveedorId, options).pipe(
+    return this.http.get<Respuesta>(environment.host + urn.ruta + urn.grupoProveedor + urn.slash + grupoProveedorId, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);
@@ -42,7 +42,7 @@ export class GrupoProveedorService {
   }
 
   async obtenerAsync(grupoProveedorId: number): Promise<Respuesta> {
-    return await lastValueFrom(this.http.get<Respuesta>(environment.host + urn.ruta + urn.grupoProveedor + '/' + grupoProveedorId, options).pipe(
+    return await lastValueFrom(this.http.get<Respuesta>(environment.host + urn.ruta + urn.grupoProveedor + urn.slash + grupoProveedorId, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);
@@ -76,8 +76,8 @@ export class GrupoProveedorService {
     );
   }
 
-  eliminar(grupoProveedor: GrupoProveedor): Observable<Respuesta> {
-    return this.http.delete(environment.host + urn.ruta + urn.grupoProveedor + '/' + grupoProveedor.id, options).pipe(
+  activar(grupoProveedor: GrupoProveedor): Observable<Respuesta> {
+    return this.http.patch(environment.host + urn.ruta + urn.grupoProveedor + urn.activar, grupoProveedor, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);
@@ -85,8 +85,8 @@ export class GrupoProveedorService {
     );
   }
 
-  eliminarPersonalizado(grupoProveedor: GrupoProveedor): Observable<Respuesta> {
-    return this.http.put(environment.host + urn.ruta + urn.grupoProveedor, grupoProveedor, options).pipe(
+  inactivar(grupoProveedor: GrupoProveedor): Observable<Respuesta> {
+    return this.http.patch(environment.host + urn.ruta + urn.grupoProveedor + urn.inactivar, grupoProveedor, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);

@@ -45,6 +45,16 @@
                             </a>
                         </li>
                     </ng-container>
+                    <li class="nav-item" *ngIf="factura.id!=0">
+                        <a class="nav-link" title="Activar" role="button" (click)="activar($event)">
+                            <mat-icon>check</mat-icon>
+                        </a>
+                    </li>
+                    <li class="nav-item" *ngIf="factura.id!=0">
+                        <a class="nav-link" title="Inactivar" role="button" (click)="inactivar($event)">
+                            <mat-icon>delete</mat-icon>
+                        </a>
+                    </li>
                 </ul>
             </nav>
             <ng-template matStepLabel>Facturación</ng-template>

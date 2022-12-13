@@ -32,7 +32,7 @@ export class UbicacionService {
   }
 
   async obtenerAsync(ubicacionId: number): Promise<Respuesta> {
-    return await lastValueFrom(this.http.get<Respuesta>(environment.host + urn.ruta + urn.ubicacion + '/' + ubicacionId, options).pipe(
+    return await lastValueFrom(this.http.get<Respuesta>(environment.host + urn.ruta + urn.ubicacion + urn.slash + ubicacionId, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);
@@ -57,8 +57,17 @@ export class UbicacionService {
     );
   }
 
-  eliminar(ubicacion: Ubicacion): Observable<Respuesta> {
-    return this.http.delete(environment.host + urn.ruta + urn.ubicacion + '/' + ubicacion.id, options).pipe(
+  activar(ubicacion: Ubicacion): Observable<Respuesta> {
+    return this.http.patch(environment.host + urn.ruta + urn.ubicacion + urn.activar, ubicacion, options).pipe(
+      map(response => response as Respuesta),
+      catchError(err => {
+        return throwError(()=>err);
+      })
+    );
+  }
+
+  inactivar(ubicacion: Ubicacion): Observable<Respuesta> {
+    return this.http.patch(environment.host + urn.ruta + urn.ubicacion + urn.inactivar, ubicacion, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);
@@ -94,7 +103,7 @@ export class UbicacionService {
   }
 
   obtenerUbicacionIDAsync(ubicacion: Ubicacion): Observable<Respuesta> {
-    return this.http.get(environment.host + urn.ruta + urn.ubicacion + '/'+ubicacion.provincia+'/'+ubicacion.canton+'/'+ubicacion.parroquia+'/id', options).pipe(
+    return this.http.get(environment.host + urn.ruta + urn.ubicacion + urn.slash + ubicacion.provincia + urn.slash + ubicacion.canton + urn.slash + ubicacion.parroquia + '/id', options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);
@@ -103,7 +112,7 @@ export class UbicacionService {
   }
 
   async obtenerUbicacionID(ubicacion: Ubicacion): Promise<Respuesta> {
-    return await lastValueFrom(this.http.get<Respuesta>(environment.host + urn.ruta + urn.ubicacion + '/' + ubicacion.provincia + '/' + ubicacion.canton + '/' + ubicacion.parroquia+'/id', options).pipe(
+    return await lastValueFrom(this.http.get<Respuesta>(environment.host + urn.ruta + urn.ubicacion + urn.slash + ubicacion.provincia + urn.slash + ubicacion.canton + urn.slash + ubicacion.parroquia+'/id', options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);
@@ -112,7 +121,7 @@ export class UbicacionService {
   }
 
   buscar(ubicacion: Ubicacion): Observable<Respuesta> {
-    return this.http.get(environment.host + urn.ruta + urn.ubicacion + urn.buscar + '/' + ubicacion.codigoNorma + '/' + ubicacion.provincia + '/' + ubicacion.canton + '/' + ubicacion.parroquia, options).pipe(
+    return this.http.get(environment.host + urn.ruta + urn.ubicacion + urn.buscar + urn.slash + ubicacion.codigoNorma + urn.slash + ubicacion.provincia + urn.slash + ubicacion.canton + urn.slash + ubicacion.parroquia, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);

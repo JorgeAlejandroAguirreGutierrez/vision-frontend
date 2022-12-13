@@ -15,7 +15,7 @@ export class DependienteService {
   constructor(private http: HttpClient) { }
 
   crear(dependiente: Dependiente): Observable<Respuesta> {
-    return this.http.post(environment.host + urn.ruta + urn.dependiente, JSON.stringify(dependiente), options).pipe(
+    return this.http.post(environment.host + urn.ruta + urn.dependiente, dependiente, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(err);
@@ -24,7 +24,7 @@ export class DependienteService {
   }
 
   obtener(dependienteId: number): Observable<Respuesta> {
-    return this.http.get<Respuesta>(environment.host + urn.ruta + urn.dependiente + '/' + dependienteId, options).pipe(
+    return this.http.get<Respuesta>(environment.host + urn.ruta + urn.dependiente + urn.slash + dependienteId, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(err);
@@ -41,7 +41,7 @@ export class DependienteService {
   }
 
   actualizar(dependiente: Dependiente): Observable<Respuesta> {
-    return this.http.put(environment.host + urn.ruta + urn.dependiente, JSON.stringify(dependiente), options).pipe(
+    return this.http.put(environment.host + urn.ruta + urn.dependiente, dependiente, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(err);
@@ -49,23 +49,34 @@ export class DependienteService {
     );
   }
 
-  eliminar(dependiente: Dependiente): Observable<Respuesta> {
-    return this.http.delete(environment.host + urn.ruta + urn.dependiente + '/' + dependiente.id, options).pipe(
+  activar(dependiente: Dependiente): Observable<Respuesta> {
+    return this.http.patch(environment.host + urn.ruta + urn.dependiente + urn.activar, dependiente, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
-        return throwError(err);
+        return throwError(()=>err);
       })
     );
   }
+
+  inactivar(dependiente: Dependiente): Observable<Respuesta> {
+    return this.http.patch(environment.host + urn.ruta + urn.dependiente + urn.inactivar, dependiente, options).pipe(
+      map(response => response as Respuesta),
+      catchError(err => {
+        return throwError(()=>err);
+      })
+    );
+  }
+
   consultarRazonSocial(dependiente: Dependiente): Observable<Respuesta> {
-    return this.http.get(environment.host + urn.ruta + urn.dependiente + urn.buscar + urn.razonSocial + "/"+ dependiente.razonSocial + "/" + dependiente.cliente.id, options).pipe(
+    return this.http.get(environment.host + urn.ruta + urn.dependiente + urn.buscar + urn.razonSocial + urn.slash + dependiente.razonSocial + urn.slash + dependiente.cliente.id, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(err);
       }));
   }
+
   consultarClienteID(dependiente: Dependiente): Observable<Respuesta> {
-    return this.http.get(environment.host + urn.ruta + urn.dependiente + urn.cliente + "/" + dependiente.cliente.id, options).pipe(
+    return this.http.get(environment.host + urn.ruta + urn.dependiente + urn.cliente + urn.slash + dependiente.cliente.id, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(err);

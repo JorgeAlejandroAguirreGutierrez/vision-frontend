@@ -61,15 +61,13 @@ export class EquivalenciaMedidaComponent implements OnInit {
       this.crear(null);
     if (($event.shiftKey || $event.metaKey) && $event.key == 'N') //ASHIFT + N
       this.nuevo(null);
-    if (($event.shiftKey || $event.metaKey) && $event.key == 'E') // SHIFT + E
-      this.eliminarLeer(null);
   }
 
-  async construirEquivalenciaMedida() {
+  construirEquivalenciaMedida() {
     let equivalenciaMedidaId=0;
     this.equivalenciaMedidaService.currentMessage.subscribe(message => equivalenciaMedidaId = message);
     if (equivalenciaMedidaId!= 0) {
-      await this.equivalenciaMedidaService.obtenerAsync(equivalenciaMedidaId).then(
+      this.equivalenciaMedidaService.obtener(equivalenciaMedidaId).subscribe(
         res => {
           Object.assign(this.equivalenciaMedida, res.resultado as EquivalenciaMedida);
           this.equivalenciaMedidaService.enviar(0);
@@ -132,28 +130,6 @@ export class EquivalenciaMedidaComponent implements OnInit {
       this.equivalenciaMedida={... this.equivalenciaMedidaActualizar};
       this.equivalenciaMedidaActualizar=new EquivalenciaMedida();
     }
-  }
-
-  eliminar(equivalencia_medida: EquivalenciaMedida) {
-    this.equivalenciaMedidaService.eliminar(equivalencia_medida).subscribe(
-      res => {
-        Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
-        this.equivalenciaMedida=res.resultado as EquivalenciaMedida
-      },
-      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
-    );
-  }
-
-  eliminarLeer(event: any) {
-    if (event!=null)
-      event.preventDefault();
-    this.equivalenciaMedidaService.eliminar(this.equivalenciaMedida).subscribe(
-      res => {
-        Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
-        this.consultar();
-      },
-      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
-    );
   }
 
   compareFn(a: any, b: any) {

@@ -18,8 +18,8 @@ export class TipoPagoService {
 
   constructor(private http: HttpClient, private router: Router) { }
 
-  enviar(grupo_cliente_id: number) {
-    this.messageSource.next(grupo_cliente_id);
+  enviar(tipoPagoId: number) {
+    this.messageSource.next(tipoPagoId);
   }
 
   crear(tipoPago: TipoPago): Observable<Respuesta> {
@@ -32,7 +32,7 @@ export class TipoPagoService {
   }
 
   obtener(tipoPagoId: number): Observable<Respuesta> {
-    return this.http.get<Respuesta>(environment.host + urn.ruta + urn.tipoPago + '/' + tipoPagoId, options).pipe(
+    return this.http.get<Respuesta>(environment.host + urn.ruta + urn.tipoPago + urn.slash + tipoPagoId, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);
@@ -49,7 +49,7 @@ export class TipoPagoService {
   }
 
   async obtenerAsync(tipoPagoId: number): Promise<Respuesta> {
-    return await lastValueFrom(this.http.get<Respuesta>(environment.host + urn.ruta + urn.tipoPago + '/' + tipoPagoId, options).pipe(
+    return await lastValueFrom(this.http.get<Respuesta>(environment.host + urn.ruta + urn.tipoPago + urn.slash + tipoPagoId, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);
@@ -75,8 +75,17 @@ export class TipoPagoService {
     );
   }
 
-  eliminar(tipoPago: TipoPago): Observable<Respuesta> {
-    return this.http.delete(environment.host + urn.ruta + urn.tipoPago + '/' + tipoPago.id, options).pipe(
+  activar(tipoPago: TipoPago): Observable<Respuesta> {
+    return this.http.patch(environment.host + urn.ruta + urn.tipoPago + urn.activar, tipoPago, options).pipe(
+      map(response => response as Respuesta),
+      catchError(err => {
+        return throwError(()=>err);
+      })
+    );
+  }
+
+  inactivar(tipoPago: TipoPago): Observable<Respuesta> {
+    return this.http.patch(environment.host + urn.ruta + urn.tipoPago + urn.inactivar, tipoPago, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);

@@ -63,8 +63,6 @@ export class GrupoProveedorComponent implements OnInit {
       this.crear(null);
     if (($event.shiftKey || $event.metaKey) && $event.key == 'N') //ASHIFT + N
       this.nuevo(null);
-    if (($event.shiftKey || $event.metaKey) && $event.key == 'E') // SHIFT + E
-      this.eliminar(null);
   }
 
   limpiar() {
@@ -106,18 +104,6 @@ export class GrupoProveedorComponent implements OnInit {
     this.grupoProveedorService.actualizar(this.grupoProveedor).subscribe({
       next: res => {
         this.grupoProveedor = res.resultado as GrupoProveedor;
-        Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
-        this.limpiar();
-      },
-      error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
-    });
-  }
-
-  eliminar(event: any) {
-    if (event != null)
-      event.preventDefault();
-    this.grupoProveedorService.eliminarPersonalizado(this.grupoProveedor).subscribe({
-      next: res => {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
         this.limpiar();
       },

@@ -31,7 +31,7 @@ export class AfectacionContableService {
   }
 
   obtener(afectacionContableId: number): Observable<Respuesta> {
-    return this.http.get<Respuesta>(environment.host + urn.ruta + urn.afectacionContable + '/' + afectacionContableId, options).pipe(
+    return this.http.get<Respuesta>(environment.host + urn.ruta + urn.afectacionContable + urn.slash + afectacionContableId, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);
@@ -65,8 +65,17 @@ export class AfectacionContableService {
     );
   }
 
-  eliminar(afectacionContable: AfectacionContable): Observable<Respuesta> {
-    return this.http.delete(environment.host + urn.ruta + urn.afectacionContable + '/' + afectacionContable.id, options).pipe(
+  activar(afectacionContable: AfectacionContable): Observable<Respuesta> {
+    return this.http.patch(environment.host + urn.ruta + urn.afectacionContable + urn.activar, afectacionContable, options).pipe(
+      map(response => response as Respuesta),
+      catchError(err => {
+        return throwError(()=>err);
+      })
+    );
+  }
+
+  inactivar(afectacionContable: AfectacionContable): Observable<Respuesta> {
+    return this.http.patch(environment.host + urn.ruta + urn.afectacionContable + urn.inactivar, afectacionContable, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);

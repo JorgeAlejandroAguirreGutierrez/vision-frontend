@@ -37,7 +37,6 @@ export class EmpresaComponent implements OnInit {
   empresas: Empresa[];
 
   columnasEmpresa: any[] = [
-    { nombreColumna: 'id', cabecera: 'ID', celda: (row: Empresa) => `${row.id}` },
     { nombreColumna: 'codigo', cabecera: 'Código', celda: (row: Empresa) => `${row.codigo}` },
     { nombreColumna: 'identificacion', cabecera: 'Identificacion', celda: (row: Empresa) => `${row.identificacion}` },
     { nombreColumna: 'razonSocial', cabecera: 'Razon Social', celda: (row: Empresa) => `${row.razonSocial}` },
@@ -57,7 +56,7 @@ export class EmpresaComponent implements OnInit {
 
   ngOnInit() {
     this.sesion=validarSesion(this.sesionService, this.router);
-    this.consultarEmpresas();
+    this.consultar();
     this.empresa.obligadoContabilidad = mensajes.no;
   }
   
@@ -67,8 +66,6 @@ export class EmpresaComponent implements OnInit {
       this.crear(null);
     if (($event.shiftKey || $event.metaKey) && $event.key == 'N') //ASHIFT + N
       this.nuevo(null);
-    if (($event.shiftKey || $event.metaKey) && $event.key == 'E') // SHIFT + E
-      this.eliminar(null);
   }
 
   limpiar() {
@@ -123,19 +120,31 @@ export class EmpresaComponent implements OnInit {
     });
   }
 
-  eliminar(event: any) {
+  activar(event) {
     if (event != null)
       event.preventDefault();
-    this.empresaService.eliminarPersonalizado(this.empresa).subscribe({
+    this.empresaService.activar(this.empresa).subscribe({
       next: res => {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
-        this.limpiar();
+        this.consultar();
       },
       error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     });
   }
 
-  consultarEmpresas() {
+  inactivar(event) {
+    if (event != null)
+      event.preventDefault();
+    this.empresaService.inactivar(this.empresa).subscribe({
+      next: res => {
+        Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
+        this.consultar();
+      },
+      error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+    });
+  }
+
+  consultar() {
     this.empresaService.consultar().subscribe({
       next: res => {
         this.empresas = res.resultado as Empresa[]

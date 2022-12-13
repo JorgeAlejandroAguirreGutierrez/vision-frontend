@@ -7,8 +7,6 @@ import { SesionService } from '../../servicios/usuario/sesion.service';
 import { MovimientoContable } from '../../modelos/contabilidad/movimiento-contable';
 import { MovimientoContableService } from '../../servicios/contabilidad/movimiento-contable.service';
 import { TablaMovimientoContableComponent } from '../../contabilidad/movimiento-contable/tabla-movimiento-contable/tabla-movimiento-contable.component';
-import { AfectacionContable } from '../../modelos/contabilidad/afectacion-contable';
-import { AfectacionContableService } from '../../servicios/contabilidad/afectacion-contable.service';
 
 import { ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
@@ -31,11 +29,10 @@ export class MovimientoContableComponent implements OnInit {
   sesion: Sesion = null;
   movimientoContable = new MovimientoContable();
   movimientosContables: MovimientoContable[];
-  afectacionesContables: AfectacionContable[];
 
   @ViewChild(TablaMovimientoContableComponent) TablaMovimientoContable: TablaMovimientoContableComponent;
 
-  constructor(private movimientoContableService: MovimientoContableService, private afectacionContableService: AfectacionContableService,
+  constructor(private movimientoContableService: MovimientoContableService,
     private sesionService: SesionService, private router: Router) { }
 
   @HostListener('window:keypress', ['$event'])
@@ -44,13 +41,11 @@ export class MovimientoContableComponent implements OnInit {
       this.crear(null);
     if (($event.shiftKey || $event.metaKey) && $event.key == 'N') //ASHIFT + N
       this.nuevo(null);
-    if (($event.shiftKey || $event.metaKey) && $event.key == 'E') // SHIFT + E
-      this.eliminar(null);
   }
 
   ngOnInit() {
     this.sesion = validarSesion(this.sesionService, this.router);
-    this.consultarAfectacionesContables();
+    this.consultar();
   }
 
   limpiar() {
@@ -104,16 +99,29 @@ export class MovimientoContableComponent implements OnInit {
       err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
-  
-  eliminar(event: any) {
+
+  activar(event) {
     if (event != null)
       event.preventDefault();
-    this.movimientoContableService.eliminar(this.movimientoContable).subscribe(
-      res => {
+    this.movimientoContableService.activar(this.movimientoContable).subscribe({
+      next: res => {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
+        this.consultar();
       },
-      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
-    );
+      error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+    });
+  }
+
+  inactivar(event) {
+    if (event != null)
+      event.preventDefault();
+    this.movimientoContableService.inactivar(this.movimientoContable).subscribe({
+      next: res => {
+        Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
+        this.consultar();
+      },
+      error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+    });
   }
 
   seleccion(event: any) {
@@ -129,10 +137,10 @@ export class MovimientoContableComponent implements OnInit {
     //console.log(this.grupoProducto.codigo);
   }
 
-  consultarAfectacionesContables() {
-    this.afectacionContableService.consultar().subscribe({
+  consultar() {
+    this.movimientoContableService.consultar().subscribe({
       next: res => {
-        this.afectacionesContables = res.resultado as AfectacionContable[]
+        this.movimientosContables = res.resultado as MovimientoContable[]
       },
       error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     });

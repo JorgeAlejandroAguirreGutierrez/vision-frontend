@@ -25,7 +25,7 @@ export class ParametroService {
   }
 
   obtener(parametro: Parametro): Observable<Respuesta> {
-    return this.http.get<Respuesta>(environment.host + urn.ruta + urn.parametro + '/' + parametro.id, options).pipe(
+    return this.http.get<Respuesta>(environment.host + urn.ruta + urn.parametro + urn.slash + parametro.id, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(err);
@@ -50,17 +50,26 @@ export class ParametroService {
     );
   }
 
-  eliminar(parametro: Parametro): Observable<Respuesta> {
-    return this.http.delete(environment.host + urn.ruta + urn.parametro + '/' + parametro.id, options).pipe(
+  activar(parametro: Parametro): Observable<Respuesta> {
+    return this.http.patch(environment.host + urn.ruta + urn.parametro + urn.activar, parametro, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
-        return throwError(err);
+        return throwError(()=>err);
+      })
+    );
+  }
+
+  inactivar(parametro: Parametro): Observable<Respuesta> {
+    return this.http.patch(environment.host + urn.ruta + urn.parametro + urn.inactivar, parametro, options).pipe(
+      map(response => response as Respuesta),
+      catchError(err => {
+        return throwError(()=>err);
       })
     );
   }
 
   obtenerTipo(parametro: Parametro): Observable<Respuesta> {
-    return this.http.get<Respuesta>(environment.host + urn.ruta + urn.parametro + urn.tipo + '/' + parametro.tipo, options).pipe(
+    return this.http.get<Respuesta>(environment.host + urn.ruta + urn.parametro + urn.tipo + urn.slash + parametro.tipo, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(err);
@@ -68,7 +77,7 @@ export class ParametroService {
     );
   }
   consultarTipo(parametro: Parametro): Observable<Respuesta> {
-    return this.http.get<Respuesta>(environment.host + urn.ruta + urn.parametro + urn.consultarTipo + '/' + parametro.tipo, options).pipe(
+    return this.http.get<Respuesta>(environment.host + urn.ruta + urn.parametro + urn.consultarTipo + urn.slash + parametro.tipo, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(err);

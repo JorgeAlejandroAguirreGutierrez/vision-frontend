@@ -54,7 +54,7 @@ export class PerfilComponent implements OnInit {
 
   ngOnInit() {
     this.sesion = validarSesion(this.sesionService, this.router);
-    this.consultarPerfils();
+    this.consultar();
   }
 
   @HostListener('window:keypress', ['$event'])
@@ -63,8 +63,6 @@ export class PerfilComponent implements OnInit {
       this.crear(null);
     if (($event.shiftKey || $event.metaKey) && $event.key == 'N') //ASHIFT + N
       this.nuevo(null);
-    if (($event.shiftKey || $event.metaKey) && $event.key == 'E') // SHIFT + E
-      this.eliminar(null);
   }
 
   limpiar() {
@@ -113,19 +111,31 @@ export class PerfilComponent implements OnInit {
     });
   }
 
-  eliminar(event: any) {
+  activar(event) {
     if (event != null)
       event.preventDefault();
-    this.perfilService.eliminarPersonalizado(this.perfil).subscribe({
+    this.perfilService.activar(this.perfil).subscribe({
       next: res => {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
-        this.limpiar();
+        this.consultar();
       },
       error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     });
   }
 
-  consultarPerfils() {
+  inactivar(event) {
+    if (event != null)
+      event.preventDefault();
+    this.perfilService.inactivar(this.perfil).subscribe({
+      next: res => {
+        Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
+        this.consultar();
+      },
+      error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+    });
+  }
+
+  consultar() {
     this.perfilService.consultar().subscribe({
       next: res => {
         this.perfiles = res.resultado as Perfil[]

@@ -33,7 +33,7 @@ export class GrupoClienteService {
   }
 
   obtener(grupoClienteId: number): Observable<Respuesta> {
-    return this.http.get<Respuesta>(environment.host + urn.ruta + urn.grupoCliente + '/' + grupoClienteId, options).pipe(
+    return this.http.get<Respuesta>(environment.host + urn.ruta + urn.grupoCliente + urn.slash + grupoClienteId, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);
@@ -42,7 +42,7 @@ export class GrupoClienteService {
   }
 
   async obtenerAsync(grupoClienteId: number): Promise<Respuesta> {
-    return await lastValueFrom(this.http.get<Respuesta>(environment.host + urn.ruta + urn.grupoCliente + '/' + grupoClienteId, options).pipe(
+    return await lastValueFrom(this.http.get<Respuesta>(environment.host + urn.ruta + urn.grupoCliente + urn.slash + grupoClienteId, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);
@@ -76,8 +76,8 @@ export class GrupoClienteService {
     );
   }
 
-  eliminar(grupoCliente: GrupoCliente): Observable<Respuesta> {
-    return this.http.delete(environment.host + urn.ruta + urn.grupoCliente + '/' + grupoCliente.id, options).pipe(
+  activar(grupoCliente: GrupoCliente): Observable<Respuesta> {
+    return this.http.patch(environment.host + urn.ruta + urn.grupoCliente + urn.activar, grupoCliente, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);
@@ -85,8 +85,8 @@ export class GrupoClienteService {
     );
   }
 
-  eliminarPersonalizado(grupoCliente: GrupoCliente): Observable<Respuesta> {
-    return this.http.put(environment.host + urn.ruta + urn.grupoCliente, grupoCliente, options).pipe(
+  inactivar(grupoCliente: GrupoCliente): Observable<Respuesta> {
+    return this.http.patch(environment.host + urn.ruta + urn.grupoCliente + urn.inactivar, grupoCliente, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);

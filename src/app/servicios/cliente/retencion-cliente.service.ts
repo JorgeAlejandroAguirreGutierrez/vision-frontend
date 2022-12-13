@@ -25,7 +25,7 @@ export class RetencionService {
   }
 
   consultar(retencionClienteId: number): Observable<Respuesta> {
-    return this.http.get<Respuesta>(environment.host + urn.ruta + urn.retencionCliente + '/' + retencionClienteId, options).pipe(
+    return this.http.get<Respuesta>(environment.host + urn.ruta + urn.retencionCliente + urn.slash + retencionClienteId, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(err);
@@ -51,7 +51,7 @@ export class RetencionService {
   }
 
   eliminar(retencionCliente: RetencionCliente): Observable<Respuesta> {
-    return this.http.delete(environment.host + urn.ruta + urn.retencionCliente + '/' + retencionCliente.id, options).pipe(
+    return this.http.delete(environment.host + urn.ruta + urn.retencionCliente + urn.slash + retencionCliente.id, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(err);

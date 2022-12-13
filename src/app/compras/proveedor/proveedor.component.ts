@@ -191,7 +191,7 @@ export class ProveedorComponent implements OnInit {
     this.obtener_sesion();
     this.obtenerEmpresa();
     this.construirProveedor();
-    this.consultarProveedores();
+    this.consultar();
     this.tipoContribuyenteService.consultar().subscribe({
       next: (res) => {
         this.tiposContribuyentes = res.resultado as TipoContribuyente[]
@@ -568,6 +568,30 @@ export class ProveedorComponent implements OnInit {
     });
   }
 
+  activar(event) {
+    if (event != null)
+      event.preventDefault();
+    this.proveedorService.activar(this.proveedor).subscribe({
+      next: res => {
+        Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
+        this.consultar();
+      },
+      error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+    });
+  }
+
+  inactivar(event) {
+    if (event != null)
+      event.preventDefault();
+    this.proveedorService.inactivar(this.proveedor).subscribe({
+      next: res => {
+        Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
+        this.consultar();
+      },
+      error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+    });
+  }
+
   actualizarLeer(event) {
     if (event!=null)
       event.preventDefault();
@@ -575,34 +599,7 @@ export class ProveedorComponent implements OnInit {
     this.tabService.addNewTab(this.ComponenteProveedor,'Actualizar proveedor');
   }
 
-  eliminar(proveedor: Proveedor) {
-    this.proveedorService.eliminar(proveedor).subscribe({
-      next: res => {
-        if (res.resultado != null) {
-          Swal.fire(exito, res.mensaje, exito_swal);
-          this.proveedor = res.resultado as Proveedor
-          this.ngOnInit();
-        } else {
-          Swal.fire(error, res.mensaje, error_swal);
-        }
-      },
-      error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.message })
-    });
-  }
-
-  eliminarLeer(event) {
-    if (event!=null)
-      event.preventDefault();
-    this.proveedorService.eliminar(this.proveedor).subscribe({
-      next: res => {
-        Swal.fire(exito, res.mensaje, exito_swal);
-        this.consultarProveedores();
-      },
-      error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.message })
-    });
-  }
-
-  consultarProveedores() {
+  consultar() {
     this.proveedorService.consultar().subscribe({
       next: (res) => {
         this.proveedores = res.resultado as Proveedor[]

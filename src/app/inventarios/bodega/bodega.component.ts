@@ -52,8 +52,6 @@ export class BodegaComponent implements OnInit {
       this.crear(null);
     if (($event.shiftKey || $event.metaKey) && $event.key == 'N') //ASHIFT + N
       this.nuevo(null);
-    if (($event.shiftKey || $event.metaKey) && $event.key == 'E') // SHIFT + E
-      this.eliminar(null);
   }
 
   nuevo(event) {
@@ -88,16 +86,28 @@ export class BodegaComponent implements OnInit {
     );
   }
 
-  eliminar(event:any) {
-    if (event!=null)
+  activar(event) {
+    if (event != null)
       event.preventDefault();
-    this.bodegaService.eliminarPersonalizado(this.bodega).subscribe(
-      res => {
+    this.bodegaService.activar(this.bodega).subscribe({
+      next: res => {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
         this.consultar();
       },
-      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
-    );
+      error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+    });
+  }
+
+  inactivar(event) {
+    if (event != null)
+      event.preventDefault();
+    this.bodegaService.inactivar(this.bodega).subscribe({
+      next: res => {
+        Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
+        this.consultar();
+      },
+      error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+    });
   }
   
   consultar() {

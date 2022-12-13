@@ -54,7 +54,7 @@ export class OrigenIngresoComponent implements OnInit {
 
   ngOnInit() {
     this.sesion=validarSesion(this.sesionService, this.router);
-    this.consultarOrigenIngresos();
+    this.consultar();
   }
   
   @HostListener('window:keypress', ['$event'])
@@ -63,8 +63,6 @@ export class OrigenIngresoComponent implements OnInit {
       this.crear(null);
     if (($event.shiftKey || $event.metaKey) && $event.key == 'N') //ASHIFT + N
       this.nuevo(null);
-    if (($event.shiftKey || $event.metaKey) && $event.key == 'E') // SHIFT + E
-      this.eliminar(null);
   }
 
   limpiar() {
@@ -113,19 +111,31 @@ export class OrigenIngresoComponent implements OnInit {
     });
   }
 
-  eliminar(event: any) {
+  activar(event) {
     if (event != null)
       event.preventDefault();
-    this.origenIngresoService.eliminarPersonalizado(this.origenIngreso).subscribe({
+    this.origenIngresoService.activar(this.origenIngreso).subscribe({
       next: res => {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
-        this.limpiar();
+        this.consultar();
       },
       error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     });
   }
 
-  consultarOrigenIngresos() {
+  inactivar(event) {
+    if (event != null)
+      event.preventDefault();
+    this.origenIngresoService.inactivar(this.origenIngreso).subscribe({
+      next: res => {
+        Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
+        this.consultar();
+      },
+      error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+    });
+  }
+
+  consultar() {
     this.origenIngresoService.consultar().subscribe({
       next: res => {
         this.origenIngresos = res.resultado as OrigenIngreso[]

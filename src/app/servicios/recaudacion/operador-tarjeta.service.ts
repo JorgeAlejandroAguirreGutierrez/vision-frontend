@@ -24,7 +24,7 @@ export class OperadorTarjetaService {
   }
 
   obtener(operadorTarjetaId: number): Observable<Respuesta> {
-    return this.http.get<Respuesta>(environment.host + urn.ruta + urn.banco + '/' + operadorTarjetaId, options).pipe(
+    return this.http.get<Respuesta>(environment.host + urn.ruta + urn.banco + urn.slash + operadorTarjetaId, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);
@@ -41,7 +41,7 @@ export class OperadorTarjetaService {
   }
 
   consultarTipo(tipo: string): Observable<Respuesta> {
-    return this.http.get(environment.host + urn.ruta + urn.operadorTarjeta + urn.tipo + "/" + tipo, options).pipe(
+    return this.http.get(environment.host + urn.ruta + urn.operadorTarjeta + urn.tipo + urn.slash + tipo, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);
@@ -57,8 +57,17 @@ export class OperadorTarjetaService {
     );
   }
 
-  eliminar(operadorTarjeta: OperadorTarjeta): Observable<Respuesta> {
-    return this.http.delete(environment.host + urn.ruta + urn.banco + '/' + operadorTarjeta.id, options).pipe(
+  activar(operadorTarjeta: OperadorTarjeta): Observable<Respuesta> {
+    return this.http.patch(environment.host + urn.ruta + urn.operadorTarjeta + urn.activar, operadorTarjeta, options).pipe(
+      map(response => response as Respuesta),
+      catchError(err => {
+        return throwError(()=>err);
+      })
+    );
+  }
+
+  inactivar(operadorTarjeta: OperadorTarjeta): Observable<Respuesta> {
+    return this.http.patch(environment.host + urn.ruta + urn.operadorTarjeta + urn.inactivar, operadorTarjeta, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);

@@ -55,7 +55,7 @@ export class FormaPagoComponent implements OnInit {
 
   ngOnInit() {
     this.sesion=validarSesion(this.sesionService, this.router);
-    this.consultarFormaPagos();
+    this.consultar();
   }
   
   @HostListener('window:keypress', ['$event'])
@@ -64,8 +64,6 @@ export class FormaPagoComponent implements OnInit {
       this.crear(null);
     if (($event.shiftKey || $event.metaKey) && $event.key == 'N') //ASHIFT + N
       this.nuevo(null);
-    if (($event.shiftKey || $event.metaKey) && $event.key == 'E') // SHIFT + E
-      this.eliminar(null);
   }
 
   limpiar() {
@@ -114,19 +112,31 @@ export class FormaPagoComponent implements OnInit {
     });
   }
 
-  eliminar(event: any) {
+  activar(event) {
     if (event != null)
       event.preventDefault();
-    this.formaPagoService.eliminarPersonalizado(this.formaPago).subscribe({
+    this.formaPagoService.activar(this.formaPago).subscribe({
       next: res => {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
-        this.limpiar();
+        this.consultar();
       },
       error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     });
   }
 
-  consultarFormaPagos() {
+  inactivar(event) {
+    if (event != null)
+      event.preventDefault();
+    this.formaPagoService.inactivar(this.formaPago).subscribe({
+      next: res => {
+        Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
+        this.consultar();
+      },
+      error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+    });
+  }
+
+  consultar() {
     this.formaPagoService.consultar().subscribe({
       next: res => {
         this.formaPagos = res.resultado as FormaPago[];

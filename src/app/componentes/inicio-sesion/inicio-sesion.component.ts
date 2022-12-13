@@ -16,6 +16,7 @@ import { Empresa } from '../../modelos/usuario/empresa';
 import { EmpresaService } from '../../servicios/usuario/empresa.service';
 import { Estacion } from '../../modelos/usuario/estacion';
 import { EstacionService } from '../../servicios/usuario/estacion.service';
+import { EstacionUsuarioService } from 'src/app/servicios/usuario/estacion-usuario.service';
 
 
 @Component({
@@ -36,9 +37,6 @@ export class InicioSesionComponent implements OnInit {
   formularioValido: boolean = true;
 
   sesion = new Sesion();
-
-  usuario: Usuario = new Usuario();
-  empresa: Empresa = new Empresa();
   estacion: Estacion = new Estacion();
 
   empresas: Empresa[] = [];
@@ -58,67 +56,31 @@ export class InicioSesionComponent implements OnInit {
   );
 
   constructor(private parametroService: ParametroService, private sesionService: SesionService, private usuarioService: UsuarioService, 
-    private empresaService: EmpresaService, private estacionService: EstacionService, private router: Router, public dialog: MatDialog) { }
+    private empresaService: EmpresaService, private estacionService: EstacionService, private estacionUsuarioService: EstacionUsuarioService, private router: Router, public dialog: MatDialog) { }
 
   ngOnInit() {
-    this.obtenerEmpresa();
     this.obtenerParametro();
     this.consultarEmpresas();
   }
 
-  buscarUsuario() {
-    //Pasar el apodo, llenar usuario, estacion y empresa para sesion
-    this.usuarioService.buscarApodo(this.usuario.apodo).subscribe({
+  obtenerPorApodo() {
+    this.usuarioService.obtenerPorApodo(this.sesion.usuario.apodo).subscribe({
       next: res => {
-        //console.log(this.sesion.usuario);
-        this.usuario = res.resultado as Usuario
-        if (this.usuario.cambiarContrasena == valores.si) {
+        this.sesion.usuario = res.resultado as Usuario
+        if (this.sesion.usuario.cambiarContrasena == valores.si) {
           this.cambiarContrasena = true;
           return;
         }
-        this.estacionService.obtenerIP().subscribe({
-          next: res => {
-            this.ip = res;
-            this.estacionService.buscarIP(this.ip).subscribe({
-              next: res => {
-                this.estacion = res.resultado as Estacion;
-                if (this.usuario.perfil.multiempresa) { // Si tiene perfil es (ADMIN)
-                  this.obtenerEmpresa(); //Obtener empresas de la tabla Estacion_Usuario para mostrar en el combo
-                  if (this.estacion.id == 0) {
-                    this.estacion.id = 1; // para ingresar con cualquier estacion
-                  }
-                } else {
-                  if (this.estacion.id != 0) {
-                    this.empresa = this.estacion.establecimiento.empresa;
-                  }
-                }
-              },
-              error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
-            });
-          },
-          error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
-        });
+        this.multiEmpresa=this.sesion.usuario.perfil.multiempresa;
       },
       error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     });
   }
 
   iniciarSesion() {
-    this.usuario.id = 1; //Borrar
-    this.usuario.identificacion = this.usuario.apodo; // Barrar cuando se cambie ident por apodo
-    this.estacion.id = 1; //Borrar
-    this.empresa.id = 1; //Borrar, esta solo para validar
-    this.validarFormulario();
-    if (!this.formularioValido)
-      return;  
-    this.sesion.usuario = this.usuario;
-    this.sesion.estacion = this.estacion;
-    this.sesion.empresa = this.empresa;
-    console.log(this.sesion);
     this.sesionService.crear(this.sesion).subscribe({
       next: res => {
         this.sesion = res.resultado as Sesion;
-        //console.log(this.sesion);
         this.sesionService.setSesion(this.sesion);
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
         this.navegarExito();
@@ -137,27 +99,14 @@ export class InicioSesionComponent implements OnInit {
     this.router.navigateByUrl('/index');
   }
 
-  activarSesion() {
-
-  }
-
-  consultarEmpresas() {
-    this.empresaService.consultar().subscribe(
-      res => {
-        this.empresas = res.resultado as Empresa[]
-      },
-      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
-    );
-  }
-
-  obtenerEmpresa() {
-    let empresaId = 1;
-    this.empresaService.obtener(empresaId).subscribe({
+  consultarEmpresas(){
+    this.empresaService.consultar().subscribe({
       next: res => {
-        let empresa = res.resultado as Empresa
-        this.urlEmpresa = environment.prefijoUrlImagenes + "logos/" + empresa.logo;
+        this.empresas = res.resultado as Empresa[];
       },
-      error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+      error: err => {
+        Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+      }
     });
   }
 
@@ -171,30 +120,6 @@ export class InicioSesionComponent implements OnInit {
       },
       err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     );
-  }
-
-  validarFormulario(){
-    this.formularioValido = true;
-    if (this.usuario.apodo == '') {
-      Swal.fire(error, mensajes.error_usuario, error_swal);
-      this.formularioValido = false;
-      return;
-    }
-    if (this.usuario.id == 0) {
-      Swal.fire(error, mensajes.error_usuario_no_existe, error_swal);
-      this.formularioValido = false;
-      return;
-    }
-    if (this.estacion.id == 0) {
-      Swal.fire(error, mensajes.error_estacion_permiso, error_swal);
-      this.formularioValido = false;
-      return;
-    }
-    if (this.empresa.id == 0) {
-      Swal.fire(error, mensajes.error_empresa, error_swal);
-      this.formularioValido = false;
-      return;
-    }
   }
 
   // PARA VALIDACION DE CONFIRMACIÓN DE CONTRASEÑA
@@ -239,11 +164,11 @@ export class InicioSesionComponent implements OnInit {
   openDialog(): void {
     const dialogRef = this.dialog.open(CambioCredencialesComponent, {
       width: '50%',
-      data: this.usuario
+      data: this.sesion.usuario
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      this.usuario = result;
+      this.sesion.usuario = result;
     });
   }
 }

@@ -682,21 +682,6 @@ export class FacturaCompraComponent implements OnInit {
     );
   }
 
-  eliminar(cliente: Cliente) {
-    this.clienteService.eliminar(cliente).subscribe(
-      res => {
-        if (res.resultado!=null) {
-          Swal.fire('Exito', res.mensaje, 'success');
-          this.cliente = res.resultado as Cliente
-          this.ngOnInit();
-        } else {
-          Swal.fire('Error', res.mensaje, 'error');
-        }
-      },
-      err => Swal.fire('Error', err.error.mensaje, 'error')
-    );
-  }
-
   provincia(provincia: string) {
     this.cliente.direccion.ubicacion.provincia=provincia;
     this.ubicacionService.obtenerCantones(provincia).subscribe(

@@ -32,7 +32,7 @@ export class ProveedorService {
   }
 
   obtener(proveedor: Proveedor): Observable<Respuesta> {
-    return this.http.get<Respuesta>(environment.host + urn.ruta + urn.proveedor + '/' + proveedor.id, options).pipe(
+    return this.http.get<Respuesta>(environment.host + urn.ruta + urn.proveedor + urn.slash + proveedor.id, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);
@@ -49,6 +49,7 @@ export class ProveedorService {
       })
     ));
   }
+
   consultar(): Observable<Respuesta> {
     return this.http.get(environment.host + urn.ruta + urn.proveedor, options).pipe(
       map(response => response as Respuesta),
@@ -66,8 +67,17 @@ export class ProveedorService {
     );
   }
 
-  eliminar(proveedor: Proveedor): Observable<Respuesta> {
-    return this.http.delete(environment.host + urn.ruta + urn.proveedor + '/' + proveedor.id, options).pipe(
+  activar(proveedor: Proveedor): Observable<Respuesta> {
+    return this.http.patch(environment.host + urn.ruta + urn.proveedor + urn.activar, proveedor, options).pipe(
+      map(response => response as Respuesta),
+      catchError(err => {
+        return throwError(()=>err);
+      })
+    );
+  }
+
+  inactivar(proveedor: Proveedor): Observable<Respuesta> {
+    return this.http.patch(environment.host + urn.ruta + urn.proveedor + urn.inactivar, proveedor, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);
@@ -85,7 +95,7 @@ export class ProveedorService {
   }
 
   obtenerIdentificacion(identificacion: string): Observable<Respuesta> {
-    return this.http.get<Respuesta>(environment.host + urn.ruta + urn.proveedor + urn.identificacion + '/' + identificacion, options).pipe(
+    return this.http.get<Respuesta>(environment.host + urn.ruta + urn.proveedor + urn.identificacion + urn.slash + identificacion, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);

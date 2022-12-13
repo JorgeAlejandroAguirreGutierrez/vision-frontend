@@ -6,6 +6,7 @@ import { map, catchError } from 'rxjs/operators';
 import { Observable, throwError } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { EstacionUsuario } from '../../modelos/usuario/estacion-usuario';
+import { Usuario } from '../../modelos/usuario/usuario';
 
 @Injectable({
   providedIn: 'root'
@@ -24,23 +25,24 @@ export class EstacionUsuarioService {
   }
 
   obtener(estacionUsuario: EstacionUsuario): Observable<Respuesta> {
-    return this.http.get<Respuesta>(environment.host + urn.ruta + urn.estacionUsuario + '/' + estacionUsuario.id, options).pipe(
+    return this.http.get<Respuesta>(environment.host + urn.ruta + urn.estacionUsuario + urn.slash + estacionUsuario.id, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);
       })
     );
   }
-  buscarUsuario(usuarioId: number): Observable<Respuesta> {
-    return this.http.get<Respuesta>(environment.host + urn.ruta + urn.estacionUsuario + urn.usuario + '/' + usuarioId, options).pipe(
-      map(response => response as Respuesta),
-      catchError(err => {
-        return throwError(()=>err);
-      })
-    );
-  }
+
   consultar(): Observable<Respuesta> {
     return this.http.get(environment.host + urn.ruta + urn.estacionUsuario, options).pipe(
+      map(response => response as Respuesta),
+      catchError(err => {
+        return throwError(()=>err);
+      }));
+  }
+
+  consultarPorUsuario(usuario: Usuario): Observable<Respuesta> {
+    return this.http.get(environment.host + urn.ruta + urn.estacionUsuario + urn.consultarPorUsuario + urn.slash + usuario.id, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);
@@ -54,14 +56,5 @@ export class EstacionUsuarioService {
         return throwError(()=>err);
       })
     );
-  }
-
-  eliminar(estacionUsuario: EstacionUsuario): Observable<Respuesta> {
-    return this.http.delete(environment.host + urn.ruta + urn.estacionUsuario + '/' + estacionUsuario.id, options).pipe(
-      map(response => response as Respuesta),
-      catchError(err => {
-        return throwError(()=>err);
-      })
-    );
-  }
+    }
 }

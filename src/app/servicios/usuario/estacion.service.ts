@@ -32,7 +32,7 @@ export class EstacionService {
   }
 
   obtener(estacionId: number): Observable<Respuesta> {
-    return this.http.get<Respuesta>(environment.host + urn.ruta + urn.estacion + '/' + estacionId, options).pipe(
+    return this.http.get<Respuesta>(environment.host + urn.ruta + urn.estacion + urn.slash + estacionId, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);
@@ -41,7 +41,7 @@ export class EstacionService {
   }
 
   consultarEstablecimiento(establecimientoId: number): Observable<Respuesta> {
-    return this.http.get<Respuesta>(environment.host + urn.ruta + urn.estacion + urn.establecimiento + '/' + establecimientoId, options).pipe(
+    return this.http.get<Respuesta>(environment.host + urn.ruta + urn.estacion + urn.establecimiento + urn.slash + establecimientoId, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);
@@ -57,16 +57,6 @@ export class EstacionService {
       }));
   }
 
-  async obtenerAsync(estacionId: number): Promise<Respuesta> {
-    return await lastValueFrom(this.http.get<Respuesta>(environment.host + urn.ruta + urn.estacion + '/' + estacionId, options).pipe(
-      map(response => response as Respuesta),
-      catchError(err => {
-        return throwError(()=>err);
-      })
-    ));
-  }
-
-
   actualizar(estacion: Estacion): Observable<Respuesta> {
     return this.http.put(environment.host + urn.ruta + urn.estacion, estacion, options).pipe(
       map(response => response as Respuesta),
@@ -76,8 +66,8 @@ export class EstacionService {
     );
   }
 
-  eliminarPersonalizado(estacion: Estacion): Observable<Respuesta> {
-    return this.http.put(environment.host + urn.ruta + urn.segmento, estacion, options).pipe(
+  activar(estacion: Estacion): Observable<Respuesta> {
+    return this.http.patch(environment.host + urn.ruta + urn.estacion + urn.activar, estacion, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);
@@ -85,8 +75,8 @@ export class EstacionService {
     );
   }
 
-  eliminar(estacion: Estacion): Observable<Respuesta> {
-    return this.http.delete(environment.host + urn.ruta + urn.estacion + '/' + estacion.id, options).pipe(
+  inactivar(estacion: Estacion): Observable<Respuesta> {
+    return this.http.patch(environment.host + urn.ruta + urn.estacion + urn.inactivar, estacion, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);
@@ -95,26 +85,8 @@ export class EstacionService {
   }
 
   buscar(estacion: Estacion): Observable<Respuesta> {
-    return this.http.get(environment.host + urn.ruta + urn.usuario + urn.buscar + '/' + estacion.codigo + '/'+ estacion.descripcion, options).pipe(
+    return this.http.get(environment.host + urn.ruta + urn.usuario + urn.buscar + urn.slash + estacion.codigo + urn.slash + estacion.descripcion, options).pipe(
       map(response => response as Respuesta),
-      catchError(err => {
-        return throwError(()=>err);
-      })
-    );
-  }
-
-  buscarIP(ip: String): Observable<Respuesta> {
-    return this.http.get(environment.host + urn.ruta + urn.usuario + urn.buscar + '/' + ip, options).pipe(
-      map(response => response as Respuesta),
-      catchError(err => {
-        return throwError(()=>err);
-      })
-    );
-  }
-
-  obtenerIP(): Observable<string> {
-    return this.http.get('https://api.ipify.org?format=json').pipe(
-      map(response => response['ip'] as string),
       catchError(err => {
         return throwError(()=>err);
       })

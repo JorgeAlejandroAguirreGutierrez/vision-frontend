@@ -31,21 +31,12 @@ export class BodegaService {
   }
 
   obtener(bodegaId: number): Observable<Respuesta> {
-    return this.http.get<Respuesta>(environment.host + urn.ruta + urn.bodega + '/' + bodegaId, options).pipe(
+    return this.http.get<Respuesta>(environment.host + urn.ruta + urn.bodega + urn.slash + bodegaId, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);
       })
     );
-  }
-
-  async obtenerAsync(bodega_id: number): Promise<Respuesta> {
-    return await lastValueFrom(this.http.get<Respuesta>(environment.host + urn.ruta + urn.bodega + '/' + bodega_id, options).pipe(
-      map(response => response as Respuesta),
-      catchError(err => {
-        return throwError(()=>err);
-      })
-    ));
   }
 
   consultar(): Observable<Respuesta> {
@@ -65,8 +56,8 @@ export class BodegaService {
     );
   }
 
-  eliminar(bodega: Bodega): Observable<Respuesta> {
-    return this.http.delete(environment.host + urn.ruta + urn.bodega + '/' + bodega.id, options).pipe(
+  activar(bodega: Bodega): Observable<Respuesta> {
+    return this.http.patch(environment.host + urn.ruta + urn.bodega + urn.activar, bodega, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);
@@ -74,8 +65,8 @@ export class BodegaService {
     );
   }
 
-  eliminarPersonalizado(bodega: Bodega): Observable<Respuesta> {
-    return this.http.delete(environment.host + urn.ruta + urn.bodega + urn.personalizado + '/' + bodega.id, options).pipe(
+  inactivar(bodega: Bodega): Observable<Respuesta> {
+    return this.http.patch(environment.host + urn.ruta + urn.bodega + urn.inactivar, bodega, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);

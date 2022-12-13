@@ -41,7 +41,7 @@ export class CuentaPropiaService {
   }
 
   obtener(cuentaPropiaId: number): Observable<Respuesta> {
-    return this.http.get(environment.host + urn.ruta + urn.cuentaPropia + '/' + cuentaPropiaId, options).pipe(
+    return this.http.get(environment.host + urn.ruta + urn.cuentaPropia + urn.slash + cuentaPropiaId, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(err);
@@ -57,11 +57,20 @@ export class CuentaPropiaService {
     );
   }
 
-  eliminar(cuentaPropiaId: number): Observable<Respuesta> {
-    return this.http.delete(environment.host + urn.ruta + urn.cuentaPropia + '/' + cuentaPropiaId, options).pipe(
+  activar(cuentaPropia: CuentaPropia): Observable<Respuesta> {
+    return this.http.patch(environment.host + urn.ruta + urn.cuentaPropia + urn.activar, cuentaPropia, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
-        return throwError(err);
+        return throwError(()=>err);
+      })
+    );
+  }
+
+  inactivar(cuentaPropia: CuentaPropia): Observable<Respuesta> {
+    return this.http.patch(environment.host + urn.ruta + urn.cuentaPropia + urn.inactivar, cuentaPropia, options).pipe(
+      map(response => response as Respuesta),
+      catchError(err => {
+        return throwError(()=>err);
       })
     );
   }

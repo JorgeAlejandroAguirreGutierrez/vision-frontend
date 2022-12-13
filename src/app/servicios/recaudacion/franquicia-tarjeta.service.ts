@@ -24,7 +24,7 @@ export class FranquiciaTarjetaService {
   }
 
   obtener(franquiciaTarjetaId: number): Observable<Respuesta> {
-    return this.http.get<Respuesta>(environment.host + urn.ruta + urn.banco + '/' + franquiciaTarjetaId, options).pipe(
+    return this.http.get<Respuesta>(environment.host + urn.ruta + urn.banco + urn.slash + franquiciaTarjetaId, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);
@@ -49,8 +49,17 @@ export class FranquiciaTarjetaService {
     );
   }
 
-  eliminar(franquiciaTarjeta: FranquiciaTarjeta): Observable<Respuesta> {
-    return this.http.delete(environment.host + urn.ruta + urn.banco + '/' + franquiciaTarjeta.id, options).pipe(
+  activar(franquiciaTarjeta: FranquiciaTarjeta): Observable<Respuesta> {
+    return this.http.patch(environment.host + urn.ruta + urn.franquiciaTarjeta + urn.activar, franquiciaTarjeta, options).pipe(
+      map(response => response as Respuesta),
+      catchError(err => {
+        return throwError(()=>err);
+      })
+    );
+  }
+
+  inactivar(franquiciaTarjeta: FranquiciaTarjeta): Observable<Respuesta> {
+    return this.http.patch(environment.host + urn.ruta + urn.franquiciaTarjeta + urn.inactivar, franquiciaTarjeta, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);

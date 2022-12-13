@@ -10,7 +10,6 @@ import { SesionService } from '../../servicios/usuario/sesion.service';
 import { GrupoClienteService } from '../../servicios/cliente/grupo-cliente.service';
 import { GrupoCliente } from '../../modelos/cliente/grupo-cliente';
 import { CuentaContable } from '../../modelos/contabilidad/cuenta-contable';
-import { CuentaContableService } from '../../servicios/contabilidad/cuenta-contable.service';
 
 import { ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
@@ -57,7 +56,7 @@ export class GrupoClienteComponent implements OnInit {
 
   ngOnInit() {
     this.sesion=validarSesion(this.sesionService, this.router);
-    this.consultarGrupoCliente();
+    this.consultar();
   }
   
   @HostListener('window:keypress', ['$event'])
@@ -65,9 +64,7 @@ export class GrupoClienteComponent implements OnInit {
     if (($event.shiftKey || $event.metaKey) && $event.key == 'G') //SHIFT + G
       this.crear(null);
     if (($event.shiftKey || $event.metaKey) && $event.key == 'N') //ASHIFT + N
-      this.nuevo(null);
-    if (($event.shiftKey || $event.metaKey) && $event.key == 'E') // SHIFT + E
-      this.eliminar(null);
+      this.nuevo(null);      
   }
 
   limpiar() {
@@ -116,19 +113,31 @@ export class GrupoClienteComponent implements OnInit {
     });
   }
 
-  eliminar(event: any) {
+  activar(event) {
     if (event != null)
       event.preventDefault();
-    this.grupoClienteService.eliminarPersonalizado(this.grupoCliente).subscribe({
+    this.grupoClienteService.activar(this.grupoCliente).subscribe({
       next: res => {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
-        this.limpiar();
+        this.consultar();
       },
       error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     });
   }
 
-  consultarGrupoCliente() {
+  inactivar(event) {
+    if (event != null)
+      event.preventDefault();
+    this.grupoClienteService.inactivar(this.grupoCliente).subscribe({
+      next: res => {
+        Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
+        this.consultar();
+      },
+      error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+    });
+  }
+
+  consultar() {
     this.grupoClienteService.consultar().subscribe({
       next: res => {
         this.grupoClientes = res.resultado as GrupoCliente[]

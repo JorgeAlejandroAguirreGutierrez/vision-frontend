@@ -23,7 +23,12 @@
             </a>
         </li>
         <li class="nav-item" *ngIf="grupoProducto.id!=0">
-            <a class="nav-link" title="Eliminar" role="button" (click)="eliminarLeer($event)">
+            <a class="nav-link" title="Activar" role="button" (click)="activar($event)">
+                <mat-icon>check</mat-icon>
+            </a>
+        </li>
+        <li class="nav-item" *ngIf="grupoProducto.id!=0">
+            <a class="nav-link" title="Inactivar" role="button" (click)="inactivar($event)">
                 <mat-icon>delete</mat-icon>
             </a>
         </li>

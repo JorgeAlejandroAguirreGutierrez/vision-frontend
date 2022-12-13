@@ -31,7 +31,7 @@ export class MedidaService {
   }
 
   obtener(medida_id: number): Observable<Respuesta> {
-    return this.http.get<Respuesta>(environment.host + urn.ruta + urn.medida + '/' + medida_id, options).pipe(
+    return this.http.get<Respuesta>(environment.host + urn.ruta + urn.medida + urn.slash + medida_id, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);
@@ -56,8 +56,8 @@ export class MedidaService {
     );
   }
 
-  eliminar(medida: Medida): Observable<Respuesta> {
-    return this.http.delete(environment.host + urn.ruta + urn.producto + '/' + medida.id, options).pipe(
+  activar(medida: Medida): Observable<Respuesta> {
+    return this.http.patch(environment.host + urn.ruta + urn.medida + urn.activar, medida, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);
@@ -65,8 +65,8 @@ export class MedidaService {
     );
   }
 
-  eliminarPersonalizado(medida: Medida): Observable<Respuesta> {
-    return this.http.delete(environment.host + urn.ruta + urn.bodega + urn.personalizado + '/' + medida.id, options).pipe(
+  inactivar(medida: Medida): Observable<Respuesta> {
+    return this.http.patch(environment.host + urn.ruta + urn.medida + urn.inactivar, medida, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);

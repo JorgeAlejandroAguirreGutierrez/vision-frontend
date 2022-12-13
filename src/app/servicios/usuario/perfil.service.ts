@@ -32,7 +32,7 @@ export class PerfilService {
   }
 
   obtener(perfilId: number): Observable<Respuesta> {
-    return this.http.get<Respuesta>(environment.host + urn.ruta + urn.perfil + '/' + perfilId, options).pipe(
+    return this.http.get<Respuesta>(environment.host + urn.ruta + urn.perfil + urn.slash + perfilId, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);
@@ -48,15 +48,6 @@ export class PerfilService {
       }));
   }
 
-  async obtenerAsync(perfilId: number): Promise<Respuesta> {
-    return await lastValueFrom(this.http.get<Respuesta>(environment.host + urn.ruta + urn.perfil + '/' + perfilId, options).pipe(
-      map(response => response as Respuesta),
-      catchError(err => {
-        return throwError(()=>err);
-      })
-    ));
-  }
-
   actualizar(perfil: Perfil): Observable<Respuesta> {
     return this.http.put(environment.host + urn.ruta + urn.perfil, perfil, options).pipe(
       map(response => response as Respuesta),
@@ -66,8 +57,8 @@ export class PerfilService {
     );
   }
 
-  eliminarPersonalizado(perfil: Perfil): Observable<Respuesta> {
-    return this.http.put(environment.host + urn.ruta + urn.perfil, perfil, options).pipe(
+  activar(perfil: Perfil): Observable<Respuesta> {
+    return this.http.patch(environment.host + urn.ruta + urn.perfil + urn.activar, perfil, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);
@@ -75,8 +66,8 @@ export class PerfilService {
     );
   }
 
-  eliminar(perfil: Perfil): Observable<Respuesta> {
-    return this.http.delete(environment.host + urn.ruta + urn.perfil + '/' + perfil.id, options).pipe(
+  inactivar(perfil: Perfil): Observable<Respuesta> {
+    return this.http.patch(environment.host + urn.ruta + urn.perfil + urn.inactivar, perfil, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);
@@ -85,7 +76,7 @@ export class PerfilService {
   }
 
   buscar(perfil: Perfil): Observable<Respuesta> {
-    return this.http.get(environment.host + urn.ruta + urn.genero + urn.buscar+'/'+perfil.codigo, options).pipe(
+    return this.http.get(environment.host + urn.ruta + urn.genero + urn.buscar + urn.slash + perfil.codigo, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);

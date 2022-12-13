@@ -24,7 +24,7 @@ export class TipoComprobanteService {
   }
 
   obtener(tipoComprobanteId: number): Observable<Respuesta> {
-    return this.http.get<Respuesta>(environment.host + urn.ruta + urn.tipoComprobante + '/' + tipoComprobanteId, options).pipe(
+    return this.http.get<Respuesta>(environment.host + urn.ruta + urn.tipoComprobante + urn.slash + tipoComprobanteId, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(err);
@@ -49,11 +49,20 @@ export class TipoComprobanteService {
     );
   }
 
-  eliminar(tipoComprobante: TipoComprobante): Observable<Respuesta> {
-    return this.http.delete(environment.host + urn.ruta + urn.tipoComprobante + '/' + tipoComprobante.id, options).pipe(
+  activar(tipoComprobante: TipoComprobante): Observable<Respuesta> {
+    return this.http.patch(environment.host + urn.ruta + urn.tipoComprobante + urn.activar, tipoComprobante, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
-        return throwError(err);
+        return throwError(()=>err);
+      })
+    );
+  }
+
+  inactivar(tipoComprobante: TipoComprobante): Observable<Respuesta> {
+    return this.http.patch(environment.host + urn.ruta + urn.tipoComprobante + urn.inactivar, tipoComprobante, options).pipe(
+      map(response => response as Respuesta),
+      catchError(err => {
+        return throwError(()=>err);
       })
     );
   }

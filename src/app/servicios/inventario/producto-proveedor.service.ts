@@ -24,7 +24,7 @@ export class ProductoProveedorService {
   }
 
   obtener(productoProveedor: ProductoProveedor): Observable<Respuesta> {
-    return this.http.get<Respuesta>(environment.host + urn.ruta + urn.productoProveedor + '/' + productoProveedor.id, options).pipe(
+    return this.http.get<Respuesta>(environment.host + urn.ruta + urn.productoProveedor + urn.slash + productoProveedor.id, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);
@@ -32,7 +32,7 @@ export class ProductoProveedorService {
     );
   }
   buscarProducto(productoId: number): Observable<Respuesta> {
-    return this.http.get<Respuesta>(environment.host + urn.ruta + urn.productoProveedor + urn.producto + '/' + productoId, options).pipe(
+    return this.http.get<Respuesta>(environment.host + urn.ruta + urn.productoProveedor + urn.producto + urn.slash + productoId, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);
@@ -56,8 +56,17 @@ export class ProductoProveedorService {
     );
   }
 
-  eliminar(productoProveedor: ProductoProveedor): Observable<Respuesta> {
-    return this.http.delete(environment.host + urn.ruta + urn.productoProveedor + '/' + productoProveedor.id, options).pipe(
+  activar(productoProveedor: ProductoProveedor): Observable<Respuesta> {
+    return this.http.patch(environment.host + urn.ruta + urn.productoProveedor + urn.activar, productoProveedor, options).pipe(
+      map(response => response as Respuesta),
+      catchError(err => {
+        return throwError(()=>err);
+      })
+    );
+  }
+
+  inactivar(productoProveedor: ProductoProveedor): Observable<Respuesta> {
+    return this.http.patch(environment.host + urn.ruta + urn.productoProveedor + urn.inactivar, productoProveedor, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);

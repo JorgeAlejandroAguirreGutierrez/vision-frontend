@@ -31,7 +31,7 @@ export class BancoService {
   }
 
   obtener(bancoId: number): Observable<Respuesta> {
-    return this.http.get<Respuesta>(environment.host + urn.ruta + urn.banco + '/' + bancoId, options).pipe(
+    return this.http.get<Respuesta>(environment.host + urn.ruta + urn.banco + urn.slash + bancoId, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);
@@ -65,8 +65,17 @@ export class BancoService {
     );
   }
 
-  eliminar(banco: Banco): Observable<Respuesta> {
-    return this.http.delete(environment.host + urn.ruta + urn.banco + '/' + banco.id, options).pipe(
+  activar(banco: Banco): Observable<Respuesta> {
+    return this.http.patch(environment.host + urn.ruta + urn.banco + urn.activar, banco, options).pipe(
+      map(response => response as Respuesta),
+      catchError(err => {
+        return throwError(()=>err);
+      })
+    );
+  }
+
+  inactivar(banco: Banco): Observable<Respuesta> {
+    return this.http.patch(environment.host + urn.ruta + urn.banco + urn.inactivar, banco, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);

@@ -113,7 +113,7 @@ export class EstablecimientoComponent implements OnInit {
   ngOnInit() {
     this.sesion=validarSesion(this.sesionService, this.router);
     this.consultarEmpresas();
-    this.consultarEstablecimientos();
+    this.consultar();
     this.ubicacionService.obtenerProvincias().subscribe({
       next: res => {
         this.provincias = res.resultado as Ubicacion[];
@@ -289,25 +289,7 @@ export class EstablecimientoComponent implements OnInit {
     this.limpiarEstablecimiento();
   }
 
-  eliminarEstablecimiento(event: any, i:number) {
-    if (event != null)
-    event.preventDefault();
-    this.establecimientos.splice(i, 1);
-    this.llenarDataSourceEstablecimiento(this.establecimientos);
-    //this.producto.productosProveedores = this.productoProveedores;
-    if (confirm("Realmente quiere eliminar el establecimiento?")) {
-    this.establecimientoService.eliminar(this.establecimiento).subscribe({
-      next: (res) => {
-        Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
-        //this.consultar();
-      },
-      error: (err) => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
-    });
-    }
-  }
-
-  // Metodos para los autocomplete
-  consultarEstablecimientos(){
+  consultar(){
     this.establecimientoService.consultar().subscribe({
       next: res => {
         this.establecimientos = res.resultado as Establecimiento[];
@@ -347,26 +329,35 @@ export class EstablecimientoComponent implements OnInit {
       err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
-/*
-  async construirEstablecimiento() {
-    let establecimientoId=0;
-    this.establecimientoService.currentMessage.subscribe(message => establecimientoId = message);
-    if (establecimientoId!= 0) {
-      await this.establecimientoService.obtenerAsync(establecimientoId).then(
-        res => {
-          Object.assign(this.establecimiento, res.resultado as Establecimiento);
-          this.establecimientoService.enviar(0);
-        },
-        err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
-      );
-    }
-  }*/
+
+  activar(event) {
+    if (event != null)
+      event.preventDefault();
+    this.establecimientoService.activar(this.establecimiento).subscribe({
+      next: res => {
+        Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
+        this.consultar();
+      },
+      error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+    });
+  }
+
+  inactivar(event) {
+    if (event != null)
+      event.preventDefault();
+    this.establecimientoService.inactivar(this.establecimiento).subscribe({
+      next: res => {
+        Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
+        this.consultar();
+      },
+      error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+    });
+  }
 
   compareFn(a: any, b: any) {
     return a && b && a.id == b.id;
   }
 
-  
   provincia(provincia: string) {
     this.establecimiento.ubicacion.provincia = provincia;
     this.ubicacionService.obtenerCantones(provincia).subscribe({

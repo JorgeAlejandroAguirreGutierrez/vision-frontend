@@ -34,7 +34,7 @@ export class SegmentoService {
   }
 
   obtener(segmentoId: number): Observable<Respuesta> {
-    return this.http.get<Respuesta>(environment.host + urn.ruta + urn.segmento + '/' + segmentoId, options).pipe(
+    return this.http.get<Respuesta>(environment.host + urn.ruta + urn.segmento + urn.slash + segmentoId, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);
@@ -43,7 +43,7 @@ export class SegmentoService {
   }
 
   async obtenerAsync(segmentoId: number): Promise<Respuesta> {
-    return await lastValueFrom(this.http.get<Respuesta>(environment.host + urn.ruta + urn.segmento + '/' + segmentoId, options).pipe(
+    return await lastValueFrom(this.http.get<Respuesta>(environment.host + urn.ruta + urn.segmento + urn.slash + segmentoId, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);
@@ -68,8 +68,8 @@ export class SegmentoService {
     );
   }
 
-  eliminar(segmento: Segmento): Observable<Respuesta> {
-    return this.http.delete(environment.host + urn.ruta + urn.segmento + '/' + segmento.id, options).pipe(
+  activar(segmento: Segmento): Observable<Respuesta> {
+    return this.http.patch(environment.host + urn.ruta + urn.segmento + urn.activar, segmento, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);
@@ -77,8 +77,8 @@ export class SegmentoService {
     );
   }
 
-  eliminarPersonalizado(segmento: Segmento): Observable<Respuesta> {
-    return this.http.put(environment.host + urn.ruta + urn.segmento, segmento, options).pipe(
+  inactivar(segmento: Segmento): Observable<Respuesta> {
+    return this.http.patch(environment.host + urn.ruta + urn.segmento + urn.inactivar, segmento, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);
@@ -87,7 +87,7 @@ export class SegmentoService {
   }
 
   buscar(segmento: Segmento): Observable<Respuesta> {
-    return this.http.get(environment.host + urn.ruta + urn.segmento + urn.buscar + '/' + segmento.codigo + '/' + segmento.descripcion + '/' + segmento.margenGanancia, options).pipe(
+    return this.http.get(environment.host + urn.ruta + urn.segmento + urn.buscar + urn.slash + segmento.codigo + urn.slash + segmento.descripcion + urn.slash + segmento.margenGanancia, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);
@@ -98,7 +98,7 @@ export class SegmentoService {
   importar(archivo: File, modelo: Modelo): Observable<Respuesta> {
     const formData: FormData = new FormData();
     formData.append('archivo', archivo, archivo.name);
-    return this.http.post(environment.host + urn.ruta + '/' + modelo.endpoint + urn.importar, formData, optionsCargarArchivo).pipe(
+    return this.http.post(environment.host + urn.ruta + urn.slash + modelo.endpoint + urn.importar, formData, optionsCargarArchivo).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);
@@ -107,7 +107,7 @@ export class SegmentoService {
   }
 
   exportar(modelo: Modelo): Observable<Respuesta> {
-    return this.http.get(environment.host + urn.ruta + '/'+modelo.endpoint + urn.importar, options).pipe(
+    return this.http.get(environment.host + urn.ruta + urn.slash + modelo.endpoint + urn.importar, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);

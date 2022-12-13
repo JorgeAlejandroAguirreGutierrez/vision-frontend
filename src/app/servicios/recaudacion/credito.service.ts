@@ -24,7 +24,7 @@ export class CreditoService {
   }
 
   obtener(creditoId: number): Observable<Respuesta> {
-    return this.http.get<Respuesta>(environment.host + urn.ruta + urn.credito + '/' + creditoId, options).pipe(
+    return this.http.get<Respuesta>(environment.host + urn.ruta + urn.credito + urn.slash + creditoId, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);
@@ -42,15 +42,6 @@ export class CreditoService {
 
   actualizar(credito: Credito): Observable<Respuesta> {
     return this.http.put(environment.host + urn.ruta + urn.credito, credito, options).pipe(
-      map(response => response as Respuesta),
-      catchError(err => {
-        return throwError(()=>err);
-      })
-    );
-  }
-
-  eliminar(credito: Credito): Observable<Respuesta> {
-    return this.http.delete(environment.host + urn.ruta + urn.credito + '/' + credito.id, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);

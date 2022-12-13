@@ -214,7 +214,7 @@ export class GrupoProductoService {
   }
 
   obtener(grupo_producto_id: number): Observable<Respuesta> {
-    return this.http.get<Respuesta>(environment.host + urn.ruta + urn.grupoProducto + '/' + grupo_producto_id, options).pipe(
+    return this.http.get<Respuesta>(environment.host + urn.ruta + urn.grupoProducto + urn.slash + grupo_producto_id, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);
@@ -239,8 +239,17 @@ export class GrupoProductoService {
     );
   }
 
-  eliminar(grupoProducto: GrupoProducto): Observable<Respuesta> {
-    return this.http.delete(environment.host + urn.ruta + urn.grupoProducto + '/' + grupoProducto.id, options).pipe(
+  activar(grupoProducto: GrupoProducto): Observable<Respuesta> {
+    return this.http.patch(environment.host + urn.ruta + urn.grupoProducto + urn.activar, grupoProducto, options).pipe(
+      map(response => response as Respuesta),
+      catchError(err => {
+        return throwError(()=>err);
+      })
+    );
+  }
+
+  inactivar(grupoProducto: GrupoProducto): Observable<Respuesta> {
+    return this.http.patch(environment.host + urn.ruta + urn.grupoProducto + urn.inactivar, grupoProducto, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);

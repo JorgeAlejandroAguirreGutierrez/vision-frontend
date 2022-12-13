@@ -22,7 +22,7 @@ export class CalificacionClienteService {
   }
 
   crear(calificacionCliente: CalificacionCliente): Observable<Respuesta> {
-    return this.http.post(environment.host + urn.ruta + urn.calificacionCliente, JSON.stringify(calificacionCliente), options).pipe(
+    return this.http.post(environment.host + urn.ruta + urn.calificacionCliente, calificacionCliente, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);
@@ -31,7 +31,7 @@ export class CalificacionClienteService {
   }
 
   obtener(calificacionClienteId: number): Observable<Respuesta> {
-    return this.http.get<Respuesta>(environment.host + urn.ruta + urn.calificacionCliente + '/' + calificacionClienteId, options).pipe(
+    return this.http.get<Respuesta>(environment.host + urn.ruta + urn.calificacionCliente + urn.slash + calificacionClienteId, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);
@@ -57,7 +57,7 @@ export class CalificacionClienteService {
   }
 
   actualizar(calificacionCliente: CalificacionCliente): Observable<Respuesta> {
-    return this.http.put(environment.host + urn.ruta + urn.calificacionCliente, JSON.stringify(calificacionCliente), options).pipe(
+    return this.http.put(environment.host + urn.ruta + urn.calificacionCliente, calificacionCliente, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);
@@ -65,8 +65,8 @@ export class CalificacionClienteService {
     );
   }
 
-  eliminar(calificacionCliente: CalificacionCliente): Observable<Respuesta> {
-    return this.http.delete(environment.host + urn.ruta + urn.calificacionCliente + '/' + calificacionCliente.id, options).pipe(
+  activar(calificacionCliente: CalificacionCliente): Observable<Respuesta> {
+    return this.http.patch(environment.host + urn.ruta + urn.calificacionCliente + urn.activar, calificacionCliente, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);
@@ -74,8 +74,8 @@ export class CalificacionClienteService {
     );
   }
 
-  eliminarPersonalizado(calificacionCliente: CalificacionCliente): Observable<Respuesta> {
-    return this.http.put(environment.host + urn.ruta + urn.calificacionCliente, JSON.stringify(calificacionCliente), options).pipe(
+  inactivar(calificacionCliente: CalificacionCliente): Observable<Respuesta> {
+    return this.http.patch(environment.host + urn.ruta + urn.calificacionCliente + urn.inactivar, calificacionCliente, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);

@@ -24,7 +24,7 @@ export class KardexService {
   }
 
   obtener(kardexId: number): Observable<Respuesta> {
-    return this.http.get<Respuesta>(environment.host + urn.ruta + urn.kardex + '/' + kardexId, options).pipe(
+    return this.http.get<Respuesta>(environment.host + urn.ruta + urn.kardex + urn.slash + kardexId, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);
@@ -42,15 +42,6 @@ export class KardexService {
 
   actualizar(kardex: Kardex): Observable<Respuesta> {
     return this.http.put(environment.host + urn.ruta + urn.kardex, kardex, options).pipe(
-      map(response => response as Respuesta),
-      catchError(err => {
-        return throwError(()=>err);
-      })
-    );
-  }
-
-  eliminar(kardex: Kardex): Observable<Respuesta> {
-    return this.http.delete(environment.host + urn.ruta + urn.kardex + '/' + kardex.id, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);

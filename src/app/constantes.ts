@@ -9,7 +9,10 @@ export const urn =
     /**
      * URN
      */
+     slash: "/",
      ruta: "/sicecuador",
+     activar: "/activar",
+     inactivar: "/inactivar",
      dependiente: "/dependiente",
      plazoCredito: "/plazoCredito",
      impuesto: "/impuesto",
@@ -51,6 +54,7 @@ export const urn =
      producto: "/producto",
      medida: "/medida",
      buscar: "/buscar",
+     obtenerPorApodo: "/obtenerPorApodo",
      calcular: "/calcular",
      calcularTotales: "/calcularTotales",
      calcularFacturaDetalleTemp: "/calcularFacturaDetalleTemp",
@@ -76,6 +80,7 @@ export const urn =
      proveedor: "/proveedor",
      grupoProveedor: "/grupoProveedor",
      productoProveedor: "/productoProveedor",
+     consultarPorUsuario: "/consultarPorUsuario",
      consultarGrupos: "/consultarGrupos",
      consultarSubgrupos: "/consultarSubgrupos",
      consultarSecciones: "/consultarSecciones",

@@ -20,8 +20,8 @@ export class CuentaContableService {
 
   constructor(private http: HttpClient) { }
 
-  enviar(cuenta_contable_id: number) {
-    this.messageSource.next(cuenta_contable_id);
+  enviar(cuentaContableId: number) {
+    this.messageSource.next(cuentaContableId);
   }
 
   crear(cuentaContable: CuentaContable): Observable<Respuesta> {
@@ -34,21 +34,12 @@ export class CuentaContableService {
   }
 
   obtener(cuentaContableId: number): Observable<Respuesta> {
-    return this.http.get<Respuesta>(environment.host + urn.ruta + urn.cuentaContable + '/' + cuentaContableId, options).pipe(
+    return this.http.get<Respuesta>(environment.host + urn.ruta + urn.cuentaContable + urn.slash + cuentaContableId, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);
       })
     );
-  }
-
-  async obtenerAsync(cuentaContableId: number): Promise<Respuesta> {
-    return await lastValueFrom(this.http.get<Respuesta>(environment.host + urn.ruta + urn.cuentaContable + '/' + cuentaContableId, options).pipe(
-      map(response => response as Respuesta),
-      catchError(err => {
-        return throwError(()=>err);
-      })
-    ));
   }
 
   consultar(): Observable<Respuesta> {
@@ -68,8 +59,8 @@ export class CuentaContableService {
     );
   }
 
-  eliminar(cuentaContable: CuentaContable): Observable<Respuesta> {
-    return this.http.delete(environment.host + urn.ruta + urn.cuentaContable + '/' + cuentaContable.id, options).pipe(
+  activar(cuentaContable: CuentaContable): Observable<Respuesta> {
+    return this.http.patch(environment.host + urn.ruta + urn.cuentaContable + urn.activar, cuentaContable, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);
@@ -77,8 +68,8 @@ export class CuentaContableService {
     );
   }
 
-  eliminarPersonalizado(cuentaContable: CuentaContable): Observable<Respuesta> {
-    return this.http.put(environment.host + urn.ruta + urn.cuentaContable, cuentaContable, options).pipe(
+  inactivar(cuentaContable: CuentaContable): Observable<Respuesta> {
+    return this.http.patch(environment.host + urn.ruta + urn.cuentaContable + urn.inactivar, cuentaContable, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);
@@ -87,7 +78,7 @@ export class CuentaContableService {
   }
 
   buscar(cuentaContable: CuentaContable): Observable<Respuesta> {
-    return this.http.get(environment.host + urn.ruta + urn.cuentaContable + urn.buscar + '/' + cuentaContable.cuenta + '/' + cuentaContable.descripcion + '/' + cuentaContable.nivel, options).pipe(
+    return this.http.get(environment.host + urn.ruta + urn.cuentaContable + urn.buscar + urn.slash + cuentaContable.cuenta + urn.slash + cuentaContable.descripcion + urn.slash + cuentaContable.nivel, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);
@@ -98,7 +89,7 @@ export class CuentaContableService {
   importar(archivo: File, modelo: Modelo): Observable<Respuesta> {
     const formData: FormData = new FormData();
     formData.append('archivo', archivo, archivo.name);
-    return this.http.post(environment.host + urn.ruta + '/' + modelo.endpoint + urn.importar, formData, optionsCargarArchivo).pipe(
+    return this.http.post(environment.host + urn.ruta + urn.slash + modelo.endpoint + urn.importar, formData, optionsCargarArchivo).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);
@@ -107,7 +98,7 @@ export class CuentaContableService {
   }
 
   exportar(modelo: Modelo): Observable<Respuesta> {
-    return this.http.get(environment.host + urn.ruta + '/' + modelo.endpoint + urn.importar, options).pipe(
+    return this.http.get(environment.host + urn.ruta + urn.slash + modelo.endpoint + urn.importar, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);

@@ -32,7 +32,7 @@ export class GeneroService {
   }
 
   obtener(generoId: number): Observable<Respuesta> {
-    return this.http.get<Respuesta>(environment.host + urn.ruta + urn.genero + '/' + generoId, options).pipe(
+    return this.http.get<Respuesta>(environment.host + urn.ruta + urn.genero + urn.slash + generoId, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);
@@ -49,7 +49,7 @@ export class GeneroService {
   }
 
   async obtenerAsync(generoId: number): Promise<Respuesta> {
-    return await lastValueFrom(this.http.get<Respuesta>(environment.host + urn.ruta + urn.genero + '/' + generoId, options).pipe(
+    return await lastValueFrom(this.http.get<Respuesta>(environment.host + urn.ruta + urn.genero + urn.slash + generoId, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);
@@ -66,8 +66,17 @@ export class GeneroService {
     );
   }
 
-  eliminar(genero: Genero): Observable<Respuesta> {
-    return this.http.delete(environment.host + urn.ruta + urn.genero + '/' + genero.id, options).pipe(
+  activar(genero: Genero): Observable<Respuesta> {
+    return this.http.patch(environment.host + urn.ruta + urn.genero + urn.activar, genero, options).pipe(
+      map(response => response as Respuesta),
+      catchError(err => {
+        return throwError(()=>err);
+      })
+    );
+  }
+
+  inactivar(genero: Genero): Observable<Respuesta> {
+    return this.http.patch(environment.host + urn.ruta + urn.genero + urn.inactivar, genero, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);

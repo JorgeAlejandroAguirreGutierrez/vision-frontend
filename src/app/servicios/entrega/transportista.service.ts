@@ -34,7 +34,7 @@ export class TransportistaService {
   }
 
   obtener(transportistaId: number): Observable<Respuesta> {
-    return this.http.get(environment.host + urn.ruta + urn.transportista + '/' + transportistaId, options).pipe(
+    return this.http.get(environment.host + urn.ruta + urn.transportista + urn.slash + transportistaId, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);
@@ -50,8 +50,17 @@ export class TransportistaService {
     );
   }
 
-  eliminar(transportista: Transportista): Observable<Respuesta> {
-    return this.http.delete(environment.host + urn.ruta + urn.servicio + '/' + transportista.id, options).pipe(
+  activar(transportista: Transportista): Observable<Respuesta> {
+    return this.http.patch(environment.host + urn.ruta + urn.transportista + urn.activar, transportista, options).pipe(
+      map(response => response as Respuesta),
+      catchError(err => {
+        return throwError(()=>err);
+      })
+    );
+  }
+
+  inactivar(transportista: Transportista): Observable<Respuesta> {
+    return this.http.patch(environment.host + urn.ruta + urn.transportista + urn.inactivar, transportista, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);

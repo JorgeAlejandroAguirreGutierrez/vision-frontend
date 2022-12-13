@@ -32,7 +32,7 @@ export class OrigenIngresoService {
   }
 
   obtener(origenIngresoId: number): Observable<Respuesta> {
-    return this.http.get<Respuesta>(environment.host + urn.ruta + urn.origenIngreso + '/' + origenIngresoId, options).pipe(
+    return this.http.get<Respuesta>(environment.host + urn.ruta + urn.origenIngreso + urn.slash + origenIngresoId, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);
@@ -66,8 +66,8 @@ export class OrigenIngresoService {
     );
   }
 
-  eliminar(origenIngreso: OrigenIngreso): Observable<Respuesta> {
-    return this.http.delete(environment.host + urn.ruta + urn.origenIngreso + '/' + origenIngreso.id, options).pipe(
+  activar(origenIngreso: OrigenIngreso): Observable<Respuesta> {
+    return this.http.patch(environment.host + urn.ruta + urn.origenIngreso + urn.activar, origenIngreso, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);
@@ -75,8 +75,8 @@ export class OrigenIngresoService {
     );
   }
 
-  eliminarPersonalizado(origenIngreso: OrigenIngreso): Observable<Respuesta> {
-    return this.http.put(environment.host + urn.ruta + urn.origenIngreso, origenIngreso, options).pipe(
+  inactivar(origenIngreso: OrigenIngreso): Observable<Respuesta> {
+    return this.http.patch(environment.host + urn.ruta + urn.origenIngreso + urn.inactivar, origenIngreso, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);

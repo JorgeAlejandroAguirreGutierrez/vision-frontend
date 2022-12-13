@@ -24,7 +24,7 @@ export class EmpresaService {
   }
 
   obtener(empresaId: number): Observable<Respuesta> {
-    return this.http.get<Respuesta>(environment.host + urn.ruta + urn.empresa + '/' + empresaId, options).pipe(
+    return this.http.get<Respuesta>(environment.host + urn.ruta + urn.empresa + urn.slash + empresaId, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);
@@ -49,8 +49,8 @@ export class EmpresaService {
     );
   }
 
-  eliminar(empresa: Empresa): Observable<Respuesta> {
-    return this.http.delete(environment.host + urn.ruta + urn.empresa + '/' + empresa.id, options).pipe(
+  activar(empresa: Empresa): Observable<Respuesta> {
+    return this.http.patch(environment.host + urn.ruta + urn.empresa + urn.activar, empresa, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);
@@ -58,8 +58,8 @@ export class EmpresaService {
     );
   }
 
-  eliminarPersonalizado(empresa: Empresa): Observable<Respuesta> {
-    return this.http.delete(environment.host + urn.ruta + urn.empresa + urn.personalizado + '/' + empresa.id, options).pipe(
+  inactivar(empresa: Empresa): Observable<Respuesta> {
+    return this.http.patch(environment.host + urn.ruta + urn.empresa + urn.inactivar, empresa, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);

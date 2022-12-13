@@ -23,7 +23,7 @@ export class EstadoCivilService {
   }
 
   crear(estado_civil: EstadoCivil): Observable<Respuesta> {
-    return this.http.post(environment.host + urn.ruta + urn.estadoCivil, JSON.stringify(estado_civil), options).pipe(
+    return this.http.post(environment.host + urn.ruta + urn.estadoCivil, estado_civil, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);
@@ -32,7 +32,7 @@ export class EstadoCivilService {
   }
 
   obtener(estadoCivilId: number): Observable<Respuesta> {
-    return this.http.get<Respuesta>(environment.host + urn.ruta + urn.estadoCivil + '/' + estadoCivilId, options).pipe(
+    return this.http.get<Respuesta>(environment.host + urn.ruta + urn.estadoCivil + urn.slash + estadoCivilId, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);
@@ -49,7 +49,7 @@ export class EstadoCivilService {
   }
 
   async obtenerAsync(estadoCivilId: number): Promise<Respuesta> {
-    return await lastValueFrom(this.http.get<Respuesta>(environment.host + urn.ruta + urn.estadoCivil + '/' + estadoCivilId, options).pipe(
+    return await lastValueFrom(this.http.get<Respuesta>(environment.host + urn.ruta + urn.estadoCivil + urn.slash + estadoCivilId, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);
@@ -67,7 +67,7 @@ export class EstadoCivilService {
   }
 
   actualizar(estadoCivil: EstadoCivil): Observable<Respuesta> {
-    return this.http.put(environment.host + urn.ruta + urn.estadoCivil, JSON.stringify(estadoCivil), options).pipe(
+    return this.http.put(environment.host + urn.ruta + urn.estadoCivil, estadoCivil, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);
@@ -75,8 +75,17 @@ export class EstadoCivilService {
     );
   }
 
-  eliminar(estadoCivil: EstadoCivil): Observable<Respuesta> {
-    return this.http.delete(environment.host + urn.ruta + urn.estadoCivil + '/' + estadoCivil.id, options).pipe(
+  activar(estadoCivil: EstadoCivil): Observable<Respuesta> {
+    return this.http.patch(environment.host + urn.ruta + urn.estadoCivil + urn.activar, estadoCivil, options).pipe(
+      map(response => response as Respuesta),
+      catchError(err => {
+        return throwError(()=>err);
+      })
+    );
+  }
+
+  inactivar(estadoCivil: EstadoCivil): Observable<Respuesta> {
+    return this.http.patch(environment.host + urn.ruta + urn.estadoCivil + urn.inactivar, estadoCivil, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);

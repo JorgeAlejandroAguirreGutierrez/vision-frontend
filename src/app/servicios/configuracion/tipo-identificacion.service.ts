@@ -24,7 +24,7 @@ export class TipoIdentificacionService {
   }
 
   obtener(tipoIdentificacionId: number): Observable<Respuesta> {
-    return this.http.get<Respuesta>(environment.host + urn.ruta + urn.tipoIdentificacion + '/' + tipoIdentificacionId, options).pipe(
+    return this.http.get<Respuesta>(environment.host + urn.ruta + urn.tipoIdentificacion + urn.slash + tipoIdentificacionId, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);
@@ -42,24 +42,6 @@ export class TipoIdentificacionService {
 
   actualizar(tipoIdentificacion: TipoIdentificacion): Observable<Respuesta> {
     return this.http.put(environment.host + urn.ruta + urn.tipoIdentificacion, tipoIdentificacion, options).pipe(
-      map(response => response as Respuesta),
-      catchError(err => {
-        return throwError(()=>err);
-      })
-    );
-  }
-
-  eliminar(tipoIdentificacion: TipoIdentificacion): Observable<Respuesta> {
-    return this.http.delete(environment.host + urn.ruta + urn.empresa + '/' + tipoIdentificacion.id, options).pipe(
-      map(response => response as Respuesta),
-      catchError(err => {
-        return throwError(()=>err);
-      })
-    );
-  }
-
-  eliminarPersonalizado(tipoIdentificacion: TipoIdentificacion): Observable<Respuesta> {
-    return this.http.delete(environment.host + urn.ruta + urn.tipoIdentificacion + urn.personalizado + '/' + tipoIdentificacion.id, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);
