@@ -1,7 +1,7 @@
 import { Component, OnInit, HostListener, ViewChild, ElementRef, Renderer2 } from '@angular/core';
 import { TabService } from '../../componentes/services/tab.service';
 import Swal from 'sweetalert2';
-import { validarSesion, exito, exito_swal, error, error_swal } from '../../constantes';
+import { validarSesion, exito, exito_swal, error, error_swal, valores } from '../../constantes';
 import { Banco } from '../../modelos/recaudacion/banco';
 import { BancoService } from '../../servicios/recaudacion/banco.service';
 import { Sesion } from 'src/app/modelos/usuario/sesion';
@@ -19,13 +19,15 @@ import { MatPaginator } from '@angular/material/paginator';
 })
 export class BancoComponent implements OnInit {
 
+  activo=valores.activo;
+  inactivo=valores.inactivo;
   banco= new Banco();
   bancos: Banco[] = [];
   sesion: Sesion=null;
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
   @ViewChild("inputFiltro") inputFiltro: ElementRef;
-  editar: boolean = true;
+  edicion: boolean = true;
   abrirPanelNuevo : boolean= true;
   abrirPanelAdmin : boolean = false;
 
@@ -64,6 +66,12 @@ export class BancoComponent implements OnInit {
       },
       err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     );
+  }
+
+  editar(event) {
+    if (event != null)
+      event.preventDefault();
+    this.edicion = true;
   }
 
   actualizar(event) {
@@ -126,6 +134,24 @@ export class BancoComponent implements OnInit {
     });
   }
 
+  seleccion(banco: Banco) {
+    if (!this.clickedRows.has(banco)) {
+      this.clickedRows.clear();
+      this.clickedRows.add(banco);
+      this.banco = banco;
+      this.edicion = false;
+    } else {
+      this.limpiar();
+    }
+  }
+
+  limpiar() {
+    this.banco = new Banco();
+    this.edicion = true;
+    this.clickedRows.clear();
+    this.borrarFiltro();
+  }
+
   filtro(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toUpperCase();
@@ -134,7 +160,7 @@ export class BancoComponent implements OnInit {
     }
   }
 
-  borrarFiltroCalificacionCliente() {
+  borrarFiltro() {
     this.renderer.setProperty(this.inputFiltro.nativeElement, 'value', '');
     this.dataSource.filter = '';
   }

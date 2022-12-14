@@ -13,6 +13,8 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
+import { AfectacionContableService } from 'src/app/servicios/contabilidad/afectacion-contable.service';
+import { AfectacionContable } from 'src/app/modelos/contabilidad/afectacion-contable';
 
 
 @Component({
@@ -29,10 +31,11 @@ export class MovimientoContableComponent implements OnInit {
   sesion: Sesion = null;
   movimientoContable = new MovimientoContable();
   movimientosContables: MovimientoContable[];
+  afectacionesContables: AfectacionContable[];
 
   @ViewChild(TablaMovimientoContableComponent) TablaMovimientoContable: TablaMovimientoContableComponent;
 
-  constructor(private movimientoContableService: MovimientoContableService,
+  constructor(private afectacionContableService: AfectacionContableService, private movimientoContableService: MovimientoContableService,
     private sesionService: SesionService, private router: Router) { }
 
   @HostListener('window:keypress', ['$event'])
@@ -141,6 +144,15 @@ export class MovimientoContableComponent implements OnInit {
     this.movimientoContableService.consultar().subscribe({
       next: res => {
         this.movimientosContables = res.resultado as MovimientoContable[]
+      },
+      error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+    });
+  }
+
+  consultarAfectacionContable() {
+    this.afectacionContableService.consultar().subscribe({
+      next: res => {
+        this.afectacionesContables = res.resultado as AfectacionContable[]
       },
       error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     });

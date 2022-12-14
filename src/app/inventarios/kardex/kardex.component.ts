@@ -132,18 +132,6 @@ export class KardexComponent implements OnInit {
     });
   }
 
-  eliminar(event: any) {
-    if (event != null)
-      event.preventDefault();
-    this.kardexService.eliminar(this.kardex).subscribe({
-      next: res => {
-        Swal.fire({ icon: constantes.exito_swal, title: constantes.exito, text: res.mensaje });
-        this.limpiar();
-      },
-      error: err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
-    });
-  }
-
   consultarKardex() {
     this.kardexService.consultar().subscribe({
       next: res => {

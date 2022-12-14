@@ -253,23 +253,6 @@ export class ProveedorProductoComponent implements OnInit {
     this.limpiarProveedor();
   }
 
-  eliminarProveedor(event: any, i:number) {
-    if (event != null)
-    event.preventDefault();
-    this.productoProveedores.splice(i, 1);
-    this.llenarDataSourceProductoProveedor(this.productoProveedores);
-    this.producto.productosProveedores = this.productoProveedores;
-    if (confirm("Realmente quiere eliminar el proveedor?")) {
-    this.productoProveedorService.eliminar(this.productoProveedor).subscribe({
-      next: (res) => {
-        Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
-        //this.consultar();
-      },
-      error: (err) => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
-    });
-    }
-  }
-
   // Metodos para los autocomplete
   consultarProveedores(){
     this.proveedorService.consultar().subscribe(

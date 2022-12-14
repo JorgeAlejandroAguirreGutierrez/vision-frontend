@@ -49,16 +49,12 @@ export class EstablecimientoComponent implements OnInit {
 
   empresa: Empresa = new Empresa();
   establecimiento: Establecimiento = new Establecimiento();
-  //productoProveedor: ProductoProveedor = new ProductoProveedor();
 
   codigoEquivalente: string = "";
   establecimientoProvincia: string = "";
   establecimientoCanton: string = "";
   establecimientoParroquia: string = "";
 
-  //productoProveedores: ProductoProveedor[] = [];
-
-  //Variables para los autocomplete
   empresas: Empresa[]=[];
   controlEmpresa = new UntypedFormControl();
   filtroEmpresas: Observable<Empresa[]> = new Observable<Empresa[]>();
@@ -96,9 +92,8 @@ export class EstablecimientoComponent implements OnInit {
   @ViewChild(MatSort) sort: MatSort;
 
   columnasEstablecimiento: any[] = [
-    { nombreColumna: 'id', cabecera: 'ID', celda: (row: Establecimiento) => `${row.id}`},
-    { nombreColumna: 'codigo_propio', cabecera: 'Código propio', celda: (row: Establecimiento) => `${row.codigo}`},
-    { nombreColumna: 'codigo_factura', cabecera: 'Código factura', celda: (row: Establecimiento) => `${row.codigoSRI}`},
+    { nombreColumna: 'codigo', cabecera: 'Código', celda: (row: Establecimiento) => `${row.codigo}`},
+    { nombreColumna: 'codigoSRI', cabecera: 'Código SRI', celda: (row: Establecimiento) => `${row.codigoSRI}`},
     { nombreColumna: 'nombre', cabecera: 'Nombre', celda: (row: Establecimiento) => `${row.descripcion}`},
     { nombreColumna: 'direccion', cabecera: 'Dirección', celda: (row: Establecimiento) => `${row.direccion}`},
     { nombreColumna: 'estado', cabecera: 'Estado', celda: (row: Establecimiento) => `${row.estado}`}

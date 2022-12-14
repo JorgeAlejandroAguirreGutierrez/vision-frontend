@@ -6,12 +6,12 @@
             </a>
         </li>
         <ng-container *ngIf="formaPago.id!=0">
-            <li class="nav-item" *ngIf="!editarFormaPago">
+            <li class="nav-item" *ngIf="!edicion">
                 <a class="nav-link" title="Actualizar" role="button" (click)="editar($event)">
                     <mat-icon>edit</mat-icon>
                 </a>
             </li>
-            <li class="nav-item" *ngIf="editarFormaPago">
+            <li class="nav-item" *ngIf="edicion">
                 <a class="nav-link" title="Actualizar" role="button" (click)="actualizar($event)">
                     <mat-icon>update</mat-icon>
                 </a>
@@ -36,14 +36,14 @@
 </nav>
 <div class="contenedor">
     <mat-accordion class="headers-align">
-        <mat-expansion-panel (opened)="abrirPanelNuevoFormaPago = true" (closed)="abrirPanelNuevoFormaPago = false"
-            [expanded]="abrirPanelNuevoFormaPago">
+        <mat-expansion-panel (opened)="abrirPanelNuevo = true" (closed)="abrirPanelNuevo = false"
+            [expanded]="abrirPanelNuevo">
             <mat-expansion-panel-header>
                 <mat-panel-title>
                     <i><u>FORMA DE PAGO</u></i>
                 </mat-panel-title>
                 <mat-panel-description>
-                    {{abrirPanelNuevoFormaPago ? 'Ocultar crear forma de pago' : 'Crear una nueva forma de pago'}}
+                    {{abrirPanelNuevo ? 'Ocultar crear forma de pago' : 'Crear una nueva forma de pago'}}
                     <mat-icon>add_card</mat-icon>
                 </mat-panel-description>
             </mat-expansion-panel-header>
@@ -59,28 +59,28 @@
                 <div class="col-5">
                     <mat-form-field appearance="standard">
                         <mat-label>Descripción</mat-label>
-                        <input matInput type="text" [(ngModel)]="formaPago.descripcion" [disabled]="!editarFormaPago"
+                        <input matInput type="text" [(ngModel)]="formaPago.descripcion" [disabled]="!edicion"
                             oninput="this.value = this.value.toUpperCase()" class="form-control-sm">
                     </mat-form-field>
                 </div>
                 <div class="col-1">
                     <mat-form-field appearance="standard">
                         <mat-label>Abreviatura</mat-label>
-                        <input matInput type="text" [(ngModel)]="formaPago.abreviatura" [disabled]="!editarFormaPago"
+                        <input matInput type="text" [(ngModel)]="formaPago.abreviatura" [disabled]="!edicion"
                             oninput="this.value = this.value.toUpperCase()" class="form-control-sm">
                     </mat-form-field>
                 </div>
                 <div class="col-1">
                     <mat-form-field appearance="standard">
                         <mat-label>Código SRI</mat-label>
-                        <input matInput type="text" [(ngModel)]="formaPago.codigoSri" [disabled]="!editarFormaPago"
+                        <input matInput type="text" [(ngModel)]="formaPago.codigoSri" [disabled]="!edicion"
                             oninput="this.value = this.value.toUpperCase()" class="form-control-sm">
                     </mat-form-field>
                 </div>
                 <div class="col-2">
                     <mat-form-field appearance="standard">
                         <mat-label>Estado</mat-label>
-                        <mat-select [(ngModel)]="formaPago.estado" [disabled]="!editarFormaPago"
+                        <mat-select [(ngModel)]="formaPago.estado" [disabled]="!edicion"
                             class="form-control-sm">
                             <mat-option [value]="activo">{{activo}}</mat-option>
                             <mat-option [value]="inactivo">{{inactivo}}</mat-option>
@@ -91,13 +91,13 @@
         </mat-expansion-panel>
     </mat-accordion>
     <mat-accordion class="headers-align">
-        <mat-expansion-panel (opened)="abrirPanelAdminFormaPago = true" (closed)="abrirPanelAdminFormaPago = false">
+        <mat-expansion-panel (opened)="abrirPanelAdmin = true" (closed)="abrirPanelAdmin = false">
             <mat-expansion-panel-header>
                 <mat-panel-title>
                     <i><u>GESTIONAR FORMAS DE PAGO</u></i>
                 </mat-panel-title>
                 <mat-panel-description>
-                    {{abrirPanelAdminFormaPago ? 'Ocultar administrador de formas de pago' : 'Editar formas de pago
+                    {{abrirPanelAdmin ? 'Ocultar administrador de formas de pago' : 'Editar formas de pago
                     existentes'}}
                     <mat-icon>playlist_add_check</mat-icon>
                 </mat-panel-description>
@@ -105,26 +105,26 @@
             <hr>
             <mat-form-field appearance="standard">
                 <mat-label>Buscar formas de pago</mat-label>
-                <input matInput (keyup)="filtroFormaPago($event)" #inputFiltroFormaPago>
-                <button mat-button *ngIf="inputFiltroFormaPago.value" matSuffix mat-icon-button
-                    (click)="borrarFiltroFormaPago()">
+                <input matInput (keyup)="filtro($event)" #inputFiltro>
+                <button mat-button *ngIf="inputFiltro.value" matSuffix mat-icon-button
+                    (click)="borrarFiltro()">
                     <mat-icon>close</mat-icon>
                 </button>
             </mat-form-field>
             <div class="mat-elevation-z8">
-                <table mat-table [dataSource]="observableDSFormaPago.value" matSort>
+                <table mat-table [dataSource]="observable.value" matSort>
                     <!-- Columnas Dinamicas -->
-                    <ng-container *ngFor="let columna of columnasFormaPago" [matColumnDef]="columna.nombreColumna">
+                    <ng-container *ngFor="let columna of columnas" [matColumnDef]="columna.nombreColumna">
                         <th mat-header-cell *matHeaderCellDef mat-sort-header> {{ columna.cabecera }} </th>
                         <td mat-cell *matCellDef="let row"> {{ columna.celda(row) }} </td>
                     </ng-container>
-                    <tr mat-header-row *matHeaderRowDef="cabeceraFormaPago"></tr>
+                    <tr mat-header-row *matHeaderRowDef="cabecera"></tr>
                     <tr mat-row (click)="seleccion(row)" [class.selected-row]="clickedRows.has(row)"
-                        *matRowDef="let row; columns: cabeceraFormaPago;"></tr>
+                        *matRowDef="let row; columns: cabecera;"></tr>
                     <!-- Row shown when there is no matching data. -->
                     <tr class="mat-row" *matNoDataRow>
                         <td class="mat-cell" colspan="6">No hay datos que coincidan con la forma de pago:
-                            "{{inputFiltroFormaPago.value}}"
+                            "{{inputFiltro.value}}"
                         </td>
                     </tr>
                 </table>

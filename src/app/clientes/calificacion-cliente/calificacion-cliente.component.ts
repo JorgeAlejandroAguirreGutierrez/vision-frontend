@@ -25,29 +25,28 @@ export class CalificacionClienteComponent implements OnInit {
   activo: string = valores.activo;
   inactivo: string = valores.inactivo;
 
-  abrirPanelNuevoCalificacionCliente : boolean= true;
-  abrirPanelAdminCalificacionCliente: boolean = false;
-  editarCalificacionCliente: boolean = true;
+  abrirPanelNuevo : boolean= true;
+  abrirPanelAdmin: boolean = false;
+  edicion: boolean = true;
 
   sesion: Sesion=null;
   calificacionCliente= new CalificacionCliente();
   calificacionesClientes: CalificacionCliente[];
 
-  columnasCalificacionCliente: any[] = [
-    { nombreColumna: 'id', cabecera: 'ID', celda: (row: CalificacionCliente) => `${row.id}` },
+  columnas: any[] = [
     { nombreColumna: 'codigo', cabecera: 'Código', celda: (row: CalificacionCliente) => `${row.codigo}` },
     { nombreColumna: 'descripcion', cabecera: 'Descripción', celda: (row: CalificacionCliente) => `${row.descripcion}` },
     { nombreColumna: 'abreviatura', cabecera: 'Abreviatura', celda: (row: CalificacionCliente) => `${row.abreviatura}` },
     { nombreColumna: 'estado', cabecera: 'Estado', celda: (row: CalificacionCliente) => `${row.estado}` }
   ];
-  cabeceraCalificacionCliente: string[] = this.columnasCalificacionCliente.map(titulo => titulo.nombreColumna);
-  dataSourceCalificacionCliente: MatTableDataSource<CalificacionCliente>;
-  observableDSCalificacionCliente: BehaviorSubject<MatTableDataSource<CalificacionCliente>> = new BehaviorSubject<MatTableDataSource<CalificacionCliente>>(null);
+  cabecera: string[] = this.columnas.map(titulo => titulo.nombreColumna);
+  dataSource: MatTableDataSource<CalificacionCliente>;
+  observable: BehaviorSubject<MatTableDataSource<CalificacionCliente>> = new BehaviorSubject<MatTableDataSource<CalificacionCliente>>(null);
   clickedRows = new Set<CalificacionCliente>();
   
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
-  @ViewChild("inputFiltroCalificacionCliente") inputFiltroCalificacionCliente: ElementRef;
+  @ViewChild("inputFiltro") inputFiltro: ElementRef;
 
   constructor(private renderer: Renderer2, private calificacionClienteService: CalificacionClienteService,
         private sesionService: SesionService,private router: Router) { }
@@ -67,9 +66,9 @@ export class CalificacionClienteComponent implements OnInit {
 
   limpiar() {
     this.calificacionCliente = new CalificacionCliente();
-    this.editarCalificacionCliente = true;
+    this.edicion = true;
     this.clickedRows.clear();
-    this.borrarFiltroCalificacionCliente();
+    this.borrarFiltro();
   }
 
   nuevo(event) {
@@ -86,7 +85,7 @@ export class CalificacionClienteComponent implements OnInit {
         this.calificacionCliente = res.resultado as CalificacionCliente;
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
         this.calificacionesClientes.push(this.calificacionCliente);
-        this.llenarTablaCalificacionCliente(this.calificacionesClientes);
+        this.llenarTabla(this.calificacionesClientes);
       },
       error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     });
@@ -95,7 +94,7 @@ export class CalificacionClienteComponent implements OnInit {
   editar(event) {
     if (event != null)
       event.preventDefault();
-    this.editarCalificacionCliente = true;
+    this.edicion = true;
   }
 
   actualizar(event) {
@@ -139,18 +138,18 @@ export class CalificacionClienteComponent implements OnInit {
     this.calificacionClienteService.consultar().subscribe({
       next: res => {
         this.calificacionesClientes = res.resultado as CalificacionCliente[]
-        this.llenarTablaCalificacionCliente(this.calificacionesClientes);
+        this.llenarTabla(this.calificacionesClientes);
       },
       error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     });
   }
 
-  llenarTablaCalificacionCliente(calificacionClientes: CalificacionCliente[]) {
+  llenarTabla(calificacionClientes: CalificacionCliente[]) {
     this.ordenarAsc(calificacionClientes, 'id');
-    this.dataSourceCalificacionCliente = new MatTableDataSource(calificacionClientes);
-    this.dataSourceCalificacionCliente.paginator = this.paginator;
-    this.dataSourceCalificacionCliente.sort = this.sort;
-    this.observableDSCalificacionCliente.next(this.dataSourceCalificacionCliente);
+    this.dataSource = new MatTableDataSource(calificacionClientes);
+    this.dataSource.paginator = this.paginator;
+    this.dataSource.sort = this.sort;
+    this.observable.next(this.dataSource);
   }
 
   seleccion(calificacionCliente: CalificacionCliente) {
@@ -158,22 +157,22 @@ export class CalificacionClienteComponent implements OnInit {
       this.clickedRows.clear();
       this.clickedRows.add(calificacionCliente);
       this.calificacionCliente = calificacionCliente;
-      this.editarCalificacionCliente = false;
+      this.edicion = false;
     } else {
       this.limpiar();
     }
   }
 
-  filtroCalificacionCliente(event: Event) {
+  filtro(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
-    this.dataSourceCalificacionCliente.filter = filterValue.trim().toUpperCase();
-    if (this.dataSourceCalificacionCliente.paginator) {
-      this.dataSourceCalificacionCliente.paginator.firstPage();
+    this.dataSource.filter = filterValue.trim().toUpperCase();
+    if (this.dataSource.paginator) {
+      this.dataSource.paginator.firstPage();
     }
   }
-  borrarFiltroCalificacionCliente() {
-    this.renderer.setProperty(this.inputFiltroCalificacionCliente.nativeElement, 'value', '');
-    this.dataSourceCalificacionCliente.filter = '';
+  borrarFiltro() {
+    this.renderer.setProperty(this.inputFiltro.nativeElement, 'value', '');
+    this.dataSource.filter = '';
   }
 
   ordenarAsc(arrayJson: any, pKey: any) {

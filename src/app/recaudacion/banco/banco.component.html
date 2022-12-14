@@ -6,12 +6,12 @@
             </a>
         </li>
         <ng-container *ngIf="banco.id!=0">
-            <li class="nav-item" *ngIf="!editar">
+            <li class="nav-item" *ngIf="!edicion">
                 <a class="nav-link" title="Actualizar" role="button" (click)="editar($event)">
                     <mat-icon>edit</mat-icon>
                 </a>
             </li>
-            <li class="nav-item" *ngIf="editar">
+            <li class="nav-item" *ngIf="edicion">
                 <a class="nav-link" title="Actualizar" role="button" (click)="actualizar($event)">
                     <mat-icon>update</mat-icon>
                 </a>
@@ -61,7 +61,7 @@
                     <mat-form-field appearance="standard">
                         <mat-label>Tipo</mat-label>
                         <input matInput type="text" [(ngModel)]="banco.tipo"
-                            [disabled]="!editar" oninput="this.value = this.value.toUpperCase()"
+                            [disabled]="!edicion" oninput="this.value = this.value.toUpperCase()"
                             class="form-control-sm">
                     </mat-form-field>
                 </div>
@@ -69,7 +69,7 @@
                     <mat-form-field appearance="standard">
                         <mat-label>Nombre</mat-label>
                         <input matInput type="text" [(ngModel)]="banco.nombre"
-                            [disabled]="!editar" oninput="this.value = this.value.toUpperCase()"
+                            [disabled]="!edicion" oninput="this.value = this.value.toUpperCase()"
                             class="form-control-sm">
                     </mat-form-field>
                 </div>
@@ -77,17 +77,17 @@
                     <mat-form-field appearance="standard">
                         <mat-label>Abreviatura</mat-label>
                         <input matInput type="text" [(ngModel)]="banco.abreviatura"
-                            [disabled]="!editar" oninput="this.value = this.value.toUpperCase()"
+                            [disabled]="!edicion" oninput="this.value = this.value.toUpperCase()"
                             class="form-control-sm">
                     </mat-form-field>
                 </div>
                 <div class="col-2">
                     <mat-form-field appearance="standard">
                         <mat-label>Estado</mat-label>
-                        <mat-select [(ngModel)]="banco.estado" [disabled]="!editar"
+                        <mat-select [(ngModel)]="banco.estado" [disabled]="!edicion"
                             class="form-control-sm">
-                            <mat-option [value]="{{activo}}">{{activo}}</mat-option>
-                            <mat-option [value]="{{activo}}">{{inactivo}}</mat-option>
+                            <mat-option [value]="activo">{{activo}}</mat-option>
+                            <mat-option [value]="inactivo">{{inactivo}}</mat-option>
                         </mat-select>
                     </mat-form-field>
                 </div>
@@ -113,7 +113,7 @@
                 <input matInput (keyup)="filtro($event)" placeholder="Ej. MU"
                     #inputFiltro>
                 <button mat-button *ngIf="inputFiltro.value" matSuffix mat-icon-button
-                    (click)="borrar()">
+                    (click)="borrarFiltro()">
                     <mat-icon>close</mat-icon>
                 </button>
             </mat-form-field>

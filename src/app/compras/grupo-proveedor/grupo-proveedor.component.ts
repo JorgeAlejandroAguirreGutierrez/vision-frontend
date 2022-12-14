@@ -54,7 +54,7 @@ export class GrupoProveedorComponent implements OnInit {
 
   ngOnInit() {
     this.sesion=validarSesion(this.sesionService, this.router);
-    this.consultarGrupoProveedor();
+    this.consultar();
   }
   
   @HostListener('window:keypress', ['$event'])
@@ -111,7 +111,31 @@ export class GrupoProveedorComponent implements OnInit {
     });
   }
 
-  consultarGrupoProveedor() {
+  activar(event) {
+    if (event != null)
+      event.preventDefault();
+    this.grupoProveedorService.activar(this.grupoProveedor).subscribe({
+      next: res => {
+        Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
+        this.consultar();
+      },
+      error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+    });
+  }
+
+  inactivar(event) {
+    if (event != null)
+      event.preventDefault();
+    this.grupoProveedorService.inactivar(this.grupoProveedor).subscribe({
+      next: res => {
+        Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
+        this.consultar();
+      },
+      error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+    });
+  }
+
+  consultar() {
     this.grupoProveedorService.consultar().subscribe({
       next: res => {
         this.grupoProveedors = res.resultado as GrupoProveedor[]
