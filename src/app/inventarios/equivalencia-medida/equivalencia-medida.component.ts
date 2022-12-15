@@ -38,8 +38,8 @@ export class EquivalenciaMedidaComponent implements OnInit {
     { nombreColumna: 'medidaFin', cabecera: 'Medida Equiv', celda: (row: EquivalenciaMedida) => `${row.medidaEqui.descripcion}`},
     { nombreColumna: 'estado', cabecera: 'Estado', celda: (row: EquivalenciaMedida) => `${row.estado ? row.estado : ''}`}
   ];
-  
-  columnas: string[]  = this.columnas.map(titulo => titulo.nombreColumna);
+
+  cabecera: string[]  = this.columnas.map(titulo => titulo.nombreColumna);
   dataSource: MatTableDataSource<EquivalenciaMedida>;
   clickedRows = new Set<EquivalenciaMedida>();
 
