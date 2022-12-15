@@ -17,21 +17,20 @@ import { MatSort } from '@angular/material/sort';
 })
 export class TipoPagoComponent implements OnInit {
 
-  abrirPanelNuevoTipoPago = true;
-  abrirPanelAdminTipoPago = false;
+  abrirPanelNuevo = true;
+  abrirPanelAdmin = false;
 
   sesion: Sesion=null;
   tipoPago= new TipoPago();
   tiposPagos: TipoPago[];
 
-  columnasTipoPago: any[] = [
-    { nombreColumna: 'id', cabecera: 'ID', celda: (row: TipoPago) => `${row.id}` },
+  columnas: any[] = [
     { nombreColumna: 'codigo', cabecera: 'Código', celda: (row: TipoPago) => `${row.codigo}` },
     { nombreColumna: 'descripcion', cabecera: 'Descripcion', celda: (row: TipoPago) => `${row.descripcion}` },
     { nombreColumna: 'abreviatura', cabecera: 'Abreviatura', celda: (row: TipoPago) => `${row.abreviatura}` },
   ];
-  cabeceraTipoPago: string[] = this.columnasTipoPago.map(titulo => titulo.nombreColumna);
-  dataSourceTipoPago: MatTableDataSource<TipoPago>;
+  cabecera: string[] = this.columnas.map(titulo => titulo.nombreColumna);
+  dataSource: MatTableDataSource<TipoPago>;
   clickedRows = new Set<TipoPago>();
   
   @ViewChild(MatPaginator) paginator: MatPaginator;
@@ -113,9 +112,9 @@ export class TipoPagoComponent implements OnInit {
     this.tipoPagoService.consultar().subscribe(
       res => {
         this.tiposPagos = res.resultado as TipoPago[]
-        this.dataSourceTipoPago = new MatTableDataSource(this.tiposPagos);
-        this.dataSourceTipoPago.paginator = this.paginator;
-        this.dataSourceTipoPago.sort = this.sort;
+        this.dataSource = new MatTableDataSource(this.tiposPagos);
+        this.dataSource.paginator = this.paginator;
+        this.dataSource.sort = this.sort;
       },
       err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     );
@@ -132,11 +131,11 @@ export class TipoPagoComponent implements OnInit {
     }
   }
 
-  filtroTipoPago(event: Event) {
+  filtro(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
-    this.dataSourceTipoPago.filter = filterValue.trim().toUpperCase();
-    if (this.dataSourceTipoPago.paginator) {
-      this.dataSourceTipoPago.paginator.firstPage();
+    this.dataSource.filter = filterValue.trim().toUpperCase();
+    if (this.dataSource.paginator) {
+      this.dataSource.paginator.firstPage();
     }
   }
 

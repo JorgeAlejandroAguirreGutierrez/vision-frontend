@@ -18,21 +18,20 @@ import { MatSort } from '@angular/material/sort';
 })
 export class GeneroComponent implements OnInit {
 
-  abrirPanelNuevoGenero = true;
-  abrirPanelAdminGenero = false;
+  abrirPanelNuevo = true;
+  abrirPanelAdmin = false;
 
   sesion: Sesion=null;
   genero= new Genero();
   generos: Genero[];
 
-  columnasGenero: any[] = [
-    { nombreColumna: 'id', cabecera: 'ID', celda: (row: Genero) => `${row.id}` },
+  columnas: any[] = [
     { nombreColumna: 'codigo', cabecera: 'Código', celda: (row: Genero) => `${row.codigo}` },
     { nombreColumna: 'descripcion', cabecera: 'Descripcion', celda: (row: Genero) => `${row.descripcion}` },
     { nombreColumna: 'abreviatura', cabecera: 'Abreviatura', celda: (row: Genero) => `${row.abreviatura}` },
   ];
-  cabeceraGenero: string[] = this.columnasGenero.map(titulo => titulo.nombreColumna);
-  dataSourceGenero: MatTableDataSource<Genero>;
+  cabecera: string[] = this.columnas.map(titulo => titulo.nombreColumna);
+  dataSource: MatTableDataSource<Genero>;
   clickedRows = new Set<Genero>();
   
   @ViewChild(MatPaginator) paginator: MatPaginator;
@@ -114,9 +113,9 @@ export class GeneroComponent implements OnInit {
     this.generoService.consultar().subscribe(
       res => {
         this.generos = res.resultado as Genero[]
-        this.dataSourceGenero = new MatTableDataSource(this.generos);
-        this.dataSourceGenero.paginator = this.paginator;
-        this.dataSourceGenero.sort = this.sort;
+        this.dataSource = new MatTableDataSource(this.generos);
+        this.dataSource.paginator = this.paginator;
+        this.dataSource.sort = this.sort;
       },
       err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     );
@@ -133,11 +132,11 @@ export class GeneroComponent implements OnInit {
     }
   }
 
-  filtroGenero(event: Event) {
+  filtro(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
-    this.dataSourceGenero.filter = filterValue.trim().toUpperCase();
-    if (this.dataSourceGenero.paginator) {
-      this.dataSourceGenero.paginator.firstPage();
+    this.dataSource.filter = filterValue.trim().toUpperCase();
+    if (this.dataSource.paginator) {
+      this.dataSource.paginator.firstPage();
     }
   }
 }

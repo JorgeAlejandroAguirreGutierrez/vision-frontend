@@ -17,21 +17,20 @@ import { MatTableDataSource } from '@angular/material/table';
 })
 export class ImpuestoComponent implements OnInit {
 
-  abrirPanelNuevoImpuesto = true;
-  abrirPanelAdminImpuesto = false;
+  abrirPanelNuevo = true;
+  abrirPanelAdmin = false;
 
   sesion: Sesion=null;
-  impuesto= new Impuesto();
+  impuesto = new Impuesto();
   impuestos: Impuesto[];
 
-  columnasImpuesto: any[] = [
-    { nombreColumna: 'id', cabecera: 'ID', celda: (row: Impuesto) => `${row.id}` },
+  columnas: any[] = [
     { nombreColumna: 'codigo', cabecera: 'Código', celda: (row: Impuesto) => `${row.codigo}` },
     { nombreColumna: 'codigoNorma', cabecera: 'Codigo Norma', celda: (row: Impuesto) => `${row.codigoNorma}` },
     { nombreColumna: 'porcentaje', cabecera: 'Porcentaje', celda: (row: Impuesto) => `${row.porcentaje}` },
   ];
-  cabeceraImpuesto: string[] = this.columnasImpuesto.map(titulo => titulo.nombreColumna);
-  dataSourceImpuesto: MatTableDataSource<Impuesto>;
+  cabecera: string[] = this.columnas.map(titulo => titulo.nombreColumna);
+  dataSource: MatTableDataSource<Impuesto>;
   clickedRows = new Set<Impuesto>();
   
   @ViewChild(MatPaginator) paginator: MatPaginator;
@@ -113,9 +112,9 @@ export class ImpuestoComponent implements OnInit {
     this.impuestoService.consultar().subscribe(
       res => {
         this.impuestos = res.resultado as Impuesto[]
-        this.dataSourceImpuesto = new MatTableDataSource(this.impuestos);
-        this.dataSourceImpuesto.paginator = this.paginator;
-        this.dataSourceImpuesto.sort = this.sort;
+        this.dataSource = new MatTableDataSource(this.impuestos);
+        this.dataSource.paginator = this.paginator;
+        this.dataSource.sort = this.sort;
       },
       err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     );
@@ -134,9 +133,9 @@ export class ImpuestoComponent implements OnInit {
 
   filtroImpuesto(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
-    this.dataSourceImpuesto.filter = filterValue.trim().toUpperCase();
-    if (this.dataSourceImpuesto.paginator) {
-      this.dataSourceImpuesto.paginator.firstPage();
+    this.dataSource.filter = filterValue.trim().toUpperCase();
+    if (this.dataSource.paginator) {
+      this.dataSource.paginator.firstPage();
     }
   }
 

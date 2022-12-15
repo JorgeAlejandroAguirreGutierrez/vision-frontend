@@ -25,30 +25,29 @@ export class SegmentoComponent implements OnInit {
   activo: string = valores.activo;
   inactivo: string = valores.inactivo;
 
-  abrirPanelNuevoSegmento: boolean = true;
-  abrirPanelAdminSegmento: boolean = true;
-  editarSegmento: boolean = true;
+  abrirPanelNuevo: boolean = true;
+  abrirPanelAdmin: boolean = true;
+  edicion: boolean = true;
 
   sesion: Sesion = null;
   segmento: Segmento = new Segmento();
   segmentos: Segmento[];
 
-  columnasSegmento: any[] = [
-    { nombreColumna: 'id', cabecera: 'ID', celda: (row: Segmento) => `${row.id}` },
+  columnas: any[] = [
     { nombreColumna: 'codigo', cabecera: 'Código', celda: (row: Segmento) => `${row.codigo}` },
     { nombreColumna: 'descripcion', cabecera: 'Descripción', celda: (row: Segmento) => `${row.descripcion}` },
     { nombreColumna: 'margen_ganancia', cabecera: 'Margen Ganancia %', celda: (row: Segmento) => `${row.margenGanancia} %` },
     { nombreColumna: 'estado', cabecera: 'Estado', celda: (row: Segmento) => `${row.estado}` }
   ];
-  cabeceraSegmento: string[] = this.columnasSegmento.map(titulo => titulo.nombreColumna);
-  dataSourceSegmento: MatTableDataSource<Segmento>;
-  observableDSSegmento: BehaviorSubject<MatTableDataSource<Segmento>> = new BehaviorSubject<MatTableDataSource<Segmento>>(null);
+  cabecera: string[] = this.columnas.map(titulo => titulo.nombreColumna);
+  dataSource: MatTableDataSource<Segmento>;
+  observable: BehaviorSubject<MatTableDataSource<Segmento>> = new BehaviorSubject<MatTableDataSource<Segmento>>(null);
   clickedRows = new Set<Segmento>();
 
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
-  @ViewChild("inputFiltroSegmento") inputFiltroSegmento: ElementRef;
+  @ViewChild("inputFiltro") inputFiltro: ElementRef;
 
   constructor(private renderer: Renderer2, private segmentoService: SegmentoService,
     private sesionService: SesionService, private router: Router) { }
@@ -68,9 +67,9 @@ export class SegmentoComponent implements OnInit {
 
   limpiar() {
     this.segmento = new Segmento();
-    this.editarSegmento = true;
+    this.edicion = true;
     this.clickedRows.clear();
-    this.borrarFiltroSegmento();
+    this.borrarFiltro();
   }
 
   nuevo(event) {
@@ -87,7 +86,7 @@ export class SegmentoComponent implements OnInit {
         this.segmento = res.resultado as Segmento;
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
         this.segmentos.push(this.segmento);
-        this.llenarTablaSegmento(this.segmentos);
+        this.llenarTabla(this.segmentos);
       },
       error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     });
@@ -96,7 +95,7 @@ export class SegmentoComponent implements OnInit {
   editar(event) {
     if (event != null)
       event.preventDefault();
-    this.editarSegmento = true;
+    this.edicion = true;
   }
 
   actualizar(event) {
@@ -140,18 +139,18 @@ export class SegmentoComponent implements OnInit {
     this.segmentoService.consultar().subscribe({
       next: res => {
         this.segmentos = res.resultado as Segmento[]
-        this.llenarTablaSegmento(this.segmentos);
+        this.llenarTabla(this.segmentos);
       },
       error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     });
   }
 
-  llenarTablaSegmento(segmentos: Segmento[]) {
+  llenarTabla(segmentos: Segmento[]) {
     this.ordenarAsc(segmentos, 'id');
-    this.dataSourceSegmento = new MatTableDataSource(segmentos);
-    this.dataSourceSegmento.paginator = this.paginator;
-    this.dataSourceSegmento.sort = this.sort;
-    this.observableDSSegmento.next(this.dataSourceSegmento);
+    this.dataSource = new MatTableDataSource(segmentos);
+    this.dataSource.paginator = this.paginator;
+    this.dataSource.sort = this.sort;
+    this.observable.next(this.dataSource);
   }
 
   seleccion(segmento: Segmento) {
@@ -159,22 +158,22 @@ export class SegmentoComponent implements OnInit {
       this.clickedRows.clear();
       this.clickedRows.add(segmento);
       this.segmento = segmento;
-      this.editarSegmento = false;
+      this.edicion = false;
     } else {
       this.limpiar();
     }
   }
 
-  filtroSegmento(event: Event) {
+  filtro(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
-    this.dataSourceSegmento.filter = filterValue.trim().toUpperCase();
-    if (this.dataSourceSegmento.paginator) {
-      this.dataSourceSegmento.paginator.firstPage();
+    this.dataSource.filter = filterValue.trim().toUpperCase();
+    if (this.dataSource.paginator) {
+      this.dataSource.paginator.firstPage();
     }
   }
-  borrarFiltroSegmento() {
-    this.renderer.setProperty(this.inputFiltroSegmento.nativeElement, 'value', '');
-    this.dataSourceSegmento.filter = '';
+  borrarFiltro() {
+    this.renderer.setProperty(this.inputFiltro.nativeElement, 'value', '');
+    this.dataSource.filter = '';
   }
 
   ordenarAsc(arrayJson: any, pKey: any) {

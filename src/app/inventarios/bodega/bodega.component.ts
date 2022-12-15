@@ -18,31 +18,29 @@ import { Router } from '@angular/router';
 })
 export class BodegaComponent implements OnInit {
 
-  abrirPanelNuevoBodega = true;
-  abrirPanelAdminBodega = false;
+  abrirPanelNuevo = true;
+  abrirPanelAdmin = false;
 
   sesion: Sesion=null;
-  bodega= new Bodega();
-  bodegas: Bodega[];
+  bodega = new Bodega();
+  bodegas : Bodega[];
   
-  columnasBodega: any[] = [
-    { nombreColumna: 'id', cabecera: 'ID', celda: (row: Bodega) => `${row.id}` },
+  columnas: any[] = [
     { nombreColumna: 'codigo', cabecera: 'Código', celda: (row: Bodega) => `${row.codigo}` },
     { nombreColumna: 'nombre', cabecera: 'Nombre', celda: (row: Bodega) => `${row.nombre}` },
     { nombreColumna: 'estado', cabecera: 'Estado', celda: (row: Bodega) => `${row.estado}` }
   ];
-  cabeceraBodega: string[] = this.columnasBodega.map(titulo => titulo.nombreColumna);
-  dataSourceBodega: MatTableDataSource<Bodega>;
+  cabecera: string[] = this.columnas.map(titulo => titulo.nombreColumna);
+  dataSource: MatTableDataSource<Bodega>;
   clickedRows = new Set<Bodega>();
   
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
-  constructor(private bodegaService: BodegaService,
-    private sesionService: SesionService,private router: Router) { }
+  constructor(private bodegaService: BodegaService, private sesionService: SesionService,private router: Router) { }
 
   ngOnInit() {
-    this.sesion=validarSesion(this.sesionService, this.router);
+    this.sesion = validarSesion(this.sesionService, this.router);
     this.consultar();
   }
   
@@ -66,7 +64,7 @@ export class BodegaComponent implements OnInit {
     this.bodegaService.crear(this.bodega).subscribe(
       res => {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
-        this.bodega=res.resultado as Bodega;
+        this.bodega = res.resultado as Bodega;
         this.consultar();
       },
       err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
@@ -114,9 +112,9 @@ export class BodegaComponent implements OnInit {
     this.bodegaService.consultar().subscribe(
       res => {
         this.bodegas = res.resultado as Bodega[]
-        this.dataSourceBodega = new MatTableDataSource(this.bodegas);
-        this.dataSourceBodega.paginator = this.paginator;
-        this.dataSourceBodega.sort = this.sort;
+        this.dataSource = new MatTableDataSource(this.bodegas);
+        this.dataSource.paginator = this.paginator;
+        this.dataSource.sort = this.sort;
       },
       err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     );
@@ -133,11 +131,11 @@ export class BodegaComponent implements OnInit {
     }
   }
 
-  filtroBodega(event: Event) {
+  filtro(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
-    this.dataSourceBodega.filter = filterValue.trim().toUpperCase();
-    if (this.dataSourceBodega.paginator) {
-      this.dataSourceBodega.paginator.firstPage();
+    this.dataSource.filter = filterValue.trim().toUpperCase();
+    if (this.dataSource.paginator) {
+      this.dataSource.paginator.firstPage();
     }
   }
 

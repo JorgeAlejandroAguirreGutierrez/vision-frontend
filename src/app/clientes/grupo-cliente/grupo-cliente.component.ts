@@ -27,29 +27,28 @@ export class GrupoClienteComponent implements OnInit {
   activo: string = valores.activo;
   inactivo: string = valores.inactivo;
 
-  abrirPanelNuevoGrupoCliente: boolean = true;
-  abrirPanelAdminGrupoCliente: boolean = true;
-  editarGrupoCliente: boolean = true;
+  abrirPanelNuevo: boolean = true;
+  abrirPanelAdmin: boolean = true;
+  edicion: boolean = true;
 
   sesion: Sesion=null;
   grupoCliente= new GrupoCliente();
   grupoClientes: GrupoCliente[];
 
-  columnasGrupoCliente: any[] = [
-    { nombreColumna: 'id', cabecera: 'ID', celda: (row: GrupoCliente) => `${row.id}` },
+  columnas: any[] = [
     { nombreColumna: 'codigo', cabecera: 'Código', celda: (row: GrupoCliente) => `${row.codigo}` },
     { nombreColumna: 'descripcion', cabecera: 'Descripción', celda: (row: GrupoCliente) => `${row.descripcion}` },
     { nombreColumna: 'abreviatura', cabecera: 'Abreviatura', celda: (row: GrupoCliente) => `${row.abreviatura}` },
     { nombreColumna: 'estado', cabecera: 'Estado', celda: (row: GrupoCliente) => `${row.estado}` }
   ];
-  cabeceraGrupoCliente: string[] = this.columnasGrupoCliente.map(titulo => titulo.nombreColumna);
-  dataSourceGrupoCliente: MatTableDataSource<GrupoCliente>;
-  observableDSGrupoCliente: BehaviorSubject<MatTableDataSource<GrupoCliente>> = new BehaviorSubject<MatTableDataSource<GrupoCliente>>(null);
+  cabecera: string[] = this.columnas.map(titulo => titulo.nombreColumna);
+  dataSource: MatTableDataSource<GrupoCliente>;
+  observable: BehaviorSubject<MatTableDataSource<GrupoCliente>> = new BehaviorSubject<MatTableDataSource<GrupoCliente>>(null);
   clickedRows = new Set<GrupoCliente>(); 
   
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
-  @ViewChild("inputFiltroGrupoCliente") inputFiltroGrupoCliente: ElementRef;
+  @ViewChild("inputFiltro") inputFiltro: ElementRef;
 
   constructor(public dialog: MatDialog, private renderer: Renderer2, private grupoClienteService: GrupoClienteService,
     private sesionService: SesionService,private router: Router) { }
@@ -69,9 +68,9 @@ export class GrupoClienteComponent implements OnInit {
 
   limpiar() {
     this.grupoCliente = new GrupoCliente();
-    this.editarGrupoCliente = true;
+    this.edicion = true;
     this.clickedRows.clear();
-    this.borrarFiltroGrupoCliente();
+    this.borrarFiltro();
   }
 
   nuevo(event) {
@@ -88,7 +87,7 @@ export class GrupoClienteComponent implements OnInit {
         this.grupoCliente = res.resultado as GrupoCliente;
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
         this.grupoClientes.push(this.grupoCliente);
-        this.llenarTablaGrupoCliente(this.grupoClientes);
+        this.llenarTabla(this.grupoClientes);
       },
       error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     });
@@ -97,7 +96,7 @@ export class GrupoClienteComponent implements OnInit {
   editar(event) {
     if (event != null)
       event.preventDefault();
-    this.editarGrupoCliente = true;
+    this.edicion = true;
   }
 
   actualizar(event) {
@@ -141,18 +140,18 @@ export class GrupoClienteComponent implements OnInit {
     this.grupoClienteService.consultar().subscribe({
       next: res => {
         this.grupoClientes = res.resultado as GrupoCliente[]
-        this.llenarTablaGrupoCliente(this.grupoClientes);
+        this.llenarTabla(this.grupoClientes);
       },
       error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     });
   }
 
-  llenarTablaGrupoCliente(grupoClientes: GrupoCliente[]) {
+  llenarTabla(grupoClientes: GrupoCliente[]) {
     this.ordenarAsc(grupoClientes, 'id');
-    this.dataSourceGrupoCliente = new MatTableDataSource(grupoClientes);
-    this.dataSourceGrupoCliente.paginator = this.paginator;
-    this.dataSourceGrupoCliente.sort = this.sort;
-    this.observableDSGrupoCliente.next(this.dataSourceGrupoCliente);
+    this.dataSource = new MatTableDataSource(grupoClientes);
+    this.dataSource.paginator = this.paginator;
+    this.dataSource.sort = this.sort;
+    this.observable.next(this.dataSource);
   }
 
   seleccion(grupoCliente: GrupoCliente) {
@@ -160,22 +159,23 @@ export class GrupoClienteComponent implements OnInit {
       this.clickedRows.clear();
       this.clickedRows.add(grupoCliente);
       this.grupoCliente = grupoCliente;
-      this.editarGrupoCliente = false;
+      this.edicion = false;
     } else {
       this.limpiar();
     }
   }
 
-  filtroGrupoCliente(event: Event) {
+  filtro(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
-    this.dataSourceGrupoCliente.filter = filterValue.trim().toUpperCase();
-    if (this.dataSourceGrupoCliente.paginator) {
-      this.dataSourceGrupoCliente.paginator.firstPage();
+    this.dataSource.filter = filterValue.trim().toUpperCase();
+    if (this.dataSource.paginator) {
+      this.dataSource.paginator.firstPage();
     }
   }
-  borrarFiltroGrupoCliente() {
-    this.renderer.setProperty(this.inputFiltroGrupoCliente.nativeElement, 'value', '');
-    this.dataSourceGrupoCliente.filter = '';
+  
+  borrarFiltro() {
+    this.renderer.setProperty(this.inputFiltro.nativeElement, 'value', '');
+    this.dataSource.filter = '';
   }
 
   ordenarAsc(arrayJson: any, pKey: any) {

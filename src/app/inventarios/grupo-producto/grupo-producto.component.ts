@@ -44,10 +44,10 @@ export class GrupoProductoComponent implements OnInit {
   clave: string = "";
   //estado: string = "ACTIVO";
 
-  abrirPanelNuevoGrupo: boolean = true;
-  abrirPanelAdminGrupo: boolean = false;
+  abrirPanelNuevo: boolean = true;
+  abrirPanelAdmin: boolean = false;
   deshabilitarPresentacion: boolean = false;
-  editarGrupoProducto: boolean = true;
+  edicion: boolean = true;
   formularioValidado: boolean = false;
 
   sesion: Sesion;
@@ -85,8 +85,8 @@ export class GrupoProductoComponent implements OnInit {
   filtroPresentaciones: Observable<string[]> = new Observable<string[]>();
 
   //cabeceraGrupoProducto: string[] = ['id', 'grupo', 'subgrupo', 'seccion', 'linea', 'sublinea', 'presentacion'];
-  dataSourceGrupoProducto: MatTableDataSource<GrupoProducto>;
-  observableDSGrupoProducto: BehaviorSubject<MatTableDataSource<GrupoProducto>> = new BehaviorSubject<MatTableDataSource<GrupoProducto>>(null);
+  dataSource: MatTableDataSource<GrupoProducto>;
+  observable: BehaviorSubject<MatTableDataSource<GrupoProducto>> = new BehaviorSubject<MatTableDataSource<GrupoProducto>>(null);
   clickedRows = new Set<GrupoProducto>();
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
@@ -107,7 +107,6 @@ export class GrupoProductoComponent implements OnInit {
 
   async ngOnInit() {
     this.sesion=validarSesion(this.sesionService, this.router);
-    this.construirGrupoProducto();
     this.categoriaProductoService.consultar().subscribe({
       next: res => {
         this.categoriasProductos = res.resultado as CategoriaProducto[];
@@ -218,7 +217,7 @@ export class GrupoProductoComponent implements OnInit {
   editar() {
     this.habilitarControles();
     this.validarCategoria();
-    this.editarGrupoProducto = true;
+    this.edicion = true;
   }
 
   actualizar(event: any) {
@@ -295,7 +294,7 @@ export class GrupoProductoComponent implements OnInit {
   }
 
   inhabilitarControles() {
-    this.editarGrupoProducto = false;
+    this.edicion = false;
     this.controlGrupo.disable();
     this.controlSubgrupo.disable();
     this.controlSeccion.disable();
@@ -319,20 +318,6 @@ export class GrupoProductoComponent implements OnInit {
       this.controlLinea.disable();
       this.controlSublinea.disable();
       this.deshabilitarPresentacion = true;
-    }
-  }
-
-  construirGrupoProducto() {
-    let presentacionProductoId = 0;
-    this.grupoProductoService.currentMessage.subscribe(message => presentacionProductoId = message);
-    if (presentacionProductoId != 0) {
-      this.grupoProductoService.obtener(presentacionProductoId).subscribe(
-        res => {
-          this.grupoProducto = res.resultado as GrupoProducto
-          this.grupoProductoService.enviar(0);
-        },
-        err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
-      );
     }
   }
 
@@ -365,7 +350,7 @@ export class GrupoProductoComponent implements OnInit {
         err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
       );
 
-      if (this.editarGrupoProducto) {
+      if (this.edicion) {
         if (this.controlGrupo.value != this.grupoProducto.grupo) {
           this.grupoProducto.grupo = this.controlGrupo.value.toUpperCase();
           this.borrarControles('grupo');
@@ -385,8 +370,6 @@ export class GrupoProductoComponent implements OnInit {
   }
   async seleccionarSubgrupo() {
     if (this.controlSubgrupo.value != null) {
-      //this.grupoProducto.subgrupo = this.controlSubgrupo.value.toUpperCase();
-
       await this.grupoProductoService.consultarSeccionesAsync(this.grupoProducto.grupo, this.controlSubgrupo.value.toUpperCase()).then(
         res => {
           this.secciones = res.resultado as string[];
@@ -394,7 +377,7 @@ export class GrupoProductoComponent implements OnInit {
         err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
       );
     }
-    if (this.controlSubgrupo.value != null && this.editarGrupoProducto) {
+    if (this.controlSubgrupo.value != null && this.edicion) {
       if (this.controlSubgrupo.value != this.grupoProducto.subgrupo) {
         this.grupoProducto.subgrupo = this.controlSubgrupo.value.toUpperCase();
         this.borrarControles('subgrupo');
@@ -425,7 +408,7 @@ export class GrupoProductoComponent implements OnInit {
         err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
       );
     }
-    if (this.controlSeccion.value != null && this.editarGrupoProducto) {
+    if (this.controlSeccion.value != null && this.edicion) {
       if (this.controlSeccion.value != this.grupoProducto.seccion) {
         this.grupoProducto.seccion = this.controlSeccion.value.toUpperCase();
         this.borrarControles('seccion');
@@ -463,7 +446,7 @@ export class GrupoProductoComponent implements OnInit {
         err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
       );
     }
-    if (this.controlLinea.value != null && this.editarGrupoProducto) {
+    if (this.controlLinea.value != null && this.edicion) {
       if (this.controlLinea.value != this.grupoProducto.linea) {
         this.grupoProducto.linea = this.controlLinea.value.toUpperCase();
         this.borrarControles('linea');
@@ -491,7 +474,7 @@ export class GrupoProductoComponent implements OnInit {
         err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
       );
     }
-    if (this.controlSublinea.value != null && this.editarGrupoProducto) {
+    if (this.controlSublinea.value != null && this.edicion) {
       if (this.controlSublinea.value != this.grupoProducto.sublinea) {
         this.grupoProducto.sublinea = this.controlSublinea.value.toUpperCase();
         this.borrarControles('sublinea');

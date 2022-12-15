@@ -25,31 +25,30 @@ export class CuentaContableComponent implements OnInit {
   activo: string = valores.activo;
   inactivo: string = valores.inactivo;
 
-  abrirPanelNuevoCuentaContable: boolean = true;
-  abrirPanelAdminCuentaContable: boolean = false;
-  editarCuentaContable: boolean = true;
+  abrirPanelNuevo: boolean = true;
+  abrirPanelAdmin: boolean = false;
+  edicion: boolean = true;
 
   sesion: Sesion = null;
   cuentaContable: CuentaContable = new CuentaContable();
   cuentasContables: CuentaContable[];
 
-  columnasCuentaContable: any[] = [
-    { nombreColumna: 'id', cabecera: 'ID', celda: (row: CuentaContable) => `${row.id}` },
+  columnas: any[] = [
     { nombreColumna: 'cuenta', cabecera: 'Cuenta', celda: (row: CuentaContable) => `${row.cuenta}` },
     { nombreColumna: 'descripcion', cabecera: 'Descripción', celda: (row: CuentaContable) => `${row.descripcion}` },
     { nombreColumna: 'clasificacion', cabecera: 'Clasificación', celda: (row: CuentaContable) => `${row.clasificacion}` },
     { nombreColumna: 'nivel', cabecera: 'Nivel', celda: (row: CuentaContable) => `${row.nivel}` },
     { nombreColumna: 'estado', cabecera: 'Estado', celda: (row: CuentaContable) => `${row.estado}` }
   ];
-  cabeceraCuentaContable: string[] = this.columnasCuentaContable.map(titulo => titulo.nombreColumna);
-  dataSourceCuentaContable: MatTableDataSource<CuentaContable>;
-  observableDSCuentaContable: BehaviorSubject<MatTableDataSource<CuentaContable>> = new BehaviorSubject<MatTableDataSource<CuentaContable>>(null);
+  cabecera: string[] = this.columnas.map(titulo => titulo.nombreColumna);
+  dataSource: MatTableDataSource<CuentaContable>;
+  observable: BehaviorSubject<MatTableDataSource<CuentaContable>> = new BehaviorSubject<MatTableDataSource<CuentaContable>>(null);
   clickedRows = new Set<CuentaContable>();
 
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
-  @ViewChild("inputFiltroCuentaContable") inputFiltroCuentaContable: ElementRef;
+  @ViewChild("inputFiltro") inputFiltro: ElementRef;
 
   constructor(private renderer: Renderer2, private cuentaContableService: CuentaContableService,
     private sesionService: SesionService, private router: Router) { }
@@ -69,9 +68,9 @@ export class CuentaContableComponent implements OnInit {
 
   limpiar() {
     this.cuentaContable = new CuentaContable();
-    this.editarCuentaContable = true;
+    this.edicion = true;
     this.clickedRows.clear();
-    this.borrarFiltroCuentaContable();
+    this.borrarFiltro();
   }
 
   nuevo(event) {
@@ -88,7 +87,7 @@ export class CuentaContableComponent implements OnInit {
         this.cuentaContable = res.resultado as CuentaContable;
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
         this.cuentasContables.push(this.cuentaContable);
-        this.llenarTablaCuentaContable(this.cuentasContables);
+        this.llenarTabla(this.cuentasContables);
       },
       error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     });
@@ -97,7 +96,7 @@ export class CuentaContableComponent implements OnInit {
   editar(event) {
     if (event != null)
       event.preventDefault();
-    this.editarCuentaContable = true;
+    this.edicion = true;
   }
 
   actualizar(event) {
@@ -141,18 +140,18 @@ export class CuentaContableComponent implements OnInit {
     this.cuentaContableService.consultar().subscribe({
       next: res => {
         this.cuentasContables = res.resultado as CuentaContable[]
-        this.llenarTablaCuentaContable(this.cuentasContables);
+        this.llenarTabla(this.cuentasContables);
       },
       error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     });
   }
 
-  llenarTablaCuentaContable(cuentasContables: CuentaContable[]) {
+  llenarTabla(cuentasContables: CuentaContable[]) {
     this.ordenarAsc(cuentasContables, 'id');
-    this.dataSourceCuentaContable = new MatTableDataSource(cuentasContables);
-    this.dataSourceCuentaContable.paginator = this.paginator;
-    this.dataSourceCuentaContable.sort = this.sort;
-    this.observableDSCuentaContable.next(this.dataSourceCuentaContable);
+    this.dataSource = new MatTableDataSource(cuentasContables);
+    this.dataSource.paginator = this.paginator;
+    this.dataSource.sort = this.sort;
+    this.observable.next(this.dataSource);
   }
 
   seleccion(cuentaContable: CuentaContable) {
@@ -160,22 +159,22 @@ export class CuentaContableComponent implements OnInit {
       this.clickedRows.clear();
       this.clickedRows.add(cuentaContable);
       this.cuentaContable = cuentaContable;
-      this.editarCuentaContable = false;
+      this.edicion = false;
     } else {
       this.limpiar();
     }
   }
 
-  filtroCuentaContable(event: Event) {
+  filtro(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
-    this.dataSourceCuentaContable.filter = filterValue.trim().toUpperCase();
-    if (this.dataSourceCuentaContable.paginator) {
-      this.dataSourceCuentaContable.paginator.firstPage();
+    this.dataSource.filter = filterValue.trim().toUpperCase();
+    if (this.dataSource.paginator) {
+      this.dataSource.paginator.firstPage();
     }
   }
-  borrarFiltroCuentaContable() {
-    this.renderer.setProperty(this.inputFiltroCuentaContable.nativeElement, 'value', '');
-    this.dataSourceCuentaContable.filter = '';
+  borrarFiltro() {
+    this.renderer.setProperty(this.inputFiltro.nativeElement, 'value', '');
+    this.dataSource.filter = '';
   }
 
   ordenarAsc(arrayJson: any, pKey: any) {

@@ -22,8 +22,8 @@ import { MatTableDataSource } from '@angular/material/table';
 
 export class EquivalenciaMedidaComponent implements OnInit {
 
-  abrirPanelNuevaEquivalencia = true;
-  abrirPanelAdminEquivalencia = false;
+  abrirPanelNuevo = true;
+  abrirPanelAdmin = false;
 
   sesion: Sesion;
   equivalenciaMedida= new EquivalenciaMedida();
@@ -32,15 +32,15 @@ export class EquivalenciaMedidaComponent implements OnInit {
   equivalenciaMedidaBuscar: EquivalenciaMedida=new EquivalenciaMedida();
 
   columnas: any[] = [
-    { nombreColumna: 'id', cabecera: 'ID', celda: (row: EquivalenciaMedida) => `${row.id}`},
     { nombreColumna: 'codigo', cabecera: 'Código', celda: (row: EquivalenciaMedida) => `${row.codigo}`},
     { nombreColumna: 'medidaIni', cabecera: 'Medida Ini', celda: (row: EquivalenciaMedida) => `${row.medidaIni.descripcion}`},
     { nombreColumna: 'equivalencia', cabecera: 'Valor Equiv', celda: (row: EquivalenciaMedida) => `${row.equivalencia}`},
     { nombreColumna: 'medidaFin', cabecera: 'Medida Equiv', celda: (row: EquivalenciaMedida) => `${row.medidaEqui.descripcion}`},
     { nombreColumna: 'estado', cabecera: 'Estado', celda: (row: EquivalenciaMedida) => `${row.estado ? row.estado : ''}`}
   ];
-  columnasEquivalenciaMedida: string[]  = this.columnas.map(titulo => titulo.nombreColumna);
-  dataSourceEquivalenciaMedida: MatTableDataSource<EquivalenciaMedida>;
+  
+  columnas: string[]  = this.columnas.map(titulo => titulo.nombreColumna);
+  dataSource: MatTableDataSource<EquivalenciaMedida>;
   clickedRows = new Set<EquivalenciaMedida>();
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
@@ -51,7 +51,6 @@ export class EquivalenciaMedidaComponent implements OnInit {
 
   ngOnInit() {
     this.sesion=validarSesion(this.sesionService, this.router);
-    this.construirEquivalenciaMedida();
     this.consultar();
   }
 
@@ -61,20 +60,6 @@ export class EquivalenciaMedidaComponent implements OnInit {
       this.crear(null);
     if (($event.shiftKey || $event.metaKey) && $event.key == 'N') //ASHIFT + N
       this.nuevo(null);
-  }
-
-  construirEquivalenciaMedida() {
-    let equivalenciaMedidaId=0;
-    this.equivalenciaMedidaService.currentMessage.subscribe(message => equivalenciaMedidaId = message);
-    if (equivalenciaMedidaId!= 0) {
-      this.equivalenciaMedidaService.obtener(equivalenciaMedidaId).subscribe(
-        res => {
-          Object.assign(this.equivalenciaMedida, res.resultado as EquivalenciaMedida);
-          this.equivalenciaMedidaService.enviar(0);
-        },
-        err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
-      );
-    }
   }
 
   nuevo(event: any) {
@@ -124,8 +109,8 @@ export class EquivalenciaMedidaComponent implements OnInit {
   actualizarLeer(event: any){
     if (event!=null)
       event.preventDefault();
-      this.abrirPanelNuevaEquivalencia = true;
-      this.abrirPanelAdminEquivalencia = false;
+      this.abrirPanelNuevo = true;
+      this.abrirPanelAdmin = false;
     if (this.equivalenciaMedidaActualizar.id != 0){
       this.equivalenciaMedida={... this.equivalenciaMedidaActualizar};
       this.equivalenciaMedidaActualizar=new EquivalenciaMedida();
@@ -140,7 +125,7 @@ export class EquivalenciaMedidaComponent implements OnInit {
     this.equivalenciaMedidaService.consultar().subscribe(
       res => {
         this.equivalenciasMedidas = res.resultado as EquivalenciaMedida[];
-        this.llenarDataSourceEquivalenciaMedida(this.equivalenciasMedidas);
+        this.llenarDataSource(this.equivalenciasMedidas);
       },
       err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     );
@@ -169,20 +154,20 @@ export class EquivalenciaMedidaComponent implements OnInit {
     }
   }
 
-  filtroEquivalenciaMedida(event: Event) {
+  filtro(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
-    this.dataSourceEquivalenciaMedida.filter = filterValue.trim().toUpperCase();
-    if (this.dataSourceEquivalenciaMedida.paginator) {
-      this.dataSourceEquivalenciaMedida.paginator.firstPage();
+    this.dataSource.filter = filterValue.trim().toUpperCase();
+    if (this.dataSource.paginator) {
+      this.dataSource.paginator.firstPage();
     }
   }
 
-  llenarDataSourceEquivalenciaMedida(equivalenciasMedidas : EquivalenciaMedida[]){
-    this.dataSourceEquivalenciaMedida = new MatTableDataSource(equivalenciasMedidas);
-    this.dataSourceEquivalenciaMedida.filterPredicate = (data: EquivalenciaMedida, filter: string): boolean =>
+  llenarDataSource(equivalenciasMedidas : EquivalenciaMedida[]){
+    this.dataSource = new MatTableDataSource(equivalenciasMedidas);
+    this.dataSource.filterPredicate = (data: EquivalenciaMedida, filter: string): boolean =>
       data.codigo.toUpperCase().includes(filter) || data.medidaIni.descripcion.toUpperCase().includes(filter) || data.medidaEqui.descripcion.toUpperCase().includes(filter);
-    this.dataSourceEquivalenciaMedida.paginator = this.paginator;
-    this.dataSourceEquivalenciaMedida.sort = this.sort;
+    this.dataSource.paginator = this.paginator;
+    this.dataSource.sort = this.sort;
   }
 
   cambiarBuscarCodigo(){

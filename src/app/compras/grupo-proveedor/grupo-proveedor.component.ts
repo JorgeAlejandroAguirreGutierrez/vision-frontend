@@ -25,29 +25,29 @@ export class GrupoProveedorComponent implements OnInit {
   activo: string = valores.activo;
   inactivo: string = valores.inactivo;
 
-  abrirPanelNuevoGrupoProveedor: boolean = true;
-  abrirPanelAdminGrupoProveedor: boolean = false;
-  editarGrupoProveedor: boolean = true;
+  abrirPanelNuevo: boolean = true;
+  abrirPanelAdmin: boolean = false;
+  edicion: boolean = true;
 
   sesion: Sesion=null;
   grupoProveedor= new GrupoProveedor();
-  grupoProveedors: GrupoProveedor[];
+  grupoProveedores: GrupoProveedor[];
 
-  columnasGrupoProveedor: any[] = [
+  columnas: any[] = [
     { nombreColumna: 'id', cabecera: 'ID', celda: (row: GrupoProveedor) => `${row.id}` },
     { nombreColumna: 'codigo', cabecera: 'Código', celda: (row: GrupoProveedor) => `${row.codigo}` },
     { nombreColumna: 'descripcion', cabecera: 'Descripción', celda: (row: GrupoProveedor) => `${row.descripcion}` },
     { nombreColumna: 'abreviatura', cabecera: 'Abreviatura', celda: (row: GrupoProveedor) => `${row.abreviatura}` },
     { nombreColumna: 'estado', cabecera: 'Estado', celda: (row: GrupoProveedor) => `${row.estado}` }
   ];
-  cabeceraGrupoProveedor: string[] = this.columnasGrupoProveedor.map(titulo => titulo.nombreColumna);
-  dataSourceGrupoProveedor: MatTableDataSource<GrupoProveedor>;
-  observableDSGrupoProveedor: BehaviorSubject<MatTableDataSource<GrupoProveedor>> = new BehaviorSubject<MatTableDataSource<GrupoProveedor>>(null);
+  cabecera: string[] = this.columnas.map(titulo => titulo.nombreColumna);
+  dataSource: MatTableDataSource<GrupoProveedor>;
+  observable: BehaviorSubject<MatTableDataSource<GrupoProveedor>> = new BehaviorSubject<MatTableDataSource<GrupoProveedor>>(null);
   clickedRows = new Set<GrupoProveedor>(); 
   
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
-  @ViewChild("inputFiltroGrupoProveedor") inputFiltroGrupoProveedor: ElementRef;
+  @ViewChild("inputFiltro") inputFiltro: ElementRef;
 
   constructor(private renderer: Renderer2, private grupoProveedorService: GrupoProveedorService,
     private sesionService: SesionService,private router: Router) { }
@@ -67,9 +67,9 @@ export class GrupoProveedorComponent implements OnInit {
 
   limpiar() {
     this.grupoProveedor = new GrupoProveedor();
-    this.editarGrupoProveedor = true;
+    this.edicion = true;
     this.clickedRows.clear();
-    this.borrarFiltroGrupoProveedor();
+    this.borrarFiltro();
   }
 
   nuevo(event) {
@@ -85,8 +85,8 @@ export class GrupoProveedorComponent implements OnInit {
       next: res => {
         this.grupoProveedor = res.resultado as GrupoProveedor;
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
-        this.grupoProveedors.push(this.grupoProveedor);
-        this.llenarTablaGrupoProveedor(this.grupoProveedors);
+        this.grupoProveedores.push(this.grupoProveedor);
+        this.llenarTabla(this.grupoProveedores);
       },
       error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     });
@@ -95,7 +95,7 @@ export class GrupoProveedorComponent implements OnInit {
   editar(event) {
     if (event != null)
       event.preventDefault();
-    this.editarGrupoProveedor = true;
+    this.edicion = true;
   }
 
   actualizar(event) {
@@ -138,19 +138,19 @@ export class GrupoProveedorComponent implements OnInit {
   consultar() {
     this.grupoProveedorService.consultar().subscribe({
       next: res => {
-        this.grupoProveedors = res.resultado as GrupoProveedor[]
-        this.llenarTablaGrupoProveedor(this.grupoProveedors);
+        this.grupoProveedores = res.resultado as GrupoProveedor[]
+        this.llenarTabla(this.grupoProveedores);
       },
       error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     });
   }
 
-  llenarTablaGrupoProveedor(grupoProveedors: GrupoProveedor[]) {
-    this.ordenarAsc(grupoProveedors, 'id');
-    this.dataSourceGrupoProveedor = new MatTableDataSource(grupoProveedors);
-    this.dataSourceGrupoProveedor.paginator = this.paginator;
-    this.dataSourceGrupoProveedor.sort = this.sort;
-    this.observableDSGrupoProveedor.next(this.dataSourceGrupoProveedor);
+  llenarTabla(grupoProveedores: GrupoProveedor[]) {
+    this.ordenarAsc(grupoProveedores, 'id');
+    this.dataSource = new MatTableDataSource(grupoProveedores);
+    this.dataSource.paginator = this.paginator;
+    this.dataSource.sort = this.sort;
+    this.observable.next(this.dataSource);
   }
 
   seleccion(grupoProveedor: GrupoProveedor) {
@@ -158,22 +158,22 @@ export class GrupoProveedorComponent implements OnInit {
       this.clickedRows.clear();
       this.clickedRows.add(grupoProveedor);
       this.grupoProveedor = grupoProveedor;
-      this.editarGrupoProveedor = false;
+      this.edicion = false;
     } else {
       this.limpiar();
     }
   }
 
-  filtroGrupoProveedor(event: Event) {
+  filtro(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
-    this.dataSourceGrupoProveedor.filter = filterValue.trim().toUpperCase();
-    if (this.dataSourceGrupoProveedor.paginator) {
-      this.dataSourceGrupoProveedor.paginator.firstPage();
+    this.dataSource.filter = filterValue.trim().toUpperCase();
+    if (this.dataSource.paginator) {
+      this.dataSource.paginator.firstPage();
     }
   }
-  borrarFiltroGrupoProveedor() {
-    this.renderer.setProperty(this.inputFiltroGrupoProveedor.nativeElement, 'value', '');
-    this.dataSourceGrupoProveedor.filter = '';
+  borrarFiltro() {
+    this.renderer.setProperty(this.inputFiltro.nativeElement, 'value', '');
+    this.dataSource.filter = '';
   }
 
   ordenarAsc(arrayJson: any, pKey: any) {

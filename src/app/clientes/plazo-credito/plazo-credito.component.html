@@ -6,12 +6,12 @@
             </a>
         </li>
         <ng-container *ngIf="plazoCredito.id!=0">
-            <li class="nav-item" *ngIf="!editarPlazoCredito">
+            <li class="nav-item" *ngIf="!edicion">
                 <a class="nav-link" title="Actualizar" role="button" (click)="editar($event)">
                     <mat-icon>edit</mat-icon>
                 </a>
             </li>
-            <li class="nav-item" *ngIf="editarPlazoCredito">
+            <li class="nav-item" *ngIf="edicion">
                 <a class="nav-link" title="Actualizar" role="button" (click)="actualizar($event)">
                     <mat-icon>update</mat-icon>
                 </a>
@@ -36,14 +36,14 @@
 </nav>
 <div class="contenedor">
     <mat-accordion class="headers-align">
-        <mat-expansion-panel (opened)="abrirPanelNuevoPlazoCredito = true"
-            (closed)="abrirPanelNuevoPlazoCredito = false" [expanded]="abrirPanelNuevoPlazoCredito">
+        <mat-expansion-panel (opened)="abrirPanelNuevo = true"
+            (closed)="abrirPanelNuevo = false" [expanded]="abrirPanelNuevo">
             <mat-expansion-panel-header>
                 <mat-panel-title>
                     <i><u>PLAZO DE CRÉDITO</u></i>
                 </mat-panel-title>
                 <mat-panel-description>
-                    {{abrirPanelNuevoPlazoCredito ? 'Ocultar crear plazo de crédito' : 'Crear nuevo plazo de crédito'}}
+                    {{abrirPanelNuevo ? 'Ocultar crear plazo de crédito' : 'Crear nuevo plazo de crédito'}}
                     <mat-icon>edit_calendar</mat-icon>
                 </mat-panel-description>
             </mat-expansion-panel-header>
@@ -59,21 +59,21 @@
                 <div class="col-5">
                     <mat-form-field appearance="standard">
                         <mat-label>Descripción</mat-label>
-                        <input matInput type="text" [(ngModel)]="plazoCredito.descripcion" [disabled]="!editarPlazoCredito"
+                        <input matInput type="text" [(ngModel)]="plazoCredito.descripcion" [disabled]="!edicion"
                             oninput="this.value = this.value.toUpperCase()" class="form-control-sm">
                     </mat-form-field>
                 </div>
                 <div class="col-2">
                     <mat-form-field appearance="standard">
                         <mat-label>Plazo</mat-label>
-                        <input matInput type="text" [(ngModel)]="plazoCredito.plazo" [disabled]="!editarPlazoCredito" 
+                        <input matInput type="text" [(ngModel)]="plazoCredito.plazo" [disabled]="!edicion" 
                             class="form-control-sm">
                     </mat-form-field>
                 </div>
                 <div class="col-2">
                     <mat-form-field appearance="standard">
                         <mat-label>Estado</mat-label>
-                        <mat-select [(ngModel)]="plazoCredito.estado" [disabled]="!editarPlazoCredito" 
+                        <mat-select [(ngModel)]="plazoCredito.estado" [disabled]="!edicion" 
                             class="form-control-sm">
                             <mat-option [value]="activo">{{activo}}</mat-option>
                             <mat-option [value]="inactivo">{{inactivo}}</mat-option>
@@ -84,36 +84,36 @@
         </mat-expansion-panel>
     </mat-accordion>
     <mat-accordion class="headers-align">
-        <mat-expansion-panel (opened)="abrirPanelAdminPlazoCredito = true"
-            (closed)="abrirPanelAdminPlazoCredito = false">
+        <mat-expansion-panel (opened)="abrirPanelAdmin = true"
+            (closed)="abrirPanelAdmin = false">
             <mat-expansion-panel-header>
                 <mat-panel-title>
                     <i><u>GESTIONAR PLAZOS DE CRÉDITO</u></i>
                 </mat-panel-title>
                 <mat-panel-description>
-                    {{abrirPanelAdminPlazoCredito ? 'Ocultar administrador de plazo de crédito' : 'Editar plazo de crédito existente'}}
+                    {{abrirPanelAdmin ? 'Ocultar administrador de plazo de crédito' : 'Editar plazo de crédito existente'}}
                     <mat-icon>playlist_add_check</mat-icon>
                 </mat-panel-description>
             </mat-expansion-panel-header>
             <hr>
             <mat-form-field appearance="standard">
                 <mat-label>Buscar plazo de crédito</mat-label>
-                <input matInput (keyup)="filtroPlazoCredito($event)" #inputFiltroPlazoCredito>
-                <button mat-button *ngIf="inputFiltroPlazoCredito.value" matSuffix mat-icon-button
-                    (click)="borrarFiltroPlazoCredito()">
+                <input matInput (keyup)="filtro($event)" #inputFiltro>
+                <button mat-button *ngIf="inputFiltro.value" matSuffix mat-icon-button
+                    (click)="borrarFiltro()">
                 <mat-icon>close</mat-icon>
             </button>
             </mat-form-field>
             <div class="mat-elevation-z8">
-                <table mat-table [dataSource]="observableDSPlazoCredito.value" matSort>
+                <table mat-table [dataSource]="observable.value" matSort>
                     <!-- Columnas Dinamicas -->
-                    <ng-container *ngFor="let columna of columnasPlazoCredito" [matColumnDef]="columna.nombreColumna">
+                    <ng-container *ngFor="let columna of columnas" [matColumnDef]="columna.nombreColumna">
                         <th mat-header-cell *matHeaderCellDef mat-sort-header> {{ columna.cabecera }} </th>
                         <td mat-cell *matCellDef="let row"> {{ columna.celda(row) }} </td>
                     </ng-container>
-                    <tr mat-header-row *matHeaderRowDef="cabeceraPlazoCredito"></tr>
+                    <tr mat-header-row *matHeaderRowDef="cabecera"></tr>
                     <tr mat-row (click)="seleccion(row)" [class.selected-row]="clickedRows.has(row)"
-                        *matRowDef="let row; columns: cabeceraPlazoCredito;"></tr>
+                        *matRowDef="let row; columns: cabecera;"></tr>
                     <!-- Row shown when there is no matching data. -->
                     <tr class="mat-row" *matNoDataRow>
                         <td class="mat-cell" colspan="6">No hay datos que coincidan con el segmento:

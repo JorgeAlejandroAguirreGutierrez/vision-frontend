@@ -11,7 +11,7 @@
                     <mat-icon>edit</mat-icon>
                 </a>
             </li>
-            <li class="nav-item" *ngIf="editarGrupoProveedor">
+            <li class="nav-item" *ngIf="edicion">
                 <a class="nav-link" title="Actualizar" role="button" (click)="actualizar($event)">
                     <mat-icon>update</mat-icon>
                 </a>
@@ -36,14 +36,14 @@
 </nav>
 <div class="contenedor">
     <mat-accordion class="headers-align">
-        <mat-expansion-panel (opened)="abrirPanelNuevoGrupoProveedor = true" (closed)="abrirPanelNuevoGrupoProveedor = false"
-            [expanded]="abrirPanelNuevoGrupoProveedor">
+        <mat-expansion-panel (opened)="abrirPanelNuevo = true" (closed)="abrirPanelNuevo = false"
+            [expanded]="abrirPanelNuevo">
             <mat-expansion-panel-header>
                 <mat-panel-title>
                     <i><u>GRUPO CLIENTE</u></i>
                 </mat-panel-title>
                 <mat-panel-description>
-                    {{abrirPanelNuevoGrupoProveedor ? 'Ocultar crear grupo de clientes' : 'Crear un nuevo grupo de clientes'}}
+                    {{abrirPanelNuevo ? 'Ocultar crear grupo de clientes' : 'Crear un nuevo grupo de clientes'}}
                     <mat-icon>group_add</mat-icon>
                 </mat-panel-description>
             </mat-expansion-panel-header>
@@ -59,28 +59,28 @@
                 <div class="col-4">
                     <mat-form-field appearance="standard">
                         <mat-label>Descripcion</mat-label>
-                        <input matInput type="text" [(ngModel)]="grupoProveedor.descripcion" [disabled]="!editarGrupoProveedor"
+                        <input matInput type="text" [(ngModel)]="grupoProveedor.descripcion" [disabled]="!edicion"
                             oninput="this.value = this.value.toUpperCase()" class="form-control-sm">
                     </mat-form-field>
                 </div>
                 <div class="col-1">
                     <mat-form-field appearance="standard">
                         <mat-label>Abreviatura</mat-label>
-                        <input matInput type="text" [(ngModel)]="grupoProveedor.abreviatura" [disabled]="!editarGrupoProveedor"
+                        <input matInput type="text" [(ngModel)]="grupoProveedor.abreviatura" [disabled]="!edicion"
                             oninput="this.value = this.value.toUpperCase()" class="form-control-sm">
                     </mat-form-field>
                 </div>
                 <div class="col-3">
                     <mat-form-field appearance="standard">
                         <mat-label>Cuenta Contable</mat-label>
-                        <input matInput type="text" [(ngModel)]="grupoProveedor.abreviatura" [disabled]="!editarGrupoProveedor"
+                        <input matInput type="text" [(ngModel)]="grupoProveedor.abreviatura" [disabled]="!edicion"
                             oninput="this.value = this.value.toUpperCase()" class="form-control-sm">
                     </mat-form-field>
                 </div>
                 <div class="col-2">
                     <mat-form-field appearance="standard">
                         <mat-label>Estado</mat-label>
-                        <mat-select [(ngModel)]="grupoProveedor.estado" [disabled]="!editarGrupoProveedor" class="form-control-sm">
+                        <mat-select [(ngModel)]="grupoProveedor.estado" [disabled]="!edicion" class="form-control-sm">
                             <mat-option [value]="activo">{{activo}}</mat-option>
                             <mat-option [value]="inactivo">{{inactivo}}</mat-option>
                         </mat-select>
@@ -90,39 +90,39 @@
         </mat-expansion-panel>
     </mat-accordion>    
     <mat-accordion class="headers-align">
-        <mat-expansion-panel (opened)="abrirPanelAdminGrupoProveedor = true" (closed)="abrirPanelAdminGrupoProveedor = false">
+        <mat-expansion-panel (opened)="abrirPanelAdmin = true" (closed)="abrirPanelAdmin = false">
             <mat-expansion-panel-header>
                 <mat-panel-title>
                     <i><u>GESTIONAR GRUPOS DE CLIENTES</u></i>
                 </mat-panel-title>
                 <mat-panel-description>
-                    {{abrirPanelAdminGrupoProveedor ? 'Ocultar administrador de grupos de clientes' : 'Editar grupos de clientes existentes'}}
+                    {{abrirPanelAdmin ? 'Ocultar administrador de grupos de clientes' : 'Editar grupos de clientes existentes'}}
                     <mat-icon>playlist_add_check</mat-icon>
                 </mat-panel-description>
             </mat-expansion-panel-header>
             <hr>
             <mat-form-field appearance="standard">
                 <mat-label>Buscar grupos de clientes</mat-label>
-                <input matInput (keyup)="filtroGrupoProveedor($event)" placeholder="Ej. EX" #inputFiltroGrupoProveedor>
-                <button mat-button *ngIf="inputFiltroGrupoProveedor.value" matSuffix mat-icon-button
+                <input matInput (keyup)="filtro($event)" placeholder="Ej. EX" #inputFiltroGrupoProveedor>
+                <button mat-button *ngIf="inputFiltro.value" matSuffix mat-icon-button
                     (click)="borrarFiltroGrupoProveedor()">
                 <mat-icon>close</mat-icon>
             </button>
             </mat-form-field>
             <div class="mat-elevation-z8">
-                <table mat-table [dataSource]="observableDSGrupoProveedor.value" matSort>
+                <table mat-table [dataSource]="observable.value" matSort>
                     <!-- Columnas Dinamicas -->
-                    <ng-container *ngFor="let columna of columnasGrupoProveedor" [matColumnDef]="columna.nombreColumna">
+                    <ng-container *ngFor="let columna of columnas" [matColumnDef]="columna.nombreColumna">
                         <th mat-header-cell *matHeaderCellDef mat-sort-header> {{ columna.cabecera }} </th>
                         <td mat-cell *matCellDef="let row"> {{ columna.celda(row) }} </td>
                     </ng-container>
-                    <tr mat-header-row *matHeaderRowDef="cabeceraGrupoProveedor"></tr>
+                    <tr mat-header-row *matHeaderRowDef="cabecera"></tr>
                     <tr mat-row (click)="seleccion(row)" [class.selected-row]="clickedRows.has(row)"
-                        *matRowDef="let row; columns: cabeceraGrupoProveedor;"></tr>
+                        *matRowDef="let row; columns: cabecera;"></tr>
                     <!-- Row shown when there is no matching data. -->
                     <tr class="mat-row" *matNoDataRow>
                         <td class="mat-cell" colspan="6">No hay datos que coincidan con el grupo de cliente: 
-                            "{{inputFiltroGrupoProveedor.value}}"
+                            "{{inputFiltro.value}}"
                         </td>
                     </tr>
                 </table>

@@ -6,12 +6,12 @@
             </a>
         </li>
         <ng-container *ngIf="movimientoContable.id!=0">
-            <li class="nav-item" *ngIf="!editarMovimientoContable">
-                <a class="nav-link" title="Actualizar" role="button" (click)="editar()">
+            <li class="nav-item" *ngIf="!edicion">
+                <a class="nav-link" title="Editar" role="button" (click)="editar()">
                     <mat-icon>edit</mat-icon>
                 </a>
             </li>
-            <li class="nav-item" *ngIf="editarMovimientoContable">
+            <li class="nav-item" *ngIf="edicion">
                 <a class="nav-link" title="Actualizar" role="button" (click)="actualizar($event)">
                     <mat-icon>update</mat-icon>
                 </a>
@@ -36,14 +36,14 @@
 </nav>
 <div class="contenedor">
     <mat-accordion class="headers-align">
-        <mat-expansion-panel (opened)="abrirPanelNuevoMovimientoContable = true"
-            (closed)="abrirPanelNuevoMovimientoContable = false" [expanded]="abrirPanelNuevoMovimientoContable">
+        <mat-expansion-panel (opened)="abrirPanelNuevo = true"
+            (closed)="abrirPanelNuevo = false" [expanded]="abrirPanelNuevo">
             <mat-expansion-panel-header>
                 <mat-panel-title>
                     <i><u>MOVIMIENTO CONTABLE</u></i>
                 </mat-panel-title>
                 <mat-panel-description>
-                    {{abrirPanelNuevoMovimientoContable ? 'Ocultar crear movimiento contable' : 'Crear nuevo movimiento contable'}}
+                    {{abrirPanelNuevo ? 'Ocultar crear movimiento contable' : 'Crear nuevo movimiento contable'}}
                     <mat-icon>playlist_add</mat-icon>
                 </mat-panel-description>
             </mat-expansion-panel-header>
@@ -59,21 +59,21 @@
                 <div class="col-3">
                     <mat-form-field appearance="standard">
                         <mat-label>Inventario</mat-label>
-                        <input matInput type="text" [(ngModel)]="movimientoContable.inventario.cuenta" [disabled]="!editarMovimientoContable"
+                        <input matInput type="text" [(ngModel)]="movimientoContable.inventario.cuenta" [disabled]="!edicion"
                             oninput="this.value = this.value.toUpperCase()" class="form-control-sm">
                     </mat-form-field>
                 </div>
                 <div class="col-3">
                     <mat-form-field appearance="standard">
                         <mat-label>Costo Venta</mat-label>
-                        <input matInput type="text" [(ngModel)]="movimientoContable.costoVenta.cuenta" [disabled]="!editarMovimientoContable"
+                        <input matInput type="text" [(ngModel)]="movimientoContable.costoVenta.cuenta" [disabled]="!edicion"
                             oninput="this.value = this.value.toUpperCase()" class="form-control-sm">
                     </mat-form-field>
                 </div>
                 <div class="col-3">
                     <mat-form-field appearance="standard">
                         <mat-label>Devolucion Compra</mat-label>
-                        <input matInput type="text" [(ngModel)]="movimientoContable.devolucionCompra.cuenta" [disabled]="!editarMovimientoContable"
+                        <input matInput type="text" [(ngModel)]="movimientoContable.devolucionCompra.cuenta" [disabled]="!edicion"
                             oninput="this.value = this.value.toUpperCase()" class="form-control-sm">
                     </mat-form-field>
                 </div>
@@ -82,28 +82,28 @@
                 <div class="col-3">
                     <mat-form-field appearance="standard">
                         <mat-label>Venta</mat-label>
-                        <input matInput type="text" [(ngModel)]="movimientoContable.venta.cuenta" [disabled]="!editarMovimientoContable"
+                        <input matInput type="text" [(ngModel)]="movimientoContable.venta.cuenta" [disabled]="!edicion"
                         oninput="this.value = this.value.toUpperCase()" class="form-control-sm">
                     </mat-form-field>
                 </div>
                 <div class="col-3">
                     <mat-form-field appearance="standard">
                         <mat-label>Devolucion Venta</mat-label>
-                        <input matInput type="text" [(ngModel)]="movimientoContable.devolucionVenta.cuenta" [disabled]="!editarMovimientoContable"
+                        <input matInput type="text" [(ngModel)]="movimientoContable.devolucionVenta.cuenta" [disabled]="!edicion"
                             oninput="this.value = this.value.toUpperCase()" class="form-control-sm">
                     </mat-form-field>
                 </div>
                 <div class="col-3">
                     <mat-form-field appearance="standard">
                         <mat-label>Descuento Venta</mat-label>
-                        <input matInput type="text" [(ngModel)]="movimientoContable.descuentoVenta.cuenta" [disabled]="!editarMovimientoContable"
+                        <input matInput type="text" [(ngModel)]="movimientoContable.descuentoVenta.cuenta" [disabled]="!edicion"
                             oninput="this.value = this.value.toUpperCase()" class="form-control-sm">
                     </mat-form-field>
                 </div>
                 <div class="col-3">
                     <mat-form-field appearance="standard">
                         <mat-label>Devolucion Costo Venta</mat-label>
-                        <input matInput type="text" [(ngModel)]="movimientoContable.devolucionCostoVenta.cuenta" [disabled]="!editarMovimientoContable"
+                        <input matInput type="text" [(ngModel)]="movimientoContable.devolucionCostoVenta.cuenta" [disabled]="!edicion"
                             oninput="this.value = this.value.toUpperCase()" class="form-control-sm">
                     </mat-form-field>
                 </div>
@@ -112,7 +112,7 @@
                 <div class="col-12">
                     <mat-form-field appearance="standard">
                         <mat-label>Afectacion Contable</mat-label>
-                        <mat-select type="text" [(ngModel)]="movimientoContable.afectacionContable.id" [disabled]="!editarMovimientoContable" class="form-control-sm">
+                        <mat-select type="text" [(ngModel)]="movimientoContable.afectacionContable.id" [disabled]="!edicion" class="form-control-sm">
                             <mat-option *ngFor="let afectacionContable of afectacionesContables" [value]="afectacionContable.id">
                                 {{afectacionContable.descripcion}}
                             </mat-option>
@@ -123,14 +123,14 @@
         </mat-expansion-panel>
     </mat-accordion>
     <mat-accordion class="headers-align">
-        <mat-expansion-panel (opened)="abrirPanelAdminMovimientoContable = true"
-            (closed)="abrirPanelAdminMovimientoContable = false">
+        <mat-expansion-panel (opened)="abrirPanelAdmin = true"
+            (closed)="abrirPanelAdmin = false">
             <mat-expansion-panel-header>
                 <mat-panel-title>
                     <i><u>GESTIONAR MOVIMIENTOS CONTABLES</u></i>
                 </mat-panel-title>
                 <mat-panel-description>
-                    {{abrirPanelAdminMovimientoContable ? 'Ocultar administrador de movimiento contable' : 'Editar movimiento contable existente'}}
+                    {{abrirPanelAdmin ? 'Ocultar administrador de movimiento contable' : 'Editar movimiento contable existente'}}
                     <mat-icon>playlist_add_check</mat-icon>
                 </mat-panel-description>
             </mat-expansion-panel-header>

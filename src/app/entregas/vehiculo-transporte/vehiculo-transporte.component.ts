@@ -17,15 +17,14 @@ import { MatSort } from '@angular/material/sort';
 })
 export class VehiculoTransporteComponent implements OnInit {
 
-  abrirPanelNuevoVehiculoTransporte = true;
-  abrirPanelAdminVehiculoTransporte = false;
+  abrirPanelNuevo = true;
+  abrirPanelAdmin = false;
 
   sesion: Sesion=null;
   vehiculoTransporte= new VehiculoTransporte();
   VehiculosTransportes: VehiculoTransporte[];
 
-  columnasVehiculoTransporte: any[] = [
-    { nombreColumna: 'id', cabecera: 'ID', celda: (row: VehiculoTransporte) => `${row.id}` },
+  columnas: any[] = [
     { nombreColumna: 'codigo', cabecera: 'Código', celda: (row: VehiculoTransporte) => `${row.codigo}` },
     { nombreColumna: 'modelo', cabecera: 'Modelo', celda: (row: VehiculoTransporte) => `${row.modelo}` },
     { nombreColumna: 'placa', cabecera: 'Placa', celda: (row: VehiculoTransporte) => `${row.placa}` },
@@ -36,8 +35,8 @@ export class VehiculoTransporteComponent implements OnInit {
     { nombreColumna: 'fabricacion', cabecera: 'Fabricacion', celda: (row: VehiculoTransporte) => `${row.fabricacion}` },
     { nombreColumna: 'numero', cabecera: 'Numero', celda: (row: VehiculoTransporte) => `${row.numero}` }
   ];
-  cabeceraVehiculoTransporte: string[] = this.columnasVehiculoTransporte.map(titulo => titulo.nombreColumna);
-  dataSourceVehiculoTransporte: MatTableDataSource<VehiculoTransporte>;
+  cabecera: string[] = this.columnas.map(titulo => titulo.nombreColumna);
+  dataSource: MatTableDataSource<VehiculoTransporte>;
   clickedRows = new Set<VehiculoTransporte>();
   
   @ViewChild(MatPaginator) paginator: MatPaginator;
@@ -119,9 +118,9 @@ export class VehiculoTransporteComponent implements OnInit {
     this.vehiculoTransporteService.consultar().subscribe(
       res => {
         this.VehiculosTransportes = res.resultado as VehiculoTransporte[]
-        this.dataSourceVehiculoTransporte = new MatTableDataSource(this.VehiculosTransportes);
-        this.dataSourceVehiculoTransporte.paginator = this.paginator;
-        this.dataSourceVehiculoTransporte.sort = this.sort;
+        this.dataSource = new MatTableDataSource(this.VehiculosTransportes);
+        this.dataSource.paginator = this.paginator;
+        this.dataSource.sort = this.sort;
       },
       err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     );
@@ -138,11 +137,11 @@ export class VehiculoTransporteComponent implements OnInit {
     }
   }
 
-  filtroVehiculoTransporte(event: Event) {
+  filtro(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
-    this.dataSourceVehiculoTransporte.filter = filterValue.trim().toUpperCase();
-    if (this.dataSourceVehiculoTransporte.paginator) {
-      this.dataSourceVehiculoTransporte.paginator.firstPage();
+    this.dataSource.filter = filterValue.trim().toUpperCase();
+    if (this.dataSource.paginator) {
+      this.dataSource.paginator.firstPage();
     }
   }
 

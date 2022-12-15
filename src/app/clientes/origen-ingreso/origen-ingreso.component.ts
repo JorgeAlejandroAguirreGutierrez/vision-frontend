@@ -25,29 +25,28 @@ export class OrigenIngresoComponent implements OnInit {
   activo: string = valores.activo;
   inactivo: string = valores.inactivo;
 
-  abrirPanelNuevoOrigenIngreso: boolean = true;
-  abrirPanelAdminOrigenIngreso: boolean = false;
-  editarOrigenIngreso: boolean = true;
+  abrirPanelNuevo: boolean = true;
+  abrirPanelAdmin: boolean = false;
+  edicion: boolean = true;
 
   sesion: Sesion=null;
   origenIngreso= new OrigenIngreso();
   origenIngresos: OrigenIngreso[];
   
-  columnasOrigenIngreso: any[] = [
-    { nombreColumna: 'id', cabecera: 'ID', celda: (row: OrigenIngreso) => `${row.id}` },
+  columnas: any[] = [
     { nombreColumna: 'codigo', cabecera: 'Código', celda: (row: OrigenIngreso) => `${row.codigo}` },
     { nombreColumna: 'descripcion', cabecera: 'Descripción', celda: (row: OrigenIngreso) => `${row.descripcion}` },
     { nombreColumna: 'abreviatura', cabecera: 'Abreviatura', celda: (row: OrigenIngreso) => `${row.abreviatura}` },
     { nombreColumna: 'estado', cabecera: 'Estado', celda: (row: OrigenIngreso) => `${row.estado}` }
   ];
-  cabeceraOrigenIngreso: string[] = this.columnasOrigenIngreso.map(titulo => titulo.nombreColumna);
-  dataSourceOrigenIngreso: MatTableDataSource<OrigenIngreso>;
-  observableDSOrigenIngreso: BehaviorSubject<MatTableDataSource<OrigenIngreso>> = new BehaviorSubject<MatTableDataSource<OrigenIngreso>>(null);
+  cabecera: string[] = this.columnas.map(titulo => titulo.nombreColumna);
+  dataSource: MatTableDataSource<OrigenIngreso>;
+  observable: BehaviorSubject<MatTableDataSource<OrigenIngreso>> = new BehaviorSubject<MatTableDataSource<OrigenIngreso>>(null);
   clickedRows = new Set<OrigenIngreso>();
   
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
-  @ViewChild("inputFiltroOrigenIngreso") inputFiltroOrigenIngreso: ElementRef;
+  @ViewChild("inputFiltro") inputFiltro: ElementRef;
 
   constructor(private renderer: Renderer2, private origenIngresoService: OrigenIngresoService,
     private sesionService: SesionService,private router: Router) { }
@@ -67,9 +66,9 @@ export class OrigenIngresoComponent implements OnInit {
 
   limpiar() {
     this.origenIngreso = new OrigenIngreso();
-    this.editarOrigenIngreso = true;
+    this.edicion = true;
     this.clickedRows.clear();
-    this.borrarFiltroOrigenIngreso();
+    this.borrarFiltro();
   }
 
   nuevo(event) {
@@ -86,7 +85,7 @@ export class OrigenIngresoComponent implements OnInit {
         this.origenIngreso = res.resultado as OrigenIngreso;
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
         this.origenIngresos.push(this.origenIngreso);
-        this.llenarTablaOrigenIngreso(this.origenIngresos);
+        this.llenarTabla(this.origenIngresos);
       },
       error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     });
@@ -95,7 +94,7 @@ export class OrigenIngresoComponent implements OnInit {
   editar(event) {
     if (event != null)
       event.preventDefault();
-    this.editarOrigenIngreso = true;
+    this.edicion = true;
   }
 
   actualizar(event) {
@@ -139,18 +138,18 @@ export class OrigenIngresoComponent implements OnInit {
     this.origenIngresoService.consultar().subscribe({
       next: res => {
         this.origenIngresos = res.resultado as OrigenIngreso[]
-        this.llenarTablaOrigenIngreso(this.origenIngresos);
+        this.llenarTabla(this.origenIngresos);
       },
       error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     });
   }
 
-  llenarTablaOrigenIngreso(origenIngresos: OrigenIngreso[]) {
+  llenarTabla(origenIngresos: OrigenIngreso[]) {
     this.ordenarAsc(origenIngresos, 'id');
-    this.dataSourceOrigenIngreso = new MatTableDataSource(origenIngresos);
-    this.dataSourceOrigenIngreso.paginator = this.paginator;
-    this.dataSourceOrigenIngreso.sort = this.sort;
-    this.observableDSOrigenIngreso.next(this.dataSourceOrigenIngreso);
+    this.dataSource = new MatTableDataSource(origenIngresos);
+    this.dataSource.paginator = this.paginator;
+    this.dataSource.sort = this.sort;
+    this.observable.next(this.dataSource);
   }
 
   seleccion(origenIngreso: OrigenIngreso) {
@@ -158,22 +157,22 @@ export class OrigenIngresoComponent implements OnInit {
       this.clickedRows.clear();
       this.clickedRows.add(origenIngreso);
       this.origenIngreso = origenIngreso;
-      this.editarOrigenIngreso = false;
+      this.edicion = false;
     } else {
       this.limpiar();
     }
   }
 
-  filtroOrigenIngreso(event: Event) {
+  filtro(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
-    this.dataSourceOrigenIngreso.filter = filterValue.trim().toUpperCase();
-    if (this.dataSourceOrigenIngreso.paginator) {
-      this.dataSourceOrigenIngreso.paginator.firstPage();
+    this.dataSource.filter = filterValue.trim().toUpperCase();
+    if (this.dataSource.paginator) {
+      this.dataSource.paginator.firstPage();
     }
   }
-  borrarFiltroOrigenIngreso() {
-    this.renderer.setProperty(this.inputFiltroOrigenIngreso.nativeElement, 'value', '');
-    this.dataSourceOrigenIngreso.filter = '';
+  borrarFiltro() {
+    this.renderer.setProperty(this.inputFiltro.nativeElement, 'value', '');
+    this.dataSource.filter = '';
   }
 
   ordenarAsc(arrayJson: any, pKey: any) {

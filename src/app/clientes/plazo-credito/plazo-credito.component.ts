@@ -24,29 +24,28 @@ export class PlazoCreditoComponent implements OnInit {
   activo: string = valores.activo;
   inactivo: string = valores.inactivo;
 
-  abrirPanelNuevoPlazoCredito: boolean = true;
-  abrirPanelAdminPlazoCredito: boolean = false;
-  editarPlazoCredito: boolean = true;
+  abrirPanelNuevo: boolean = true;
+  abrirPanelAdmin: boolean = false;
+  edicion: boolean = true;
 
   sesion: Sesion=null;
   plazoCredito= new PlazoCredito();
   plazoCreditos: PlazoCredito[];
 
-  columnasPlazoCredito: any[] = [
-    { nombreColumna: 'id', cabecera: 'ID', celda: (row: PlazoCredito) => `${row.id}` },
+  columnas: any[] = [
     { nombreColumna: 'codigo', cabecera: 'Código', celda: (row: PlazoCredito) => `${row.codigo}` },
     { nombreColumna: 'descripcion', cabecera: 'Descripción', celda: (row: PlazoCredito) => `${row.descripcion}` },
     { nombreColumna: 'plazo', cabecera: 'Plazo', celda: (row: PlazoCredito) => `${row.plazo}` },
     { nombreColumna: 'estado', cabecera: 'Estado', celda: (row: PlazoCredito) => `${row.estado}` }
   ];
-  cabeceraPlazoCredito: string[] = this.columnasPlazoCredito.map(titulo => titulo.nombreColumna);
-  dataSourcePlazoCredito: MatTableDataSource<PlazoCredito>;
-  observableDSPlazoCredito: BehaviorSubject<MatTableDataSource<PlazoCredito>> = new BehaviorSubject<MatTableDataSource<PlazoCredito>>(null);
+  cabecera: string[] = this.columnas.map(titulo => titulo.nombreColumna);
+  dataSource: MatTableDataSource<PlazoCredito>;
+  observable: BehaviorSubject<MatTableDataSource<PlazoCredito>> = new BehaviorSubject<MatTableDataSource<PlazoCredito>>(null);
   clickedRows = new Set<PlazoCredito>();
   
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
-  @ViewChild("inputFiltroPlazoCredito") inputFiltroPlazoCredito: ElementRef;
+  @ViewChild("inputFiltro") inputFiltro: ElementRef;
 
   constructor(private renderer: Renderer2, private plazoCreditoService: PlazoCreditoService,
         private sesionService: SesionService,private router: Router) { }
@@ -66,9 +65,9 @@ export class PlazoCreditoComponent implements OnInit {
 
   limpiar() {
     this.plazoCredito = new PlazoCredito();
-    this.editarPlazoCredito = true;
+    this.edicion = true;
     this.clickedRows.clear();
-    this.borrarFiltroPlazoCredito();
+    this.borrarFiltro();
   }
 
   nuevo(event) {
@@ -85,7 +84,7 @@ export class PlazoCreditoComponent implements OnInit {
         this.plazoCredito = res.resultado as PlazoCredito;
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
         this.plazoCreditos.push(this.plazoCredito);
-        this.llenarTablaPlazoCredito(this.plazoCreditos);
+        this.llenarTabla(this.plazoCreditos);
       },
       error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     });
@@ -94,7 +93,7 @@ export class PlazoCreditoComponent implements OnInit {
   editar(event) {
     if (event != null)
       event.preventDefault();
-    this.editarPlazoCredito = true;
+    this.edicion = true;
   }
 
   actualizar(event) {
@@ -138,18 +137,18 @@ export class PlazoCreditoComponent implements OnInit {
     this.plazoCreditoService.consultar().subscribe({
       next: res => {
         this.plazoCreditos = res.resultado as PlazoCredito[]
-        this.llenarTablaPlazoCredito(this.plazoCreditos);
+        this.llenarTabla(this.plazoCreditos);
       },
       error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     });
   }
 
-  llenarTablaPlazoCredito(plazoCreditos: PlazoCredito[]) {
-    this.ordenarAsc(plazoCreditos, 'id');
-    this.dataSourcePlazoCredito = new MatTableDataSource(plazoCreditos);
-    this.dataSourcePlazoCredito.paginator = this.paginator;
-    this.dataSourcePlazoCredito.sort = this.sort;
-    this.observableDSPlazoCredito.next(this.dataSourcePlazoCredito);
+  llenarTabla(plazoCreditos: PlazoCredito[]) {
+    this.ordenarAsc(plazoCreditos, 'codigo');
+    this.dataSource = new MatTableDataSource(plazoCreditos);
+    this.dataSource.paginator = this.paginator;
+    this.dataSource.sort = this.sort;
+    this.observable.next(this.dataSource);
   }
 
   seleccion(plazoCredito: PlazoCredito) {
@@ -157,22 +156,22 @@ export class PlazoCreditoComponent implements OnInit {
       this.clickedRows.clear();
       this.clickedRows.add(plazoCredito);
       this.plazoCredito = plazoCredito;
-      this.editarPlazoCredito = false;
+      this.edicion = false;
     } else {
       this.limpiar();
     }
   }
 
-  filtroPlazoCredito(event: Event) {
+  filtro(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
-    this.dataSourcePlazoCredito.filter = filterValue.trim().toUpperCase();
-    if (this.dataSourcePlazoCredito.paginator) {
-      this.dataSourcePlazoCredito.paginator.firstPage();
+    this.dataSource.filter = filterValue.trim().toUpperCase();
+    if (this.dataSource.paginator) {
+      this.dataSource.paginator.firstPage();
     }
   }
-  borrarFiltroPlazoCredito() {
-    this.renderer.setProperty(this.inputFiltroPlazoCredito.nativeElement, 'value', '');
-    this.dataSourcePlazoCredito.filter = '';
+  borrarFiltro() {
+    this.renderer.setProperty(this.inputFiltro.nativeElement, 'value', '');
+    this.dataSource.filter = '';
   }
 
   ordenarAsc(arrayJson: any, pKey: any) {

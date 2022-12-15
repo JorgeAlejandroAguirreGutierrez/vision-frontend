@@ -6,12 +6,12 @@
             </a>
         </li>
         <ng-container *ngIf="cuentaContable.id!=0">
-            <li class="nav-item" *ngIf="!editarCuentaContable">
-                <a class="nav-link" title="Actualizar" role="button" (click)="editar($event)">
+            <li class="nav-item" *ngIf="!edicion">
+                <a class="nav-link" title="Editar" role="button" (click)="editar($event)">
                     <mat-icon>edit</mat-icon>
                 </a>
             </li>
-            <li class="nav-item" *ngIf="editarCuentaContable">
+            <li class="nav-item" *ngIf="edicion">
                 <a class="nav-link" title="Actualizar" role="button" (click)="actualizar($event)">
                     <mat-icon>update</mat-icon>
                 </a>
@@ -36,14 +36,14 @@
 </nav>
 <div class="contenedor">
     <mat-accordion class="headers-align">
-        <mat-expansion-panel (opened)="abrirPanelNuevoCuentaContable = true" (closed)="abrirPanelNuevoCuentaContable = false"
-            [expanded]="abrirPanelNuevoCuentaContable">
+        <mat-expansion-panel (opened)="abrirPanelNuevo = true" (closed)="abrirPanelNuevo = false"
+            [expanded]="abrirPanelNuevo">
             <mat-expansion-panel-header>
                 <mat-panel-title>
                     <i><u>CUENTA CONTABLE</u></i>
                 </mat-panel-title>
                 <mat-panel-description>
-                    {{abrirPanelNuevoCuentaContable ? 'Ocultar crear cuenta contable' : 'Crear nuevo cuenta contable'}}
+                    {{abrirPanelNuevo ? 'Ocultar crear cuenta contable' : 'Crear nuevo cuenta contable'}}
                     <mat-icon>playlist_add</mat-icon>
                 </mat-panel-description>
             </mat-expansion-panel-header>
@@ -59,28 +59,28 @@
                 <div class="col-4">
                     <mat-form-field appearance="standard">
                         <mat-label>Descripción</mat-label>
-                        <input matInput type="text" [(ngModel)]="cuentaContable.descripcion" [disabled]="!editarCuentaContable"
+                        <input matInput type="text" [(ngModel)]="cuentaContable.descripcion" [disabled]="!edicion"
                             oninput="this.value = this.value.toUpperCase()" class="form-control-sm">
                     </mat-form-field>
                 </div>
                 <div class="col-2">
                     <mat-form-field appearance="standard">
                         <mat-label>Clasificación</mat-label>
-                        <input matInput type="text" [(ngModel)]="cuentaContable.clasificacion" [disabled]="!editarCuentaContable"
+                        <input matInput type="text" [(ngModel)]="cuentaContable.clasificacion" [disabled]="!edicion"
                             class="form-control-sm">
                     </mat-form-field>
                 </div>
                 <div class="col-2">
                     <mat-form-field appearance="standard">
                         <mat-label>Nivel</mat-label>
-                        <input matInput type="text" [(ngModel)]="cuentaContable.nivel" [disabled]="!editarCuentaContable"
+                        <input matInput type="text" [(ngModel)]="cuentaContable.nivel" [disabled]="!edicion"
                             class="form-control-sm">
                     </mat-form-field>
                 </div>
                 <div class="col-2">
                     <mat-form-field appearance="standard">
                         <mat-label>Estado</mat-label>
-                        <mat-select [(ngModel)]="cuentaContable.estado" [disabled]="!editarCuentaContable" class="form-control-sm">
+                        <mat-select [(ngModel)]="cuentaContable.estado" [disabled]="!edicion" class="form-control-sm">
                             <mat-option [value]="activo">{{activo}}</mat-option>
                             <mat-option [value]="inactivo">{{inactivo}}</mat-option>
                         </mat-select>
@@ -90,14 +90,14 @@
         </mat-expansion-panel>
     </mat-accordion>
     <mat-accordion class="headers-align">
-        <mat-expansion-panel (opened)="abrirPanelAdminCuentaContable = true" (closed)="abrirPanelAdminCuentaContable = false"
-            [expanded]="abrirPanelAdminCuentaContable">
+        <mat-expansion-panel (opened)="abrirPanelAdmin = true" (closed)="abrirPanelAdmin = false"
+            [expanded]="abrirPanelAdmin">
             <mat-expansion-panel-header>
                 <mat-panel-title>
                     <i><u>PLAN DE CUENTAS</u></i>
                 </mat-panel-title>
                 <mat-panel-description>
-                    {{abrirPanelAdminCuentaContable ? 'Ocultar administrador de cuenta contable' : 'Editar cueta contable existente'}}
+                    {{abrirPanelAdmin ? 'Ocultar administrador de cuenta contable' : 'Editar cueta contable existente'}}
                     <mat-icon>playlist_add_check</mat-icon>
                 </mat-panel-description>
             </mat-expansion-panel-header>

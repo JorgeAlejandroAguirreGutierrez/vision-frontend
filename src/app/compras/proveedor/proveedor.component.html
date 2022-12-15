@@ -29,14 +29,14 @@
 </nav>
 <div class="contenedor">
     <mat-accordion class="headers-align">
-        <mat-expansion-panel (opened)="abrirPanelAdminProveedor = false" (closed)="abrirPanelAdminProveedor = true"
-            [expanded]="!abrirPanelAdminProveedor">
+        <mat-expansion-panel (opened)="abrirPanelAdmin = false" (closed)="abrirPanelAdmin = true"
+            [expanded]="!abrirPanelAdmin">
             <mat-expansion-panel-header>
                 <mat-panel-title>
                     <i><u>PROVEEDOR</u></i>
                 </mat-panel-title>
                 <mat-panel-description>
-                    {{abrirPanelAdminProveedor ? 'Ocultar crear proveedor' : 'Crear nuevo proveedor'}}
+                    {{abrirPanelAdmin ? 'Ocultar crear proveedor' : 'Crear nuevo proveedor'}}
                     <mat-icon>assignment_ind</mat-icon>
                 </mat-panel-description>
             </mat-expansion-panel-header>
@@ -125,9 +125,6 @@
                 <div class="col-1">
                     <mat-checkbox [(ngModel)]="proveedor.especial" class="form-control-sm" color="primary">
                         Relac.</mat-checkbox>
-                </div>
-                <div class="col-2">
-                    <mat-slide-toggle [checked]="estadoProveedor">Estado</mat-slide-toggle>
                 </div>
             </div>
         </mat-expansion-panel>
@@ -504,33 +501,33 @@
                 </div>
             </div>
         </mat-expansion-panel>
-        <mat-expansion-panel (opened)="abrirPanelAdminProveedor = true" (closed)="abrirPanelAdminProveedor = false"
-            [expanded]="abrirPanelAdminProveedor">
+        <mat-expansion-panel (opened)="abrirPanelAdmin = true" (closed)="abrirPanelAdmin = false"
+            [expanded]="abrirPanelAdmin">
             <mat-expansion-panel-header>
                 <mat-panel-title>
                     <i><u>GESTIONAR PROVEEDORES</u></i>
                 </mat-panel-title>
                 <mat-panel-description>
-                    {{abrirPanelAdminProveedor ? 'Ocultar administrador de proveedores' : 'Editar proveedor existente'}}
+                    {{abrirPanelAdmin ? 'Ocultar administrador de proveedores' : 'Editar proveedor existente'}}
                     <mat-icon>playlist_add_check</mat-icon>
                 </mat-panel-description>
             </mat-expansion-panel-header>
             <hr>
             <mat-form-field appearance="standard">
                 <mat-label>Buscar proveedores</mat-label>
-                <input matInput (keyup)="filtroProveedor($event)" placeholder="Ej. BA" #input>
+                <input matInput (keyup)="filtro($event)" placeholder="Ej. BA" #input>
             </mat-form-field>
             <div class="mat-elevation-z8">
-                <table mat-table [dataSource]="dataSourceProveedor" matSort>
+                <table mat-table [dataSource]="dataSource" matSort>
                     <!-- Columnas Dinamicas -->
-                    <ng-container *ngFor="let columna of columnasProveedor" [matColumnDef]="columna.nombreColumna">
+                    <ng-container *ngFor="let columna of columnas" [matColumnDef]="columna.nombreColumna">
                         <th mat-header-cell *matHeaderCellDef mat-sort-header> {{ columna.cabecera }} </th>
                         <td mat-cell *matCellDef="let row"> {{ columna.celda(row) }} </td>
                     </ng-container>
 
-                    <tr mat-header-row *matHeaderRowDef="cabeceraProveedor"></tr>
+                    <tr mat-header-row *matHeaderRowDef="cabecera"></tr>
                     <tr mat-row (click)="seleccion(row)" [class.selected-row]="clickedRows.has(row)"
-                        *matRowDef="let row; columns: cabeceraProveedor;"></tr>
+                        *matRowDef="let row; columns: cabecera;"></tr>
 
                     <!-- Row shown when there is no matching data. -->
                     <tr class="mat-row" *matNoDataRow>
@@ -549,22 +546,3 @@
         </mat-expansion-panel>
     </mat-accordion>
 </div>
-<ng-template #modal_importar let-modal>
-    <div class="modal-header ">
-        <h5 class="modal-title ">Importar un Proveedor</h5>
-        <button type="button " class="close " aria-label="Close " (click)="modal.dismiss( 'Cross click') ">
-            <span aria-hidden="true ">&times;</span>
-        </button>
-    </div>
-    <div class="modal-body ">
-        <div class="form-row ">
-            <div class="form-group col-12 ">
-                <label>Cargar Archivo</label>
-                <!--input type="file" id="file" (change)="importar($event.target.files)"-->
-            </div>
-        </div>
-    </div>
-    <div class="modal-footer ">
-        <button type="button " class="btn btn-outline-dark " (click)="modal.close('close') ">Cerrar</button>
-    </div>
-</ng-template>

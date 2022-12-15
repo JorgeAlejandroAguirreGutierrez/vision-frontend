@@ -1,6 +1,6 @@
 <nav class="navbar-light nav-fijo">
     <ul class="navbar-nav">
-        <ng-container *ngIf="abrirPanelNuevaEquivalencia">
+        <ng-container *ngIf="abrirPanelNuevo">
             <li class="nav-item" *ngIf="equivalenciaMedida.id==0">
                 <a class="nav-link" title="Guardar" role="button" (click)="crear($event)">
                     <mat-icon>save</mat-icon>
@@ -22,7 +22,7 @@
                 </a>
             </li>
         </ng-container>
-        <ng-container *ngIf="abrirPanelAdminEquivalencia">
+        <ng-container *ngIf="abrirPanelAdmin">
             <li class="nav-item">
                 <a class="nav-link" title="Buscar" role="button" (click)="buscar($event)">
                     <mat-icon>search</mat-icon>
@@ -38,14 +38,14 @@
 </nav>
 <div class="contenedor">
     <mat-accordion class="headers-align">
-        <mat-expansion-panel (opened)="abrirPanelNuevaEquivalencia = true"
-            (closed)="abrirPanelNuevaEquivalencia = false" [expanded]="abrirPanelNuevaEquivalencia">
+        <mat-expansion-panel (opened)="abrirPanelNuevo = true"
+            (closed)="abrirPanelNuevo = false" [expanded]="abrirPanelNuevo">
             <mat-expansion-panel-header>
                 <mat-panel-title>
                     <i><u>EQUIVALENCIA DE MEDIDA</u></i>
                 </mat-panel-title>
                 <mat-panel-description>
-                    {{abrirPanelNuevaEquivalencia ? 'Ocultar crear equivalencia de medida para el kardex' : 'Crear nueva
+                    {{abrirPanelNuevo ? 'Ocultar crear equivalencia de medida para el kardex' : 'Crear nueva
                     equivalencia de medida para el kardex'}}
                     <mat-icon>playlist_add</mat-icon>
                 </mat-panel-description>
@@ -82,14 +82,14 @@
                 </div>
             </div>
         </mat-expansion-panel>
-        <mat-expansion-panel (opened)="abrirPanelAdminEquivalencia = true"
-            (closed)="abrirPanelAdminEquivalencia = false">
+        <mat-expansion-panel (opened)="abrirPanelAdmin = true"
+            (closed)="abrirPanelAdmin = false">
             <mat-expansion-panel-header>
                 <mat-panel-title>
                     <i><u>GESTIONAR EQUIVALENCIAS</u></i>
                 </mat-panel-title>
                 <mat-panel-description>
-                    {{abrirPanelAdminEquivalencia ? 'Ocultar administrador de equivalencias' : 'Editar
+                    {{abrirPanelAdmin ? 'Ocultar administrador de equivalencias' : 'Editar
                     equivalencias existentes'}}
                     <mat-icon>playlist_add_check</mat-icon>
                 </mat-panel-description>
@@ -97,10 +97,10 @@
             <hr>
             <mat-form-field appearance="standard">
                 <mat-label>Buscar Equivalencia</mat-label>
-                <input matInput (keyup)="filtroEquivalenciaMedida($event)" placeholder="Ej. KI" #input>
+                <input matInput (keyup)="filtro($event)" placeholder="Ej. KI" #input>
             </mat-form-field>
             <div class="mat-elevation-z8">
-                <table mat-table [dataSource]="dataSourceEquivalenciaMedida" matSort>
+                <table mat-table [dataSource]="dataSource" matSort>
 
                     <!-- Columnas Dinamicas -->
                     <ng-container *ngFor="let columna of columnas" [matColumnDef]="columna.nombreColumna">
@@ -108,9 +108,9 @@
                         <td mat-cell *matCellDef="let row"> {{ columna.celda(row) }} </td>
                     </ng-container>
 
-                    <tr mat-header-row *matHeaderRowDef="columnasEquivalenciaMedida"></tr>
+                    <tr mat-header-row *matHeaderRowDef="columnas"></tr>
                     <tr mat-row (click)="seleccion(row)" [class.selected-row]="clickedRows.has(row)"
-                        *matRowDef="let row; columns: columnasEquivalenciaMedida;"></tr>
+                        *matRowDef="let row; columns: columnas;"></tr>
 
                     <!-- Row shown when there is no matching data. -->
                     <tr class="mat-row" *matNoDataRow>

@@ -68,13 +68,12 @@ export class ProveedorComponent implements OnInit {
   nombreEmpresa: string = valores.vacio;
   urlAvatar: string = environment.prefijoUrlImagenes + "avatar/avatar1.png";
 
-  abrirPanelProveedor: boolean = true;
+  abrirPanel: boolean = true;
   abrirPanelUbicacion: boolean = false;
   abrirPanelDependiente: boolean = false;
   abrirPanelDatoAdicional: boolean = false;
-  abrirPanelAdminProveedor: boolean = false;
-  estadoProveedor: boolean = true;
-  editing:boolean = false;
+  abrirPanelAdmin: boolean = false;
+  edicion:boolean = false;
 
   cliente: Cliente = new Cliente;
   proveedor: Proveedor = new Proveedor;
@@ -122,14 +121,9 @@ export class ProveedorComponent implements OnInit {
   tiposRetencionesRentaBien: TipoRetencion[];
   tiposRetencionesRentaServicio: TipoRetencion[];
 
-  //ComponenteLeerCliente: Type<any> = ClienteLeerComponent;
   habilitarTipoContribuyente = false;
   indiceTipoContribuyente: number = -1;
   habilitarCelularTelefonoCorreoDependiente = true;
-
-  archivoImportar: File = null;
-  panelOpenState = false;
-  value = 'Clear me';
 
   //Mapa
   latitud: number = valores.latCiudad; //Tomar de configuación y poner en el init
@@ -147,16 +141,15 @@ export class ProveedorComponent implements OnInit {
     minZoom: 12,
   };
 
-  columnasProveedor: any[] = [
-    { nombreColumna: 'id', cabecera: 'ID', celda: (row: Proveedor) => `${row.id}`},
+  columnas: any[] = [
     { nombreColumna: 'codigo', cabecera: 'Código', celda: (row: Proveedor) => `${row.codigo}`},
     { nombreColumna: 'identificacion', cabecera: 'Indentificación', celda: (row: Proveedor) => `${row.identificacion}`},
     { nombreColumna: 'razon_social', cabecera: 'Razón Social', celda: (row: Proveedor) => `${row.razonSocial}`},
     { nombreColumna: 'direccion', cabecera: 'Direccion', celda: (row: Proveedor) => `${row.tipoIdentificacion}`},
-    { nombreColumna: 'estado', cabecera: 'Estado', celda: (row: Proveedor) => `${row.estado ? 'ACTIVO' : 'INACTIVO'}`}
+    { nombreColumna: 'estado', cabecera: 'Estado', celda: (row: Proveedor) => `${row.estado}`}
   ];
-  cabeceraProveedor: string[]  = this.columnasProveedor.map(titulo => titulo.nombreColumna);
-  dataSourceProveedor: MatTableDataSource<Proveedor>;
+  cabecera: string[]  = this.columnas.map(titulo => titulo.nombreColumna);
+  dataSource: MatTableDataSource<Proveedor>;
   clickedRows = new Set<Proveedor>();
   
   @ViewChild(MatPaginator) paginator: MatPaginator;
@@ -174,9 +167,9 @@ export class ProveedorComponent implements OnInit {
     @HostListener('window:keypress', ['$event'])
     keyEvent($event: KeyboardEvent) {
       if (($event.shiftKey || $event.metaKey) && $event.key == "G")
-        this.crearProveedor(null);
+        this.crear(null);
       if (($event.shiftKey || $event.metaKey) && $event.key == "N")
-        this.nuevoProveedor(null);
+        this.nuevo(null);
       if (($event.shiftKey || $event.metaKey) && $event.key == "E")
         console.log('SHIFT + E');
       if (($event.shiftKey || $event.metaKey) && $event.key == "B")
@@ -186,11 +179,7 @@ export class ProveedorComponent implements OnInit {
     }
   
   ngOnInit() {
-    this.proveedor = new Proveedor();
-    this.validar_sesion();
-    this.obtener_sesion();
     this.obtenerEmpresa();
-    this.construirProveedor();
     this.consultar();
     this.tipoContribuyenteService.consultar().subscribe({
       next: (res) => {
@@ -315,16 +304,6 @@ export class ProveedorComponent implements OnInit {
     });
   }
 
-  validar_sesion() {
-    this.sesion = this.sesionService.getSesion();
-    if (this.sesion == undefined)
-      this.router.navigate(['/iniciosesion']);
-  }
-
-  obtener_sesion() {
-    this.sesion = this.sesionService.getSesion();
-  }
-
   obtenerEmpresa() {
     let empresa = new Empresa();
     empresa.id = 1;
@@ -339,7 +318,6 @@ export class ProveedorComponent implements OnInit {
       }
     });
   }
-
   
   validarIdentificacion() {
     this.proveedorService.obtenerIdentificacion(this.proveedor.identificacion).subscribe({
@@ -375,26 +353,7 @@ export class ProveedorComponent implements OnInit {
     });
   }
 
-  construirProveedor() {
-    let proveedorId = 0;
-    this.proveedorService.currentMessage.subscribe(message => proveedorId = message);
-    if (proveedorId != 0) {
-      this.clienteService.obtener(proveedorId).subscribe({
-        next: res => {
-          Object.assign(this.proveedor, res.resultado as Proveedor);
-          this.cliente.normalizar();
-          this.validarSexoEstadoCivilOrigenIngreso();
-          this.ubicacionNormalizarActualizar();
-          this.proveedorService.enviar(0);
-        },
-        error: err => {
-          Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.message });
-        }
-      })
-    }
-  }
-
-  nuevoProveedor(event) {
+  nuevo(event) {
     if (event != null)
       event.preventDefault();
     this.tabService.addNewTab(ProveedorComponent, tabs.tab_proveedor);
@@ -409,7 +368,7 @@ export class ProveedorComponent implements OnInit {
     });
   }
 
-  async crearProveedor(event: any) {
+  async crear(event: any) {
     if (event != null)
       event.preventDefault();
     //AGREGAR DEPENDIENTE
@@ -501,12 +460,12 @@ export class ProveedorComponent implements OnInit {
   }
 
   editarDependiente(dependiente: Dependiente){
-    this.editing = !this.editing;
+    this.edicion = !this.edicion;
     this.dependiente = dependiente;
   }
 
   confirmarEditarDependiente(row: Dependiente){
-    this.editing = !this.editing;
+    this.edicion = !this.edicion;
   }
 
   async actualizar(event) {
@@ -592,38 +551,31 @@ export class ProveedorComponent implements OnInit {
     });
   }
 
-  actualizarLeer(event) {
-    if (event!=null)
-      event.preventDefault();
-    this.proveedorService.enviar(this.proveedor.id);
-    this.tabService.addNewTab(this.ComponenteProveedor,'Actualizar proveedor');
-  }
-
   consultar() {
     this.proveedorService.consultar().subscribe({
       next: (res) => {
         this.proveedores = res.resultado as Proveedor[]
-        this.llenarDataSourceProveedor(this.proveedores);
+        this.llenarDataSource(this.proveedores);
       },
       error: (err) => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.message })
     });
   }
 
-  filtroProveedor(event: Event) {
+  filtro(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
-    this.dataSourceProveedor.filter = filterValue.trim().toUpperCase();
-    if (this.dataSourceProveedor.paginator) {
-      this.dataSourceProveedor.paginator.firstPage();
+    this.dataSource.filter = filterValue.trim().toUpperCase();
+    if (this.dataSource.paginator) {
+      this.dataSource.paginator.firstPage();
     }
   }
 
-  llenarDataSourceProveedor(proveedores : Proveedor[]){
-    this.dataSourceProveedor = new MatTableDataSource(proveedores);
-    this.dataSourceProveedor.filterPredicate = (data: Proveedor, filter: string): boolean =>
+  llenarDataSource(proveedores : Proveedor[]){
+    this.dataSource = new MatTableDataSource(proveedores);
+    this.dataSource.filterPredicate = (data: Proveedor, filter: string): boolean =>
       data.codigo.toUpperCase().includes(filter) || data.identificacion.toUpperCase().includes(filter) || data.razonSocial.toUpperCase().includes(filter) ||
       data.tipoIdentificacion.toUpperCase().includes(filter);
-    this.dataSourceProveedor.paginator = this.paginator;
-    this.dataSourceProveedor.sort = this.sort;
+    this.dataSource.paginator = this.paginator;
+    this.dataSource.sort = this.sort;
   }
 
   seleccion(proveedorSeleccionado: Proveedor) {

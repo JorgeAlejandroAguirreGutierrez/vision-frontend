@@ -19,24 +19,23 @@ import { VehiculoTransporteService } from 'src/app/servicios/entrega/vehiculo-tr
 })
 export class TransportistaComponent implements OnInit {
 
-  abrirPanelNuevoTransportista = true;
-  abrirPanelAdminTransportista = false;
+  abrirPanelNuevo = true;
+  abrirPanelAdmin = false;
 
   sesion: Sesion=null;
   transportista= new Transportista();
   transportistas: Transportista[];
   vehiculosTransportes: VehiculoTransporte[];
 
-  columnasTransportista: any[] = [
-    { nombreColumna: 'id', cabecera: 'ID', celda: (row: Transportista) => `${row.id}` },
+  columnas: any[] = [
     { nombreColumna: 'codigo', cabecera: 'Código', celda: (row: Transportista) => `${row.codigo}` },
     { nombreColumna: 'nombre', cabecera: 'Nombre', celda: (row: Transportista) => `${row.nombre}` },
     { nombreColumna: 'identificacion', cabecera: 'Identificación', celda: (row: Transportista) => `${row.identificacion}` },
     { nombreColumna: 'vehiculoPropio', cabecera: 'Vehiculo Propio', celda: (row: Transportista) => `${row.vehiculoPropio}` },
     { nombreColumna: 'vehiculo', cabecera: 'Vehiculo', celda: (row: Transportista) => `${row.vehiculoTransporte.placa}` }
   ];
-  cabeceraTransportista: string[] = this.columnasTransportista.map(titulo => titulo.nombreColumna);
-  dataSourceTransportista: MatTableDataSource<Transportista>;
+  cabecera: string[] = this.columnas.map(titulo => titulo.nombreColumna);
+  dataSource: MatTableDataSource<Transportista>;
   clickedRows = new Set<Transportista>();
   
   @ViewChild(MatPaginator) paginator: MatPaginator;
@@ -119,9 +118,9 @@ export class TransportistaComponent implements OnInit {
     this.transportistaService.consultar().subscribe(
       res => {
         this.transportistas = res.resultado as Transportista[]
-        this.dataSourceTransportista = new MatTableDataSource(this.transportistas);
-        this.dataSourceTransportista.paginator = this.paginator;
-        this.dataSourceTransportista.sort = this.sort;
+        this.dataSource = new MatTableDataSource(this.transportistas);
+        this.dataSource.paginator = this.paginator;
+        this.dataSource.sort = this.sort;
       },
       err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     );
@@ -138,11 +137,11 @@ export class TransportistaComponent implements OnInit {
     }
   }
 
-  filtroTransportista(event: Event) {
+  filtro(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
-    this.dataSourceTransportista.filter = filterValue.trim().toUpperCase();
-    if (this.dataSourceTransportista.paginator) {
-      this.dataSourceTransportista.paginator.firstPage();
+    this.dataSource.filter = filterValue.trim().toUpperCase();
+    if (this.dataSource.paginator) {
+      this.dataSource.paginator.firstPage();
     }
   }
 

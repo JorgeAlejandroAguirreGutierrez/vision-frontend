@@ -17,23 +17,22 @@ import { MatSort } from '@angular/material/sort';
 })
 export class UbicacionComponent implements OnInit {
 
-  abrirPanelNuevoUbicacion = true;
-  abrirPanelAdminUbicacion = false;
+  abrirPanelNuevo = true;
+  abrirPanelAdmin = false;
 
   sesion: Sesion=null;
   ubicacion= new Ubicacion();
   ubicaciones: Ubicacion[];
 
-  columnasUbicacion: any[] = [
-    { nombreColumna: 'id', cabecera: 'ID', celda: (row: Ubicacion) => `${row.id}` },
+  columnas: any[] = [
     { nombreColumna: 'codigo', cabecera: 'Código', celda: (row: Ubicacion) => `${row.codigo}` },
     { nombreColumna: 'codigoNorma', cabecera: 'Código Norma', celda: (row: Ubicacion) => `${row.codigoNorma}` },
     { nombreColumna: 'provincia', cabecera: 'Provincia', celda: (row: Ubicacion) => `${row.provincia}` },
     { nombreColumna: 'canton', cabecera: 'Canton', celda: (row: Ubicacion) => `${row.canton}` },
     { nombreColumna: 'parroquia', cabecera: 'Parroquia', celda: (row: Ubicacion) => `${row.parroquia}` },
   ];
-  cabeceraUbicacion: string[] = this.columnasUbicacion.map(titulo => titulo.nombreColumna);
-  dataSourceUbicacion: MatTableDataSource<Ubicacion>;
+  cabecera: string[] = this.columnas.map(titulo => titulo.nombreColumna);
+  dataSource: MatTableDataSource<Ubicacion>;
   clickedRows = new Set<Ubicacion>();
   
   @ViewChild(MatPaginator) paginator: MatPaginator;
@@ -115,9 +114,9 @@ export class UbicacionComponent implements OnInit {
     this.ubicacionService.consultar().subscribe(
       res => {
         this.ubicaciones = res.resultado as Ubicacion[]
-        this.dataSourceUbicacion = new MatTableDataSource(this.ubicaciones);
-        this.dataSourceUbicacion.paginator = this.paginator;
-        this.dataSourceUbicacion.sort = this.sort;
+        this.dataSource = new MatTableDataSource(this.ubicaciones);
+        this.dataSource.paginator = this.paginator;
+        this.dataSource.sort = this.sort;
       },
       err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     );
@@ -134,11 +133,11 @@ export class UbicacionComponent implements OnInit {
     }
   }
 
-  filtroUbicacion(event: Event) {
+  filtro(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
-    this.dataSourceUbicacion.filter = filterValue.trim().toUpperCase();
-    if (this.dataSourceUbicacion.paginator) {
-      this.dataSourceUbicacion.paginator.firstPage();
+    this.dataSource.filter = filterValue.trim().toUpperCase();
+    if (this.dataSource.paginator) {
+      this.dataSource.paginator.firstPage();
     }
   }
 }

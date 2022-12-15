@@ -17,21 +17,20 @@ import { MatTableDataSource } from '@angular/material/table';
 })
 export class EstadoCivilComponent implements OnInit {
 
-  abrirPanelNuevoEstadoCivil = true;
-  abrirPanelAdminEstadoCivil = false;
+  abrirPanelNuevo = true;
+  abrirPanelAdmin = false;
 
   sesion: Sesion=null;
   estadoCivil= new EstadoCivil();
   estadosCiviles: EstadoCivil[];
 
-  columnasEstadoCivil: any[] = [
-    { nombreColumna: 'id', cabecera: 'ID', celda: (row: EstadoCivil) => `${row.id}` },
+  columnas: any[] = [
     { nombreColumna: 'codigo', cabecera: 'Código', celda: (row: EstadoCivil) => `${row.codigo}` },
     { nombreColumna: 'descripcion', cabecera: 'Descripcion', celda: (row: EstadoCivil) => `${row.descripcion}` },
     { nombreColumna: 'abreviatura', cabecera: 'Abreviatura', celda: (row: EstadoCivil) => `${row.abreviatura}` },
   ];
-  cabeceraEstadoCivil: string[] = this.columnasEstadoCivil.map(titulo => titulo.nombreColumna);
-  dataSourceEstadoCivil: MatTableDataSource<EstadoCivil>;
+  cabecera: string[] = this.columnas.map(titulo => titulo.nombreColumna);
+  dataSource: MatTableDataSource<EstadoCivil>;
   clickedRows = new Set<EstadoCivil>();
   
   @ViewChild(MatPaginator) paginator: MatPaginator;
@@ -113,9 +112,9 @@ export class EstadoCivilComponent implements OnInit {
     this.estadoCivilService.consultar().subscribe(
       res => {
         this.estadosCiviles = res.resultado as EstadoCivil[]
-        this.dataSourceEstadoCivil = new MatTableDataSource(this.estadosCiviles);
-        this.dataSourceEstadoCivil.paginator = this.paginator;
-        this.dataSourceEstadoCivil.sort = this.sort;
+        this.dataSource = new MatTableDataSource(this.estadosCiviles);
+        this.dataSource.paginator = this.paginator;
+        this.dataSource.sort = this.sort;
       },
       err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     );
@@ -132,11 +131,11 @@ export class EstadoCivilComponent implements OnInit {
     }
   }
 
-  filtroEstadoCivil(event: Event) {
+  filtro(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
-    this.dataSourceEstadoCivil.filter = filterValue.trim().toUpperCase();
-    if (this.dataSourceEstadoCivil.paginator) {
-      this.dataSourceEstadoCivil.paginator.firstPage();
+    this.dataSource.filter = filterValue.trim().toUpperCase();
+    if (this.dataSource.paginator) {
+      this.dataSource.paginator.firstPage();
     }
   }
 }

@@ -17,15 +17,14 @@ import { TipoRetencionService } from 'src/app/servicios/configuracion/tipo-reten
 })
 export class TipoRetencionComponent implements OnInit {
 
-  abrirPanelNuevoTipoRetencion = true;
-  abrirPanelAdminTipoRetencion = false;
+  abrirPanelNuevo = true;
+  abrirPanelAdmin = false;
 
   sesion: Sesion=null;
-  tipoRetencion= new TipoRetencion();
+  tipoRetencion = new TipoRetencion();
   tiposRetenciones: TipoRetencion[];
 
-  columnasTipoRetencion: any[] = [
-    { nombreColumna: 'id', cabecera: 'ID', celda: (row: TipoRetencion) => `${row.id}` },
+  columnas: any[] = [
     { nombreColumna: 'codigo', cabecera: 'Código', celda: (row: TipoRetencion) => `${row.codigo}` },
     { nombreColumna: 'impuestoRetencion', cabecera: 'Impuesto Retención', celda: (row: TipoRetencion) => `${row.impuestoRetencion}` },
     { nombreColumna: 'tipoRetencion', cabecera: 'Tipo de Retención', celda: (row: TipoRetencion) => `${row.tipoRetencion}` },
@@ -34,8 +33,8 @@ export class TipoRetencionComponent implements OnInit {
     { nombreColumna: 'descripcion', cabecera: 'Descripcion', celda: (row: TipoRetencion) => `${row.descripcion}` },
     { nombreColumna: 'porcentaje', cabecera: 'Porcentaje', celda: (row: TipoRetencion) => `${row.porcentaje}` }
   ];
-  cabeceraTipoRetencion: string[] = this.columnasTipoRetencion.map(titulo => titulo.nombreColumna);
-  dataSourceTipoRetencion: MatTableDataSource<TipoRetencion>;
+  cabecera: string[] = this.columnas.map(titulo => titulo.nombreColumna);
+  dataSource: MatTableDataSource<TipoRetencion>;
   clickedRows = new Set<TipoRetencion>();
   
   @ViewChild(MatPaginator) paginator: MatPaginator;
@@ -117,9 +116,9 @@ export class TipoRetencionComponent implements OnInit {
     this.tipoRetencionService.consultar().subscribe(
       res => {
         this.tiposRetenciones = res.resultado as TipoRetencion[]
-        this.dataSourceTipoRetencion = new MatTableDataSource(this.tiposRetenciones);
-        this.dataSourceTipoRetencion.paginator = this.paginator;
-        this.dataSourceTipoRetencion.sort = this.sort;
+        this.dataSource = new MatTableDataSource(this.tiposRetenciones);
+        this.dataSource.paginator = this.paginator;
+        this.dataSource.sort = this.sort;
       },
       err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     );
@@ -136,11 +135,11 @@ export class TipoRetencionComponent implements OnInit {
     }
   }
 
-  filtroTipoRetencion(event: Event) {
+  filtro(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
-    this.dataSourceTipoRetencion.filter = filterValue.trim().toUpperCase();
-    if (this.dataSourceTipoRetencion.paginator) {
-      this.dataSourceTipoRetencion.paginator.firstPage();
+    this.dataSource.filter = filterValue.trim().toUpperCase();
+    if (this.dataSource.paginator) {
+      this.dataSource.paginator.firstPage();
     }
   }
 
