@@ -131,7 +131,7 @@ export class ImpuestoComponent implements OnInit {
     }
   }
 
-  filtroImpuesto(event: Event) {
+  filtro(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toUpperCase();
     if (this.dataSource.paginator) {

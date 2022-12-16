@@ -6,7 +6,7 @@
             </a>
         </li>
         <ng-container *ngIf="grupoProveedor.id!=0">
-            <li class="nav-item" *ngIf="!editarGrupoProveedor">
+            <li class="nav-item" *ngIf="!edicion">
                 <a class="nav-link" title="Actualizar" role="button" (click)="editar($event)">
                     <mat-icon>edit</mat-icon>
                 </a>
@@ -103,9 +103,9 @@
             <hr>
             <mat-form-field appearance="standard">
                 <mat-label>Buscar grupos de clientes</mat-label>
-                <input matInput (keyup)="filtro($event)" placeholder="Ej. EX" #inputFiltroGrupoProveedor>
+                <input matInput (keyup)="filtro($event)" placeholder="Ej. EX" #inputFiltro>
                 <button mat-button *ngIf="inputFiltro.value" matSuffix mat-icon-button
-                    (click)="borrarFiltroGrupoProveedor()">
+                    (click)="borrarFiltro()">
                 <mat-icon>close</mat-icon>
             </button>
             </mat-form-field>

@@ -32,9 +32,9 @@ export class UsuarioComponent implements OnInit {
   contrasena2: string = valores.vacio;
   minContrasena = 8;
 
-  abrirPanelNuevoUsuario: boolean = true;
-  abrirPanelAdminUsuario: boolean = true;
-  editarUsuario: boolean = true;
+  abrirPanelNuevo: boolean = true;
+  abrirPanelAdmin: boolean = true;
+  edicion: boolean = true;
   ocultarContrasena: boolean = true;
   ocultarContrasena2: boolean = true;
   cambiarContrasena: boolean = false;
@@ -56,22 +56,21 @@ export class UsuarioComponent implements OnInit {
     [ this.MatchValidator('password', 'confirmPassword') ]
   );
 
-  columnasUsuario: any[] = [
-    { nombreColumna: 'id', cabecera: 'ID', celda: (row: Usuario) => `${row.id}` },
+  columnas: any[] = [
     { nombreColumna: 'codigo', cabecera: 'Código', celda: (row: Usuario) => `${row.codigo}` },
     { nombreColumna: 'identificacion', cabecera: 'Identificación', celda: (row: Usuario) => `${row.identificacion}` },
     { nombreColumna: 'nombre', cabecera: 'Nombre', celda: (row: Usuario) => `${row.nombre}` },
     { nombreColumna: 'perfil', cabecera: 'Perfil', celda: (row: Usuario) => `${row.perfil.descripcion}` },
     { nombreColumna: 'estado', cabecera: 'Estado', celda: (row: Usuario) => `${row.activo}` }
   ];
-  cabeceraUsuario: string[] = this.columnasUsuario.map(titulo => titulo.nombreColumna);
-  dataSourceUsuario: MatTableDataSource<Usuario>;
-  observableDSUsuario: BehaviorSubject<MatTableDataSource<Usuario>> = new BehaviorSubject<MatTableDataSource<Usuario>>(null);
+  cabecera: string[] = this.columnas.map(titulo => titulo.nombreColumna);
+  dataSource: MatTableDataSource<Usuario>;
+  observable: BehaviorSubject<MatTableDataSource<Usuario>> = new BehaviorSubject<MatTableDataSource<Usuario>>(null);
   clickedRows = new Set<Usuario>();
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
-  @ViewChild("inputFiltroUsuario") inputFiltroUsuario: ElementRef;
+  @ViewChild("inputFiltro") inputFiltro: ElementRef;
 
   constructor(private renderer: Renderer2, private usuarioService: UsuarioService,
     private perfilService: PerfilService, private sesionService: SesionService, private router: Router) { }
@@ -84,9 +83,9 @@ export class UsuarioComponent implements OnInit {
 
   limpiar() {
     this.usuario = new Usuario();
-    this.editarUsuario = true;
+    this.edicion = true;
     this.clickedRows.clear();
-    this.borrarFiltroUsuario();
+    this.borrarFiltro();
   }
 
   nuevo(event) {
@@ -108,7 +107,7 @@ export class UsuarioComponent implements OnInit {
         this.usuario = res.resultado as Usuario;
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
         this.usuarios.push(this.usuario);
-        this.llenarTablaUsuario(this.usuarios);
+        this.llenarTabla(this.usuarios);
       },
       error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     });
@@ -117,7 +116,7 @@ export class UsuarioComponent implements OnInit {
   editar(event) {
     if (event != null)
       event.preventDefault();
-    this.editarUsuario = true;
+    this.edicion = true;
   }
 
   actualizar(event) {
@@ -161,18 +160,18 @@ export class UsuarioComponent implements OnInit {
     this.usuarioService.consultar().subscribe({
       next: res => {
         this.usuarios = res.resultado as Usuario[]
-        this.llenarTablaUsuario(this.usuarios);
+        this.llenarTabla(this.usuarios);
       },
       error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     });
   }
 
-  llenarTablaUsuario(usuarios: Usuario[]) {
+  llenarTabla(usuarios: Usuario[]) {
     this.ordenarAsc(usuarios, 'id');
-    this.dataSourceUsuario = new MatTableDataSource(usuarios);
-    this.dataSourceUsuario.paginator = this.paginator;
-    this.dataSourceUsuario.sort = this.sort;
-    this.observableDSUsuario.next(this.dataSourceUsuario);
+    this.dataSource = new MatTableDataSource(usuarios);
+    this.dataSource.paginator = this.paginator;
+    this.dataSource.sort = this.sort;
+    this.observable.next(this.dataSource);
   }
 
   llenarControlUsuario(){
@@ -190,22 +189,22 @@ export class UsuarioComponent implements OnInit {
       this.clickedRows.clear();
       this.clickedRows.add(usuario);
       this.usuario = usuario;
-      this.editarUsuario = false;
+      this.edicion = false;
     } else {
       this.limpiar();
     }
   }
 
-  filtroUsuario(event: Event) {
+  filtro(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
-    this.dataSourceUsuario.filter = filterValue.trim().toUpperCase();
-    if (this.dataSourceUsuario.paginator) {
-      this.dataSourceUsuario.paginator.firstPage();
+    this.dataSource.filter = filterValue.trim().toUpperCase();
+    if (this.dataSource.paginator) {
+      this.dataSource.paginator.firstPage();
     }
   }
-  borrarFiltroUsuario() {
-    this.renderer.setProperty(this.inputFiltroUsuario.nativeElement, 'value', '');
-    this.dataSourceUsuario.filter = '';
+  borrarFiltro() {
+    this.renderer.setProperty(this.inputFiltro.nativeElement, 'value', '');
+    this.dataSource.filter = '';
   }
 
   ordenarAsc(arrayJson: any, pKey: any) {

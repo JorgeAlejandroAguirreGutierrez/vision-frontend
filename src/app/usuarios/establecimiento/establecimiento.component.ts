@@ -36,6 +36,7 @@ export class EstablecimientoComponent implements OnInit {
 
   abierto: string = valores.abierto;
   cerrado: string = valores.cerrado;
+  edicion: boolean = false;
 
   sesion: Sesion=null;
   abrirPanelAsignarEstablecimiento: boolean = true;

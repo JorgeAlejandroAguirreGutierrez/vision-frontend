@@ -1,5 +1,5 @@
 import { Component, HostListener, OnInit } from '@angular/core';
-import { validarSesion, exito, exito_swal, error, error_swal } from '../../constantes';
+import { validarSesion, exito, exito_swal, error, error_swal, valores } from '../../constantes';
 import Swal from 'sweetalert2';
 import { Sesion } from '../../modelos/usuario/sesion';
 import { SesionService } from '../../servicios/usuario/sesion.service';
@@ -20,6 +20,9 @@ export class BodegaComponent implements OnInit {
 
   abrirPanelNuevo = true;
   abrirPanelAdmin = false;
+
+  activo = valores.activo;
+  inactivo = valores.inactivo;
 
   sesion: Sesion=null;
   bodega = new Bodega();

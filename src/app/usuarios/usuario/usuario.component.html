@@ -6,12 +6,12 @@
             </a>
         </li>
         <ng-container *ngIf="usuario.id!=0">
-            <li class="nav-item" *ngIf="!editarUsuario">
+            <li class="nav-item" *ngIf="!edicion">
                 <a class="nav-link" title="Actualizar" role="button" (click)="editar($event)">
                     <mat-icon>edit</mat-icon>
                 </a>
             </li>
-            <li class="nav-item" *ngIf="editarUsuario">
+            <li class="nav-item" *ngIf="edicion">
                 <a class="nav-link" title="Actualizar" role="button" (click)="actualizar($event)">
                     <mat-icon>update</mat-icon>
                 </a>
@@ -36,14 +36,14 @@
 </nav>
 <div class="contenedor">
     <mat-accordion class="headers-align">
-        <mat-expansion-panel (opened)="abrirPanelNuevoUsuario = true" (closed)="abrirPanelNuevoUsuario = false"
-            [expanded]="abrirPanelNuevoUsuario">
+        <mat-expansion-panel (opened)="abrirPanelNuevo = true" (closed)="abrirPanelNuevo = false"
+            [expanded]="abrirPanelNuevo">
             <mat-expansion-panel-header>
                 <mat-panel-title>
                     <i><u>USUARIOS</u></i>
                 </mat-panel-title>
                 <mat-panel-description>
-                    {{abrirPanelNuevoUsuario ? 'Ocultar crear usuario' : 'Crear nuevo usuario'}}
+                    {{abrirPanelNuevo ? 'Ocultar crear usuario' : 'Crear nuevo usuario'}}
                     <mat-icon>playlist_add</mat-icon>
                 </mat-panel-description>
             </mat-expansion-panel-header>
@@ -98,7 +98,7 @@
                         <mat-form-field appearance="standard">
                             <mat-label>Nombre</mat-label>
                             <input matInput type="text" [(ngModel)]="usuario.nombre" class="form-control-sm"
-                                oninput="this.value = this.value.toUpperCase()" [disabled]="!editarUsuario">
+                                oninput="this.value = this.value.toUpperCase()" [disabled]="!edicion">
                         </mat-form-field>
                     </div>
                     <div class="col-4">
@@ -124,7 +124,7 @@
                             <mat-label>Correo</mat-label>
                             <input matInput placeholder="ejemplo@futuristic.com" [formControl]="email"
                                 class="form-control-sm" oninput="this.value = this.value.toLowerCase()"
-                                [disabled]="!editarUsuario" required>
+                                [disabled]="!edicion" required>
                             <mat-error *ngIf="email.invalid">{{mensajeErrorCorreo()}}</mat-error>
                         </mat-form-field>
                     </div>
@@ -141,7 +141,7 @@
                     <div class="col-4">
                         <mat-form-field appearance="standard">
                             <mat-label>Estado</mat-label>
-                            <mat-select [(ngModel)]="usuario.activo" [disabled]="!editarUsuario"
+                            <mat-select [(ngModel)]="usuario.activo" [disabled]="!edicion"
                                 class="form-control-sm">
                                 <mat-option [value]="activo">{{activo}}</mat-option>
                                 <mat-option [value]="inactivo">{{inactivo}}</mat-option>
@@ -170,7 +170,7 @@
                         <mat-form-field appearance="standard">
                             <mat-label>Respuesta</mat-label>
                             <input matInput type="text" [(ngModel)]="usuario.respuesta" class="form-control-sm"
-                                oninput="this.value = this.value.toUpperCase()" [disabled]="!editarUsuario">
+                                oninput="this.value = this.value.toUpperCase()" [disabled]="!edicion">
                         </mat-form-field>
                     </div>
                 </div>
@@ -185,40 +185,39 @@
         </mat-expansion-panel>
     </mat-accordion>
     <mat-accordion class="headers-align">
-        <mat-expansion-panel (opened)="abrirPanelAdminUsuario = true" (closed)="abrirPanelAdminUsuario = false"
-            [expanded]="abrirPanelAdminUsuario">
+        <mat-expansion-panel (opened)="abrirPanelAdmin = true" (closed)="abrirPanelAdmin = false"
+            [expanded]="abrirPanelAdmin">
             <mat-expansion-panel-header>
                 <mat-panel-title>
                     <i><u>GESTIONAR USUARIOS</u></i>
                 </mat-panel-title>
                 <mat-panel-description>
-                    {{abrirPanelAdminUsuario ? 'Ocultar administrador de usuarios' : 'Editar usuario existente'}}
+                    {{abrirPanelAdmin ? 'Ocultar administrador de usuarios' : 'Editar usuario existente'}}
                     <mat-icon>playlist_add_check</mat-icon>
                 </mat-panel-description>
             </mat-expansion-panel-header>
             <hr>
             <mat-form-field appearance="standard">
                 <mat-label>Buscar usuario</mat-label>
-                <input matInput (keyup)="filtroUsuario($event)" #inputFiltroUsuario>
-                <button mat-button *ngIf="inputFiltroUsuario.value" matSuffix mat-icon-button
-                    (click)="borrarFiltroUsuario()">
+                <input matInput (keyup)="filtro($event)" #inputFiltro>
+                <button mat-button *ngIf="inputFiltro.value" matSuffix mat-icon-button (click)="borrarFiltro()">
                     <mat-icon>close</mat-icon>
                 </button>
             </mat-form-field>
             <div class="mat-elevation-z8">
-                <table mat-table [dataSource]="observableDSUsuario.value" matSort>
+                <table mat-table [dataSource]="dataSource" matSort>
                     <!-- Columnas Dinamicas -->
-                    <ng-container *ngFor="let columna of columnasUsuario" [matColumnDef]="columna.nombreColumna">
+                    <ng-container *ngFor="let columna of columnas" [matColumnDef]="columna.nombreColumna">
                         <th mat-header-cell *matHeaderCellDef mat-sort-header> {{ columna.cabecera }} </th>
                         <td mat-cell *matCellDef="let row"> {{ columna.celda(row) }} </td>
                     </ng-container>
-                    <tr mat-header-row *matHeaderRowDef="cabeceraUsuario"></tr>
+                    <tr mat-header-row *matHeaderRowDef="cabecera"></tr>
                     <tr mat-row (click)="seleccion(row)" [class.selected-row]="clickedRows.has(row)"
-                        *matRowDef="let row; columns: cabeceraUsuario;"></tr>
+                        *matRowDef="let row; columns: cabecera;"></tr>
                     <!-- Row shown when there is no matching data. -->
                     <tr class="mat-row" *matNoDataRow>
                         <td class="mat-cell" colspan="6">No hay datos que coincidan con el usuario:
-                            "{{inputFiltroUsuario.value}}"
+                            "{{inputFiltro.value}}"
                         </td>
                     </tr>
                 </table>

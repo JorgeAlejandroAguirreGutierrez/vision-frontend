@@ -66,12 +66,12 @@ export class InicioSesionComponent implements OnInit {
   obtenerPorApodo() {
     this.usuarioService.obtenerPorApodo(this.sesion.usuario.apodo).subscribe({
       next: res => {
-        this.sesion.usuario = res.resultado as Usuario
+        console.log(res);
+        this.sesion.usuario = res.resultado as Usuario;
+        this.multiEmpresa=this.sesion.usuario.perfil.multiempresa;
         if (this.sesion.usuario.cambiarContrasena == valores.si) {
           this.cambiarContrasena = true;
-          return;
         }
-        this.multiEmpresa=this.sesion.usuario.perfil.multiempresa;
       },
       error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     });

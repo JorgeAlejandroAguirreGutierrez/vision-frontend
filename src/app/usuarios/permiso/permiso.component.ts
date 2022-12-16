@@ -27,9 +27,9 @@ import { MatTableDataSource } from '@angular/material/table';
 })
 export class PermisoComponent implements OnInit {
 
-  abrirPanelNuevoPermiso: boolean = true;
-  abrirPanelAdminPermiso: boolean = true;
-  editarPermiso: boolean = true;
+  abrirPanelNuevo: boolean = true;
+  abrirPanelAdmin: boolean = true;
+  edicion: boolean = true;
 
   sesion: Sesion = null;
   perfil: Perfil = new Perfil();
@@ -44,19 +44,19 @@ export class PermisoComponent implements OnInit {
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
-  @ViewChild("inputFiltroPermiso") inputFiltroPermiso: ElementRef;
+  @ViewChild("inputFiltro") inputFiltroPermiso: ElementRef;
   
-  columnasPermiso: any[] = [
+  columnas: any[] = [
     { nombreColumna: 'codigo', cabecera: 'Código', celda: (row: Permiso) => `${row.codigo}`},
     { nombreColumna: 'modulo', cabecera: 'Módulo', celda: (row: Permiso) => `${row.modulo}`},
     { nombreColumna: 'opcion', cabecera: 'Opcion', celda: (row: Permiso) => `${row.opcion}`},
     { nombreColumna: 'operacion', cabecera: 'Operacion', celda: (row: Permiso) => `${row.operacion}`},
     { nombreColumna: 'estado', cabecera: 'Estado', celda: (row: Permiso) => `${row.estado}`},
   ];
-  cabeceraPermiso: string[]  = this.columnasPermiso.map(titulo => titulo.nombreColumna);
-  dataSourcePermiso: MatTableDataSource<Permiso>;
-  clickedRowsPermiso = new Set<Permiso>();
-  observableDSPermiso: BehaviorSubject<MatTableDataSource<Permiso>> = new BehaviorSubject<MatTableDataSource<Permiso>>(null);
+  cabecera: string[]  = this.columnas.map(titulo => titulo.nombreColumna);
+  dataSource: MatTableDataSource<Permiso>;
+  clickedRows = new Set<Permiso>();
+  observable: BehaviorSubject<MatTableDataSource<Permiso>> = new BehaviorSubject<MatTableDataSource<Permiso>>(null);
   selection = new SelectionModel<Permiso>(true, []);
 
   /** Whether the number of selected elements matches the total number of rows. */
@@ -75,7 +75,7 @@ export class PermisoComponent implements OnInit {
       return;
     }
     // Para poner todas las filas seleccionadas uso "select"
-    this.selection.select(...this.dataSourcePermiso.data);
+    this.selection.select(...this.dataSource.data);
     //console.log(this.selection);
   }
 
@@ -104,8 +104,8 @@ export class PermisoComponent implements OnInit {
 
   limpiar() {
     this.perfil = new Perfil();
-    this.editarPermiso = true;
-    this.clickedRowsPermiso.clear();
+    this.edicion = true;
+    this.clickedRows.clear();
   }
 
   nuevo(event) {
@@ -122,7 +122,6 @@ export class PermisoComponent implements OnInit {
         this.permiso = res.resultado as Permiso;
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
         this.permisos.push(this.permiso);
-        //this.llenarTablaPermiso(this.perfiles);
       },
       error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     });
@@ -131,7 +130,7 @@ export class PermisoComponent implements OnInit {
   editar(event) {
     if (event != null)
       event.preventDefault();
-    this.editarPermiso = true;
+    this.edicion = true;
   }
 
   actualizar(event) {
@@ -195,31 +194,31 @@ export class PermisoComponent implements OnInit {
     this.controlPerfil.enable();
     this.consultar();
     if (this.perfiles.length > 0) {
-      this.llenarDataSourcePermiso(this.permisos);
+      this.llenarDataSource(this.permisos);
     }
   }
 
-  llenarDataSourcePermiso(permisos : Permiso[]){
+  llenarDataSource(permisos : Permiso[]){
     this.ordenarAsc(permisos, 'id');
-    this.dataSourcePermiso = new MatTableDataSource(permisos);
-    this.dataSourcePermiso.filterPredicate = (data: Permiso, filter: string): boolean =>
+    this.dataSource = new MatTableDataSource(permisos);
+    this.dataSource.filterPredicate = (data: Permiso, filter: string): boolean =>
       data.codigo.toUpperCase().includes(filter) || data.modulo.toUpperCase().includes(filter) ||
       data.operacion.toUpperCase().includes(filter);
-    this.dataSourcePermiso.paginator = this.paginator;
-    this.dataSourcePermiso.sort = this.sort;
+    this.dataSource.paginator = this.paginator;
+    this.dataSource.sort = this.sort;
   }
 
-  filtroPermiso(event: Event) {
+  filtro(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
-    this.dataSourcePermiso.filter = filterValue.trim().toUpperCase();
-    if (this.dataSourcePermiso.paginator) {
-      this.dataSourcePermiso.paginator.firstPage();
+    this.dataSource.filter = filterValue.trim().toUpperCase();
+    if (this.dataSource.paginator) {
+      this.dataSource.paginator.firstPage();
     }
   }
-  borrarFiltroPermiso() {
-    this.renderer.setProperty(this.dataSourcePermiso, 'value', '');
+  borrarFiltro() {
+    this.renderer.setProperty(this.dataSource, 'value', '');
     this.renderer.setProperty(this.inputFiltroPermiso.nativeElement , 'value', '');
-    this.dataSourcePermiso.filter = '';
+    this.dataSource.filter = '';
   }
 
   ordenarAsc(arrayJson: any, pKey: any) {
@@ -241,19 +240,19 @@ export class PermisoComponent implements OnInit {
 
   llenarTabla(permisos: Permiso[]) {
     this.ordenarAsc(this.permisos, 'codigo');
-    this.dataSourcePermiso = new MatTableDataSource(this.permisos);
-    this.dataSourcePermiso.paginator = this.paginator;
-    this.dataSourcePermiso.sort = this.sort;
-    this.observableDSPermiso.next(this.dataSourcePermiso);
+    this.dataSource = new MatTableDataSource(this.permisos);
+    this.dataSource.paginator = this.paginator;
+    this.dataSource.sort = this.sort;
+    this.observable.next(this.dataSource);
   }
   
 
   seleccion(permiso: Permiso) {
-    if (!this.clickedRowsPermiso.has(permiso)) {
-      this.clickedRowsPermiso.clear();
-      this.clickedRowsPermiso.add(permiso);
+    if (!this.clickedRows.has(permiso)) {
+      this.clickedRows.clear();
+      this.clickedRows.add(permiso);
       this.permiso = permiso;
-      this.editarPermiso = false;
+      this.edicion = false;
     } else {
       this.limpiar();
     }

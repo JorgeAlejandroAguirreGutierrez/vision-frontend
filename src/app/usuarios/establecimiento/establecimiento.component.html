@@ -1,12 +1,12 @@
 <nav class="navbar-light nav-fijo">
     <ul class="navbar-nav">
         <ng-container *ngIf="abrirPanelAsignarEstablecimiento">
-            <li class="nav-item" *ngIf="!verActualizarEmpresa">
+            <li class="nav-item" *ngIf="!edicion">
                 <a class="nav-link" title="Guardar" role="button" (click)="actualizarEmpresa($event)">
                     <mat-icon>save</mat-icon>
                 </a>
             </li>
-            <li class="nav-item" *ngIf="verActualizarEmpresa">
+            <li class="nav-item" *ngIf="edicion">
                 <a class="nav-link" title="Actualizar" role="button" (click)="actualizarEmpresa($event)">
                     <mat-icon>update</mat-icon>
                 </a>

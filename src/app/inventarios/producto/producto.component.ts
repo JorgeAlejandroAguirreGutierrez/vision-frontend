@@ -48,9 +48,9 @@ export class ProductoComponent implements OnInit {
   ComponenteProducto: Type<any> = ProductoComponent;
 
   abrirPanelPrecios: boolean[] = [];
-  abrirPanelNuevoProducto: boolean = true;
+  abrirPanelNuevo: boolean = true;
   abrirPanelNuevoPrecio: boolean = false;
-  abrirPanelAdminProducto: boolean = false;
+  abrirPanelAdmin: boolean = false;
   //verAcordeonPrecios: boolean = false;
   deshabilitarImpuesto: boolean = false;
   deshabilitarOtrasMedidas: boolean = true;
@@ -110,8 +110,7 @@ export class ProductoComponent implements OnInit {
   datos: any = [];
   controls: UntypedFormArray[] = [];
 
-  columnasProducto: any[] = [
-    { nombreColumna: 'id', cabecera: 'ID', celda: (row: Producto) => `${row.id}` },
+  columnas: any[] = [
     { nombreColumna: 'codigo', cabecera: 'Código', celda: (row: Producto) => `${row.codigo}` },
     { nombreColumna: 'nombre', cabecera: 'Nombre', celda: (row: Producto) => `${row.nombre}` },
     { nombreColumna: 'medidaKardex', cabecera: 'Medida Kardex', celda: (row: Producto) => `${row.medidaKardex.descripcion}` },
@@ -119,8 +118,8 @@ export class ProductoComponent implements OnInit {
     { nombreColumna: 'tipoGasto', cabecera: 'Tipo Gasto', celda: (row: Producto) => `${row.tipoGasto.descripcion}` },
     { nombreColumna: 'estado', cabecera: 'Estado', celda: (row: Producto) => `${row.estado}` }
   ];
-  cabeceraProducto: string[] = this.columnasProducto.map(titulo => titulo.nombreColumna);
-  dataSourceProducto: MatTableDataSource<Producto>;
+  cabecera: string[] = this.columnas.map(titulo => titulo.nombreColumna);
+  dataSource: MatTableDataSource<Producto>;
   clickedRows = new Set<Producto>();
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
@@ -199,7 +198,6 @@ export class ProductoComponent implements OnInit {
       Swal.fire(error, mensajes.error_saldo_inicial, error_swal);
       return;
     }
-
     this.producto.precios = this.tablaPrecios;
     this.bodega.id 
     this.producto.productosBodegas.push(); 
@@ -232,9 +230,9 @@ export class ProductoComponent implements OnInit {
     this.producto.impuesto = this.impuestos[0];
     this.producto.tipoGasto = this.tiposGastos[0];
     this.abrirPanelPrecios = [];
-    this.abrirPanelNuevoProducto = true;
+    this.abrirPanelNuevo = true;
     this.abrirPanelNuevoPrecio = false;
-    this.abrirPanelAdminProducto = false;
+    this.abrirPanelAdmin = false;
     this.deshabilitarOtrasMedidas = true;
     this.deshabilitarImpuesto = false;
     this.deshabilitarSaldoInicial = false;
@@ -307,27 +305,27 @@ export class ProductoComponent implements OnInit {
     this.productoService.consultar().subscribe(
       res => {
         this.productos = res.resultado as Producto[];
-        this.llenarDataSourceProducto(this.productos);
+        this.llenarDataSource(this.productos);
       },
       err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
 
-  llenarDataSourceProducto(productos: Producto[]) {
-    this.dataSourceProducto = new MatTableDataSource(productos);
-    this.dataSourceProducto.filterPredicate = (data: Producto, filter: string): boolean =>
+  llenarDataSource(productos: Producto[]) {
+    this.dataSource = new MatTableDataSource(productos);
+    this.dataSource.filterPredicate = (data: Producto, filter: string): boolean =>
       data.codigo.toUpperCase().includes(filter) || data.nombre.toUpperCase().includes(filter) || data.tipoGasto.descripcion.toUpperCase().includes(filter) ||
       data.categoriaProducto.descripcion.toUpperCase().includes(filter) || data.estado.toUpperCase().includes(filter);
-    this.dataSourceProducto.paginator = this.paginator;
-    this.dataSourceProducto.paginator.firstPage();
-    this.dataSourceProducto.sort = this.sort;
+    this.dataSource.paginator = this.paginator;
+    this.dataSource.paginator.firstPage();
+    this.dataSource.sort = this.sort;
   }
 
-  filtroProducto(event: Event) {
+  filtro(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
-    this.dataSourceProducto.filter = filterValue.trim().toUpperCase();
-    if (this.dataSourceProducto.paginator) {
-      this.dataSourceProducto.paginator.firstPage();
+    this.dataSource.filter = filterValue.trim().toUpperCase();
+    if (this.dataSource.paginator) {
+      this.dataSource.paginator.firstPage();
     }
   }
 

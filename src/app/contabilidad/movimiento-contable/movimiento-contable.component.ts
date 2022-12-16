@@ -24,9 +24,9 @@ import { AfectacionContable } from 'src/app/modelos/contabilidad/afectacion-cont
 })
 export class MovimientoContableComponent implements OnInit {
 
-  abrirPanelNuevoMovimientoContable = true;
-  abrirPanelAdminMovimientoContable = false;
-  editarMovimientoContable: boolean = true;
+  abrirPanelNuevo = true;
+  abrirPanelAdmin = false;
+  edicion: boolean = true;
 
   sesion: Sesion = null;
   movimientoContable = new MovimientoContable();
@@ -53,9 +53,6 @@ export class MovimientoContableComponent implements OnInit {
 
   limpiar() {
     this.movimientoContable = new MovimientoContable();
-    //this.grupoProducto.categoriaProducto.id = this.categoriasProductos[0].id;
-    //this.editar();
-
     this.TablaMovimientoContable.clickedRows.clear();
     this.TablaMovimientoContable.borrarFiltroMovimientoContable();
     if (this.TablaMovimientoContable.dataSourceMovimientoContable.paginator) {
@@ -84,9 +81,7 @@ export class MovimientoContableComponent implements OnInit {
   }
 
   editar() {
-    //this.habilitarControles();
-    //this.validarCategoria();
-    this.editarMovimientoContable = true;
+    this.edicion = true;
   }
 
   actualizar(event) {
@@ -133,7 +128,7 @@ export class MovimientoContableComponent implements OnInit {
     if (this.movimientoContable.id != 0) {
       //this.llenarMovimientoContable();
       //this.inhabilitarControles();
-      this.editarMovimientoContable = false;
+      this.edicion = false;
     } else {
       this.limpiar();
     }

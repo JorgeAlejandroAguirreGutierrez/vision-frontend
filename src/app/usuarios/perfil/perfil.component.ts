@@ -24,30 +24,29 @@ export class PerfilComponent implements OnInit {
   activo: string = valores.activo;
   inactivo: string = valores.inactivo;
 
-  abrirPanelNuevoPerfil: boolean = true;
-  abrirPanelAdminPerfil: boolean = true;
-  editarPerfil: boolean = true;
+  abrirPanelNuevo: boolean = true;
+  abrirPanelAdmin: boolean = true;
+  edicion: boolean = true;
 
   sesion: Sesion = null;
   perfil: Perfil = new Perfil();
   perfiles: Perfil[];
 
-  columnasPerfil: any[] = [
-    { nombreColumna: 'id', cabecera: 'ID', celda: (row: Perfil) => `${row.id}` },
+  columnas: any[] = [
     { nombreColumna: 'codigo', cabecera: 'Código', celda: (row: Perfil) => `${row.codigo}` },
     { nombreColumna: 'descripcion', cabecera: 'Descripción', celda: (row: Perfil) => `${row.descripcion}` },
     { nombreColumna: 'abreviatura', cabecera: 'Abreviatura', celda: (row: Perfil) => `${row.abreviatura}` },
     { nombreColumna: 'estado', cabecera: 'Estado', celda: (row: Perfil) => `${row.estado}` }
   ];
-  cabeceraPerfil: string[] = this.columnasPerfil.map(titulo => titulo.nombreColumna);
-  dataSourcePerfil: MatTableDataSource<Perfil>;
-  observableDSPerfil: BehaviorSubject<MatTableDataSource<Perfil>> = new BehaviorSubject<MatTableDataSource<Perfil>>(null);
+  cabecera: string[] = this.columnas.map(titulo => titulo.nombreColumna);
+  dataSource: MatTableDataSource<Perfil>;
+  observable: BehaviorSubject<MatTableDataSource<Perfil>> = new BehaviorSubject<MatTableDataSource<Perfil>>(null);
   clickedRows = new Set<Perfil>();
 
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
-  @ViewChild("inputFiltroPerfil") inputFiltroPerfil: ElementRef;
+  @ViewChild("inputFiltro") inputFiltro: ElementRef;
 
   constructor(private renderer: Renderer2, private perfilService: PerfilService,
     private sesionService: SesionService, private router: Router) { }
@@ -67,9 +66,9 @@ export class PerfilComponent implements OnInit {
 
   limpiar() {
     this.perfil = new Perfil();
-    this.editarPerfil = true;
+    this.edicion = true;
     this.clickedRows.clear();
-    this.borrarFiltroPerfil();
+    this.borrarFiltro();
   }
 
   nuevo(event) {
@@ -86,7 +85,7 @@ export class PerfilComponent implements OnInit {
         this.perfil = res.resultado as Perfil;
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
         this.perfiles.push(this.perfil);
-        this.llenarTablaPerfil(this.perfiles);
+        this.llenarTabla(this.perfiles);
       },
       error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     });
@@ -95,7 +94,7 @@ export class PerfilComponent implements OnInit {
   editar(event) {
     if (event != null)
       event.preventDefault();
-    this.editarPerfil = true;
+    this.edicion = true;
   }
 
   actualizar(event) {
@@ -139,18 +138,18 @@ export class PerfilComponent implements OnInit {
     this.perfilService.consultar().subscribe({
       next: res => {
         this.perfiles = res.resultado as Perfil[]
-        this.llenarTablaPerfil(this.perfiles);
+        this.llenarTabla(this.perfiles);
       },
       error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     });
   }
 
-  llenarTablaPerfil(perfiles: Perfil[]) {
+  llenarTabla(perfiles: Perfil[]) {
     this.ordenarAsc(perfiles, 'id');
-    this.dataSourcePerfil = new MatTableDataSource(perfiles);
-    this.dataSourcePerfil.paginator = this.paginator;
-    this.dataSourcePerfil.sort = this.sort;
-    this.observableDSPerfil.next(this.dataSourcePerfil);
+    this.dataSource = new MatTableDataSource(perfiles);
+    this.dataSource.paginator = this.paginator;
+    this.dataSource.sort = this.sort;
+    this.observable.next(this.dataSource);
   }
 
   seleccion(perfil: Perfil) {
@@ -158,22 +157,22 @@ export class PerfilComponent implements OnInit {
       this.clickedRows.clear();
       this.clickedRows.add(perfil);
       this.perfil = perfil;
-      this.editarPerfil = false;
+      this.edicion = false;
     } else {
       this.limpiar();
     }
   }
 
-  filtroPerfil(event: Event) {
+  filtro(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
-    this.dataSourcePerfil.filter = filterValue.trim().toUpperCase();
-    if (this.dataSourcePerfil.paginator) {
-      this.dataSourcePerfil.paginator.firstPage();
+    this.dataSource.filter = filterValue.trim().toUpperCase();
+    if (this.dataSource.paginator) {
+      this.dataSource.paginator.firstPage();
     }
   }
-  borrarFiltroPerfil() {
-    this.renderer.setProperty(this.inputFiltroPerfil.nativeElement, 'value', '');
-    this.dataSourcePerfil.filter = '';
+  borrarFiltro() {
+    this.renderer.setProperty(this.inputFiltro.nativeElement, 'value', '');
+    this.dataSource.filter = '';
   }
 
   ordenarAsc(arrayJson: any, pKey: any) {

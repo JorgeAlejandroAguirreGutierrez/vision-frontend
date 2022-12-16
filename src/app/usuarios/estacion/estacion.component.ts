@@ -29,9 +29,9 @@ export class EstacionComponent implements OnInit {
   activo: string = valores.activo;
   inactivo: string = valores.inactivo;
 
-  abrirPanelNuevoEstacion: boolean = true;
-  abrirPanelAdminEstacion: boolean = false;
-  editarEstacion: boolean = true;
+  abrirPanelNuevo: boolean = true;
+  abrirPanelAdmin: boolean = false;
+  edicion: boolean = true;
 
   sesion: Sesion = null;
   empresa: Empresa = new Empresa();
@@ -40,16 +40,16 @@ export class EstacionComponent implements OnInit {
   empresas: Empresa[];
   establecimientos: Establecimiento[]=[];
 
-  columnasEstacion: any[] = [
+  columnas: any[] = [
     { nombreColumna: 'codigo', cabecera: 'Código', celda: (row: Estacion) => `${row.codigo}` },
     { nombreColumna: 'descripcion', cabecera: 'Estación', celda: (row: Estacion) => `${row.descripcion}` },
     { nombreColumna: 'nombre_pc', cabecera: 'Nombre PC', celda: (row: Estacion) => `${row.nombrePC}` },
     { nombreColumna: 'ip', cabecera: 'IP Red', celda: (row: Estacion) => `${row.ip}` },
     { nombreColumna: 'estado', cabecera: 'Estado', celda: (row: Estacion) => `${row.estado}` }
   ];
-  cabeceraEstacion: string[] = this.columnasEstacion.map(titulo => titulo.nombreColumna);
-  dataSourceEstacion: MatTableDataSource<Estacion>;
-  observableDSEstacion: BehaviorSubject<MatTableDataSource<Estacion>> = new BehaviorSubject<MatTableDataSource<Estacion>>(null);
+  cabecera: string[] = this.columnas.map(titulo => titulo.nombreColumna);
+  dataSource: MatTableDataSource<Estacion>;
+  observable: BehaviorSubject<MatTableDataSource<Estacion>> = new BehaviorSubject<MatTableDataSource<Estacion>>(null);
   clickedRows = new Set<Estacion>();
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
@@ -75,9 +75,9 @@ export class EstacionComponent implements OnInit {
 
   limpiar() {
     this.estacion = new Estacion();
-    this.editarEstacion = true;
+    this.edicion = true;
     this.clickedRows.clear();
-    this.borrarFiltroEstacion();
+    this.borrarFiltro();
   }
 
   nuevo(event) {
@@ -94,7 +94,7 @@ export class EstacionComponent implements OnInit {
         this.estacion = res.resultado as Estacion;
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
         this.estaciones.push(this.estacion);
-        this.llenarTablaEstacion(this.estaciones);
+        this.llenarTabla(this.estaciones);
       },
       error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     });
@@ -103,7 +103,7 @@ export class EstacionComponent implements OnInit {
   editar(event) {
     if (event != null)
       event.preventDefault();
-    this.editarEstacion = true;
+    this.edicion = true;
   }
 
   actualizar(event) {
@@ -147,18 +147,18 @@ export class EstacionComponent implements OnInit {
     this.estacionService.consultar().subscribe({
       next: res => {
         this.estaciones = res.resultado as Estacion[]
-        this.llenarTablaEstacion(this.estaciones);
+        this.llenarTabla(this.estaciones);
       },
       error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     });
   }
 
-  llenarTablaEstacion(estaciones: Estacion[]) {
+  llenarTabla(estaciones: Estacion[]) {
     this.ordenarAsc(estaciones, 'id');
-    this.dataSourceEstacion = new MatTableDataSource(estaciones);
-    this.dataSourceEstacion.paginator = this.paginator;
-    this.dataSourceEstacion.sort = this.sort;
-    this.observableDSEstacion.next(this.dataSourceEstacion);
+    this.dataSource = new MatTableDataSource(estaciones);
+    this.dataSource.paginator = this.paginator;
+    this.dataSource.sort = this.sort;
+    this.observable.next(this.dataSource);
   }
 
   seleccion(estacion: Estacion) {
@@ -166,22 +166,22 @@ export class EstacionComponent implements OnInit {
       this.clickedRows.clear();
       this.clickedRows.add(estacion);
       this.estacion = estacion;
-      this.editarEstacion = false;
+      this.edicion = false;
     } else {
       this.limpiar();
     }
   }
 
-  filtroEstacion(event: Event) {
+  filtro(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
-    this.dataSourceEstacion.filter = filterValue.trim().toUpperCase();
-    if (this.dataSourceEstacion.paginator) {
-      this.dataSourceEstacion.paginator.firstPage();
+    this.dataSource.filter = filterValue.trim().toUpperCase();
+    if (this.dataSource.paginator) {
+      this.dataSource.paginator.firstPage();
     }
   }
-  borrarFiltroEstacion() {
+  borrarFiltro() {
     this.renderer.setProperty(this.inputFiltroEstacion.nativeElement, 'value', '');
-    this.dataSourceEstacion.filter = '';
+    this.dataSource.filter = '';
   }
 
   ordenarAsc(arrayJson: any, pKey: any) {
@@ -201,8 +201,6 @@ export class EstacionComponent implements OnInit {
   }
 
   consultarEstablecimientos(establecimientoId: number) {
-    //this.establecimiento.ubicacion.provincia = provincia;
-    //this.establecimientoService.obtener(establecimientoId).subscribe({
     this.establecimientoService.consultar().subscribe({
       next: res => {
         console.log("estable");

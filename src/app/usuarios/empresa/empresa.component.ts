@@ -26,9 +26,9 @@ export class EmpresaComponent implements OnInit {
   activo: string = valores.activo;
   inactivo: string = valores.inactivo;
 
-  abrirPanelNuevoEmpresa: boolean = true;
-  abrirPanelAdminEmpresa: boolean = true;
-  editarEmpresa: boolean = true;
+  abrirPanelNuevo: boolean = true;
+  abrirPanelAdmin: boolean = true;
+  edicion: boolean = true;
   obligadoContabilidad: boolean = false;
   formularioValido: boolean = true;
 
@@ -36,20 +36,20 @@ export class EmpresaComponent implements OnInit {
   empresa= new Empresa();
   empresas: Empresa[];
 
-  columnasEmpresa: any[] = [
+  columnas: any[] = [
     { nombreColumna: 'codigo', cabecera: 'Código', celda: (row: Empresa) => `${row.codigo}` },
     { nombreColumna: 'identificacion', cabecera: 'Identificacion', celda: (row: Empresa) => `${row.identificacion}` },
     { nombreColumna: 'razonSocial', cabecera: 'Razon Social', celda: (row: Empresa) => `${row.razonSocial}` },
     { nombreColumna: 'estado', cabecera: 'Estado', celda: (row: Empresa) => `${row.estado}` }
   ];
-  cabeceraEmpresa: string[] = this.columnasEmpresa.map(titulo => titulo.nombreColumna);
-  dataSourceEmpresa: MatTableDataSource<Empresa>;
-  observableDSEmpresa: BehaviorSubject<MatTableDataSource<Empresa>> = new BehaviorSubject<MatTableDataSource<Empresa>>(null);
+  cabecera: string[] = this.columnas.map(titulo => titulo.nombreColumna);
+  dataSource: MatTableDataSource<Empresa>;
+  observable: BehaviorSubject<MatTableDataSource<Empresa>> = new BehaviorSubject<MatTableDataSource<Empresa>>(null);
   clickedRows = new Set<Empresa>();
   
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
-  @ViewChild("inputFiltroEmpresa") inputFiltroEmpresa: ElementRef;
+  @ViewChild("inputFiltro") inputFiltro: ElementRef;
 
   constructor(private renderer: Renderer2, private router: Router, 
     private sesionService: SesionService, private empresaService: EmpresaService) { }
@@ -70,9 +70,9 @@ export class EmpresaComponent implements OnInit {
 
   limpiar() {
     this.empresa = new Empresa();
-    this.editarEmpresa = true;
+    this.edicion = true;
     this.clickedRows.clear();
-    this.borrarFiltroEmpresa();
+    this.borrarFiltro();
   }
 
   nuevo(event) {
@@ -95,7 +95,7 @@ export class EmpresaComponent implements OnInit {
         this.empresa = res.resultado as Empresa;
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
         this.empresas.push(this.empresa);
-        this.llenarTablaEmpresa(this.empresas);
+        this.llenarTabla(this.empresas);
       },
       error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     });
@@ -104,7 +104,7 @@ export class EmpresaComponent implements OnInit {
   editar(event) {
     if (event != null)
       event.preventDefault();
-    this.editarEmpresa = true;
+    this.edicion = true;
   }
 
   actualizar(event) {
@@ -148,18 +148,18 @@ export class EmpresaComponent implements OnInit {
     this.empresaService.consultar().subscribe({
       next: res => {
         this.empresas = res.resultado as Empresa[]
-        this.llenarTablaEmpresa(this.empresas);
+        this.llenarTabla(this.empresas);
       },
       error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     });
   }
 
-  llenarTablaEmpresa(empresas: Empresa[]) {
+  llenarTabla(empresas: Empresa[]) {
     this.ordenarAsc(empresas, 'id');
-    this.dataSourceEmpresa = new MatTableDataSource(empresas);
-    this.dataSourceEmpresa.paginator = this.paginator;
-    this.dataSourceEmpresa.sort = this.sort;
-    this.observableDSEmpresa.next(this.dataSourceEmpresa);
+    this.dataSource = new MatTableDataSource(empresas);
+    this.dataSource.paginator = this.paginator;
+    this.dataSource.sort = this.sort;
+    this.observable.next(this.dataSource);
   }
 
   seleccion(empresa: Empresa) {
@@ -167,7 +167,7 @@ export class EmpresaComponent implements OnInit {
       this.clickedRows.clear();
       this.clickedRows.add(empresa);
       this.empresa = empresa;
-      this.editarEmpresa = false;
+      this.edicion = false;
     } else {
       this.limpiar();
     }
@@ -183,16 +183,16 @@ export class EmpresaComponent implements OnInit {
     //console.log(this.obligadoContabilidad);
   }
 
-  filtroEmpresa(event: Event) {
+  filtro(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
-    this.dataSourceEmpresa.filter = filterValue.trim().toUpperCase();
-    if (this.dataSourceEmpresa.paginator) {
-      this.dataSourceEmpresa.paginator.firstPage();
+    this.dataSource.filter = filterValue.trim().toUpperCase();
+    if (this.dataSource.paginator) {
+      this.dataSource.paginator.firstPage();
     }
   }
-  borrarFiltroEmpresa() {
-    this.renderer.setProperty(this.inputFiltroEmpresa.nativeElement, 'value', '');
-    this.dataSourceEmpresa.filter = '';
+  borrarFiltro() {
+    this.renderer.setProperty(this.inputFiltro.nativeElement, 'value', '');
+    this.dataSource.filter = '';
   }
 
   ordenarAsc(arrayJson: any, pKey: any) {

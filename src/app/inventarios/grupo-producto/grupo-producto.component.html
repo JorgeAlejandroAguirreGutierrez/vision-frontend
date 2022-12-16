@@ -6,12 +6,12 @@
             </a>
         </li>
         <ng-container *ngIf="grupoProducto.id!=0">
-            <li class="nav-item" *ngIf="!editarGrupoProducto">
+            <li class="nav-item" *ngIf="!edicion">
                 <a class="nav-link" title="Actualizar" role="button" (click)="editar()">
                     <mat-icon>edit</mat-icon>
                 </a>
             </li>
-            <li class="nav-item" *ngIf="editarGrupoProducto">
+            <li class="nav-item" *ngIf="edicion">
                 <a class="nav-link" title="Actualizar" role="button" (click)="actualizar($event)">
                     <mat-icon>update</mat-icon>
                 </a>
@@ -36,14 +36,14 @@
 </nav>
 <div class="contenedor">
     <mat-accordion class="headers-align">
-        <mat-expansion-panel (opened)="abrirPanelNuevoGrupo = true" (closed)="abrirPanelNuevoGrupo = false"
-            [expanded]="abrirPanelNuevoGrupo">
+        <mat-expansion-panel (opened)="abrirPanelNuevo = true" (closed)="abrirPanelNuevo = false"
+            [expanded]="abrirPanelNuevo">
             <mat-expansion-panel-header>
                 <mat-panel-title>
                     <i><u>GRUPOS PARA PRODUCTOS</u></i>
                 </mat-panel-title>
                 <mat-panel-description>
-                    {{abrirPanelNuevoGrupo ? 'Ocultar crear grupo' : 'Crear nuevo grupo'}}
+                    {{abrirPanelNuevo ? 'Ocultar crear grupo' : 'Crear nuevo grupo'}}
                     <mat-icon>playlist_add</mat-icon>
                 </mat-panel-description>
             </mat-expansion-panel-header>
@@ -124,7 +124,7 @@
                         <mat-form-field appearance="standard">
                             <mat-label>Categoría</mat-label>
                             <mat-select [(ngModel)]="grupoProducto.categoriaProducto.id" class="form-control-sm"
-                                (selectionChange)="validarCategoria()" [disabled]="!editarGrupoProducto">
+                                (selectionChange)="validarCategoria()" [disabled]="!edicion">
                                 <mat-option *ngFor="let categoriaProducto of categoriasProductos"
                                     [value]="categoriaProducto.id">
                                     {{categoriaProducto.descripcion}}</mat-option>
@@ -134,7 +134,7 @@
                     <div class="col-6">
                         <mat-form-field appearance="standard">
                             <mat-label>Estado</mat-label>
-                            <mat-select [(ngModel)]="grupoProducto.estado" class="form-control-sm" [disabled]="!editarGrupoProducto">
+                            <mat-select [(ngModel)]="grupoProducto.estado" class="form-control-sm" [disabled]="!edicion">
                                 <mat-option [value]="activo">{{activo}}</mat-option>
                                 <mat-option [value]="inactivo">{{inactivo}}</mat-option>
                             </mat-select>
@@ -148,7 +148,7 @@
                         </mat-form-field>
                     </div>
                     <div class="col-4 iconos">
-                        <button mat-icon-button aria-label="Mov. Conta" [disabled]="!editarGrupoProducto" (click)="dialogoMovimientosContables()">
+                        <button mat-icon-button aria-label="Mov. Conta" [disabled]="!edicion" (click)="dialogoMovimientosContables()">
                             <mat-icon >search</mat-icon>
                         </button>
                     </div>
@@ -157,13 +157,13 @@
         </mat-expansion-panel>
     </mat-accordion>
     <mat-accordion class="headers-align">    
-        <mat-expansion-panel (opened)="abrirPanelAdminGrupo = true" (closed)="abrirPanelAdminGrupo = false">
+        <mat-expansion-panel (opened)="abrirPanelAdmin = true" (closed)="abrirPanelAdmin = false">
             <mat-expansion-panel-header>
                 <mat-panel-title>
                     <i><u>GESTIONAR GRUPOS</u></i>
                 </mat-panel-title>
                 <mat-panel-description>
-                    {{abrirPanelAdminGrupo ? 'Ocultar administrador de grupos' : 'Editar grupos de productos existentes'}}
+                    {{abrirPanelAdmin ? 'Ocultar administrador de grupos' : 'Editar grupos de productos existentes'}}
                     <mat-icon>playlist_add_check</mat-icon>
                 </mat-panel-description>
             </mat-expansion-panel-header>

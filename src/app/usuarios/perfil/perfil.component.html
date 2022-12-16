@@ -6,12 +6,12 @@
             </a>
         </li>
         <ng-container *ngIf="perfil.id!=0">
-            <li class="nav-item" *ngIf="!editarPerfil">
-                <a class="nav-link" title="Actualizar" role="button" (click)="editar($event)">
+            <li class="nav-item" *ngIf="!edicion">
+                <a class="nav-link" title="Editar" role="button" (click)="editar($event)">
                     <mat-icon>edit</mat-icon>
                 </a>
             </li>
-            <li class="nav-item" *ngIf="editarPerfil">
+            <li class="nav-item" *ngIf="edicion">
                 <a class="nav-link" title="Actualizar" role="button" (click)="actualizar($event)">
                     <mat-icon>update</mat-icon>
                 </a>
@@ -36,14 +36,14 @@
 </nav>
 <div class="contenedor">
     <mat-accordion class="headers-align">
-        <mat-expansion-panel (opened)="abrirPanelNuevoPerfil = true" (closed)="abrirPanelNuevoPerfil = false"
-            [expanded]="abrirPanelNuevoPerfil">
+        <mat-expansion-panel (opened)="abrirPanelNuevo = true" (closed)="abrirPanelNuevo = false"
+            [expanded]="abrirPanelNuevo">
             <mat-expansion-panel-header>
                 <mat-panel-title>
                     <i><u>PERFIL</u></i>
                 </mat-panel-title>
                 <mat-panel-description>
-                    {{abrirPanelNuevoPerfil ? 'Ocultar crear perfil' : 'Crear nuevo perfil'}}
+                    {{abrirPanelNuevo ? 'Ocultar crear perfil' : 'Crear nuevo perfil'}}
                     <mat-icon>playlist_add</mat-icon>
                 </mat-panel-description>
             </mat-expansion-panel-header>
@@ -59,21 +59,21 @@
                 <div class="col-5">
                     <mat-form-field appearance="standard">
                         <mat-label>Descripción</mat-label>
-                        <input matInput type="text" [(ngModel)]="perfil.descripcion" [disabled]="!editarPerfil"
+                        <input matInput type="text" [(ngModel)]="perfil.descripcion" [disabled]="!edicion"
                             oninput="this.value = this.value.toUpperCase()" class="form-control-sm">
                     </mat-form-field>
                 </div>
                 <div class="col-1">
                     <mat-form-field appearance="standard">
                         <mat-label>Abreviatura</mat-label>
-                        <input matInput type="text" [(ngModel)]="perfil.abreviatura" [disabled]="!editarPerfil"
+                        <input matInput type="text" [(ngModel)]="perfil.abreviatura" [disabled]="!edicion"
                             class="form-control-sm">
                     </mat-form-field>
                 </div>
                 <div class="col-1">
                     <mat-form-field appearance="standard">
                         <mat-label>Mutiempresa</mat-label>
-                            <mat-select [(ngModel)]="perfil.multiempresa" [disabled]="!editarPerfil" class="form-control-sm">
+                            <mat-select [(ngModel)]="perfil.multiempresa" [disabled]="!edicion" class="form-control-sm">
                                 <mat-option value="SI">SI</mat-option>
                                 <mat-option value="NO">NO</mat-option>
                             </mat-select>    
@@ -82,7 +82,7 @@
                 <div class="col-2">
                     <mat-form-field appearance="standard">
                         <mat-label>Estado</mat-label>
-                        <mat-select [(ngModel)]="perfil.estado" [disabled]="!editarPerfil" class="form-control-sm">
+                        <mat-select [(ngModel)]="perfil.estado" [disabled]="!edicion" class="form-control-sm">
                             <mat-option [value]="activo">{{activo}}</mat-option>
                             <mat-option [value]="inactivo">{{inactivo}}</mat-option>
                         </mat-select>
@@ -92,40 +92,40 @@
         </mat-expansion-panel>
     </mat-accordion>
     <mat-accordion class="headers-align">
-        <mat-expansion-panel (opened)="abrirPanelAdminPerfil = true" (closed)="abrirPanelAdminPerfil = false"
-            [expanded]="abrirPanelAdminPerfil">
+        <mat-expansion-panel (opened)="abrirPanelAdmin = true" (closed)="abrirPanelAdmin = false"
+            [expanded]="abrirPanelAdmin">
             <mat-expansion-panel-header>
                 <mat-panel-title>
                     <i><u>GESTIONAR PERFILES</u></i>
                 </mat-panel-title>
                 <mat-panel-description>
-                    {{abrirPanelAdminPerfil ? 'Ocultar administrador de perfiles' : 'Editar perfil existente'}}
+                    {{abrirPanelAdmin ? 'Ocultar administrador de perfiles' : 'Editar perfil existente'}}
                     <mat-icon>playlist_add_check</mat-icon>
                 </mat-panel-description>
             </mat-expansion-panel-header>
             <hr>
             <mat-form-field appearance="standard">
                 <mat-label>Buscar perfil</mat-label>
-                <input matInput (keyup)="filtroPerfil($event)" #inputFiltroPerfil>
-                <button mat-button *ngIf="inputFiltroPerfil.value" matSuffix mat-icon-button
-                    (click)="borrarFiltroPerfil()">
+                <input matInput (keyup)="filtro($event)" #inputFiltro>
+                <button mat-button *ngIf="inputFiltro.value" matSuffix mat-icon-button
+                    (click)="borrarFiltro()">
                     <mat-icon>close</mat-icon>
                 </button>
             </mat-form-field>
             <div class="mat-elevation-z8">
-                <table mat-table [dataSource]="observableDSPerfil.value" matSort>
+                <table mat-table [dataSource]="observable.value" matSort>
                     <!-- Columnas Dinamicas -->
-                    <ng-container *ngFor="let columna of columnasPerfil" [matColumnDef]="columna.nombreColumna">
+                    <ng-container *ngFor="let columna of columnas" [matColumnDef]="columna.nombreColumna">
                         <th mat-header-cell *matHeaderCellDef mat-sort-header> {{ columna.cabecera }} </th>
                         <td mat-cell *matCellDef="let row"> {{ columna.celda(row) }} </td>
                     </ng-container>
-                    <tr mat-header-row *matHeaderRowDef="cabeceraPerfil"></tr>
+                    <tr mat-header-row *matHeaderRowDef="cabecera"></tr>
                     <tr mat-row (click)="seleccion(row)" [class.selected-row]="clickedRows.has(row)"
-                        *matRowDef="let row; columns: cabeceraPerfil;"></tr>
+                        *matRowDef="let row; columns: cabecera;"></tr>
                     <!-- Row shown when there is no matching data. -->
                     <tr class="mat-row" *matNoDataRow>
                         <td class="mat-cell" colspan="6">No hay datos que coincidan con el perfil: 
-                            "{{inputFiltroPerfil.value}}"
+                            "{{inputFiltro.value}}"
                         </td>
                     </tr>
                 </table>

@@ -39,7 +39,6 @@ import { VehiculoTransporteComponent } from '../../entregas/vehiculo-transporte/
 
 //ACCESOS
 import { UsuarioComponent } from '../../usuarios/usuario/usuario.component';
-import { EstacionUsuarioComponent } from '../../usuarios/estacion-usuario/estacion-usuario.component';
 import { EmpresaComponent } from '../../usuarios/empresa/empresa.component';
 import { EstablecimientoComponent } from '../../usuarios/establecimiento/establecimiento.component';
 import { EstacionComponent } from '../../usuarios/estacion/estacion.component';
@@ -141,7 +140,6 @@ export class SidebarItemsService {
 
     if (tabNombre == modulos.modulo_accesos) {
       this.llenarOpciones(UsuarioComponent, tabs.tab_usuario, items.item_usuario, icos.ico_usuario);
-      this.llenarOpciones(EstacionUsuarioComponent, tabs.tab_estacion_usuario, items.item_estacion_usuario, icos.ico_estacion_usuario);
       this.llenarOpciones(EmpresaComponent, tabs.tab_empresa, items.item_empresa, icos.ico_empresa);
       this.llenarOpciones(EstablecimientoComponent, tabs.tab_establecimiento, items.item_establecimiento, icos.ico_establecimiento);
       this.llenarOpciones(EstacionComponent, tabs.tab_estacion, items.item_estacion, icos.ico_estacion);
