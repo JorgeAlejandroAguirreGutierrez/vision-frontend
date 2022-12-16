@@ -1,6 +1,6 @@
 import { Perfil } from './perfil';
-import { EstacionUsuario } from './estacion-usuario';
 import { valores } from "../../constantes";
+import { Estacion } from './estacion';
 
 export class Usuario {
     id: number;
@@ -18,7 +18,7 @@ export class Usuario {
     respuesta: string;
     activo: string;
     perfil: Perfil;
-    estacionesUsuarios: EstacionUsuario[];
+    estacion: Estacion;
 
     constructor() {
       this.id = valores.cero;
@@ -36,7 +36,7 @@ export class Usuario {
       this.respuesta = valores.vacio;
       this.activo = valores.activo;
       this.perfil = new Perfil();
-      this.estacionesUsuarios = [];
+      this.estacion=new Estacion();
     }
     
 }

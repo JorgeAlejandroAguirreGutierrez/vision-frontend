@@ -59,7 +59,7 @@
                 <div class="col-2">
                     <mat-form-field appearance="standard">
                         <mat-label>Abreviatura</mat-label>
-                        <input matInput type="text" [(ngModel)]="estadoCivil.abreviatura" class="form-control-sm">
+                        <input matInput type="text" [(ngModel)]="estadoCivil.abreviatura" oninput="this.value = this.value.toUpperCase()" class="form-control-sm">
                     </mat-form-field>
                 </div>
             </div>

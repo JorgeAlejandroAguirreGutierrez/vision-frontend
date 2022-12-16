@@ -4,23 +4,17 @@ import { Respuesta } from '../../respuesta';
 import { urn, options } from '../../constantes';
 import {HttpClient} from '@angular/common/http';
 import { map, catchError } from 'rxjs/operators';
-import { Observable, throwError, BehaviorSubject, lastValueFrom } from 'rxjs';
+import { Observable, throwError} from 'rxjs';
 import { Router } from '@angular/router';
 import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
+
 export class UsuarioService {
 
-  private messageSource = new BehaviorSubject(0);
-  currentMessage = this.messageSource.asObservable();
-
   constructor(private http: HttpClient, private router: Router) { }
-
-  enviar(id: number) {
-    this.messageSource.next(id);
-  }
 
   crear(usuario: Usuario): Observable<Respuesta> {
     return this.http.post(environment.host + urn.ruta + urn.usuario, usuario, options).pipe(

@@ -380,7 +380,7 @@ export class ClienteComponent implements OnInit {
   crear(event: any) {
     if (event != null)
       event.preventDefault();
-    this.cliente.estacion = this.sesion.estacion;  
+    this.cliente.estacion = this.sesion.usuario.estacion;  
     this.llenarUbicacion();
     this.clienteService.crear(this.cliente).subscribe({
       next: res => {

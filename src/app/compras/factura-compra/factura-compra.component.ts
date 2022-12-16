@@ -584,7 +584,7 @@ export class FacturaCompraComponent implements OnInit {
       );
     }
     this.sesion= this.sesionService.getSesion();
-    this.cliente.estacion=this.sesion.estacion;
+    this.cliente.estacion=this.sesion.usuario.estacion;
     if (this.telefono.numero!=undefined)
       this.cliente.telefonos.push(this.telefono);
     if (this.celular.numero!=undefined)

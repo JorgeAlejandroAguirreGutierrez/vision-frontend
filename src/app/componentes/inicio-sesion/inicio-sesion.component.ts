@@ -2,7 +2,7 @@ import { Component, OnInit, Inject } from '@angular/core';
 import { UntypedFormControl, Validators, AbstractControl, ValidationErrors, ValidatorFn, FormGroup } from '@angular/forms';
 import { environment } from '../../../environments/environment';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { valores, mensajes, exito, exito_swal, error, error_swal } from '../../constantes';
+import { valores, exito, exito_swal, error, error_swal } from '../../constantes';
 import { Router } from '@angular/router';
 import Swal from 'sweetalert2';
 
@@ -15,8 +15,6 @@ import { UsuarioService } from '../../servicios/usuario/usuario.service';
 import { Empresa } from '../../modelos/usuario/empresa';
 import { EmpresaService } from '../../servicios/usuario/empresa.service';
 import { Estacion } from '../../modelos/usuario/estacion';
-import { EstacionService } from '../../servicios/usuario/estacion.service';
-import { EstacionUsuarioService } from 'src/app/servicios/usuario/estacion-usuario.service';
 
 
 @Component({
@@ -56,7 +54,7 @@ export class InicioSesionComponent implements OnInit {
   );
 
   constructor(private parametroService: ParametroService, private sesionService: SesionService, private usuarioService: UsuarioService, 
-    private empresaService: EmpresaService, private estacionService: EstacionService, private estacionUsuarioService: EstacionUsuarioService, private router: Router, public dialog: MatDialog) { }
+    private empresaService: EmpresaService, private router: Router, public dialog: MatDialog) { }
 
   ngOnInit() {
     this.obtenerParametro();
@@ -78,6 +76,7 @@ export class InicioSesionComponent implements OnInit {
   }
 
   iniciarSesion() {
+    console.log(this.sesion);
     this.sesionService.crear(this.sesion).subscribe({
       next: res => {
         this.sesion = res.resultado as Sesion;
@@ -102,6 +101,7 @@ export class InicioSesionComponent implements OnInit {
   consultarEmpresas(){
     this.empresaService.consultar().subscribe({
       next: res => {
+        console.log(res);
         this.empresas = res.resultado as Empresa[];
       },
       error: err => {

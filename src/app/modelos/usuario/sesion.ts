@@ -1,28 +1,22 @@
 import { Usuario } from './usuario';
-import { Estacion } from './estacion';
-import { Empresa } from './empresa';
 import { valores } from "../../constantes";
 
 export class Sesion {
     id:number;
     codigo: string;
-    estado:boolean;
     ip:string;
     fechaApertura: Date;
     fechaCierre: Date;
+    estado: string;
     usuario: Usuario;
-    estacion: Estacion;
-    empresa: Empresa;
 
     constructor() { 
         this.id = valores.cero;
         this.codigo = valores.vacio;
-        this.estado = true;
         this.ip = valores.vacio;
         this.fechaApertura = new Date();
         this.fechaCierre = new Date();
+        this.estado = valores.activo;
         this.usuario = new Usuario(); 
-        this.estacion = new Estacion();  
-        this.empresa = new Empresa();  
     }
 }

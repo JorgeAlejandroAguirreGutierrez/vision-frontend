@@ -67,7 +67,6 @@
                         <div class="col-6"></div>
                         <div class="col-6 centrar m-t-10 font-10">
                             <p (click)="openDialog()">Olvidó su contraseña</p>
-                            <!--p (click)="openDialog()">Crea tu usuario aquí</p-->
                         </div>
                     </ng-container>
                     <ng-container *ngIf="cambiarContrasena">
@@ -134,8 +133,7 @@
                 <div class="form-row col-5 ml-1">
                     <div class="col-8">
                         <mat-card class="foto">
-                            <img *ngIf="!sesion.usuario.avatar" width="100%" height="100%" src="assets/images/users/avatar.jpg">
-                            <img *ngIf="sesion.usuario.avatar" width="100%" height="100%" [src]="sesion.usuario.avatar">
+                            <img width="100%" height="100%" src="assets/images/users/avatar.jpg">
                         </mat-card>
                     </div>
                     <div class="col-4"></div>

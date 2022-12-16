@@ -28,6 +28,7 @@ export class EstadoCivilComponent implements OnInit {
     { nombreColumna: 'codigo', cabecera: 'Código', celda: (row: EstadoCivil) => `${row.codigo}` },
     { nombreColumna: 'descripcion', cabecera: 'Descripcion', celda: (row: EstadoCivil) => `${row.descripcion}` },
     { nombreColumna: 'abreviatura', cabecera: 'Abreviatura', celda: (row: EstadoCivil) => `${row.abreviatura}` },
+    { nombreColumna: 'estado', cabecera: 'Estado', celda: (row: EstadoCivil) => `${row.estado}` },
   ];
   cabecera: string[] = this.columnas.map(titulo => titulo.nombreColumna);
   dataSource: MatTableDataSource<EstadoCivil>;
