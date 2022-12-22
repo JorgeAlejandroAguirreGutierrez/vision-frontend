@@ -70,7 +70,7 @@
                 </div>
             </div>
             <div class="form-group form-row">
-                <div class="col-10">
+                <div class="col-8">
                     <mat-form-field appearance="standard">
                         <mat-label>Descripcion</mat-label>
                         <input matInput type="text" [(ngModel)]="tipoRetencion.descripcion"
@@ -81,6 +81,15 @@
                     <mat-form-field appearance="standard">
                         <mat-label>Porcentaje</mat-label>
                         <input matInput type="text" [(ngModel)]="tipoRetencion.porcentaje" class="form-control-sm">
+                    </mat-form-field>
+                </div>
+                <div class="col-2">
+                    <mat-form-field appearance="standard">
+                        <mat-label>Estado</mat-label>
+                        <mat-select [(ngModel)]="tipoRetencion.estado" [disabled]="true" class="form-control-sm">
+                            <mat-option [value]="activo">{{activo}}</mat-option>
+                            <mat-option [value]="inactivo">{{inactivo}}</mat-option>
+                        </mat-select>
                     </mat-form-field>
                 </div>
             </div>

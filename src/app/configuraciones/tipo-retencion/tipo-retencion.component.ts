@@ -17,6 +17,9 @@ import { TipoRetencionService } from 'src/app/servicios/configuracion/tipo-reten
 })
 export class TipoRetencionComponent implements OnInit {
 
+  activo: string = valores.activo;
+  inactivo: string = valores.inactivo;
+  
   abrirPanelNuevo = true;
   abrirPanelAdmin = false;
 

@@ -16,12 +16,15 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 
+export interface DialogData {
+  cuentaContable: CuentaContable;
+}
+
 @Component({
   selector: 'app-grupo-cliente',
   templateUrl: './grupo-cliente.component.html',
   styleUrls: ['./grupo-cliente.component.scss']
 })
-
 export class GrupoClienteComponent implements OnInit {
 
   activo: string = valores.activo;
@@ -39,6 +42,7 @@ export class GrupoClienteComponent implements OnInit {
     { nombreColumna: 'codigo', cabecera: 'Código', celda: (row: GrupoCliente) => `${row.codigo}` },
     { nombreColumna: 'descripcion', cabecera: 'Descripción', celda: (row: GrupoCliente) => `${row.descripcion}` },
     { nombreColumna: 'abreviatura', cabecera: 'Abreviatura', celda: (row: GrupoCliente) => `${row.abreviatura}` },
+    { nombreColumna: 'cuenta', cabecera: 'Cuenta Contable', celda: (row: GrupoCliente) => `${row.cuentaContable.cuenta}` },
     { nombreColumna: 'estado', cabecera: 'Estado', celda: (row: GrupoCliente) => `${row.estado}` }
   ];
   cabecera: string[] = this.columnas.map(titulo => titulo.nombreColumna);
@@ -105,6 +109,7 @@ export class GrupoClienteComponent implements OnInit {
       next: res => {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
         this.consultar();
+        this.nuevo(null);
       },
       error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     });
@@ -117,6 +122,7 @@ export class GrupoClienteComponent implements OnInit {
       next: res => {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
         this.consultar();
+        this.nuevo(null);
       },
       error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     });
@@ -153,24 +159,17 @@ export class GrupoClienteComponent implements OnInit {
     }
   }
 
-  // Para capturar la imformación del Mat-dialog
-  cuentaContableSeleccionado(event: any) {
-    //console.log(event);
-    let cuentaContableRecibido = event.movimientoContableSeleccionado as CuentaContable;
-    this.grupoCliente.cuentaContable = cuentaContableRecibido;
-    //console.log(grupoProductoRecibido.codigo);
-  }
-
   dialogoCuentasContables(): void {
     const dialogRef = this.dialog.open(DialogoCuentaContableComponent, {
       width: '80%',
-      //data: { usuario: this.usuario, clave: this.clave }
+      data: {}
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      //console.log('El dialogo para selección de grupo producto fue cerrado');
       if (result) {
-        this.grupoCliente.cuentaContable = result as CuentaContable;
+        console.log(result);
+        Object.assign(this.grupoCliente.cuentaContable, result as CuentaContable);
+        console.log(this.grupoCliente.cuentaContable);
       }
     });
   }
@@ -182,24 +181,13 @@ export class GrupoClienteComponent implements OnInit {
 })
 export class DialogoCuentaContableComponent {
 
-  movimientoContable: string[] = [];
-
-  constructor(
-    public dialogRef: MatDialogRef<DialogoCuentaContableComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: CuentaContable) { }
+  constructor(public dialogRef: MatDialogRef<DialogoCuentaContableComponent>, @Inject(MAT_DIALOG_DATA) public data: DialogData) { }
 
   onNoClick(): void {
     this.dialogRef.close();
   }
-
-  // Para capturar la imformación del Mat-dialog
+  //Para capturar la información del Mat-dialog
   cuentaContableSeleccionado(event: any) {
-    //console.log(event);
-    if (event && event.id != 0) {
-      this.data = event.movimientoContableSeleccionado as CuentaContable;
-      //console.log(this.data.codigo);
-    } else {
-      this.data = new CuentaContable;
-    }
+    this.data.cuentaContable = event.cuentaContableSeleccionado;
   }
 }  

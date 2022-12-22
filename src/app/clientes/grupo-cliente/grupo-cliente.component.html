@@ -65,7 +65,7 @@
                 </div>
                 <div class="col-1 iconos">
                     <button mat-icon-button aria-label="Mov. Conta" (click)="dialogoCuentasContables()">
-                        <mat-icon >search</mat-icon>
+                        <mat-icon>search</mat-icon>
                     </button>
                 </div>
                 <div class="col-1">
@@ -78,7 +78,7 @@
                 <div class="col-2">
                     <mat-form-field appearance="standard">
                         <mat-label>Estado</mat-label>
-                        <mat-select [(ngModel)]="grupoCliente.estado" class="form-control-sm">
+                        <mat-select [(ngModel)]="grupoCliente.estado" [disabled]="true" class="form-control-sm">
                             <mat-option [value]="activo">{{activo}}</mat-option>
                             <mat-option [value]="inactivo">{{inactivo}}</mat-option>
                         </mat-select>

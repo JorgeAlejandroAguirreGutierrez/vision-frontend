@@ -17,6 +17,9 @@ import { MatTableDataSource } from '@angular/material/table';
 })
 export class ImpuestoComponent implements OnInit {
 
+  activo: string = valores.activo;
+  inactivo: string = valores.inactivo;
+  
   abrirPanelNuevo = true;
   abrirPanelAdmin = false;
 
@@ -26,7 +29,7 @@ export class ImpuestoComponent implements OnInit {
 
   columnas: any[] = [
     { nombreColumna: 'codigo', cabecera: 'Código', celda: (row: Impuesto) => `${row.codigo}` },
-    { nombreColumna: 'codigoSri', cabecera: 'Codigo Sri', celda: (row: Impuesto) => `${row.codigoSri}` },
+    { nombreColumna: 'codigoSRI', cabecera: 'Codigo SRI', celda: (row: Impuesto) => `${row.codigoSRI}` },
     { nombreColumna: 'porcentaje', cabecera: 'Porcentaje', celda: (row: Impuesto) => `${row.porcentaje}` },
     { nombreColumna: 'estado', cabecera: 'Estado', celda: (row: Impuesto) => `${row.estado}` },
   ];

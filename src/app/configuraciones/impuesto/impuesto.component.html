@@ -49,10 +49,10 @@
                             [disabled]="true">
                     </mat-form-field>
                 </div>
-                <div class="col-7">
+                <div class="col-5">
                     <mat-form-field appearance="standard">
-                        <mat-label>Codigo Sri</mat-label>
-                        <input matInput type="text" [(ngModel)]="impuesto.codigoSri"
+                        <mat-label>Codigo SRI</mat-label>
+                        <input matInput type="text" [(ngModel)]="impuesto.codigoSRI"
                             oninput="this.value = this.value.toUpperCase()" class="form-control-sm">
                     </mat-form-field>
                 </div>
@@ -60,6 +60,15 @@
                     <mat-form-field appearance="standard">
                         <mat-label>Porcentaje</mat-label>
                         <input matInput type="text" [(ngModel)]="impuesto.porcentaje" class="form-control-sm">
+                    </mat-form-field>
+                </div>
+                <div class="col-2">
+                    <mat-form-field appearance="standard">
+                        <mat-label>Estado</mat-label>
+                        <mat-select [(ngModel)]="impuesto.estado" [disabled]="true" class="form-control-sm">
+                            <mat-option [value]="activo">{{activo}}</mat-option>
+                            <mat-option [value]="inactivo">{{inactivo}}</mat-option>
+                        </mat-select>
                     </mat-form-field>
                 </div>
             </div>

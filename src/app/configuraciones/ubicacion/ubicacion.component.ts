@@ -17,6 +17,9 @@ import { MatSort } from '@angular/material/sort';
 })
 export class UbicacionComponent implements OnInit {
 
+  activo: string = valores.activo;
+  inactivo: string = valores.inactivo;
+  
   abrirPanelNuevo = true;
   abrirPanelAdmin = false;
 

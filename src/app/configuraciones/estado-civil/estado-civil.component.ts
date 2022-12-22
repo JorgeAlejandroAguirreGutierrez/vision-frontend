@@ -17,6 +17,9 @@ import { MatTableDataSource } from '@angular/material/table';
 })
 export class EstadoCivilComponent implements OnInit {
 
+  activo: string = valores.activo;
+  inactivo: string = valores.inactivo;
+  
   abrirPanelNuevo = true;
   abrirPanelAdmin = false;
 
