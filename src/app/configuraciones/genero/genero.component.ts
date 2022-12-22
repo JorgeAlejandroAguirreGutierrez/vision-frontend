@@ -29,6 +29,7 @@ export class GeneroComponent implements OnInit {
     { nombreColumna: 'codigo', cabecera: 'Código', celda: (row: Genero) => `${row.codigo}` },
     { nombreColumna: 'descripcion', cabecera: 'Descripcion', celda: (row: Genero) => `${row.descripcion}` },
     { nombreColumna: 'abreviatura', cabecera: 'Abreviatura', celda: (row: Genero) => `${row.abreviatura}` },
+    { nombreColumna: 'estado', cabecera: 'Estado', celda: (row: Genero) => `${row.estado}` }
   ];
   cabecera: string[] = this.columnas.map(titulo => titulo.nombreColumna);
   dataSource: MatTableDataSource<Genero>;
@@ -57,6 +58,7 @@ export class GeneroComponent implements OnInit {
     if (event!=null)
       event.preventDefault();
     this.genero = new Genero();
+    this.clickedRows.clear();
   }
 
   crear(event) {
@@ -67,6 +69,7 @@ export class GeneroComponent implements OnInit {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
         this.genero=res.resultado as Genero;
         this.consultar();
+        this.nuevo(null);
       },
       err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     );
@@ -80,6 +83,7 @@ export class GeneroComponent implements OnInit {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
         this.genero=res.resultado as Genero;
         this.consultar();
+        this.nuevo(null);
       },
       err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     );
@@ -92,6 +96,7 @@ export class GeneroComponent implements OnInit {
       next: res => {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
         this.consultar();
+        this.nuevo(null);
       },
       error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     });
@@ -104,6 +109,7 @@ export class GeneroComponent implements OnInit {
       next: res => {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
         this.consultar();
+        this.nuevo(null);
       },
       error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     });
@@ -125,7 +131,7 @@ export class GeneroComponent implements OnInit {
     if (!this.clickedRows.has(genero)){
       this.clickedRows.clear();
       this.clickedRows.add(genero);
-      this.genero = genero;
+      this.genero = { ... genero};
     } else {
       this.clickedRows.clear();
       this.genero = new Genero();

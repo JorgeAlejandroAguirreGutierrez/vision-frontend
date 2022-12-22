@@ -28,6 +28,7 @@ export class TipoPagoComponent implements OnInit {
     { nombreColumna: 'codigo', cabecera: 'Código', celda: (row: TipoPago) => `${row.codigo}` },
     { nombreColumna: 'descripcion', cabecera: 'Descripcion', celda: (row: TipoPago) => `${row.descripcion}` },
     { nombreColumna: 'abreviatura', cabecera: 'Abreviatura', celda: (row: TipoPago) => `${row.abreviatura}` },
+    { nombreColumna: 'estado', cabecera: 'Estado', celda: (row: TipoPago) => `${row.estado}` }
   ];
   cabecera: string[] = this.columnas.map(titulo => titulo.nombreColumna);
   dataSource: MatTableDataSource<TipoPago>;
@@ -56,6 +57,7 @@ export class TipoPagoComponent implements OnInit {
     if (event!=null)
       event.preventDefault();
     this.tipoPago = new TipoPago();
+    this.clickedRows.clear();
   }
 
   crear(event) {
@@ -66,6 +68,7 @@ export class TipoPagoComponent implements OnInit {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
         this.tipoPago=res.resultado as TipoPago;
         this.consultar();
+        this.nuevo(null);
       },
       err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     );
@@ -79,6 +82,7 @@ export class TipoPagoComponent implements OnInit {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
         this.tipoPago=res.resultado as TipoPago;
         this.consultar();
+        this.nuevo(null);
       },
       err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     );
@@ -91,6 +95,7 @@ export class TipoPagoComponent implements OnInit {
       next: res => {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
         this.consultar();
+        this.nuevo(null);
       },
       error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     });
@@ -103,6 +108,7 @@ export class TipoPagoComponent implements OnInit {
       next: res => {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
         this.consultar();
+        this.nuevo(null);
       },
       error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     });
@@ -124,7 +130,7 @@ export class TipoPagoComponent implements OnInit {
     if (!this.clickedRows.has(tipoPago)){
       this.clickedRows.clear();
       this.clickedRows.add(tipoPago);
-      this.tipoPago = tipoPago;
+      this.tipoPago = { ... tipoPago};
     } else {
       this.clickedRows.clear();
       this.tipoPago = new TipoPago();

@@ -30,6 +30,7 @@ export class UbicacionComponent implements OnInit {
     { nombreColumna: 'provincia', cabecera: 'Provincia', celda: (row: Ubicacion) => `${row.provincia}` },
     { nombreColumna: 'canton', cabecera: 'Canton', celda: (row: Ubicacion) => `${row.canton}` },
     { nombreColumna: 'parroquia', cabecera: 'Parroquia', celda: (row: Ubicacion) => `${row.parroquia}` },
+    { nombreColumna: 'estado', cabecera: 'Estado', celda: (row: Ubicacion) => `${row.estado}` },
   ];
   cabecera: string[] = this.columnas.map(titulo => titulo.nombreColumna);
   dataSource: MatTableDataSource<Ubicacion>;
@@ -58,6 +59,7 @@ export class UbicacionComponent implements OnInit {
     if (event!=null)
       event.preventDefault();
     this.ubicacion = new Ubicacion();
+    this.clickedRows.clear();
   }
 
   crear(event) {
@@ -68,6 +70,7 @@ export class UbicacionComponent implements OnInit {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
         this.ubicacion=res.resultado as Ubicacion;
         this.consultar();
+        this.nuevo(null);
       },
       err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     );
@@ -81,6 +84,7 @@ export class UbicacionComponent implements OnInit {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
         this.ubicacion=res.resultado as Ubicacion;
         this.consultar();
+        this.nuevo(null);
       },
       err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     );
@@ -93,6 +97,7 @@ export class UbicacionComponent implements OnInit {
       next: res => {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
         this.consultar();
+        this.nuevo(null);
       },
       error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     });
@@ -105,6 +110,7 @@ export class UbicacionComponent implements OnInit {
       next: res => {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
         this.consultar();
+        this.nuevo(null);
       },
       error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     });
@@ -126,7 +132,7 @@ export class UbicacionComponent implements OnInit {
     if (!this.clickedRows.has(ubicacion)){
       this.clickedRows.clear();
       this.clickedRows.add(ubicacion);
-      this.ubicacion = ubicacion;
+      this.ubicacion = { ... ubicacion};
     } else {
       this.clickedRows.clear();
       this.ubicacion = new Ubicacion();

@@ -51,8 +51,8 @@
                 </div>
                 <div class="col-7">
                     <mat-form-field appearance="standard">
-                        <mat-label>Codigo Norma</mat-label>
-                        <input matInput type="text" [(ngModel)]="impuesto.codigoNorma"
+                        <mat-label>Codigo Sri</mat-label>
+                        <input matInput type="text" [(ngModel)]="impuesto.codigoSri"
                             oninput="this.value = this.value.toUpperCase()" class="form-control-sm">
                     </mat-form-field>
                 </div>
@@ -81,7 +81,7 @@
             <hr>
             <mat-form-field appearance="standard">
                 <mat-label>Buscar Impuesto</mat-label>
-                <input matInput (keyup)="filtro($event)" #input>
+                <input matInput oninput="this.value = this.value.toUpperCase()" (keyup)="filtro($event)" #input>
             </mat-form-field>
             <div class="mat-elevation-z8">
                 <table mat-table [dataSource]="dataSource" matSort>

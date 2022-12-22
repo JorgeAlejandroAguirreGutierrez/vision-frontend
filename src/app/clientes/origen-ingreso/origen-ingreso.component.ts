@@ -1,5 +1,4 @@
-import { Component, OnInit, HostListener, ElementRef, Renderer2 } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { Component, OnInit, HostListener, Renderer2 } from '@angular/core';
 import { valores, validarSesion, tab_activo, exito, exito_swal, error, error_swal } from '../../constantes';
 import Swal from 'sweetalert2';
 
@@ -31,7 +30,7 @@ export class OrigenIngresoComponent implements OnInit {
 
   sesion: Sesion=null;
   origenIngreso= new OrigenIngreso();
-  origenIngresos: OrigenIngreso[];
+  origenesIngresos: OrigenIngreso[];
   
   columnas: any[] = [
     { nombreColumna: 'codigo', cabecera: 'Código', celda: (row: OrigenIngreso) => `${row.codigo}` },
@@ -41,12 +40,10 @@ export class OrigenIngresoComponent implements OnInit {
   ];
   cabecera: string[] = this.columnas.map(titulo => titulo.nombreColumna);
   dataSource: MatTableDataSource<OrigenIngreso>;
-  observable: BehaviorSubject<MatTableDataSource<OrigenIngreso>> = new BehaviorSubject<MatTableDataSource<OrigenIngreso>>(null);
   clickedRows = new Set<OrigenIngreso>();
   
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
-  @ViewChild("inputFiltro") inputFiltro: ElementRef;
 
   constructor(private renderer: Renderer2, private origenIngresoService: OrigenIngresoService,
     private sesionService: SesionService,private router: Router) { }
@@ -64,17 +61,11 @@ export class OrigenIngresoComponent implements OnInit {
       this.nuevo(null);
   }
 
-  limpiar() {
-    this.origenIngreso = new OrigenIngreso();
-    this.edicion = true;
-    this.clickedRows.clear();
-    this.borrarFiltro();
-  }
-
   nuevo(event) {
     if (event != null)
       event.preventDefault();
-    this.limpiar();
+    this.origenIngreso = new OrigenIngreso();
+    this.clickedRows.clear();
   }
 
   crear(event) {
@@ -82,19 +73,12 @@ export class OrigenIngresoComponent implements OnInit {
       event.preventDefault();
     this.origenIngresoService.crear(this.origenIngreso).subscribe({
       next: res => {
-        this.origenIngreso = res.resultado as OrigenIngreso;
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
-        this.origenIngresos.push(this.origenIngreso);
-        this.llenarTabla(this.origenIngresos);
+        this.consultar();
+        this.nuevo(null);
       },
       error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     });
-  }
-
-  editar(event) {
-    if (event != null)
-      event.preventDefault();
-    this.edicion = true;
   }
 
   actualizar(event) {
@@ -102,9 +86,9 @@ export class OrigenIngresoComponent implements OnInit {
       event.preventDefault();
     this.origenIngresoService.actualizar(this.origenIngreso).subscribe({
       next: res => {
-        this.origenIngreso = res.resultado as OrigenIngreso;
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
-        this.limpiar();
+        this.consultar();
+        this.nuevo(null);
       },
       error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     });
@@ -137,29 +121,23 @@ export class OrigenIngresoComponent implements OnInit {
   consultar() {
     this.origenIngresoService.consultar().subscribe({
       next: res => {
-        this.origenIngresos = res.resultado as OrigenIngreso[]
-        this.llenarTabla(this.origenIngresos);
+        this.origenesIngresos = res.resultado as OrigenIngreso[]
+        this.dataSource = new MatTableDataSource(this.origenesIngresos);
+        this.dataSource.paginator = this.paginator;
+        this.dataSource.sort = this.sort;
       },
       error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     });
   }
 
-  llenarTabla(origenIngresos: OrigenIngreso[]) {
-    this.ordenarAsc(origenIngresos, 'id');
-    this.dataSource = new MatTableDataSource(origenIngresos);
-    this.dataSource.paginator = this.paginator;
-    this.dataSource.sort = this.sort;
-    this.observable.next(this.dataSource);
-  }
-
   seleccion(origenIngreso: OrigenIngreso) {
-    if (!this.clickedRows.has(origenIngreso)) {
+    if (!this.clickedRows.has(origenIngreso)){
       this.clickedRows.clear();
       this.clickedRows.add(origenIngreso);
-      this.origenIngreso = origenIngreso;
-      this.edicion = false;
+      this.origenIngreso = { ... origenIngreso};
     } else {
-      this.limpiar();
+      this.clickedRows.clear();
+      this.origenIngreso = new OrigenIngreso();
     }
   }
 
@@ -169,15 +147,5 @@ export class OrigenIngresoComponent implements OnInit {
     if (this.dataSource.paginator) {
       this.dataSource.paginator.firstPage();
     }
-  }
-  borrarFiltro() {
-    this.renderer.setProperty(this.inputFiltro.nativeElement, 'value', '');
-    this.dataSource.filter = '';
-  }
-
-  ordenarAsc(arrayJson: any, pKey: any) {
-    arrayJson.sort(function (a: any, b: any) {
-      return a[pKey] > b[pKey];
-    });
   }
 }

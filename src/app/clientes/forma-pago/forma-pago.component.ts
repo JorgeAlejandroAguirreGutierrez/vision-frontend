@@ -31,24 +31,22 @@ export class FormaPagoComponent implements OnInit {
 
   sesion: Sesion=null;
   formaPago= new FormaPago();
-  formaPagos: FormaPago[];
+  formasPagos: FormaPago[];
 
   columnas: any[] = [
     { nombreColumna: 'id', cabecera: 'ID', celda: (row: FormaPago) => `${row.id}` },
     { nombreColumna: 'codigo', cabecera: 'Código', celda: (row: FormaPago) => `${row.codigo}` },
     { nombreColumna: 'descripcion', cabecera: 'Descripción', celda: (row: FormaPago) => `${row.descripcion}` },
     { nombreColumna: 'abreviatura', cabecera: 'Abreviatura', celda: (row: FormaPago) => `${row.abreviatura}` },
-    { nombreColumna: 'codigoSri', cabecera: 'Código SRI', celda: (row: FormaPago) => `${row.codigoSri}` },
+    { nombreColumna: 'codigoSRI', cabecera: 'Código SRI', celda: (row: FormaPago) => `${row.codigoSRI}` },
     { nombreColumna: 'estado', cabecera: 'Estado', celda: (row: FormaPago) => `${row.estado}` }
   ];
   cabecera: string[] = this.columnas.map(titulo => titulo.nombreColumna);
   dataSource: MatTableDataSource<FormaPago>;
-  observable: BehaviorSubject<MatTableDataSource<FormaPago>> = new BehaviorSubject<MatTableDataSource<FormaPago>>(null);
   clickedRows = new Set<FormaPago>();
   
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
-  @ViewChild("inputFiltro") inputFiltro: ElementRef;
 
   constructor(private renderer: Renderer2, private formaPagoService: FormaPagoService,
         private sesionService: SesionService,private router: Router) { }
@@ -66,17 +64,12 @@ export class FormaPagoComponent implements OnInit {
       this.nuevo(null);
   }
 
-  limpiar() {
-    this.formaPago = new FormaPago();
-    this.edicion = true;
-    this.clickedRows.clear();
-    this.borrarFiltro();
-  }
-
   nuevo(event) {
     if (event != null)
       event.preventDefault();
-    this.limpiar();
+    this.formaPago= new FormaPago();
+    this.clickedRows.clear();
+
   }
 
   crear(event) {
@@ -84,19 +77,12 @@ export class FormaPagoComponent implements OnInit {
       event.preventDefault();
     this.formaPagoService.crear(this.formaPago).subscribe({
       next: res => {
-        this.formaPago = res.resultado as FormaPago;
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
-        this.formaPagos.push(this.formaPago);
-        this.llenarTabla(this.formaPagos);
+        this.consultar();
+        this.nuevo(null);
       },
       error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     });
-  }
-
-  editar(event) {
-    if (event != null)
-      event.preventDefault();
-    this.edicion = true;
   }
 
   actualizar(event) {
@@ -104,9 +90,9 @@ export class FormaPagoComponent implements OnInit {
       event.preventDefault();
     this.formaPagoService.actualizar(this.formaPago).subscribe({
       next: res => {
-        this.formaPago = res.resultado as FormaPago;
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
-        this.limpiar();
+        this.consultar();
+        this.nuevo(null);
       },
       error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     });
@@ -139,29 +125,23 @@ export class FormaPagoComponent implements OnInit {
   consultar() {
     this.formaPagoService.consultar().subscribe({
       next: res => {
-        this.formaPagos = res.resultado as FormaPago[];
-        this.llenarTabla(this.formaPagos);
+        this.formasPagos = res.resultado as FormaPago[]
+        this.dataSource = new MatTableDataSource(this.formasPagos);
+        this.dataSource.paginator = this.paginator;
+        this.dataSource.sort = this.sort;
       },
       error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     });
   }
 
-  llenarTabla(formaPagos: FormaPago[]) {
-    this.ordenarAsc(formaPagos, 'id');
-    this.dataSource = new MatTableDataSource(formaPagos);
-    this.dataSource.paginator = this.paginator;
-    this.dataSource.sort = this.sort;
-    this.observable.next(this.dataSource);
-  }
-
   seleccion(formaPago: FormaPago) {
-    if (!this.clickedRows.has(formaPago)) {
+    if (!this.clickedRows.has(formaPago)){
       this.clickedRows.clear();
       this.clickedRows.add(formaPago);
-      this.formaPago = formaPago;
-      this.edicion = false;
+      this.formaPago = { ... formaPago};
     } else {
-      this.limpiar();
+      this.clickedRows.clear();
+      this.formaPago = new FormaPago();
     }
   }
 
@@ -172,15 +152,4 @@ export class FormaPagoComponent implements OnInit {
       this.dataSource.paginator.firstPage();
     }
   }
-  borrarFiltro() {
-    this.renderer.setProperty(this.inputFiltro.nativeElement, 'value', '');
-    this.dataSource.filter = '';
-  }
-
-  ordenarAsc(arrayJson: any, pKey: any) {
-    arrayJson.sort(function (a: any, b: any) {
-      return a[pKey] > b[pKey];
-    });
-  }
-
 }

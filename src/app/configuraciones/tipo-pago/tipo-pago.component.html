@@ -59,7 +59,7 @@
                 <div class="col-2">
                     <mat-form-field appearance="standard">
                         <mat-label>Abreviatura</mat-label>
-                        <input matInput type="text" [(ngModel)]="tipoPago.abreviatura" class="form-control-sm">
+                        <input matInput type="text" [(ngModel)]="tipoPago.abreviatura" oninput="this.value = this.value.toUpperCase()" class="form-control-sm">
                     </mat-form-field>
                 </div>
             </div>
@@ -81,7 +81,7 @@
             <hr>
             <mat-form-field appearance="standard">
                 <mat-label>Buscar Tipo de Pago</mat-label>
-                <input matInput (keyup)="filtro($event)" #input>
+                <input matInput oninput="this.value = this.value.toUpperCase()"  (keyup)="filtro($event)" #input>
             </mat-form-field>
             <div class="mat-elevation-z8">
                 <table mat-table [dataSource]="dataSource" matSort>

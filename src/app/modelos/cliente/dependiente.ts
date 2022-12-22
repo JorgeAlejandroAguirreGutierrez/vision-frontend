@@ -9,8 +9,7 @@ export class Dependiente {
     id: number;
     codigo: string;
     razonSocial: string;
-    estado: boolean;
-    eliminado: boolean;
+    estado: string;
     direccion:Direccion;
     cliente: Cliente;
     telefonos: TelefonoDependiente[];
@@ -20,8 +19,7 @@ export class Dependiente {
     constructor(){
         this.codigo = valores.vacio;
         this.razonSocial = valores.vacio;
-        this.eliminado=false;
-        this.estado=true;
+        this.estado=valores.activo;
         this.direccion=new Direccion();
         this.cliente=new Cliente();
         this.telefonos=[];

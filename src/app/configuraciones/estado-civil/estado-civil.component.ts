@@ -57,6 +57,7 @@ export class EstadoCivilComponent implements OnInit {
     if (event!=null)
       event.preventDefault();
     this.estadoCivil = new EstadoCivil();
+    this.clickedRows.clear();
   }
 
   crear(event) {
@@ -67,6 +68,7 @@ export class EstadoCivilComponent implements OnInit {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
         this.estadoCivil=res.resultado as EstadoCivil;
         this.consultar();
+        this.nuevo(null);
       },
       err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     );
@@ -80,6 +82,7 @@ export class EstadoCivilComponent implements OnInit {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
         this.estadoCivil=res.resultado as EstadoCivil;
         this.consultar();
+        this.nuevo(null);
       },
       err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     );
@@ -92,6 +95,7 @@ export class EstadoCivilComponent implements OnInit {
       next: res => {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
         this.consultar();
+        this.nuevo(null);
       },
       error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     });
@@ -104,6 +108,7 @@ export class EstadoCivilComponent implements OnInit {
       next: res => {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
         this.consultar();
+        this.nuevo(null);
       },
       error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     });
@@ -125,7 +130,7 @@ export class EstadoCivilComponent implements OnInit {
     if (!this.clickedRows.has(estadoCivil)){
       this.clickedRows.clear();
       this.clickedRows.add(estadoCivil);
-      this.estadoCivil = estadoCivil;
+      this.estadoCivil = { ... estadoCivil};
     } else {
       this.clickedRows.clear();
       this.estadoCivil = new EstadoCivil();

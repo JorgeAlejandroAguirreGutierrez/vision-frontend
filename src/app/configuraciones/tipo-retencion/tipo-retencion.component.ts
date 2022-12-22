@@ -28,10 +28,10 @@ export class TipoRetencionComponent implements OnInit {
     { nombreColumna: 'codigo', cabecera: 'Código', celda: (row: TipoRetencion) => `${row.codigo}` },
     { nombreColumna: 'impuestoRetencion', cabecera: 'Impuesto Retención', celda: (row: TipoRetencion) => `${row.impuestoRetencion}` },
     { nombreColumna: 'tipoRetencion', cabecera: 'Tipo de Retención', celda: (row: TipoRetencion) => `${row.tipoRetencion}` },
-    { nombreColumna: 'codigoNorma', cabecera: 'Código Norma', celda: (row: TipoRetencion) => `${row.codigoNorma}` },
-    { nombreColumna: 'homologacionFE', cabecera: 'Homologacion FE', celda: (row: TipoRetencion) => `${row.homologacionFE==null? "NA": row.homologacionFE}` },
+    { nombreColumna: 'codigoSRI', cabecera: 'Código SRI', celda: (row: TipoRetencion) => `${row.codigoSRI}` },
     { nombreColumna: 'descripcion', cabecera: 'Descripcion', celda: (row: TipoRetencion) => `${row.descripcion}` },
-    { nombreColumna: 'porcentaje', cabecera: 'Porcentaje', celda: (row: TipoRetencion) => `${row.porcentaje}` }
+    { nombreColumna: 'porcentaje', cabecera: 'Porcentaje', celda: (row: TipoRetencion) => `${row.porcentaje}` },
+    { nombreColumna: 'estado', cabecera: 'Estado', celda: (row: TipoRetencion) => `${row.estado}` }
   ];
   cabecera: string[] = this.columnas.map(titulo => titulo.nombreColumna);
   dataSource: MatTableDataSource<TipoRetencion>;
@@ -60,6 +60,7 @@ export class TipoRetencionComponent implements OnInit {
     if (event!=null)
       event.preventDefault();
     this.tipoRetencion = new TipoRetencion();
+    this.clickedRows.clear();
   }
 
   crear(event) {
@@ -70,6 +71,7 @@ export class TipoRetencionComponent implements OnInit {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
         this.tipoRetencion=res.resultado as TipoRetencion;
         this.consultar();
+        this.nuevo(null);
       },
       err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     );
@@ -83,6 +85,7 @@ export class TipoRetencionComponent implements OnInit {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
         this.tipoRetencion=res.resultado as TipoRetencion;
         this.consultar();
+        this.nuevo(null);
       },
       err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     );
@@ -95,6 +98,7 @@ export class TipoRetencionComponent implements OnInit {
       next: res => {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
         this.consultar();
+        this.nuevo(null);
       },
       error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     });
@@ -107,6 +111,7 @@ export class TipoRetencionComponent implements OnInit {
       next: res => {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
         this.consultar();
+        this.nuevo(null);
       },
       error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     });
@@ -128,7 +133,7 @@ export class TipoRetencionComponent implements OnInit {
     if (!this.clickedRows.has(tipoRetencion)){
       this.clickedRows.clear();
       this.clickedRows.add(tipoRetencion);
-      this.tipoRetencion = tipoRetencion;
+      this.tipoRetencion = { ... tipoRetencion};
     } else {
       this.clickedRows.clear();
       this.tipoRetencion = new TipoRetencion();

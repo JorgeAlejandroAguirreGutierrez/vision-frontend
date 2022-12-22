@@ -42,7 +42,6 @@ export class GrupoProductoComponent implements OnInit {
 
   usuario: string = "";
   clave: string = "";
-  //estado: string = "ACTIVO";
 
   abrirPanelNuevo: boolean = true;
   abrirPanelAdmin: boolean = false;
@@ -52,7 +51,6 @@ export class GrupoProductoComponent implements OnInit {
 
   sesion: Sesion;
   grupoProducto: GrupoProducto = new GrupoProducto();
-  //presentacionBien: PresentacionBien = new PresentacionBien(); // crear
   movimientoContable: MovimientoContable = new MovimientoContable();
   grupoProductoBuscar: GrupoProducto = new GrupoProducto();
   movimientoContableBuscar: MovimientoContable = new MovimientoContable();
@@ -86,7 +84,6 @@ export class GrupoProductoComponent implements OnInit {
 
   //cabeceraGrupoProducto: string[] = ['id', 'grupo', 'subgrupo', 'seccion', 'linea', 'sublinea', 'presentacion'];
   dataSource: MatTableDataSource<GrupoProducto>;
-  observable: BehaviorSubject<MatTableDataSource<GrupoProducto>> = new BehaviorSubject<MatTableDataSource<GrupoProducto>>(null);
   clickedRows = new Set<GrupoProducto>();
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
@@ -144,6 +141,13 @@ export class GrupoProductoComponent implements OnInit {
         startWith(''),
         map(sublinea => this.filtroSublinea(sublinea))
       );
+  }
+
+  nuevo(event) {
+    if (event!=null)
+      event.preventDefault();
+    this.grupoProducto = new GrupoProducto();
+    this.clickedRows.clear();
   }
 
   limpiar() {

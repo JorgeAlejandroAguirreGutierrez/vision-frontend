@@ -62,6 +62,7 @@ export class MedidaComponent implements OnInit {
     if (event!=null)
       event.preventDefault();
     this.medida = new Medida();
+    this.clickedRows.clear();
   }
 
   crear(event) {
@@ -70,8 +71,8 @@ export class MedidaComponent implements OnInit {
     this.medidaService.crear(this.medida).subscribe(
       res => {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
-        this.medida=res.resultado as Medida;
         this.consultar();
+        this.nuevo(null);
       },
       err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     );
@@ -83,8 +84,8 @@ export class MedidaComponent implements OnInit {
     this.medidaService.actualizar(this.medida).subscribe(
       res => {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
-        this.medida=res.resultado as Medida;
         this.consultar();
+        this.nuevo(null);
       },
       err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     );

@@ -1,39 +1,30 @@
 <nav class="navbar-light nav-fijo">
     <ul class="navbar-nav">
-        <ng-container *ngIf="abrirPanelNuevo">
-            <li class="nav-item" *ngIf="equivalenciaMedida.id==0">
-                <a class="nav-link" title="Guardar" role="button" (click)="crear($event)">
-                    <mat-icon>save</mat-icon>
-                </a>
-            </li>
-            <li class="nav-item" *ngIf="equivalenciaMedida.id!=0">
-                <a class="nav-link" title="Actualizar" role="button" (click)="actualizar($event)">
-                    <mat-icon>update</mat-icon>
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" title="Nuevo" role="button" (click)="nuevo($event)">
-                    <mat-icon>file_copy</mat-icon>
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" title="Borrar" role="button" (click)="borrar($event)">
-                    <mat-icon>backspace</mat-icon>
-                </a>
-            </li>
-        </ng-container>
-        <ng-container *ngIf="abrirPanelAdmin">
-            <li class="nav-item">
-                <a class="nav-link" title="Buscar" role="button" (click)="buscar($event)">
-                    <mat-icon>search</mat-icon>
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" title="Editar" role="button" (click)="actualizarLeer($event)">
-                    <mat-icon>edit</mat-icon>
-                </a>
-            </li>
-        </ng-container>
+        <li class="nav-item" *ngIf="equivalenciaMedida.id==0">
+            <a class="nav-link" title="Guardar" role="button" (click)="crear($event)">
+                <mat-icon>save</mat-icon>
+            </a>
+        </li>
+        <li class="nav-item" *ngIf="equivalenciaMedida.id!=0">
+            <a class="nav-link" title="Actualizar" role="button" (click)="actualizar($event)">
+                <mat-icon>update</mat-icon>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" title="Nuevo" role="button" (click)="nuevo($event)">
+                <mat-icon>file_copy</mat-icon>
+            </a>
+        </li>
+        <li class="nav-item" *ngIf="equivalenciaMedida.id!=0">
+            <a class="nav-link" title="Activar" role="button" (click)="activar($event)">
+                <mat-icon>check</mat-icon>
+            </a>
+        </li>
+        <li class="nav-item" *ngIf="equivalenciaMedida.id!=0">
+            <a class="nav-link" title="Inactivar" role="button" (click)="inactivar($event)">
+                <mat-icon>delete</mat-icon>
+            </a>
+        </li>
     </ul>
 </nav>
 <div class="contenedor">
@@ -97,11 +88,10 @@
             <hr>
             <mat-form-field appearance="standard">
                 <mat-label>Buscar Equivalencia</mat-label>
-                <input matInput (keyup)="filtro($event)" placeholder="Ej. KI" #input>
+                <input matInput (keyup)="filtro($event)" #input>
             </mat-form-field>
             <div class="mat-elevation-z8">
                 <table mat-table [dataSource]="dataSource" matSort>
-
                     <!-- Columnas Dinamicas -->
                     <ng-container *ngFor="let columna of columnas" [matColumnDef]="columna.nombreColumna">
                         <th mat-header-cell *matHeaderCellDef mat-sort-header> {{ columna.cabecera }} </th>

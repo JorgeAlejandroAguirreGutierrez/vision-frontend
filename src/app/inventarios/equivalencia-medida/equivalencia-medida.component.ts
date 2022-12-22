@@ -66,21 +66,7 @@ export class EquivalenciaMedidaComponent implements OnInit {
     if (event!=null)
       event.preventDefault();
     this.equivalenciaMedida = new EquivalenciaMedida();
-  }
-
-  borrar(event: any){
-    if (event!=null)
-      event.preventDefault();
-      if(this.equivalenciaMedida.id!=0){
-        let id=this.equivalenciaMedida.id;
-        let codigo=this.equivalenciaMedida.codigo;
-        this.equivalenciaMedida=new EquivalenciaMedida();
-        this.equivalenciaMedida.id=id;
-        this.equivalenciaMedida.codigo=codigo;
-      }
-      else{
-        this.equivalenciaMedida=new EquivalenciaMedida();
-      }
+    this.clickedRows.clear();
   }
 
   crear(event: any) {
@@ -89,6 +75,8 @@ export class EquivalenciaMedidaComponent implements OnInit {
     this.equivalenciaMedidaService.crear(this.equivalenciaMedida).subscribe(
       res => {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
+        this.consultar();
+        this.nuevo(null);
       },
       err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     );
@@ -100,21 +88,35 @@ export class EquivalenciaMedidaComponent implements OnInit {
     this.equivalenciaMedidaService.actualizar(this.equivalenciaMedida).subscribe(
       res => {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
-        this.equivalenciaMedida=res.resultado as EquivalenciaMedida;
+        this.consultar();
+        this.nuevo(null);
       },
       err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
 
-  actualizarLeer(event: any){
-    if (event!=null)
+  activar(event) {
+    if (event != null)
       event.preventDefault();
-      this.abrirPanelNuevo = true;
-      this.abrirPanelAdmin = false;
-    if (this.equivalenciaMedidaActualizar.id != 0){
-      this.equivalenciaMedida={... this.equivalenciaMedidaActualizar};
-      this.equivalenciaMedidaActualizar=new EquivalenciaMedida();
-    }
+    this.equivalenciaMedidaService.activar(this.equivalenciaMedida).subscribe({
+      next: res => {
+        Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
+        this.consultar();
+      },
+      error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+    });
+  }
+
+  inactivar(event) {
+    if (event != null)
+      event.preventDefault();
+    this.equivalenciaMedidaService.inactivar(this.equivalenciaMedida).subscribe({
+      next: res => {
+        Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
+        this.consultar();
+      },
+      error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+    });
   }
 
   compareFn(a: any, b: any) {
@@ -124,30 +126,20 @@ export class EquivalenciaMedidaComponent implements OnInit {
   consultar() {
     this.equivalenciaMedidaService.consultar().subscribe(
       res => {
-        this.equivalenciasMedidas = res.resultado as EquivalenciaMedida[];
-        this.llenarDataSource(this.equivalenciasMedidas);
+        this.equivalenciasMedidas = res.resultado as EquivalenciaMedida[]
+        this.dataSource = new MatTableDataSource(this.equivalenciasMedidas);
+        this.dataSource.paginator = this.paginator;
+        this.dataSource.sort = this.sort;
       },
       err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
 
-  buscar(event: any) {
-    if (event!=null)
-      event.preventDefault();
-    this.equivalenciaMedidaService.buscar(this.equivalenciaMedidaBuscar).subscribe(
-      res => {
-          this.equivalenciasMedidas = res.resultado as EquivalenciaMedida[]
-      },
-      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
-    );
-  }
-
-  seleccion(equivalenciaMedidaSeleccionada: EquivalenciaMedida) {
-    if (!this.clickedRows.has(equivalenciaMedidaSeleccionada)){
+  seleccion(equivalenciaMedida: EquivalenciaMedida) {
+    if (!this.clickedRows.has(equivalenciaMedida)){
       this.clickedRows.clear();
-      this.clickedRows.add(equivalenciaMedidaSeleccionada);
-      this.equivalenciaMedida = equivalenciaMedidaSeleccionada;
-      this.equivalenciaMedidaActualizar=equivalenciaMedidaSeleccionada;
+      this.clickedRows.add(equivalenciaMedida);
+      this.equivalenciaMedida = equivalenciaMedida;
     } else {
       this.clickedRows.clear();
       this.equivalenciaMedida = new EquivalenciaMedida();
@@ -161,29 +153,4 @@ export class EquivalenciaMedidaComponent implements OnInit {
       this.dataSource.paginator.firstPage();
     }
   }
-
-  llenarDataSource(equivalenciasMedidas : EquivalenciaMedida[]){
-    this.dataSource = new MatTableDataSource(equivalenciasMedidas);
-    this.dataSource.filterPredicate = (data: EquivalenciaMedida, filter: string): boolean =>
-      data.codigo.toUpperCase().includes(filter) || data.medidaIni.descripcion.toUpperCase().includes(filter) || data.medidaEqui.descripcion.toUpperCase().includes(filter);
-    this.dataSource.paginator = this.paginator;
-    this.dataSource.sort = this.sort;
-  }
-
-  cambiarBuscarCodigo(){
-    this.buscar(null);
-  }
-
-  cambiarBuscarMedida1(){
-    this.buscar(null);
-  }
-
-  cambiarBuscarMedida2(){
-    this.buscar(null);
-  }
-
-  cambiarBuscarEquivalencia(){
-    this.buscar(null);;
-  }
-
 }

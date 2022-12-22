@@ -41,13 +41,11 @@ export class SegmentoComponent implements OnInit {
   ];
   cabecera: string[] = this.columnas.map(titulo => titulo.nombreColumna);
   dataSource: MatTableDataSource<Segmento>;
-  observable: BehaviorSubject<MatTableDataSource<Segmento>> = new BehaviorSubject<MatTableDataSource<Segmento>>(null);
   clickedRows = new Set<Segmento>();
 
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
-  @ViewChild("inputFiltro") inputFiltro: ElementRef;
 
   constructor(private renderer: Renderer2, private segmentoService: SegmentoService,
     private sesionService: SesionService, private router: Router) { }
@@ -65,17 +63,11 @@ export class SegmentoComponent implements OnInit {
       this.nuevo(null);
   }
 
-  limpiar() {
-    this.segmento = new Segmento();
-    this.edicion = true;
-    this.clickedRows.clear();
-    this.borrarFiltro();
-  }
-
   nuevo(event) {
     if (event != null)
       event.preventDefault();
-    this.limpiar();
+    this.segmento = new Segmento();
+    this.clickedRows.clear();
   }
 
   crear(event) {
@@ -83,19 +75,12 @@ export class SegmentoComponent implements OnInit {
       event.preventDefault();
     this.segmentoService.crear(this.segmento).subscribe({
       next: res => {
-        this.segmento = res.resultado as Segmento;
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
-        this.segmentos.push(this.segmento);
-        this.llenarTabla(this.segmentos);
+        this.consultar();
+        this.nuevo(null);
       },
       error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     });
-  }
-
-  editar(event) {
-    if (event != null)
-      event.preventDefault();
-    this.edicion = true;
   }
 
   actualizar(event) {
@@ -103,9 +88,9 @@ export class SegmentoComponent implements OnInit {
       event.preventDefault();
     this.segmentoService.actualizar(this.segmento).subscribe({
       next: res => {
-        this.segmento = res.resultado as Segmento;
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
-        this.limpiar();
+        this.consultar();
+        this.nuevo(null);
       },
       error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     });
@@ -139,28 +124,22 @@ export class SegmentoComponent implements OnInit {
     this.segmentoService.consultar().subscribe({
       next: res => {
         this.segmentos = res.resultado as Segmento[]
-        this.llenarTabla(this.segmentos);
+        this.dataSource = new MatTableDataSource(this.segmentos);
+        this.dataSource.paginator = this.paginator;
+        this.dataSource.sort = this.sort;
       },
       error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     });
   }
 
-  llenarTabla(segmentos: Segmento[]) {
-    this.ordenarAsc(segmentos, 'id');
-    this.dataSource = new MatTableDataSource(segmentos);
-    this.dataSource.paginator = this.paginator;
-    this.dataSource.sort = this.sort;
-    this.observable.next(this.dataSource);
-  }
-
   seleccion(segmento: Segmento) {
-    if (!this.clickedRows.has(segmento)) {
+    if (!this.clickedRows.has(segmento)){
       this.clickedRows.clear();
       this.clickedRows.add(segmento);
-      this.segmento = segmento;
-      this.edicion = false;
+      this.segmento = { ... segmento};
     } else {
-      this.limpiar();
+      this.clickedRows.clear();
+      this.segmento = new Segmento();
     }
   }
 
@@ -170,15 +149,5 @@ export class SegmentoComponent implements OnInit {
     if (this.dataSource.paginator) {
       this.dataSource.paginator.firstPage();
     }
-  }
-  borrarFiltro() {
-    this.renderer.setProperty(this.inputFiltro.nativeElement, 'value', '');
-    this.dataSource.filter = '';
-  }
-
-  ordenarAsc(arrayJson: any, pKey: any) {
-    arrayJson.sort(function (a: any, b: any) {
-      return a[pKey] > b[pKey];
-    });
   }
 }

@@ -5,6 +5,7 @@ export class Modelo {
     nombre: string;
     nombreTecnico: string;
     endpoint: string;
+    estado: string;
 
     constructor(){
         this.id=valores.cero;
@@ -12,5 +13,6 @@ export class Modelo {
         this.nombre=valores.vacio;
         this.nombreTecnico=valores.vacio;
         this.endpoint=valores.vacio;
+        this.estado=valores.activo;
     }
 }

@@ -33,7 +33,7 @@ export class GrupoClienteComponent implements OnInit {
 
   sesion: Sesion=null;
   grupoCliente= new GrupoCliente();
-  grupoClientes: GrupoCliente[];
+  gruposClientes: GrupoCliente[];
 
   columnas: any[] = [
     { nombreColumna: 'codigo', cabecera: 'Código', celda: (row: GrupoCliente) => `${row.codigo}` },
@@ -43,7 +43,6 @@ export class GrupoClienteComponent implements OnInit {
   ];
   cabecera: string[] = this.columnas.map(titulo => titulo.nombreColumna);
   dataSource: MatTableDataSource<GrupoCliente>;
-  observable: BehaviorSubject<MatTableDataSource<GrupoCliente>> = new BehaviorSubject<MatTableDataSource<GrupoCliente>>(null);
   clickedRows = new Set<GrupoCliente>(); 
   
   @ViewChild(MatPaginator) paginator: MatPaginator;
@@ -66,17 +65,11 @@ export class GrupoClienteComponent implements OnInit {
       this.nuevo(null);      
   }
 
-  limpiar() {
-    this.grupoCliente = new GrupoCliente();
-    this.edicion = true;
-    this.clickedRows.clear();
-    this.borrarFiltro();
-  }
-
   nuevo(event) {
     if (event != null)
       event.preventDefault();
-    this.limpiar();
+    this.grupoCliente = new GrupoCliente();
+    this.clickedRows.clear();
   }
 
   crear(event) {
@@ -84,19 +77,12 @@ export class GrupoClienteComponent implements OnInit {
       event.preventDefault();
     this.grupoClienteService.crear(this.grupoCliente).subscribe({
       next: res => {
-        this.grupoCliente = res.resultado as GrupoCliente;
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
-        this.grupoClientes.push(this.grupoCliente);
-        this.llenarTabla(this.grupoClientes);
+        this.consultar();
+        this.nuevo(null);
       },
       error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     });
-  }
-
-  editar(event) {
-    if (event != null)
-      event.preventDefault();
-    this.edicion = true;
   }
 
   actualizar(event) {
@@ -104,9 +90,9 @@ export class GrupoClienteComponent implements OnInit {
       event.preventDefault();
     this.grupoClienteService.actualizar(this.grupoCliente).subscribe({
       next: res => {
-        this.grupoCliente = res.resultado as GrupoCliente;
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
-        this.limpiar();
+        this.consultar();
+        this.nuevo(null);
       },
       error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     });
@@ -139,29 +125,23 @@ export class GrupoClienteComponent implements OnInit {
   consultar() {
     this.grupoClienteService.consultar().subscribe({
       next: res => {
-        this.grupoClientes = res.resultado as GrupoCliente[]
-        this.llenarTabla(this.grupoClientes);
+        this.gruposClientes = res.resultado as GrupoCliente[]
+        this.dataSource = new MatTableDataSource(this.gruposClientes);
+        this.dataSource.paginator = this.paginator;
+        this.dataSource.sort = this.sort;
       },
       error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     });
   }
 
-  llenarTabla(grupoClientes: GrupoCliente[]) {
-    this.ordenarAsc(grupoClientes, 'id');
-    this.dataSource = new MatTableDataSource(grupoClientes);
-    this.dataSource.paginator = this.paginator;
-    this.dataSource.sort = this.sort;
-    this.observable.next(this.dataSource);
-  }
-
   seleccion(grupoCliente: GrupoCliente) {
-    if (!this.clickedRows.has(grupoCliente)) {
+    if (!this.clickedRows.has(grupoCliente)){
       this.clickedRows.clear();
       this.clickedRows.add(grupoCliente);
-      this.grupoCliente = grupoCliente;
-      this.edicion = false;
+      this.grupoCliente = { ... grupoCliente};
     } else {
-      this.limpiar();
+      this.clickedRows.clear();
+      this.grupoCliente = new GrupoCliente();
     }
   }
 
@@ -172,18 +152,6 @@ export class GrupoClienteComponent implements OnInit {
       this.dataSource.paginator.firstPage();
     }
   }
-  
-  borrarFiltro() {
-    this.renderer.setProperty(this.inputFiltro.nativeElement, 'value', '');
-    this.dataSource.filter = '';
-  }
-
-  ordenarAsc(arrayJson: any, pKey: any) {
-    arrayJson.sort(function (a: any, b: any) {
-      return a[pKey] > b[pKey];
-    });
-  }
-
 
   // Para capturar la imformación del Mat-dialog
   cuentaContableSeleccionado(event: any) {

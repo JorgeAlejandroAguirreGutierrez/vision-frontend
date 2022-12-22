@@ -81,7 +81,7 @@
             <hr>
             <mat-form-field appearance="standard">
                 <mat-label>Buscar Estado Civil</mat-label>
-                <input matInput (keyup)="filtro($event)" #input>
+                <input matInput oninput="this.value = this.value.toUpperCase()" (keyup)="filtro($event)" #input>
             </mat-form-field>
             <div class="mat-elevation-z8">
                 <table mat-table [dataSource]="dataSource" matSort>

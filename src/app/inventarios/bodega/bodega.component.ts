@@ -29,7 +29,7 @@ export class BodegaComponent implements OnInit {
   bodegas : Bodega[];
   
   columnas: any[] = [
-    { nombreColumna: 'codigo', cabecera: 'Código', celda: (row: Bodega) => `${row.codigo}` },
+    { nombreColumna: 'codigo', cabecera: 'Codigo', celda: (row: Bodega) => `${row.codigo}` },
     { nombreColumna: 'nombre', cabecera: 'Nombre', celda: (row: Bodega) => `${row.nombre}` },
     { nombreColumna: 'estado', cabecera: 'Estado', celda: (row: Bodega) => `${row.estado}` }
   ];
@@ -59,6 +59,7 @@ export class BodegaComponent implements OnInit {
     if (event!=null)
       event.preventDefault();
     this.bodega = new Bodega();
+    this.clickedRows.clear();
   }
 
   crear(event) {
@@ -67,8 +68,8 @@ export class BodegaComponent implements OnInit {
     this.bodegaService.crear(this.bodega).subscribe(
       res => {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
-        this.bodega = res.resultado as Bodega;
         this.consultar();
+        this.nuevo(null);
       },
       err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     );
@@ -80,8 +81,8 @@ export class BodegaComponent implements OnInit {
     this.bodegaService.actualizar(this.bodega).subscribe(
       res => {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
-        this.bodega=res.resultado as Bodega;
         this.consultar();
+        this.nuevo(null);
       },
       err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     );

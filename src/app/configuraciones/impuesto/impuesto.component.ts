@@ -26,8 +26,9 @@ export class ImpuestoComponent implements OnInit {
 
   columnas: any[] = [
     { nombreColumna: 'codigo', cabecera: 'Código', celda: (row: Impuesto) => `${row.codigo}` },
-    { nombreColumna: 'codigoNorma', cabecera: 'Codigo Norma', celda: (row: Impuesto) => `${row.codigoNorma}` },
+    { nombreColumna: 'codigoSri', cabecera: 'Codigo Sri', celda: (row: Impuesto) => `${row.codigoSri}` },
     { nombreColumna: 'porcentaje', cabecera: 'Porcentaje', celda: (row: Impuesto) => `${row.porcentaje}` },
+    { nombreColumna: 'estado', cabecera: 'Estado', celda: (row: Impuesto) => `${row.estado}` },
   ];
   cabecera: string[] = this.columnas.map(titulo => titulo.nombreColumna);
   dataSource: MatTableDataSource<Impuesto>;
@@ -56,6 +57,7 @@ export class ImpuestoComponent implements OnInit {
     if (event!=null)
       event.preventDefault();
     this.impuesto = new Impuesto();
+    this.clickedRows.clear();
   }
 
   crear(event) {
@@ -66,6 +68,7 @@ export class ImpuestoComponent implements OnInit {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
         this.impuesto=res.resultado as Impuesto;
         this.consultar();
+        this.nuevo(null);
       },
       err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     );
@@ -79,6 +82,7 @@ export class ImpuestoComponent implements OnInit {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
         this.impuesto=res.resultado as Impuesto;
         this.consultar();
+        this.nuevo(null);
       },
       err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     );
@@ -91,6 +95,7 @@ export class ImpuestoComponent implements OnInit {
       next: res => {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
         this.consultar();
+        this.nuevo(null);
       },
       error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     });
@@ -103,6 +108,7 @@ export class ImpuestoComponent implements OnInit {
       next: res => {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
         this.consultar();
+        this.nuevo(null);
       },
       error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     });
@@ -124,7 +130,7 @@ export class ImpuestoComponent implements OnInit {
     if (!this.clickedRows.has(impuesto)){
       this.clickedRows.clear();
       this.clickedRows.add(impuesto);
-      this.impuesto = impuesto;
+      this.impuesto = { ... impuesto};
     } else {
       this.clickedRows.clear();
       this.impuesto = new Impuesto();

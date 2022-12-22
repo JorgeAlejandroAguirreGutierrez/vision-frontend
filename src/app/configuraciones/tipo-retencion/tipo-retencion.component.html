@@ -59,24 +59,18 @@
                 <div class="col-3">
                     <mat-form-field appearance="standard">
                         <mat-label>Tipo Retención</mat-label>
-                        <input matInput type="text" [(ngModel)]="tipoRetencion.tipoRetencion" class="form-control-sm">
+                        <input matInput type="text" [(ngModel)]="tipoRetencion.tipoRetencion" oninput="this.value = this.value.toUpperCase()" class="form-control-sm">
                     </mat-form-field>
                 </div>
                 <div class="col-3">
                     <mat-form-field appearance="standard">
-                        <mat-label>Codigo Norma</mat-label>
-                        <input matInput type="text" [(ngModel)]="tipoRetencion.codigoNorma" class="form-control-sm">
+                        <mat-label>Codigo SRI</mat-label>
+                        <input matInput type="text" [(ngModel)]="tipoRetencion.codigoSRI" oninput="this.value = this.value.toUpperCase()" class="form-control-sm">
                     </mat-form-field>
                 </div>
             </div>
             <div class="form-group form-row">
-                <div class="col-3">
-                    <mat-form-field appearance="standard">
-                        <mat-label>Homologacion FE</mat-label>
-                        <input matInput type="text" [(ngModel)]="tipoRetencion.homologacionFE" class="form-control-sm">
-                    </mat-form-field>
-                </div>
-                <div class="col-7">
+                <div class="col-10">
                     <mat-form-field appearance="standard">
                         <mat-label>Descripcion</mat-label>
                         <input matInput type="text" [(ngModel)]="tipoRetencion.descripcion"

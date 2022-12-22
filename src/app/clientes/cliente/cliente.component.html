@@ -703,7 +703,7 @@
                                         [disabled]="deshabilitarDatoAdicional" [compareWith]="compareFn" class="form-control-sm ">
                                         <mat-option *ngFor="let tipoRetencionIvaBien of tiposRetencionesIvaBien "
                                             [value]="tipoRetencionIvaBien ">
-                                            {{tipoRetencionIvaBien.codigoNorma}}
+                                            {{tipoRetencionIvaBien.codigoSRI}}
                                         </mat-option>
                                     </mat-select>
                                 </mat-form-field>
@@ -731,7 +731,7 @@
                                         [disabled]="deshabilitarDatoAdicional" [compareWith]="compareFn" class="form-control-sm ">
                                         <mat-option [value]="tipoRetencionIvaServicio"
                                             *ngFor="let tipoRetencionIvaServicio of tiposRetencionesIvaServicio">
-                                            {{tipoRetencionIvaServicio.codigoNorma}}
+                                            {{tipoRetencionIvaServicio.codigoSRI}}
                                         </mat-option>
                                     </mat-select>
                                 </mat-form-field>
@@ -769,7 +769,7 @@
                                         [disabled]="deshabilitarDatoAdicional" [compareWith]="compareFn" class="form-control-sm ">
                                         <mat-option [value]="tipoRetencionRentaBien"
                                             *ngFor="let tipoRetencionRentaBien of tiposRetencionesRentaBien ">
-                                            {{tipoRetencionRentaBien.codigoNorma}}
+                                            {{tipoRetencionRentaBien.codigoSRI}}
                                         </mat-option>
                                     </mat-select>
                                 </mat-form-field>
@@ -797,7 +797,7 @@
                                         [disabled]="deshabilitarDatoAdicional" [compareWith]="compareFn" class="form-control-sm ">
                                         <mat-option [value]="tipoRentencionesRentaServicio"
                                             *ngFor="let tipoRentencionesRentaServicio of tiposRetencionesRentaServicio ">
-                                            {{tipoRentencionesRentaServicio.codigoNorma}}
+                                            {{tipoRentencionesRentaServicio.codigoSRI}}
                                         </mat-option>
                                     </mat-select>
                                 </mat-form-field>
