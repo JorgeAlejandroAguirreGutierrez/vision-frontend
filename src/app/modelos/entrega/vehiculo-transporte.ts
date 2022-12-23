@@ -10,6 +10,7 @@ export class VehiculoTransporte {
     color:string;
     fabricacion:string;
     numero:string;
+    estado: string;
 
     constructor(){
         this.id = valores.cero;
@@ -22,6 +23,7 @@ export class VehiculoTransporte {
         this.color = valores.vacio;
         this.fabricacion = valores.vacio;
         this.numero = valores.vacio;
+        this.estado = valores.activo;
     }
 
 }

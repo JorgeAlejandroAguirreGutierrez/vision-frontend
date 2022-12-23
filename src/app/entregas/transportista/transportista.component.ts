@@ -19,6 +19,9 @@ import { VehiculoTransporteService } from 'src/app/servicios/entrega/vehiculo-tr
 })
 export class TransportistaComponent implements OnInit {
 
+  activo: string = valores.activo;
+  inactivo: string = valores.inactivo;
+  
   abrirPanelNuevo = true;
   abrirPanelAdmin = false;
 
@@ -32,7 +35,8 @@ export class TransportistaComponent implements OnInit {
     { nombreColumna: 'nombre', cabecera: 'Nombre', celda: (row: Transportista) => `${row.nombre}` },
     { nombreColumna: 'identificacion', cabecera: 'Identificación', celda: (row: Transportista) => `${row.identificacion}` },
     { nombreColumna: 'vehiculoPropio', cabecera: 'Vehiculo Propio', celda: (row: Transportista) => `${row.vehiculoPropio}` },
-    { nombreColumna: 'vehiculo', cabecera: 'Vehiculo', celda: (row: Transportista) => `${row.vehiculoTransporte.placa}` }
+    { nombreColumna: 'vehiculo', cabecera: 'Vehiculo', celda: (row: Transportista) => `${row.vehiculoTransporte.placa}` },
+    { nombreColumna: 'estado', cabecera: 'Estado', celda: (row: Transportista) => `${row.estado}` }
   ];
   cabecera: string[] = this.columnas.map(titulo => titulo.nombreColumna);
   dataSource: MatTableDataSource<Transportista>;
@@ -47,7 +51,7 @@ export class TransportistaComponent implements OnInit {
   ngOnInit() {
     this.sesion=validarSesion(this.sesionService, this.router);
     this.consultar();
-    this.consultarVehiculoTransporte();
+    this.consultarVehiculosTransportes();
   }
   
   @HostListener('window:keypress', ['$event'])
@@ -145,13 +149,12 @@ export class TransportistaComponent implements OnInit {
     }
   }
 
-  consultarVehiculoTransporte() {
-    this.vehiculoTransporteService.consultar().subscribe(
-      res => {
+  consultarVehiculosTransportes(){
+    this.vehiculoTransporteService.consultarActivos().subscribe({
+      next: res => {
         this.vehiculosTransportes = res.resultado as VehiculoTransporte[]
       },
-      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
-    );
+      error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+    });
   }
-
 }

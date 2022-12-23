@@ -33,7 +33,8 @@ export class VehiculoTransporteComponent implements OnInit {
     { nombreColumna: 'clase', cabecera: 'Clase', celda: (row: VehiculoTransporte) => `${row.clase}` },
     { nombreColumna: 'color', cabecera: 'Color', celda: (row: VehiculoTransporte) => `${row.color}` },
     { nombreColumna: 'fabricacion', cabecera: 'Fabricacion', celda: (row: VehiculoTransporte) => `${row.fabricacion}` },
-    { nombreColumna: 'numero', cabecera: 'Numero', celda: (row: VehiculoTransporte) => `${row.numero}` }
+    { nombreColumna: 'numero', cabecera: 'Numero', celda: (row: VehiculoTransporte) => `${row.numero}` },
+    { nombreColumna: 'estado', cabecera: 'Estado', celda: (row: VehiculoTransporte) => `${row.estado}` }
   ];
   cabecera: string[] = this.columnas.map(titulo => titulo.nombreColumna);
   dataSource: MatTableDataSource<VehiculoTransporte>;
@@ -62,6 +63,7 @@ export class VehiculoTransporteComponent implements OnInit {
     if (event!=null)
       event.preventDefault();
     this.vehiculoTransporte = new VehiculoTransporte();
+    this.clickedRows.clear();
   }
 
   crear(event) {
@@ -72,6 +74,7 @@ export class VehiculoTransporteComponent implements OnInit {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
         this.vehiculoTransporte=res.resultado as VehiculoTransporte;
         this.consultar();
+        this.nuevo(null);
       },
       err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     );
@@ -85,6 +88,7 @@ export class VehiculoTransporteComponent implements OnInit {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
         this.vehiculoTransporte=res.resultado as VehiculoTransporte;
         this.consultar();
+        this.nuevo(null);
       },
       err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     );
@@ -97,6 +101,7 @@ export class VehiculoTransporteComponent implements OnInit {
       next: res => {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
         this.consultar();
+        this.nuevo(null);
       },
       error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     });
@@ -109,6 +114,7 @@ export class VehiculoTransporteComponent implements OnInit {
       next: res => {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
         this.consultar();
+        this.nuevo(null);
       },
       error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     });
