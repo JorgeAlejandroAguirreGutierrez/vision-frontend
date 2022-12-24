@@ -9,8 +9,8 @@ export class Transportista {
     estado: string;
     vehiculoTransporte: VehiculoTransporte;
 
-
     constructor(){
+        this.id = valores.cero;
         this.codigo = valores.vacio;
         this.nombre = valores.vacio;
         this.identificacion = valores.vacio;

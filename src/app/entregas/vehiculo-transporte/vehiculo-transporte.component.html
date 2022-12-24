@@ -36,7 +36,7 @@
                     <i><u>VEHICULO DE TRANSPORTE</u></i>
                 </mat-panel-title>
                 <mat-panel-description>
-                    {{abrirPanelNuevo ? 'Ocultar crear plazo de crédito' : 'Crear nuevo vehiculo de transporte'}}
+                    {{abrirPanelNuevo ? 'Ocultar crear vehiculo de transporte' : 'Crear nuevo vehiculo de transporte'}}
                     <mat-icon>playlist_add</mat-icon>
                 </mat-panel-description>
             </mat-expansion-panel-header>
@@ -75,8 +75,7 @@
                 <div class="col-3">
                     <mat-form-field appearance="standard">
                         <mat-label>Clase</mat-label>
-                        <input matInput type="text" [(ngModel)]="vehiculoTransporte.clase" class="form-control-sm"
-                            [disabled]="true">
+                        <input matInput type="text" [(ngModel)]="vehiculoTransporte.clase" class="form-control-sm">
                     </mat-form-field>
                 </div>
                 <div class="col-3">

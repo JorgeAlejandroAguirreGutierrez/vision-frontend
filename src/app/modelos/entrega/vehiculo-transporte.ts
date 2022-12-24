@@ -25,5 +25,4 @@ export class VehiculoTransporte {
         this.numero = valores.vacio;
         this.estado = valores.activo;
     }
-
 }
