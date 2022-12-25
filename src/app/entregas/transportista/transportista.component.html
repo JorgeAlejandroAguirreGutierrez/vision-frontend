@@ -75,7 +75,7 @@
                 <div class="col-2">
                     <mat-form-field appearance="standard">
                         <mat-label>Vehiculo</mat-label>
-                        <mat-select type="text" [(ngModel)]="transportista.vehiculoTransporte" class="form-control-sm">
+                        <mat-select type="text" [(ngModel)]="transportista.vehiculoTransporte" [compareWith]="compareFn" class="form-control-sm">
                             <mat-option *ngFor="let vehiculoTransporte of vehiculosTransportes" [value]="vehiculoTransporte">
                                 {{vehiculoTransporte.placa}}
                             </mat-option>

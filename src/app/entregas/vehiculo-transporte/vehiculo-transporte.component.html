@@ -42,17 +42,24 @@
             </mat-expansion-panel-header>
             <hr>
             <div class="form-group form-row">
-                <div class="col-3">
+                <div class="col-2">
                     <mat-form-field appearance="standard">
                         <mat-label>Código</mat-label>
                         <input matInput type="text" [(ngModel)]="vehiculoTransporte.codigo" class="form-control-sm"
                             [disabled]="true">
                     </mat-form-field>
                 </div>
-                <div class="col-3">
+                <div class="col-2">
                     <mat-form-field appearance="standard">
                         <mat-label>Placa</mat-label>
                         <input matInput type="text" [(ngModel)]="vehiculoTransporte.placa"
+                            oninput="this.value = this.value.toUpperCase()" class="form-control-sm">
+                    </mat-form-field>
+                </div>
+                <div class="col-2">
+                    <mat-form-field appearance="standard">
+                        <mat-label>Marca</mat-label>
+                        <input matInput type="text" [(ngModel)]="vehiculoTransporte.marca"
                             oninput="this.value = this.value.toUpperCase()" class="form-control-sm">
                     </mat-form-field>
                 </div>
@@ -75,7 +82,7 @@
                 <div class="col-3">
                     <mat-form-field appearance="standard">
                         <mat-label>Clase</mat-label>
-                        <input matInput type="text" [(ngModel)]="vehiculoTransporte.clase" class="form-control-sm">
+                        <input matInput type="text" [(ngModel)]="vehiculoTransporte.clase" oninput="this.value = this.value.toUpperCase()" class="form-control-sm">
                     </mat-form-field>
                 </div>
                 <div class="col-3">

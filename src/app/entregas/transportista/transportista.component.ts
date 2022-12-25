@@ -21,7 +21,7 @@ export class TransportistaComponent implements OnInit {
 
   activo: string = valores.activo;
   inactivo: string = valores.inactivo;
-  
+
   abrirPanelNuevo = true;
   abrirPanelAdmin = false;
 
@@ -134,7 +134,7 @@ export class TransportistaComponent implements OnInit {
     if (!this.clickedRows.has(transportista)){
       this.clickedRows.clear();
       this.clickedRows.add(transportista);
-      this.transportista = transportista;
+      this.transportista = { ... transportista};
     } else {
       this.clickedRows.clear();
       this.transportista = new Transportista();
@@ -156,5 +156,9 @@ export class TransportistaComponent implements OnInit {
       },
       error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     });
+  }
+
+  compareFn(a: any, b: any) {
+    return a && b && a.id == b.id;
   }
 }
