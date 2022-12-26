@@ -59,7 +59,7 @@
                 <div class="col-2">
                     <mat-form-field appearance="standard">
                         <mat-label>Estado</mat-label>
-                        <mat-select [(ngModel)]="bodega.estado" class="form-control-sm">
+                        <mat-select [(ngModel)]="bodega.estado" class="form-control-sm" [disabled]="true">
                             <mat-option [value]="activo">{{activo}}</mat-option>
                             <mat-option [value]="inactivo">{{inactivo}}</mat-option>
                         </mat-select>

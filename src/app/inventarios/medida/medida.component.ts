@@ -98,6 +98,7 @@ export class MedidaComponent implements OnInit {
       next: res => {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
         this.consultar();
+        this.nuevo(null);
       },
       error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     });
@@ -110,6 +111,7 @@ export class MedidaComponent implements OnInit {
       next: res => {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
         this.consultar();
+        this.nuevo(null);
       },
       error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     });
@@ -131,7 +133,7 @@ export class MedidaComponent implements OnInit {
     if (!this.clickedRows.has(medida)){
       this.clickedRows.clear();
       this.clickedRows.add(medida);
-      this.medida = medida;
+      this.medida = { ... medida};
     } else {
       this.clickedRows.clear();
       this.medida = new Medida();

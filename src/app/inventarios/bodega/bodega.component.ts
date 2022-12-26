@@ -95,6 +95,7 @@ export class BodegaComponent implements OnInit {
       next: res => {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
         this.consultar();
+        this.nuevo(null);
       },
       error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     });
@@ -107,6 +108,7 @@ export class BodegaComponent implements OnInit {
       next: res => {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
         this.consultar();
+        this.nuevo(null);
       },
       error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     });
@@ -128,7 +130,7 @@ export class BodegaComponent implements OnInit {
     if (!this.clickedRows.has(bodega)){
       this.clickedRows.clear();
       this.clickedRows.add(bodega);
-      this.bodega = bodega;
+      this.bodega = { ... bodega};
     } else {
       this.clickedRows.clear();
       this.bodega = new Bodega();
