@@ -1,4 +1,4 @@
-import { MovimientoContable } from "../../modelos/contabilidad/movimiento-contable";
+import { CuentaContable } from "../../modelos/contabilidad/cuenta-contable";
 import { CategoriaProducto } from "./categoria-producto";
 import { valores } from "../../constantes";
 
@@ -11,10 +11,9 @@ export class GrupoProducto {
     linea: string;
     sublinea: string;
     presentacion: string;
-    presentacionBien: number;
     estado: string;
     categoriaProducto: CategoriaProducto;
-    movimientoContable: MovimientoContable;
+    cuentaContable: CuentaContable;
 
     constructor() {
         this.id=valores.cero;
@@ -27,6 +26,6 @@ export class GrupoProducto {
         this.presentacion=valores.vacio;
         this.estado=valores.activo;
         this.categoriaProducto = new CategoriaProducto();
-        this.movimientoContable = new MovimientoContable();
+        this.cuentaContable = new CuentaContable();
     }
 }

@@ -1,33 +1,24 @@
-import { Component, OnInit, HostListener, Inject } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
-import { UntypedFormControl } from '@angular/forms';
-import { Observable } from 'rxjs';
-import { startWith, map } from 'rxjs/operators';
-import { valores, validarSesion, exito, exito_swal, error, error_swal, error_formulario } from '../../constantes';
+import { Component, OnInit, HostListener, ElementRef, Inject, Renderer2 } from '@angular/core';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { valores, validarSesion, tab_activo, exito, exito_swal, error, error_swal } from '../../constantes';
 import Swal from 'sweetalert2';
 
 import { Router } from '@angular/router';
 import { Sesion } from '../../modelos/usuario/sesion';
 import { SesionService } from '../../servicios/usuario/sesion.service';
-import { TabService } from '../../componentes/services/tab.service';
-import { GrupoProducto } from '../../modelos/inventario/grupo-producto';
 import { GrupoProductoService } from '../../servicios/inventario/grupo-producto.service';
-import { TablaGrupoProductoComponent } from '../../inventarios/grupo-producto/tabla-grupo-producto/tabla-grupo-producto.component';
-import { CategoriaProductoService } from '../../servicios/inventario/categoria-producto.service';
-import { CategoriaProducto } from '../../modelos/inventario/categoria-producto';
-import { MovimientoContable } from '../../modelos/contabilidad/movimiento-contable';
-import { MovimientoContableService } from '../../servicios/contabilidad/movimiento-contable.service';
+import { GrupoProducto } from '../../modelos/inventario/grupo-producto';
+import { CuentaContable } from '../../modelos/contabilidad/cuenta-contable';
 
 import { ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-
-import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { CategoriaProducto } from 'src/app/modelos/inventario/categoria-producto';
+import { CategoriaProductoService } from 'src/app/servicios/inventario/categoria-producto.service';
 
 export interface DialogData {
-  usuario: string;
-  clave: string;
+  cuentaContable: CuentaContable;
 }
 
 @Component({
@@ -40,199 +31,78 @@ export class GrupoProductoComponent implements OnInit {
   activo: string = valores.activo;
   inactivo: string = valores.inactivo;
 
-  usuario: string = "";
-  clave: string = "";
-
   abrirPanelNuevo: boolean = true;
-  abrirPanelAdmin: boolean = false;
-  deshabilitarPresentacion: boolean = false;
+  abrirPanelAdmin: boolean = true;
   edicion: boolean = true;
-  formularioValidado: boolean = false;
 
-  sesion: Sesion;
-  grupoProducto: GrupoProducto = new GrupoProducto();
-  movimientoContable: MovimientoContable = new MovimientoContable();
-  grupoProductoBuscar: GrupoProducto = new GrupoProducto();
-  movimientoContableBuscar: MovimientoContable = new MovimientoContable();
-
+  sesion: Sesion=null;
+  grupoProducto = new GrupoProducto();
   gruposProductos: GrupoProducto[];
-  categoriasProductos: CategoriaProducto[] = [];
+  categoriasProductos: CategoriaProducto[];
 
-  grupos: string[] = [];
-  controlGrupo = new UntypedFormControl();
-  filtroGrupos: Observable<string[]> = new Observable<string[]>();
-
-  subgrupos: string[] = [];
-  controlSubgrupo = new UntypedFormControl();
-  filtroSubgrupos: Observable<string[]> = new Observable<string[]>();
-
-  secciones: string[] = [];
-  controlSeccion = new UntypedFormControl();
-  filtroSecciones: Observable<string[]> = new Observable<string[]>();
-
-  lineas: string[] = [];
-  controlLinea = new UntypedFormControl();
-  filtroLineas: Observable<string[]> = new Observable<string[]>();
-
-  sublineas: string[] = [];
-  controlSublinea = new UntypedFormControl();
-  filtroSublineas: Observable<string[]> = new Observable<string[]>();
-
-  presentaciones: string[] = [];
-  controlPresentacion = new UntypedFormControl();
-  filtroPresentaciones: Observable<string[]> = new Observable<string[]>();
-
-  //cabeceraGrupoProducto: string[] = ['id', 'grupo', 'subgrupo', 'seccion', 'linea', 'sublinea', 'presentacion'];
+  columnas: any[] = [
+    { nombreColumna: 'codigo', cabecera: 'Código', celda: (row: GrupoProducto) => `${row.codigo}`},
+    { nombreColumna: 'grupo', cabecera: 'Grupo', celda: (row: GrupoProducto) => `${row.grupo}`},
+    { nombreColumna: 'subgrupo', cabecera: 'Subgrupo', celda: (row: GrupoProducto) => `${row.subgrupo}`},
+    { nombreColumna: 'seccion', cabecera: 'Sección', celda: (row: GrupoProducto) => `${row.seccion}`},
+    { nombreColumna: 'linea', cabecera: 'Línea', celda: (row: GrupoProducto) => `${row.linea}`},
+    { nombreColumna: 'sublinea', cabecera: 'Sublínea', celda: (row: GrupoProducto) => `${row.sublinea}`},
+    { nombreColumna: 'presentacion', cabecera: 'Presentación', celda: (row: GrupoProducto) => `${row.presentacion}`},
+    { nombreColumna: 'cuenta', cabecera: 'Cuenta', celda: (row: GrupoProducto) => `${row.cuentaContable != null? row.cuentaContable.cuenta : new CuentaContable()}`},
+    { nombreColumna: 'estado', cabecera: 'Estado', celda: (row: GrupoProducto) => `${row.estado}`},
+  ];
+  cabecera: string[] = this.columnas.map(titulo => titulo.nombreColumna);
   dataSource: MatTableDataSource<GrupoProducto>;
-  clickedRows = new Set<GrupoProducto>();
-
+  clickedRows = new Set<GrupoProducto>(); 
+  
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
-  @ViewChild(TablaGrupoProductoComponent) TablaGrupoProducto: TablaGrupoProductoComponent;
 
-  constructor(public dialog: MatDialog, private sesionService: SesionService, private router: Router, private tabService: TabService,
-    private grupoProductoService: GrupoProductoService, private categoriaProductoService: CategoriaProductoService,
-    private movimientoContableService: MovimientoContableService) { }
+  constructor(public dialog: MatDialog, private grupoProductoService: GrupoProductoService, private categoriaProductoService: CategoriaProductoService,
+    private sesionService: SesionService,private router: Router) { }
 
+  ngOnInit() {
+    this.sesion=validarSesion(this.sesionService, this.router);
+    this.consultar();
+    this.consultarCategoriasProductos();
+  }
+  
   @HostListener('window:keypress', ['$event'])
   keyEvent($event: KeyboardEvent) {
     if (($event.shiftKey || $event.metaKey) && $event.key == 'G') //SHIFT + G
       this.crear(null);
     if (($event.shiftKey || $event.metaKey) && $event.key == 'N') //ASHIFT + N
-      this.limpiar();
-  }
-
-  async ngOnInit() {
-    this.sesion=validarSesion(this.sesionService, this.router);
-    this.categoriaProductoService.consultar().subscribe({
-      next: res => {
-        this.categoriasProductos = res.resultado as CategoriaProducto[];
-        this.grupoProducto.categoriaProducto.id = this.categoriasProductos[0].id;
-      },
-      error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
-    });
-    this.consultar();
-    this.filtroGrupos = this.controlGrupo.valueChanges
-      .pipe(
-        startWith(''),
-        map(grupo => this.filtroGrupo(grupo))
-      );
-
-    this.filtroSubgrupos = this.controlSubgrupo.valueChanges
-      .pipe(
-        startWith(''),
-        map(subgrupo => this.filtroSubgrupo(subgrupo))
-      );
-
-    this.filtroSecciones = this.controlSeccion.valueChanges
-      .pipe(
-        startWith(''),
-        map(seccion => this.filtroSeccion(seccion))
-      );
-
-    this.filtroLineas = this.controlLinea.valueChanges
-      .pipe(
-        startWith(''),
-        map(linea => this.filtroLinea(linea))
-      );
-
-    this.filtroSublineas = this.controlSublinea.valueChanges
-      .pipe(
-        startWith(''),
-        map(sublinea => this.filtroSublinea(sublinea))
-      );
+      this.nuevo(null);      
   }
 
   nuevo(event) {
-    if (event!=null)
-      event.preventDefault();
-    this.grupoProducto = new GrupoProducto();
-    this.clickedRows.clear();
-  }
-
-  limpiar() {
-    this.grupoProducto = new GrupoProducto();
-    this.grupoProducto.categoriaProducto.id = this.categoriasProductos[0].id;
-    this.editar();
-    this.controlGrupo.setValue('');
-    this.controlSubgrupo.setValue('');
-    this.controlSeccion.setValue('');
-    this.controlLinea.setValue('');
-    this.controlSublinea.setValue('');
-    //this.controlPresentacion.setValue('');
-    this.clickedRows.clear();
-    this.TablaGrupoProducto.borrarFiltroGrupoProducto();
-    if (this.TablaGrupoProducto.dataSourceGrupoProducto.paginator) {
-      this.TablaGrupoProducto.dataSourceGrupoProducto.paginator.firstPage();
-    }
-  }
-
-  borrarControles(controlModificado: string) {
-    if (controlModificado == 'grupo') {
-      this.controlSubgrupo.setValue('');
-      this.controlSeccion.setValue('');
-      this.controlLinea.setValue('');
-      this.controlSublinea.setValue('');
-      this.controlPresentacion.setValue('');
-    }
-    if (controlModificado == 'subgrupo') {
-      this.controlSeccion.setValue('');
-      this.controlLinea.setValue('');
-      this.controlSublinea.setValue('');
-      this.controlPresentacion.setValue('');
-    }
-    if (controlModificado == 'seccion') {
-      this.controlLinea.setValue('');
-      this.controlSublinea.setValue('');
-      this.controlPresentacion.setValue('');
-    }
-    if (controlModificado == 'linea') {
-      this.controlSublinea.setValue('');
-      this.controlPresentacion.setValue('');
-    }
-    if (controlModificado == 'sublinea') {
-      //this.controlPresentacion.setValue('');
-      this.grupoProducto.presentacion = "";
-    }
-  }
-
-  crear(event: any) {
     if (event != null)
       event.preventDefault();
-    this.validarFormulario();  
-    //this.grupoProducto.movimientoContable.id = 1;
-    console.log(this.grupoProducto);
-    if (this.formularioValidado) {
-      this.grupoProductoService.crear(this.grupoProducto).subscribe({
-        next: res => {
-          this.grupoProducto = res.resultado as GrupoProducto;
-          this.TablaGrupoProducto.consultarGrupoProductos();
-          Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
-          this.limpiar();
-        },
-        error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
-      });
-    } else {
-      Swal.fire({ icon: error_swal, title: error, text: error_formulario });
-    }
-
+    this.grupoProducto = new GrupoProducto();
+    this.clickedRows.clear();
   }
 
-  editar() {
-    this.habilitarControles();
-    this.validarCategoria();
-    this.edicion = true;
+  crear(event) {
+    if (event != null)
+      event.preventDefault();
+    this.grupoProductoService.crear(this.grupoProducto).subscribe({
+      next: res => {
+        Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
+        this.consultar();
+        this.nuevo(null);
+      },
+      error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+    });
   }
 
-  actualizar(event: any) {
+  actualizar(event) {
     if (event != null)
       event.preventDefault();
     this.grupoProductoService.actualizar(this.grupoProducto).subscribe({
       next: res => {
-        this.grupoProducto = res.resultado as GrupoProducto;
-        this.TablaGrupoProducto.consultarGrupoProductos();
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
-        this.limpiar();
+        this.consultar();
+        this.nuevo(null);
       },
       error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     });
@@ -245,6 +115,7 @@ export class GrupoProductoComponent implements OnInit {
       next: res => {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
         this.consultar();
+        this.nuevo(null);
       },
       error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     });
@@ -257,282 +128,84 @@ export class GrupoProductoComponent implements OnInit {
       next: res => {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
         this.consultar();
+        this.nuevo(null);
       },
       error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     });
   }
 
-  seleccion(event: any) {
-    this.grupoProducto = event.grupoProductoSeleccionado as GrupoProducto;
-    if (this.grupoProducto.id != 0) {
-      this.llenarGrupoProducto();
-      this.inhabilitarControles();
-    } else {
-      this.limpiar();
-    }
-  }
-
-  llenarGrupoProducto() {
-    this.grupoProducto.categoriaProducto = this.categoriasProductos[0]; //Bien o servicio
-    this.controlGrupo.setValue(this.grupoProducto.grupo);
-    this.controlSubgrupo.setValue(this.grupoProducto.subgrupo);
-    this.controlSeccion.setValue(this.grupoProducto.seccion);
-    this.controlLinea.setValue(this.grupoProducto.linea);
-    this.controlSublinea.setValue(this.grupoProducto.sublinea);
-  }
-
-  buscar(event: any) {
-    if (event != null)
-      event.preventDefault();
-    this.grupoProductoService.buscar(this.grupoProductoBuscar).subscribe(
-      res => {
-        this.gruposProductos = res.resultado as GrupoProducto[]
-      },
-      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
-    );
-  }
-
-  validarFormulario(){
-    //validar que los campos esten llenos antes de guardar
-    this.formularioValidado = true;
-  }
-
-  inhabilitarControles() {
-    this.edicion = false;
-    this.controlGrupo.disable();
-    this.controlSubgrupo.disable();
-    this.controlSeccion.disable();
-    this.controlLinea.disable();
-    this.controlSublinea.disable();
-    this.deshabilitarPresentacion = true;
-  }
-
-  habilitarControles() {
-    this.controlGrupo.enable();
-    this.controlSubgrupo.enable();
-    this.controlSeccion.enable();
-  }
-
-  validarCategoria() {
-    if (this.grupoProducto.categoriaProducto.id == 1) { // Si categoria en = Bien
-      this.controlLinea.enable();
-      this.controlSublinea.enable();
-      this.deshabilitarPresentacion = false;
-    } else {
-      this.controlLinea.disable();
-      this.controlSublinea.disable();
-      this.deshabilitarPresentacion = true;
-    }
-  }
-
   consultar() {
-    this.grupoProductoService.consultar().subscribe(
-      res => {
-        this.grupos = res.resultado as string[];
+    this.grupoProductoService.consultar().subscribe({
+      next: res => {
+        this.gruposProductos = res.resultado as GrupoProducto[]
+        this.dataSource = new MatTableDataSource(this.gruposProductos);
+        this.dataSource.paginator = this.paginator;
+        this.dataSource.sort = this.sort;
       },
-      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
-    );
+      error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+    });
   }
 
-  // Metodos para los autocomplete
-  private filtroGrupo(value: string): string[] {
-    //this.grupoProducto.grupo = value.toUpperCase();
-    // Actua como que el valor digitado fuera el seleccionado
-    this.seleccionarGrupo();
-    if (this.grupos.length > 0) {
-      const filterValue = value.toLowerCase();
-      return this.grupos.filter(grupo => grupo.toLowerCase().includes(filterValue));
-    }
-    return [];
-  }
-  async seleccionarGrupo() {
-    if (this.controlGrupo.value != null) {
-      await this.grupoProductoService.consultarSubgruposAsync(this.controlGrupo.value.toUpperCase()).then(
-        res => {
-          this.subgrupos = res.resultado as string[];
-        },
-        err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
-      );
-
-      if (this.edicion) {
-        if (this.controlGrupo.value != this.grupoProducto.grupo) {
-          this.grupoProducto.grupo = this.controlGrupo.value.toUpperCase();
-          this.borrarControles('grupo');
-        }
-      }
-    }
-  }
-
-  private filtroSubgrupo(value: string): string[] {
-    //this.grupoProducto.subgrupo = value.toUpperCase();
-    this.seleccionarSubgrupo();
-    if (this.subgrupos.length > 0) {
-      const filterValue = value.toLowerCase();
-      return this.subgrupos.filter(subgrupo => subgrupo.toLowerCase().includes(filterValue));
-    }
-    return [];
-  }
-  async seleccionarSubgrupo() {
-    if (this.controlSubgrupo.value != null) {
-      await this.grupoProductoService.consultarSeccionesAsync(this.grupoProducto.grupo, this.controlSubgrupo.value.toUpperCase()).then(
-        res => {
-          this.secciones = res.resultado as string[];
-        },
-        err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
-      );
-    }
-    if (this.controlSubgrupo.value != null && this.edicion) {
-      if (this.controlSubgrupo.value != this.grupoProducto.subgrupo) {
-        this.grupoProducto.subgrupo = this.controlSubgrupo.value.toUpperCase();
-        this.borrarControles('subgrupo');
-      }
-    }
-  }
-
-  private filtroSeccion(value: string): string[] {
-    //this.grupoProducto.seccion = value.toUpperCase();
-    this.seleccionarSeccion();
-    //if (this.secciones.indexOf(value) > -1) { // Si encuentra la sección
-      //this.consultarMovimientoContable(); //
-    //}
-    if (this.secciones.length > 0) {
-      const filterValue = value.toLowerCase();
-      return this.secciones.filter(seccion => seccion.toLowerCase().includes(filterValue));
-    }
-    return [];
-  }
-  async seleccionarSeccion() {
-    if (this.controlSeccion.value != null) {
-      //this.grupoProducto.seccion = this.controlSeccion.value.toUpperCase();
-
-      await this.grupoProductoService.consultarLineasAsync(this.grupoProducto.grupo, this.grupoProducto.subgrupo, this.controlSeccion.value.toUpperCase()).then(
-        res => {
-          this.lineas = res.resultado as string[];
-        },
-        err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
-      );
-    }
-    if (this.controlSeccion.value != null && this.edicion) {
-      if (this.controlSeccion.value != this.grupoProducto.seccion) {
-        this.grupoProducto.seccion = this.controlSeccion.value.toUpperCase();
-        this.borrarControles('seccion');
-      }
-    }
-    //this.consultarMovimientoContable();
-  }
-
-  consultarMovimientoContable() {
-    this.grupoProductoService.consultarMovimientoContable(this.grupoProducto.grupo, this.grupoProducto.subgrupo, this.grupoProducto.seccion).subscribe(
-      res => {
-        //this.grupo_producto.movimiento_contable = res.resultado as MovimientoContable;
+  consultarCategoriasProductos() {
+    this.categoriaProductoService.consultar().subscribe({
+      next: res => {
+        this.categoriasProductos = res.resultado as CategoriaProducto[]
       },
-      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
-    );
+      error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+    });
   }
 
-  private filtroLinea(value: string): string[] {
-    //this.grupoProducto.linea = value.toUpperCase();
-    this.seleccionarLinea();
-    if (this.lineas.length > 0) {
-      const filterValue = value.toLowerCase();
-      return this.lineas.filter(linea => linea.toLowerCase().includes(filterValue));
-    }
-    return [];
-  }
-  async seleccionarLinea() {
-    if (this.controlLinea.value != null) {
-      //this.grupoProducto.linea = this.controlLinea.value.toUpperCase();
-
-      await this.grupoProductoService.consultarSublineasAsync(this.grupoProducto.grupo, this.grupoProducto.subgrupo, this.grupoProducto.seccion, this.controlLinea.value.toUpperCase()).then(
-        res => {
-          this.sublineas = res.resultado as string[];
-        },
-        err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
-      );
-    }
-    if (this.controlLinea.value != null && this.edicion) {
-      if (this.controlLinea.value != this.grupoProducto.linea) {
-        this.grupoProducto.linea = this.controlLinea.value.toUpperCase();
-        this.borrarControles('linea');
-      }
+  seleccion(grupoProducto: GrupoProducto) {
+    if (!this.clickedRows.has(grupoProducto)){
+      this.clickedRows.clear();
+      this.clickedRows.add(grupoProducto);
+      this.grupoProducto = { ... grupoProducto};
+    } else {
+      this.clickedRows.clear();
+      this.grupoProducto= new GrupoProducto();
     }
   }
 
-  private filtroSublinea(value: string): string[] {
-    //this.grupoProducto.sublinea = value.toUpperCase();
-    this.seleccionarSublinea();
-    if (this.sublineas.length > 0) {
-      const filterValue = value.toLowerCase();
-      return this.sublineas.filter(sublinea => sublinea.toLowerCase().includes(filterValue));
-    }
-    return [];
-  }
-  async seleccionarSublinea() {
-    if (this.controlSublinea.value != null) {
-      //this.grupoProducto.sublinea = this.controlSublinea.value.toUpperCase();
-
-      await this.grupoProductoService.consultarPresentacionesAsync(this.grupoProducto.grupo, this.grupoProducto.subgrupo, this.grupoProducto.seccion, this.grupoProducto.linea, this.controlSublinea.value.toUpperCase()).then(
-        res => {
-          this.presentaciones = res.resultado as string[];
-        },
-        err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
-      );
-    }
-    if (this.controlSublinea.value != null && this.edicion) {
-      if (this.controlSublinea.value != this.grupoProducto.sublinea) {
-        this.grupoProducto.sublinea = this.controlSublinea.value.toUpperCase();
-        this.borrarControles('sublinea');
-      }
+  filtro(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.dataSource.filter = filterValue.trim().toUpperCase();
+    if (this.dataSource.paginator) {
+      this.dataSource.paginator.firstPage();
     }
   }
 
-  // Para capturar la imformación del Mat-dialog
-  movimientoContableSeleccionado(event: any) {
-    //console.log(event);
-    let movimientoContableRecibido = event.movimientoContableSeleccionado as MovimientoContable;
-    this.grupoProducto.movimientoContable = movimientoContableRecibido;
-    //console.log(grupoProductoRecibido.codigo);
+  compareFn(a: any, b: any) {
+    return a && b && a.id == b.id;
   }
 
-  dialogoMovimientosContables(): void {
-    const dialogRef = this.dialog.open(DialogoMovimientoContableComponent, {
+  dialogoCuentasContables(): void {
+    const dialogRef = this.dialog.open(DialogoGrupoProductoCuentaContableComponent, {
       width: '80%',
-      //data: { usuario: this.usuario, clave: this.clave }
+      data: {}
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      //console.log('El dialogo para selección de grupo producto fue cerrado');
+      console.log(result);
       if (result) {
-        this.grupoProducto.movimientoContable = result as MovimientoContable;
+        Object.assign(this.grupoProducto.cuentaContable, result as CuentaContable);
       }
     });
   }
 }
 
 @Component({
-  selector: 'dialogo-movimiento-contable',
-  templateUrl: 'dialogo-movimiento-contable.component.html',
+  selector: 'dialogo-grupo-producto-cuenta-contable',
+  templateUrl: 'dialogo-grupo-producto-cuenta-contable.component.html',
 })
-export class DialogoMovimientoContableComponent {
+export class DialogoGrupoProductoCuentaContableComponent {
 
-  movimientoContable: string[] = [];
-
-  constructor(
-    public dialogRef: MatDialogRef<DialogoMovimientoContableComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: MovimientoContable) { }
+  constructor(public dialogRef: MatDialogRef<DialogoGrupoProductoCuentaContableComponent>, @Inject(MAT_DIALOG_DATA) public data: DialogData) { }
 
   onNoClick(): void {
     this.dialogRef.close();
   }
-
-  // Para capturar la imformación del Mat-dialog
-  movimientoContableSeleccionado(event: any) {
-    //console.log(event);
-    if (event && event.id != 0) {
-      this.data = event.movimientoContableSeleccionado as MovimientoContable;
-      //console.log(this.data.codigo);
-    } else {
-      this.data = new MovimientoContable;
-    }
+  cuentaContableSeleccionado(event: any) {
+    console.log(event);
+    this.data.cuentaContable = event;
   }
-}
+} 

@@ -46,69 +46,43 @@
                     <div class="col-4">
                         <mat-form-field appearance="standard">
                             <mat-label>Grupo</mat-label>
-                            <input type="text" matInput aria-label="grupo" class="form-control-sm"
-                                [formControl]="controlGrupo" [matAutocomplete]="grupo">
-                            <mat-autocomplete autoActiveFirstOption #grupo="matAutocomplete">
-                                <mat-option *ngFor="let grupo of filtroGrupos | async" [value]="grupo">
-                                    {{grupo}}
-                                </mat-option>
-                            </mat-autocomplete>
+                            <input matInput type="text" [(ngModel)]="grupoProducto.grupo"
+                            oninput="this.value = this.value.toUpperCase()" class="form-control-sm">
                         </mat-form-field>
                     </div>
                     <div class="col-4">
                         <mat-form-field appearance="standard">
                             <mat-label>Subgrupo</mat-label>
-                            <input type="text" matInput aria-label="subgrupo" class="form-control-sm"
-                                [formControl]="controlSubgrupo" [matAutocomplete]="subgrupo">
-                            <mat-autocomplete autoActiveFirstOption #subgrupo="matAutocomplete">
-                                <mat-option *ngFor="let subgrupo of filtroSubgrupos | async" [value]="subgrupo">
-                                    {{subgrupo}}
-                                </mat-option>
-                            </mat-autocomplete>
+                            <input matInput type="text" [(ngModel)]="grupoProducto.subgrupo"
+                            oninput="this.value = this.value.toUpperCase()" class="form-control-sm">
                         </mat-form-field>
                     </div>
                     <div class="col-4">
                         <mat-form-field appearance="standard">
                             <mat-label>Sección</mat-label>
-                            <input type="text" matInput aria-label="seccion" class="form-control-sm"
-                                [formControl]="controlSeccion" [matAutocomplete]="seccion">
-                            <mat-autocomplete autoActiveFirstOption #seccion="matAutocomplete">
-                                <mat-option *ngFor="let seccion of filtroSecciones | async" [value]="seccion">
-                                    {{seccion}}
-                                </mat-option>
-                            </mat-autocomplete>
+                            <input matInput type="text" [(ngModel)]="grupoProducto.seccion"
+                            oninput="this.value = this.value.toUpperCase()" class="form-control-sm">
                         </mat-form-field>
                     </div>
                     <div class="col-4">
                         <mat-form-field appearance="standard">
                             <mat-label>Línea</mat-label>
-                            <input type="text" matInput aria-label="linea" class="form-control-sm"
-                                [formControl]="controlLinea" [matAutocomplete]="linea">
-                            <mat-autocomplete autoActiveFirstOption #linea="matAutocomplete">
-                                <mat-option *ngFor="let linea of filtroLineas | async" [value]="linea">
-                                    {{linea}}
-                                </mat-option>
-                            </mat-autocomplete>
+                            <input matInput type="text" [(ngModel)]="grupoProducto.linea"
+                            oninput="this.value = this.value.toUpperCase()" class="form-control-sm">
                         </mat-form-field>
                     </div>
                     <div class="col-4">
                         <mat-form-field appearance="standard">
                             <mat-label>Sublínea</mat-label>
-                            <input type="text" matInput aria-label="sublinea" class="form-control-sm"
-                                [formControl]="controlSublinea" [matAutocomplete]="sublinea">
-                            <mat-autocomplete autoActiveFirstOption #sublinea="matAutocomplete">
-                                <mat-option *ngFor="let sublinea of filtroSublineas | async" [value]="sublinea">
-                                    {{sublinea}}
-                                </mat-option>
-                            </mat-autocomplete>
+                            <input matInput type="text" [(ngModel)]="grupoProducto.sublinea"
+                            oninput="this.value = this.value.toUpperCase()" class="form-control-sm">
                         </mat-form-field>
                     </div>
                     <div class="col-4">
                         <mat-form-field appearance="standard">
                             <mat-label>Presentación</mat-label>
                             <input matInput type="text" [(ngModel)]="grupoProducto.presentacion"
-                                [disabled]="deshabilitarPresentacion" oninput="this.value = this.value.toUpperCase()"
-                                class="form-control-sm">
+                            oninput="this.value = this.value.toUpperCase()" class="form-control-sm">
                         </mat-form-field>
                     </div>
                 </div>
@@ -116,18 +90,15 @@
                     <div class="col-6">
                         <mat-form-field appearance="standard">
                             <mat-label>Categoría</mat-label>
-                            <mat-select [(ngModel)]="grupoProducto.categoriaProducto.id" class="form-control-sm"
-                                (selectionChange)="validarCategoria()" [disabled]="!edicion">
-                                <mat-option *ngFor="let categoriaProducto of categoriasProductos"
-                                    [value]="categoriaProducto.id">
-                                    {{categoriaProducto.descripcion}}</mat-option>
+                            <mat-select [(ngModel)]="grupoProducto.categoriaProducto" [compareWith]="compareFn" class="form-control-sm">
+                                <mat-option *ngFor="let categoriaProducto of categoriasProductos" [value]="categoriaProducto">{{categoriaProducto.descripcion}}</mat-option>
                             </mat-select>
                         </mat-form-field>
                     </div>
                     <div class="col-6">
                         <mat-form-field appearance="standard">
                             <mat-label>Estado</mat-label>
-                            <mat-select [(ngModel)]="grupoProducto.estado" class="form-control-sm" [disabled]="!edicion">
+                            <mat-select [(ngModel)]="grupoProducto.estado" class="form-control-sm" [disabled]="true">
                                 <mat-option [value]="activo">{{activo}}</mat-option>
                                 <mat-option [value]="inactivo">{{inactivo}}</mat-option>
                             </mat-select>
@@ -135,13 +106,13 @@
                     </div>
                     <div class="col-8">
                         <mat-form-field appearance="standard">
-                            <mat-label>Cod. Movimiento Contable</mat-label>
-                            <input matInput type="text" [(ngModel)]="grupoProducto.movimientoContable.codigo" disabled
+                            <mat-label>Cuenta Contable</mat-label>
+                            <input matInput type="text" [(ngModel)]="grupoProducto.cuentaContable.cuenta" disabled
                                 oninput="this.value = this.value.toUpperCase()" class="form-control-sm">
                         </mat-form-field>
                     </div>
                     <div class="col-4 iconos">
-                        <button mat-icon-button aria-label="Mov. Conta" (click)="dialogoMovimientosContables()">
+                        <button mat-icon-button aria-label="Mov. Conta" (click)="dialogoCuentasContables()">
                             <mat-icon >search</mat-icon>
                         </button>
                     </div>
@@ -161,8 +132,36 @@
                 </mat-panel-description>
             </mat-expansion-panel-header>
             <hr>
-            <app-tabla-grupo-producto [clickedRows]="clickedRows" (grupoProductoSeleccionado)="seleccion($event)">
-            </app-tabla-grupo-producto>
+            <mat-form-field appearance="standard">
+                <mat-label>Buscar en grupo de productos</mat-label>
+                <input matInput oninput="this.value = this.value.toUpperCase()" (keyup)="filtro($event)" #input>
+            </mat-form-field>
+            <div class="mat-elevation-z8">
+                <table mat-table [dataSource]="dataSource" matSort>
+        
+                    <!-- Columnas Dinamicas -->
+                    <ng-container *ngFor="let columna of columnas" [matColumnDef]="columna.nombreColumna">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> {{ columna.cabecera }} </th>
+                        <td mat-cell *matCellDef="let row"> {{ columna.celda(row) }} </td>
+                    </ng-container>
+        
+                    <tr mat-header-row *matHeaderRowDef="cabecera"></tr>
+                    <tr mat-row (click)="seleccion(row)" [class.selected-row]="clickedRows.has(row)"
+                        *matRowDef="let row; columns: cabecera;"></tr>
+        
+                    <!-- Row shown when there is no matching data. -->
+                    <tr class="mat-row" *matNoDataRow>
+                        <td class="mat-cell" colspan="7">No hay datos que coincidan con el grupo de producto</td>
+                    </tr>
+                </table>
+                <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
+            </div>
+            <div class="azul" *ngIf="!clickedRows.size">
+                Seleccione una fila para editar
+            </div>
+            <div class="azul" *ngFor="let clickedRow of clickedRows">
+                Id: {{clickedRow.id}} seleccionado
+            </div>
         </mat-expansion-panel>
     </mat-accordion>
 </div>

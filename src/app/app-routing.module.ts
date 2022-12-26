@@ -17,7 +17,8 @@ import { MenuComponent } from './componentes/menu/menu.component';
 // Molulo de Clientes
 import { ClienteComponent, DialogoMapaComponent } from './clientes/cliente/cliente.component';
 import { SegmentoComponent } from './clientes/segmento/segmento.component';
-import { GrupoClienteComponent, DialogoCuentaContableComponent } from './clientes/grupo-cliente/grupo-cliente.component';
+import { GrupoClienteComponent, DialogoGrupoClienteCuentaContableComponent } from './clientes/grupo-cliente/grupo-cliente.component';
+import { TablaGrupoClienteCuentaContableComponent } from './clientes/grupo-cliente/tabla-grupo-cliente-cuenta-contable/tabla-grupo-cliente-cuenta-contable.component';
 import { OrigenIngresoComponent } from './clientes/origen-ingreso/origen-ingreso.component';
 import { CalificacionClienteComponent } from './clientes/calificacion-cliente/calificacion-cliente.component';
 import { EstadoCivilComponent } from './configuraciones/estado-civil/estado-civil.component';
@@ -30,8 +31,8 @@ import { TipoPagoComponent } from './configuraciones/tipo-pago/tipo-pago.compone
 //Módulo de Inventarios
 import { BodegaComponent } from './inventarios/bodega/bodega.component';
 import { MedidaComponent } from './inventarios/medida/medida.component';
-import { GrupoProductoComponent, DialogoMovimientoContableComponent } from './inventarios/grupo-producto/grupo-producto.component';
-import { TablaGrupoProductoComponent } from './inventarios/grupo-producto/tabla-grupo-producto/tabla-grupo-producto.component';
+import { GrupoProductoComponent, DialogoGrupoProductoCuentaContableComponent } from './inventarios/grupo-producto/grupo-producto.component';
+import { TablaGrupoProductoCuentaContableComponent } from './inventarios/grupo-producto/tabla-grupo-producto-cuenta-contable/tabla-grupo-producto-cuenta-contable.component';
 import { KardexComponent } from './inventarios/kardex/kardex.component';
 import { FiltroSerie } from './pipes/filtro-serie';
 import { ProductoComponent, DialogoGrupoProductoComponent } from './inventarios/producto/producto.component';
@@ -165,7 +166,8 @@ export const RoutingComponents = [
   DialogoMapaComponent,
   SegmentoComponent,
   GrupoClienteComponent,
-  DialogoCuentaContableComponent,
+  DialogoGrupoClienteCuentaContableComponent,
+  TablaGrupoClienteCuentaContableComponent,
   PlazoCreditoComponent,
   ImpuestoComponent,
   OrigenIngresoComponent,
@@ -178,8 +180,8 @@ export const RoutingComponents = [
   ProductoComponent,
   DialogoGrupoProductoComponent,
   GrupoProductoComponent,
-  DialogoMovimientoContableComponent,
-  TablaGrupoProductoComponent,
+  DialogoGrupoProductoCuentaContableComponent,
+  TablaGrupoProductoCuentaContableComponent,
   BodegaComponent,
   MedidaComponent,
   KardexComponent,

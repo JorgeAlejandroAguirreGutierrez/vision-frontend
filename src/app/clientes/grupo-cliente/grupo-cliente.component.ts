@@ -1,5 +1,4 @@
 import { Component, OnInit, HostListener, ElementRef, Inject, Renderer2 } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { valores, validarSesion, tab_activo, exito, exito_swal, error, error_swal } from '../../constantes';
 import Swal from 'sweetalert2';
@@ -51,7 +50,6 @@ export class GrupoClienteComponent implements OnInit {
   
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
-  @ViewChild("inputFiltro") inputFiltro: ElementRef;
 
   constructor(public dialog: MatDialog, private renderer: Renderer2, private grupoClienteService: GrupoClienteService,
     private sesionService: SesionService,private router: Router) { }
@@ -160,34 +158,31 @@ export class GrupoClienteComponent implements OnInit {
   }
 
   dialogoCuentasContables(): void {
-    const dialogRef = this.dialog.open(DialogoCuentaContableComponent, {
+    const dialogRef = this.dialog.open(DialogoGrupoClienteCuentaContableComponent, {
       width: '80%',
       data: {}
     });
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        console.log(result);
         Object.assign(this.grupoCliente.cuentaContable, result as CuentaContable);
-        console.log(this.grupoCliente.cuentaContable);
       }
     });
   }
 }
 
 @Component({
-  selector: 'dialogo-cuenta-contable',
-  templateUrl: 'dialogo-cuenta-contable.component.html',
+  selector: 'dialogo-grupo-cliente-cuenta-contable',
+  templateUrl: 'dialogo-grupo-cliente-cuenta-contable.component.html',
 })
-export class DialogoCuentaContableComponent {
+export class DialogoGrupoClienteCuentaContableComponent {
 
-  constructor(public dialogRef: MatDialogRef<DialogoCuentaContableComponent>, @Inject(MAT_DIALOG_DATA) public data: DialogData) { }
+  constructor(public dialogRef: MatDialogRef<DialogoGrupoClienteCuentaContableComponent>, @Inject(MAT_DIALOG_DATA) public data: DialogData) { }
 
   onNoClick(): void {
     this.dialogRef.close();
   }
-  //Para capturar la información del Mat-dialog
   cuentaContableSeleccionado(event: any) {
-    this.data.cuentaContable = event.cuentaContableSeleccionado;
+    this.data.cuentaContable = event;
   }
 }  

@@ -76,6 +76,7 @@ export class TransportistaComponent implements OnInit {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
         this.transportista=res.resultado as Transportista;
         this.consultar();
+        this.nuevo(null);
       },
       err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     );
@@ -89,6 +90,7 @@ export class TransportistaComponent implements OnInit {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
         this.transportista=res.resultado as Transportista;
         this.consultar();
+        this.nuevo(null);
       },
       err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     );
@@ -101,6 +103,7 @@ export class TransportistaComponent implements OnInit {
       next: res => {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
         this.consultar();
+        this.nuevo(null);
       },
       error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     });
@@ -113,6 +116,7 @@ export class TransportistaComponent implements OnInit {
       next: res => {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
         this.consultar();
+        this.nuevo(null);
       },
       error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     });
