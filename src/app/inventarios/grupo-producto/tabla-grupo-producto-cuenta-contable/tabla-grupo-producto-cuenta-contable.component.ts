@@ -29,8 +29,7 @@ export class TablaGrupoProductoCuentaContableComponent implements OnInit {
     { nombreColumna: 'cuenta', cabecera: 'Cuenta', celda: (row: CuentaContable) => `${row.cuenta}` },
     { nombreColumna: 'descripcion', cabecera: 'Descripción', celda: (row: CuentaContable) => `${row.descripcion}` },
     { nombreColumna: 'clasificacion', cabecera: 'Clasificación', celda: (row: CuentaContable) => `${row.clasificacion}` },
-    { nombreColumna: 'nivel', cabecera: 'Nivel', celda: (row: CuentaContable) => `${row.nivel}` },
-    { nombreColumna: 'estado', cabecera: 'Estado', celda: (row: CuentaContable) => `${row.estado}` }
+    { nombreColumna: 'nivel', cabecera: 'Nivel', celda: (row: CuentaContable) => `${row.nivel}` }
   ];
   cabecera: string[] = this.columnas.map(titulo => titulo.nombreColumna);
   dataSource: MatTableDataSource<CuentaContable>;
@@ -56,7 +55,7 @@ export class TablaGrupoProductoCuentaContableComponent implements OnInit {
   }
   
   consultar() {
-    this.cuentaContableService.consultar().subscribe({
+    this.cuentaContableService.consultarActivos().subscribe({
       next: res => {
         this.cuentasContables = res.resultado as CuentaContable[]
         this.dataSource = new MatTableDataSource(this.cuentasContables);

@@ -15,14 +15,7 @@ import { CuentaContable } from '../../modelos/contabilidad/cuenta-contable';
 
 export class CuentaContableService {
 
-  private messageSource = new BehaviorSubject(0);
-  currentMessage = this.messageSource.asObservable();
-
   constructor(private http: HttpClient) { }
-
-  enviar(cuentaContableId: number) {
-    this.messageSource.next(cuentaContableId);
-  }
 
   crear(cuentaContable: CuentaContable): Observable<Respuesta> {
     return this.http.post(environment.host + urn.ruta + urn.cuentaContable, cuentaContable, options).pipe(
@@ -44,6 +37,14 @@ export class CuentaContableService {
 
   consultar(): Observable<Respuesta> {
     return this.http.get(environment.host + urn.ruta + urn.cuentaContable, options).pipe(
+      map(response => response as Respuesta),
+      catchError(err => {
+        return throwError(()=>err);
+      }));
+  }
+
+  consultarActivos(): Observable<Respuesta> {
+    return this.http.get(environment.host + urn.ruta + urn.cuentaContable + urn.consultarActivos, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);

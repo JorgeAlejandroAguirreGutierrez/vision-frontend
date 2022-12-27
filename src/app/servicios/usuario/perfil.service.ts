@@ -13,14 +13,7 @@ import { Perfil } from '../../modelos/usuario/perfil';
 })
 export class PerfilService {
 
-  private messageSource = new BehaviorSubject(0);
-  currentMessage = this.messageSource.asObservable();
-
   constructor(private http: HttpClient, private router: Router) { }
-
-  enviar(perfil_id: number) {
-    this.messageSource.next(perfil_id);
-  }
 
   crear(perfil: Perfil): Observable<Respuesta> {
     return this.http.post(environment.host + urn.ruta + urn.perfil, perfil, options).pipe(
@@ -42,6 +35,14 @@ export class PerfilService {
 
   consultar(): Observable<Respuesta> {
     return this.http.get(environment.host + urn.ruta + urn.perfil, options).pipe(
+      map(response => response as Respuesta),
+      catchError(err => {
+        return throwError(()=>err);
+      }));
+  }
+
+  consultarActivos(): Observable<Respuesta> {
+    return this.http.get(environment.host + urn.ruta + urn.perfil + urn.consultarActivos, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);

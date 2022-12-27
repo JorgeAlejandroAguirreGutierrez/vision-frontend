@@ -13,14 +13,7 @@ import { environment } from '../../../environments/environment';
 })
 export class EstacionService {
 
-  private messageSource = new BehaviorSubject(0);
-  currentMessage = this.messageSource.asObservable();
-
   constructor(private http: HttpClient, private router: Router) { }
-
-  enviar(estacionId: number) {
-    this.messageSource.next(estacionId);
-  }
 
   crear(estacion: Estacion): Observable<Respuesta> {
     return this.http.post(environment.host + urn.ruta + urn.estacion, estacion, options).pipe(
@@ -51,6 +44,14 @@ export class EstacionService {
 
   consultar(): Observable<Respuesta> {
     return this.http.get(environment.host + urn.ruta + urn.estacion, options).pipe(
+      map(response => response as Respuesta),
+      catchError(err => {
+        return throwError(()=>err);
+      }));
+  }
+
+  consultarActivos(): Observable<Respuesta> {
+    return this.http.get(environment.host + urn.ruta + urn.estacion +urn.consultarActivos, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);

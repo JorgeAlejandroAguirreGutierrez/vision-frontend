@@ -31,7 +31,7 @@ export const urn =
      sesion: "/sesion",
      validar: "/validar",
      establecimiento: "/establecimiento",
-     estacion: "/puntoVenta",
+     estacion: "/estacion",
      origenIngreso: "/origenIngreso",
      genero: "/genero",
      estadoCivil: "/estadoCivil",
@@ -137,15 +137,7 @@ export const valores ={
      lngCiudad: -78.64974203645144
 }
 
-export const preguntas = [
-    /**
-     * Preguntas de seguridad para usuarios
-     */
-    { pregunta: '¿Cúal es el nombre de tu mascota?' },
-    { pregunta: '¿Cúal es el apellido de tu Abuela materna?' },
-    { pregunta: '¿Cúal es el nombre de tu equipo preferido?' },
-    { pregunta: '¿Cúal es tu marca de vehículo preferido?' },
-]
+export const preguntas = ["¿CUAL ES EL NOMBRE DE TU MASCOTA?", "¿CUAL ES EL APELLIDO DE TU ABUELA MATERNA?", "¿CUAL ES EL NOMBRE DE TU EQUIPO PREFERIDO?", "¿CUAL ES TU MARCA DE VEHICULO PREFERIDO?"]
     
 export const mensajes = {
     /**
@@ -169,6 +161,7 @@ export const mensajes = {
      error_celular_invalido : "NUMERO DE CELULAR INVALIDO",
      error_correo_ingresado : "INGRESE UN CORREO ELECTRÓNICO",
      error_correo_invalido : "CORREO INVALIDO",
+     error_contrasena_invalida : "CONTRASENA INVALIDA",
      error_perfil : "SELECCIONE UN PERFIL",
      error_unidad_kardex : "ERROR EN UNIDAD KARDEX",
      error_impuesto : "ERROR EN IMPUESTO",

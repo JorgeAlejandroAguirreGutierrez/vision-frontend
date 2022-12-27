@@ -14,13 +14,6 @@ export class MedidaService {
 
   constructor(private http: HttpClient) { }
 
-  private messageSource = new BehaviorSubject(0);
-  currentMessage = this.messageSource.asObservable();
-
-  enviar(medida_id: number) {
-    this.messageSource.next(medida_id);
-  }
-
   crear(medida: Medida): Observable<Respuesta> {
     return this.http.post(environment.host + urn.ruta + urn.medida, medida, options).pipe(
       map(response => response as Respuesta),
@@ -41,6 +34,14 @@ export class MedidaService {
 
   consultar(): Observable<Respuesta> {
     return this.http.get(environment.host + urn.ruta + urn.medida, options).pipe(
+      map(response => response as Respuesta),
+      catchError(err => {
+        return throwError(()=>err);
+      }));
+  }
+
+  consultarActivos(): Observable<Respuesta> {
+    return this.http.get(environment.host + urn.ruta + urn.medida + urn.consultarActivos, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);

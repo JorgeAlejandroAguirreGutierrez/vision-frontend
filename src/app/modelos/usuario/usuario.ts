@@ -7,6 +7,7 @@ export class Usuario {
     codigo: string;
     apodo: string;
     contrasena: string;
+    confirmarContrasena: string;
     identificacion: string;
     nombre: string;
     telefono: string;
@@ -16,7 +17,7 @@ export class Usuario {
     cambiarContrasena: string;
     pregunta: string;
     respuesta: string;
-    activo: string;
+    estado: string;
     perfil: Perfil;
     estacion: Estacion;
 
@@ -25,6 +26,7 @@ export class Usuario {
       this.codigo = valores.vacio;
       this.apodo = valores.vacio;
       this.contrasena = valores.vacio;
+      this.confirmarContrasena = valores.vacio;
       this.identificacion = valores.vacio;
       this.nombre = valores.vacio;
       this.telefono = valores.vacio;
@@ -34,7 +36,7 @@ export class Usuario {
       this.cambiarContrasena = valores.si;
       this.pregunta = valores.vacio;
       this.respuesta = valores.vacio;
-      this.activo = valores.activo;
+      this.estado = valores.activo;
       this.perfil = new Perfil();
       this.estacion=new Estacion();
     }

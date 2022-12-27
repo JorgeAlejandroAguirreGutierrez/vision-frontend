@@ -1,25 +1,18 @@
 <nav class="navbar-light nav-fijo">
     <ul class="navbar-nav">
+        <li class="nav-item">
+            <a class="nav-link" title="Nuevo" role="button" (click)="nuevo($event)">
+                <mat-icon>note_add</mat-icon>
+            </a>
+        </li>
         <li class="nav-item" *ngIf="usuario.id==0">
             <a class="nav-link" title="Guardar" role="button" (click)="crear($event)">
                 <mat-icon>save</mat-icon>
             </a>
         </li>
-        <ng-container *ngIf="usuario.id!=0">
-            <li class="nav-item" *ngIf="!edicion">
-                <a class="nav-link" title="Actualizar" role="button" (click)="editar($event)">
-                    <mat-icon>edit</mat-icon>
-                </a>
-            </li>
-            <li class="nav-item" *ngIf="edicion">
-                <a class="nav-link" title="Actualizar" role="button" (click)="actualizar($event)">
-                    <mat-icon>update</mat-icon>
-                </a>
-            </li>
-        </ng-container>
-        <li class="nav-item">
-            <a class="nav-link" title="Nuevo" role="button" (click)="nuevo($event)">
-                <mat-icon>file_copy</mat-icon>
+        <li class="nav-item" *ngIf="usuario.id!=0">
+            <a class="nav-link" title="Actualizar" role="button" (click)="actualizar($event)">
+                <mat-icon>update</mat-icon>
             </a>
         </li>
         <li class="nav-item" *ngIf="usuario.id!=0">
@@ -53,33 +46,27 @@
                     <div class="col-12">
                         <mat-form-field appearance="standard">
                             <mat-label>Usuario</mat-label>
-                            <input matInput type="text" [(ngModel)]="usuario.apodo" class="form-control-sm">
+                            <input matInput type="text" [(ngModel)]="usuario.apodo" oninput="this.value = this.value.toUpperCase()" class="form-control-sm">
                         </mat-form-field>
                     </div>
-                    <div class="col-12" [formGroup]="formGroupContrasena">
+                    <div class="col-12">
                         <mat-form-field appearance="standard">
                             <mat-label>Contraseña</mat-label>
-                            <input matInput [type]="ocultarContrasena ? 'password' : 'text'" formControlName="password">
+                            <input matInput [type]="ocultarContrasena ? 'password' : 'text'" [(ngModel)]="usuario.contrasena">
                             <button mat-icon-button matSuffix (click)="ocultarContrasena = !ocultarContrasena"
                                 [attr.aria-label]="'Ocultar password'" [attr.aria-pressed]="ocultarContrasena">
                                 <mat-icon>{{ocultarContrasena ? 'visibility_off' : 'visibility'}}</mat-icon>
                             </button>
-                            <mat-error *ngIf="formGroupContrasena.get('password').invalid">
-                                {{mensajeErrorContrasena()}}
-                            </mat-error>
                         </mat-form-field>
                     </div>
-                    <div class="col-12" [formGroup]="formGroupContrasena">
+                    <div class="col-12">
                         <mat-form-field appearance="standard">
                             <mat-label>Confirmar Contraseña</mat-label>
-                            <input matInput [type]="ocultarContrasena2 ? 'password' : 'text'"
-                                formControlName="confirmPassword" (input)="onPasswordInput()">
+                            <input matInput [type]="ocultarContrasena2 ? 'password' : 'text'" [(ngModel)]="usuario.confirmarContrasena" (change)="validarContrasena()">
                             <button mat-icon-button matSuffix (click)="ocultarContrasena2 = !ocultarContrasena2"
                                 [attr.aria-label]="'Ocultar password2'" [attr.aria-pressed]="ocultarContrasena2">
                                 <mat-icon>{{ocultarContrasena2 ? 'visibility_off' : 'visibility'}}</mat-icon>
                             </button>
-                            <mat-error *ngIf="formGroupContrasena.get('confirmPassword').invalid">
-                                {{mensajeErrorConfirmarContrasena()}}</mat-error>
                         </mat-form-field>
                     </div>
                     <div class="col-12 centrar labelBeforeSlide">
@@ -98,7 +85,7 @@
                         <mat-form-field appearance="standard">
                             <mat-label>Nombre</mat-label>
                             <input matInput type="text" [(ngModel)]="usuario.nombre" class="form-control-sm"
-                                oninput="this.value = this.value.toUpperCase()" [disabled]="!edicion">
+                                oninput="this.value = this.value.toUpperCase()">
                         </mat-form-field>
                     </div>
                     <div class="col-4">
@@ -122,13 +109,11 @@
                     <div class="col-4">
                         <mat-form-field appearance="standard">
                             <mat-label>Correo</mat-label>
-                            <input matInput placeholder="ejemplo@futuristic.com" [formControl]="email"
-                                class="form-control-sm" oninput="this.value = this.value.toLowerCase()"
-                                [disabled]="!edicion" required>
-                            <mat-error *ngIf="email.invalid">{{mensajeErrorCorreo()}}</mat-error>
+                            <input matInput placeholder="ejemplo@futuristic.com" [(ngModel)]="usuario.correo"
+                            oninput="this.value = this.value.toUpperCase()" class="form-control-sm">
                         </mat-form-field>
                     </div>
-                    <div class="col-4">
+                    <div class="col-3">
                         <mat-form-field appearance="standard">
                             <mat-label>Perfil</mat-label>
                             <mat-select [(ngModel)]="usuario.perfil" [compareWith]="compareFn" class="form-control-sm">
@@ -138,10 +123,20 @@
                             </mat-select>
                         </mat-form-field>
                     </div>
-                    <div class="col-4">
+                    <div class="col-3">
+                        <mat-form-field appearance="standard">
+                            <mat-label>Estacion</mat-label>
+                            <mat-select [(ngModel)]="usuario.estacion" [compareWith]="compareFn" class="form-control-sm">
+                                <mat-option *ngFor="let estacion of estaciones" [value]="estacion">
+                                    {{estacion.descripcion}}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                    <div class="col-2">
                         <mat-form-field appearance="standard">
                             <mat-label>Estado</mat-label>
-                            <mat-select [(ngModel)]="usuario.activo" [disabled]="!edicion"
+                            <mat-select [(ngModel)]="usuario.estado" [disabled]="true"
                                 class="form-control-sm">
                                 <mat-option [value]="activo">{{activo}}</mat-option>
                                 <mat-option [value]="inactivo">{{inactivo}}</mat-option>
@@ -161,7 +156,7 @@
                             <mat-select [(ngModel)]="usuario.pregunta" [compareWith]="compareFn"
                                 class="form-control-sm">
                                 <mat-option *ngFor="let pregunta of preguntas" [value]="pregunta">
-                                    {{pregunta.pregunta}}
+                                    {{pregunta}}
                                 </mat-option>
                             </mat-select>
                         </mat-form-field>
@@ -170,7 +165,7 @@
                         <mat-form-field appearance="standard">
                             <mat-label>Respuesta</mat-label>
                             <input matInput type="text" [(ngModel)]="usuario.respuesta" class="form-control-sm"
-                                oninput="this.value = this.value.toUpperCase()" [disabled]="!edicion">
+                                oninput="this.value = this.value.toUpperCase()">
                         </mat-form-field>
                     </div>
                 </div>
@@ -199,10 +194,7 @@
             <hr>
             <mat-form-field appearance="standard">
                 <mat-label>Buscar usuario</mat-label>
-                <input matInput (keyup)="filtro($event)" #inputFiltro>
-                <button mat-button *ngIf="inputFiltro.value" matSuffix mat-icon-button (click)="borrarFiltro()">
-                    <mat-icon>close</mat-icon>
-                </button>
+                <input matInput (keyup)="filtro($event)" #input>
             </mat-form-field>
             <div class="mat-elevation-z8">
                 <table mat-table [dataSource]="dataSource" matSort>
@@ -216,9 +208,7 @@
                         *matRowDef="let row; columns: cabecera;"></tr>
                     <!-- Row shown when there is no matching data. -->
                     <tr class="mat-row" *matNoDataRow>
-                        <td class="mat-cell" colspan="6">No hay datos que coincidan con el usuario:
-                            "{{inputFiltro.value}}"
-                        </td>
+                        <td class="mat-cell" colspan="6">No hay datos que coincidan con el usuario</td>
                     </tr>
                 </table>
                 <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>

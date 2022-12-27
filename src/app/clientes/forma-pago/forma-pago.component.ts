@@ -69,7 +69,6 @@ export class FormaPagoComponent implements OnInit {
       event.preventDefault();
     this.formaPago= new FormaPago();
     this.clickedRows.clear();
-
   }
 
   crear(event) {

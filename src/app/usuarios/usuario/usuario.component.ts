@@ -1,6 +1,4 @@
-import { Component, OnInit, HostListener, ElementRef, Renderer2 } from '@angular/core';
-import { UntypedFormControl, Validators, AbstractControl, ValidationErrors, ValidatorFn, FormGroup} from '@angular/forms';
-import { BehaviorSubject } from 'rxjs';
+import { Component, OnInit } from '@angular/core';
 import { valores, mensajes, preguntas, validarSesion, exito_swal, error_swal, exito, error } from '../../constantes';
 import Swal from 'sweetalert2';
 
@@ -18,6 +16,8 @@ import { ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
+import { Estacion } from 'src/app/modelos/usuario/estacion';
+import { EstacionService } from 'src/app/servicios/usuario/estacion.service';
 
 @Component({
   selector: 'app-usuario',
@@ -29,94 +29,63 @@ export class UsuarioComponent implements OnInit {
 
   activo: string = valores.activo;
   inactivo: string = valores.inactivo;
-  contrasena2: string = valores.vacio;
-  minContrasena = 8;
 
   abrirPanelNuevo: boolean = true;
   abrirPanelAdmin: boolean = true;
-  edicion: boolean = true;
   ocultarContrasena: boolean = true;
   ocultarContrasena2: boolean = true;
   cambiarContrasena: boolean = false;
-  formularioValido: boolean = true;
 
   sesion: Sesion = null;
   usuario: Usuario = new Usuario();
 
   usuarios: Usuario[];
   perfiles: Perfil[] = [];
+  estaciones: Estacion[] = [];
   preguntas: any[] = preguntas;
-
-  email = new UntypedFormControl('', [Validators.required, Validators.email]);
-  formGroupContrasena = new FormGroup(
-    {
-      password: new UntypedFormControl('', [Validators.required, Validators.minLength(this.minContrasena)]),
-      confirmPassword: new UntypedFormControl('', [Validators.required])
-    },
-    [ this.MatchValidator('password', 'confirmPassword') ]
-  );
 
   columnas: any[] = [
     { nombreColumna: 'codigo', cabecera: 'Código', celda: (row: Usuario) => `${row.codigo}` },
     { nombreColumna: 'identificacion', cabecera: 'Identificación', celda: (row: Usuario) => `${row.identificacion}` },
     { nombreColumna: 'nombre', cabecera: 'Nombre', celda: (row: Usuario) => `${row.nombre}` },
     { nombreColumna: 'perfil', cabecera: 'Perfil', celda: (row: Usuario) => `${row.perfil.descripcion}` },
-    { nombreColumna: 'estado', cabecera: 'Estado', celda: (row: Usuario) => `${row.activo}` }
+    { nombreColumna: 'estado', cabecera: 'Estado', celda: (row: Usuario) => `${row.estado}` }
   ];
   cabecera: string[] = this.columnas.map(titulo => titulo.nombreColumna);
   dataSource: MatTableDataSource<Usuario>;
-  observable: BehaviorSubject<MatTableDataSource<Usuario>> = new BehaviorSubject<MatTableDataSource<Usuario>>(null);
   clickedRows = new Set<Usuario>();
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
-  @ViewChild("inputFiltro") inputFiltro: ElementRef;
 
-  constructor(private renderer: Renderer2, private usuarioService: UsuarioService,
-    private perfilService: PerfilService, private sesionService: SesionService, private router: Router) { }
+  constructor(private usuarioService: UsuarioService, private perfilService: PerfilService, private estacionService: EstacionService, private sesionService: SesionService, private router: Router) { }
 
   ngOnInit() {
     this.sesion = validarSesion(this.sesionService, this.router);
     this.consultar();
     this.consultarPerfiles();
-  }
-
-  limpiar() {
-    this.usuario = new Usuario();
-    this.edicion = true;
-    this.clickedRows.clear();
-    this.borrarFiltro();
+    this.consultarEstaciones();
   }
 
   nuevo(event) {
     if (event != null)
       event.preventDefault();
-    this.limpiar();
+    this.usuario = new Usuario();
+    this.clickedRows.clear();
   }
 
   crear(event) {
     if (event != null)
       event.preventDefault();
-    this.validarFormulario();
-    if (!this.formularioValido)
-      return;  
-    this.obtenerUsuarioControl();
-    console.log(this.usuario);  
+    console.log(this.usuario);
     this.usuarioService.crear(this.usuario).subscribe({
       next: res => {
-        this.usuario = res.resultado as Usuario;
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
-        this.usuarios.push(this.usuario);
-        this.llenarTabla(this.usuarios);
+        this.consultar();
+        this.nuevo(null);
       },
       error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     });
-  }
-
-  editar(event) {
-    if (event != null)
-      event.preventDefault();
-    this.edicion = true;
   }
 
   actualizar(event) {
@@ -124,9 +93,9 @@ export class UsuarioComponent implements OnInit {
       event.preventDefault();
     this.usuarioService.actualizar(this.usuario).subscribe({
       next: res => {
-        this.usuario = res.resultado as Usuario;
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
-        this.limpiar();
+        this.consultar();
+        this.nuevo(null);
       },
       error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     });
@@ -139,6 +108,7 @@ export class UsuarioComponent implements OnInit {
       next: res => {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
         this.consultar();
+        this.nuevo(null);
       },
       error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     });
@@ -151,6 +121,7 @@ export class UsuarioComponent implements OnInit {
       next: res => {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
         this.consultar();
+        this.nuevo(null);
       },
       error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     });
@@ -160,38 +131,22 @@ export class UsuarioComponent implements OnInit {
     this.usuarioService.consultar().subscribe({
       next: res => {
         this.usuarios = res.resultado as Usuario[]
-        this.llenarTabla(this.usuarios);
+        this.dataSource = new MatTableDataSource(this.usuarios);
+        this.dataSource.paginator = this.paginator;
+        this.dataSource.sort = this.sort;
       },
       error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     });
   }
 
-  llenarTabla(usuarios: Usuario[]) {
-    this.ordenarAsc(usuarios, 'id');
-    this.dataSource = new MatTableDataSource(usuarios);
-    this.dataSource.paginator = this.paginator;
-    this.dataSource.sort = this.sort;
-    this.observable.next(this.dataSource);
-  }
-
-  llenarControlUsuario(){
-    this.formGroupContrasena.get('password').value == this.usuario.contrasena;
-    this.email.setValue(this.usuario.correo);
-  }
-
-  obtenerUsuarioControl(){
-    this.usuario.contrasena = md5(this.formGroupContrasena.get('password').value)
-    this.usuario.correo = this.email.value;
-  }
-
   seleccion(usuario: Usuario) {
-    if (!this.clickedRows.has(usuario)) {
+    if (!this.clickedRows.has(usuario)){
       this.clickedRows.clear();
       this.clickedRows.add(usuario);
-      this.usuario = usuario;
-      this.edicion = false;
+      this.usuario = { ... usuario};
     } else {
-      this.limpiar();
+      this.clickedRows.clear();
+      this.usuario = new Usuario();
     }
   }
 
@@ -202,21 +157,20 @@ export class UsuarioComponent implements OnInit {
       this.dataSource.paginator.firstPage();
     }
   }
-  borrarFiltro() {
-    this.renderer.setProperty(this.inputFiltro.nativeElement, 'value', '');
-    this.dataSource.filter = '';
-  }
 
-  ordenarAsc(arrayJson: any, pKey: any) {
-    arrayJson.sort(function (a: any, b: any) {
-      return a[pKey] > b[pKey];
+  consultarPerfiles() {
+    this.perfilService.consultarActivos().subscribe({
+      next: res => {
+        this.perfiles = res.resultado as Perfil[]
+      },
+      error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     });
   }
 
-  consultarPerfiles() {
-    this.perfilService.consultar().subscribe({
+  consultarEstaciones() {
+    this.estacionService.consultarActivos().subscribe({
       next: res => {
-        this.perfiles = res.resultado as Perfil[]
+        this.estaciones = res.resultado as Estacion[]
       },
       error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     });
@@ -235,68 +189,24 @@ export class UsuarioComponent implements OnInit {
     return a && b && a.id == b.id;
   }
 
-  // PARA VALIDACION DE CONFIRMACIÓN DE CONTRASEÑA
-  MatchValidator(source: string, target: string): ValidatorFn {
-    return (control: AbstractControl): ValidationErrors | null => {
-      const sourceCtrl = control.get(source);
-      const targetCtrl = control.get(target);
-
-      return sourceCtrl && targetCtrl && sourceCtrl.value !== targetCtrl.value
-        ? { passwordMismatch: true }
-        : null;
-    };
-  }
-
-  /* Called on each input in either password field */
-  onPasswordInput() {
-    if (this.formGroupContrasena.hasError('passwordMismatch')) { // puedo pasar un parámetro
-      this.formGroupContrasena.get('confirmPassword').setErrors([{ 'passwordMismatch': true }]);
-    } else {
-      this.formGroupContrasena.get('confirmPassword').setErrors(null);
+  validarContrasena(){
+    if (this.usuario.contrasena != this.usuario.confirmarContrasena) {
+      Swal.fire({ icon: error_swal, title: error, text: mensajes.error_contrasena_invalida });
     }
   }
 
-  mensajeErrorContrasena() {
-    if (this.formGroupContrasena.get('password').hasError('required')) {
-      return 'Contraseña requerida';
+  validarCorreo() {
+    let arroba = this.usuario.correo.includes("@");
+    if (!arroba) {
+      Swal.fire({ icon: error_swal, title: error, text: mensajes.error_correo_invalido });
     }
-    return 'Mínimo ' + this.minContrasena + ' caracteres';
   }
 
-  mensajeErrorConfirmarContrasena() {
-    if (this.formGroupContrasena.get('confirmPassword').hasError('required')) {
-      return 'Confirmación requerida';
-    }
-    if (this.formGroupContrasena.getError('passwordMismatch') && (this.formGroupContrasena.get('confirmPassword')?.touched || this.formGroupContrasena.get('confirmPassword')?.dirty)) {
-      return 'Contraña no coincide';
-    };
-    return 'Error';
-  }
-
-  mensajeErrorCorreo() {
-    if (this.email.hasError('required')) {
-      return 'Correo requerido';
-    }
-    return this.email.hasError('email') ? 'Correo no válido' : '';
-  }
-
-  crearTelefono() {
-    if (this.usuario.telefono.length != valores.cero) {
-      //this.usuario.telefonos.push(this.telefono);
-      //this.telefono = new Telefono();
-    } else {
-      Swal.fire(error, "Ingrese un número telefónico válido", error_swal);
-    }
-  }
   validarTelefono() {
     let digito = this.usuario.telefono.substring(0, 1);
     if (this.usuario.telefono.length != 11 || digito != "0") {
-      //this.telefono.numero = valores.vacio;
-      Swal.fire(error, "Telefono Invalido", error_swal);
+      Swal.fire({ icon: error_swal, title: error, text: mensajes.error_telefono_invalido });
     }
-  }
-  eliminarTelefono(i: number) {
-    //this.usuario.telefono.splice(i, 1);
   }
 
   validarCelular() {
@@ -304,51 +214,6 @@ export class UsuarioComponent implements OnInit {
     if (this.usuario.celular.length != 12 || digito != "09") {
       this.usuario.celular = valores.vacio;
       Swal.fire({ icon: error_swal, title: error, text: mensajes.error_celular_invalido });
-    }
-  }
-
-  validarFormulario(){
-    this.formularioValido = true;
-    if (this.usuario.apodo == '') {
-      Swal.fire(error, mensajes.error_usuario, error_swal);
-      this.formularioValido = false;
-      return;
-    } else { // cambiar idetificacion x apodo cuando esté en DB
-      if ((this.usuarios.findIndex(usuario => usuario.identificacion.toUpperCase() === this.usuario.apodo.toUpperCase())) > -1){
-        Swal.fire(error, mensajes.error_usuario_existe, error_swal);
-        this.formularioValido = false;
-        return;
-      };
-    }
-    if (this.formGroupContrasena.get('password').value =='' || this.formGroupContrasena.get('password').invalid) {
-      Swal.fire(error, mensajes.error_contrasena, error_swal);
-      this.formularioValido = false;
-      return;
-    }
-    if (this.formGroupContrasena.get('confirmPassword').value =='' || this.formGroupContrasena.get('confirmPassword').invalid) {
-      Swal.fire(error, mensajes.error_confirmar_contrasena, error_swal);
-      this.formularioValido = false;
-      return;
-    }
-    if (this.usuario.identificacion == '') {
-      Swal.fire(error, mensajes.error_identificacion, error_swal);
-      this.formularioValido = false;
-      return;
-    }
-    if (this.usuario.nombre == '') {
-      Swal.fire(error, mensajes.error_nombre, error_swal);
-      this.formularioValido = false;
-      return;
-    }
-    if (this.email.value =='' || this.email.invalid) {
-      Swal.fire(error, mensajes.error_correo_invalido, error_swal);
-      this.formularioValido = false;
-      return;
-    }
-    if (this.usuario.perfil.id == 0) {
-      Swal.fire(error, mensajes.error_perfil, error_swal);
-      this.formularioValido = false;
-      return;
     }
   }
 
