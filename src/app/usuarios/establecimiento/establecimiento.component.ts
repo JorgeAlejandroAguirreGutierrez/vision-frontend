@@ -1,10 +1,6 @@
-import { Component, OnInit, ViewChild, ElementRef, Renderer2, Inject } from '@angular/core';
-import { EmailValidator, FormControl, Validators} from '@angular/forms';
+import { Component, OnInit, ViewChild, Inject } from '@angular/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MapInfoWindow, MapMarker } from '@angular/google-maps';
-import { UntypedFormControl } from '@angular/forms';
-import { Observable } from 'rxjs';
-import { startWith, map } from 'rxjs/operators';
 import Swal from 'sweetalert2';
 import { valores, mensajes, validarSesion, exito, exito_swal, error, error_swal } from '../../constantes';
 
@@ -14,9 +10,6 @@ import { EstablecimientoService } from '../../servicios/usuario/establecimiento.
 import { Establecimiento } from '../../modelos/usuario/establecimiento';
 import { Ubicacion } from '../../modelos/configuracion/ubicacion';
 import { UbicacionService } from '../../servicios/configuracion/ubicacion.service';
-import { Telefono } from '../../modelos/cliente/telefono';
-import { Celular } from '../../modelos/cliente/celular';
-import { Correo } from '../../modelos/cliente/correo';
 import { Coordenada } from '../../modelos/configuracion/coordenada';
 
 import { MatPaginator } from '@angular/material/paginator';
@@ -25,6 +18,9 @@ import { MatTableDataSource } from '@angular/material/table';
 import { Sesion } from 'src/app/modelos/usuario/sesion';
 import { SesionService } from 'src/app/servicios/usuario/sesion.service';
 import { Router } from '@angular/router';
+import { TelefonoEstablecimiento } from 'src/app/modelos/usuario/telefono-establecimiento';
+import { CelularEstablecimiento } from 'src/app/modelos/usuario/celular-establecimiento';
+import { CorreoEstablecimiento } from 'src/app/modelos/usuario/correo-establecimiento';
 
 @Component({
   selector: 'app-establecimiento',
@@ -34,44 +30,25 @@ import { Router } from '@angular/router';
 
 export class EstablecimientoComponent implements OnInit {
 
-  abierto: string = valores.abierto;
-  cerrado: string = valores.cerrado;
-  edicion: boolean = false;
+  activo: string = valores.activo;
+  inactivo: string = valores.inactivo;
 
   sesion: Sesion=null;
-  abrirPanelAsignarEstablecimiento: boolean = true;
-  abrirPanelUbicacionEstablecimiento: boolean = true;
-  verBotones: boolean = false;
-  deshabilitarEditarEstablecimiento: boolean = true;
-  deshabilitarFiltroEstablecimientos: boolean = true;
-  verActualizarEstablecimiento: boolean = false;
-  verActualizarEmpresa: boolean = false;
-  formularioValido: boolean = true;
-
-  empresa: Empresa = new Empresa();
+  abrirPanelAdmin: boolean = true;
+  abrirPanelNuevo: boolean = true;
   establecimiento: Establecimiento = new Establecimiento();
 
-  codigoEquivalente: string = "";
-  establecimientoProvincia: string = "";
-  establecimientoCanton: string = "";
-  establecimientoParroquia: string = "";
-
   empresas: Empresa[]=[];
-  controlEmpresa = new UntypedFormControl();
-  filtroEmpresas: Observable<Empresa[]> = new Observable<Empresa[]>();
 
   establecimientos: Establecimiento[] = [];
-  filtroEstablecimientos: Observable<Establecimiento[]> = new Observable<Establecimiento[]>();
 
-  telefono = new Telefono();
-  celular = new Celular();
-  correo = new Correo();
+  telefono = new TelefonoEstablecimiento();
+  celular = new CelularEstablecimiento();
+  correo = new CorreoEstablecimiento();
 
   provincias: Ubicacion[];
   cantones: Ubicacion[];
   parroquias: Ubicacion[];
-
-  correoEmpresa = new FormControl('', [Validators.email]);
 
   //Mapa
   latitud: number = valores.latCiudad;
@@ -88,28 +65,32 @@ export class EstablecimientoComponent implements OnInit {
     minZoom: 12,
   };
 
-  @ViewChild("inputFiltroEstablecimiento") inputFiltroEstablecimiento: ElementRef;
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
-  columnasEstablecimiento: any[] = [
+  columnas: any[] = [
     { nombreColumna: 'codigo', cabecera: 'Código', celda: (row: Establecimiento) => `${row.codigo}`},
     { nombreColumna: 'codigoSRI', cabecera: 'Código SRI', celda: (row: Establecimiento) => `${row.codigoSRI}`},
     { nombreColumna: 'nombre', cabecera: 'Nombre', celda: (row: Establecimiento) => `${row.descripcion}`},
     { nombreColumna: 'direccion', cabecera: 'Dirección', celda: (row: Establecimiento) => `${row.direccion}`},
+    { nombreColumna: 'empresa', cabecera: 'Empresa', celda: (row: Establecimiento) => `${row.empresa.razonSocial}`},
     { nombreColumna: 'estado', cabecera: 'Estado', celda: (row: Establecimiento) => `${row.estado}`}
   ];
-  cabeceraEstablecimiento: string[]  = this.columnasEstablecimiento.map(titulo => titulo.nombreColumna);
-  dataSourceEstablecimiento: MatTableDataSource<Establecimiento>;
-  clickedRowsEstablecimiento = new Set<Establecimiento>();
+  cabecera: string[]  = this.columnas.map(titulo => titulo.nombreColumna);
+  dataSource: MatTableDataSource<Establecimiento>;
+  clickedRows = new Set<Establecimiento>();
   
-  constructor(public dialog: MatDialog, private establecimientoService: EstablecimientoService, private empresaService: EmpresaService, private sesionService: SesionService, private router: Router,
-    private renderer: Renderer2, private ubicacionService: UbicacionService) { }
+  constructor(public dialog: MatDialog, private establecimientoService: EstablecimientoService, private empresaService: EmpresaService, 
+    private sesionService: SesionService, private router: Router, private ubicacionService: UbicacionService) { }
 
   ngOnInit() {
     this.sesion=validarSesion(this.sesionService, this.router);
     this.consultarEmpresas();
     this.consultar();
+    this.obtenerProvincias();
+  }
+
+  obtenerProvincias(){
     this.ubicacionService.obtenerProvincias().subscribe({
       next: res => {
         this.provincias = res.resultado as Ubicacion[];
@@ -118,54 +99,10 @@ export class EstablecimientoComponent implements OnInit {
         Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje });
       }
     });
-    this.filtroEmpresas = this.controlEmpresa.valueChanges
-      .pipe(
-        startWith(''),
-        map(value => typeof value === 'string' || value==null ? value : value.id),
-        map(empresa => typeof empresa === 'string' ? this.filtroEmpresa(empresa) : this.empresas.slice())
-      );
-
-  }
-
-  limpiar(){
-    this.empresa = new Empresa();
-    this.abrirPanelAsignarEstablecimiento = true;
-    this.deshabilitarFiltroEstablecimientos = true;
-    this.verBotones = false;
-    this.deshabilitarEditarEstablecimiento = false;
-    this.verActualizarEmpresa = false;
-    this.controlEmpresa.patchValue('');
-    this.establecimiento = new Establecimiento();
-    this.establecimientos = [];
-    this.limpiarEstablecimiento();
-    this.dataSourceEstablecimiento = new MatTableDataSource();
-    this.clickedRowsEstablecimiento = new Set<Establecimiento>();
-    this.borrarFiltroEstablecimiento();
-  };
-
-  actualizarEmpresa(event: any){
-    if (event!=null)
-      event.preventDefault();
-    if (this.empresa.razonSocial == valores.vacio) {
-        Swal.fire(error, mensajes.error_nombre_producto, error_swal);
-        return;
-    }
-    console.log(this.empresa);
-    //this.producto.kardexs[0].proveedor = new Proveedor;
-    this.empresaService.actualizar(this.empresa).subscribe({
-      next: (res) => {
-        Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
-        this.limpiar();
-        //this.consultar();
-      },
-      error: (err) => {
-        Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
-      }
-    });
   }
 
   consultarEmpresas() {
-    this.empresaService.consultar().subscribe({
+    this.empresaService.consultarActivos().subscribe({
       next: (res) => {
         this.empresas = res.resultado as Empresa[]
       },
@@ -173,122 +110,14 @@ export class EstablecimientoComponent implements OnInit {
       }
     );
   }
-  private filtroEmpresa(value: string): Empresa[] {
-    if(this.empresas.length>0) {
-      const filterValue = value.toLowerCase();
-      return this.empresas.filter(empresa => empresa.razonSocial.toLowerCase().includes(filterValue));
-    }
-    return [];
-  }
-  verEmpresa(empresa: Empresa): string {
-    return empresa && empresa.nombreComercial ? empresa.nombreComercial : '';
-  }
-  seleccionarEmpresa(){
-    this.empresa = this.controlEmpresa.value as Empresa;
-    //this.establecimiento = this.producto.productosProveedores;
-    //this.verBotones = true;
-    this.deshabilitarEditarEstablecimiento = false;
-    if (this.establecimientos.length > 0) {
-      this.deshabilitarFiltroEstablecimientos = false;
-      this.llenarDataSourceEstablecimiento(this.establecimientos);
-    }
-  }
-
-  // CODIGO PARA Establecimiento
-  limpiarEstablecimiento(){
-    this.establecimiento = new Establecimiento();
-    this.deshabilitarEditarEstablecimiento = false;
-    this.codigoEquivalente = "";
-    this.verActualizarEstablecimiento = false;
-    this.clickedRowsEstablecimiento.clear();
-  }
-
-  agregarEstablecimiento(){
-    let existe: boolean;
-    existe = this.existeEstablecimiento();
-    if (existe) {
-      Swal.fire(error, mensajes.error_producto_proveedor, error_swal);
-      return;
-    }
-    this.establecimiento = new Establecimiento();
- /*   this.productoProveedor.producto.id = this.producto.id
-    this.productoProveedor.proveedor = this.proveedor;
-    this.productoProveedor.codigoEquivalente = this.codigoEquivalente;
-    this.productoProveedores.push(this.productoProveedor);
-    this.producto.productosProveedores = this.productoProveedores;*/
-    this.llenarDataSourceEstablecimiento(this.establecimientos);
-    this.verActualizarEmpresa = true;
-    this.limpiarEstablecimiento();
-  }
-
-  llenarDataSourceEstablecimiento(establecimientos : Establecimiento[]){
-    this.dataSourceEstablecimiento = new MatTableDataSource(establecimientos);
-    this.dataSourceEstablecimiento.filterPredicate = (data: Establecimiento, filter: string): boolean =>
-      data.codigo.toUpperCase().includes(filter) || data.codigoSRI.toUpperCase().includes(filter) ||
-      data.descripcion.toUpperCase().includes(filter) ||data.direccion.toUpperCase().includes(filter) || data.estado.toUpperCase().includes(filter);
-    this.dataSourceEstablecimiento.paginator = this.paginator;
-    this.dataSourceEstablecimiento.sort = this.sort;
-  }
-
-  filtroEstablecimiento(event: Event) {
-    const filterValue = (event.target as HTMLInputElement).value;
-    this.dataSourceEstablecimiento.filter = filterValue.trim().toUpperCase();
-    if (this.dataSourceEstablecimiento.paginator) {
-      this.dataSourceEstablecimiento.paginator.firstPage();
-    }
-  }
-  borrarFiltroEstablecimiento(){
-    this.renderer.setProperty(this.inputFiltroEstablecimiento.nativeElement, 'value', '');
-    //Funciona, pero es mala práctica
-    //this.inputFiltroProductoProveedor.nativeElement.value = '';
-    this.dataSourceEstablecimiento.filter = '';
-  }
-
-  seleccionEstablecimiento(establecimientoSeleccionado: Establecimiento) {
-      if (!this.clickedRowsEstablecimiento.has(establecimientoSeleccionado)){
-        this.limpiarEstablecimiento();
-        this.construirEstablecimiento(establecimientoSeleccionado);
-      } else {
-        this.limpiarEstablecimiento();  
-    }
-  }
-
-  construirEstablecimiento(establecimientoSeleccionado: Establecimiento) {
-    //this.productoProveedorService.currentMessage.subscribe(message => productoProveedorId = message);
-    if (establecimientoSeleccionado.id != 0) {
-      this.clickedRowsEstablecimiento.add(establecimientoSeleccionado);
-      this.establecimiento = establecimientoSeleccionado;
-
-      //this.codigoEquivalente = this.establecimiento.codigoEquivalente;
-      this.deshabilitarEditarEstablecimiento = true;
-      //this.actualizar_precios();
-    }
-  }
-
-  existeEstablecimiento():boolean{
-    for (let i = 0; i < this.establecimientos.length; i++) {
-      if (this.establecimiento.id == this.establecimientos[i].id){
-        return true;
-      }
-    }
-    return false;
-  }
-
-  editarEstablecimiento(){
-    this.verActualizarEstablecimiento = true;
-    this.deshabilitarEditarEstablecimiento = false;
-  }
-  
-  actualizarEstablecimiento(){
-    this.establecimiento.codigo = this.codigoEquivalente;
-    this.verActualizarEmpresa = true;
-    this.limpiarEstablecimiento();
-  }
 
   consultar(){
     this.establecimientoService.consultar().subscribe({
       next: res => {
         this.establecimientos = res.resultado as Establecimiento[];
+        this.dataSource = new MatTableDataSource(this.establecimientos);
+        this.dataSource.paginator = this.paginator;
+        this.dataSource.sort = this.sort;
       },
       error: err => {
         Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
@@ -300,14 +129,29 @@ export class EstablecimientoComponent implements OnInit {
     if (event!=null)
       event.preventDefault();
     this.establecimiento = new Establecimiento();
+    this.telefono = new TelefonoEstablecimiento();
+    this.celular = new CelularEstablecimiento();
+    this.correo = new CorreoEstablecimiento();
+    this.clickedRows.clear();
   }
 
   crear(event: any) {
     if (event!=null)
       event.preventDefault();
+    if(this.telefono.numero != valores.vacio){
+      this.establecimiento.telefonos.push(this.telefono);
+    }
+    if(this.celular.numero != valores.vacio){
+      this.establecimiento.celulares.push(this.celular);
+    }
+    if(this.correo.email != valores.vacio){
+      this.establecimiento.correos.push(this.correo);
+    }
+    console.log(this.establecimiento);
     this.establecimientoService.crear(this.establecimiento).subscribe(
       res => {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
+        this.consultar();
         this.nuevo(null);
       },
       err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
@@ -317,10 +161,20 @@ export class EstablecimientoComponent implements OnInit {
   actualizar(event: any) {
     if (event!=null)
       event.preventDefault();
+    if(this.telefono.numero != valores.vacio){
+      this.establecimiento.telefonos.push(this.telefono);
+    }
+    if(this.celular.numero != valores.vacio){
+      this.establecimiento.celulares.push(this.celular);
+    }
+    if(this.correo.email != valores.vacio){
+      this.establecimiento.correos.push(this.correo);
+    }
     this.establecimientoService.actualizar(this.establecimiento).subscribe(
       res => {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
-        this.establecimiento=res.resultado as Establecimiento;
+        this.consultar();
+        this.nuevo(null);
       },
       err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     );
@@ -333,6 +187,7 @@ export class EstablecimientoComponent implements OnInit {
       next: res => {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
         this.consultar();
+        this.nuevo(null);
       },
       error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     });
@@ -345,6 +200,7 @@ export class EstablecimientoComponent implements OnInit {
       next: res => {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
         this.consultar();
+        this.nuevo(null);
       },
       error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     });
@@ -386,110 +242,88 @@ export class EstablecimientoComponent implements OnInit {
     this.establecimiento.ubicacion.parroquia = parroquia;
   }
 
-  agregarTelefonosCorreo(){
-    if (this.telefono.numero != ""){
-      this.establecimiento.telefonos.push(this.telefono);
-      //console.log("telefono");
-    }
-    if (this.celular.numero != ""){
-      this.establecimiento.celulares.push(this.celular);
-    }
-    if (this.correoEmpresa.value != '' && this.correoEmpresa.valid){
-      this.correo.email = this.correoEmpresa.value
-      this.establecimiento.correos.push(this.correo);
-      //console.log("correo");
+  agregarTelefono() {
+    let digito = this.telefono.numero.substring(0, 1);
+    if (this.telefono.numero.length != 11 || digito != "0") {
+      Swal.fire({ icon: error_swal, title: error, text: mensajes.error_telefono_invalido });
+    } else {
+      this.establecimiento.telefonos.push({ ... this.telefono});
+      this.telefono = new TelefonoEstablecimiento();
     }
   }
 
-  crearTelefono() {
-    if (this.telefono.numero.length != valores.cero) {
-      this.establecimiento.telefonos.push(this.telefono);
-      this.telefono = new Telefono();
-    } else {
-      Swal.fire(error, "Ingrese un número telefónico válido", error_swal);
-    }
-  }
   validarTelefono() {
     let digito = this.telefono.numero.substring(0, 1);
     if (this.telefono.numero.length != 11 || digito != "0") {
-      //this.telefono.numero = valores.vacio;
-      Swal.fire(error, "Telefono Invalido", error_swal);
+      Swal.fire({ icon: error_swal, title: error, text: mensajes.error_telefono_invalido });
     }
   }
+
   eliminarTelefono(i: number) {
     this.establecimiento.telefonos.splice(i, 1);
   }
 
-  crearCelular() {
-    if (this.celular.numero.length != valores.cero) {
-      this.establecimiento.celulares.push(this.celular);
-      this.celular = new Celular();
-    } else {
-      Swal.fire(error, "Ingrese un número de celular válido", error_swal);
+  agregarCelular() {
+    let digito = this.celular.numero.substring(0, 2);
+    if (this.celular.numero.length != 12 || digito != "09") {
+      this.celular.numero = valores.vacio;
+      Swal.fire({ icon: error_swal, title: error, text: mensajes.error_celular_invalido });
+    } else{
+      this.establecimiento.celulares.push({ ... this.celular});
+      this.celular = new CelularEstablecimiento();
     }
   }
+
   validarCelular() {
     let digito = this.celular.numero.substring(0, 2);
     if (this.celular.numero.length != 12 || digito != "09") {
-      //this.celular.numero = valores.vacio;
-      Swal.fire(error, "Celular Invalido", error_swal);
+      this.celular.numero = valores.vacio;
+      Swal.fire({ icon: error_swal, title: error, text: mensajes.error_celular_invalido });
     }
   }
+
   eliminarCelular(i: number) {
     this.establecimiento.celulares.splice(i, 1);
   }
 
-  getErrorMessage() {
-    if (this.correoEmpresa.hasError('required')) {
-      return 'Correo requerido';
-    }
-    return this.correoEmpresa.hasError('email') ? 'No es un correo' : '';
-  }
-  crearCorreo() {
-    if (this.correoEmpresa.value != '' && this.correoEmpresa.valid) {
-      this.correo.email = this.correoEmpresa.value;
-      this.establecimiento.correos.push(this.correo);
-      this.correo = new Correo();
-      this.correoEmpresa.setValue('');
-    } else {
-      Swal.fire(error, "Ingrese un correo válido", error_swal);
+  agregarCorreo() {
+    let arroba = this.correo.email.includes("@");
+    if (!arroba) {
+      Swal.fire({ icon: error_swal, title: error, text: mensajes.error_correo_invalido });
+    } else{
+      this.establecimiento.correos.push({ ... this.correo});
+      this.correo = new CorreoEstablecimiento();
     }
   }
+
   validarCorreo() {
     let arroba = this.correo.email.includes("@");
     if (!arroba) {
-      //this.correo.email = "";
-      Swal.fire(error, "Correo Invalido", error_swal);
+      Swal.fire({ icon: error_swal, title: error, text: mensajes.error_correo_invalido });
     }
   }
+
   eliminarCorreo(i: number) {
     this.establecimiento.correos.splice(i, 1);
   }
 
-  
-  validarFormulario(){
-    this.formularioValido = true;
-    if (this.empresa.identificacion == '') {
-      Swal.fire(error, mensajes.error_identificacion, error_swal);
-      this.formularioValido = false;
-      return;
+  seleccion(establecimiento: Establecimiento) {
+    if (!this.clickedRows.has(establecimiento)){
+      this.clickedRows.clear();
+      this.clickedRows.add(establecimiento);
+      this.establecimiento = { ... establecimiento};
+    } else {
+      this.clickedRows.clear();
+      this.establecimiento = new Establecimiento();
     }
-    if (this.empresa.razonSocial == '') {
-      Swal.fire(error, mensajes.error_razon_social, error_swal);
-      this.formularioValido = false;
-      return;
-    }
-    if (this.establecimiento.direccion == '') {
-      Swal.fire(error, mensajes.error_direccion, error_swal);
-      this.formularioValido = false;
-      return;
-    }
-    if (this.establecimiento.ubicacion.provincia == '' || this.establecimiento.ubicacion.canton == '' || this.establecimiento.ubicacion.parroquia == '') {
-      Swal.fire(error, mensajes.error_ubicacion, error_swal);
-      this.formularioValido = false;
-      return;
-    }
+  }
 
+  filtro(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.dataSource.filter = filterValue.trim().toUpperCase();
+    if (this.dataSource.paginator) {
+      this.dataSource.paginator.firstPage();
+    }
   }
 
   openInfoWindow(marker: MapMarker, infoWindow: MapInfoWindow) {
@@ -513,7 +347,6 @@ export class EstablecimientoComponent implements OnInit {
         this.posicionCentral = this.posicionGeografica;
         this.establecimiento.latitud = this.posicionGeografica.lat;
         this.establecimiento.longitud = this.posicionGeografica.lng;
-       //console.log(result);
       }
     });
   }

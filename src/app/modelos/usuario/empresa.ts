@@ -10,7 +10,6 @@ export class Empresa {
     obligadoContabilidad: string;
     logo: string;
     estado: string;
-    //tipoIdentificacion: TipoIdentificacion;
     
     constructor() {
         this.id=valores.cero;
@@ -18,9 +17,8 @@ export class Empresa {
         this.identificacion=valores.vacio;
         this.razonSocial=valores.vacio;
         this.nombreComercial=valores.vacio;
-        this.obligadoContabilidad=valores.vacio;
+        this.obligadoContabilidad=valores.no;
         this.logo=valores.vacio;
         this.estado=valores.activo;
-        //this.tipoIdentificacion=new TipoIdentificacion();
     }
 }

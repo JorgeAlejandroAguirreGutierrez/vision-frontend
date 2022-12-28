@@ -81,6 +81,7 @@ export const urn =
      grupoProveedor: "/grupoProveedor",
      productoProveedor: "/productoProveedor",
      consultarPorUsuario: "/consultarPorUsuario",
+     consultarPorEmpresa: "/consultarPorEmpresa",
      consultarGrupos: "/consultarGrupos",
      consultarSubgrupos: "/consultarSubgrupos",
      consultarSecciones: "/consultarSecciones",
@@ -200,9 +201,7 @@ export const mensajes = {
      error_direccion : "ERROR EN DIRECCIÓN",
      error_ubicacion : "ERROR EN PROVINCIA, CANTON O PARROQUIA",
      mensaje_kardex_inicial : "INICIALIZAR KARDEX CON SALDO 0",
-     error_medida_kardex : "ERROR MEDIDA KARDEX",
-     si : "SI",
-     no : "NO"
+     error_medida_kardex : "ERROR MEDIDA KARDEX"
 }
 
 export const otras ={

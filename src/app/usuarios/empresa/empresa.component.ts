@@ -1,5 +1,4 @@
-import { Component, OnInit, HostListener, ElementRef, Renderer2 } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { Component, OnInit, HostListener, Renderer2 } from '@angular/core';
 import { valores, validarSesion, mensajes, exito, exito_swal, error, error_swal } from '../../constantes';
 import Swal from 'sweetalert2';
 
@@ -28,9 +27,6 @@ export class EmpresaComponent implements OnInit {
 
   abrirPanelNuevo: boolean = true;
   abrirPanelAdmin: boolean = true;
-  edicion: boolean = true;
-  obligadoContabilidad: boolean = false;
-  formularioValido: boolean = true;
 
   sesion: Sesion=null;
   empresa= new Empresa();
@@ -44,12 +40,10 @@ export class EmpresaComponent implements OnInit {
   ];
   cabecera: string[] = this.columnas.map(titulo => titulo.nombreColumna);
   dataSource: MatTableDataSource<Empresa>;
-  observable: BehaviorSubject<MatTableDataSource<Empresa>> = new BehaviorSubject<MatTableDataSource<Empresa>>(null);
   clickedRows = new Set<Empresa>();
   
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
-  @ViewChild("inputFiltro") inputFiltro: ElementRef;
 
   constructor(private renderer: Renderer2, private router: Router, 
     private sesionService: SesionService, private empresaService: EmpresaService) { }
@@ -57,7 +51,6 @@ export class EmpresaComponent implements OnInit {
   ngOnInit() {
     this.sesion=validarSesion(this.sesionService, this.router);
     this.consultar();
-    this.empresa.obligadoContabilidad = mensajes.no;
   }
   
   @HostListener('window:keypress', ['$event'])
@@ -68,43 +61,24 @@ export class EmpresaComponent implements OnInit {
       this.nuevo(null);
   }
 
-  limpiar() {
-    this.empresa = new Empresa();
-    this.edicion = true;
-    this.clickedRows.clear();
-    this.borrarFiltro();
-  }
-
   nuevo(event) {
     if (event != null)
       event.preventDefault();
-    this.limpiar();
+    this.empresa= new Empresa();
+    this.clickedRows.clear();
   }
 
   crear(event) {
     if (event != null)
       event.preventDefault();
-
-    this.validarFormulario();
-    if (!this.formularioValido)
-      return;
-
-    console.log(this.empresa);  
     this.empresaService.crear(this.empresa).subscribe({
       next: res => {
-        this.empresa = res.resultado as Empresa;
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
-        this.empresas.push(this.empresa);
-        this.llenarTabla(this.empresas);
+        this.consultar();
+        this.nuevo(null);
       },
       error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     });
-  }
-
-  editar(event) {
-    if (event != null)
-      event.preventDefault();
-    this.edicion = true;
   }
 
   actualizar(event) {
@@ -112,9 +86,9 @@ export class EmpresaComponent implements OnInit {
       event.preventDefault();
     this.empresaService.actualizar(this.empresa).subscribe({
       next: res => {
-        this.empresa = res.resultado as Empresa;
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
-        this.limpiar();
+        this.consultar();
+        this.nuevo(null);
       },
       error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     });
@@ -127,6 +101,7 @@ export class EmpresaComponent implements OnInit {
       next: res => {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
         this.consultar();
+        this.nuevo(null);
       },
       error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     });
@@ -139,48 +114,33 @@ export class EmpresaComponent implements OnInit {
       next: res => {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
         this.consultar();
+        this.nuevo(null);
       },
       error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     });
   }
 
   consultar() {
-    this.empresaService.consultar().subscribe({
-      next: res => {
+    this.empresaService.consultar().subscribe(
+      res => {
         this.empresas = res.resultado as Empresa[]
-        this.llenarTabla(this.empresas);
+        this.dataSource = new MatTableDataSource(this.empresas);
+        this.dataSource.paginator = this.paginator;
+        this.dataSource.sort = this.sort;
       },
-      error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
-    });
-  }
-
-  llenarTabla(empresas: Empresa[]) {
-    this.ordenarAsc(empresas, 'id');
-    this.dataSource = new MatTableDataSource(empresas);
-    this.dataSource.paginator = this.paginator;
-    this.dataSource.sort = this.sort;
-    this.observable.next(this.dataSource);
+      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+    );
   }
 
   seleccion(empresa: Empresa) {
-    if (!this.clickedRows.has(empresa)) {
+    if (!this.clickedRows.has(empresa)){
       this.clickedRows.clear();
       this.clickedRows.add(empresa);
-      this.empresa = empresa;
-      this.edicion = false;
+      this.empresa = { ... empresa};
     } else {
-      this.limpiar();
+      this.clickedRows.clear();
+      this.empresa = new Empresa();
     }
-  }
-
-  estadoObligadoContabilidad(event: any){
-    if (event.checked){
-      this.empresa.obligadoContabilidad = mensajes.si;
-    } else {
-      this.empresa.obligadoContabilidad = mensajes.no;
-    }
-    //console.log(this.empresa.obligadoContabilidad);
-    //console.log(this.obligadoContabilidad);
   }
 
   filtro(event: Event) {
@@ -190,28 +150,12 @@ export class EmpresaComponent implements OnInit {
       this.dataSource.paginator.firstPage();
     }
   }
-  borrarFiltro() {
-    this.renderer.setProperty(this.inputFiltro.nativeElement, 'value', '');
-    this.dataSource.filter = '';
-  }
 
-  ordenarAsc(arrayJson: any, pKey: any) {
-    arrayJson.sort(function (a: any, b: any) {
-      return a[pKey] > b[pKey];
-    });
-  }
-
-  validarFormulario(){
-    this.formularioValido = true;
-    if (this.empresa.identificacion == '') {
-      Swal.fire(error, mensajes.error_identificacion, error_swal);
-      this.formularioValido = false;
-      return;
-    }
-    if (this.empresa.razonSocial == '') {
-      Swal.fire(error, mensajes.error_razon_social, error_swal);
-      this.formularioValido = false;
-      return;
+  obligadoContabilidad(event: any){
+    if (event.checked){
+      this.empresa.obligadoContabilidad = valores.si;
+    } else {
+      this.empresa.obligadoContabilidad = valores.no;
     }
   }
 

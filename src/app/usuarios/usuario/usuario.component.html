@@ -128,7 +128,7 @@
                             <mat-label>Estacion</mat-label>
                             <mat-select [(ngModel)]="usuario.estacion" [compareWith]="compareFn" class="form-control-sm">
                                 <mat-option *ngFor="let estacion of estaciones" [value]="estacion">
-                                    {{estacion.descripcion}}
+                                    {{estacion.nombre}}
                                 </mat-option>
                             </mat-select>
                         </mat-form-field>

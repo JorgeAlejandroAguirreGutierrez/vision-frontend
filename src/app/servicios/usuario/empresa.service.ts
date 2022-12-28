@@ -40,6 +40,14 @@ export class EmpresaService {
       }));
   }
 
+  consultarActivos(): Observable<Respuesta> {
+    return this.http.get(environment.host + urn.ruta + urn.empresa + urn.consultarActivos, options).pipe(
+      map(response => response as Respuesta),
+      catchError(err => {
+        return throwError(()=>err);
+      }));
+  }
+
   actualizar(empresa: Empresa): Observable<Respuesta> {
     return this.http.put(environment.host + urn.ruta + urn.empresa, empresa, options).pipe(
       map(response => response as Respuesta),

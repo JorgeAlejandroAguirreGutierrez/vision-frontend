@@ -28,7 +28,7 @@ export class Establecimiento {
         this.direccion = valores.vacio;
         this.latitud = valores.cero;
         this.latitud = valores.cero;
-        this.estado = valores.abierto;
+        this.estado = valores.activo;
         this.empresa = new Empresa();
         this.ubicacion = new Ubicacion();
         this.telefonos=[];

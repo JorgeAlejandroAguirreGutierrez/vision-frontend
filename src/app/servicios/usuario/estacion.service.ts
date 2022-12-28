@@ -4,7 +4,7 @@ import { Respuesta } from '../../respuesta';
 import { urn, options } from '../../constantes';
 import {HttpClient} from '@angular/common/http';
 import { map, catchError } from 'rxjs/operators';
-import { Observable, throwError, BehaviorSubject, lastValueFrom } from 'rxjs';
+import { Observable, throwError } from 'rxjs';
 import { Router } from '@angular/router';
 import { environment } from '../../../environments/environment'; 
 
@@ -84,14 +84,4 @@ export class EstacionService {
       })
     );
   }
-
-  buscar(estacion: Estacion): Observable<Respuesta> {
-    return this.http.get(environment.host + urn.ruta + urn.usuario + urn.buscar + urn.slash + estacion.codigo + urn.slash + estacion.descripcion, options).pipe(
-      map(response => response as Respuesta),
-      catchError(err => {
-        return throwError(()=>err);
-      })
-    );
-  }
-
 }
