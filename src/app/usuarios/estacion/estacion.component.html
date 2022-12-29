@@ -52,7 +52,7 @@
                 <div class="col-5">
                     <mat-form-field appearance="standard">
                         <mat-label>Empresa</mat-label>
-                        <mat-select [(ngModel)]="estacion.establecimiento.empresa" (selectionChange)="consultarEstablecimientos($event)" class="form-control-sm">
+                        <mat-select [(ngModel)]="estacion.establecimiento.empresa" [compareWith]="compareFn" (selectionChange)="consultarEstablecimientos()" class="form-control-sm">
                             <mat-option *ngFor="let empresa of empresas" [value]="empresa">
                                 {{empresa.razonSocial}}
                             </mat-option>

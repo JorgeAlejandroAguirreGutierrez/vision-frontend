@@ -48,7 +48,7 @@ export class ProductoService {
   }
 
   consultarBien(): Observable<Respuesta> {
-    return this.http.get(environment.host + urn.ruta + urn.producto + urn.tipo + urn.bien, options).pipe(
+    return this.http.get(environment.host + urn.ruta + urn.producto + urn.consultarBien, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);
@@ -56,7 +56,7 @@ export class ProductoService {
   }
 
   consultarServicio(): Observable<Respuesta> {
-    return this.http.get(environment.host + urn.ruta + urn.producto + urn.tipo + urn.servicio, options).pipe(
+    return this.http.get(environment.host + urn.ruta + urn.producto + urn.consultarServicio, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);
@@ -64,7 +64,7 @@ export class ProductoService {
   }
 
   consultarActivoFijo(): Observable<Respuesta> {
-    return this.http.get(environment.host + urn.ruta + urn.producto + urn.tipo + urn.activoFijo, options).pipe(
+    return this.http.get(environment.host + urn.ruta + urn.producto + urn.consultarActivoFijo, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);

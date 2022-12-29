@@ -318,7 +318,8 @@ export class RecaudacionComponent implements OnInit {
     );
   }
   consultarOperadoresTarjetasCreditos(){
-    this.operadorTarjetaService.consultarTipo("CREDITO").subscribe(
+    let tipo= otras.credito;
+    this.operadorTarjetaService.consultarPorTipo(tipo).subscribe(
       res => {
         this.operadoresTarjetasCreditos = res.resultado as OperadorTarjeta[]
       },
@@ -326,7 +327,8 @@ export class RecaudacionComponent implements OnInit {
     );
   }
   consultarOperadoresTarjetasDebitos(){
-    this.operadorTarjetaService.consultarTipo("DEBITO").subscribe(
+    let tipo= otras.debito;
+    this.operadorTarjetaService.consultarPorTipo(tipo).subscribe(
       res => {
         this.operadoresTarjetasDebitos = res.resultado as OperadorTarjeta[]
       },
@@ -334,9 +336,8 @@ export class RecaudacionComponent implements OnInit {
     );
   }
   consultarAmortizaciones(){
-    let parametro=new Parametro();
-    parametro.tipo= otras.amortizacion;
-    this.parametroService.consultarTipo(parametro).subscribe(
+    let tipo= otras.amortizacion;
+    this.parametroService.consultarPorTipo(tipo).subscribe(
       res => {
         this.modelosAmortizaciones = res.resultado as Parametro[]
       },
@@ -344,9 +345,8 @@ export class RecaudacionComponent implements OnInit {
     );
   }
   consultarPeriodicidades(){
-    let parametro=new Parametro();
-    parametro.tipo=otras.periodicidad;
-    this.parametroService.consultarTipo(parametro).subscribe(
+    let tipo = otras.periodicidad;
+    this.parametroService.consultarPorTipo(tipo).subscribe(
       res => {
         this.periodicidades = res.resultado as Parametro[]
       },
@@ -986,19 +986,18 @@ export class RecaudacionComponent implements OnInit {
   }
 
   cambiarTipoPeriodicidad(){
-    let parametro=new Parametro();
-    parametro.tipo=this.recaudacion.credito.periodicidad;
-    this.parametroService.obtenerTipo(parametro).subscribe(
+    let tipo=this.recaudacion.credito.periodicidad;
+    this.parametroService.obtenerPorTipo(tipo).subscribe(
       res => {
-        parametro = res.resultado as Parametro
+        let parametro = res.resultado as Parametro
         this.recaudacion.credito.periodicidadNumero=Number(parametro.nombre);
       },
       err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     );
-    parametro.tipo=otras.periodo+"_"+this.recaudacion.credito.periodicidad;
-    this.parametroService.obtenerTipo(parametro).subscribe(
+    tipo=otras.periodo+"_"+this.recaudacion.credito.periodicidad;
+    this.parametroService.obtenerPorTipo(tipo).subscribe(
       res => {
-        parametro = res.resultado as Parametro
+        let parametro = res.resultado as Parametro
         this.recaudacion.credito.periodicidadTotal=Number(parametro.nombre);
       },
       err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })

@@ -49,13 +49,4 @@ export class TipoContribuyenteService {
       })
     );
   }
-
-  eliminar(tipoContribuyente: TipoContribuyente): Observable<Respuesta> {
-    return this.http.delete(environment.host + urn.ruta + urn.servicio + urn.slash + tipoContribuyente.id, options).pipe(
-      map(response => response as Respuesta),
-      catchError(err => {
-        return throwError(err);
-      })
-    );
-  }
 }

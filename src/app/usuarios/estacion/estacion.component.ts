@@ -140,11 +140,16 @@ export class EstacionComponent implements OnInit {
     });
   }
 
+  construir(){
+    this.consultarEstablecimientos();
+  }
+
   seleccion(estacion: Estacion) {
     if (!this.clickedRows.has(estacion)){
       this.clickedRows.clear();
       this.clickedRows.add(estacion);
       this.estacion = { ... estacion};
+      this.construir();
     } else {
       this.clickedRows.clear();
       this.estacion = new Estacion();
@@ -169,10 +174,8 @@ export class EstacionComponent implements OnInit {
     );
   }
 
-  consultarEstablecimientos(event) {
-    console.log(event);
-    let empresa = event.value as Empresa;
-    this.establecimientoService.consultarPorEmpresa(empresa.id).subscribe({
+  consultarEstablecimientos() {
+    this.establecimientoService.consultarPorEmpresa(this.estacion.establecimiento.empresa.id).subscribe({
       next: res => {
         this.establecimientos = res.resultado as Establecimiento[];
       },

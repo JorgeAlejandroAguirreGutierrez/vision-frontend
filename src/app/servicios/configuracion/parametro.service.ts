@@ -68,16 +68,16 @@ export class ParametroService {
     );
   }
 
-  obtenerTipo(parametro: Parametro): Observable<Respuesta> {
-    return this.http.get<Respuesta>(environment.host + urn.ruta + urn.parametro + urn.tipo + urn.slash + parametro.tipo, options).pipe(
+  obtenerPorTipo(tipo: string): Observable<Respuesta> {
+    return this.http.get<Respuesta>(environment.host + urn.ruta + urn.parametro + urn.obtenerPorTipo + urn.slash + tipo, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(err);
       })
     );
   }
-  consultarTipo(parametro: Parametro): Observable<Respuesta> {
-    return this.http.get<Respuesta>(environment.host + urn.ruta + urn.parametro + urn.consultarTipo + urn.slash + parametro.tipo, options).pipe(
+  consultarPorTipo(tipo: string): Observable<Respuesta> {
+    return this.http.get<Respuesta>(environment.host + urn.ruta + urn.parametro + urn.consultarPorTipo + urn.slash + tipo, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(err);

@@ -1,25 +1,18 @@
 <nav class="navbar-light nav-fijo">
     <ul class="navbar-nav">
+        <li class="nav-item">
+            <a class="nav-link" title="Nuevo" role="button" (click)="nuevo($event)">
+                <mat-icon>note_add</mat-icon>
+            </a>
+        </li>
         <li class="nav-item" *ngIf="perfil.id==0">
             <a class="nav-link" title="Guardar" role="button" (click)="crear($event)">
                 <mat-icon>save</mat-icon>
             </a>
         </li>
-        <ng-container *ngIf="perfil.id!=0">
-            <li class="nav-item" *ngIf="!edicion">
-                <a class="nav-link" title="Editar" role="button" (click)="editar($event)">
-                    <mat-icon>edit</mat-icon>
-                </a>
-            </li>
-            <li class="nav-item" *ngIf="edicion">
-                <a class="nav-link" title="Actualizar" role="button" (click)="actualizar($event)">
-                    <mat-icon>update</mat-icon>
-                </a>
-            </li>
-        </ng-container>
-        <li class="nav-item">
-            <a class="nav-link" title="Nuevo" role="button" (click)="nuevo($event)">
-                <mat-icon>file_copy</mat-icon>
+        <li class="nav-item" *ngIf="perfil.id!=0">
+            <a class="nav-link" title="Actualizar" role="button" (click)="actualizar($event)">
+                <mat-icon>update</mat-icon>
             </a>
         </li>
         <li class="nav-item" *ngIf="perfil.id!=0">
@@ -59,21 +52,21 @@
                 <div class="col-5">
                     <mat-form-field appearance="standard">
                         <mat-label>Descripción</mat-label>
-                        <input matInput type="text" [(ngModel)]="perfil.descripcion" [disabled]="!edicion"
+                        <input matInput type="text" [(ngModel)]="perfil.descripcion"
                             oninput="this.value = this.value.toUpperCase()" class="form-control-sm">
                     </mat-form-field>
                 </div>
                 <div class="col-1">
                     <mat-form-field appearance="standard">
                         <mat-label>Abreviatura</mat-label>
-                        <input matInput type="text" [(ngModel)]="perfil.abreviatura" [disabled]="!edicion"
+                        <input matInput type="text" [(ngModel)]="perfil.abreviatura" oninput="this.value = this.value.toUpperCase()"
                             class="form-control-sm">
                     </mat-form-field>
                 </div>
                 <div class="col-1">
                     <mat-form-field appearance="standard">
                         <mat-label>Mutiempresa</mat-label>
-                            <mat-select [(ngModel)]="perfil.multiempresa" [disabled]="!edicion" class="form-control-sm">
+                            <mat-select [(ngModel)]="perfil.multiempresa" class="form-control-sm">
                                 <mat-option value="SI">SI</mat-option>
                                 <mat-option value="NO">NO</mat-option>
                             </mat-select>    
@@ -82,12 +75,50 @@
                 <div class="col-2">
                     <mat-form-field appearance="standard">
                         <mat-label>Estado</mat-label>
-                        <mat-select [(ngModel)]="perfil.estado" [disabled]="!edicion" class="form-control-sm">
+                        <mat-select [(ngModel)]="perfil.estado" [disabled]="true" class="form-control-sm">
                             <mat-option [value]="activo">{{activo}}</mat-option>
                             <mat-option [value]="inactivo">{{inactivo}}</mat-option>
                         </mat-select>
                     </mat-form-field>
                 </div>
+                <div class="col-6">
+                    <mat-form-field appearance="standard">
+                        <mat-label>Modulo</mat-label>
+                        <mat-select [(ngModel)]="permiso.modulo" [compareWith]="compareFn" class="form-control-sm">
+                            <mat-option *ngFor="let modulo of modulos" [value]="modulo.nombre">
+                                {{modulo.nombre}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+                <div class="col-5">
+                    <mat-form-field appearance="standard">
+                        <mat-label>Operacion</mat-label>
+                        <mat-select [(ngModel)]="permiso.operacion" [compareWith]="compareFn" class="form-control-sm">
+                            <mat-option *ngFor="let operacion of operaciones" [value]="operacion.nombre">
+                                {{operacion.nombre}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+                <div class="col-1 iconos">
+                    <button mat-icon-button>
+                        <mat-icon (click)="agregarPermiso()">add</mat-icon>
+                    </button>
+                </div>
+                <ng-container *ngFor="let permiso of perfil.permisos; let i=index ">
+                    <div class="col-11">
+                        <mat-form-field appearance="standard">
+                            <mat-label>Permisos</mat-label>
+                            <input matInput type="text" value="{{permiso.modulo}} + {{permiso.operacion}}" class="form-control-sm" [disabled]="true">
+                        </mat-form-field>
+                    </div>
+                    <div class="col-1 iconos">
+                        <button mat-icon-button>
+                            <mat-icon class="iconos-peque" (click)="eliminarPermiso(i)">close</mat-icon>
+                        </button>
+                    </div>
+                </ng-container>
             </div>
         </mat-expansion-panel>
     </mat-accordion>
@@ -106,14 +137,10 @@
             <hr>
             <mat-form-field appearance="standard">
                 <mat-label>Buscar perfil</mat-label>
-                <input matInput (keyup)="filtro($event)" #inputFiltro>
-                <button mat-button *ngIf="inputFiltro.value" matSuffix mat-icon-button
-                    (click)="borrarFiltro()">
-                    <mat-icon>close</mat-icon>
-                </button>
+                <input matInput (keyup)="filtro($event)" #input>
             </mat-form-field>
             <div class="mat-elevation-z8">
-                <table mat-table [dataSource]="observable.value" matSort>
+                <table mat-table [dataSource]="dataSource" matSort>
                     <!-- Columnas Dinamicas -->
                     <ng-container *ngFor="let columna of columnas" [matColumnDef]="columna.nombreColumna">
                         <th mat-header-cell *matHeaderCellDef mat-sort-header> {{ columna.cabecera }} </th>
@@ -124,9 +151,7 @@
                         *matRowDef="let row; columns: cabecera;"></tr>
                     <!-- Row shown when there is no matching data. -->
                     <tr class="mat-row" *matNoDataRow>
-                        <td class="mat-cell" colspan="6">No hay datos que coincidan con el perfil: 
-                            "{{inputFiltro.value}}"
-                        </td>
+                        <td class="mat-cell" colspan="6">No hay datos que coincidan con la estacion</td>
                     </tr>
                 </table>
                 <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>

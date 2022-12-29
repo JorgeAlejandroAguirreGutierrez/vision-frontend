@@ -66,7 +66,7 @@ export class InicioSesionComponent implements OnInit {
       next: res => {
         console.log(res);
         this.sesion.usuario = res.resultado as Usuario;
-        this.multiEmpresa=this.sesion.usuario.perfil.multiempresa;
+        this.multiEmpresa=this.sesion.usuario.perfil.multiempresa == valores.si? true: false;
         if (this.sesion.usuario.cambiarContrasena == valores.si) {
           this.cambiarContrasena = true;
         }
@@ -111,11 +111,10 @@ export class InicioSesionComponent implements OnInit {
   }
 
   obtenerParametro() {
-    let parametro = new Parametro();
-    parametro.tipo = 'LOGO';
-    this.parametroService.obtenerTipo(parametro).subscribe(
+    let tipo = "LOGO";
+    this.parametroService.obtenerPorTipo(tipo).subscribe(
       res => {
-        parametro = res.resultado as Parametro;
+        let parametro = res.resultado as Parametro;
         this.urlLogo = environment.prefijoUrlImagenes + parametro.nombre;
       },
       err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })

@@ -45,12 +45,12 @@ export const urn =
      facturaFisica: "/facturaFisica",
      facturaDetalle: "/facturaDetalle",
      tipoRetencion: "/tipoRetencion",
-     servicio: "/servicio",
+     consultarBien: "/consultarBien",
+     consultarServicio: "/consultarServicio",
+     consultarActivoFijo: "/consultarActivoFijo",
      caracteristica: "/caracteristica",
-     bien: "/bien",
-     activoFijo: "/activoFijo",
-     tipo: "/tipo",
-     consultarTipo: "/consultarTipo",
+     obtenerPorTipo: "/obtenerPorTipo",
+     consultarPorTipo: "/consultarPorTipo",
      producto: "/producto",
      medida: "/medida",
      buscar: "/buscar",
@@ -134,6 +134,8 @@ export const valores ={
      nofacturada: "NO FACTURADA",
      si : "SI",
      no : "NO",
+     modulo : "MODULO",
+     operacion : "OPERACION",
      latCiudad: -1.6705413480437092,
      lngCiudad: -78.64974203645144
 }
@@ -208,7 +210,8 @@ export const otras ={
     /**
      * OTRAS
      */
-     estadoEliminado : "ELIMINADO",
+     credito : "CREDITO",
+     debito : "DEBITO",
      identificacion_consumidor_final : "9999999999999",
      tipoContribuyenteNatural : "NATURAL",
      tipoContribuyenteJuridica : "JURIDICA",

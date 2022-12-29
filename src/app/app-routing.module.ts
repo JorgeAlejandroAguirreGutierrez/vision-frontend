@@ -80,7 +80,6 @@ import { EmpresaComponent } from './usuarios/empresa/empresa.component';
 import { EstablecimientoComponent, DialogoMapaEstablecimientoComponent } from './usuarios/establecimiento/establecimiento.component';
 import { EstacionComponent } from './usuarios/estacion/estacion.component';
 import { PerfilComponent } from './usuarios/perfil/perfil.component';
-import { PermisoComponent } from './usuarios/permiso/permiso.component';
 
 //Módulo de Configuraciones
 import { UbicacionComponent } from './configuraciones/ubicacion/ubicacion.component';
@@ -104,7 +103,6 @@ const routes: Routes = [
   {path: 'cliente/empresa', component: EmpresaComponent},
   // Rutas para el modulo de usuarios
   { path: 'usuario', component: UsuarioComponent },
-  { path: 'permiso', component: PermisoComponent },
   { path: 'usuario/establecimiento', component: EstablecimientoComponent },
   { path: 'usuario/estacion', component: EstacionComponent },
   // Rutas para el modulo de clientes
@@ -227,7 +225,6 @@ export const RoutingComponents = [
   DialogoMapaEstablecimientoComponent,
   EstacionComponent,
   PerfilComponent,
-  PermisoComponent,
   // configuración
   TipoRetencionComponent,
   UbicacionComponent,

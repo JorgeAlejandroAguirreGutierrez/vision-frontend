@@ -1,5 +1,4 @@
-import { Component, OnInit, HostListener, ElementRef, Renderer2 } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { Component, OnInit, HostListener } from '@angular/core';
 import { valores, validarSesion, exito, exito_swal, error, error_swal } from '../../constantes';
 import Swal from 'sweetalert2';
 
@@ -13,6 +12,9 @@ import { ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
+import { Parametro } from 'src/app/modelos/configuracion/parametro';
+import { ParametroService } from 'src/app/servicios/configuracion/parametro.service';
+import { Permiso } from 'src/app/modelos/usuario/permiso';
 
 @Component({
   selector: 'app-perfil',
@@ -26,11 +28,13 @@ export class PerfilComponent implements OnInit {
 
   abrirPanelNuevo: boolean = true;
   abrirPanelAdmin: boolean = true;
-  edicion: boolean = true;
 
   sesion: Sesion = null;
   perfil: Perfil = new Perfil();
   perfiles: Perfil[];
+  modulos: Parametro[] = [];
+  operaciones: Parametro[] = [];
+  permiso: Permiso = new Permiso();
 
   columnas: any[] = [
     { nombreColumna: 'codigo', cabecera: 'Código', celda: (row: Perfil) => `${row.codigo}` },
@@ -40,20 +44,19 @@ export class PerfilComponent implements OnInit {
   ];
   cabecera: string[] = this.columnas.map(titulo => titulo.nombreColumna);
   dataSource: MatTableDataSource<Perfil>;
-  observable: BehaviorSubject<MatTableDataSource<Perfil>> = new BehaviorSubject<MatTableDataSource<Perfil>>(null);
   clickedRows = new Set<Perfil>();
-
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
-  @ViewChild("inputFiltro") inputFiltro: ElementRef;
 
-  constructor(private renderer: Renderer2, private perfilService: PerfilService,
+  constructor(private parametroService: ParametroService, private perfilService: PerfilService,
     private sesionService: SesionService, private router: Router) { }
 
   ngOnInit() {
     this.sesion = validarSesion(this.sesionService, this.router);
     this.consultar();
+    this.consultarModulos();
+    this.consultarOperaciones();
   }
 
   @HostListener('window:keypress', ['$event'])
@@ -64,17 +67,11 @@ export class PerfilComponent implements OnInit {
       this.nuevo(null);
   }
 
-  limpiar() {
-    this.perfil = new Perfil();
-    this.edicion = true;
-    this.clickedRows.clear();
-    this.borrarFiltro();
-  }
-
   nuevo(event) {
     if (event != null)
       event.preventDefault();
-    this.limpiar();
+    this.perfil = new Perfil();
+    this.clickedRows.clear();
   }
 
   crear(event) {
@@ -82,19 +79,12 @@ export class PerfilComponent implements OnInit {
       event.preventDefault();
     this.perfilService.crear(this.perfil).subscribe({
       next: res => {
-        this.perfil = res.resultado as Perfil;
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
-        this.perfiles.push(this.perfil);
-        this.llenarTabla(this.perfiles);
+        this.consultar();
+        this.nuevo(null);
       },
       error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     });
-  }
-
-  editar(event) {
-    if (event != null)
-      event.preventDefault();
-    this.edicion = true;
   }
 
   actualizar(event) {
@@ -102,9 +92,9 @@ export class PerfilComponent implements OnInit {
       event.preventDefault();
     this.perfilService.actualizar(this.perfil).subscribe({
       next: res => {
-        this.perfil = res.resultado as Perfil;
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
-        this.limpiar();
+        this.consultar();
+        this.nuevo(null);
       },
       error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     });
@@ -117,6 +107,7 @@ export class PerfilComponent implements OnInit {
       next: res => {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
         this.consultar();
+        this.nuevo(null);
       },
       error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     });
@@ -129,6 +120,7 @@ export class PerfilComponent implements OnInit {
       next: res => {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
         this.consultar();
+        this.nuevo(null);
       },
       error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     });
@@ -137,29 +129,23 @@ export class PerfilComponent implements OnInit {
   consultar() {
     this.perfilService.consultar().subscribe({
       next: res => {
-        this.perfiles = res.resultado as Perfil[]
-        this.llenarTabla(this.perfiles);
+        this.perfiles = res.resultado as Perfil[];
+        this.dataSource = new MatTableDataSource(this.perfiles);
+        this.dataSource.paginator = this.paginator;
+        this.dataSource.sort = this.sort;
       },
       error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     });
   }
 
-  llenarTabla(perfiles: Perfil[]) {
-    this.ordenarAsc(perfiles, 'id');
-    this.dataSource = new MatTableDataSource(perfiles);
-    this.dataSource.paginator = this.paginator;
-    this.dataSource.sort = this.sort;
-    this.observable.next(this.dataSource);
-  }
-
   seleccion(perfil: Perfil) {
-    if (!this.clickedRows.has(perfil)) {
+    if (!this.clickedRows.has(perfil)){
       this.clickedRows.clear();
       this.clickedRows.add(perfil);
-      this.perfil = perfil;
-      this.edicion = false;
+      this.perfil = { ... perfil};
     } else {
-      this.limpiar();
+      this.clickedRows.clear();
+      this.perfil = new Perfil();
     }
   }
 
@@ -170,15 +156,36 @@ export class PerfilComponent implements OnInit {
       this.dataSource.paginator.firstPage();
     }
   }
-  borrarFiltro() {
-    this.renderer.setProperty(this.inputFiltro.nativeElement, 'value', '');
-    this.dataSource.filter = '';
+
+  consultarModulos() {
+    this.parametroService.consultarPorTipo(valores.modulo).subscribe({
+      next: res => {
+        this.modulos = res.resultado as Parametro[];
+      },
+      error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+    });
   }
 
-  ordenarAsc(arrayJson: any, pKey: any) {
-    arrayJson.sort(function (a: any, b: any) {
-      return a[pKey] > b[pKey];
+  consultarOperaciones() {
+    this.parametroService.consultarPorTipo(valores.operacion).subscribe({
+      next: res => {
+        this.operaciones = res.resultado as Parametro[];
+      },
+      error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     });
+  }
+
+  agregarPermiso(){
+    this.perfil.permisos.push({ ... this.permiso});
+    this.permiso= new Permiso();
+  }
+
+  eliminarPermiso(i: number) {
+    this.perfil.permisos.splice(i, 1);
+  }
+
+  compareFn(a: any, b: any) {
+    return a && b && a.id == b.id;
   }
 
 }

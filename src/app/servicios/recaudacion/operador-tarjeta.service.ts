@@ -40,8 +40,8 @@ export class OperadorTarjetaService {
       }));
   }
 
-  consultarTipo(tipo: string): Observable<Respuesta> {
-    return this.http.get(environment.host + urn.ruta + urn.operadorTarjeta + urn.tipo + urn.slash + tipo, options).pipe(
+  consultarPorTipo(tipo: string): Observable<Respuesta> {
+    return this.http.get(environment.host + urn.ruta + urn.operadorTarjeta + urn.consultarPorTipo + urn.slash + tipo, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);
