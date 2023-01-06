@@ -185,7 +185,6 @@ export class GrupoProductoComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      console.log(result);
       if (result) {
         Object.assign(this.grupoProducto.cuentaContable, result as CuentaContable);
       }
@@ -205,7 +204,6 @@ export class DialogoGrupoProductoCuentaContableComponent {
     this.dialogRef.close();
   }
   cuentaContableSeleccionado(event: any) {
-    console.log(event);
     this.data.cuentaContable = event;
   }
 } 

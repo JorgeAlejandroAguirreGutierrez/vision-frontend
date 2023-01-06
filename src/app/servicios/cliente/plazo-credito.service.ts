@@ -13,14 +13,7 @@ import { environment } from '../../../environments/environment';
 })
 export class PlazoCreditoService {
 
-  private messageSource = new BehaviorSubject(0);
-  currentMessage = this.messageSource.asObservable();
-
   constructor(private http: HttpClient, private router: Router) { }
-
-  enviar(plazoCreditoId: number) {
-    this.messageSource.next(plazoCreditoId);
-  }
 
   crear(plazoCredito: PlazoCredito): Observable<Respuesta> {
     return this.http.post(environment.host + urn.ruta + urn.plazoCredito, plazoCredito, options).pipe(
@@ -42,6 +35,14 @@ export class PlazoCreditoService {
 
   consultar(): Observable<Respuesta> {
     return this.http.get(environment.host + urn.ruta + urn.plazoCredito, options).pipe(
+      map(response => response as Respuesta),
+      catchError(err => {
+        return throwError(()=>err);
+      }));
+  }
+
+  consultarActivos(): Observable<Respuesta> {
+    return this.http.get(environment.host + urn.ruta + urn.plazoCredito + urn.consultarActivos, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);

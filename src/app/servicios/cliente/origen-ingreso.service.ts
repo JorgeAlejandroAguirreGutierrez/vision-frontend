@@ -13,14 +13,7 @@ import { Router } from '@angular/router';
 })
 export class OrigenIngresoService {
 
-  private messageSource = new BehaviorSubject(0);
-  currentMessage = this.messageSource.asObservable();
-
   constructor(private http: HttpClient, private router: Router) { }
-
-  enviar(origenIngresoId: number) {
-    this.messageSource.next(origenIngresoId);
-  }
 
   crear(origenIngreso: OrigenIngreso): Observable<Respuesta> {
     return this.http.post(environment.host + urn.ruta + urn.origenIngreso, origenIngreso, options).pipe(
@@ -42,6 +35,14 @@ export class OrigenIngresoService {
 
   consultar(): Observable<Respuesta> {
     return this.http.get(environment.host + urn.ruta + urn.origenIngreso, options).pipe(
+      map(response => response as Respuesta),
+      catchError(err => {
+        return throwError(()=>err);
+      }));
+  }
+
+  consultarActivos(): Observable<Respuesta> {
+    return this.http.get(environment.host + urn.ruta + urn.origenIngreso + urn.consultarActivos, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);

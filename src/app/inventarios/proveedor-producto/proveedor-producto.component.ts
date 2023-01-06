@@ -113,13 +113,10 @@ export class ProveedorProductoComponent implements OnInit {
         Swal.fire(error, mensajes.error_nombre_producto, error_swal);
         return;
     }
-    console.log(this.producto);
-    //this.producto.kardexs[0].proveedor = new Proveedor;
     this.productoService.actualizar(this.producto).subscribe({
       next: (res) => {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
         this.limpiar();
-        //this.consultar();
       },
       error: (err) => {
         Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })

@@ -1,7 +1,6 @@
 import { GrupoProveedor } from './grupo-proveedor';
 import { TipoContribuyente } from '../cliente/tipo-contribuyente';
 import { Segmento } from '../inventario/segmento';
-import { Direccion } from '../cliente/direccion';
 import { Financiamiento } from '../cliente/financiamiento';
 import { Genero } from '../cliente/genero';
 import { EstadoCivil } from '../cliente/estado-civil';
@@ -14,6 +13,7 @@ import { Correo } from '../cliente/correo';
 import { Dependiente } from '../cliente/dependiente';
 import { RetencionCliente } from '../cliente/retencion-cliente';
 import { valores } from "../../constantes";
+import { Ubicacion } from '../configuracion/ubicacion';
 
 export class Proveedor {
     id:number;
@@ -22,15 +22,17 @@ export class Proveedor {
     tipoIdentificacion:string;
     razonSocial: string;
     nombreComercial: string;
-    especial: boolean;
-    obligadoContabilidad: boolean;
+    direccion: string;
+    especial: string;
+    obligadoContabilidad: string;
     estado: string;
     
+    ubicacion: Ubicacion;
     estacion: Estacion;
     grupoProveedor: GrupoProveedor;
     tipoContribuyente: TipoContribuyente;
     segmento: Segmento;
-    direccion: Direccion;
+    
     financiamiento: Financiamiento;
     genero: Genero;
     estadoCivil: EstadoCivil;
@@ -51,14 +53,15 @@ export class Proveedor {
         this.tipoIdentificacion=valores.vacio;
         this.razonSocial=valores.vacio;
         this.nombreComercial=valores.vacio;
-        this.obligadoContabilidad=false;
+        this.direccion = valores.vacio;
+        this.obligadoContabilidad=valores.no;
         this.estado=valores.activo;
-        this.especial=false;
+        this.especial=valores.no;
+        this.ubicacion = new Ubicacion();
         this.estacion=new Estacion();
         this.tipoContribuyente=new TipoContribuyente();
         this.segmento=new Segmento();
         this.grupoProveedor=new GrupoProveedor();
-        this.direccion=new Direccion();
         this.financiamiento=new Financiamiento();
         this.genero=new Genero();
         this.estadoCivil=new EstadoCivil();

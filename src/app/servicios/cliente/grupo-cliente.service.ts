@@ -13,15 +13,7 @@ import { environment } from '../../../environments/environment';
 })
 export class GrupoClienteService {
 
-  private messageSource = new BehaviorSubject(0);
-  currentMessage = this.messageSource.asObservable();
-
   constructor(private http: HttpClient, private router: Router) { }
-
-  enviar(grupoClienteId: number) {
-    this.messageSource.next(grupoClienteId);
-  }
-
 
   crear(grupoCliente: GrupoCliente): Observable<Respuesta> {
     return this.http.post(environment.host + urn.ruta + urn.grupoCliente, grupoCliente, options).pipe(
@@ -41,17 +33,16 @@ export class GrupoClienteService {
     );
   }
 
-  async obtenerAsync(grupoClienteId: number): Promise<Respuesta> {
-    return await lastValueFrom(this.http.get<Respuesta>(environment.host + urn.ruta + urn.grupoCliente + urn.slash + grupoClienteId, options).pipe(
+  consultar(): Observable<Respuesta> {
+    return this.http.get(environment.host + urn.ruta + urn.grupoCliente, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);
-      })
-    ));
+      }));
   }
 
-  consultar(): Observable<Respuesta> {
-    return this.http.get(environment.host + urn.ruta + urn.grupoCliente, options).pipe(
+  consultarActivos(): Observable<Respuesta> {
+    return this.http.get(environment.host + urn.ruta + urn.grupoCliente + urn.consultarActivos, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);

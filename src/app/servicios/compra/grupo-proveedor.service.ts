@@ -13,15 +13,7 @@ import { GrupoProveedor } from '../../modelos/compra/grupo-proveedor';
 })
 export class GrupoProveedorService {
 
-  private messageSource = new BehaviorSubject(0);
-  currentMessage = this.messageSource.asObservable();
-
   constructor(private http: HttpClient, private router: Router) { }
-
-  enviar(grupoProveedorId: number) {
-    this.messageSource.next(grupoProveedorId);
-  }
-
 
   crear(grupoProveedor: GrupoProveedor): Observable<Respuesta> {
     return this.http.post(environment.host + urn.ruta + urn.grupoProveedor, grupoProveedor, options).pipe(
@@ -41,17 +33,16 @@ export class GrupoProveedorService {
     );
   }
 
-  async obtenerAsync(grupoProveedorId: number): Promise<Respuesta> {
-    return await lastValueFrom(this.http.get<Respuesta>(environment.host + urn.ruta + urn.grupoProveedor + urn.slash + grupoProveedorId, options).pipe(
+  consultar(): Observable<Respuesta> {
+    return this.http.get(environment.host + urn.ruta + urn.grupoProveedor, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);
-      })
-    ));
+      }));
   }
 
-  consultar(): Observable<Respuesta> {
-    return this.http.get(environment.host + urn.ruta + urn.grupoProveedor, options).pipe(
+  consultarActivos(): Observable<Respuesta> {
+    return this.http.get(environment.host + urn.ruta + urn.grupoProveedor + urn.consultarActivos, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);

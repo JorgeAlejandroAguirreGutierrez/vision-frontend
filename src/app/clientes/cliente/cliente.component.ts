@@ -6,8 +6,6 @@ import { Router } from '@angular/router';
 import Swal from 'sweetalert2';
 import { valores, mensajes, otras, tabs, validarSesion, tab_activo, exito, exito_swal, error, error_swal } from '../../constantes';
 import { environment } from '../../../environments/environment';
-
-import { Empresa } from '../../modelos/usuario/empresa';
 import { EmpresaService } from '../../servicios/usuario/empresa.service';
 import { Sesion } from '../../modelos/usuario/sesion';
 import { SesionService } from '../../servicios/usuario/sesion.service';
@@ -52,7 +50,6 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { TipoIdentificacion } from '../../modelos/configuracion/tipo-identificacion';
 import { TipoIdentificacionService } from '../../servicios/configuracion/tipo-identificacion.service';
-//import { Content } from '@angular/compiler/src/render3/r3_ast';
 
 @Component({
   selector: 'app-cliente',
@@ -61,12 +58,15 @@ import { TipoIdentificacionService } from '../../servicios/configuracion/tipo-id
 })
 export class ClienteComponent implements OnInit {
 
+  activo: string = valores.activo;
+  inactivo: string = valores.inactivo;
+  si: string = valores.si;
+  no: string = valores.no;
+
   sesion: Sesion;
   ComponenteCliente: Type<any> = ClienteComponent;
 
   indiceTipoContribuyente: number = -1;
-  activo: string = valores.activo;
-  inactivo: string = valores.inactivo;
 
   abrirPanelNuevoCliente: boolean = true;
   abrirPanelUbicacion: boolean = false;
@@ -74,7 +74,6 @@ export class ClienteComponent implements OnInit {
   abrirPanelDatoAdicional: boolean = false;
   abrirPanelAdminCliente: boolean = false;
   estadoCliente: boolean = true;
-  editing: boolean = false;
   dirEstablecida: boolean = true;
   activacion_s_es_oi: boolean = true;
   activacionPlazoCredito: boolean = false;
@@ -83,17 +82,10 @@ export class ClienteComponent implements OnInit {
   deshabilitarDireccion: boolean = false;
   deshabilitarDependiente: boolean = false;
   deshabilitarDatoAdicional: boolean = false;
-  verOpcionEditarCliente: boolean = false;
 
 
   urlLogo: string = "";
   nombreEmpresa: string = "";
-  clienteProvincia: string = "";
-  clienteCanton: string = "";
-  clienteParroquia: string = "";
-  dependienteProvincia: string = "";
-  dependienteCanton: string = "";
-  dependienteParroquia: string = "";
   urlAvatar: string = environment.prefijoUrlImagenes + "avatar/avatar1.png";
 
   cliente: Cliente = new Cliente();
@@ -103,7 +95,6 @@ export class ClienteComponent implements OnInit {
   dependienteTelefono: TelefonoDependiente = new TelefonoDependiente();
   dependienteCelular: CelularDependiente = new CelularDependiente();
   dependienteCorreo: CorreoDependiente = new CorreoDependiente();
-  segmento: Segmento = new Segmento();
   dependiente: Dependiente = new Dependiente();
 
   clientes: Cliente[];
@@ -133,7 +124,6 @@ export class ClienteComponent implements OnInit {
 
   archivoImportar: File;
 
-  //Mapa //Tomar ubicacion de configuación y poner en el init
   posicionCentralDireccion: Coordenada = new Coordenada(valores.latCiudad, valores.lngCiudad);
   posicionCentralDependiente: Coordenada = new Coordenada(valores.latCiudad, valores.lngCiudad);
   posicionGeograficaDireccion: Coordenada;
@@ -147,16 +137,15 @@ export class ClienteComponent implements OnInit {
     maxZoom: 20,
     minZoom: 12,
   };
-  // @ViewChild(MapInfoWindow) infoWindowDireccion: MapInfoWindow;
 
   columnasCliente: any[] = [
     { nombreColumna: 'id', cabecera: 'ID', celda: (row: Cliente) => `${row.id}` },
     { nombreColumna: 'codigo', cabecera: 'Código', celda: (row: Cliente) => `${row.codigo}` },
     { nombreColumna: 'identificacion', cabecera: 'Indentificación', celda: (row: Cliente) => `${row.identificacion}` },
     { nombreColumna: 'razonSocial', cabecera: 'Razón Social', celda: (row: Cliente) => `${row.razonSocial}` },
-    { nombreColumna: 'direccion', cabecera: 'Direccion', celda: (row: Cliente) => `${row.direccion.direccion}` },
-    { nombreColumna: 'obligado', cabecera: 'Obligado', celda: (row: Cliente) => `${row.tipoContribuyente.obligadoContabilidad? "SI": "NO"}` },
-    { nombreColumna: 'especial', cabecera: 'Especial', celda: (row: Cliente) => `${row.especial? "SI": "NO"}` },
+    { nombreColumna: 'direccion', cabecera: 'Direccion', celda: (row: Cliente) => `${row.direccion}` },
+    { nombreColumna: 'obligado', cabecera: 'Obligado', celda: (row: Cliente) => `${row.tipoContribuyente.obligadoContabilidad}` },
+    { nombreColumna: 'especial', cabecera: 'Especial', celda: (row: Cliente) => `${row.especial}` },
     { nombreColumna: 'estado', cabecera: 'Estado', celda: (row: Cliente) => `${row.estado}` }
   ];
   cabeceraCliente: string[] = this.columnasCliente.map(titulo => titulo.nombreColumna);
@@ -165,11 +154,10 @@ export class ClienteComponent implements OnInit {
 
   columnasDependiente: any[] = [
     { nombreColumna: 'razonSocial', cabecera: 'Razón Social', celda: (row: Dependiente) => `${row.razonSocial}` },
-    { nombreColumna: 'direccion', cabecera: 'Direccion', celda: (row: Dependiente) => `${row.direccion.direccion}` },
-    { nombreColumna: 'provincia', cabecera: 'Provincia', celda: (row: Dependiente) => `${row.direccion.ubicacion.provincia}` },
-    { nombreColumna: 'canton', cabecera: 'Cantón', celda: (row: Dependiente) => `${row.direccion.ubicacion.canton}` },
-    { nombreColumna: 'parroquia', cabecera: 'Parroquia', celda: (row: Dependiente) => `${row.direccion.ubicacion.parroquia}` },
-    //{ nombreColumna: 'estado', cabecera: 'Estado', celda: (row: Dependiente) => `${row.estado}` },
+    { nombreColumna: 'direccion', cabecera: 'Direccion', celda: (row: Dependiente) => `${row.direccion}` },
+    { nombreColumna: 'provincia', cabecera: 'Provincia', celda: (row: Dependiente) => `${row.ubicacion.provincia}` },
+    { nombreColumna: 'canton', cabecera: 'Cantón', celda: (row: Dependiente) => `${row.ubicacion.canton}` },
+    { nombreColumna: 'parroquia', cabecera: 'Parroquia', celda: (row: Dependiente) => `${row.ubicacion.parroquia}` },
     { nombreColumna: 'acciones', cabecera: 'Acciones' }
   ];
   cabeceraDependientes: string[] = this.columnasDependiente.map(titulo => titulo.nombreColumna);
@@ -184,7 +172,7 @@ export class ClienteComponent implements OnInit {
     if (($event.shiftKey || $event.metaKey) && $event.key == "G")
       this.crear(null);
     if (($event.shiftKey || $event.metaKey) && $event.key == "N")
-      this.limpiar();
+      this.nuevo(null);
     if (($event.shiftKey || $event.metaKey) && $event.key == "E")
       console.log('SHIFT + E');
   }
@@ -200,17 +188,37 @@ export class ClienteComponent implements OnInit {
 
   ngOnInit() {
     this.sesion = validarSesion(this.sesionService, this.router);
-    this.obtenerSesion();
-    this.obtenerEmpresa();
     this.consultar();
+    this.consultarTipoIdentificacion();
+    this.consultarTipoContribuyente();
+    this.consultarSegmento();
+    this.consultarGrupoCliente();
+    this.consultarGenero();
+    this.consultarEstadoCivil();
+    this.consultarOrigenIngreso();
+    this.consultarCalificacionCliente();
+    this.consultarPlazoCredito();
+    this.consultarTipoPago();
+    this.consultarFormaPago();
+    this.consultarProvincias();
+    this.consultarIvaBien();
+    this.consultarIvaServicio();
+    this.consultarRentaBien();
+    this.consultarRentaServicio();
+  }
+
+  consultarTipoIdentificacion(){
     this.tipoIdentificacionService.consultar().subscribe({
       next: (res) => {
         this.tiposIdentificaciones = res.resultado as TipoIdentificacion[];
+        console.log(this.tiposIdentificaciones);
       },
       error: (err) => {
         Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje });
       }
     });
+  }
+  consultarTipoContribuyente(){
     this.tipoContribuyenteService.consultar().subscribe({
       next: (res) => {
         this.tiposContribuyentes = res.resultado as TipoContribuyente[];
@@ -219,7 +227,9 @@ export class ClienteComponent implements OnInit {
         Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje });
       }
     });
-    this.segmentoService.consultar().subscribe({
+  }
+  consultarSegmento(){
+    this.segmentoService.consultarActivos().subscribe({
       next: (res) => {
         this.segmentos = res.resultado as Segmento[];
       },
@@ -227,7 +237,9 @@ export class ClienteComponent implements OnInit {
         Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje });
       }
     });
-    this.grupoClienteService.consultar().subscribe({
+  }
+  consultarGrupoCliente(){
+    this.grupoClienteService.consultarActivos().subscribe({
       next: (res) => {
         this.gruposClientes = res.resultado as GrupoCliente[]
       },
@@ -235,7 +247,9 @@ export class ClienteComponent implements OnInit {
         Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje });
       }
     });
-    this.generoService.consultar().subscribe({
+  }
+  consultarGenero(){
+    this.generoService.consultarActivos().subscribe({
       next: (res) => {
         this.generos = res.resultado as Genero[]
       },
@@ -243,7 +257,9 @@ export class ClienteComponent implements OnInit {
         Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje });
       }
     });
-    this.estadoCivilService.consultar().subscribe({
+  }
+  consultarEstadoCivil(){
+    this.estadoCivilService.consultarActivos().subscribe({
       next: (res) => {
         this.estadosCiviles = res.resultado as EstadoCivil[]
       },
@@ -251,7 +267,9 @@ export class ClienteComponent implements OnInit {
         Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje });
       }
     });
-    this.origenIngresoService.consultar().subscribe({
+  }
+  consultarOrigenIngreso(){
+    this.origenIngresoService.consultarActivos().subscribe({
       next: (res) => {
         this.origenesIngresos = res.resultado as OrigenIngreso[];
       },
@@ -259,7 +277,9 @@ export class ClienteComponent implements OnInit {
         Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje });
       }
     });
-    this.calificacionClienteService.consultar().subscribe({
+  }
+  consultarCalificacionCliente(){
+    this.calificacionClienteService.consultarActivos().subscribe({
       next: res => {
         this.calificacionesClientes = res.resultado as CalificacionCliente[]
       },
@@ -267,7 +287,9 @@ export class ClienteComponent implements OnInit {
         Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje });
       }
     });
-    this.plazoCreditoService.consultar().subscribe({
+  }
+  consultarPlazoCredito(){
+    this.plazoCreditoService.consultarActivos().subscribe({
       next: res => {
         this.plazosCreditos = res.resultado as PlazoCredito[]
       },
@@ -275,7 +297,9 @@ export class ClienteComponent implements OnInit {
         Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje });
       }
     });
-    this.tipoPagoService.consultar().subscribe({
+  }
+  consultarTipoPago(){
+    this.tipoPagoService.consultarActivos().subscribe({
       next: res => {
         this.tiposPagos = res.resultado as TipoPago[]
       },
@@ -283,7 +307,9 @@ export class ClienteComponent implements OnInit {
         Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje });
       }
     });
-    this.formaPagoService.consultar().subscribe({
+  }
+  consultarFormaPago(){
+    this.formaPagoService.consultarActivos().subscribe({
       next: res => {
         this.formasPagos = res.resultado as FormaPago[]
       },
@@ -291,7 +317,9 @@ export class ClienteComponent implements OnInit {
         Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje });
       }
     });
-    this.ubicacionService.obtenerProvincias().subscribe({
+  }
+  consultarProvincias(){
+    this.ubicacionService.consultarProvincias().subscribe({
       next: res => {
         this.provincias = res.resultado as Ubicacion[];
         this.dependienteProvincias = res.resultado as Ubicacion[]
@@ -300,7 +328,9 @@ export class ClienteComponent implements OnInit {
         Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje });
       }
     });
-    this.tipoRetencionService.obtenerIvaBien().subscribe({
+  }
+  consultarIvaBien(){
+    this.tipoRetencionService.consultarIvaBien().subscribe({
       next: res => {
         this.tiposRetencionesIvaBien = res.resultado as TipoRetencion[]
       },
@@ -308,7 +338,9 @@ export class ClienteComponent implements OnInit {
         Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje });
       }
     });
-    this.tipoRetencionService.obtenerIvaServicio().subscribe({
+  }
+  consultarIvaServicio(){
+    this.tipoRetencionService.consultarIvaServicio().subscribe({
       next: res => {
         this.tiposRetencionesIvaServicio = res.resultado as TipoRetencion[]
 
@@ -317,7 +349,9 @@ export class ClienteComponent implements OnInit {
         Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje });
       }
     });
-    this.tipoRetencionService.obtenerRentaBien().subscribe({
+  }
+  consultarRentaBien(){
+    this.tipoRetencionService.consultarRentaBien().subscribe({
       next: res => {
         this.tiposRetencionesRentaBien = res.resultado as TipoRetencion[]
       },
@@ -325,7 +359,9 @@ export class ClienteComponent implements OnInit {
         Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje });
       }
     });
-    this.tipoRetencionService.obtenerRentaServicio().subscribe({
+  }
+  consultarRentaServicio(){
+    this.tipoRetencionService.consultarRentaServicio().subscribe({
       next: res => {
         this.tiposRetencionesRentaServicio = res.resultado as TipoRetencion[];
       },
@@ -335,72 +371,36 @@ export class ClienteComponent implements OnInit {
     });
   }
 
-  obtenerSesion() {
-    this.sesion = this.sesionService.getSesion();
-  }
-
-  //NO hace falta, obtener empresa de sesion
-  obtenerEmpresa() {
-    let empresaId = 1;
-    this.empresaService.obtener(empresaId).subscribe(
-      res => {
-        let empresa = res.resultado as Empresa
-        this.urlLogo = environment.prefijoUrlImagenes + "logos/" + empresa.logo;
-        this.nombreEmpresa = empresa.razonSocial;
-      },
-      err => {
-        Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje });
-      }
-    );
-  }
-
-  limpiar() {
-    this.clienteProvincia = valores.vacio;
-    this.clienteCanton = valores.vacio;
-    this.clienteParroquia = valores.vacio;
+  nuevo(event){
+    if (event != null)
+      event.preventDefault();
     this.cliente = new Cliente();
+    this.dependiente = new Dependiente();
     this.telefono = new Telefono();
     this.celular = new Celular();
     this.correo = new Correo();
-    this.limpiarDependiente();
-    this.habilitarFormulario();
-    this.clickedRows.clear();
-  }
-
-  limpiarDependiente(){
-    this.dependienteProvincia = valores.vacio;
-    this.dependienteCanton = valores.vacio;
-    this.dependienteParroquia = valores.vacio;
-    this.dependiente = new Dependiente();
     this.dependienteTelefono = new TelefonoDependiente();
     this.dependienteCelular = new CelularDependiente();
     this.dependienteCorreo = new CorreoDependiente();
+    this.clickedRows.clear();
+    this.clickedRowsDependiente.clear();
   }
 
   crear(event: any) {
     if (event != null)
       event.preventDefault();
-    this.cliente.estacion = this.sesion.usuario.estacion;  
-    this.llenarUbicacion();
+    this.agregarDatos();
     this.clienteService.crear(this.cliente).subscribe({
       next: res => {
-        this.cliente = res.resultado as Cliente;
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
-        this.limpiar();
         this.consultar();
+        this.nuevo(null);
       },
       error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     });
   }
 
-  editar(event) {
-    if (event != null)
-      event.preventDefault();
-    this.habilitarFormulario();
-  }
-
-  llenarUbicacion(){
-    // AGREGAR UBICACION CLIENTE  
+  agregarDatos() {
     if (this.telefono.numero != valores.vacio)
       this.cliente.telefonos.push(this.telefono);
     if (this.celular.numero != valores.vacio)
@@ -408,13 +408,6 @@ export class ClienteComponent implements OnInit {
     if (this.correo.email != valores.vacio)
       this.cliente.correos.push(this.correo);
 
-    let ubicacion: Ubicacion = new Ubicacion();
-    ubicacion.provincia = this.clienteProvincia;
-    ubicacion.canton = this.clienteCanton;
-    ubicacion.parroquia = this.clienteParroquia;
-    this.cliente.direccion.ubicacion = ubicacion;
-
-    //AGREGAR UBICACION DEPENDIENTE
     if (this.dependienteTelefono.numero != valores.vacio)
       this.dependiente.telefonos.push(this.dependienteTelefono);
     if (this.dependienteCelular.numero != valores.vacio)
@@ -422,31 +415,19 @@ export class ClienteComponent implements OnInit {
     if (this.dependienteCorreo.email != valores.vacio)
       this.dependiente.correos.push(this.dependienteCorreo);
 
-    let dependienteUbicacion: Ubicacion = new Ubicacion();
-    dependienteUbicacion.provincia = this.dependienteProvincia;
-    dependienteUbicacion.canton = this.dependienteCanton;
-    dependienteUbicacion.parroquia = this.dependienteParroquia;
-    this.dependiente.direccion.ubicacion = dependienteUbicacion;
+    this.cliente.estacion = this.sesion.usuario.estacion;
   }
 
   agregarDependiente() {
-    if (this.dependienteTelefono.numero != undefined)
-      this.dependiente.telefonos.push(this.dependienteTelefono);
-    if (this.dependienteTelefono.numero != undefined)
-      this.dependiente.celulares.push(this.dependienteCelular);
-    if (this.dependienteCorreo.email != undefined)
-      this.dependiente.correos.push(this.dependienteCorreo);
-    let ubicacion: Ubicacion = new Ubicacion();
-    ubicacion.provincia = this.dependienteProvincia;
-    ubicacion.canton = this.dependienteCanton;
-    ubicacion.parroquia = this.dependienteParroquia;
-    if (ubicacion.provincia != valores.vacio && ubicacion.canton != valores.vacio && ubicacion.parroquia != valores.vacio) {
-      this.cliente.dependientes.push(this.dependiente);
-      this.llenarDataSourceDependiente(this.cliente.dependientes);
-      this.deshabilitarDependiente = true;
-      this.limpiarDependiente();
-    } else {
-      Swal.fire({ icon: error_swal, title: error, text: mensajes.error_agregar_dependiente });
+    if(this.dependiente.razonSocial != valores.vacio){
+      if (this.dependienteTelefono.numero != valores.vacio)
+        this.dependiente.telefonos.push(this.dependienteTelefono);
+      if (this.dependienteTelefono.numero != valores.vacio)
+        this.dependiente.celulares.push(this.dependienteCelular);
+      if (this.dependienteCorreo.email != valores.vacio)
+        this.dependiente.correos.push(this.dependienteCorreo);
+    this.cliente.dependientes.push(this.dependiente);
+    this.llenarDataSourceDependiente(this.cliente.dependientes);
     }
   }
 
@@ -458,57 +439,13 @@ export class ClienteComponent implements OnInit {
       this.deshabilitarDependiente = false;
   }
 
-  editarDependiente(dependienteSeleccionado: Dependiente) {
-    this.editing = !this.editing;
-    this.dependiente = dependienteSeleccionado;
-  }
-
-  confirmarEditarDependiente(row: Dependiente) {
-    this.editing = !this.editing;
-  }
-
-  async actualizar(event: any) {
+  actualizar(event: any) {
     if (event != null)
       event.preventDefault();
-    //AGREGAR AUXILIARES
-    if (this.dependiente.razonSocial != valores.vacio) {
-      if (this.dependienteTelefono.numero != valores.vacio)
-        this.dependiente.telefonos.push(this.dependienteTelefono);
-      if (this.dependienteTelefono.numero != valores.vacio)
-        this.dependiente.celulares.push(this.dependienteCelular);
-      if (this.dependienteCorreo.email != valores.vacio)
-        this.dependiente.correos.push(this.dependienteCorreo);
-      let ubicacion: Ubicacion = new Ubicacion();
-      ubicacion.provincia = this.dependienteProvincia;
-      ubicacion.canton = this.dependienteCanton;
-      ubicacion.parroquia = this.dependienteParroquia;
-      if (ubicacion.provincia != valores.vacio && ubicacion.canton != valores.vacio && ubicacion.parroquia != valores.vacio) {
-        await this.ubicacionService.obtenerUbicacionID(ubicacion).then(
-          res => {
-            this.dependiente.direccion.ubicacion = res.resultado as Ubicacion;
-          },
-          err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
-        );
-      }
-      this.cliente.dependientes.push(this.dependiente);
-    }
-    //CLIENTE
-    if (this.cliente.direccion.ubicacion.provincia != valores.vacio && this.cliente.direccion.ubicacion.canton != valores.vacio && this.cliente.direccion.ubicacion.parroquia != valores.vacio) {
-      await this.ubicacionService.obtenerUbicacionID(this.cliente.direccion.ubicacion).then(
-        res => {
-          this.cliente.direccion.ubicacion = res.resultado as Ubicacion;
-        },
-        err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
-      );
-    }
-
+    this.agregarDependiente();
     this.clienteService.actualizar(this.cliente).subscribe(
       res => {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
-        this.cliente = res.resultado as Cliente;
-        this.dependienteCantones = [];
-        this.dependienteParroquias = [];
-        this.limpiarDependiente();
       },
       err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     );
@@ -521,6 +458,7 @@ export class ClienteComponent implements OnInit {
       next: res => {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
         this.consultar();
+        this.nuevo(null);
       },
       error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     });
@@ -533,6 +471,7 @@ export class ClienteComponent implements OnInit {
       next: res => {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
         this.consultar();
+        this.nuevo(null);
       },
       error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     });
@@ -560,61 +499,27 @@ export class ClienteComponent implements OnInit {
     this.dataSourceCliente = new MatTableDataSource(clientes);
     this.dataSourceCliente.filterPredicate = (data: Cliente, filter: string): boolean =>
       data.codigo.toUpperCase().includes(filter) || data.identificacion.toUpperCase().includes(filter) || data.razonSocial.toUpperCase().includes(filter) ||
-      data.direccion.direccion.toUpperCase().includes(filter) || data.estado.toUpperCase().includes(filter);
+      data.direccion.toUpperCase().includes(filter) || data.estado.toUpperCase().includes(filter);
     this.dataSourceCliente.paginator = this.paginator;
     this.dataSourceCliente.sort = this.sort;
   }
 
-  seleccion(clienteSeleccionado: any) {
-    if (!this.clickedRows.has(clienteSeleccionado)) {
+  seleccion(cliente: any) {
+    if (!this.clickedRows.has(cliente)){
       this.clickedRows.clear();
-      this.clickedRows.add(clienteSeleccionado);
-      let cliente = new Cliente();
-      Object.assign(cliente, clienteSeleccionado as Cliente);
-      cliente.normalizar();
-      this.cliente = cliente;
-      console.log(this.cliente);
-      // this.cliente = clienteSeleccionado;
-      this.clienteProvincia = this.cliente.direccion.ubicacion.provincia;
-      this.seleccionarProvincia(this.clienteProvincia);
-      this.clienteCanton = this.cliente.direccion.ubicacion.canton;
-      this.seleccionarCanton(this.clienteCanton);
-      this.clienteParroquia = this.cliente.direccion.ubicacion.parroquia;
-      this.cambiarFormaPago();
-      this.llenarDataSourceDependiente(this.cliente.dependientes);
-      this.deshabilitarFormulario();
+      this.clickedRows.add(cliente);
+      this.cliente = { ... cliente};
     } else {
-      this.limpiar();
+      this.clickedRows.clear();
+      this.cliente = new Cliente();
     }
   }
 
-  deshabilitarFormulario(){
-    this.deshabilitarCliente = true;
-    this.deshabilitarDireccion = true;
-    this.deshabilitarDependiente = true;
-    this.deshabilitarDatoAdicional = true;
-    this.verOpcionEditarCliente = true;
-  }
-
-  habilitarFormulario(){
-    this.deshabilitarCliente = false;
-    this.deshabilitarDireccion = false;
-    this.deshabilitarDependiente = false;
-    this.deshabilitarDatoAdicional = false;
-    this.verOpcionEditarCliente = false;
-  }
-
-  seleccionDependiente(dependienteSeleccionado: Dependiente) {
-    if (!this.clickedRowsDependiente.has(dependienteSeleccionado)) {
+  seleccionDependiente(dependiente: Dependiente) {
+    if (!this.clickedRowsDependiente.has(dependiente)){
       this.clickedRowsDependiente.clear();
-      this.clickedRowsDependiente.add(dependienteSeleccionado);
-      this.dependiente = dependienteSeleccionado;
-      console.log(this.dependiente);
-      this.dependienteProvincia = this.dependiente.direccion.ubicacion.provincia;
-      this.seleccionarDependienteProvincia(this.dependienteProvincia);
-      this.dependienteCanton = this.dependiente.direccion.ubicacion.canton;
-      this.seleccionarDependienteCanton(this.dependienteCanton);
-      this.dependienteParroquia = this.dependiente.direccion.ubicacion.parroquia;
+      this.clickedRowsDependiente.add(dependiente);
+      this.dependiente = { ... dependiente};
     } else {
       this.clickedRowsDependiente.clear();
       this.dependiente = new Dependiente();
@@ -632,46 +537,28 @@ export class ClienteComponent implements OnInit {
   llenarDataSourceDependiente(dependientes: Dependiente[]) {
     this.dataSourceDependiente = new MatTableDataSource(dependientes);
     this.dataSourceDependiente.filterPredicate = (data: Dependiente, filter: string): boolean =>
-      data.razonSocial.toUpperCase().includes(filter) || data.direccion.direccion.toUpperCase().includes(filter) ||
-      data.direccion.ubicacion.provincia.toUpperCase().includes(filter) || data.direccion.ubicacion.canton.toUpperCase().includes(filter);
+      data.razonSocial.toUpperCase().includes(filter) || data.direccion.toUpperCase().includes(filter) ||
+      data.ubicacion.provincia.toUpperCase().includes(filter) || data.ubicacion.canton.toUpperCase().includes(filter);
     this.dataSourceDependiente.paginator = this.paginator;
     this.dataSourceDependiente.sort = this.sort;
   }
 
-  ubicacionNormalizarActualizar() {
-    if (this.cliente.direccion.ubicacion != null) {
-      this.clienteProvincia = this.cliente.direccion.ubicacion.provincia;
-      this.clienteCanton = this.cliente.direccion.ubicacion.canton;
-      this.clienteParroquia = this.cliente.direccion.ubicacion.parroquia;
+  ubicacionNormalizar() {
+    if(this.cliente.ubicacion.provincia != valores.vacio){
+      this.seleccionarProvincia();
     }
-    this.seleccionarProvincia(this.clienteProvincia);
-    this.seleccionarCanton(this.clienteCanton);
+    if(this.cliente.ubicacion.canton != valores.vacio){
+      this.seleccionarCanton();
+    }
   }
 
   validarIdentificacion() {
-    this.clienteService.obtenerIdentificacion(this.cliente.identificacion).subscribe({
+    this.clienteService.validarIdentificacion(this.cliente.identificacion).subscribe({
       next: (res) => {
-        this.clienteService.validarIdentificacion(this.cliente.identificacion).subscribe({
-          next: (res) => {
-            this.cliente.tipoIdentificacion = res.resultado.tipoIdentificacion;
-            this.cliente.tipoContribuyente = res.resultado.tipoContribuyente as TipoContribuyente;
-            if (this.cliente.tipoContribuyente == null) {
-              this.deshabilitarTipoContribuyente = false;
-            } else {
-              this.cliente.tipoContribuyente = this.obtenerTipoContribuyente() as TipoContribuyente;
-            }
-            this.cliente.segmento.id = 1;
-            this.cliente.grupoCliente.id = 1;
-            this.cliente.financiamiento.formaPago.id = 1;
-            this.cambiarFormaPago();
-            this.validarSexoEstadoCivilOrigenIngreso();
-          },
-          error: (err) => {
-            this.cliente.tipoIdentificacion = null;
-            this.cliente.tipoContribuyente = new TipoContribuyente();
-            Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje });
-          }
-        });
+        this.cliente.tipoIdentificacion = res.resultado.tipoIdentificacion as TipoIdentificacion;
+        this.cliente.tipoContribuyente = res.resultado.tipoContribuyente as TipoContribuyente;
+        this.cambiarFormaPago();
+        this.validarSexoEstadoCivilOrigenIngreso();
       },
       error: (err) => {
         this.cliente.tipoIdentificacion = null;
@@ -679,17 +566,6 @@ export class ClienteComponent implements OnInit {
         Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje });
       }
     });
-  }
-
-  validarTipoContribuyente() {
-    this.cliente.tipoContribuyente = this.tiposContribuyentes[this.indiceTipoContribuyente];
-  }
-
-  obtenerTipoContribuyente() {
-    for (let i = 0; i < this.tiposContribuyentes.length; i++) {
-      if (this.cliente.tipoContribuyente.id == this.tiposContribuyentes[i].id)
-        return this.tiposContribuyentes[i];
-    }
   }
 
   cambiarFormaPago() {
@@ -703,7 +579,7 @@ export class ClienteComponent implements OnInit {
 
   crearTelefono() {
     if (this.telefono.numero.length != valores.cero) {
-      this.cliente.telefonos.push(this.telefono);
+      this.cliente.telefonos.push({ ... this.telefono});
       this.telefono = new Telefono();
     } else {
       Swal.fire({ icon: error_swal, title: error, text: mensajes.error_telefono_ingresado });
@@ -718,10 +594,9 @@ export class ClienteComponent implements OnInit {
   eliminarTelefono(i: number) {
     this.cliente.telefonos.splice(i, 1);
   }
-
   crearCelular() {
-    if (this.celular.numero.length != 0) {
-      this.cliente.celulares.push(this.celular);
+    if (this.celular.numero.length != valores.cero) {
+      this.cliente.celulares.push( { ... this.celular});
       this.celular = new Celular();
     } else {
       Swal.fire({ icon: error_swal, title: error, text: mensajes.error_celular_ingresado });
@@ -736,10 +611,9 @@ export class ClienteComponent implements OnInit {
   eliminarCelular(i: number) {
     this.cliente.celulares.splice(i, 1);
   }
-
   crearCorreo() {
     if (this.correo.email.length != valores.cero) {
-      this.cliente.correos.push(this.correo);
+      this.cliente.correos.push({ ... this.correo});
       this.correo = new Correo();
     } else {
       Swal.fire({ icon: error_swal, title: error, text: mensajes.error_correo_ingresado });
@@ -824,9 +698,8 @@ export class ClienteComponent implements OnInit {
   }
 
 
-  seleccionarProvincia(provincia: string) {
-    this.cliente.direccion.ubicacion.provincia = provincia;
-    this.ubicacionService.obtenerCantones(provincia).subscribe({
+  seleccionarProvincia() {
+    this.ubicacionService.consultarCantones(this.cliente.ubicacion.provincia).subscribe({
       next: res => {
         this.cantones = res.resultado as Ubicacion[];
       },
@@ -834,9 +707,8 @@ export class ClienteComponent implements OnInit {
     });
   }
 
-  seleccionarDependienteProvincia(provincia: string) {
-    this.dependiente.direccion.ubicacion.provincia = provincia;
-    this.ubicacionService.obtenerCantones(provincia).subscribe(
+  seleccionarDependienteProvincia() {
+    this.ubicacionService.consultarCantones(this.dependiente.ubicacion.provincia).subscribe(
       res => {
         this.dependienteCantones = res.resultado as Ubicacion[];
       },
@@ -844,9 +716,8 @@ export class ClienteComponent implements OnInit {
     );
   }
 
-  seleccionarCanton(canton: string) {
-    this.cliente.direccion.ubicacion.canton = canton;
-    this.ubicacionService.obtenerParroquias(canton).subscribe({
+  seleccionarCanton() {
+    this.ubicacionService.consultarParroquias(this.cliente.ubicacion.canton).subscribe({
       next: res => {
         this.parroquias = res.resultado as Ubicacion[];
       },
@@ -854,22 +725,13 @@ export class ClienteComponent implements OnInit {
     });
   }
 
-  seleccionarDependienteCanton(canton: string) {
-    this.dependiente.direccion.ubicacion.provincia = canton;
-    this.ubicacionService.obtenerParroquias(canton).subscribe(
+  seleccionarDependienteCanton() {
+    this.ubicacionService.consultarParroquias(this.dependiente.ubicacion.canton).subscribe(
       res => {
         this.dependienteParroquias = res.resultado as Ubicacion[];
       },
       err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     );
-  }
-
-  seleccionarParroquia(parroquia: string) {
-    this.cliente.direccion.ubicacion.parroquia = parroquia;
-  }
-
-  seleccionarDependienteParroquia(parroquia: string) {
-    this.dependiente.direccion.ubicacion.parroquia = parroquia;
   }
 
   validarSexoEstadoCivilOrigenIngreso() {
@@ -894,7 +756,6 @@ export class ClienteComponent implements OnInit {
   getCurrentPosition() {
     navigator.geolocation.getCurrentPosition(position => {
       this.posicionCentralDireccion = new Coordenada(position.coords.latitude, position.coords.longitude);
-      console.log(this.posicionCentralDireccion);
     })
   }
 
@@ -921,21 +782,15 @@ export class ClienteComponent implements OnInit {
   }
 
   dialogoMapasDireccion(): void {
-    //console.log('El dialogo para selección de grupo producto fue abierto');
     const dialogRef = this.dialog.open(DialogoMapaComponent, {
       width: '80%',
-      // Para enviar datos
-      //data: { usuario: this.usuario, clave: this.clave, grupo_producto_recibido: "" }
       data: this.posicionGeograficaDireccion as Coordenada
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      //console.log('El dialogo para selección de coordenada fue cerrado');
-      console.log(result);
       if (result) {
         this.posicionGeograficaDireccion = result as Coordenada;
         this.posicionCentralDireccion = this.posicionGeograficaDireccion;
-        //console.log(result);
       }
     });
   }
@@ -948,12 +803,9 @@ export class ClienteComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      //console.log('El dialogo para selección de coordenada fue cerrado');
-      console.log(result);
       if (result) {
         this.posicionGeograficaDependiente = result as Coordenada;
         this.posicionCentralDependiente = this.posicionGeograficaDependiente;
-        //console.log(result);
       }
     });
   }
@@ -979,11 +831,8 @@ export class DialogoMapaComponent {
   }
 
   coordenadaSeleccionada(event: any) {
-    //console.log(event);
     if (event && event.latitud != 0) {
       this.data = event as Coordenada;
-      //this.producto.grupo_producto = grupoProductoRecibido;
-      console.log(this.data);
     } else {
       this.data = new Coordenada(0, 0);
     }

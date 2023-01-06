@@ -61,7 +61,7 @@
                     <div class="col-12">
                         <mat-form-field appearance="standard">
                             <mat-label>Direccion</mat-label>
-                            <input matInput type="text" [(ngModel)]="entrega.direccion.direccion"
+                            <input matInput type="text" [(ngModel)]="entrega.direccion"
                                 [disabled]="deshabilitar" oninput="this.value = this.value.toUpperCase()"
                                 class="form-control-sm">
                         </mat-form-field>
@@ -69,8 +69,8 @@
                     <div class="col-4">
                         <mat-form-field appearance="standard">
                             <mat-label>Provincia</mat-label>
-                            <mat-select type="text" (selectionChange)="provincia()"
-                                [(ngModel)]="entrega.direccion?.ubicacion.provincia" [disabled]="deshabilitar"
+                            <mat-select type="text" (selectionChange)="seleccionarProvincia()"
+                                [(ngModel)]="entrega.ubicacion.provincia" [disabled]="deshabilitar"
                                 class="form-control-sm">
                                 <mat-option *ngFor="let provincia of provincias" [value]="provincia.provincia">
                                     {{provincia.provincia}}
@@ -81,8 +81,8 @@
                     <div class="col-4">
                         <mat-form-field appearance="standard">
                             <mat-label>Canton</mat-label>
-                            <mat-select type="text" (selectionChange)="canton()"
-                                [(ngModel)]="entrega.direccion?.ubicacion.canton" [disabled]="deshabilitar"
+                            <mat-select type="text" (selectionChange)="seleccionarCanton()"
+                                [(ngModel)]="entrega.ubicacion.canton" [disabled]="deshabilitar"
                                 class="form-control-sm">
                                 <mat-option *ngFor="let canton of cantones" [value]="canton.canton">
                                     {{canton.canton}}
@@ -93,9 +93,7 @@
                     <div class="col-4">
                         <mat-form-field appearance="standard">
                             <mat-label>Parroquia</mat-label>
-                            <mat-select type="text" (selectionChange)="parroquia()"
-                                [(ngModel)]="entrega.direccion?.ubicacion.parroquia" [disabled]="deshabilitar"
-                                class="form-control-sm">
+                            <mat-select type="text" [(ngModel)]="entrega.ubicacion.parroquia" [disabled]="deshabilitar" class="form-control-sm">
                                 <mat-option *ngFor="let parroquia of parroquias" [value]="parroquia.parroquia">
                                     {{parroquia.parroquia}}
                                 </mat-option>

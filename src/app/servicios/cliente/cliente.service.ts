@@ -40,21 +40,14 @@ export class ClienteService {
       })
     );
   }
-  
-  async consultarAsync(): Promise<Respuesta> {
-    return await lastValueFrom(this.http.get<Respuesta>(environment.host + urn.ruta + urn.cliente, options).pipe(
-      map(response => response as Respuesta),
-      catchError(err => {
-        return throwError(()=>err);
-      })));
-  }
 
-  async obtenerAsync(clienteId: number): Promise<Respuesta> {
-    return await lastValueFrom(this.http.get<Respuesta>(environment.host + urn.ruta + urn.cliente + urn.slash + clienteId, options).pipe(
+  consultarActivos(): Observable<Respuesta> {
+    return this.http.get<Respuesta>(environment.host + urn.ruta + urn.cliente + urn.consultarActivos, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);
-      })));
+      })
+    );
   }
 
   obtener(clienteId: number): Observable<Respuesta> {

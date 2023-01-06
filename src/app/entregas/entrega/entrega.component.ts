@@ -9,7 +9,6 @@ import { UbicacionService } from '../../servicios/configuracion/ubicacion.servic
 import { TransportistaService } from '../../servicios/entrega/transportista.service';
 import { Transportista } from '../../modelos/entrega/transportista';
 import { Entrega } from '../../modelos/entrega/entrega';
-import { Direccion } from '../../modelos/cliente/direccion';
 import { EntregaService } from '../../servicios/entrega/entrega.service';
 import { Sesion } from '../../modelos/usuario/sesion';
 import { FacturaService } from '../../servicios/comprobante/factura.service';
@@ -60,13 +59,13 @@ export class EntregaComponent implements OnInit {
         res => {
           if (res.resultado!= null){
             Object.assign(this.entrega, res.resultado as Entrega);
-            this.provincia();
-            this.canton();
+            this.seleccionarProvincia();
+            this.seleccionarCanton();
           } else{
-            this.entrega.direccion.direccion=this.entrega.factura.cliente.direccion.direccion;
-            this.entrega.direccion.ubicacion=this.entrega.factura.cliente.direccion.ubicacion;
-            this.provincia();
-            this.canton();
+            this.entrega.direccion=this.entrega.factura.cliente.direccion;
+            this.entrega.ubicacion=this.entrega.factura.cliente.ubicacion;
+            this.seleccionarProvincia();
+            this.seleccionarCanton();
             this.entrega.telefono=this.entrega.factura.cliente.telefonos[0].numero;
             this.entrega.celular=this.entrega.factura.cliente.celulares[0].numero;
             this.entrega.correo=this.entrega.factura.cliente.correos[0].email;
@@ -80,7 +79,7 @@ export class EntregaComponent implements OnInit {
   }
 
   consultarUbicaciones(){
-    this.ubicacionService.obtenerProvincias().subscribe(
+    this.ubicacionService.consultarProvincias().subscribe(
       res => {
         this.provincias = res.resultado as Ubicacion[];
       },
@@ -100,7 +99,6 @@ export class EntregaComponent implements OnInit {
   crear(event: any) {
     if (event!=null)
       event.preventDefault();
-    this.entrega.normalizar();
     this.entregaService.crear(this.entrega).subscribe(
       res => {
         this.entrega = res.resultado as Entrega;
@@ -113,7 +111,6 @@ export class EntregaComponent implements OnInit {
   actualizar(event: any) {
     if (event!=null)
       event.preventDefault();
-    this.entrega.normalizar();
     this.entregaService.actualizar(this.entrega).subscribe(
       res => {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
@@ -123,8 +120,8 @@ export class EntregaComponent implements OnInit {
     );
   }
 
-  provincia() {
-    this.ubicacionService.obtenerCantones(this.entrega.direccion.ubicacion.provincia).subscribe(
+  seleccionarProvincia() {
+    this.ubicacionService.consultarCantones(this.entrega.ubicacion.provincia).subscribe(
       res => {
           this.cantones = res.resultado as Ubicacion[];
       },
@@ -132,23 +129,13 @@ export class EntregaComponent implements OnInit {
     );
   }
 
-  canton() {
-    this.ubicacionService.obtenerParroquias(this.entrega.direccion.ubicacion.canton).subscribe(
+  seleccionarCanton() {
+    this.ubicacionService.consultarParroquias(this.entrega.ubicacion.canton).subscribe(
       res => {
           this.parroquias = res.resultado as Ubicacion[];
       },
       err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     );
-  }
-  parroquia(){
-    if (this.entrega.direccion.ubicacion.provincia != "" && this.entrega.direccion.ubicacion.canton != "" && this.entrega.direccion.ubicacion.parroquia != ""){
-      this.ubicacionService.obtenerUbicacionIDAsync(this.entrega.direccion.ubicacion).subscribe(
-        res => {
-          this.entrega.direccion.ubicacion=res.resultado as Ubicacion;
-        },
-        err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
-      );
-    }
   }
 
   validarTelefono() {
@@ -186,17 +173,17 @@ export class EntregaComponent implements OnInit {
 
   seleccionarOpcion(event: any){
     if (event.value=="0"){
-      this.entrega.direccion.direccion=this.entrega.factura.cliente.direccion.direccion;
-      this.entrega.direccion.ubicacion=this.entrega.factura.cliente.direccion.ubicacion;
-      this.provincia();
-      this.canton();
+      this.entrega.direccion=this.entrega.factura.cliente.direccion;
+      this.entrega.ubicacion=this.entrega.factura.cliente.ubicacion;
+      this.seleccionarProvincia();
+      this.seleccionarCanton();
       this.entrega.telefono=this.entrega.factura.cliente.telefonos[0].numero;
       this.entrega.celular=this.entrega.factura.cliente.celulares[0].numero;
       this.entrega.correo=this.entrega.factura.cliente.correos[0].email;
       this.entrega.inhabilitar=false;
       this.deshabilitar=true;
     } else if (event.value=="1") {
-      this.entrega.direccion=new Direccion();
+      this.entrega.direccion = valores.vacio;
       this.entrega.telefono= valores.vacio;
       this.entrega.celular= valores.vacio;
       this.entrega.correo= valores.vacio;
@@ -204,7 +191,7 @@ export class EntregaComponent implements OnInit {
       this.deshabilitar=false
     } else if (event.value=="2"){
       this.entrega.transportista=new Transportista();
-      this.entrega.direccion=new Direccion();
+      this.entrega.direccion= valores.vacio;
       this.entrega.telefono= valores.vacio;
       this.entrega.celular= valores.vacio;
       this.entrega.correo= valores.vacio;

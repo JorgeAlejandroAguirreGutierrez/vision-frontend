@@ -24,7 +24,7 @@ export class RetencionService {
     );
   }
 
-  consultar(retencionClienteId: number): Observable<Respuesta> {
+  obtener(retencionClienteId: number): Observable<Respuesta> {
     return this.http.get<Respuesta>(environment.host + urn.ruta + urn.retencionCliente + urn.slash + retencionClienteId, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
@@ -33,7 +33,7 @@ export class RetencionService {
     );
   }
 
-  obtener(): Observable<Respuesta> {
+  consultar(): Observable<Respuesta> {
     return this.http.get(environment.host + urn.ruta + urn.retencionCliente, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {

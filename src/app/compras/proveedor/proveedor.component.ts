@@ -181,127 +181,6 @@ export class ProveedorComponent implements OnInit {
   ngOnInit() {
     this.obtenerEmpresa();
     this.consultar();
-    this.tipoContribuyenteService.consultar().subscribe({
-      next: (res) => {
-        this.tiposContribuyentes = res.resultado as TipoContribuyente[]
-      },
-      error: (err) => {
-        Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.message });
-      }
-    });
-    this.segmentoService.consultar().subscribe({
-      next: (res) => {
-        this.segmentos = res.resultado as Segmento[];
-      },
-      error: (err) => {
-        Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.message });
-      }
-    });
-    this.grupoClienteService.consultar().subscribe({
-      next: (res) => {
-        this.gruposClientes = res.resultado as GrupoCliente[]
-      },
-      error: (err) => {
-        Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.message });
-      }
-    });
-    this.generoService.consultar().subscribe({
-      next: res => {
-        this.generos = res.resultado as Genero[]
-      },
-      error: err => {
-        Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.message });
-      }
-    });
-    this.estadoCivilService.consultar().subscribe({
-      next: res => {
-        this.estadosCiviles = res.resultado as EstadoCivil[]
-      },
-      error: err => {
-        Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.message });
-      }
-    });
-    this.origenIngresoService.consultar().subscribe({
-      next: res => {
-        this.origenesIngresos = res.resultado as OrigenIngreso[]
-      },
-      error: err => {
-        Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.message });
-      }
-    });
-    this.calificacionClienteService.consultar().subscribe({
-      next: res => {
-        this.calificacionesClientes = res.resultado as CalificacionCliente[]
-      },
-      error: err => {
-        Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.message });
-      }
-    });
-    this.plazoCreditoService.consultar().subscribe({
-      next: res => {
-        this.plazosCreditos = res.resultado as PlazoCredito[]
-      },
-      error: err => {
-        Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.message });
-      }
-    });
-    this.tipoPagoService.consultar().subscribe({
-      next: res => {
-        this.tiposPagos = res.resultado as TipoPago[]
-      },
-      error: err => {
-        Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.message });
-      }
-    });
-    this.formaPagoService.consultar().subscribe({
-      next: res => {
-        this.formasPagos = res.resultado as FormaPago[]
-      },
-      error: err => {
-        Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.message });
-      }
-    });
-    this.ubicacionService.obtenerProvincias().subscribe({
-      next: res => {
-        this.provincias = res.resultado as Ubicacion[];
-        this.dependienteProvincias = res.resultado as Ubicacion[]
-      },
-      error: err => {
-        Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.message });
-      }
-    });
-    this.tipoRetencionService.obtenerIvaBien().subscribe({
-      next: res => {
-        this.tiposRetencionesIvaBien = res.resultado as TipoRetencion[]
-      },
-      error: err => {
-        Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.message });
-      }
-    });
-    this.tipoRetencionService.obtenerIvaServicio().subscribe({
-      next: res => {
-        this.tiposRetencionesIvaServicio = res.resultado as TipoRetencion[]
-      },
-      error: err => {
-        Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.message });
-      }
-    });
-    this.tipoRetencionService.obtenerRentaBien().subscribe({
-      next: res => {
-        this.tiposRetencionesRentaBien = res.resultado as TipoRetencion[]
-      },
-      error: err => {
-        Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.message });
-      }
-    });
-    this.tipoRetencionService.obtenerRentaServicio().subscribe({
-      next: res => {
-        this.tiposRetencionesRentaServicio = res.resultado as TipoRetencion[]
-      },
-      error: err => {
-        Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.message });
-      }
-    });
   }
 
   obtenerEmpresa() {
@@ -324,7 +203,6 @@ export class ProveedorComponent implements OnInit {
       next: res => {
         this.proveedorService.validarIdentificacion(this.proveedor.identificacion).subscribe({
           next: res => {
-            console.log(res.resultado);
             this.proveedor.tipoIdentificacion = res.resultado.tipo_identificacion;
             this.proveedor.tipoContribuyente = res.resultado.tipo_contribuyente as TipoContribuyente
             if (this.proveedor.tipoContribuyente == null) {
@@ -368,48 +246,24 @@ export class ProveedorComponent implements OnInit {
     });
   }
 
-  async crear(event: any) {
+  crear(event: any) {
     if (event != null)
       event.preventDefault();
     //AGREGAR DEPENDIENTE
-    if (this.dependiente.razonSocial != valores.vacio && this.dependiente.direccion.direccion != valores.vacio) {
+    if (this.dependiente.razonSocial != valores.vacio && this.dependiente.direccion != valores.vacio) {
       if (this.dependienteTelefono.numero != valores.vacio)
         this.dependiente.telefonos.push(this.dependienteTelefono);
       if (this.dependienteTelefono.numero != valores.vacio)
         this.dependiente.celulares.push(this.dependienteCelular);
       if (this.dependienteCorreo.email != valores.vacio)
         this.dependiente.correos.push(this.dependienteCorreo);
-      let ubicacion: Ubicacion = new Ubicacion();
-      ubicacion.provincia = this.dependienteProvincia;
-      ubicacion.canton = this.dependienteCanton;
-      ubicacion.parroquia = this.dependienteParroquia;
-      if (ubicacion.provincia != valores.vacio && ubicacion.canton != valores.vacio && ubicacion.parroquia != valores.vacio) {
-        await this.ubicacionService.obtenerUbicacionID(ubicacion).then(
-          res => {
-            this.dependiente.direccion.ubicacion = res.resultado as Ubicacion;
-          },
-          err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.message })
-        );
-      }
-      this.proveedor.dependientes.push(this.dependiente);
+      if (this.telefono.numero != valores.vacio)
+        this.proveedor.telefonos.push(this.telefono);
+      if (this.celular.numero != valores.vacio)
+        this.proveedor.celulares.push(this.celular);
+      if (this.correo.email != valores.vacio)
+        this.proveedor.correos.push(this.correo);
     }
-
-    //proveedor
-    if (this.proveedor.direccion.ubicacion.provincia != "" && this.proveedor.direccion.ubicacion.canton != "" && this.cliente.direccion.ubicacion.parroquia != "") {
-      await this.ubicacionService.obtenerUbicacionID(this.proveedor.direccion.ubicacion).then(
-        res => {
-          this.proveedor.direccion.ubicacion = res.resultado as Ubicacion;
-        },
-        err => Swal.fire(error, err.error.mensaje, error_swal)
-      );
-    }
-    //this.proveedor.estacion = this.sesion.estacion;
-    if (this.telefono.numero != valores.vacio)
-      this.proveedor.telefonos.push(this.telefono);
-    if (this.celular.numero != valores.vacio)
-      this.proveedor.celulares.push(this.celular);
-    if (this.correo.email != valores.vacio)
-      this.proveedor.correos.push(this.correo);
     this.proveedorService.crear(this.proveedor).subscribe({
       next: res => {
         this.proveedor = res.resultado as Proveedor;
@@ -422,25 +276,13 @@ export class ProveedorComponent implements OnInit {
     });
   }
   
-  async crearDependiente() {
+  crearDependiente() {
     if (this.dependienteTelefono.numero != undefined)
       this.dependiente.telefonos.push(this.dependienteTelefono);
     if (this.dependienteTelefono.numero != undefined)
       this.dependiente.celulares.push(this.dependienteCelular);
     if (this.dependienteCorreo.email != undefined)
       this.dependiente.correos.push(this.dependienteCorreo);
-    let ubicacion: Ubicacion = new Ubicacion();
-    ubicacion.provincia = this.dependienteProvincia;
-    ubicacion.canton = this.dependienteCanton;
-    ubicacion.parroquia = this.dependienteParroquia;
-    if (ubicacion.provincia != "" && ubicacion.canton != "" && ubicacion.parroquia != "") {
-      await this.ubicacionService.obtenerUbicacionID(ubicacion).then(
-        res => {
-          this.dependiente.direccion.ubicacion = res.resultado as Ubicacion;
-        },
-        err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.message })
-      );
-    }
     this.proveedor.dependientes.push(this.dependiente);
     this.dependiente = new Dependiente();
     this.habilitarCelularTelefonoCorreoDependiente = false;
@@ -479,30 +321,7 @@ export class ProveedorComponent implements OnInit {
         this.dependiente.celulares.push(this.dependienteCelular);
       if (this.dependienteCorreo.email != valores.vacio)
         this.dependiente.correos.push(this.dependienteCorreo);
-      let ubicacion: Ubicacion = new Ubicacion();
-      ubicacion.provincia = this.dependienteProvincia;
-      ubicacion.canton = this.dependienteCanton;
-      ubicacion.parroquia = this.dependienteParroquia;
-      if (ubicacion.provincia != valores.vacio && ubicacion.canton != valores.vacio && ubicacion.parroquia != valores.vacio) {
-        await this.ubicacionService.obtenerUbicacionID(ubicacion).then(
-          res => {
-            this.dependiente.direccion.ubicacion = res.resultado as Ubicacion;
-          },
-          err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.message })
-        );
-      }
-      this.proveedor.dependientes.push(this.dependiente);
     }
-    //proveedor
-    if (this.proveedor.direccion.ubicacion.provincia != valores.vacio && this.proveedor.direccion.ubicacion.canton != valores.vacio && this.cliente.direccion.ubicacion.parroquia != valores.vacio) {
-      await this.ubicacionService.obtenerUbicacionID(this.proveedor.direccion.ubicacion).then(
-        res => {
-          this.proveedor.direccion.ubicacion = res.resultado as Ubicacion;
-        },
-        err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.message })
-      );
-    }
-
     this.proveedorService.actualizar(this.proveedor).subscribe({
       next: res => {
         if (res.resultado != null) {
@@ -619,10 +438,10 @@ export class ProveedorComponent implements OnInit {
   }
 
   ubicacionNormalizarActualizar() {
-    if (this.proveedor.direccion.ubicacion != null) {
-      this.proveedorProvincia = this.proveedor.direccion.ubicacion.provincia;
-      this.proveedorCanton = this.proveedor.direccion.ubicacion.canton;
-      this.proveedorParroquia = this.proveedor.direccion.ubicacion.parroquia;
+    if (this.proveedor.ubicacion != null) {
+      this.proveedorProvincia = this.proveedor.ubicacion.provincia;
+      this.proveedorCanton = this.proveedor.ubicacion.canton;
+      this.proveedorParroquia = this.proveedor.ubicacion.parroquia;
     }
     this.provincia(this.proveedorProvincia);
     this.canton(this.proveedorCanton);
@@ -782,8 +601,8 @@ export class ProveedorComponent implements OnInit {
 
 
   provincia(provincia: string) {
-    this.proveedor.direccion.ubicacion.provincia = provincia;
-    this.ubicacionService.obtenerCantones(provincia).subscribe(
+    this.proveedor.ubicacion.provincia = provincia;
+    this.ubicacionService.consultarCantones(provincia).subscribe(
       res => {
         if (res.resultado != null) {
           this.cantones = res.resultado as Ubicacion[];
@@ -796,8 +615,8 @@ export class ProveedorComponent implements OnInit {
   }
 
   seleccionarDependienteProvincia(provincia: string) {
-    this.dependiente.direccion.ubicacion.provincia = provincia;
-    this.ubicacionService.obtenerCantones(provincia).subscribe(
+    this.dependiente.ubicacion.provincia = provincia;
+    this.ubicacionService.consultarCantones(provincia).subscribe(
       res => {
         if (res.resultado != null) {
           this.dependienteCantones = res.resultado as Ubicacion[];
@@ -810,8 +629,8 @@ export class ProveedorComponent implements OnInit {
   }
 
   canton(canton: string) {
-    this.proveedor.direccion.ubicacion.canton = canton;
-    this.ubicacionService.obtenerParroquias(canton).subscribe(
+    this.proveedor.ubicacion.canton = canton;
+    this.ubicacionService.consultarParroquias(canton).subscribe(
       res => {
         if (res.resultado != null) {
           this.parroquias = res.resultado as Ubicacion[];
@@ -824,8 +643,8 @@ export class ProveedorComponent implements OnInit {
   }
 
   seleccionarAuDependienteCanton(canton: string) {
-    this.dependiente.direccion.ubicacion.provincia = canton;
-    this.ubicacionService.obtenerParroquias(canton).subscribe(
+    this.dependiente.ubicacion.provincia = canton;
+    this.ubicacionService.consultarParroquias(canton).subscribe(
       res => {
         if (res.resultado != null) {
           this.dependienteParroquias = res.resultado as Ubicacion[];
@@ -838,11 +657,11 @@ export class ProveedorComponent implements OnInit {
   }
 
   parroquia(parroquia: string) {
-    this.proveedor.direccion.ubicacion.parroquia = parroquia;
+    this.proveedor.ubicacion.parroquia = parroquia;
   }
 
   seleccionarAuxiliarParroquia(parroquia: string) {
-    this.dependiente.direccion.ubicacion.parroquia = parroquia;
+    this.dependiente.ubicacion.parroquia = parroquia;
   }
 
   validarSexoEstadoCivilOrigenIngreso() {
@@ -882,21 +701,15 @@ export class ProveedorComponent implements OnInit {
   }
 
   dialogoMapas(): void {
-    //console.log('El dialogo para selección de grupo producto fue abierto');
     const dialogRef = this.dialog.open(DialogoMapaProveedorComponent, {
       width: '80%',
-      // Para enviar datos
-      //data: { usuario: this.usuario, clave: this.clave, grupo_producto_recibido: "" }
       data: this.posicionGeografica as Coordenada
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      //console.log('El dialogo para selección de coordenada fue cerrado');
-      console.log(result);
       if (result) {
         this.posicionGeografica = result as Coordenada;
         this.posicionCentral = this.posicionGeografica;
-       //console.log(result);
       }
     });
   }

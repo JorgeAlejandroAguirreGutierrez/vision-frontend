@@ -265,7 +265,7 @@ export class FacturaCompraComponent implements OnInit {
         Swal.fire('Error', err.error.mensaje, 'error')
       }
     );
-    this.ubicacionService.obtenerProvincias().subscribe(
+    this.ubicacionService.consultarProvincias().subscribe(
       res => {
         this.provincias = res.resultado as Ubicacion[];
         this.dependienteProvincias = res.resultado as Ubicacion[]
@@ -274,7 +274,7 @@ export class FacturaCompraComponent implements OnInit {
         Swal.fire('Error', err.error.mensaje, 'error')
       }
     );
-    this.tipoRetencionService.obtenerIvaBien().subscribe(
+    this.tipoRetencionService.consultarIvaBien().subscribe(
       res => {
         this.tiposRetencionesIvaBien = res.resultado as TipoRetencion[]
       },
@@ -282,7 +282,7 @@ export class FacturaCompraComponent implements OnInit {
         Swal.fire('Error', err.error.mensaje, 'error')
       }
     );
-    this.tipoRetencionService.obtenerIvaServicio().subscribe(
+    this.tipoRetencionService.consultarIvaServicio().subscribe(
       res => {
         this.tiposRetencionesIvaServicio = res.resultado as TipoRetencion[]
       },
@@ -290,7 +290,7 @@ export class FacturaCompraComponent implements OnInit {
         Swal.fire('Error', err.error.mensaje, 'error')
       }
     );
-    this.tipoRetencionService.obtenerRentaBien().subscribe(
+    this.tipoRetencionService.consultarRentaBien().subscribe(
       res => {
         this.tiposRetencionesRentaBien = res.resultado as TipoRetencion[]
       },
@@ -298,7 +298,7 @@ export class FacturaCompraComponent implements OnInit {
         Swal.fire('Error', err.error.mensaje, 'error')
       }
     );
-    this.tipoRetencionService.obtenerRentaServicio().subscribe(
+    this.tipoRetencionService.consultarRentaServicio().subscribe(
       res => {
         this.tiposRetencionesRentaServicio = res.resultado as TipoRetencion[]
       },
@@ -314,13 +314,6 @@ export class FacturaCompraComponent implements OnInit {
       this.crear(null);
     if (($event.shiftKey || $event.metaKey) && $event.keyCode == 78)
       this.nuevo(null);
-    if (($event.shiftKey || $event.metaKey) && $event.keyCode == 69)
-    console.log('SHIFT + E');
-    if (($event.shiftKey || $event.metaKey) && $event.keyCode == 66)
-      console.log('SHIFT + B');
-    if (($event.shiftKey || $event.metaKey) && $event.keyCode == 65)
-      console.log('SHIFT + A');
-
   }
 
   construirCliente() {
@@ -343,10 +336,10 @@ export class FacturaCompraComponent implements OnInit {
   }
 
   ubicacionNormalizarActualizar(){
-    if (this.cliente.direccion.ubicacion!= null){
-      this.clienteProvincia=this.cliente.direccion.ubicacion.provincia;
-      this.clienteCanton=this.cliente.direccion.ubicacion.canton;
-      this.clienteParroquia=this.cliente.direccion.ubicacion.parroquia;
+    if (this.cliente.ubicacion!= null){
+      this.clienteProvincia=this.cliente.ubicacion.provincia;
+      this.clienteCanton=this.cliente.ubicacion.canton;
+      this.clienteParroquia=this.cliente.ubicacion.parroquia;
     }
     this.provincia(this.clienteProvincia);
     this.canton(this.clienteCanton);
@@ -519,18 +512,6 @@ export class FacturaCompraComponent implements OnInit {
       this.dependiente.celulares.push(this.dependienteCelular);
     if (this.dependienteCorreo.email!=undefined)
       this.dependiente.correos.push(this.dependienteCorreo);
-    let ubicacion: Ubicacion= new Ubicacion();
-    ubicacion.provincia=this.dependienteProvincia;
-    ubicacion.canton=this.dependienteCanton;
-    ubicacion.parroquia=this.dependienteParroquia;
-    if (ubicacion.provincia != "" && ubicacion.canton != "" && ubicacion.parroquia != ""){
-      await this.ubicacionService.obtenerUbicacionID(ubicacion).then(
-        res => {
-          this.dependiente.direccion.ubicacion=res.resultado as Ubicacion;
-        },
-        err => Swal.fire('Error', err.error.mensaje, 'error')
-      );
-    }
     this.cliente.dependientes.push(this.dependiente);
     this.dependiente=new Dependiente();
     this.habilitarCelularTelefonoCorreoDependiente=false;
@@ -552,36 +533,14 @@ export class FacturaCompraComponent implements OnInit {
     if (event!=null)
       event.preventDefault();
     //AGREGAR AUXILIAR
-    if (this.dependiente.razonSocial != "" && this.dependiente.direccion.direccion != "" ){
+    if (this.dependiente.razonSocial != "" && this.dependiente.direccion != "" ){
       if (this.dependienteTelefono.numero!="")
         this.dependiente.telefonos.push(this.dependienteTelefono);
       if (this.dependienteTelefono.numero!="")
         this.dependiente.celulares.push(this.dependienteCelular);
       if (this.dependienteCorreo.email!="")
         this.dependiente.correos.push(this.dependienteCorreo);
-      let ubicacion: Ubicacion= new Ubicacion();
-      ubicacion.provincia=this.dependienteProvincia;
-      ubicacion.canton=this.dependienteCanton;
-      ubicacion.parroquia=this.dependienteParroquia;
-      if (ubicacion.provincia != "" && ubicacion.canton != "" && ubicacion.parroquia != ""){
-        await this.ubicacionService.obtenerUbicacionID(ubicacion).then(
-          res => {
-            this.dependiente.direccion.ubicacion=res.resultado as Ubicacion;
-          },
-          err => Swal.fire('Error', err.error.mensaje, 'error')
-        );
-      }
       this.cliente.dependientes.push(this.dependiente);
-    }
-    
-    //CLIENTE
-    if (this.cliente.direccion.ubicacion.provincia != "" && this.cliente.direccion.ubicacion.canton != "" && this.cliente.direccion.ubicacion.parroquia != ""){
-      await this.ubicacionService.obtenerUbicacionID(this.cliente.direccion.ubicacion).then(
-        res => {
-          this.cliente.direccion.ubicacion= res.resultado as Ubicacion;
-        },
-        err => Swal.fire('Error', err.error.mensaje, 'error')
-      );
     }
     this.sesion= this.sesionService.getSesion();
     this.cliente.estacion=this.sesion.usuario.estacion;
@@ -627,37 +586,15 @@ export class FacturaCompraComponent implements OnInit {
     if (event!=null)
       event.preventDefault();
     //AGREGAR AUXILIARES
-    if (this.dependiente.razonSocial != undefined ){
+    if (this.dependiente.razonSocial != undefined ) {
       if (this.dependienteTelefono.numero!=undefined)
         this.dependiente.telefonos.push(this.dependienteTelefono);
       if (this.dependienteTelefono.numero!=undefined)
         this.dependiente.celulares.push(this.dependienteCelular);
       if (this.dependienteCorreo.email!=undefined)
         this.dependiente.correos.push(this.dependienteCorreo);
-      let ubicacion: Ubicacion= new Ubicacion();
-      ubicacion.provincia=this.dependienteProvincia;
-      ubicacion.canton=this.dependienteCanton;
-      ubicacion.parroquia=this.dependienteParroquia;
-      if (ubicacion.provincia != "" && ubicacion.canton != "" && ubicacion.parroquia != ""){
-        await this.ubicacionService.obtenerUbicacionID(ubicacion).then(
-          res => {
-            this.dependiente.direccion.ubicacion=res.resultado as Ubicacion;
-          },
-          err => Swal.fire('Error', err.error.mensaje, 'error')
-        );
-      }
       this.cliente.dependientes.push(this.dependiente);
-    }
-    //CLIENTE
-    if (this.cliente.direccion.ubicacion.provincia != "" && this.cliente.direccion.ubicacion.canton != "" && this.cliente.direccion.ubicacion.parroquia != ""){
-      await this.ubicacionService.obtenerUbicacionID(this.cliente.direccion.ubicacion).then(
-        res => {
-          this.cliente.direccion.ubicacion= res.resultado as Ubicacion;
-        },
-        err => Swal.fire('Error', err.error.mensaje, 'error')
-      );
-    }
-    
+    }    
     this.clienteService.actualizar(this.cliente).subscribe(
       res => {
         if (res.resultado!= null) {
@@ -683,8 +620,8 @@ export class FacturaCompraComponent implements OnInit {
   }
 
   provincia(provincia: string) {
-    this.cliente.direccion.ubicacion.provincia=provincia;
-    this.ubicacionService.obtenerCantones(provincia).subscribe(
+    this.cliente.ubicacion.provincia=provincia;
+    this.ubicacionService.consultarCantones(provincia).subscribe(
       res => {
         if (res.resultado!= null) {
           this.cantones = res.resultado as Ubicacion[];
@@ -695,8 +632,8 @@ export class FacturaCompraComponent implements OnInit {
     );
   }
   seleccionar_dependiente_provincia(provincia: string) {
-    this.dependiente.direccion.ubicacion.provincia=provincia;
-    this.ubicacionService.obtenerCantones(provincia).subscribe(
+    this.dependiente.ubicacion.provincia=provincia;
+    this.ubicacionService.consultarCantones(provincia).subscribe(
       res => {
         if (res.resultado!= null) {
           this.dependienteCantones=res.resultado as Ubicacion[];
@@ -709,8 +646,8 @@ export class FacturaCompraComponent implements OnInit {
   }
 
   canton(canton: string) {
-    this.cliente.direccion.ubicacion.canton=canton;
-    this.ubicacionService.obtenerParroquias(canton).subscribe(
+    this.cliente.ubicacion.canton=canton;
+    this.ubicacionService.consultarParroquias(canton).subscribe(
       res => {
         if (res.resultado!= null) {
           this.parroquias = res.resultado as Ubicacion[];
@@ -722,8 +659,8 @@ export class FacturaCompraComponent implements OnInit {
   }
 
   seleccionarDependienteCanton(canton: string) {
-    this.dependiente.direccion.ubicacion.provincia=canton;
-    this.ubicacionService.obtenerParroquias(canton).subscribe(
+    this.dependiente.ubicacion.provincia=canton;
+    this.ubicacionService.consultarParroquias(canton).subscribe(
       res => {
         if (res.resultado!= null) {
           this.dependienteParroquias= res.resultado as Ubicacion[];
@@ -735,11 +672,11 @@ export class FacturaCompraComponent implements OnInit {
   }
 
   parroquia(parroquia: string) {
-    this.cliente.direccion.ubicacion.parroquia=parroquia;
+    this.cliente.ubicacion.parroquia=parroquia;
   }
 
   seleccionar_dependiente_parroquia(parroquia: string) {
-    this.dependiente.direccion.ubicacion.parroquia=parroquia;
+    this.dependiente.ubicacion.parroquia=parroquia;
   }
 
   validarTelefono() {

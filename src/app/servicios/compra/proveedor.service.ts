@@ -13,14 +13,7 @@ import { Proveedor } from '../../modelos/compra/proveedor';
 })
 export class ProveedorService {
 
-  private messageSource = new BehaviorSubject(0);
-  currentMessage = this.messageSource.asObservable();
-
   constructor(private http: HttpClient) { }
-
-  enviar(proveedorId: number) {
-    this.messageSource.next(proveedorId);
-  }
 
   crear(proveedor: Proveedor): Observable<Respuesta> {
     return this.http.post(environment.host + urn.ruta + urn.proveedor, proveedor, options).pipe(
@@ -40,18 +33,16 @@ export class ProveedorService {
     );
   }
 
-  async obtener_proveedores_async(nombre_proveedor: string): Promise<Respuesta> {
-    let params = new HttpParams().set("razon_social", nombre_proveedor)
-    return await lastValueFrom(this.http.get<Respuesta>(environment.host + urn.ruta + urn.proveedor + urn.consultarProveedor, {params: params, headers: options.headers}).pipe(
+  consultar(): Observable<Respuesta> {
+    return this.http.get(environment.host + urn.ruta + urn.proveedor, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);
-      })
-    ));
+      }));
   }
 
-  consultar(): Observable<Respuesta> {
-    return this.http.get(environment.host + urn.ruta + urn.proveedor, options).pipe(
+  consultarActivos(): Observable<Respuesta> {
+    return this.http.get(environment.host + urn.ruta + urn.proveedor + urn.consultarActivos, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);

@@ -839,19 +839,19 @@
                             {{dependiente.razonSocial}}
                         </td>
                         <td>
-                            {{dependiente.direccion.direccion}}
+                            {{dependiente.direccion}}
                         </td>
                         <td>
-                            <ng-container *ngIf="dependiente.direccion.ubicacion != null">
-                                {{dependiente.direccion.ubicacion.provincia}}</ng-container>
+                            <ng-container *ngIf="dependiente.ubicacion != null">
+                                {{dependiente.ubicacion.provincia}}</ng-container>
                         </td>
                         <td>
-                            <ng-container *ngIf="dependiente.direccion.ubicacion != null">
-                                {{dependiente.direccion.ubicacion.canton}}</ng-container>
+                            <ng-container *ngIf="dependiente.ubicacion != null">
+                                {{dependiente.ubicacion.canton}}</ng-container>
                         </td>
                         <td>
-                            <ng-container *ngIf="dependiente.direccion.ubicacion != null">
-                                {{dependiente.direccion.ubicacion.parroquia}}</ng-container>
+                            <ng-container *ngIf="dependiente.ubicacion != null">
+                                {{dependiente.ubicacion.parroquia}}</ng-container>
                         </td>
                         <td>
                             <button class="btn btn-primary btn-circle " (click)="eliminarDependiente(i) ">
@@ -890,7 +890,7 @@
                             {{dependiente.razonSocial}}
                         </td>
                         <td>
-                            {{dependiente.direccion.direccion}}
+                            {{dependiente.direccion}}
                         </td>
                         <td>
                             <table class="table table-bordered ">
@@ -939,7 +939,7 @@
                             {{dependiente.razonSocial}}
                         </td>
                         <td>
-                            {{dependiente.direccion.direccion}}
+                            {{dependiente.direccion}}
                         </td>
                         <td>
                             <table class="table table-bordered ">
@@ -988,7 +988,7 @@
                             {{dependiente.razonSocial}}
                         </td>
                         <td>
-                            {{dependiente.direccion.direccion}}
+                            {{dependiente.direccion}}
                         </td>
                         <td>
                             <table class="table table-bordered ">

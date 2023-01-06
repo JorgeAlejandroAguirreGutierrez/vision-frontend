@@ -321,7 +321,7 @@ export class FacturaComponent implements OnInit {
   }
 
   consultarClientes() {
-     this.clienteService.consultarAsync().then(
+     this.clienteService.consultarActivos().subscribe(
       res => {
         this.clientes = res.resultado as Cliente[]
       },
@@ -378,10 +378,10 @@ export class FacturaComponent implements OnInit {
   }
 
   seleccionarRazonSocialCliente() {
-    let cliente_id=undefined;
-    cliente_id=this.seleccionRazonSocialCliente.value.id;
-    this.dependienteBuscar.cliente.id=cliente_id;
-    this.clienteService.obtenerAsync(cliente_id).then(
+    let clienteId=undefined;
+    clienteId=this.seleccionRazonSocialCliente.value.id;
+    this.dependienteBuscar.cliente.id=clienteId;
+    this.clienteService.obtener(clienteId).subscribe(
       res => {
         Object.assign(this.factura.cliente, res.resultado as Cliente);
         this.factura.cliente.normalizar();
@@ -409,19 +409,13 @@ export class FacturaComponent implements OnInit {
       },
       err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     );
-    this.dependienteService.consultarClienteID(this.dependienteBuscar).subscribe(
-      res => {
-        this.dependientes = res.resultado as Dependiente[]
-      },
-      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
-    );
   }
 
   seleccionarIdentificacionCliente() {
     let cliente_id=undefined;
     cliente_id=this.seleccionIdentificacionCliente.value.id;
     this.dependienteBuscar.cliente.id=cliente_id;
-    this.clienteService.obtenerAsync(cliente_id).then(
+    this.clienteService.obtener(cliente_id).subscribe(
       res => {
         Object.assign(this.factura.cliente,res.resultado as Cliente);
         this.factura.cliente.normalizar();
@@ -445,12 +439,6 @@ export class FacturaComponent implements OnInit {
           this.seleccionRazonSocialClienteFactura.enable();
         }
         this.habilitarClienteTce=false;
-      },
-      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
-    );
-    this.dependienteService.consultarClienteID(this.dependienteBuscar).subscribe(
-      res => {
-        this.dependientes = res.resultado as Dependiente[]
       },
       err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     );
@@ -860,7 +848,7 @@ export class FacturaComponent implements OnInit {
     }
   }
   limpiarCliente(){
-    this.factura.cliente.direccion.direccion="";
+    this.factura.cliente.direccion="";
     this.primerTelefonoCliente="";
     this.primerCelularCliente="";
     this.primerCorreoCliente="";
@@ -878,7 +866,7 @@ export class FacturaComponent implements OnInit {
     }
   }
   limpiarClienteFactura(){
-    this.factura.clienteFactura.direccion.direccion="";
+    this.factura.clienteFactura.direccion="";
     this.primerTelefonoClienteFactura="";
     this.primerCelularClienteFactura="";
     this.primerCorreoClienteFactura="";

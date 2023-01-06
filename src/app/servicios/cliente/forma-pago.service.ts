@@ -13,14 +13,7 @@ import { Router } from '@angular/router';
 })
 export class FormaPagoService {
 
-  private messageSource = new BehaviorSubject(0);
-  currentMessage = this.messageSource.asObservable();
-
   constructor(private http: HttpClient, private router: Router) { }
-
-  enviar(formaPagoId: number) {
-    this.messageSource.next(formaPagoId);
-  }
 
   crear(formaPago: FormaPago): Observable<Respuesta> {
     return this.http.post(environment.host + urn.ruta + urn.formaPago, formaPago, options).pipe(
@@ -42,6 +35,14 @@ export class FormaPagoService {
 
   consultar(): Observable<Respuesta> {
     return this.http.get(environment.host + urn.ruta + urn.formaPago, options).pipe(
+      map(response => response as Respuesta),
+      catchError(err => {
+        return throwError(()=>err);
+      }));
+  }
+
+  consultarActivos(): Observable<Respuesta> {
+    return this.http.get(environment.host + urn.ruta + urn.formaPago + urn.consultarActivos, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);

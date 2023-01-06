@@ -79,7 +79,6 @@ export class TablaMovimientoContableComponent implements OnInit {
 
   llenarDataSourceMovimientoContable(movimientosContables : MovimientoContable[]){
     this.ordenarAsc(movimientosContables, 'id');
-    //console.log(gruposProductos);
     this.dataSourceMovimientoContable = new MatTableDataSource(this.movimientosContables);
     this.dataSourceMovimientoContable.filterPredicate = (data: MovimientoContable, filter: string): boolean =>
       data.codigo.toUpperCase().includes(filter) || data.afectacionContable.abreviatura.toUpperCase().includes(filter) || data.inventario.cuenta.toUpperCase().includes(filter) || data.costoVenta.cuenta.toUpperCase().includes(filter) || 

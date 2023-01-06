@@ -113,7 +113,7 @@
                         <mat-form-field appearance="standard">
                             <mat-label>Provincia</mat-label>
                             <mat-select type="text" [(ngModel)]="establecimiento.ubicacion.provincia"
-                                (selectionChange)="provincia($event.value)" class="form-control-sm">
+                                (selectionChange)="seleccionarProvincia()" class="form-control-sm">
                                 <mat-option *ngFor="let provincia of provincias" [value]="provincia.provincia">
                                     {{provincia.provincia}}
                                 </mat-option>
@@ -124,7 +124,7 @@
                         <mat-form-field appearance="standard">
                             <mat-label>Canton</mat-label>
                             <mat-select type="text" [(ngModel)]="establecimiento.ubicacion.canton"
-                                (selectionChange)="canton($event.value)" class="form-control-sm">
+                                (selectionChange)="seleccionarCanton()" class="form-control-sm">
                                 <mat-option *ngFor="let canton of cantones" [value]="canton.canton">
                                     {{canton.canton}}
                                 </mat-option>
@@ -134,8 +134,7 @@
                     <div class="col-4">
                         <mat-form-field appearance="standard">
                             <mat-label>Parroquia</mat-label>
-                            <mat-select type="text" [(ngModel)]="establecimiento.ubicacion.parroquia" class="form-control-sm"
-                                (selectionChange)="parroquia($event.value)">
+                            <mat-select type="text" [(ngModel)]="establecimiento.ubicacion.parroquia" class="form-control-sm">
                                 <mat-option *ngFor="let parroquia of parroquias" [value]="parroquia.parroquia">
                                     {{parroquia.parroquia}}
                                 </mat-option>

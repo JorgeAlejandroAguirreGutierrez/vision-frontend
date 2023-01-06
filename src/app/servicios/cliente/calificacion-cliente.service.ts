@@ -3,7 +3,7 @@ import { Respuesta } from '../../respuesta';
 import { urn, options } from '../../constantes';
 import {HttpClient} from '@angular/common/http';
 import { map, catchError } from 'rxjs/operators';
-import { Observable, throwError, BehaviorSubject } from 'rxjs';
+import { Observable, throwError } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { CalificacionCliente } from '../../modelos/cliente/calificacion-cliente';
 
@@ -12,14 +12,7 @@ import { CalificacionCliente } from '../../modelos/cliente/calificacion-cliente'
 })
 export class CalificacionClienteService {
 
-  private messageSource = new BehaviorSubject(0);
-  currentMessage = this.messageSource.asObservable();
-
   constructor(private http: HttpClient) { }
-
-  enviar(calificacionClienteId: number) {
-    this.messageSource.next(calificacionClienteId);
-  }
 
   crear(calificacionCliente: CalificacionCliente): Observable<Respuesta> {
     return this.http.post(environment.host + urn.ruta + urn.calificacionCliente, calificacionCliente, options).pipe(
@@ -41,6 +34,14 @@ export class CalificacionClienteService {
 
   consultar(): Observable<Respuesta> {
     return this.http.get(environment.host + urn.ruta + urn.calificacionCliente, options).pipe(
+      map(response => response as Respuesta),
+      catchError(err => {
+        return throwError(()=>err);
+      }));
+  }
+
+  consultarActivos(): Observable<Respuesta> {
+    return this.http.get(environment.host + urn.ruta + urn.calificacionCliente + urn.consultarActivos, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);

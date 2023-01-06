@@ -1,25 +1,18 @@
 <nav class="navbar-light nav-fijo">
     <ul class="navbar-nav">
+        <li class="nav-item">
+            <a class="nav-link" title="Nuevo" role="button" (click)="nuevo($event)">
+                <mat-icon>note_add</mat-icon>
+            </a>
+        </li>
         <li class="nav-item" *ngIf="cliente.id==0">
             <a class="nav-link" title="Guardar" role="button" (click)="crear($event)">
                 <mat-icon>save</mat-icon>
             </a>
         </li>
-        <ng-container *ngIf="cliente.id!=0">
-            <li class="nav-item" *ngIf="verOpcionEditarCliente">
-                <a class="nav-link" title="Actualizar" role="button" (click)="editar($event)">
-                    <mat-icon>edit</mat-icon>
-                </a>
-            </li>
-            <li class="nav-item" *ngIf="!verOpcionEditarCliente">
-                <a class="nav-link" title="Actualizar" role="button" (click)="actualizar($event)">
-                    <mat-icon>update</mat-icon>
-                </a>
-            </li>
-        </ng-container>
-        <li class="nav-item">
-            <a class="nav-link" title="Nuevo" role="button" (click)="limpiar()">
-                <mat-icon>file_copy</mat-icon>
+        <li class="nav-item" *ngIf="cliente.id!=0">
+            <a class="nav-link" title="Actualizar" role="button" (click)="actualizar($event)">
+                <mat-icon>update</mat-icon>
             </a>
         </li>
         <li class="nav-item" *ngIf="cliente.id!=0">
@@ -60,10 +53,9 @@
                 <div class="col-1">
                     <mat-form-field appearance="standard">
                         <mat-label>Documento</mat-label>
-                        <mat-select [ngModel]="cliente.tipoIdentificacion?.id" class="form-control-sm" disabled>
-                            <mat-option *ngFor="let tipoIdentificacion of tiposIdentificaciones"
-                                [value]="tipoIdentificacion.id">
-                                {{tipoIdentificacion.codigoSri}}
+                        <mat-select [(ngModel)]="cliente.tipoIdentificacion" [compareWith]="compareFn" class="form-control-sm" [disabled]="true">
+                            <mat-option *ngFor="let tipoIdentificacion of tiposIdentificaciones" [value]="tipoIdentificacion">
+                                {{tipoIdentificacion.codigoSRI}}
                             </mat-option>
                         </mat-select>
                     </mat-form-field>
@@ -71,11 +63,8 @@
                 <div class="col-2">
                     <mat-form-field appearance="standard">
                         <mat-label>Contribuyente</mat-label>
-                        <mat-select [ngModel]="cliente.tipoContribuyente?.id"
-                            oninput="this.value = this.value.toUpperCase()" [disabled]="deshabilitarTipoContribuyente"
-                            (selectionChange)="validarTipoContribuyente()" class="form-control-sm">
-                            <mat-option *ngFor="let tipoContribuyente of tiposContribuyentes"
-                                [value]="tipoContribuyente.id">
+                        <mat-select [ngModel]="cliente.tipoContribuyente" [compareWith]="compareFn" [disabled]="deshabilitarTipoContribuyente" class="form-control-sm">
+                            <mat-option *ngFor="let tipoContribuyente of tiposContribuyentes" [value]="tipoContribuyente">
                                 {{tipoContribuyente.subtipo}}
                             </mat-option>
                         </mat-select>
@@ -84,8 +73,8 @@
                 <div class="col-2">
                     <mat-form-field appearance="standard">
                         <mat-label>Segmento Venta</mat-label>
-                        <mat-select [(ngModel)]="cliente.segmento.id" class="form-control-sm" [disabled]="deshabilitarCliente">
-                            <mat-option *ngFor="let segmento of segmentos" [value]="segmento.id">
+                        <mat-select [(ngModel)]="cliente.segmento" [compareWith]="compareFn" class="form-control-sm" [disabled]="deshabilitarCliente">
+                            <mat-option *ngFor="let segmento of segmentos" [value]="segmento">
                                 {{segmento.descripcion}}
                             </mat-option>
                         </mat-select>
@@ -94,8 +83,8 @@
                 <div class="col-3">
                     <mat-form-field appearance="standard">
                         <mat-label>Grupo</mat-label>
-                        <mat-select [(ngModel)]="cliente.grupoCliente.id" class="form-control-sm" [disabled]="deshabilitarCliente">
-                            <mat-option *ngFor="let grupoCliente of gruposClientes" [value]="grupoCliente.id">
+                        <mat-select [(ngModel)]="cliente.grupoCliente" [compareWith]="compareFn" class="form-control-sm" [disabled]="deshabilitarCliente">
+                            <mat-option *ngFor="let grupoCliente of gruposClientes" [value]="grupoCliente">
                                 {{grupoCliente.descripcion}}
                             </mat-option>
                         </mat-select>
@@ -119,18 +108,29 @@
                     </mat-form-field>
                 </div>
                 <div class="col-1">
-                    <mat-checkbox [(ngModel)]="cliente.tipoContribuyente.obligadoContabilidad" class="form-control-sm"
-                        [disabled]="deshabilitarCliente" color="primary">Oblig.</mat-checkbox>
+                    <mat-form-field appearance="standard">
+                        <mat-label>Oblig.</mat-label>
+                        <mat-select [(ngModel)]="cliente.obligadoContabilidad"
+                            class="form-control-sm">
+                            <mat-option [value]="si">{{si}}</mat-option>
+                            <mat-option [value]="no">{{no}}</mat-option>
+                        </mat-select>
+                    </mat-form-field>
                 </div>
                 <div class="col-1">
-                    <mat-checkbox [(ngModel)]="cliente.especial" class="form-control-sm" 
-                        [disabled]="deshabilitarCliente" color="primary">
-                        Espec.</mat-checkbox>
+                    <mat-form-field appearance="standard">
+                        <mat-label>Especial.</mat-label>
+                        <mat-select [(ngModel)]="cliente.especial"
+                            class="form-control-sm">
+                            <mat-option [value]="si">{{si}}</mat-option>
+                            <mat-option [value]="no">{{no}}</mat-option>
+                        </mat-select>
+                    </mat-form-field>
                 </div>
                 <div class="col-1">
                     <mat-form-field appearance="standard">
                         <mat-label>Estado</mat-label>
-                        <mat-select [(ngModel)]="cliente.estado" [disabled]="deshabilitarCliente"
+                        <mat-select [(ngModel)]="cliente.estado" [disabled]="true"
                             class="form-control-sm">
                             <mat-option [value]="activo">{{activo}}</mat-option>
                             <mat-option [value]="inactivo">{{inactivo}}</mat-option>
@@ -158,10 +158,10 @@
                     <div class="col-11">
                         <mat-form-field appearance="standard">
                             <mat-label>Direccion</mat-label>
-                            <input matInput type="text" [(ngModel)]="cliente.direccion.direccion" [disabled]="deshabilitarDireccion"
+                            <input matInput type="text" [(ngModel)]="cliente.direccion" [disabled]="deshabilitarDireccion"
                                 oninput="this.value = this.value.toUpperCase()" class="form-control-sm">
-                            <button mat-button *ngIf="cliente.direccion.direccion" matSuffix mat-icon-button
-                                (click)="cliente.direccion.direccion=''">
+                            <button mat-button *ngIf="cliente.direccion" matSuffix mat-icon-button
+                                (click)="cliente.direccion=''">
                                 <mat-icon>close</mat-icon>
                             </button>
                         </mat-form-field>
@@ -172,10 +172,10 @@
                     <div class="col-12">
                         <mat-form-field appearance="standard">
                             <mat-label>Referencia</mat-label>
-                            <input matInput type="text" [(ngModel)]="cliente.direccion.referencia" [disabled]="deshabilitarDireccion"
+                            <input matInput type="text" [(ngModel)]="cliente.referencia" [disabled]="deshabilitarDireccion"
                                 oninput="this.value = this.value.toUpperCase()" class="form-control-sm">
-                            <button mat-button *ngIf="cliente.direccion.referencia" matSuffix mat-icon-button
-                                (click)="cliente.direccion.referencia=''">
+                            <button mat-button *ngIf="cliente.referencia" matSuffix mat-icon-button
+                                (click)="cliente.referencia=''">
                                 <mat-icon>close</mat-icon>
                             </button>
                         </mat-form-field>
@@ -183,8 +183,8 @@
                     <div class="col-4">
                         <mat-form-field appearance="standard">
                             <mat-label>Provincia</mat-label>
-                            <mat-select type="text" [(ngModel)]="clienteProvincia" [disabled]="deshabilitarDireccion"
-                                (selectionChange)="seleccionarProvincia($event.value)" class="form-control-sm">
+                            <mat-select type="text" [(ngModel)]="cliente.ubicacion.provincia" [disabled]="deshabilitarDireccion"
+                                (selectionChange)="seleccionarProvincia()" class="form-control-sm">
                                 <mat-option *ngFor="let provincia of provincias" [value]="provincia.provincia">
                                     {{provincia.provincia}}
                                 </mat-option>
@@ -194,8 +194,8 @@
                     <div class="col-4">
                         <mat-form-field appearance="standard">
                             <mat-label>Canton</mat-label>
-                            <mat-select type="text" [(ngModel)]="clienteCanton" [disabled]="deshabilitarDireccion" 
-                                (selectionChange)="seleccionarCanton($event.value)" class="form-control-sm">
+                            <mat-select type="text" [(ngModel)]="cliente.ubicacion.canton" [disabled]="deshabilitarDireccion" 
+                                (selectionChange)="seleccionarCanton()" class="form-control-sm">
                                 <mat-option *ngFor="let canton of cantones" [value]="canton.canton">
                                     {{canton.canton}}
                                 </mat-option>
@@ -205,8 +205,7 @@
                     <div class="col-4">
                         <mat-form-field appearance="standard">
                             <mat-label>Parroquia</mat-label>
-                            <mat-select type="text" [(ngModel)]="clienteParroquia" [disabled]="deshabilitarDireccion"
-                                class="form-control-sm" (selectionChange)="seleccionarParroquia($event.value)">
+                            <mat-select type="text" [(ngModel)]="cliente.ubicacion.parroquia" [disabled]="deshabilitarDireccion" class="form-control-sm">
                                 <mat-option *ngFor="let parroquia of parroquias" [value]="parroquia.parroquia">
                                     {{parroquia.parroquia}}
                                 </mat-option>
@@ -285,7 +284,7 @@
                                 <mat-form-field appearance="standard">
                                     <mat-label>Correo electrónico</mat-label>
                                     <input matInput type="text " [(ngModel)]="correo.email" [disabled]="deshabilitarDireccion"
-                                        oninput="this.value = this.value.toLowerCase()" class="form-control-sm "
+                                        oninput="this.value = this.value.toUpperCase()" class="form-control-sm "
                                         (change)="validarCorreo()" placeholder="ejemplo@futiristic.com">
                                 </mat-form-field>
                             </div>
@@ -359,10 +358,10 @@
                     <div class="col-12">
                         <mat-form-field appearance="standard">
                             <mat-label>Direccion</mat-label>
-                            <input matInput type="text" [(ngModel)]="dependiente.direccion.direccion" [disabled]="deshabilitarDependiente"
+                            <input matInput type="text" [(ngModel)]="dependiente.direccion" [disabled]="deshabilitarDependiente"
                                 oninput="this.value = this.value.toUpperCase()" class="form-control-sm">
-                            <button mat-button *ngIf="dependiente.direccion.direccion" matSuffix mat-icon-button
-                                (click)="dependiente.direccion.direccion=''">
+                            <button mat-button *ngIf="dependiente.direccion" matSuffix mat-icon-button
+                                (click)="dependiente.direccion=''">
                                 <mat-icon>close</mat-icon>
                             </button>
                         </mat-form-field>
@@ -370,8 +369,8 @@
                     <div class="col-4">
                         <mat-form-field appearance="standard">
                             <mat-label>Provincia</mat-label>
-                            <mat-select type="text" [(ngModel)]="dependienteProvincia" [disabled]="deshabilitarDependiente"
-                                (selectionChange)="seleccionarDependienteProvincia($event.value)" class="form-control-sm">
+                            <mat-select type="text" [(ngModel)]="dependiente.ubicacion.provincia" [disabled]="deshabilitarDependiente"
+                                (selectionChange)="seleccionarDependienteProvincia()" class="form-control-sm">
                                 <mat-option *ngFor="let provincia of dependienteProvincias"
                                     [value]="provincia.provincia">
                                     {{provincia.provincia}}
@@ -382,8 +381,8 @@
                     <div class="col-4">
                         <mat-form-field appearance="standard">
                             <mat-label>Canton</mat-label>
-                            <mat-select type="text" [(ngModel)]="dependienteCanton" [disabled]="deshabilitarDependiente"
-                                (selectionChange)="seleccionarDependienteCanton($event.value)" class="form-control-sm">
+                            <mat-select type="text" [(ngModel)]="dependiente.ubicacion.canton" [disabled]="deshabilitarDependiente"
+                                (selectionChange)="seleccionarDependienteCanton()" class="form-control-sm">
                                 <mat-option *ngFor="let canton of dependienteCantones" [value]="canton.canton">
                                     {{canton.canton}}
                                 </mat-option>
@@ -393,10 +392,8 @@
                     <div class="col-4">
                         <mat-form-field appearance="standard">
                             <mat-label>Parroquia</mat-label>
-                            <mat-select type="text" [(ngModel)]="dependienteParroquia" [disabled]="deshabilitarDependiente" 
-                                (selectionChange)="seleccionarDependienteParroquia($event.value)" class="form-control-sm">
-                                <mat-option *ngFor="let parroquia of dependienteParroquias"
-                                    [value]="parroquia.parroquia">
+                            <mat-select type="text" [(ngModel)]="dependiente.ubicacion.parroquia" [disabled]="deshabilitarDependiente" class="form-control-sm">
+                                <mat-option *ngFor="let parroquia of dependienteParroquias" [value]="parroquia.parroquia">
                                     {{parroquia.parroquia}}
                                 </mat-option>
                             </mat-select>
@@ -795,8 +792,7 @@
                                     <mat-label>Código</mat-label>
                                     <mat-select type="text " [(ngModel)]="cliente.retencionesCliente[3].tipoRetencion"
                                         [disabled]="deshabilitarDatoAdicional" [compareWith]="compareFn" class="form-control-sm ">
-                                        <mat-option [value]="tipoRentencionesRentaServicio"
-                                            *ngFor="let tipoRentencionesRentaServicio of tiposRetencionesRentaServicio ">
+                                        <mat-option *ngFor="let tipoRentencionesRentaServicio of tiposRetencionesRentaServicio " [value]="tipoRentencionesRentaServicio">
                                             {{tipoRentencionesRentaServicio.codigoSRI}}
                                         </mat-option>
                                     </mat-select>

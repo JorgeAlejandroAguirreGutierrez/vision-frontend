@@ -77,7 +77,6 @@ export class UsuarioComponent implements OnInit {
   crear(event) {
     if (event != null)
       event.preventDefault();
-    console.log(this.usuario);
     this.usuarioService.crear(this.usuario).subscribe({
       next: res => {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });

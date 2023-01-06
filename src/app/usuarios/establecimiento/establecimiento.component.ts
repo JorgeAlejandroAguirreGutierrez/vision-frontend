@@ -87,11 +87,11 @@ export class EstablecimientoComponent implements OnInit {
     this.sesion=validarSesion(this.sesionService, this.router);
     this.consultarEmpresas();
     this.consultar();
-    this.obtenerProvincias();
+    this.consultarProvincias();
   }
 
-  obtenerProvincias(){
-    this.ubicacionService.obtenerProvincias().subscribe({
+  consultarProvincias(){
+    this.ubicacionService.consultarProvincias().subscribe({
       next: res => {
         this.provincias = res.resultado as Ubicacion[];
       },
@@ -147,7 +147,6 @@ export class EstablecimientoComponent implements OnInit {
     if(this.correo.email != valores.vacio){
       this.establecimiento.correos.push(this.correo);
     }
-    console.log(this.establecimiento);
     this.establecimientoService.crear(this.establecimiento).subscribe(
       res => {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
@@ -210,9 +209,8 @@ export class EstablecimientoComponent implements OnInit {
     return a && b && a.id == b.id;
   }
 
-  provincia(provincia: string) {
-    this.establecimiento.ubicacion.provincia = provincia;
-    this.ubicacionService.obtenerCantones(provincia).subscribe({
+  seleccionarProvincia() {
+    this.ubicacionService.consultarCantones(this.establecimiento.ubicacion.provincia).subscribe({
       next: res => {
         if (res.resultado != null) {
           this.cantones = res.resultado as Ubicacion[];
@@ -224,9 +222,8 @@ export class EstablecimientoComponent implements OnInit {
     });
   }
 
-  canton(canton: string) {
-    this.establecimiento.ubicacion.canton = canton;
-    this.ubicacionService.obtenerParroquias(canton).subscribe({
+  seleccionarCanton() {
+    this.ubicacionService.consultarParroquias(this.establecimiento.ubicacion.canton).subscribe({
       next: res => {
         if (res.resultado != null) {
           this.parroquias = res.resultado as Ubicacion[];
@@ -236,10 +233,6 @@ export class EstablecimientoComponent implements OnInit {
       },
       error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     });
-  }
-
-  parroquia(parroquia: string) {
-    this.establecimiento.ubicacion.parroquia = parroquia;
   }
 
   agregarTelefono() {
@@ -331,17 +324,12 @@ export class EstablecimientoComponent implements OnInit {
   }
 
   dialogoMapas(): void {
-    //console.log('El dialogo para selección de grupo producto fue abierto');
     const dialogRef = this.dialog.open(DialogoMapaEstablecimientoComponent, {
       width: '80%',
-      // Para enviar datos
-      //data: { usuario: this.usuario, clave: this.clave, grupo_producto_recibido: "" }
       data: this.posicionGeografica as Coordenada
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      //console.log('El dialogo para selección de coordenada fue cerrado');
-      console.log(result);
       if (result) {
         this.posicionGeografica = result as Coordenada;
         this.posicionCentral = this.posicionGeografica;
@@ -368,16 +356,12 @@ export class DialogoMapaEstablecimientoComponent {
 
   onNoClick(): void {
     this.dialogRef.close();
-    //console.log('El dialogo para selección de coordenada fue cancelado');
     this.data = new Coordenada(0,0);
   }
 
   coordenadaSeleccionada(event: any) {
-    //console.log(event);
     if (event && event.latitud != 0) {
       this.data = event as Coordenada;
-      //this.producto.grupo_producto = grupoProductoRecibido;
-      //console.log(this.data);
     } else {
       this.data = new Coordenada(0,0);
     }

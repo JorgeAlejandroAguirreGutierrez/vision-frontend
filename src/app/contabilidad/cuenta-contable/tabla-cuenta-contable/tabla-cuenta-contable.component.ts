@@ -76,7 +76,6 @@ export class TablaCuentaContableComponent implements OnInit {
 
   llenarDataSourceCuentaContable(cuentasContables : CuentaContable[]){
     this.ordenarAsc(cuentasContables, 'id');
-    //console.log(gruposProductos);
     this.dataSourceCuentaContable = new MatTableDataSource(this.cuentasContables);
     this.dataSourceCuentaContable.filterPredicate = (data: CuentaContable, filter: string): boolean =>
       data.cuenta.toUpperCase().includes(filter) || data.descripcion.toUpperCase().includes(filter) || 

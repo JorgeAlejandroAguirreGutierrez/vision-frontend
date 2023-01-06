@@ -64,7 +64,6 @@ export class InicioSesionComponent implements OnInit {
   obtenerPorApodo() {
     this.usuarioService.obtenerPorApodo(this.sesion.usuario.apodo).subscribe({
       next: res => {
-        console.log(res);
         this.sesion.usuario = res.resultado as Usuario;
         this.multiEmpresa=this.sesion.usuario.perfil.multiempresa == valores.si? true: false;
         if (this.sesion.usuario.cambiarContrasena == valores.si) {
@@ -76,7 +75,6 @@ export class InicioSesionComponent implements OnInit {
   }
 
   iniciarSesion() {
-    console.log(this.sesion);
     this.sesionService.crear(this.sesion).subscribe({
       next: res => {
         this.sesion = res.resultado as Sesion;
@@ -101,7 +99,6 @@ export class InicioSesionComponent implements OnInit {
   consultarEmpresas(){
     this.empresaService.consultar().subscribe({
       next: res => {
-        console.log(res);
         this.empresas = res.resultado as Empresa[];
       },
       error: err => {
@@ -123,7 +120,6 @@ export class InicioSesionComponent implements OnInit {
 
   // PARA VALIDACION DE CONFIRMACIÓN DE CONTRASEÑA
   MatchValidator(source: string, target: string): ValidatorFn {
-    //console.log(source);
     return (control: AbstractControl): ValidationErrors | null => {
       const sourceCtrl = control.get(source);
       const targetCtrl = control.get(target);

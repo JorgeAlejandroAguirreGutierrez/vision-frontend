@@ -42,17 +42,16 @@ export class SegmentoService {
     );
   }
 
-  async obtenerAsync(segmentoId: number): Promise<Respuesta> {
-    return await lastValueFrom(this.http.get<Respuesta>(environment.host + urn.ruta + urn.segmento + urn.slash + segmentoId, options).pipe(
+  consultar(): Observable<Respuesta> {
+    return this.http.get(environment.host + urn.ruta + urn.segmento, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);
-      })
-    ));
+      }));
   }
 
-  consultar(): Observable<Respuesta> {
-    return this.http.get(environment.host + urn.ruta + urn.segmento, options).pipe(
+  consultarActivos(): Observable<Respuesta> {
+    return this.http.get(environment.host + urn.ruta + urn.segmento + urn.consultarActivos, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);
