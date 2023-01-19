@@ -446,6 +446,8 @@ export class ClienteComponent implements OnInit {
     this.clienteService.actualizar(this.cliente).subscribe(
       res => {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
+        this.consultar();
+        this.nuevo(null);
       },
       err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     );

@@ -13,39 +13,43 @@ export class Producto {
   id: number;
   codigo: string;
   nombre: string;
-  costo: number;
   consignacion: boolean;
-  estado: string;
-  serieAutogenerado: number;
   stockTotal: number;
-  impuesto: Impuesto;
-  tipoGasto: TipoGasto;
-  grupoProducto: GrupoProducto;
+  serieAutogenerado: number;
+  estado: string;
   categoriaProducto: CategoriaProducto;
-  medidaKardex: Medida;
+  tipoGasto: TipoGasto;
+  impuesto: Impuesto;
+  grupoProducto: GrupoProducto;
+  medida: Medida;
+
+  kardexs: Kardex[];
   caracteristicas: Caracteristica[];
   precios: Precio[];
   productosProveedores: ProductoProveedor[];
   productosBodegas: ProductoBodega[];
-  kardexs: Kardex[];
+  
 
   constructor() {
     this.id=valores.cero;
     this.codigo=valores.vacio;
     this.nombre=valores.vacio;
     this.consignacion=false;
-    this.serieAutogenerado=valores.cero;
     this.stockTotal=valores.cero;
+    this.serieAutogenerado=valores.cero;
     this.estado=valores.activo;
-    this.caracteristicas=[];
+    
     this.impuesto=new Impuesto();
     this.tipoGasto=new TipoGasto();
     this.grupoProducto=new GrupoProducto();
     this.categoriaProducto=new CategoriaProducto();
-    this.medidaKardex=new Medida();
+    this.medida=new Medida();
+
+    this.kardexs=[];
+    this.caracteristicas=[];
     this.precios=[];
     this.productosProveedores=[];
     this.productosBodegas=[];
-    this.kardexs=[];
+    
   }
 }
