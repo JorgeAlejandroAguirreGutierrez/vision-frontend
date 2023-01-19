@@ -192,7 +192,7 @@
                             <div class="col-5">
                                 <mat-form-field appearance="standard">
                                     <mat-label>Medida</mat-label>
-                                    <mat-select [(ngModel)]="producto.medidaKardex.id" (ngModelChange)="medidaSeleccionada($event)"
+                                    <mat-select [(ngModel)]="producto.medida.id" (ngModelChange)="medidaSeleccionada($event)"
                                     [ngModelOptions]="{standalone: true}" [disabled]="deshabilitarSaldoInicial">
                                         <mat-option *ngFor="let medida of medidas" [value]="medida.id" >
                                             {{medida.descripcion}}</mat-option>

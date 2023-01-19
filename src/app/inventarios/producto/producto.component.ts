@@ -113,7 +113,7 @@ export class ProductoComponent implements OnInit {
   columnas: any[] = [
     { nombreColumna: 'codigo', cabecera: 'Código', celda: (row: Producto) => `${row.codigo}` },
     { nombreColumna: 'nombre', cabecera: 'Nombre', celda: (row: Producto) => `${row.nombre}` },
-    { nombreColumna: 'medidaKardex', cabecera: 'Medida Kardex', celda: (row: Producto) => `${row.medidaKardex.descripcion}` },
+    { nombreColumna: 'medida', cabecera: 'Medida Kardex', celda: (row: Producto) => `${row.medida.descripcion}` },
     { nombreColumna: 'categoriaProducto', cabecera: 'Categoria', celda: (row: Producto) => `${row.categoriaProducto.descripcion}` },
     { nombreColumna: 'tipoGasto', cabecera: 'Tipo Gasto', celda: (row: Producto) => `${row.tipoGasto.descripcion}` },
     { nombreColumna: 'estado', cabecera: 'Estado', celda: (row: Producto) => `${row.estado}` }
@@ -190,7 +190,7 @@ export class ProductoComponent implements OnInit {
       Swal.fire(error, mensajes.error_nombre_producto, error_swal);
       return;
     }
-    if (this.producto.medidaKardex.id == 0) {
+    if (this.producto.medida.id == 0) {
       Swal.fire(error, mensajes.error_medida_kardex, error_swal);
       return;
     }
@@ -347,7 +347,7 @@ export class ProductoComponent implements OnInit {
     if (productoSeleccionado.id != 0) {
       this.construirInfoKardex(productoSeleccionado.kardexs);
       this.construirMedidasPrecios(productoSeleccionado.precios);
-      this.buscarMedidasEquivalentes(productoSeleccionado.medidaKardex.id);
+      this.buscarMedidasEquivalentes(productoSeleccionado.medida.id);
       this.deshabilitarOtrasMedidas = false;
       //this.actualizar_precios();
     }
@@ -364,7 +364,7 @@ export class ProductoComponent implements OnInit {
     });
     this.kardexInicial.cantidad = kardex[0].cantidad;
     this.kardexInicial.costoPromedio = kardex[0].costoPromedio;
-    this.deshabilitarMedidaKardex();
+    this.deshabilitarMedida();
     let ultimoKardex = kardex.length - 1;
     this.kardexFinal.cantidad = kardex[ultimoKardex].cantidad;
     this.kardexFinal.costoPromedio = kardex[ultimoKardex].costoPromedio;
@@ -373,7 +373,7 @@ export class ProductoComponent implements OnInit {
     //this.producto.kardexs[0].proveedor = new Proveedor;
   }
 
-  deshabilitarMedidaKardex() {
+  deshabilitarMedida() {
     this.deshabilitarImpuesto = true;
     this.deshabilitarSaldoInicial = true;
     this.formKardexInicial.get('controlSaldoInicial').disable();
@@ -426,7 +426,7 @@ export class ProductoComponent implements OnInit {
   medidaSeleccionada(event: number) {
     this.medidaService.obtener(event).subscribe({
       next: (res) => {
-        this.producto.medidaKardex = res.resultado as Medida;
+        this.producto.medida = res.resultado as Medida;
       },
       error: (err) => {
         Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
@@ -448,7 +448,7 @@ export class ProductoComponent implements OnInit {
 
   cargarSaldoInicial() {
     if (this.producto.categoriaProducto.id == 1) { //Para bienes
-      if (this.producto.medidaKardex.id == 0) {
+      if (this.producto.medida.id == 0) {
         Swal.fire(error, mensajes.error_medida, error_swal);
         return;
       }
@@ -472,7 +472,7 @@ export class ProductoComponent implements OnInit {
       // Obtengo medida Unidad
       this.medidaService.obtener(13).subscribe(
         res => {
-          this.producto.medidaKardex = res.resultado as Medida;
+          this.producto.medida = res.resultado as Medida;
           this.crearKardexPrecios();
         },
         err => {
@@ -501,12 +501,12 @@ export class ProductoComponent implements OnInit {
     this.producto.stockTotal = this.kardexInicial.cantidad;
     this.producto.kardexs.push(this.kardexInicial);
     this.crearBodega();
-    this.llenarTablaPrecios(this.producto.medidaKardex);
+    this.llenarTablaPrecios(this.producto.medida);
     //this.actualizar_precios();
     Swal.fire('Bien!', 'El kardex fue inicializado', 'success')
-    this.deshabilitarMedidaKardex();
+    this.deshabilitarMedida();
     this.deshabilitarOtrasMedidas = false;
-    this.buscarMedidasEquivalentes(this.producto.medidaKardex.id);
+    this.buscarMedidasEquivalentes(this.producto.medida.id);
   }
 
   crearBodega(){
@@ -519,7 +519,7 @@ export class ProductoComponent implements OnInit {
   llenarTablaPrecios(medida: Medida) {
     let costo: number = 0;
     this.medidaPrecio = new MedidaPrecio();
-    if (medida.id == this.producto.medidaKardex.id) {
+    if (medida.id == this.producto.medida.id) {
       costo = Number((this.kardexFinal.costoPromedio));
     } else {
       costo = Number((this.kardexFinal.costoPromedio / this.medidaEquivalenteSeleccionada.equivalencia).toFixed(4));
@@ -607,7 +607,7 @@ export class ProductoComponent implements OnInit {
     this.controls.splice(i, 1);
     this.abrirPanelPrecios.splice(i, 1);
     this.actualizarAbrirPanel();
-    this.buscarMedidasEquivalentes(this.producto.medidaKardex.id);
+    this.buscarMedidasEquivalentes(this.producto.medida.id);
     this.actualizarTablaPrecios();  
   }
 
@@ -686,15 +686,15 @@ export class ProductoComponent implements OnInit {
     }
   }
 
-  buscarMedidasEquivalentes(medidaKardexId: number) {
-    this.equivalenciaMedidaService.buscarMedidasEquivalentes(medidaKardexId).subscribe(
+  buscarMedidasEquivalentes(medidaId: number) {
+    this.equivalenciaMedidaService.buscarMedidasEquivalentes(medidaId).subscribe(
       res => {
         this.medidasEquivalentes = res.resultado as EquivalenciaMedida[];
         if (this.medidasPrecios.length > 1) {
           this.actualizarMedidasEquivalentes()
         }
         else {
-          this.eliminarMedidaEquivalente(this.producto.medidaKardex);
+          this.eliminarMedidaEquivalente(this.producto.medida);
         }
       },
       err => {
