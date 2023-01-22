@@ -12,7 +12,7 @@ import { Entrega } from '../../modelos/entrega/entrega';
 import { EntregaService } from '../../servicios/entrega/entrega.service';
 import { Sesion } from '../../modelos/usuario/sesion';
 import { FacturaService } from '../../servicios/comprobante/factura.service';
-import { valores, validarSesion, tab_activo, exito, exito_swal, error, error_swal } from '../../constantes';
+import { valores, mensajes, otras, tabs, validarSesion, tab_activo, exito, exito_swal, error, error_swal } from '../../constantes';
 import { MatTableDataSource } from '@angular/material/table';
 import { FacturaDetalle } from '../../modelos/comprobante/factura-detalle';
 import { FacturacionElectronicaService } from 'src/app/servicios/comprobante/factura-eletronica.service';
@@ -28,12 +28,19 @@ export class EntregaComponent implements OnInit {
   panelGuiaDetalle=false;
 
   transportistas: Transportista[];
-  entrega: Entrega=new Entrega();
+  entrega: Entrega = new Entrega();
   sesion: Sesion;
   provincias: Ubicacion[];
   cantones: Ubicacion[];
   parroquias: Ubicacion[];
-  deshabilitar: boolean=false;
+  deshabilitar: boolean = false;
+  deshabilitarTransportista: boolean = false;
+  pendiente = valores.pendiente;
+  entregada = valores.entregada;
+  sinGuia = valores.sinGuia;
+  clienteDireccion = valores.clienteDireccion;
+  nuevaDireccion = valores.nuevaDireccion;
+
 
   columnasFacturaDetalle: string[] = ['nombre', 'cantidad', 'precio_unitario', 'iva', 'total'];
   dataFacturaDetalle = new MatTableDataSource<FacturaDetalle>(this.entrega.factura.facturaDetalles);
@@ -47,35 +54,38 @@ export class EntregaComponent implements OnInit {
     this.consultarTransportistas();
     this.consultarUbicaciones();
 
-    this.facturaService.eventoEntrega.subscribe((data:Factura) => {
-      this.entrega.factura=data;
-      this.cargar();
+    this.facturaService.eventoEntrega.subscribe((data:number) => {
+      this.facturaService.obtener(data).subscribe(
+        res => {
+          this.entrega.factura = res.resultado as Factura;
+          this.cargar();
+        },
+        err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+      );
     });
   }
 
   cargar(){
-    if(this.entrega.factura.id!=0){
-      this.entregaService.obtenerPorFactura(this.entrega.factura.id).subscribe(
-        res => {
-          if (res.resultado!= null){
-            Object.assign(this.entrega, res.resultado as Entrega);
-            this.seleccionarProvincia();
-            this.seleccionarCanton();
-          } else{
-            this.entrega.direccion=this.entrega.factura.cliente.direccion;
-            this.entrega.ubicacion=this.entrega.factura.cliente.ubicacion;
-            this.seleccionarProvincia();
-            this.seleccionarCanton();
-            this.entrega.telefono=this.entrega.factura.cliente.telefonos[0].numero;
-            this.entrega.celular=this.entrega.factura.cliente.celulares[0].numero;
-            this.entrega.correo=this.entrega.factura.cliente.correos[0].email;
-            this.deshabilitar=true;
-          }
-          this.dataFacturaDetalle = new MatTableDataSource<FacturaDetalle>(this.entrega.factura.facturaDetalles);
-        },
-        err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
-      );
-    }
+    this.entregaService.obtenerPorFactura(this.entrega.factura.id).subscribe(
+      res => {
+        if (res.resultado!= null){
+          Object.assign(this.entrega, res.resultado as Entrega);
+          this.seleccionarProvincia();
+          this.seleccionarCanton();
+        } else{
+          this.entrega.direccion=this.entrega.factura.cliente.direccion;
+          this.entrega.ubicacion=this.entrega.factura.cliente.ubicacion;
+          this.seleccionarProvincia();
+          this.seleccionarCanton();
+          this.entrega.telefono=this.entrega.factura.cliente.telefonos[0].numero;
+          this.entrega.celular=this.entrega.factura.cliente.celulares[0].numero;
+          this.entrega.correo=this.entrega.factura.cliente.correos[0].email;
+          this.deshabilitar=true;
+        }
+        this.dataFacturaDetalle = new MatTableDataSource<FacturaDetalle>(this.entrega.factura.facturaDetalles);
+      },
+      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+    );
   }
 
   consultarUbicaciones(){
@@ -139,26 +149,26 @@ export class EntregaComponent implements OnInit {
   }
 
   validarTelefono() {
-    let digito=this.entrega.telefono.substring(0,1);
-    if (this.entrega.telefono.length!=11 || digito!= "0") {
-      this.entrega.telefono= valores.vacio;
-      Swal.fire(error, "Telefono Invalido", error_swal);
+    let digito = this.entrega.telefono.substring(0, 1);
+    if (this.entrega.telefono.length != 11 || digito != "0") {
+      this.entrega.telefono = valores.vacio;
+      Swal.fire({ icon: error_swal, title: error, text: mensajes.error_telefono_invalido });
     }
   }
 
   validarCelular() {
-    let digito=this.entrega.celular.substring(0,2);
-    if (this.entrega.celular.length!=12 || digito!="09") {
-      this.entrega.celular= valores.vacio;
-      Swal.fire(error, "Celular Invalido", error_swal);
+    let digito = this.entrega.celular.substring(0, 2);
+    if (this.entrega.celular.length != 12 || digito != "09") {
+      this.entrega.celular = valores.vacio;
+      Swal.fire({ icon: error_swal, title: error, text: mensajes.error_celular_invalido });
     }
   }
 
   validarCorreo() {
-    let arroba=this.entrega.correo.includes("@");
+    let arroba = this.entrega.correo.includes("@");
     if (!arroba) {
-      this.entrega.correo=valores.vacio;
-      Swal.fire(error, "Correo Invalido", error_swal);
+      this.entrega.correo = valores.vacio;
+      Swal.fire({ icon: error_swal, title: error, text: mensajes.error_correo_invalido });
     }
   }
 
@@ -171,8 +181,8 @@ export class EntregaComponent implements OnInit {
     });
   }
 
-  seleccionarOpcion(event: any){
-    if (event.value=="0"){
+  seleccionarOpcionGuia(){
+    if (this.entrega.opcionGuia==this.clienteDireccion){
       this.entrega.direccion=this.entrega.factura.cliente.direccion;
       this.entrega.ubicacion=this.entrega.factura.cliente.ubicacion;
       this.seleccionarProvincia();
@@ -180,32 +190,31 @@ export class EntregaComponent implements OnInit {
       this.entrega.telefono=this.entrega.factura.cliente.telefonos[0].numero;
       this.entrega.celular=this.entrega.factura.cliente.celulares[0].numero;
       this.entrega.correo=this.entrega.factura.cliente.correos[0].email;
-      this.entrega.inhabilitar=false;
       this.deshabilitar=true;
-    } else if (event.value=="1") {
+      this.deshabilitarTransportista = false;
+    } else if (this.entrega.opcionGuia==this.nuevaDireccion) {
       this.entrega.direccion = valores.vacio;
-      this.entrega.telefono= valores.vacio;
-      this.entrega.celular= valores.vacio;
-      this.entrega.correo= valores.vacio;
-      this.entrega.inhabilitar=false;
-      this.deshabilitar=false
-    } else if (event.value=="2"){
-      this.entrega.transportista=new Transportista();
+      this.entrega.ubicacion = new Ubicacion();
+      this.entrega.telefono = valores.vacio;
+      this.entrega.celular = valores.vacio;
+      this.entrega.correo = valores.vacio;
+      this.entrega.transportista = new Transportista();
+      this.deshabilitar=false;
+      this.deshabilitarTransportista = false;
+    } else if (this.entrega.opcionGuia==this.sinGuia){
       this.entrega.direccion= valores.vacio;
+      this.entrega.ubicacion = new Ubicacion();
       this.entrega.telefono= valores.vacio;
       this.entrega.celular= valores.vacio;
       this.entrega.correo= valores.vacio;
-      this.entrega.inhabilitar=true;
+      this.entrega.transportista = new Transportista();
       this.deshabilitar=true
+      this.deshabilitarTransportista = true;
     }
   }
 
   nuevo(event: any){
     this.entrega=new Entrega();
-  }
-
-  despachar(){
-
   }
 
   crearFacturaElectronica(event){
@@ -218,5 +227,9 @@ export class EntregaComponent implements OnInit {
       },
       err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.message })
     );
+  }
+
+  compareFn(a: any, b: any) {
+    return a && b && a.id == b.id;
   }
 }

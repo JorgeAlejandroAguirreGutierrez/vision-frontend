@@ -12,6 +12,7 @@ export class Entrega {
     celular: string;
     correo: string;
     referencia: string;
+    opcionGuia: string;
     estado: string;
     ubicacion : Ubicacion;
     transportista: Transportista;
@@ -27,6 +28,7 @@ export class Entrega {
         this.telefono = valores.vacio;
         this.celular = valores.vacio;
         this.correo = valores.vacio;
+        this.opcionGuia = valores.clienteDireccion;
         this.estado = valores.pendiente;
         this.ubicacion = new Ubicacion();
         this.transportista = new Transportista();

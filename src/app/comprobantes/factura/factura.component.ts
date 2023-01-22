@@ -4,7 +4,7 @@ import { UntypedFormControl, UntypedFormBuilder, UntypedFormGroup, Validators } 
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatStepper } from '@angular/material/stepper';
-import {Observable} from 'rxjs';
+import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
 import Swal from 'sweetalert2';
@@ -44,15 +44,13 @@ export class FacturaComponent implements OnInit {
   isLinear = false;
   isEditable = false;
   completed = false;
-  categoriaProducto = "B";
-  estado = "EMITIDA";
+  categoria = valores.bien;
   facturaDetalleIndice = valores.cero;
-  facturaDetalleEntregado = valores.vacio;
   serieBuscar = valores.vacio;
 
   panelOpenState=false;
-  seleccionDependiente: boolean =false;
-  seleccionFacturar: boolean =false;
+  seleccionDependiente: boolean = false;
+  seleccionFacturar: boolean = false;
 
   firstFormGroup: UntypedFormGroup;
   secondFormGroup: UntypedFormGroup;
@@ -83,7 +81,7 @@ export class FacturaComponent implements OnInit {
   abrirPanelNuevoFactura = true;
   abrirPanelAdminFactura = false;
   facturas: Factura[];
-  deshabilitarAgregarFacturaDetalle: boolean=false;
+  deshabilitarAgregarFacturaDetalle: boolean = false;
   verAcordeonFacturaDetalle: boolean = true;
   
   @ViewChild("paginatorFactura") paginatorFactura: MatPaginator;
@@ -278,7 +276,7 @@ export class FacturaComponent implements OnInit {
   nuevo(event){
     if (event!=null)
       event.preventDefault();
-    this.factura=new Factura();
+    this.factura = new Factura();
   }
 
   construirFactura() {
@@ -704,8 +702,7 @@ export class FacturaComponent implements OnInit {
     this.factura.sesion=this.sesion;
     this.facturaService.crear(this.factura).subscribe(
       res => {
-        this.factura = res.resultado as Factura;
-        this.facturaService.enviarEventoRecaudacion(this.factura);
+        this.facturaService.enviarEventoRecaudacion(res.resultado.id);
         this.stepper.next();
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
       },
@@ -718,10 +715,10 @@ export class FacturaComponent implements OnInit {
       event.preventDefault();
     this.facturaService.actualizar(this.factura).subscribe(
       res => {
-        this.factura = res.resultado as Factura;
-        this.facturaService.enviarEventoRecaudacion(this.factura);
-        this.stepper.next();
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
+        this.facturaService.enviarEventoRecaudacion(res.resultado.id);
+        this.stepper.next();
+        
       },
       err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     );
@@ -752,13 +749,13 @@ export class FacturaComponent implements OnInit {
   }
 
   consultarProductos(){
-    if (this.categoriaProducto== "B"){
+    if (this.categoria == valores.bien){
       this.consultarBienes(null);
     }
-    if (this.categoriaProducto=="S"){
+    if (this.categoria == valores.servicio){
       this.consultarServicios(null);
     }
-    if (this.categoriaProducto== "AF"){
+    if (this.categoria == valores.activoFijo){
       this.consultarActivosFijos(null);
     }
   }

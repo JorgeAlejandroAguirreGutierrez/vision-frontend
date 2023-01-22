@@ -590,6 +590,7 @@ export class ClienteComponent implements OnInit {
   validarTelefono() {
     let digito = this.telefono.numero.substring(0, 1);
     if (this.telefono.numero.length != 11 || digito != "0") {
+      this.telefono.numero = valores.vacio;
       Swal.fire({ icon: error_swal, title: error, text: mensajes.error_telefono_invalido });
     }
   }
@@ -607,6 +608,7 @@ export class ClienteComponent implements OnInit {
   validarCelular() {
     let digito = this.celular.numero.substring(0, 2);
     if (this.celular.numero.length != 12 || digito != "09") {
+      this.celular.numero = valores.vacio;
       Swal.fire({ icon: error_swal, title: error, text: mensajes.error_celular_invalido });
     }
   }
