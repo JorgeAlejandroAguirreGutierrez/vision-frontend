@@ -176,10 +176,9 @@
                     <div class="col-12">
                         <mat-form-field appearance="standard">
                             <mat-label>Estado</mat-label>
-                            <mat-select class="form-control-sm" [(ngModel)]="recaudacion.estado"
-                                [ngModelOptions]="{standalone: true}" [disabled]="true">
-                                <mat-option value="RECAUDADO">RECAUDADO</mat-option>
-                                <mat-option value="NO RECAUDADO">NO RECAUDADO</mat-option>
+                            <mat-select class="form-control-sm" [(ngModel)]="recaudacion.estado" [disabled]="true">
+                                <mat-option [value]="recaudado">{{recaudado}}</mat-option>
+                                <mat-option [value]="noRecaudado">{{noRecaudado}}</mat-option>
                             </mat-select>
                         </mat-form-field>
                     </div>

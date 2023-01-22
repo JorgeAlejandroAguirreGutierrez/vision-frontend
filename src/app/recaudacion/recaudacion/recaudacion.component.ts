@@ -75,6 +75,9 @@ export class RecaudacionComponent implements OnInit {
   panelCredito=false;
   deshabilitarTabla=true;
 
+  recaudado = valores.recaudado;
+  noRecaudado = valores.noRecaudado;
+
   constructor(private facturaService: FacturaService, private facturacionElectronicaService: FacturacionElectronicaService, private clienteService: ClienteService, private bancoService: BancoService, private sesionService: SesionService,
     private cuentaPropiaService: CuentaPropiaService, private operadorTarjetaService: OperadorTarjetaService, private datePipe: DatePipe,
     private franquiciaTarjetaService: FranquiciaTarjetaService, private formaPagoService: FormaPagoService, private creditoService: CreditoService,
