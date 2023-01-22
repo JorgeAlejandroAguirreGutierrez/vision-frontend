@@ -38,8 +38,9 @@ export class TablaGrupoClienteCuentaContableComponent implements OnInit {
   
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
+  @ViewChild("inputFiltro") inputFiltro: ElementRef;
 
-  constructor(private sesionService: SesionService, private router: Router, 
+  constructor(private renderer: Renderer2, private sesionService: SesionService, private router: Router, 
     private cuentaContableService: CuentaContableService) { }
 
   ngOnInit() {
@@ -54,16 +55,36 @@ export class TablaGrupoClienteCuentaContableComponent implements OnInit {
       this.dataSource.paginator.firstPage();
     }
   }
+
+  borrarFiltro() {
+    this.renderer.setProperty(this.inputFiltro.nativeElement, 'value', '');
+    this.dataSource.filter = '';
+    this.clickedRows.clear;
+  }
   
   consultar() {
     this.cuentaContableService.consultarActivos().subscribe({
       next: res => {
         this.cuentasContables = res.resultado as CuentaContable[]
-        this.dataSource = new MatTableDataSource(this.cuentasContables);
-        this.dataSource.paginator = this.paginator;
-        this.dataSource.sort = this.sort;
+        this.llenarDataSource(this.cuentasContables);
       },
       error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+    });
+  }
+
+  llenarDataSource(cuentasContables : CuentaContable[]){
+    this.ordenarAsc(cuentasContables, 'id');
+    this.dataSource = new MatTableDataSource(this.cuentasContables);
+    this.dataSource.filterPredicate = (data: CuentaContable, filter: string): boolean =>
+      data.cuenta.toUpperCase().includes(filter) || data.descripcion.toUpperCase().includes(filter) || 
+      data.clasificacion.toUpperCase().includes(filter) || String(data.nivel).toUpperCase().includes(filter);
+    this.dataSource.paginator = this.paginator;
+    this.dataSource.sort = this.sort;
+  }
+
+  ordenarAsc(arrayJson: any, pKey: any) {
+    arrayJson.sort(function (a: any, b: any) {
+      return a[pKey] > b[pKey];
     });
   }
 
@@ -72,10 +93,10 @@ export class TablaGrupoClienteCuentaContableComponent implements OnInit {
       this.clickedRows.clear();
       this.clickedRows.add(cuentaContable);
       this.cuentaContable = { ... cuentaContable};
-      this.cuentaContableSeleccionado.emit(this.cuentaContable);
     } else {
       this.clickedRows.clear();
       cuentaContable = new CuentaContable();
     }
+    this.cuentaContableSeleccionado.emit(cuentaContable);
   }
 }

@@ -13,7 +13,7 @@
                         </mat-card-content>
                     </mat-card> 
                 </div>
-                <div [fxFlex]="(100/gridColumns) + '%'" fxFlex.xs="100%" fxFlex.sm="33%" *ngIf="permiso_proveedores">
+                <div [fxFlex]="(100/gridColumns) + '%'" fxFlex.xs="100%" fxFlex.sm="33%" *ngIf="permiso_compras">
                     <mat-card class="mat-elevation-z4 text-center" (click)="abrirOpcion('COMPRAS')">
                         <img mat-card-image class="efecto" src="{{ico_proveedor}}" alt="">
                         <mat-card-content>
@@ -21,7 +21,7 @@
                         </mat-card-content>
                     </mat-card>
                 </div>
-                <div [fxFlex]="(100/gridColumns) + '%'" fxFlex.xs="100%" fxFlex.sm="33%" *ngIf="permiso_facturacion">
+                <div [fxFlex]="(100/gridColumns) + '%'" fxFlex.xs="100%" fxFlex.sm="33%" *ngIf="permiso_ventas">
                     <mat-card class="mat-elevation-z4 text-center" (click)="abrirOpcion('VENTAS')">
                         <img mat-card-image class="efecto" src="{{ico_facturacion}}" alt="">
                         <mat-card-content>

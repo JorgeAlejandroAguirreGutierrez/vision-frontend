@@ -1,5 +1,5 @@
-import { Component, OnInit, HostListener, Renderer2 } from '@angular/core';
-import { valores, validarSesion, tab_activo, exito, exito_swal, error, error_swal } from '../../constantes';
+import { Component, OnInit, HostListener, ElementRef, Renderer2 } from '@angular/core';
+import { valores, mensajes, validarSesion, exito, exito_swal, error, error_swal } from '../../constantes';
 import Swal from 'sweetalert2';
 
 import { Router } from '@angular/router';
@@ -24,7 +24,8 @@ export class PlazoCreditoComponent implements OnInit {
   inactivo: string = valores.inactivo;
 
   abrirPanelNuevo: boolean = true;
-  abrirPanelAdmin: boolean = false;
+  abrirPanelAdmin: boolean = true;
+  formularioValido: boolean = false;
 
   sesion: Sesion=null;
   plazoCredito= new PlazoCredito();
@@ -33,6 +34,7 @@ export class PlazoCreditoComponent implements OnInit {
   columnas: any[] = [
     { nombreColumna: 'codigo', cabecera: 'Código', celda: (row: PlazoCredito) => `${row.codigo}` },
     { nombreColumna: 'descripcion', cabecera: 'Descripción', celda: (row: PlazoCredito) => `${row.descripcion}` },
+    { nombreColumna: 'abreviatura', cabecera: 'Abreviatura', celda: (row: PlazoCredito) => `${row.abreviatura}` },
     { nombreColumna: 'plazo', cabecera: 'Plazo', celda: (row: PlazoCredito) => `${row.plazo}` },
     { nombreColumna: 'estado', cabecera: 'Estado', celda: (row: PlazoCredito) => `${row.estado}` }
   ];
@@ -42,6 +44,7 @@ export class PlazoCreditoComponent implements OnInit {
   
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
+  @ViewChild("inputFiltro") inputFiltro: ElementRef;
 
   constructor(private renderer: Renderer2, private plazoCreditoService: PlazoCreditoService,
         private sesionService: SesionService,private router: Router) { }
@@ -64,11 +67,16 @@ export class PlazoCreditoComponent implements OnInit {
       event.preventDefault();
     this.plazoCredito = new PlazoCredito();
     this.clickedRows.clear();
+    this.borrarFiltro();
+    this.formularioValido = false;
   }
 
   crear(event) {
     if (event != null)
       event.preventDefault();
+    this.validarFormulario();
+    if (!this.formularioValido)
+      return;  
     this.plazoCreditoService.crear(this.plazoCredito).subscribe({
       next: res => {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
@@ -82,6 +90,9 @@ export class PlazoCreditoComponent implements OnInit {
   actualizar(event) {
     if (event != null)
       event.preventDefault();
+    this.validarFormulario();
+    if (!this.formularioValido)
+      return;  
     this.plazoCreditoService.actualizar(this.plazoCredito).subscribe({
       next: res => {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
@@ -121,12 +132,23 @@ export class PlazoCreditoComponent implements OnInit {
   consultar() {
     this.plazoCreditoService.consultar().subscribe({
       next: res => {
-        this.plazosCreditos = res.resultado as PlazoCredito[]
-        this.dataSource = new MatTableDataSource(this.plazosCreditos);
-        this.dataSource.paginator = this.paginator;
-        this.dataSource.sort = this.sort;
+        this.plazosCreditos = res.resultado as PlazoCredito[];
+        this.llenarTabla(this.plazosCreditos);
       },
       error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+    });
+  }
+
+  llenarTabla(plazosCreditos: PlazoCredito[]) {
+    this.ordenarAsc(plazosCreditos, 'id');
+    this.dataSource = new MatTableDataSource(plazosCreditos);
+    this.dataSource.paginator = this.paginator;
+    this.dataSource.sort = this.sort;
+  }
+
+  ordenarAsc(arrayJson: any, pKey: any) {
+    arrayJson.sort(function (a: any, b: any) {
+      return a[pKey] > b[pKey];
     });
   }
 
@@ -136,8 +158,7 @@ export class PlazoCreditoComponent implements OnInit {
       this.clickedRows.add(plazoCredito);
       this.plazoCredito = { ... plazoCredito};
     } else {
-      this.clickedRows.clear();
-      this.plazoCredito = new PlazoCredito();
+      this.nuevo(null);
     }
   }
 
@@ -146,6 +167,31 @@ export class PlazoCreditoComponent implements OnInit {
     this.dataSource.filter = filterValue.trim().toUpperCase();
     if (this.dataSource.paginator) {
       this.dataSource.paginator.firstPage();
+    }
+  }
+
+  borrarFiltro() {
+    this.renderer.setProperty(this.inputFiltro.nativeElement, 'value', '');
+    this.dataSource.filter = '';
+  }
+
+  validarFormulario(){
+    //validar que los campos esten llenos antes de guardar
+    this.formularioValido = true;
+    if (this.plazoCredito.descripcion == '') {
+      Swal.fire({ icon: error_swal, title: error, text: mensajes.error_falta_datos });
+      this.formularioValido = false;
+      return;
+    }
+    if (this.plazoCredito.abreviatura == '') {
+      Swal.fire({ icon: error_swal, title: error, text: mensajes.error_falta_datos });
+      this.formularioValido = false;
+      return;
+    }
+    if (this.plazoCredito.plazo <= 0) {
+      Swal.fire({ icon: error_swal, title: error, text: mensajes.error_falta_datos });
+      this.formularioValido = false;
+      return;
     }
   }
 }

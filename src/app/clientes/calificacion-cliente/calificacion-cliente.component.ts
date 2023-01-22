@@ -1,5 +1,5 @@
-import { Component, OnInit, HostListener, Renderer2 } from '@angular/core';
-import { valores, validarSesion, exito, exito_swal, error, error_swal } from '../../constantes';
+import { Component, OnInit, HostListener, ElementRef, Renderer2 } from '@angular/core';
+import { valores, mensajes, validarSesion, exito, exito_swal, error, error_swal } from '../../constantes';
 import Swal from 'sweetalert2';
 
 import { Router } from '@angular/router';
@@ -25,7 +25,8 @@ export class CalificacionClienteComponent implements OnInit {
   inactivo: string = valores.inactivo;
 
   abrirPanelNuevo : boolean= true;
-  abrirPanelAdmin: boolean = false;
+  abrirPanelAdmin: boolean = true;
+  formularioValido: boolean = false;
 
   sesion: Sesion=null;
   calificacionCliente= new CalificacionCliente();
@@ -43,6 +44,7 @@ export class CalificacionClienteComponent implements OnInit {
   
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
+  @ViewChild("inputFiltro") inputFiltro: ElementRef;
 
   constructor(private renderer: Renderer2, private calificacionClienteService: CalificacionClienteService,
         private sesionService: SesionService,private router: Router) { }
@@ -65,11 +67,16 @@ export class CalificacionClienteComponent implements OnInit {
       event.preventDefault();
     this.calificacionCliente = new CalificacionCliente();
     this.clickedRows.clear();
+    this.borrarFiltro();
+    this.formularioValido = false;
   }
 
   crear(event) {
     if (event != null)
       event.preventDefault();
+    this.validarFormulario();
+    if (!this.formularioValido)
+      return;  
     this.calificacionClienteService.crear(this.calificacionCliente).subscribe({
       next: res => {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
@@ -83,6 +90,9 @@ export class CalificacionClienteComponent implements OnInit {
   actualizar(event) {
     if (event != null)
       event.preventDefault();
+    this.validarFormulario();
+    if (!this.formularioValido)
+      return;  
     this.calificacionClienteService.actualizar(this.calificacionCliente).subscribe({
       next: res => {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
@@ -122,12 +132,23 @@ export class CalificacionClienteComponent implements OnInit {
   consultar() {
     this.calificacionClienteService.consultar().subscribe({
       next: res => {
-        this.calificacionesClientes = res.resultado as CalificacionCliente[]
-        this.dataSource = new MatTableDataSource(this.calificacionesClientes);
-        this.dataSource.paginator = this.paginator;
-        this.dataSource.sort = this.sort;
+        this.calificacionesClientes = res.resultado as CalificacionCliente[];
+        this.llenarTabla(this.calificacionesClientes);
       },
       error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+    });
+  }
+
+  llenarTabla(calificacionesClientes: CalificacionCliente[]) {
+    this.ordenarAsc(calificacionesClientes, 'id');
+    this.dataSource = new MatTableDataSource(calificacionesClientes);
+    this.dataSource.paginator = this.paginator;
+    this.dataSource.sort = this.sort;
+  }
+
+  ordenarAsc(arrayJson: any, pKey: any) {
+    arrayJson.sort(function (a: any, b: any) {
+      return a[pKey] > b[pKey];
     });
   }
 
@@ -137,8 +158,7 @@ export class CalificacionClienteComponent implements OnInit {
       this.clickedRows.add(calificacionCliente);
       this.calificacionCliente = { ... calificacionCliente};
     } else {
-      this.clickedRows.clear();
-      this.calificacionCliente = new CalificacionCliente();
+      this.nuevo(null);
     }
   }
 
@@ -147,6 +167,26 @@ export class CalificacionClienteComponent implements OnInit {
     this.dataSource.filter = filterValue.trim().toUpperCase();
     if (this.dataSource.paginator) {
       this.dataSource.paginator.firstPage();
+    }
+  }
+
+  borrarFiltro() {
+    this.renderer.setProperty(this.inputFiltro.nativeElement, 'value', '');
+    this.dataSource.filter = '';
+  }
+
+  validarFormulario(){
+    //validar que los campos esten llenos antes de guardar
+    this.formularioValido = true;
+    if (this.calificacionCliente.descripcion == '') {
+      Swal.fire({ icon: error_swal, title: error, text: mensajes.error_falta_datos });
+      this.formularioValido = false;
+      return;
+    }
+    if (this.calificacionCliente.abreviatura == '') {
+      Swal.fire({ icon: error_swal, title: error, text: mensajes.error_falta_datos });
+      this.formularioValido = false;
+      return;
     }
   }
 }

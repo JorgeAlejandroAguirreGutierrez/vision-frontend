@@ -55,7 +55,7 @@
                         <mat-label>Documento</mat-label>
                         <mat-select [(ngModel)]="cliente.tipoIdentificacion" [compareWith]="compareFn" class="form-control-sm" [disabled]="true">
                             <mat-option *ngFor="let tipoIdentificacion of tiposIdentificaciones" [value]="tipoIdentificacion">
-                                {{tipoIdentificacion.codigoSRI}}
+                                {{tipoIdentificacion.abreviatura}}
                             </mat-option>
                         </mat-select>
                     </mat-form-field>
@@ -655,7 +655,7 @@
                                     <mat-select [(ngModel)]="cliente.financiamiento.formaPago.id" [disabled]="deshabilitarDatoAdicional"
                                         [compareWith]="compareFn" (selectionChange)="cambiarFormaPago()" class="form-control-sm">
                                         <mat-option *ngFor="let formaPago of formasPagos" [value]="formaPago.id">
-                                            {{formaPago.descripcion}}
+                                            {{formaPago.abreviatura}}
                                         </mat-option>
                                     </mat-select>
                                 </mat-form-field>

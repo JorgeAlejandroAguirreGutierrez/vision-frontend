@@ -1,6 +1,5 @@
 import { Component, OnInit, HostListener, ElementRef, Renderer2 } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
-import { valores, validarSesion, tab_activo, exito, exito_swal, error, error_swal } from '../../constantes';
+import { valores, mensajes, validarSesion, exito, exito_swal, error, error_swal } from '../../constantes';
 import Swal from 'sweetalert2';
 
 import { Router } from '@angular/router';
@@ -26,15 +25,14 @@ export class FormaPagoComponent implements OnInit {
   inactivo: string = valores.inactivo;
 
   abrirPanelNuevo: boolean = true;
-  abrirPanelAdmin: boolean = false;
-  edicion: boolean = true;
+  abrirPanelAdmin: boolean = true;
+  formularioValido: boolean = false;
 
   sesion: Sesion=null;
   formaPago= new FormaPago();
   formasPagos: FormaPago[];
 
   columnas: any[] = [
-    { nombreColumna: 'id', cabecera: 'ID', celda: (row: FormaPago) => `${row.id}` },
     { nombreColumna: 'codigo', cabecera: 'Código', celda: (row: FormaPago) => `${row.codigo}` },
     { nombreColumna: 'descripcion', cabecera: 'Descripción', celda: (row: FormaPago) => `${row.descripcion}` },
     { nombreColumna: 'abreviatura', cabecera: 'Abreviatura', celda: (row: FormaPago) => `${row.abreviatura}` },
@@ -47,6 +45,7 @@ export class FormaPagoComponent implements OnInit {
   
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
+  @ViewChild("inputFiltro") inputFiltro: ElementRef;
 
   constructor(private renderer: Renderer2, private formaPagoService: FormaPagoService,
         private sesionService: SesionService,private router: Router) { }
@@ -69,11 +68,16 @@ export class FormaPagoComponent implements OnInit {
       event.preventDefault();
     this.formaPago= new FormaPago();
     this.clickedRows.clear();
+    this.borrarFiltro();
+    this.formularioValido = false;
   }
 
   crear(event) {
     if (event != null)
       event.preventDefault();
+    this.validarFormulario();
+    if (!this.formularioValido)
+      return;  
     this.formaPagoService.crear(this.formaPago).subscribe({
       next: res => {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
@@ -87,6 +91,9 @@ export class FormaPagoComponent implements OnInit {
   actualizar(event) {
     if (event != null)
       event.preventDefault();
+    this.validarFormulario();
+    if (!this.formularioValido)
+      return;    
     this.formaPagoService.actualizar(this.formaPago).subscribe({
       next: res => {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
@@ -126,12 +133,23 @@ export class FormaPagoComponent implements OnInit {
   consultar() {
     this.formaPagoService.consultar().subscribe({
       next: res => {
-        this.formasPagos = res.resultado as FormaPago[]
-        this.dataSource = new MatTableDataSource(this.formasPagos);
-        this.dataSource.paginator = this.paginator;
-        this.dataSource.sort = this.sort;
+        this.formasPagos = res.resultado as FormaPago[];
+        this.llenarTabla(this.formasPagos);
       },
       error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+    });
+  }
+
+  llenarTabla(formasPagos: FormaPago[]) {
+    this.ordenarAsc(formasPagos, 'id');
+    this.dataSource = new MatTableDataSource(formasPagos);
+    this.dataSource.paginator = this.paginator;
+    this.dataSource.sort = this.sort;
+  }
+
+  ordenarAsc(arrayJson: any, pKey: any) {
+    arrayJson.sort(function (a: any, b: any) {
+      return a[pKey] > b[pKey];
     });
   }
 
@@ -141,8 +159,7 @@ export class FormaPagoComponent implements OnInit {
       this.clickedRows.add(formaPago);
       this.formaPago = { ... formaPago};
     } else {
-      this.clickedRows.clear();
-      this.formaPago = new FormaPago();
+      this.nuevo(null);
     }
   }
 
@@ -151,6 +168,31 @@ export class FormaPagoComponent implements OnInit {
     this.dataSource.filter = filterValue.trim().toUpperCase();
     if (this.dataSource.paginator) {
       this.dataSource.paginator.firstPage();
+    }
+  }
+
+  borrarFiltro() {
+    this.renderer.setProperty(this.inputFiltro.nativeElement, 'value', '');
+    this.dataSource.filter = '';
+  }
+
+  validarFormulario(){
+    //validar que los campos esten llenos antes de guardar
+    this.formularioValido = true;
+    if (this.formaPago.descripcion == '') {
+      Swal.fire({ icon: error_swal, title: error, text: mensajes.error_falta_datos });
+      this.formularioValido = false;
+      return;
+    }
+    if (this.formaPago.abreviatura == '') {
+      Swal.fire({ icon: error_swal, title: error, text: mensajes.error_falta_datos });
+      this.formularioValido = false;
+      return;
+    }
+    if (this.formaPago.codigoSRI == '') {
+      Swal.fire({ icon: error_swal, title: error, text: mensajes.error_falta_datos });
+      this.formularioValido = false;
+      return;
     }
   }
 }

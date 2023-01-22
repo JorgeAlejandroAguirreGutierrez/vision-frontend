@@ -24,7 +24,8 @@
                     <div class="col-6 centrar">
                         <mat-form-field appearance="standard">
                             <mat-label>Cúal es su usuario?</mat-label>
-                            <input matInput [(ngModel)]="sesion.usuario.apodo" (change)="obtenerPorApodo()">
+                            <input matInput oninput="this.value = this.value.toUpperCase()" 
+                                [(ngModel)]="sesion.usuario.apodo" (change)="obtenerPorApodo()">
                         </mat-form-field>
                     </div>
                     <ng-container *ngIf="!cambiarContrasena">
@@ -36,7 +37,7 @@
                             <mat-form-field appearance="standard">
                                 <mat-label>Contraseña</mat-label>
                                 <input matInput [type]="ocultarContrasena ? 'password' : 'text'"
-                                    [(ngModel)]="sesion.usuario.contrasena" (keyup.enter)="iniciarSesion()">
+                                    [(ngModel)]="contrasena" (keyup.enter)="iniciarSesion()">
                                 <button mat-icon-button matSuffix (click)="ocultarContrasena = !ocultarContrasena"
                                     [attr.aria-label]="'Ocultar password'" [attr.aria-pressed]="ocultarContrasena">
                                     <mat-icon>{{ocultarContrasena ? 'visibility_off' : 'visibility'}}</mat-icon>
@@ -78,7 +79,7 @@
                             <mat-form-field appearance="standard">
                                 <mat-label>Contraseña actual</mat-label>
                                 <input matInput [type]="ocultarContrasena ? 'password' : 'text'"
-                                    [(ngModel)]="sesion.usuario.contrasena">
+                                    [(ngModel)]="contrasena">
                                 <button mat-icon-button matSuffix (click)="ocultarContrasena = !ocultarContrasena"
                                     [attr.aria-label]="'Ocultar password'" [attr.aria-pressed]="ocultarContrasena">
                                     <mat-icon>{{ocultarContrasena ? 'visibility_off' : 'visibility'}}</mat-icon>

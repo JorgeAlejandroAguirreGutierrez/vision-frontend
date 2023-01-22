@@ -139,7 +139,6 @@ export class ClienteComponent implements OnInit {
   };
 
   columnasCliente: any[] = [
-    { nombreColumna: 'id', cabecera: 'ID', celda: (row: Cliente) => `${row.id}` },
     { nombreColumna: 'codigo', cabecera: 'Código', celda: (row: Cliente) => `${row.codigo}` },
     { nombreColumna: 'identificacion', cabecera: 'Indentificación', celda: (row: Cliente) => `${row.identificacion}` },
     { nombreColumna: 'razonSocial', cabecera: 'Razón Social', celda: (row: Cliente) => `${row.razonSocial}` },
@@ -389,7 +388,7 @@ export class ClienteComponent implements OnInit {
   crear(event: any) {
     if (event != null)
       event.preventDefault();
-    this.agregarDatos();
+    this.agregarUbicacion();
     this.clienteService.crear(this.cliente).subscribe({
       next: res => {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
@@ -400,7 +399,7 @@ export class ClienteComponent implements OnInit {
     });
   }
 
-  agregarDatos() {
+  agregarUbicacion() {
     if (this.telefono.numero != valores.vacio)
       this.cliente.telefonos.push(this.telefono);
     if (this.celular.numero != valores.vacio)
@@ -487,14 +486,6 @@ export class ClienteComponent implements OnInit {
     });
   }
 
-  filtroCliente(event: Event) {
-    const filterValue = (event.target as HTMLInputElement).value;
-    this.dataSourceCliente.filter = filterValue.trim().toUpperCase();
-    if (this.dataSourceCliente.paginator) {
-      this.dataSourceCliente.paginator.firstPage();
-    }
-  }
-
   llenarDataSourceCliente(clientes: Cliente[]) {
     this.dataSourceCliente = new MatTableDataSource(clientes);
     this.dataSourceCliente.filterPredicate = (data: Cliente, filter: string): boolean =>
@@ -512,6 +503,14 @@ export class ClienteComponent implements OnInit {
     } else {
       this.clickedRows.clear();
       this.cliente = new Cliente();
+    }
+  }
+
+  filtroCliente(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.dataSourceCliente.filter = filterValue.trim().toUpperCase();
+    if (this.dataSourceCliente.paginator) {
+      this.dataSourceCliente.paginator.firstPage();
     }
   }
 
