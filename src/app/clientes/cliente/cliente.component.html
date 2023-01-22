@@ -183,7 +183,7 @@
                     <div class="col-4">
                         <mat-form-field appearance="standard">
                             <mat-label>Provincia</mat-label>
-                            <mat-select type="text" [(ngModel)]="cliente.ubicacion.provincia" [disabled]="deshabilitarDireccion"
+                            <mat-select type="text" [(ngModel)]="clienteProvincia" [disabled]="deshabilitarDireccion"
                                 (selectionChange)="seleccionarProvincia()" class="form-control-sm">
                                 <mat-option *ngFor="let provincia of provincias" [value]="provincia.provincia">
                                     {{provincia.provincia}}
@@ -194,7 +194,7 @@
                     <div class="col-4">
                         <mat-form-field appearance="standard">
                             <mat-label>Canton</mat-label>
-                            <mat-select type="text" [(ngModel)]="cliente.ubicacion.canton" [disabled]="deshabilitarDireccion" 
+                            <mat-select type="text" [(ngModel)]="clienteCanton" [disabled]="deshabilitarDireccion" 
                                 (selectionChange)="seleccionarCanton()" class="form-control-sm">
                                 <mat-option *ngFor="let canton of cantones" [value]="canton.canton">
                                     {{canton.canton}}
@@ -205,7 +205,8 @@
                     <div class="col-4">
                         <mat-form-field appearance="standard">
                             <mat-label>Parroquia</mat-label>
-                            <mat-select type="text" [(ngModel)]="cliente.ubicacion.parroquia" [disabled]="deshabilitarDireccion" class="form-control-sm">
+                            <mat-select type="text" [(ngModel)]="clienteParroquia" [disabled]="deshabilitarDireccion" 
+                                (selectionChange)="seleccionarParroquia()" class="form-control-sm">
                                 <mat-option *ngFor="let parroquia of parroquias" [value]="parroquia.parroquia">
                                     {{parroquia.parroquia}}
                                 </mat-option>
@@ -369,7 +370,7 @@
                     <div class="col-4">
                         <mat-form-field appearance="standard">
                             <mat-label>Provincia</mat-label>
-                            <mat-select type="text" [(ngModel)]="dependiente.ubicacion.provincia" [disabled]="deshabilitarDependiente"
+                            <mat-select type="text" [(ngModel)]="dependienteProvincia" [disabled]="deshabilitarDependiente"
                                 (selectionChange)="seleccionarDependienteProvincia()" class="form-control-sm">
                                 <mat-option *ngFor="let provincia of dependienteProvincias"
                                     [value]="provincia.provincia">
@@ -381,7 +382,7 @@
                     <div class="col-4">
                         <mat-form-field appearance="standard">
                             <mat-label>Canton</mat-label>
-                            <mat-select type="text" [(ngModel)]="dependiente.ubicacion.canton" [disabled]="deshabilitarDependiente"
+                            <mat-select type="text" [(ngModel)]="dependienteCanton" [disabled]="deshabilitarDependiente"
                                 (selectionChange)="seleccionarDependienteCanton()" class="form-control-sm">
                                 <mat-option *ngFor="let canton of dependienteCantones" [value]="canton.canton">
                                     {{canton.canton}}
@@ -392,7 +393,7 @@
                     <div class="col-4">
                         <mat-form-field appearance="standard">
                             <mat-label>Parroquia</mat-label>
-                            <mat-select type="text" [(ngModel)]="dependiente.ubicacion.parroquia" [disabled]="deshabilitarDependiente" class="form-control-sm">
+                            <mat-select type="text" [(ngModel)]="dependienteParroquia" [disabled]="deshabilitarDependiente" class="form-control-sm">
                                 <mat-option *ngFor="let parroquia of dependienteParroquias" [value]="parroquia.parroquia">
                                     {{parroquia.parroquia}}
                                 </mat-option>

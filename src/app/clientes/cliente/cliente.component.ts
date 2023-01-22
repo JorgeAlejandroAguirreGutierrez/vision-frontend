@@ -86,6 +86,12 @@ export class ClienteComponent implements OnInit {
 
   urlLogo: string = "";
   nombreEmpresa: string = "";
+  clienteProvincia: string = "";
+  clienteCanton: string = "";
+  clienteParroquia: string = "";
+  dependienteProvincia: string = "";
+  dependienteCanton: string = "";
+  dependienteParroquia: string = "";
   urlAvatar: string = environment.prefijoUrlImagenes + "avatar/avatar1.png";
 
   cliente: Cliente = new Cliente();
@@ -210,7 +216,7 @@ export class ClienteComponent implements OnInit {
     this.tipoIdentificacionService.consultar().subscribe({
       next: (res) => {
         this.tiposIdentificaciones = res.resultado as TipoIdentificacion[];
-        console.log(this.tiposIdentificaciones);
+        //console.log(this.tiposIdentificaciones);
       },
       error: (err) => {
         Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje });
@@ -370,11 +376,15 @@ export class ClienteComponent implements OnInit {
     });
   }
 
+  //CRUD
   nuevo(event){
     if (event != null)
       event.preventDefault();
     this.cliente = new Cliente();
     this.dependiente = new Dependiente();
+    this.clienteProvincia = "";
+    this.clienteCanton = "";
+    this.clienteParroquia = "";
     this.telefono = new Telefono();
     this.celular = new Celular();
     this.correo = new Correo();
@@ -502,10 +512,31 @@ export class ClienteComponent implements OnInit {
       this.clickedRows.clear();
       this.clickedRows.add(cliente);
       this.cliente = { ... cliente};
+      console.log(this.cliente);
+      this.llenarUbicacion();
+      this.llenarDataSourceDependiente(this.cliente.dependientes);
     } else {
-      this.clickedRows.clear();
-      this.cliente = new Cliente();
+      this.nuevo(null);
     }
+  }
+
+  llenarUbicacion(){
+    // Llenar ubicación dependiente
+    this.clienteProvincia = this.cliente.ubicacion.provincia;
+    this.ubicacionService.consultarCantones(this.clienteProvincia).subscribe({
+      next: res => {
+        this.cantones = res.resultado as Ubicacion[];
+        this.clienteCanton = this.cliente.ubicacion.canton;
+        this.ubicacionService.consultarParroquias(this.clienteCanton).subscribe({
+          next: res => {
+            this.parroquias = res.resultado as Ubicacion[];
+            this.clienteParroquia = this.cliente.ubicacion.parroquia;
+          },
+          error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+        });
+      },
+      error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+    });
   }
 
   filtroCliente(event: Event) {
@@ -700,9 +731,13 @@ export class ClienteComponent implements OnInit {
 
 
   seleccionarProvincia() {
-    this.ubicacionService.consultarCantones(this.cliente.ubicacion.provincia).subscribe({
+    this.cliente.ubicacion.provincia = this.clienteProvincia;
+    this.ubicacionService.consultarCantones(this.clienteProvincia).subscribe({
       next: res => {
+        this.clienteCanton = "";
         this.cantones = res.resultado as Ubicacion[];
+        this.clienteParroquia = "";
+        this.parroquias = [];
       },
       error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     });
@@ -718,8 +753,10 @@ export class ClienteComponent implements OnInit {
   }
 
   seleccionarCanton() {
-    this.ubicacionService.consultarParroquias(this.cliente.ubicacion.canton).subscribe({
+    this.cliente.ubicacion.canton = this.clienteCanton;
+    this.ubicacionService.consultarParroquias(this.clienteCanton).subscribe({
       next: res => {
+        this.clienteParroquia = "";
         this.parroquias = res.resultado as Ubicacion[];
       },
       error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
@@ -733,6 +770,11 @@ export class ClienteComponent implements OnInit {
       },
       err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     );
+  }
+
+  seleccionarParroquia() {
+    this.cliente.ubicacion.parroquia = this.clienteParroquia;
+    console.log(this.cliente);
   }
 
   validarSexoEstadoCivilOrigenIngreso() {
