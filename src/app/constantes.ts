@@ -126,7 +126,7 @@ export const valores ={
      abierto : "ABIERTO",
      cerrado : "CERRADO",
      pendiente : "PENDIENTE",
-     entregada : "ENTREGADA",
+     entregado : "ENTREGADO",
      sinGuia : "SIN GUIA",
      noRecaudado : "NO RECAUDADO",
      recaudado : "RECAUDADO",

@@ -545,15 +545,6 @@ export class ClienteComponent implements OnInit {
     this.dataSourceDependiente.sort = this.sort;
   }
 
-  ubicacionNormalizar() {
-    if(this.cliente.ubicacion.provincia != valores.vacio){
-      this.seleccionarProvincia();
-    }
-    if(this.cliente.ubicacion.canton != valores.vacio){
-      this.seleccionarCanton();
-    }
-  }
-
   validarIdentificacion() {
     this.clienteService.validarIdentificacion(this.cliente.identificacion).subscribe({
       next: (res) => {
@@ -571,9 +562,9 @@ export class ClienteComponent implements OnInit {
   }
 
   cambiarFormaPago() {
-    if (this.cliente.financiamiento.formaPago.id == 1) {
+    if (this.cliente.formaPago.id == 1) {
       this.activacionPlazoCredito = true;
-      this.cliente.financiamiento.plazoCredito.id = 0;
+      this.cliente.plazoCredito.id = 0;
     } else {
       this.activacionPlazoCredito = false;
     }

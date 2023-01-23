@@ -36,7 +36,7 @@ export class EntregaComponent implements OnInit {
   deshabilitar: boolean = false;
   deshabilitarTransportista: boolean = false;
   pendiente = valores.pendiente;
-  entregada = valores.entregada;
+  entregado = valores.entregado;
   sinGuia = valores.sinGuia;
   clienteDireccion = valores.clienteDireccion;
   nuevaDireccion = valores.nuevaDireccion;

@@ -845,12 +845,12 @@ export class FacturaComponent implements OnInit {
     }
   }
   limpiarCliente(){
-    this.factura.cliente.direccion="";
-    this.primerTelefonoCliente="";
-    this.primerCelularCliente="";
-    this.primerCorreoCliente="";
-    this.factura.cliente.financiamiento.formaPago.abreviatura="";
-    this.factura.cliente.financiamiento.monto=0;
+    this.factura.cliente.direccion = valores.vacio;
+    this.primerTelefonoCliente = valores.vacio;
+    this.primerCelularCliente = valores.vacio;
+    this.primerCorreoCliente = valores.vacio;
+    this.factura.cliente.formaPago.abreviatura = valores.vacio;
+    this.factura.cliente.montoFinanciamiento = valores.cero;
   }
   limpiarIdentificacionClienteFactura(){
     if (this.seleccionIdentificacionClienteFactura.value.id==undefined){
@@ -863,12 +863,12 @@ export class FacturaComponent implements OnInit {
     }
   }
   limpiarClienteFactura(){
-    this.factura.clienteFactura.direccion="";
-    this.primerTelefonoClienteFactura="";
-    this.primerCelularClienteFactura="";
-    this.primerCorreoClienteFactura="";
-    this.factura.clienteFactura.financiamiento.formaPago.abreviatura="";
-    this.factura.clienteFactura.financiamiento.monto=0;
+    this.factura.clienteFactura.direccion = valores.vacio;
+    this.primerTelefonoClienteFactura = valores.vacio;
+    this.primerCelularClienteFactura = valores.vacio;
+    this.primerCorreoClienteFactura = valores.vacio;
+    this.factura.clienteFactura.formaPago.abreviatura = valores.vacio;
+    this.factura.clienteFactura.montoFinanciamiento = valores.cero;
   }
   eliminarFacturaDetalle(i: number){
     this.factura.facturaDetalles.splice(i, 1);

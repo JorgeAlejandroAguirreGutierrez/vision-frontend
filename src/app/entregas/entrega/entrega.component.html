@@ -181,14 +181,14 @@
                     <div class="col-6">
                         <mat-form-field appearance="standard">
                             <mat-label>No. Guia</mat-label>
-                            <input matInput type="text" class="form-control-sm" [(ngModel)]="entrega.numero" [disabled]="true">
+                            <input matInput type="text" class="form-control-sm" [(ngModel)]="entrega.guiaNumero" [disabled]="true">
                         </mat-form-field>
                     </div>
                     <div class="col-6">
                         <mat-form-field appearance="standard">
                             <mat-label>Estado</mat-label>
                             <mat-select class="form-control-sm" [(ngModel)]="entrega.estado" [disabled]="true">
-                                <mat-option [value]="entregada">{{entregada}}</mat-option>
+                                <mat-option [value]="entregado">{{entregado}}</mat-option>
                                 <mat-option [value]="pendiente">{{pendiente}}</mat-option>
                                 <mat-option [value]="sinGuia">{{sinGuia}}</mat-option>
                             </mat-select>

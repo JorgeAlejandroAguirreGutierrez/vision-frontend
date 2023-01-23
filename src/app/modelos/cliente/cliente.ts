@@ -35,7 +35,9 @@ export class Cliente {
    tipoContribuyente: TipoContribuyente;
    segmento: Segmento;
    ubicacion: Ubicacion;
-   financiamiento: Financiamiento;
+   montoFinanciamiento: number;
+   formaPago: FormaPago;
+   plazoCredito: PlazoCredito;
    genero: Genero;
    estadoCivil: EstadoCivil;
    calificacionCliente: CalificacionCliente;
@@ -62,7 +64,9 @@ export class Cliente {
       this.tipoContribuyente=new TipoContribuyente();
       this.segmento=new Segmento();
       this.grupoCliente=new GrupoCliente();
-      this.financiamiento=new Financiamiento();
+      this.montoFinanciamiento = valores.cero;
+      this.formaPago = new FormaPago();
+      this.plazoCredito = new PlazoCredito();
       this.genero=new Genero();
       this.estadoCivil=new EstadoCivil();
       this.calificacionCliente= new CalificacionCliente();
@@ -84,9 +88,8 @@ export class Cliente {
       if (this.grupoCliente==null) this.grupoCliente=new GrupoCliente();
       if (this.calificacionCliente==null) this.calificacionCliente=new CalificacionCliente();
       if (this.origenIngreso==null) this.origenIngreso=new OrigenIngreso();
-      if (this.financiamiento==null) this.financiamiento=new Financiamiento();
-      if (this.financiamiento.formaPago==null) this.financiamiento.formaPago=new FormaPago();
-      if (this.financiamiento.plazoCredito==null) this.financiamiento.plazoCredito=new PlazoCredito();
+      if (this.formaPago==null) this.formaPago=new FormaPago();
+      if (this.plazoCredito==null) this.plazoCredito=new PlazoCredito();
       if (this.genero==null) this.genero=new Genero();
       if (this.estadoCivil==null) this.estadoCivil=new EstadoCivil();
       if (this.retencionesCliente[0].tipoRetencion==null) this.retencionesCliente[0].tipoRetencion= new TipoRetencion();
