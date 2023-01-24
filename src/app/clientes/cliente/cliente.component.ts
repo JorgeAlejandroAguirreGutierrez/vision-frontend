@@ -399,6 +399,7 @@ export class ClienteComponent implements OnInit {
     if (event != null)
       event.preventDefault();
     this.agregarUbicacion();
+    console.log(this.cliente);
     this.clienteService.crear(this.cliente).subscribe({
       next: res => {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
@@ -774,7 +775,6 @@ export class ClienteComponent implements OnInit {
 
   seleccionarParroquia() {
     this.cliente.ubicacion.parroquia = this.clienteParroquia;
-    console.log(this.cliente);
   }
 
   validarSexoEstadoCivilOrigenIngreso() {
