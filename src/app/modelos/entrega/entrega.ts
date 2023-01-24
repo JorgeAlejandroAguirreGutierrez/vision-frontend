@@ -6,12 +6,13 @@ export class Entrega {
     id: number;
     codigo: string;
     fecha: Date;
-    numero: string;
+    guiaNumero: string;
     direccion: string;
     telefono: string;
     celular: string;
     correo: string;
     referencia: string;
+    opcionGuia: string;
     estado: string;
     ubicacion : Ubicacion;
     transportista: Transportista;
@@ -22,11 +23,12 @@ export class Entrega {
         this.id = valores.cero;
         this.codigo = valores.vacio;
         this.fecha = new Date();
-        this.numero = valores.vacio;
+        this.guiaNumero = valores.vacio;
         this.direccion = valores.vacio;
         this.telefono = valores.vacio;
         this.celular = valores.vacio;
         this.correo = valores.vacio;
+        this.opcionGuia = valores.clienteDireccion;
         this.estado = valores.pendiente;
         this.ubicacion = new Ubicacion();
         this.transportista = new Transportista();

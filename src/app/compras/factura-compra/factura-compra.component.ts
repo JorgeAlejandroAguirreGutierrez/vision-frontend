@@ -435,9 +435,9 @@ export class FacturaCompraComponent implements OnInit {
   }
 
   cambiar_forma_pago(){
-    if (this.cliente.financiamiento.formaPago.abreviatura=="EF"){
+    if (this.cliente.formaPago.abreviatura=="EF"){
       this.activacionPlazoCredito=true;
-      this.cliente.financiamiento.plazoCredito=null;
+      this.cliente.plazoCredito=null;
     } else {
       this.activacionPlazoCredito=false;
     }

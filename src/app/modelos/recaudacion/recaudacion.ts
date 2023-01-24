@@ -45,7 +45,7 @@ export class Recaudacion {
         this.total=valores.cero;
         this.efectivo=valores.cero;
         this.cambio=valores.cero;
-        this.estado=valores.norecaudado;
+        this.estado=valores.noRecaudado;
         this.totalCheques=valores.cero;
         this.totalDepositos=valores.cero;
         this.totalTransferencias=valores.cero;

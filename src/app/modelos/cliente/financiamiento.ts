@@ -9,7 +9,7 @@ export class Financiamiento {
     plazoCredito: PlazoCredito;
 
     constructor() {
-        this.id=0;
+        this.id = valores.cero;
         this.codigo = valores.vacio;
         this.monto = valores.cero;
         this.formaPago = new FormaPago();

@@ -10,7 +10,6 @@ export class Factura {
   secuencia: string;
   fecha: Date;
   estado: string;
-  eliminado: boolean;
 
   subtotalSinDescuento: number;
   subtotalConDescuento: number;
@@ -45,8 +44,7 @@ export class Factura {
     this.id=valores.cero;
     this.secuencia=valores.vacio;
     this.fecha=new Date();
-    this.estado=valores.emitida;
-    this.eliminado=false;
+    this.estado=valores.noFacturada;
     this.cliente=new Cliente();
     this.clienteFactura=new Cliente();
     this.dependiente=null;

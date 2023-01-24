@@ -576,15 +576,6 @@ export class ClienteComponent implements OnInit {
     this.dataSourceDependiente.sort = this.sort;
   }
 
-  ubicacionNormalizar() {
-    if(this.cliente.ubicacion.provincia != valores.vacio){
-      this.seleccionarProvincia();
-    }
-    if(this.cliente.ubicacion.canton != valores.vacio){
-      this.seleccionarCanton();
-    }
-  }
-
   validarIdentificacion() {
     this.clienteService.validarIdentificacion(this.cliente.identificacion).subscribe({
       next: (res) => {
@@ -602,9 +593,9 @@ export class ClienteComponent implements OnInit {
   }
 
   cambiarFormaPago() {
-    if (this.cliente.financiamiento.formaPago.id == 1) {
+    if (this.cliente.formaPago.id == 1) {
       this.activacionPlazoCredito = true;
-      this.cliente.financiamiento.plazoCredito.id = 0;
+      this.cliente.plazoCredito.id = 0;
     } else {
       this.activacionPlazoCredito = false;
     }
@@ -621,6 +612,7 @@ export class ClienteComponent implements OnInit {
   validarTelefono() {
     let digito = this.telefono.numero.substring(0, 1);
     if (this.telefono.numero.length != 11 || digito != "0") {
+      this.telefono.numero = valores.vacio;
       Swal.fire({ icon: error_swal, title: error, text: mensajes.error_telefono_invalido });
     }
   }
@@ -638,6 +630,7 @@ export class ClienteComponent implements OnInit {
   validarCelular() {
     let digito = this.celular.numero.substring(0, 2);
     if (this.celular.numero.length != 12 || digito != "09") {
+      this.celular.numero = valores.vacio;
       Swal.fire({ icon: error_swal, title: error, text: mensajes.error_celular_invalido });
     }
   }

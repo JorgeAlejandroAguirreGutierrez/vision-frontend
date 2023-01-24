@@ -16,16 +16,16 @@ export class FacturaService {
 
   constructor(private http: HttpClient, private router: Router) { }
 
-  @Output() eventoRecaudacion= new EventEmitter<Factura>();
+  @Output() eventoRecaudacion= new EventEmitter<number>();
 
-  enviarEventoRecaudacion(msg: Factura) {
-    this.eventoRecaudacion.emit(msg);
+  enviarEventoRecaudacion(data: number) {
+    this.eventoRecaudacion.emit(data);
   }
 
-  @Output() eventoEntrega= new EventEmitter<Factura>();
+  @Output() eventoEntrega= new EventEmitter<number>();
 
-  enviarEventoEntrega(msg: Factura) {
-    this.eventoEntrega.emit(msg);
+  enviarEventoEntrega(data: number) {
+    this.eventoEntrega.emit(data);
   }
 
   crear(factura: Factura): Observable<Respuesta> {

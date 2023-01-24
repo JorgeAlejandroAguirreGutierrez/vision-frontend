@@ -75,6 +75,9 @@ export class RecaudacionComponent implements OnInit {
   panelCredito=false;
   deshabilitarTabla=true;
 
+  recaudado = valores.recaudado;
+  noRecaudado = valores.noRecaudado;
+
   constructor(private facturaService: FacturaService, private facturacionElectronicaService: FacturacionElectronicaService, private clienteService: ClienteService, private bancoService: BancoService, private sesionService: SesionService,
     private cuentaPropiaService: CuentaPropiaService, private operadorTarjetaService: OperadorTarjetaService, private datePipe: DatePipe,
     private franquiciaTarjetaService: FranquiciaTarjetaService, private formaPagoService: FormaPagoService, private creditoService: CreditoService,
@@ -191,10 +194,15 @@ export class RecaudacionComponent implements OnInit {
     this.consultarBancosTarjetasCreditos();
     this.consultarBancosTarjetasDebitos();
 
-    this.facturaService.eventoRecaudacion.subscribe((data:Factura) => {
-        this.factura=data;
-        this.cargar();
-        this.calcular();
+    this.facturaService.eventoRecaudacion.subscribe((data: number) => {
+        this.facturaService.obtener(data).subscribe(
+          res => {
+            this.factura = res.resultado as Factura;
+            this.cargar();
+            this.calcular();
+          },
+          err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+        );
     });
     
     this.filtroRazonSocialClientes = this.seleccionRazonSocialCliente.valueChanges
@@ -905,12 +913,8 @@ export class RecaudacionComponent implements OnInit {
     }
     this.recaudacionService.crear(this.recaudacion).subscribe(
       res => {
-        let recaudacion=new Recaudacion();
-        Object.assign(recaudacion, res.resultado as Recaudacion);
-        recaudacion.normalizar();
-        this.recaudacion=recaudacion;
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
-        this.facturaService.enviarEventoEntrega(this.factura);
+        this.facturaService.enviarEventoEntrega(res.resultado.id);
         this.stepper.next();
       }, 
       err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
@@ -922,11 +926,8 @@ export class RecaudacionComponent implements OnInit {
       event.preventDefault();
     this.recaudacionService.actualizar(this.recaudacion).subscribe(
       res => {
-        let recaudacion= new Recaudacion();
-        Object.assign(recaudacion, res.resultado as Recaudacion);
-        this.recaudacion=recaudacion;
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
-        this.facturaService.enviarEventoEntrega(this.factura)
+        this.facturaService.enviarEventoEntrega(res.resultado.id);
         this.stepper.next();
       }, 
       err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
