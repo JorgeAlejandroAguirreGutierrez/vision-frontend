@@ -1,5 +1,4 @@
 import { Cliente } from '../cliente/cliente';
-import { Dependiente } from '../cliente/dependiente';
 import { FacturaDetalle } from './factura-detalle';
 import { Sesion } from '../usuario/sesion';
 import { valores } from "../../constantes";
@@ -35,8 +34,6 @@ export class Factura {
   comentario: string;
 
   cliente: Cliente;
-  clienteFactura:Cliente;
-  dependiente: Dependiente;
   sesion: Sesion;
   facturaDetalles: FacturaDetalle[];
   
@@ -46,8 +43,6 @@ export class Factura {
     this.fecha=new Date();
     this.estado=valores.noFacturada;
     this.cliente=new Cliente();
-    this.clienteFactura=new Cliente();
-    this.dependiente=null;
     this.facturaDetalles=[];
     this.comentario=valores.vacio;
     this.sesion=new Sesion();
@@ -67,7 +62,6 @@ export class Factura {
 
   normalizar(){
     if (this.cliente==null) this.cliente=new Cliente();
-    if (this.clienteFactura==null) this.clienteFactura=new Cliente();
     if (this.sesion==null) this.sesion=new Sesion();
     if (this.facturaDetalles==null) this.facturaDetalles=[];
  }

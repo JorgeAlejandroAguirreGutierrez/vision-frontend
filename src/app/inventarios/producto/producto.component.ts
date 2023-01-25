@@ -35,7 +35,9 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 
-
+export interface DialogData {
+  grupoProducto: GrupoProducto;
+}
 
 @Component({
   selector: 'app-producto',
@@ -177,6 +179,12 @@ export class ProductoComponent implements OnInit {
       },
       err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     );
+  }
+
+  nuevo(event){
+    if (event != null)
+      event.preventDefault();
+    this.producto = new Producto();
   }
 
   crear(event: any) {
@@ -721,28 +729,15 @@ export class ProductoComponent implements OnInit {
     }
   }
 
-  recargar() {
-    let actual = this.router.url;
-    this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
-      this.router.navigate([actual]);
-    });
-  }
-
-  grupoSeleccionado(event: any) {
-    let grupoProductoRecibido = event.grupoProductoSeleccionado as GrupoProducto;
-    this.producto.grupoProducto = grupoProductoRecibido;
-  }
-
   dialogoGruposProductos(): void {
     const dialogRef = this.dialog.open(DialogoGrupoProductoComponent, {
       width: '80%',
+      data: {}
     });
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        this.producto.grupoProducto = result as GrupoProducto;
-        this.producto.nombre = this.producto.grupoProducto.linea + valores.espacio +
-          this.producto.grupoProducto.sublinea + valores.espacio + this.producto.grupoProducto.presentacion;
+        Object.assign(this.producto.grupoProducto, result as GrupoProducto);
       }
     });
   }
@@ -755,22 +750,12 @@ export class ProductoComponent implements OnInit {
 })
 export class DialogoGrupoProductoComponent {
 
-  gruposProductos: string[] = [];
-
-  constructor(
-    public dialogRef: MatDialogRef<DialogoGrupoProductoComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: GrupoProducto) { }
+  constructor(public dialogRef: MatDialogRef<DialogoGrupoProductoComponent>, @Inject(MAT_DIALOG_DATA) public data: DialogData) { }
 
   onNoClick(): void {
     this.dialogRef.close();
-    this.data = new GrupoProducto;
   }
-
-  grupoSeleccionado(event: any) {
-    if (event && event.id != 0) {
-      this.data = event.grupoProductoSeleccionado as GrupoProducto;
-    } else {
-      this.data = new GrupoProducto;
-    }
+  grupoProductoSeleccionado(event: any) {
+    this.data.grupoProducto = event;
   }
 }

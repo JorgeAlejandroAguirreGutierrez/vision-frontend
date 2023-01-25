@@ -4,47 +4,21 @@
         <mat-step [stepControl]="firstFormGroup" [editable]="isEditable">
             <nav class="navbar-light nav-fijo">
                 <ul class="navbar-nav">
-                    <li class="nav-item">
-                        <ng-container *ngIf="factura.id==0">
-                            <li class="nav-item">
-                                <a class="nav-link" title="Nuevo" role="button" (click)="nuevo($event)">
-                                    <mat-icon>file_copy</mat-icon>
-                                </a>
-                            </li>
-                        </ng-container>
-                        <ng-container *ngIf="factura.id==0">
-                            <a class="nav-link" title="Guardar" role="button" (click)="crear($event)">
-                                <mat-icon>save</mat-icon>
-                            </a>
-                        </ng-container>
-                        <ng-container *ngIf="factura.id!=0">
-                            <a class="nav-link" title="Actualizar" role="button" (click)="actualizar($event)">
-                                <mat-icon>update</mat-icon>
-                            </a>
-                        </ng-container>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" title="Consultar Bienes" role="button" (click)="consultarBienes($event)">
-                            <mat-icon>archive</mat-icon>
+                    <li class="nav-item" *ngIf="factura.id==0">
+                        <a class="nav-link" title="Nuevo" role="button" (click)="nuevo($event)">
+                            <mat-icon>file_copy</mat-icon>
                         </a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" title="Consultar Servicios" role="button" (click)="consultarServicios($event)">
-                            <mat-icon>archive</mat-icon>
+                    <li class="nav-item" *ngIf="factura.id==0">
+                        <a class="nav-link" title="Guardar" role="button" (click)="crear($event)">
+                            <mat-icon>save</mat-icon>
                         </a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" title="Consultar Activos Fijos" role="button" (click)="consultarActivosFijos($event)">
-                            <mat-icon>archive</mat-icon>
+                    <li class="nav-item" *ngIf="factura.id!=0">
+                        <a class="nav-link" title="Actualizar" role="button" (click)="actualizar($event)">
+                            <mat-icon>update</mat-icon>
                         </a>
                     </li>
-                    <ng-container *ngIf="factura.id!=0">
-                        <li class="nav-item">
-                            <a class="nav-link" title="Crear Factura Electronica" role="button" (click)="crearFacturaElectronica($event)">
-                                <mat-icon>download</mat-icon>
-                            </a>
-                        </li>
-                    </ng-container>
                     <li class="nav-item" *ngIf="factura.id!=0">
                         <a class="nav-link" title="Activar" role="button" (click)="activar($event)">
                             <mat-icon>check</mat-icon>
@@ -90,7 +64,7 @@
                                         [matAutocomplete]="identificacionCliente">
                                 </mat-form-field>
                             </div>
-                            <div class="col-8">
+                            <div class="col-9">
                                 <mat-form-field appearance="standard">
                                     <mat-label>Cliente*</mat-label>
                                     <mat-autocomplete #razonSocialCliente="matAutocomplete"
@@ -105,12 +79,6 @@
                                         [formControl]="seleccionRazonSocialCliente"
                                         [matAutocomplete]="razonSocialCliente">
                                 </mat-form-field>
-                            </div>
-                            <div class="col-1 centrar iconos">
-                                <button mat-icon-button [disabled]="habilitarSeleccionDependiente">
-                                    <mat-icon (click)="asignarDependiente(modalDependientes)">supervisor_account
-                                    </mat-icon>
-                                </button>
                             </div>
                             <div class="col-12">
                                 <mat-form-field appearance="standard">
@@ -222,102 +190,6 @@
                         </div>
                     </div>
                 </mat-expansion-panel>
-                <mat-expansion-panel (opened)="panelOpenState = true" (closed)="panelOpenState = false">
-                    <mat-expansion-panel-header>
-                        <mat-panel-title>
-                            <i><u>FACTURA CON OTROS DATOS</u></i>
-                        </mat-panel-title>
-                        <mat-panel-description>
-                            {{panelOpenState ? 'Ocultar sección' : 'Información del cliente para facturar'}}
-                            <mat-icon>map</mat-icon>
-                        </mat-panel-description>
-                    </mat-expansion-panel-header>
-                    <mat-divider></mat-divider>
-                    <div class="form-group form-row">
-                        <div class="col-1">
-                            <mat-checkbox [disabled]="habilitarFacturar" [(ngModel)]="seleccionFacturar"
-                                [labelPosition]="'before'" (change)="asignarFacturar()" class="form-control-sm"
-                                color="primary">Habilitar</mat-checkbox>
-                        </div>
-                        <div class="col-3">
-                            <mat-form-field appearance="standard">
-                                <mat-label>Identificación</mat-label>
-                                <mat-autocomplete #identificacionClienteFactura="matAutocomplete"
-                                    [displayWith]="verIdentificacionClienteFactura"
-                                    (optionSelected)="seleccionarIdentificacionClienteFactura()">
-                                    <mat-option *ngFor="let cliente of filtroIdentificacionClientesFactura | async"
-                                        [value]="cliente">
-                                        {{cliente.identificacion}}
-                                    </mat-option>
-                                </mat-autocomplete>
-                                <input matInput type="text" class="form-control-sm" placeholder="Clientes"
-                                    [formControl]="seleccionIdentificacionClienteFactura"
-                                    [matAutocomplete]="identificacionClienteFactura">
-                            </mat-form-field>
-                        </div>
-                        <div class="col-8">
-                            <mat-form-field appearance="standard">
-                                <mat-label>Cliente</mat-label>
-                                <mat-autocomplete #razonSocialClienteFactura="matAutocomplete"
-                                    [displayWith]="verRazonSocialClienteFactura"
-                                    (optionSelected)="seleccionarRazonSocialClienteFactura()">
-                                    <mat-option *ngFor="let cliente of filtroRazonSocialClientesFactura | async"
-                                        [value]="cliente">
-                                        {{cliente.razonSocial}}
-                                    </mat-option>
-                                </mat-autocomplete>
-                                <input type="text" class="form-control-sm" placeholder="Clientes" matInput
-                                    [formControl]="seleccionRazonSocialClienteFactura"
-                                    [matAutocomplete]="razonSocialClienteFactura">
-                            </mat-form-field>
-                        </div>
-                        <div class="col-12">
-                            <mat-form-field appearance="standard">
-                                <mat-label>Dirección</mat-label>
-                                <input matInput type="text" [(ngModel)]="factura.clienteFactura.direccion"
-                                    class="form-control-sm" [disabled]="habilitar">
-                            </mat-form-field>
-                        </div>
-                        <div class="col-3">
-                            <mat-form-field appearance="standard">
-                                <mat-label>Teléfono</mat-label>
-                                <b matPrefix>+593 &nbsp;</b>
-                                <input matInput type="tel" class="form-control-sm"
-                                    [(ngModel)]="primerTelefonoClienteFactura" [disabled]="habilitar">
-                            </mat-form-field>
-                        </div>
-                        <div class="col-1 centrar iconos">
-                            <button mat-icon-button [disabled]="habilitarClienteFacturaTce">
-                                <mat-icon (click)="open(modalTelefonosClienteFactura)">visibility</mat-icon>
-                            </button>
-                        </div>
-                        <div class="col-3">
-                            <mat-form-field appearance="standard">
-                                <mat-label>Celular</mat-label>
-                                <b matPrefix>+593 &nbsp;</b>
-                                <input matInput type="tel" class="form-control-sm"
-                                    [(ngModel)]="primerCelularClienteFactura" [disabled]="habilitar">
-                            </mat-form-field>
-                        </div>
-                        <div class="col-1 centrar iconos">
-                            <button mat-icon-button [disabled]="habilitarClienteFacturaTce">
-                                <mat-icon (click)="open(modalCelularesClienteFactura)">visibility</mat-icon>
-                            </button>
-                        </div>
-                        <div class="col-3">
-                            <mat-form-field appearance="standard">
-                                <mat-label>Correo electrónico</mat-label>
-                                <input matInput type="text" class="form-control-sm"
-                                    [(ngModel)]="primerCorreoClienteFactura" [disabled]="habilitar">
-                            </mat-form-field>
-                        </div>
-                        <div class="col-1 centrar iconos">
-                            <button mat-icon-button [disabled]="habilitarClienteFacturaTce">
-                                <mat-icon (click)="open(modalCorreosClienteFactura)">visibility</mat-icon>
-                            </button>
-                        </div>
-                    </div>
-                </mat-expansion-panel>
                 <mat-expansion-panel (opened)="panelOpenState = true" (closed)="panelOpenState = false"
                     *ngIf="verAcordeonFacturaDetalle">
                     <mat-expansion-panel-header>
@@ -379,6 +251,18 @@
                             </div>
                         </div>
                         <div class="form-row col-9 linea-vertical">
+                            <div class="col-1">
+                                <mat-form-field appearance="standard">
+                                    <mat-label>Tipo</mat-label>
+                                    <mat-select [(ngModel)]="categoriaProducto" (change)="consultarProductos()"
+                                        class="form-control-sm">
+                                        <mat-option *ngFor="let categoriaProducto of categoriasProductos"
+                                            [value]="categoriaProducto.abreviatura">
+                                            {{categoriaProducto.descripcion}}
+                                        </mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
                             <div class="col-8">
                                 <mat-form-field appearance="standard">
                                     <mat-label>Producto</mat-label>
@@ -397,7 +281,7 @@
                                     <mat-icon (click)="abrirTabProducto($event)">library_add</mat-icon>
                                 </button>
                             </div>
-                            <div class="col-3">
+                            <div class="col-2">
                                 <mat-form-field appearance="standard">
                                     <mat-label>Medida</mat-label>
                                     <mat-select [(ngModel)]="facturaDetalle.precio" [compareWith]="compareFn"
@@ -568,7 +452,8 @@
                                 <tr mat-row *matRowDef="let row; columns: columnasDetalleFactura;"></tr>
                             </table>
                             <ng-container>
-                                <mat-paginator #paginatorFacturaDetalle [pageSizeOptions]="[5, 10, 25, 100]"> </mat-paginator>
+                                <mat-paginator #paginatorFacturaDetalle [pageSizeOptions]="[5, 10, 25, 100]">
+                                </mat-paginator>
                             </ng-container>
                         </div>
                         <mat-divider></mat-divider>
@@ -746,119 +631,8 @@
                 <button mat-button matStepperNext>Siguiente</button>
             </div>
         </mat-step>
-        <!-- Pasos Entrega -->
-        <mat-step [stepControl]="thirdFormGroup" [editable]="isEditable">
-            <ng-template matStepLabel>Entrega</ng-template>
-            <app-entrega></app-entrega>
-            <mat-divider></mat-divider>
-            <div>
-                <button mat-button matStepperPrevious>Atras</button>
-                <button mat-button (click)="stepper.reset()">Terminar</button>
-            </div>
-        </mat-step>
     </mat-stepper>
 </div>
-<ng-template #block_dependiente>
-    <div class="col-12">
-        <div class="form-row">
-            <div class="form-group col-2">
-                <mat-form-field appearance="standard">
-                    <mat-label>Ced/RUC</mat-label>
-                    <input matInput type="text" [value]="factura.cliente?.identificacion" class="form-control-sm"
-                        disabled>
-                </mat-form-field>
-            </div>
-            <div class="form-group col-8">
-                <mat-form-field appearance="standard">
-                    <mat-label>Cliente/Pista</mat-label>
-                    <input matInput type="text" [value]="factura.dependiente.razonSocial" class="form-control-sm"
-                        disabled>
-                </mat-form-field>
-            </div>
-            <div class="form-group col-2">
-                <mat-checkbox [disabled]="habilitarSeleccionDependiente"
-                    (change)="asignarDependiente(modalDependientes)" [(ngModel)]="seleccionDependiente"
-                    class="form-control-sm" color="primary"> Fact. a Dep</mat-checkbox>
-            </div>
-        </div>
-        <div class="form-row">
-            <div class="col-9">
-                <div class="form-row">
-                    <div class="form-group col-12">
-                        <mat-form-field appearance="standard">
-                            <mat-label>Direccion</mat-label>
-                            <input matInput type="text" [(ngModel)]="factura.dependiente.direccion"
-                                class="form-control-sm" [disabled]="true">
-                        </mat-form-field>
-                    </div>
-                </div>
-                <div class="form-row">
-                    <div class="form-group col-3">
-                        <mat-form-field appearance="standard">
-                            <mat-label>Telefono</mat-label>
-                            <input matInput type="text" [(ngModel)]="primerTelefonoDependiente" class="form-control-sm"
-                                [disabled]="true">
-                        </mat-form-field>
-                    </div>
-                    <div class="form-group col">
-                        <label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
-                        <button class="btn btn-primary btn-circle" [disabled]="habilitarClienteTce"
-                            (click)="open(modalTelefonosCliente)">
-                            <mat-icon>visibility</mat-icon>
-                        </button>
-                    </div>
-                    <div class="form-group col-3">
-                        <mat-form-field appearance="standard">
-                            <mat-label>Celular</mat-label>
-                            <input matInput type="text" [(ngModel)]="primerCelularDependiente" class="form-control-sm"
-                                [disabled]="true">
-                        </mat-form-field>
-                    </div>
-                    <div class="form-group col">
-                        <label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
-                        <button class="btn btn-primary btn-circle" [disabled]="habilitarClienteTce"
-                            (click)="open(modalCelularesCliente)">
-                            <mat-icon>visibility</mat-icon>
-                        </button>
-                    </div>
-                    <div class="form-group col-3">
-                        <mat-form-field appearance="standard">
-                            <mat-label>Email</mat-label>
-                            <input matInput type="text" [(ngModel)]="primerCorreoDependiente" class="form-control-sm"
-                                [disabled]="true">
-                        </mat-form-field>
-                    </div>
-                    <div class="form-group col">
-                        <label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
-                        <button class="btn btn-primary btn-circle" [disabled]="habilitarClienteTce"
-                            (click)="open(modalCorreosCliente)">
-                            <mat-icon>visibility</mat-icon>
-                        </button>
-                    </div>
-                </div>
-            </div>
-            <div class="col-3">
-                <div class="form-row">
-                    <div class="form-group col-6">
-                        <mat-form-field appearance="standard">
-                            <mat-label>Forma de Pago</mat-label>
-                            <input matInput type="text"
-                                [(ngModel)]="factura.cliente.formaPago.abreviatura"
-                                class="form-control-sm" [disabled]="true">
-                        </mat-form-field>
-                    </div>
-                    <div class="form-group col-6">
-                        <mat-form-field appearance="standard">
-                            <mat-label>Pre Saldo.</mat-label>
-                            <input matInput type="text" [(ngModel)]="factura.cliente.montoFinanciamiento"
-                                class="form-control-sm" [disabled]="true">
-                        </mat-form-field>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</ng-template>
 <ng-template #modalSeries let-modal>
     <div class="modal-header ">
         <h5 class="modal-title ">Agregar Series</h5>
@@ -986,52 +760,6 @@
         <button type="button " class="btn btn-outline-dark " (click)="modal.close( 'close') ">Cerrar</button>
     </div>
 </ng-template>
-<ng-template #modalDependientes let-modal>
-    <div class="modal-header ">
-        <h5 class="modal-title ">Dependientes</h5>
-        <button type="button " class="close " aria-label="Close " (click)="modal.dismiss( 'Cross click') ">
-            <span aria-hidden="true ">&times;</span>
-        </button>
-    </div>
-    <div class="modal-body ">
-        <div class="form-group form-row ">
-            <div class="form-group col-12 ">
-                <label>Razon Social</label>
-                <input type="text " [(ngModel)]="dependienteBuscar.razonSocial "
-                    oninput="this.value=this.value.toUpperCase() " class="form-control form-control-sm ">
-            </div>
-        </div>
-        <div class="form-group form-row ">
-            <div class="form-group col-12 ">
-                <button class="btn btn-lg btn-block btn-success " (click)="dependienteBuscarAccion() ">Buscar</button>
-            </div>
-        </div>
-        <div class="form-row table-responsive">
-            <table class="table table-hover table-bordered" style="font-size: 0.7rem ">
-                <thead class="table-active">
-                    <tr>
-                        <th>SEL</th>
-                        <th>CODIGO</th>
-                        <th>RAZON SOCIAL</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr *ngFor="let dependiente of dependientes; let i=index">
-                        <td>
-                            <input type="radio" class="form-control" (click)="seleccionarDependiente(i)">
-                        </td>
-                        <td>{{dependiente.codigo}}</td>
-                        <td>{{dependiente.razonSocial}}</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-    </div>
-    <div class="modal-footer ">
-        <button type="button " class="btn btn-outline-dark " (click)="modal.close('close') ">Cerrar</button>
-        <button type="button " class="btn btn-outline-success " (click)="modal.close('confirmar') ">Confirmar</button>
-    </div>
-</ng-template>
 <ng-template #modalCorreosCliente let-modal>
     <div class="modal-header ">
         <h5 class="modal-title ">Ver Correos</h5>
@@ -1107,93 +835,6 @@
                 </thead>
                 <tbody>
                     <tr *ngFor="let telefono of factura.cliente?.telefonos; let i=index ">
-                        <td>
-                            {{telefono.numero}}
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-    </div>
-    <div class="modal-footer ">
-        <button type="button " class="btn btn-outline-dark " (click)="modal.close( 'close') ">Cerrar</button>
-    </div>
-</ng-template>
-<ng-template #modalCorreosClienteFactura let-modal>
-    <div class="modal-header ">
-        <h5 class="modal-title ">Ver Correos</h5>
-        <button type="button " class="close " aria-label="Close " (click)="modal.dismiss( 'Cross click') ">
-            <span aria-hidden="true ">&times;</span>
-        </button>
-    </div>
-    <div class="modal-body ">
-        <div class="form-group form-row table-responsive">
-            <table class="table table-bordered table-hover ">
-                <thead>
-                    <tr>
-                        <th>CORREO</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr *ngFor="let correo of factura.clienteFactura?.correos; let i=index ">
-                        <td>
-                            {{correo.email}}
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-    </div>
-    <div class="modal-footer ">
-        <button type="button " class="btn btn-outline-dark " (click)="modal.close( 'close') ">Cerrar</button>
-    </div>
-</ng-template>
-<ng-template #modalCelularesClienteFactura let-modal>
-    <div class="modal-header ">
-        <h5 class="modal-title ">Ver Celulares</h5>
-        <button type="button " class="close " aria-label="Close " (click)="modal.dismiss( 'Cross click') ">
-            <span aria-hidden="true ">&times;</span>
-        </button>
-    </div>
-    <div class="modal-body ">
-        <div class="form-group form-row table-responsive">
-            <table class="table table-bordered table-hover">
-                <thead>
-                    <tr>
-                        <th>NUMERO</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr *ngFor="let celular of factura.clienteFactura?.celulares; let i=index ">
-                        <td>
-                            {{celular.numero}}
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-    </div>
-    <div class="modal-footer ">
-        <button type="button " class="btn btn-outline-dark " (click)="modal.close( 'close') ">Cerrar</button>
-    </div>
-</ng-template>
-<ng-template #modalTelefonosClienteFactura let-modal>
-    <div class="modal-header ">
-        <h5 class="modal-title ">Ver Telefonos</h5>
-        <button type="button " class="close " aria-label="Close " (click)="modal.dismiss( 'Cross click') ">
-            <span aria-hidden="true ">&times;</span>
-        </button>
-    </div>
-    <div class="modal-body ">
-        <div class="form-group form-row table-responsive">
-            <table class="table table-bordered table-hover">
-                <thead>
-                    <tr>
-                        <th>NUMERO</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr *ngFor="let telefono of factura.clienteFactura?.telefonos; let i=index ">
                         <td>
                             {{telefono.numero}}
                         </td>

@@ -137,16 +137,6 @@ export class PagoCompraComponent implements OnInit {
   columnasTarjetasDebito: string[] = ['id', 'franquicia', 'banco', 'identificacion', 'nombre', 'operador', 'lote', 'valor', 'acciones'];
   dataTarjetasDebitos= new MatTableDataSource<TarjetaDebito>(this.recaudacion.tarjetasDebitos);
 
-  // Variables para Compensaciones
-  habilitarCompensaciones: boolean = false;
-  columnasCompensaciones: string[] = ['id', 'tipo', 'comprobante', 'fecha', 'origen', 'motivo', 'fechaVencimiento', 'valorInicial', 'valorCompensado', 'acciones'];
-  dataCompensaciones = new MatTableDataSource<Compensacion>(this.recaudacion.compensaciones);
-  
-  // Variables para RetencionesVentas
-  habilitarRetencionesVentas: boolean = false;
-  columnasRetencionesVentas: string[] = ['id', 'secuencia', 'autorizacion', 'cod Ret', 'denominacion', 'base', '%', 'valor', 'acciones'];
-  dataRetencionesVentas = new MatTableDataSource<RetencionVenta>(this.recaudacion.retencionesVentas);
-
   sesion: Sesion;
   estado: string="";
 
@@ -449,12 +439,6 @@ export class PagoCompraComponent implements OnInit {
       this.habilitarTarjetasDebitos = !this.habilitarTarjetasDebitos;
       this.defectoTarjetaDebito();
     }
-    if (formaPago == 'COMPENSACIONES'){
-      this.habilitarCompensaciones = !this.habilitarCompensaciones;
-    }
-    if (formaPago == 'RETENCION VENTAS'){
-      this.habilitarRetencionesVentas = !this.habilitarRetencionesVentas;
-    }
     this.defectoRecaudacion();
   }
 
@@ -754,93 +738,6 @@ export class PagoCompraComponent implements OnInit {
     );
   }
 
-  agregarCompensacion() {
-    this.recaudacion.compensaciones.push(this.compensacion);
-    this.dataCompensaciones = new MatTableDataSource<Compensacion>(this.recaudacion.compensaciones);
-    this.dataCompensaciones.sort = this.sort;
-    this.dataCompensaciones.paginator = this.paginator;
-    this.seleccionarValorPagado();
-    this.defectoRecaudacion();
-    this.modificarEstado();
-  }
-
-  editarCompensacion(i: number){
-    this.indiceEditar=i;
-    this.compensacion={ ... this.recaudacion.compensaciones[this.indiceEditar]};
-    this.habilitarEditarCompensacion=true;
-  }
-  confirmarEditarCompensacion(){
-    this.recaudacion.compensaciones[this.indiceEditar]=this.compensacion;
-    this.compensacion=new Compensacion();
-    this.habilitarEditarCompensacion=false;
-    this.dataCompensaciones = new MatTableDataSource<Compensacion>(this.recaudacion.compensaciones);
-    this.dataCompensaciones.sort = this.sort;
-    this.dataCompensaciones.paginator = this.paginator;
-    //this.recaudacion.calcularTotales();
-    this.seleccionarValorPagado();
-    this.defectoRecaudacion();
-  }
-
-  eliminarCompensacion(i: number) {
-    if (confirm("Realmente quiere eliminar la compensacion?")) {
-      this.recaudacion.compensaciones.splice(i, 1);
-      this.dataCompensaciones = new MatTableDataSource<Compensacion>(this.recaudacion.compensaciones);
-      this.dataCompensaciones.sort = this.sort;
-      this.dataCompensaciones.paginator = this.paginator;
-      //this.recaudacion.calcularTotales();
-      this.seleccionarValorPagado();
-      this.defectoRecaudacion();
-    }
-  }
-
-  totalCompensaciones() {
-    return this.recaudacion.compensaciones.map(t => Number(t.valorCompensado)).reduce((acc, value) => acc + value, 0);
-  }
-
-  agregarRetencionVenta(){
-    this.recaudacion.retencionesVentas.push(this.retencionVenta);
-    this.dataRetencionesVentas = new MatTableDataSource<RetencionVenta>(this.recaudacion.retencionesVentas);
-    this.dataRetencionesVentas.sort = this.sort;
-    this.dataRetencionesVentas.paginator = this.paginator;
-    this.seleccionarValorPagado();
-    this.defectoRecaudacion();
-    this.modificarEstado();
-  }
-
-  editarRetencionVenta(i: number){
-    this.indiceEditar=i;
-    this.retencionVenta={ ... this.recaudacion.retencionesVentas[this.indiceEditar]};
-    this.habilitarEditarRetencionVenta=true;
-  }
-
-  confirmarEditarRetencionVenta(){
-    this.recaudacion.retencionesVentas[this.indiceEditar]=this.retencionVenta;
-    this.retencionVenta=new RetencionVenta();
-    this.habilitarEditarRetencionVenta=false;
-    this.dataRetencionesVentas = new MatTableDataSource<RetencionVenta>(this.recaudacion.retencionesVentas);
-    this.dataRetencionesVentas.sort = this.sort;
-    this.dataRetencionesVentas.paginator = this.paginator;
-    //this.recaudacion.calcularTotales();
-    this.seleccionarValorPagado();
-    this.defectoRecaudacion();
-  }
-
-  eliminarRetencionVenta(i: number) {
-    if (confirm("Realmente quiere eliminar la retencion en la venta?")) {
-      this.recaudacion.retencionesVentas.splice(i, 1);
-      this.dataRetencionesVentas = new MatTableDataSource<RetencionVenta>(this.recaudacion.retencionesVentas);
-      this.dataCompensaciones.sort = this.sort;
-      this.dataCompensaciones.paginator = this.paginator;
-      //this.recaudacion.calcularTotales();
-      this.seleccionarValorPagado();
-      this.defectoRecaudacion();
-    }
-  }
-
-  totalRetencionesVentas() {
-    return this.recaudacion.retencionesVentas.map(t => Number(t.valor)).reduce((acc, value) => acc + value, 0);
-  }
-
   totalCreditos() {
     return 0;
   }
@@ -849,7 +746,7 @@ export class PagoCompraComponent implements OnInit {
     let suma=Number(this.recaudacion.efectivo)+Number(this.recaudacion.totalCheques)+
       Number(this.recaudacion.totalDepositos)+Number(this.recaudacion.totalTransferencias)+
       Number(this.recaudacion.totalCredito)+Number(this.recaudacion.totalTarjetasDebitos)+
-      Number(this.recaudacion.totalTarjetasCreditos)+Number(this.recaudacion.totalCompensaciones);
+      Number(this.recaudacion.totalTarjetasCreditos);
     let pagar=this.factura.totalConDescuento-suma;
     this.cheque.valor=Number(pagar.toFixed(2));
     this.deposito.valor=Number(pagar.toFixed(2));
@@ -873,7 +770,7 @@ export class PagoCompraComponent implements OnInit {
       this.recaudacion.total=Number(this.recaudacion.efectivo)+Number(this.recaudacion.totalCheques)+
       Number(this.recaudacion.totalDepositos)+Number(this.recaudacion.totalTransferencias)+
       Number(this.recaudacion.totalCredito)+Number(this.recaudacion.totalTarjetasDebitos)+
-      Number(this.recaudacion.totalTarjetasCreditos)+Number(this.recaudacion.totalCompensaciones);
+      Number(this.recaudacion.totalTarjetasCreditos);
     }
   }
 
@@ -896,13 +793,6 @@ export class PagoCompraComponent implements OnInit {
       event.preventDefault();
     this.recaudacion.sesion = this.sesion;
     this.recaudacion.factura = this.factura;
-    if (this.factura.totalConDescuento-this.recaudacion.total>0){
-      if(this.recaudacion.credito.periodicidad=="" || this.recaudacion.credito.cuotas<1 
-      || this.recaudacion.credito.fechaPrimeraCuota==null){
-        Swal.fire(error, 'Por favor validar el credito', error_swal);
-        return;
-      }
-    }
     this.recaudacionService.crear(this.recaudacion).subscribe(
       res => {
         this.recaudacionCrear = res.resultado as Recaudacion
@@ -952,8 +842,8 @@ export class PagoCompraComponent implements OnInit {
       this.tarjetaCredito.nombre=this.factura.cliente.razonSocial;
       this.habilitarTitularTarjetaCredito=true;
     } else{
-      this.tarjetaCredito.identificacion="";
-      this.tarjetaCredito.nombre="";
+      this.tarjetaCredito.identificacion = valores.vacio;
+      this.tarjetaCredito.nombre = valores.vacio;
       this.habilitarTitularTarjetaCredito=false;
     }
   }
@@ -963,49 +853,10 @@ export class PagoCompraComponent implements OnInit {
       this.tarjetaDebito.nombre=this.factura.cliente.razonSocial;
       this.habilitarEditarTarjetaDebito=true;
     } else{
-      this.tarjetaDebito.identificacion="";
-      this.tarjetaDebito.nombre="";
+      this.tarjetaDebito.identificacion = valores.vacio;
+      this.tarjetaDebito.nombre = valores.vacio;
       this.habilitarEditarTarjetaDebito=false;
     }
-  }
-
-  cambiarTipoPeriodicidad(){
-    let tipo = this.recaudacion.credito.periodicidad;
-    this.parametroService.obtenerPorTipo(tipo).subscribe(
-      res => {
-        let parametro = res.resultado as Parametro
-        this.recaudacion.credito.periodicidadNumero=Number(parametro.nombre);
-      },
-      err => Swal.fire(error, err.error.mensaje, error_swal)
-    );
-    tipo = otras.periodo + "_" + this.recaudacion.credito.periodicidad;
-    this.parametroService.obtenerPorTipo(tipo).subscribe(
-      res => {
-        let parametro = res.resultado as Parametro
-        this.recaudacion.credito.periodicidadTotal=Number(parametro.nombre);
-      },
-      err => Swal.fire(error, err.error.mensaje, error_swal)
-    );
-  }
-
-  amortizacion(content: any){
-    this.defectoRecaudacion();
-    let fecha: Date=this.recaudacion.credito.fechaPrimeraCuota;
-    this.creditoService.construir(this.recaudacion.credito).subscribe(
-      res => {
-        this.recaudacion.credito = res.resultado as Credito
-        this.recaudacion.credito.fechaPrimeraCuota=fecha;
-        this.modalService.open(content, { size: 'lg' }).result.then((result) => {
-        }, (reason) => {
-          console.log(`Dismissed ${this.getDismissReason(reason)}`);
-        });
-      },
-      err => Swal.fire(error, err.error.mensaje, error_swal)
-    );
-  }
-
-  sinIntereses(){
-    this.recaudacion.credito.tipo="";
   }
 
   private getDismissReason(reason: any): string {

@@ -16,27 +16,30 @@ export class Recaudacion {
     fecha: Date;
     total: number;
     comentario: string;
-    cambio: number;
-    estado: string;
     efectivo: number;
+    cambio: number;
     totalCheques: number;
     totalDepositos: number;
     totalTransferencias: number;
     totalTarjetasDebitos: number;
     totalTarjetasCreditos: number;
-    totalCompensaciones: number;
-    totalRetencionesVentas: number;
     totalCredito: number;
+    efectivoCodigoSri: string;
+    chequeCodigoSri: string;
+    depositoCodigoSri: string;
+    transferenciaCodigoSri: string;
+    tarjetaCreditoCodigoSri: string;
+    tarjetaDebitoCodigoSri: string;
+    creditoCodigoSri: string;
+    estado: string;
+    sesion: Sesion;
+    factura: Factura;
     cheques: Cheque[];
     depositos: Deposito[];
     transferencias: Transferencia[];
-    tarjetasCreditos: TarjetaCredito[];
     tarjetasDebitos: TarjetaDebito[];
-    compensaciones: Compensacion[];
-    retencionesVentas: RetencionVenta[];
+    tarjetasCreditos: TarjetaCredito[];
     credito: Credito;
-    sesion: Sesion;
-    factura: Factura;
 
     constructor(){
         this.id=valores.cero;
@@ -45,28 +48,27 @@ export class Recaudacion {
         this.total=valores.cero;
         this.efectivo=valores.cero;
         this.cambio=valores.cero;
-        this.estado=valores.noRecaudado;
         this.totalCheques=valores.cero;
         this.totalDepositos=valores.cero;
         this.totalTransferencias=valores.cero;
         this.totalTarjetasDebitos=valores.cero;
         this.totalTarjetasCreditos=valores.cero;
-        this.totalCompensaciones=valores.cero;
         this.totalCredito=valores.cero;
-        this.totalRetencionesVentas=valores.cero;
+        this.efectivoCodigoSri = valores.vacio;
+        this.chequeCodigoSri = valores.vacio;
+        this.depositoCodigoSri = valores.vacio;
+        this.transferenciaCodigoSri = valores.vacio;
+        this.tarjetaCreditoCodigoSri = valores.vacio;
+        this.tarjetaDebitoCodigoSri = valores.vacio;
+        this.creditoCodigoSri = valores.vacio;
+        this.estado=valores.noRecaudado;
         this.cheques= [];
         this.depositos=[];
         this.transferencias=[];
         this.tarjetasDebitos=[]
         this.tarjetasCreditos=[]
-        this.compensaciones=[];
-        this.retencionesVentas=[];
         this.credito=new Credito();
         this.sesion=new Sesion();
         this.factura=new Factura();
-    }
-
-    normalizar(){
-        if (this.credito==null) this.credito=new Credito();
     }
 }
