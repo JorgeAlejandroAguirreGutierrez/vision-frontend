@@ -119,6 +119,7 @@ export const valores ={
      * VALORES
      */
      cero : 0,
+     uno : 1,
      vacio : "",
      espacio : " ",
      activo : "ACTIVO",
@@ -140,9 +141,10 @@ export const valores ={
      operacion : "OPERACION",
      bien : "B",
      servicio : "S",
-     activoFijo : "AC",
+     activoFijo : "AF",
      clienteDireccion : "CLIENTE DIRECCION",
      nuevaDireccion : "NUEVA DIRECCION",
+     mensual : "MENSUAL",
      latCiudad: -1.6705413480437092,
      lngCiudad: -78.64974203645144
 }

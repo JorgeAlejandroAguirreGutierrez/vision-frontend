@@ -33,6 +33,7 @@ import { BodegaComponent } from './inventarios/bodega/bodega.component';
 import { MedidaComponent } from './inventarios/medida/medida.component';
 import { GrupoProductoComponent, DialogoGrupoProductoCuentaContableComponent } from './inventarios/grupo-producto/grupo-producto.component';
 import { TablaGrupoProductoCuentaContableComponent } from './inventarios/grupo-producto/tabla-grupo-producto-cuenta-contable/tabla-grupo-producto-cuenta-contable.component';
+import { TablaGrupoProductoComponent } from './inventarios/producto/tabla-grupo-producto/tabla-grupo-producto.component';
 import { KardexComponent } from './inventarios/kardex/kardex.component';
 import { FiltroSerie } from './pipes/filtro-serie';
 import { ProductoComponent, DialogoGrupoProductoComponent } from './inventarios/producto/producto.component';
@@ -180,6 +181,8 @@ export const RoutingComponents = [
   GrupoProductoComponent,
   DialogoGrupoProductoCuentaContableComponent,
   TablaGrupoProductoCuentaContableComponent,
+  DialogoGrupoProductoComponent,
+  TablaGrupoProductoComponent,
   BodegaComponent,
   MedidaComponent,
   KardexComponent,

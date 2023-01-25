@@ -30,6 +30,8 @@ import { FacturaDetalleService } from '../../servicios/comprobante/factura-detal
 import { MatSort } from '@angular/material/sort';
 import { TabService } from 'src/app/componentes/services/tab.service';
 import { FacturacionElectronicaService } from 'src/app/servicios/comprobante/factura-eletronica.service';
+import { CategoriaProducto } from 'src/app/modelos/inventario/categoria-producto';
+import { CategoriaProductoService } from 'src/app/servicios/inventario/categoria-producto.service';
 
 @Component({
   selector: 'app-factura',
@@ -44,7 +46,6 @@ export class FacturaComponent implements OnInit {
   isLinear = false;
   isEditable = false;
   completed = false;
-  categoria = valores.bien;
   facturaDetalleIndice = valores.cero;
   serieBuscar = valores.vacio;
 
@@ -69,7 +70,6 @@ export class FacturaComponent implements OnInit {
   filtroRazonSocialClientesFactura: Observable<Cliente[]> = new Observable<Cliente[]>();
 
   columnas: any[] = [
-    { nombreColumna: 'id', cabecera: 'ID', celda: (row: Factura) => `${row.id}`},
     { nombreColumna: 'codigo', cabecera: 'Código', celda: (row: Factura) => `${row.codigo}`},
     { nombreColumna: 'fecha', cabecera: 'Fecha', celda: (row: Factura) => `${row.fecha}`},
     { nombreColumna: 'cliente', cabecera: 'Cliente', celda: (row: Factura) => `${row.cliente.razonSocial}`},
@@ -91,7 +91,8 @@ export class FacturaComponent implements OnInit {
   constructor(private clienteService: ClienteService, private dependienteService: DependienteService, private sesionService: SesionService, 
     private impuestoService: ImpuestoService, private facturaDetalleService: FacturaDetalleService, private router: Router,
     private facturaService: FacturaService, private facturacionElectronicaService: FacturacionElectronicaService,
-    private productoService: ProductoService, private bodegaService: BodegaService, private tabService: TabService,
+    private productoService: ProductoService, private bodegaService: BodegaService, 
+    private categoriaProductoService: CategoriaProductoService, private tabService: TabService,
     private modalService: NgbModal, private _formBuilder: UntypedFormBuilder) { }
 
   factura: Factura = new Factura();
@@ -104,6 +105,8 @@ export class FacturaComponent implements OnInit {
   dependientes: Dependiente[]= [];
   productos: Producto[] = [];
   bodegas: Bodega[]=[];
+  categoriasProductos: CategoriaProducto[] = [];
+  categoriaProducto = valores.bien;
 
   preciosSeleccionados: Precio[]=[];
   sesion: Sesion;
@@ -133,12 +136,12 @@ export class FacturaComponent implements OnInit {
   dependienteIndice= -1;
   dependiente: Dependiente= null;
 
-  saldoTotal= valores.cero;
-  saldo= valores.cero;
-  costoUnitario= valores.cero;
-  costoPromedio= valores.cero;
-  productoIndice= valores.cero;
-  cantidadTransferencia= valores.cero;
+  saldoTotal = valores.cero;
+  saldo = valores.cero;
+  costoUnitario = valores.cero;
+  costoPromedio = valores.cero;
+  productoIndice = valores.cero;
+  cantidadTransferencia = valores.cero;
   facturaDetalle: FacturaDetalle=new FacturaDetalle();
   
 
@@ -152,14 +155,16 @@ export class FacturaComponent implements OnInit {
       this.agregarFacturaDetalle(null);
   }
 
-  async ngOnInit() {
+  ngOnInit() {
     this.sesion=validarSesion(this.sesionService, this.router);
     this.consultar();
     this.consultarClientes();
     this.construirFactura();
+    this.consultarCategoriasProductos();
     this.consultarProductos();
     this.consultarImpuestos();
     this.consultarBodegas();
+    
 
     this.firstFormGroup = new UntypedFormGroup({
       firstCtrl: new UntypedFormControl()
@@ -203,20 +208,6 @@ export class FacturaComponent implements OnInit {
         map(value => typeof value === 'string' || value==null ? value : value.id),
         map(razon_social => typeof razon_social === 'string' ? this.filtroRazonSocialCliente(razon_social) : this.clientes.slice())
       );
-    this.filtroIdentificacionClientesFactura = this.seleccionIdentificacionClienteFactura.valueChanges
-      .pipe(
-        startWith(''),
-        map(value => typeof value === 'string' || value==null ? value : value.id),
-        map(identificacion => typeof identificacion === 'string' ? this.filtroIdentificacionClienteFactura(identificacion) : this.clientes.slice())
-      );
-    this.filtroRazonSocialClientesFactura = this.seleccionRazonSocialClienteFactura.valueChanges
-      .pipe(
-        startWith(''),
-        map(value => typeof value === 'string' || value==null ? value : value.id),
-        map(razon_social => typeof razon_social === 'string' ? this.filtroRazonSocialClienteFactura(razon_social) : this.clientes.slice())
-      );
-      this.seleccionIdentificacionClienteFactura.disable();
-      this.seleccionRazonSocialClienteFactura.disable();
   }
 
   private filtroProducto(value: string): Producto[] {
@@ -226,6 +217,7 @@ export class FacturaComponent implements OnInit {
     }
     return [];
   }
+
   verProducto(producto: Producto): string {
     return producto && producto.nombre ? producto.nombre : '';
   }
@@ -251,28 +243,6 @@ export class FacturaComponent implements OnInit {
     return cliente && cliente.razonSocial ? cliente.razonSocial : '';
   }
 
-  private filtroIdentificacionClienteFactura(value: string): Cliente[] {
-    if(this.clientes.length>0) {
-      const filterValue = value.toLowerCase();
-      return this.clientes.filter(cliente => cliente.identificacion.toLowerCase().includes(filterValue));
-    }
-    return [];
-  }
-
-  verIdentificacionClienteFactura(cliente: Cliente): string {
-    return cliente && cliente.identificacion ? cliente.identificacion : '';
-  }
-  private filtroRazonSocialClienteFactura(value: string): Cliente[] {
-    if(this.clientes.length>0) {
-      const filterValue = value.toLowerCase();
-      return this.clientes.filter(cliente => cliente.razonSocial.toLowerCase().includes(filterValue));
-    }
-    return [];
-  }
-  verRazonSocialClienteFactura(cliente: Cliente): string {
-    return cliente && cliente.razonSocial ? cliente.razonSocial : '';
-  }
-
   nuevo(event){
     if (event!=null)
       event.preventDefault();
@@ -288,20 +258,6 @@ export class FacturaComponent implements OnInit {
         this.primerCelularCliente= this.factura.cliente.celulares.length>0? this.factura.cliente.celulares[0].numero: "";
         this.primerCorreoCliente= this.factura.cliente.correos.length>0? this.factura.cliente.correos[0].email: "";
         this.habilitarClienteTce=false;
-        if (this.factura.clienteFactura.id!=0){
-          this.seleccionIdentificacionClienteFactura.patchValue(this.factura.clienteFactura);
-          this.seleccionRazonSocialClienteFactura.patchValue(this.factura.clienteFactura);
-          this.seleccionFacturar= true;
-          this.habilitarFacturar= false;
-          this.asignarFacturar();
-          this.habilitarClienteFacturaTce=false;
-          this.primerTelefonoClienteFactura= this.factura.clienteFactura.telefonos.length>0? this.factura.clienteFactura.telefonos[0].numero: "";
-          this.primerCelularClienteFactura= this.factura.clienteFactura.celulares.length>0? this.factura.clienteFactura.celulares[0].numero: "";
-          this.primerCorreoClienteFactura= this.factura.clienteFactura.correos.length>0? this.factura.clienteFactura.correos[0].email: "";
-        } else{
-          this.seleccionFacturar=false;
-          this.habilitarFacturar=true;
-        }
         this.dataSourceFacturaDetalle = new MatTableDataSource<FacturaDetalle>(this.factura.facturaDetalles);
         this.dataSourceFacturaDetalle.paginator = this.paginatorFacturaDetalle;
     }
@@ -344,9 +300,16 @@ export class FacturaComponent implements OnInit {
     );
   }
 
-  consultarBienes(event) {
-    if (event!=null)
-      event.preventDefault();
+  consultarCategoriasProductos(){
+    this.categoriaProductoService.consultar().subscribe(
+      res => {
+        this.categoriasProductos = res.resultado as CategoriaProducto[]
+      },
+      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+    );
+  }
+
+  consultarBienes() {
     this.productoService.consultarBien().subscribe(
       res => {
         this.productos = res.resultado as Producto[]
@@ -354,9 +317,7 @@ export class FacturaComponent implements OnInit {
       err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
-  consultarServicios(event) {
-    if (event!=null)
-      event.preventDefault();
+  consultarServicios() {
     this.productoService.consultarServicio().subscribe(
       res => {
         this.productos = res.resultado as Producto[]
@@ -364,9 +325,7 @@ export class FacturaComponent implements OnInit {
       err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
-  consultarActivosFijos(event) {
-    if (event!=null)
-      event.preventDefault();
+  consultarActivosFijos() {
     this.productoService.consultarActivoFijo().subscribe(
       res => {
         this.productos = res.resultado as Producto[]
@@ -442,67 +401,6 @@ export class FacturaComponent implements OnInit {
     );
   }
 
-  seleccionarIdentificacionClienteFactura() {
-    let clienteId=this.seleccionIdentificacionClienteFactura.value.id;
-    this.clienteService.obtener(clienteId).subscribe(
-      res => {
-        Object.assign(this.factura.clienteFactura, res.resultado as Cliente);
-        this.factura.clienteFactura.normalizar();
-        this.seleccionIdentificacionClienteFactura.patchValue(this.factura.clienteFactura);
-        this.seleccionRazonSocialClienteFactura.patchValue(this.factura.clienteFactura);
-        if (this.factura.clienteFactura.telefonos.length>0)
-          this.primerTelefonoClienteFactura = this.factura.clienteFactura.telefonos[0].numero;
-        if (this.factura.clienteFactura.celulares.length>0)
-          this.primerCelularClienteFactura = this.factura.clienteFactura.celulares[0].numero;
-        if (this.factura.clienteFactura.correos.length>0)
-          this.primerCorreoClienteFactura= this.factura.clienteFactura.correos[0].email;
-        this.habilitarClienteFacturaTce=false;
-      },
-      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
-    );
-  }
-
-  seleccionarRazonSocialClienteFactura() {
-    let cliente_id=this.seleccionRazonSocialClienteFactura.value.id;
-    this.clienteService.obtener(cliente_id).subscribe(
-      res => {
-        Object.assign(this.factura.clienteFactura, res.resultado as Cliente);
-        this.factura.clienteFactura.normalizar();
-        this.seleccionIdentificacionClienteFactura.patchValue(this.factura.clienteFactura);
-        this.seleccionRazonSocialClienteFactura.patchValue(this.factura.clienteFactura);   
-        if (this.factura.clienteFactura.telefonos.length>0)
-          this.primerTelefonoClienteFactura = this.factura.clienteFactura.telefonos[0].numero;
-        if (this.factura.clienteFactura.celulares.length>0)
-          this.primerCelularClienteFactura = this.factura.clienteFactura.celulares[0].numero;
-        if (this.factura.clienteFactura.correos.length>0)
-          this.primerCorreoClienteFactura= this.factura.clienteFactura.correos[0].email;
-        this.habilitarClienteFacturaTce=false;
-      },
-      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
-    );
-  }
-
-  asignarDependiente(content: any){
-    if (this.factura.cliente.id!=undefined){
-      this.modalService.open(content, { size: 'lg' }).result.then((result) => {
-        if (result == "confirmar") {
-            this.factura.dependiente=this.dependientes[this.dependienteIndice];
-            if (this.factura.dependiente.telefonos.length>0)
-              this.primerTelefonoDependiente = this.factura.dependiente.telefonos[0].numero;
-            if (this.factura.dependiente.celulares.length>0)
-              this.primerCelularDependiente = this.factura.dependiente.celulares[0].numero;
-            if (this.factura.dependiente.correos.length>0)
-              this.primerCorreoDependiente = this.factura.dependiente.correos[0].email;
-        } else {
-          this.seleccionDependiente=false;
-        }
-      }, (reason) => {
-        console.log(`Dismissed ${this.getDismissReason(reason)}`);
-      });
-    } else {
-      this.factura.dependiente=null;
-    }
-  }
   asignarFacturar(){
     if (this.seleccionFacturar){
       this.seleccionIdentificacionClienteFactura.enable();
@@ -671,16 +569,16 @@ export class FacturaComponent implements OnInit {
   agregarFacturaDetalle(event){
     if (event!=null)
       event.preventDefault();
-    if (this.facturaDetalle.bodega.id==0){
+    if (this.facturaDetalle.bodega.id == valores.cero){
       return;
     }
-    if (this.facturaDetalle.cantidad==0){
+    if (this.facturaDetalle.cantidad == valores.cero){
       return;
     }
-    if (this.facturaDetalle.precio.id==0){
+    if (this.facturaDetalle.precio.id == valores.cero){
       return;
     }
-    if (this.facturaDetalle.impuesto.id==0){
+    if (this.facturaDetalle.impuesto.id == valores.cero){
       return;
     }
     this.factura.sesion=this.sesion;
@@ -749,63 +647,15 @@ export class FacturaComponent implements OnInit {
   }
 
   consultarProductos(){
-    if (this.categoria == valores.bien){
-      this.consultarBienes(null);
+    if (this.categoriaProducto == valores.bien){
+      this.consultarBienes();
     }
-    if (this.categoria == valores.servicio){
-      this.consultarServicios(null);
+    if (this.categoriaProducto == valores.servicio){
+      this.consultarServicios();
     }
-    if (this.categoria == valores.activoFijo){
-      this.consultarActivosFijos(null);
+    if (this.categoriaProducto == valores.activoFijo){
+      this.consultarActivosFijos();
     }
-  }
-
-  asignarSeries(content: any, i: number){
-    this.facturaDetalleIndice=i;
-    this.modalService.open(content, { size: 'lg' }).result.then((result) => {
-      if (result == "confirmar") {
-        this.serieBuscar="";
-        let seleccionados=0;
-        if (!this.factura.facturaDetalles[this.facturaDetalleIndice].producto.serieAutogenerado) {
-          this.factura.facturaDetalles[this.facturaDetalleIndice].producto.caracteristicas.forEach((caracteristica, index)=> {
-            if(caracteristica.seleccionado && (caracteristica.facturaDetalle==null || caracteristica.facturaDetalle.posicion==-1)){
-              caracteristica.facturaDetalle=new FacturaDetalle();
-              caracteristica.facturaDetalle.posicion=this.facturaDetalleIndice;
-              seleccionados++;
-            }
-          });
-          if (seleccionados>this.factura.facturaDetalles[this.facturaDetalleIndice].cantidad || seleccionados<this.factura.facturaDetalles[this.facturaDetalleIndice].cantidad){
-            this.factura.facturaDetalles[this.facturaDetalleIndice].caracteristicas=[];
-            this.factura.facturaDetalles[this.facturaDetalleIndice].producto.caracteristicas.forEach((caracteristica, index)=> {
-              caracteristica.seleccionado=false;
-              caracteristica.facturaDetalle=new FacturaDetalle();
-              caracteristica.facturaDetalle.posicion=-1;
-            });
-            Swal.fire('Error', "Series seleccionadas no coinciden con la cantidad", 'error');
-          }
-        }
-      }
-      if (result == "close"){
-        this.serieBuscar="";
-        if(!this.factura.facturaDetalles[this.facturaDetalleIndice].producto.serieAutogenerado){
-          this.factura.facturaDetalles[this.facturaDetalleIndice].producto.caracteristicas.forEach((caracteristica, index)=> {
-            caracteristica.seleccionado=false;
-            caracteristica.facturaDetalle=new FacturaDetalle();
-            caracteristica.facturaDetalle.posicion=-1;
-          });
-        }
-      }
-    }, (reason) => {
-      this.serieBuscar="";
-      console.log(`Dismissed ${this.getDismissReason(reason)}`);
-    });
-  }
-  
-  modalTransferencias(content: any, i: number){
-    this.modalService.open(content, { size: 'lg' }).result.then((result) => {
-    }, (reason) => {
-      console.log(`Dismissed ${this.getDismissReason(reason)}`);
-    });
   }
 
   open(content: any) {
@@ -826,14 +676,6 @@ export class FacturaComponent implements OnInit {
     }
   }
 
-  dependienteBuscarAccion(){
-    this.dependienteService.consultarRazonSocial(this.dependienteBuscar).subscribe(
-      res => {
-        this.dependientes = res.resultado as Dependiente[]
-      },
-      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.message })
-    );
-  }
   limpiarIdentificacionCliente(){
     if (this.seleccionIdentificacionCliente.value.id==null ||this.seleccionIdentificacionCliente.value.id==undefined){
       this.limpiarCliente();
@@ -852,24 +694,7 @@ export class FacturaComponent implements OnInit {
     this.factura.cliente.formaPago.abreviatura = valores.vacio;
     this.factura.cliente.montoFinanciamiento = valores.cero;
   }
-  limpiarIdentificacionClienteFactura(){
-    if (this.seleccionIdentificacionClienteFactura.value.id==undefined){
-      this.limpiarClienteFactura();
-    }
-  }
-  limpiarRazonSocialClienteFactura(){
-    if (this.seleccionRazonSocialClienteFactura.value.id==undefined){
-      this.limpiarClienteFactura();
-    }
-  }
-  limpiarClienteFactura(){
-    this.factura.clienteFactura.direccion = valores.vacio;
-    this.primerTelefonoClienteFactura = valores.vacio;
-    this.primerCelularClienteFactura = valores.vacio;
-    this.primerCorreoClienteFactura = valores.vacio;
-    this.factura.clienteFactura.formaPago.abreviatura = valores.vacio;
-    this.factura.clienteFactura.montoFinanciamiento = valores.cero;
-  }
+
   eliminarFacturaDetalle(i: number){
     this.factura.facturaDetalles.splice(i, 1);
     this.calcular();

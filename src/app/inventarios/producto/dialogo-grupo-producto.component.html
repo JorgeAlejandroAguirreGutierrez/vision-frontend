@@ -1,10 +1,9 @@
-<h1 mat-dialog-title>GRUPOS PARA PRODUCTOS</h1>
+<h1 mat-dialog-title>GRUPOS DE PRODUCTOS</h1>
 <!-- para ingresar datos {{data.codigo}} -->
 <div mat-dialog-content>
-  <app-tabla-grupo-producto-cuenta-contable (grupoProductoSeleccionado)="grupoSeleccionado($event)"></app-tabla-grupo-producto-cuenta-contable>
-    <!--app-tabla-grupo-producto></app-tabla-grupo-producto-->
+  <app-tabla-grupo-producto (grupoProductoSeleccionado)="grupoProductoSeleccionado($event)"></app-tabla-grupo-producto>
 </div>
 <div mat-dialog-actions>
   <button mat-button (click)="onNoClick()">Cancelar</button>
-  <button mat-button [mat-dialog-close]="data" cdkFocusInitial>Guardar</button>
+  <button mat-button [mat-dialog-close]="data.grupoProducto" cdkFocusInitial>Guardar</button>
 </div>

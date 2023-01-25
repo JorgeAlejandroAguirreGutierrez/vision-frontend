@@ -39,13 +39,13 @@ export class GrupoProductoService {
     );
   }
 
-  async consultarAsync(): Promise<Respuesta> {
-    return await lastValueFrom(this.http.get<Respuesta>(environment.host + urn.ruta + urn.grupoProducto, options).pipe(
+  consultarActivos(): Observable<Respuesta> {
+    return this.http.get<Respuesta>(environment.host + urn.ruta + urn.grupoProducto + urn.consultarActivos, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);
       })
-    ));
+    );
   }
 
   consultarGrupos(): Observable<Respuesta> {
