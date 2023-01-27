@@ -29,7 +29,7 @@ export class EstacionComponent implements OnInit {
   inactivo: string = valores.inactivo;
 
   abrirPanelNuevo: boolean = true;
-  abrirPanelAdmin: boolean = false;
+  abrirPanelAdmin: boolean = true;
 
   sesion: Sesion = null;
   estacion: Estacion = new Estacion();
@@ -39,10 +39,10 @@ export class EstacionComponent implements OnInit {
 
   columnas: any[] = [
     { nombreColumna: 'codigo', cabecera: 'Código', celda: (row: Estacion) => `${row.codigo}` },
-    { nombreColumna: 'nombre', cabecera: 'Estación', celda: (row: Estacion) => `${row.nombre}` },
-    { nombreColumna: 'dispositivo', cabecera: 'Estación', celda: (row: Estacion) => `${row.dispositivo}` },
-    { nombreColumna: 'establecimiento', cabecera: 'Establecimiento', celda: (row: Estacion) => `${row.establecimiento.descripcion}` },
     { nombreColumna: 'empresa', cabecera: 'Empresa', celda: (row: Estacion) => `${row.establecimiento.empresa.razonSocial}` },
+    { nombreColumna: 'establecimiento', cabecera: 'Establecimiento', celda: (row: Estacion) => `${row.establecimiento.descripcion}` },
+    { nombreColumna: 'dispositivo', cabecera: 'Dispositivo', celda: (row: Estacion) => `${row.dispositivo}` },
+    { nombreColumna: 'nombre', cabecera: 'Estación', celda: (row: Estacion) => `${row.nombre}` },
     { nombreColumna: 'estado', cabecera: 'Estado', celda: (row: Estacion) => `${row.estado}` }
   ];
   cabecera: string[] = this.columnas.map(titulo => titulo.nombreColumna);
