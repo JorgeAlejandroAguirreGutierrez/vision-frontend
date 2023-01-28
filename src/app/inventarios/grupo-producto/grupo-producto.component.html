@@ -15,16 +15,18 @@
                 <mat-icon>file_copy</mat-icon>
             </a>
         </li>
-        <li class="nav-item" *ngIf="grupoProducto.id!=0">
-            <a class="nav-link" title="Activar" role="button" (click)="activar($event)">
-                <mat-icon>check</mat-icon>
-            </a>
-        </li>
-        <li class="nav-item" *ngIf="grupoProducto.id!=0">
-            <a class="nav-link" title="Inactivar" role="button" (click)="inactivar($event)">
-                <mat-icon>delete</mat-icon>
-            </a>
-        </li>
+        <ng-container *ngIf="grupoProducto.id!=0">
+            <li class="nav-item" *ngIf="grupoProducto.estado!=activo">
+                <a class="nav-link" title="Activar" role="button" (click)="activar($event)">
+                    <mat-icon>assignment_turned_in</mat-icon>
+                </a>
+            </li>
+            <li class="nav-item" *ngIf="grupoProducto.estado==activo">
+                <a class="nav-link" title="Inactivar" role="button" (click)="inactivar($event)">
+                    <mat-icon>delete_forever</mat-icon>
+                </a>
+            </li>
+        </ng-container>
     </ul>
 </nav>
 <div class="contenedor">
@@ -46,43 +48,73 @@
                     <div class="col-4">
                         <mat-form-field appearance="standard">
                             <mat-label>Grupo</mat-label>
-                            <input matInput type="text" [(ngModel)]="grupoProducto.grupo"
-                            oninput="this.value = this.value.toUpperCase()" class="form-control-sm">
+                            <input matInput type="text" oninput="this.value = this.value.toUpperCase()" class="form-control-sm"
+                                [formControl]="controlGrupo" [matAutocomplete]="grupo">
+                            <mat-autocomplete autoActiveFirstOption #grupo="matAutocomplete">
+                                <mat-option *ngFor="let grupo of filtroGrupos | async" [value]="grupo">
+                                    {{grupo}}
+                                </mat-option>
+                            </mat-autocomplete>
                         </mat-form-field>
                     </div>
                     <div class="col-4">
                         <mat-form-field appearance="standard">
                             <mat-label>Subgrupo</mat-label>
-                            <input matInput type="text" [(ngModel)]="grupoProducto.subgrupo"
-                            oninput="this.value = this.value.toUpperCase()" class="form-control-sm">
+                            <input matInput type="text" oninput="this.value = this.value.toUpperCase()" class="form-control-sm"
+                                [formControl]="controlSubgrupo" [matAutocomplete]="subgrupo">
+                            <mat-autocomplete autoActiveFirstOption #subgrupo="matAutocomplete">
+                                <mat-option *ngFor="let subgrupo of filtroSubgrupos | async" [value]="subgrupo">
+                                    {{subgrupo}}
+                                </mat-option>
+                            </mat-autocomplete>
                         </mat-form-field>
                     </div>
                     <div class="col-4">
-                        <mat-form-field appearance="standard">
+                        <mat-form-field appearance="standard" *ngIf="!verInputSeccion">
                             <mat-label>Sección</mat-label>
-                            <input matInput type="text" [(ngModel)]="grupoProducto.seccion"
-                            oninput="this.value = this.value.toUpperCase()" class="form-control-sm">
+                            <input matInput type="text" oninput="this.value = this.value.toUpperCase()" class="form-control-sm"
+                                [formControl]="controlSeccion" [matAutocomplete]="seccion">
+                            <mat-autocomplete autoActiveFirstOption #seccion="matAutocomplete">
+                                <mat-option *ngFor="let seccion of filtroSecciones | async" [value]="seccion">
+                                    {{seccion}}
+                                </mat-option>
+                            </mat-autocomplete>
+                        </mat-form-field>
+                        <mat-form-field appearance="standard" *ngIf="verInputSeccion">
+                            <mat-label>Sección</mat-label>
+                            <input matInput type="text" [(ngModel)]="grupoProducto.seccion" class="form-control-sm"
+                                oninput="this.value = this.value.toUpperCase()" >
                         </mat-form-field>
                     </div>
                     <div class="col-4">
                         <mat-form-field appearance="standard">
                             <mat-label>Línea</mat-label>
-                            <input matInput type="text" [(ngModel)]="grupoProducto.linea"
-                            oninput="this.value = this.value.toUpperCase()" class="form-control-sm">
+                            <input matInput type="text" oninput="this.value = this.value.toUpperCase()" class="form-control-sm"
+                                [formControl]="controlLinea" [matAutocomplete]="linea">
+                            <mat-autocomplete autoActiveFirstOption #linea="matAutocomplete">
+                                <mat-option *ngFor="let linea of filtroLineas | async" [value]="linea">
+                                    {{linea}}
+                                </mat-option>
+                            </mat-autocomplete>
                         </mat-form-field>
                     </div>
                     <div class="col-4">
                         <mat-form-field appearance="standard">
                             <mat-label>Sublínea</mat-label>
-                            <input matInput type="text" [(ngModel)]="grupoProducto.sublinea"
-                            oninput="this.value = this.value.toUpperCase()" class="form-control-sm">
+                            <input matInput type="text" oninput="this.value = this.value.toUpperCase()" class="form-control-sm"
+                                [formControl]="controlSublinea" [matAutocomplete]="sublinea">
+                            <mat-autocomplete autoActiveFirstOption #sublinea="matAutocomplete">
+                                <mat-option *ngFor="let sublinea of filtroSublineas | async" [value]="sublinea">
+                                    {{sublinea}}
+                                </mat-option>
+                            </mat-autocomplete>
                         </mat-form-field>
                     </div>
                     <div class="col-4">
                         <mat-form-field appearance="standard">
                             <mat-label>Presentación</mat-label>
-                            <input matInput type="text" [(ngModel)]="grupoProducto.presentacion"
-                            oninput="this.value = this.value.toUpperCase()" class="form-control-sm">
+                            <input matInput type="text" [(ngModel)]="grupoProducto.presentacion" class="form-control-sm"
+                                oninput="this.value = this.value.toUpperCase()" [disabled]="deshabilitarPresentacion">
                         </mat-form-field>
                     </div>
                 </div>
@@ -90,8 +122,10 @@
                     <div class="col-6">
                         <mat-form-field appearance="standard">
                             <mat-label>Categoría</mat-label>
-                            <mat-select [(ngModel)]="grupoProducto.categoriaProducto" [compareWith]="compareFn" class="form-control-sm">
-                                <mat-option *ngFor="let categoriaProducto of categoriasProductos" [value]="categoriaProducto">{{categoriaProducto.descripcion}}</mat-option>
+                            <mat-select [(ngModel)]="grupoProducto.categoriaProducto" [compareWith]="compareFn"
+                                (selectionChange)="validarCategoria()" class="form-control-sm">
+                                <mat-option *ngFor="let categoriaProducto of categoriasProductos" [value]="categoriaProducto">
+                                    {{categoriaProducto.descripcion}}</mat-option>
                             </mat-select>
                         </mat-form-field>
                     </div>
@@ -121,7 +155,8 @@
         </mat-expansion-panel>
     </mat-accordion>
     <mat-accordion class="headers-align">    
-        <mat-expansion-panel (opened)="abrirPanelAdmin = true" (closed)="abrirPanelAdmin = false">
+        <mat-expansion-panel (opened)="abrirPanelAdmin = true" (closed)="abrirPanelAdmin = false"
+            [expanded]="abrirPanelAdmin">
             <mat-expansion-panel-header>
                 <mat-panel-title>
                     <i><u>GESTIONAR GRUPOS</u></i>
@@ -134,7 +169,11 @@
             <hr>
             <mat-form-field appearance="standard">
                 <mat-label>Buscar en grupo de productos</mat-label>
-                <input matInput oninput="this.value = this.value.toUpperCase()" (keyup)="filtro($event)" #input>
+                <input matInput oninput="this.value = this.value.toUpperCase()" (keyup)="filtro($event)" #inputFiltro>
+                <button mat-button *ngIf="inputFiltro.value" matSuffix mat-icon-button
+                    (click)="borrarFiltro()">
+                <mat-icon>close</mat-icon>
+                </button>
             </mat-form-field>
             <div class="mat-elevation-z8">
                 <table mat-table [dataSource]="dataSource" matSort>

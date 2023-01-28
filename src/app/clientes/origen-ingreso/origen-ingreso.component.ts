@@ -1,5 +1,5 @@
-import { Component, OnInit, HostListener, Renderer2 } from '@angular/core';
-import { valores, validarSesion, tab_activo, exito, exito_swal, error, error_swal } from '../../constantes';
+import { Component, OnInit, HostListener, ElementRef, Renderer2 } from '@angular/core';
+import { valores, mensajes, validarSesion, exito, exito_swal, error, error_swal } from '../../constantes';
 import Swal from 'sweetalert2';
 
 import { Router } from '@angular/router';
@@ -25,8 +25,8 @@ export class OrigenIngresoComponent implements OnInit {
   inactivo: string = valores.inactivo;
 
   abrirPanelNuevo: boolean = true;
-  abrirPanelAdmin: boolean = false;
-  edicion: boolean = true;
+  abrirPanelAdmin: boolean = true;
+  formularioValido: boolean = false;
 
   sesion: Sesion=null;
   origenIngreso= new OrigenIngreso();
@@ -44,6 +44,7 @@ export class OrigenIngresoComponent implements OnInit {
   
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
+  @ViewChild("inputFiltro") inputFiltro: ElementRef;
 
   constructor(private renderer: Renderer2, private origenIngresoService: OrigenIngresoService,
     private sesionService: SesionService,private router: Router) { }
@@ -66,11 +67,16 @@ export class OrigenIngresoComponent implements OnInit {
       event.preventDefault();
     this.origenIngreso = new OrigenIngreso();
     this.clickedRows.clear();
+    this.borrarFiltro();
+    this.formularioValido = false;
   }
 
   crear(event) {
     if (event != null)
       event.preventDefault();
+    this.validarFormulario();
+    if (!this.formularioValido)
+      return;  
     this.origenIngresoService.crear(this.origenIngreso).subscribe({
       next: res => {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
@@ -84,6 +90,9 @@ export class OrigenIngresoComponent implements OnInit {
   actualizar(event) {
     if (event != null)
       event.preventDefault();
+    this.validarFormulario();
+    if (!this.formularioValido)
+      return;  
     this.origenIngresoService.actualizar(this.origenIngreso).subscribe({
       next: res => {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
@@ -123,12 +132,23 @@ export class OrigenIngresoComponent implements OnInit {
   consultar() {
     this.origenIngresoService.consultar().subscribe({
       next: res => {
-        this.origenesIngresos = res.resultado as OrigenIngreso[]
-        this.dataSource = new MatTableDataSource(this.origenesIngresos);
-        this.dataSource.paginator = this.paginator;
-        this.dataSource.sort = this.sort;
+        this.origenesIngresos = res.resultado as OrigenIngreso[];
+        this.llenarTabla(this.origenesIngresos);
       },
       error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+    });
+  }
+
+  llenarTabla(origenesIngresos: OrigenIngreso[]) {
+    this.ordenarAsc(origenesIngresos, 'id');
+    this.dataSource = new MatTableDataSource(origenesIngresos);
+    this.dataSource.paginator = this.paginator;
+    this.dataSource.sort = this.sort;
+  }
+
+  ordenarAsc(arrayJson: any, pKey: any) {
+    arrayJson.sort(function (a: any, b: any) {
+      return a[pKey] > b[pKey];
     });
   }
 
@@ -138,8 +158,7 @@ export class OrigenIngresoComponent implements OnInit {
       this.clickedRows.add(origenIngreso);
       this.origenIngreso = { ... origenIngreso};
     } else {
-      this.clickedRows.clear();
-      this.origenIngreso = new OrigenIngreso();
+      this.nuevo(null);
     }
   }
 
@@ -148,6 +167,26 @@ export class OrigenIngresoComponent implements OnInit {
     this.dataSource.filter = filterValue.trim().toUpperCase();
     if (this.dataSource.paginator) {
       this.dataSource.paginator.firstPage();
+    }
+  }
+  
+  borrarFiltro() {
+    this.renderer.setProperty(this.inputFiltro.nativeElement, 'value', '');
+    this.dataSource.filter = '';
+  }
+
+  validarFormulario(){
+    //validar que los campos esten llenos antes de guardar
+    this.formularioValido = true;
+    if (this.origenIngreso.descripcion == '') {
+      Swal.fire({ icon: error_swal, title: error, text: mensajes.error_falta_datos });
+      this.formularioValido = false;
+      return;
+    }
+    if (this.origenIngreso.abreviatura == '') {
+      Swal.fire({ icon: error_swal, title: error, text: mensajes.error_falta_datos });
+      this.formularioValido = false;
+      return;
     }
   }
 }

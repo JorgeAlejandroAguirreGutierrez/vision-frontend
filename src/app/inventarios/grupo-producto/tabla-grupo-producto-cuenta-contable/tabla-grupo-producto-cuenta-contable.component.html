@@ -1,7 +1,11 @@
 <div>
     <mat-form-field appearance="standard">
         <mat-label>Buscar cuenta contable</mat-label>
-        <input matInput oninput="this.value = this.value.toUpperCase()" (keyup)="filtro($event)" #input>
+        <input matInput oninput="this.value = this.value.toUpperCase()" (keyup)="filtro($event)" #inputFiltro>
+        <button mat-button *ngIf="inputFiltro.value" matSuffix mat-icon-button
+            (click)="borrarFiltro()">
+        <mat-icon>close</mat-icon>
+    </button>
     </mat-form-field>
     <div class="mat-elevation-z8">
         <table mat-table [dataSource]="dataSource" matSort>
@@ -24,9 +28,14 @@
         <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
     </div>
     <div class="azul" *ngIf="!clickedRows.size">
-        Seleccione una fila para editar
+        Seleccione una cuenta contable
     </div>
     <div class="azul" *ngFor="let clickedRow of clickedRows">
-        Id: {{clickedRow.id}} seleccionado
+        <ng-container *ngIf="clickedRow.clasificacion=='M'">
+            Cuenta: {{clickedRow.cuenta}} seleccionada
+        </ng-container>
+        <ng-container *ngIf="clickedRow.clasificacion!='M'">
+            <p class="alerta">La cuenta {{clickedRow.cuenta}} no es de movimiento</p>
+        </ng-container>
     </div>
 </div>

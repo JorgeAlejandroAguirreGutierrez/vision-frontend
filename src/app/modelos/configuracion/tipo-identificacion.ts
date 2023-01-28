@@ -4,6 +4,7 @@ export class TipoIdentificacion {
     codigo: string;
     codigoSRI: string;
     descripcion: string;
+    abreviatura: string;
     estado: string;
 
     constructor(){
@@ -11,6 +12,7 @@ export class TipoIdentificacion {
         this.codigo=valores.vacio;
         this.codigoSRI = valores.vacio;
         this.descripcion=valores.vacio;
+        this.abreviatura=valores.vacio;
         this.estado=valores.activo;
     }
 }

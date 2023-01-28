@@ -5,8 +5,8 @@ import { SidebarItemsService } from '../../componentes/services/sidebaritems.ser
 import { Tab } from "../../modelos/tab.model";
 import { MenuComponent } from '../menu/menu.component';
 import { SidebarItem } from "../../modelos/sidebar-item.model";
-import { Sesion } from 'src/app/modelos/usuario/sesion';
-import { SesionService } from 'src/app/servicios/usuario/sesion.service';
+import { Sesion } from '../../modelos/usuario/sesion';
+import { SesionService } from '../../servicios/usuario/sesion.service';
 import { validarSesion } from '../../constantes';
 import { Router } from '@angular/router';
 
@@ -89,7 +89,7 @@ export class MainComponent implements OnInit {
     this.istabMenu = event.index == 0 ? true : false; 
     this.tabService.activarTab1(event);
     // Carga las opciones en el slide bar de acuerdo al titulo de la pestaña
-    this.opciones = this.sidebaritemsService.menuOpciones(this.tabs1[event.index].title);
+    this.opciones = this.sidebaritemsService.menuOpciones(this.tabs1[event.index].title, this.sesion);
   }
 
   removeTab(index: number): void {
@@ -100,7 +100,7 @@ export class MainComponent implements OnInit {
   removeTab1(index: number): void {
     this.tabService.removeTab1(index);
     this.tabService.indexarTab1();
-    this.opciones = this.sidebaritemsService.menuOpciones(this.tabs1[this.selectedTab1].title);
+    this.opciones = this.sidebaritemsService.menuOpciones(this.tabs1[this.selectedTab1].title, this.sesion);
   }
 
 }

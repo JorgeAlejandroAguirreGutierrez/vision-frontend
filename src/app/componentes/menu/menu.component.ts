@@ -23,8 +23,8 @@ export class MenuComponent implements OnInit {
   piePagina: Type<any> = FooterComponent; 
 
   permiso_clientes: boolean;
-  permiso_proveedores: boolean;
-  permiso_facturacion: boolean;
+  permiso_compras: boolean;
+  permiso_ventas: boolean;
   permiso_inventarios: boolean;
   permiso_caja_bancos: boolean;
   permiso_cuentasxcobrar: boolean;
@@ -83,22 +83,22 @@ export class MenuComponent implements OnInit {
     this.obtenerEmpresa();
     // FINANCIERO
     this.permiso_clientes=this.obtenerPermiso('CLIENTES');
-    this.permiso_proveedores=this.obtenerPermiso('PROVEEDORES');
-    this.permiso_facturacion=this.obtenerPermiso('FACTURACION');
+    this.permiso_compras=this.obtenerPermiso('COMPRAS');
+    this.permiso_ventas=this.obtenerPermiso('VENTAS');
     this.permiso_inventarios=this.obtenerPermiso('INVENTARIOS');
     this.permiso_caja_bancos=this.obtenerPermiso('CAJA_BANCOS');
     this.permiso_cuentasxcobrar=this.obtenerPermiso('CUENTAS_COBRAR');
     this.permiso_cuentasxpagar=this.obtenerPermiso('CUENTAS_PAGAR');
-    this.permiso_contabilidad=this.obtenerPermiso('CONTABILIDAD');
-    this.permiso_financiero=this.obtenerPermiso('FINANCIERO');
     this.permiso_activos_fijos=this.obtenerPermiso('ACTIVOS_FIJOS');
-    this.permiso_talento_humano=this.obtenerPermiso('TALENTO_HUMANO');
     this.permiso_produccion= this.obtenerPermiso('PRODUCCION');
+    this.permiso_contabilidad=this.obtenerPermiso('CONTABILIDAD');
+    this.permiso_talento_humano=this.obtenerPermiso('TALENTO_HUMANO');
+    this.permiso_financiero=this.obtenerPermiso('FINANCIERO');
     this.permiso_importacion= this.obtenerPermiso('IMPORTACION');
     this.permiso_reportes= this.obtenerPermiso('REPORTES');
     
     // ADMINISTRACION  
-    this.permiso_accesos=this.obtenerPermiso('USUARIOS');
+    this.permiso_accesos=this.obtenerPermiso('ACCESOS');
     this.permiso_configuraciones=this.obtenerPermiso('CONFIGURACIONES');
     this.permiso_estadisticas=this.obtenerPermiso('ESTADISTICAS');
     this.permiso_control=this.obtenerPermiso('ORGANISMOS_CONTROL');
@@ -117,10 +117,10 @@ export class MenuComponent implements OnInit {
     );
   }
 
-  obtenerPermiso(permiso: string): boolean {
+  obtenerPermiso(permisoModulo: string): boolean {
     let bandera=false;
     this.sesion.usuario.perfil.permisos.forEach(elemento => {
-      if (elemento.modulo==permiso){
+      if (elemento.modulo==permisoModulo){
         bandera=true;
       }
     });

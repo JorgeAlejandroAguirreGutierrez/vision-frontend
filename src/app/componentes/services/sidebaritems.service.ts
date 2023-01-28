@@ -1,6 +1,8 @@
 import { Injectable, Type } from '@angular/core';
-import { modulos, tabs, items, icos } from '../../constantes';
+import { modulos, tabs, items, icos, valores } from '../../constantes';
 import { SidebarItem } from "../../modelos/sidebar-item.model";
+import { Sesion } from '../../modelos/usuario/sesion';
+import { Permiso } from '../../modelos/usuario/permiso';
 
 //CLIENTES
 import { ClienteComponent } from "../../clientes/cliente/cliente.component";
@@ -69,23 +71,29 @@ import { CuentaContableComponent } from '../../contabilidad/cuenta-contable/cuen
 export class SidebarItemsService {
 
   opciones = new Array<SidebarItem>();
+  permisoOpciones: Permiso[] = [];
 
   constructor() { }
 
   llenarOpciones(Componente: Type<any>, tabTitulo: string, itemNombre: string, icoItem: string) {
-    this.opciones.push(new SidebarItem(Componente, tabTitulo, itemNombre, icoItem));
+    this.permisoOpciones.forEach(elemento => {
+      if (elemento.operacion==itemNombre.toUpperCase() && elemento.habilitado==valores.si && elemento.estado==valores.activo){ //opciones sidebar
+        this.opciones.push(new SidebarItem(Componente, tabTitulo, itemNombre, icoItem));
+      }
+    });
   }
 
-  menuOpciones(tabNombre: string): SidebarItem[] {
+  menuOpciones(tabNombre: string, sesion: Sesion): SidebarItem[] {
     this.opciones = [];
+    this.permisoOpciones = sesion.usuario.perfil.permisos;
     if (tabNombre == modulos.modulo_clientes) {
       this.llenarOpciones(ClienteComponent, tabs.tab_cliente, items.item_cliente, icos.ico_cliente);
       this.llenarOpciones(SegmentoComponent, tabs.tab_segmento, items.item_segmento, icos.ico_segmento);
       this.llenarOpciones(GrupoClienteComponent, tabs.tab_grupo_cliente, items.item_grupo_cliente, icos.ico_grupo_cliente);
-      this.llenarOpciones(CalificacionClienteComponent, tabs.tab_calificacion_cliente, items.item_calificacion_cliente, icos.ico_calificacion_cliente);
       this.llenarOpciones(FormaPagoComponent, tabs.tab_forma_pago, items.item_forma_pago, icos.ico_forma_pago);
       this.llenarOpciones(OrigenIngresoComponent, tabs.tab_origen_ingreso, items.item_origen_ingreso, icos.ico_origen_ingreso);
       this.llenarOpciones(PlazoCreditoComponent, tabs.tab_plazo_credito, items.item_plazo_credito, icos.ico_plazo_credito);
+      this.llenarOpciones(CalificacionClienteComponent, tabs.tab_calificacion_cliente, items.item_calificacion_cliente, icos.ico_calificacion_cliente);
     }
 
     if (tabNombre == modulos.modulo_compras) {
@@ -107,7 +115,7 @@ export class SidebarItemsService {
       this.llenarOpciones(GrupoProductoComponent,tabs.tab_grupo_producto, items.item_grupo_producto, icos.ico_grupo_producto);
       this.llenarOpciones(ProductoComponent,tabs.tab_producto, items.item_producto, icos.ico_producto);
       this.llenarOpciones(KardexComponent,tabs.tab_kardex, items.item_kardex, icos.ico_kardex);
-      this.llenarOpciones(PromocionComponent,tabs.tab_promociones,items.item_promociones,icos.ico_promociones);
+      this.llenarOpciones(PromocionComponent,tabs.tab_promocion,items.item_promocion,icos.ico_promocion);
       this.llenarOpciones(ProveedorProductoComponent,tabs.tab_proveedor_producto, items.item_proveedor_producto, icos.ico_proveedor_producto);
       this.llenarOpciones(TransferenciaBodegaComponent,tabs.tab_transferencia_bodega, items.item_transferencia_bodega, icos.ico_transferencia_bodega);
       this.llenarOpciones(BodegaComponent,tabs.tab_bodega, items.item_bodega, icos.ico_bodega);
@@ -115,26 +123,42 @@ export class SidebarItemsService {
       this.llenarOpciones(EquivalenciaMedidaComponent,tabs.tab_equivalencia_medida, items.item_equivalencia_medida, icos.ico_equivalencia_medida);
     }
 
-    if (tabNombre == modulos.modulo_contabilidad) {
-      this.llenarOpciones(CuentaContableComponent, tabs.tab_cuenta_contable, items.item_cuenta_contable, icos.ico_cuenta_contable);
-      this.llenarOpciones(MovimientoContableComponent, tabs.tab_movimiento_contable, items.item_movimiento_contable, icos.ico_movimiento_contable);
+    if (tabNombre == modulos.modulo_caja_bancos) {
+
     }
 
-    if (tabNombre == modulos.modulo_financiero) {
-      this.llenarOpciones(FacturaComponent, tabs.tab_factura, items.item_factura, icos.ico_factura);
+    if (tabNombre == modulos.modulo_cuentas_cobrar) {
+
+    }
+
+    if (tabNombre == modulos.modulo_cuentas_pagar) {
+
     }
 
     if (tabNombre == modulos.modulo_activos_fijos) {
     }
 
-    if (tabNombre == modulos.modulo_talento_humano) {
-      this.llenarOpciones(TransportistaComponent,tabs.tab_transportista, items.item_transportista, icos.ico_transportista);
-    }
-
     if (tabNombre == modulos.modulo_produccion) {
     }
 
+    if (tabNombre == modulos.modulo_contabilidad) {
+      this.llenarOpciones(CuentaContableComponent, tabs.tab_cuenta_contable, items.item_cuenta_contable, icos.ico_cuenta_contable);
+      this.llenarOpciones(MovimientoContableComponent, tabs.tab_movimiento_contable, items.item_movimiento_contable, icos.ico_movimiento_contable);
+    }
+
+    if (tabNombre == modulos.modulo_talento_humano) {
+
+    }
+
+    if (tabNombre == modulos.modulo_financiero) {
+
+    }
+
     if (tabNombre == modulos.modulo_importacion) {
+    }
+
+    if (tabNombre == modulos.modulo_reportes) {
+
     }
 
     if (tabNombre == modulos.modulo_accesos) {
@@ -164,6 +188,9 @@ export class SidebarItemsService {
     }
 
     if (tabNombre == modulos.modulo_auditoria) {
+    }
+
+    if (tabNombre == modulos.modulo_tutoriales) {
     }
 
     return this.opciones;

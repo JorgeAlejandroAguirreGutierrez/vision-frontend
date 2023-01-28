@@ -212,7 +212,8 @@ export const mensajes = {
      error_direccion : "ERROR EN DIRECCIÓN",
      error_ubicacion : "ERROR EN PROVINCIA, CANTON O PARROQUIA",
      mensaje_kardex_inicial : "INICIALIZAR KARDEX CON SALDO 0",
-     error_medida_kardex : "ERROR MEDIDA KARDEX"
+     error_medida_kardex : "ERROR MEDIDA KARDEX",
+     error_falta_datos : "DATOS INCOMPLETOS, FAVOR INGRESE TODOS LOS DATOS"
 }
 
 export const otras ={
@@ -260,18 +261,23 @@ export const modulos = {
      modulo_compras: "COMPRAS",
      modulo_ventas: "VENTAS",
      modulo_inventarios: "INVENTARIOS",
-     modulo_contabilidad: "CONTABILIDAD",
-     modulo_financiero: "FINANCIERO",
+     modulo_caja_bancos: "CAJA BANCOS",
+     modulo_cuentas_cobrar: "CUENTAS POR COBRAR",
+     modulo_cuentas_pagar: "CUENTAS POR PAGAR",
      modulo_activos_fijos: "ACTIVOS FIJOS",
-     modulo_talento_humano: "TALENTO HUMANO",
      modulo_produccion: "PRODUCCION",
+     modulo_contabilidad: "CONTABILIDAD",
+     modulo_talento_humano: "TALENTO HUMANO",
+     modulo_financiero: "FINANCIERO",
      modulo_importacion: "IMPORTACION",
+     modulo_reportes: "REPORTES",
+     
+     modulo_accesos: "ACCESOS",
      modulo_configuracion: "CONFIGURACION",
      modulo_estadisticas: "ESTADISTICAS",
      modulo_control: "CONTROL",
      modulo_auditoria: "AUDITORIA",
-     modulo_usuarios: "USUARIOS",
-     modulo_accesos: "ACCESOS"
+     modulo_tutoriales: "TUTORIALES"
 }    
 
 export const tabs = {
@@ -280,10 +286,7 @@ export const tabs = {
      */
      tab_auxiliar: "Dependiente",
      tab_calificacion_cliente: "Calificacion Cliente",
-     tab_celular: "Celular",
      tab_cliente: "Cliente",
-     tab_correo: "Correo",
-     tab_direccion: "Direccion",
      tab_estado_civil: "Estado Civil",
      tab_forma_pago: "Forma de Pago",
      tab_genero: "Genero",
@@ -292,7 +295,6 @@ export const tabs = {
      tab_origen_ingreso: "Origen de Ingreso",
      tab_plazo_credito: "Plazo de Credito",
      tab_retencion_cliente: "Retencion Cliente",
-     tab_telefono: "Telefono",
      tab_tipo_contribuyente: "Tipo de Contribuyente",
      tab_tipo_pago: "Tipo de Pago",
      tab_tipo_retencion: "Tipo de Retencion",
@@ -338,76 +340,90 @@ export const tabs = {
      tab_recaudacion: "Recaudacion",
      tab_transferencia_bodega: "Transferencia Bodega",
      tab_mapa_cliente: "Mapa Cliente",
-     tab_promociones: "Promocion",
      tab_indicadores: "Indicadores",
 }
     
 export const items = {
-    /**
-     * ITEMS
-     */
-     item_auxiliar : "Auxiliar",
-     item_calificacion_cliente : "Calificacion de Cliente",
-     item_celular : "Celular",
-     item_cliente : "Cliente",
-     item_correo : "Correo",
-     item_direccion : "Direccion",
-     item_estado_civil : "Estado Civil",
-     item_forma_pago : "Forma de Pago",
-     item_genero : "Genero",
-     item_grupo_cliente : "Grupo de Cliente",
-     item_impuesto : "Impuesto",
-     item_origen_ingreso : "Origen de Ingreso",
-     item_plazo_credito : "Plazo de Crédito",
+    /*** ITEMS PARA OPCIONES DEL MENU*/
+    // CLIENTES
+    item_cliente : "Clientes",
+    item_segmento : "Segmentos",
+    item_grupo_cliente : "Grupos de Clientes",
+    item_forma_pago : "Formas de Pago",
+    item_origen_ingreso : "Origen de Ingresos",
+    item_plazo_credito : "Plazos de Crédito",
+    item_calificacion_cliente : "Calificación de Clientes",
+
+    //COMPRAS
+    item_proveedor : "Proveedores",
+    item_factura_compra : "Facturas de Compra",
+    item_grupo_proveedor : "Grupos de Proveedores",
+
+    //VENTAS
+    item_factura : "Facturas",
+    item_pedido : "Pedidos",
+    item_proforma : "Proformas",
+    item_egreso : "Egresos", 
+    item_transportista : "Transportistas",
+    item_vehiculo_transporte : "Vehiculos Transporte",
+
+    //INVENTARIOS
+    item_grupo_producto : "Grupos de Productos",
+    item_producto : "Productos",
+    item_kardex : "Kardex",
+    item_promocion : "Promociones",
+    item_proveedor_producto : "Proveedores de productos",
+    item_transferencia_bodega : "Transferencias de Bodega",
+    item_bodega : "Bodegas",
+    item_medida : "Medidas",
+    item_equivalencia_medida : "Equivalencia de Medidas",
+
+    //CONTABILIDAD
+    item_cuenta_contable : "Cuentas Contables",
+    item_movimiento_contable : "Movimientos Contables",
+
+    //ACCESOS
+    item_usuario : "Usuarios",
+    item_empresa : "Empresas",
+    item_establecimiento : "Establecimientos",
+    item_estacion : "Estaciones",
+    item_perfil : "Perfiles",
+
+    item_estacion_usuario : "Estación Usuario",
+    item_permiso : "Permisos",
+
+    //CONFIGURACION
+    item_ubicacion : "Ubicación",
+    item_estado_civil : "Estado Civil",
+    item_impuesto : "Impuestos",
+    item_tipo_pago : "Tipos de Pago",
+    item_tipo_retencion : "Tipos de Retención",
+    item_genero : "Generos",
+    item_importacion : "Importaciones",
+    item_exportacion : "Exportaciones",
+
+    //ESTADISTICAS
+    item_indicadores : "Dashboard",
+
+    // OTROS NO UTILIZADOS
+    item_servicio : "Servicios y Activos Fijos",
+    item_grupo_servicio : "Grupo de Servicio",
+
      item_retencion_cliente : "Retencion de Cliente",
-     item_telefono : "Telefono",
      item_tipo_contribuyente : "Tipo de Contribuyente",
-     item_tipo_pago : "Tipo de Pago",
-     item_tipo_retencion : "Tipo de Retencion",
-     item_factura_compra : "Factura de Compra",
+
      item_pago_compra : "Pago de Compra",
-     item_proveedor : "Proveedor",
-     item_grupo_proveedor : "Grupo Proveedor",
      item_proveedor_bodega : "Proveedor de Bodega",
-     item_egreso : "Egreso", 
-     item_factura : "Factura",
-     item_pedido : "Pedido",
-     item_proforma : "Proforma",
-     item_empresa : "Empresa",
-     item_exportacion : "Exportacion",
-     item_importacion : "Importacion",
-     item_ubicacion : "Ubicacion",
+
      item_contabilizacion : "Contabilizacion",
      item_cuenta : "Cuenta",
      item_entrega : "Entrega",
-     item_transportista : "Transportista",
-     item_vehiculo_transporte : "Vehiculo Transporte",
+
      item_activo_fijo : "Activo Fijo",
-     item_bodega : "Bodega",
-     item_kardex : "Kardex",
-     item_medida : "Medida",
-     item_producto : "Producto",
-     item_servicio : "Servicios y Activos Fijos",
-     item_promocion : "Promocion",
      item_saldo_inicial_inventario : "Saldo Inicial Producto",
-     item_equivalencia_medida : "Equivalencia Medida",
-     item_usuario : "Usuario",
-     item_estacion_usuario : "Estación Usuario",
-     item_establecimiento : "Establecimiento",
-     item_estacion : "Estación",
-     item_perfil : "Perfil",
-     item_permiso : "Permiso",
-     item_grupo_producto : "Grupo Producto",
-     item_grupo_servicio : "Grupo de Servicio",
-     item_segmento : "Segmento",
-     item_movimiento_contable : "Movimiento Contable",
-     item_cuenta_contable : "Cuenta Contable",
-     item_proveedor_producto : "Proveedor del producto",
      item_recaudacion : "Recaudación",
-     item_transferencia_bodega : "Transferencia Bodega",
-     item_mapa_cliente : "Mapa Cliente",
-     item_promociones : "Promocion",
-     item_indicadores : "Dashboard"
+     item_mapa_cliente : "Mapa Cliente"
+
 }
     
 export const icos = {
@@ -416,10 +432,7 @@ export const icos = {
      */
      ico_auxiliar : 'fa fa-file-text-o',
      ico_calificacion_cliente : 'fa fa-star-half-o',
-     ico_celular : 'fa fa-file-text-o',
      ico_cliente : 'fa fa-address-book',
-     ico_correo : 'fa fa-file-text-o',
-     ico_direccion : 'fa fa-address-card',
      ico_estado_civil : 'fa fa-venus-mars',
      ico_forma_pago : 'fa fa-cc-mastercard',
      ico_genero : 'fa fa-mars-stroke',
@@ -428,7 +441,6 @@ export const icos = {
      ico_origen_ingreso : 'fa fa-briefcase',
      ico_plazo_credito : 'fa fa-calendar',
      ico_retencion_cliente : 'fa fa-file-text-o',
-     ico_telefono : 'fa fa-file-text-o',
      ico_tipo_contribuyente : 'fa fa-file-text-o',
      ico_tipo_pago : 'fa fa-ticket',
      ico_tipo_retencion : 'fa fa-retweet',
@@ -456,7 +468,6 @@ export const icos = {
      ico_medida : 'fa fa-medium',
      ico_producto : 'fa fa-shopping-basket',
      ico_servicio : 'fa fa-child',
-     ico_promocion : 'fa fa-product-hunt',
      ico_proveedor_bodega : 'fa fa-bus',
      ico_equivalencia_medida : 'fa fa-exchange',
      ico_usuario : 'fa fa-user',
@@ -473,7 +484,7 @@ export const icos = {
      ico_proveedor_producto : 'fa fa-bus',
      ico_transferencia_bodega : 'fa fa-handshake-o',
      ico_mapa_cliente : 'fa fa-map',
-     ico_promociones : 'fa fa-product-hunt',
+     ico_promocion : 'fa fa-product-hunt',
      ico_indicadores : 'fa fa-bar-chart',
 }
 
