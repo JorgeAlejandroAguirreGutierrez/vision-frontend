@@ -38,6 +38,7 @@ export class InicioSesionComponent implements OnInit {
   formularioValido: boolean = true;
 
   sesion = new Sesion();
+  empresa: Empresa = new Empresa();
   estacion: Estacion = new Estacion();
 
   empresas: Empresa[] = [];
@@ -62,6 +63,7 @@ export class InicioSesionComponent implements OnInit {
   ngOnInit() {
     this.obtenerParametro();
     this.consultarEmpresas();
+    this.obtenerEstacion();
   }
 
   obtenerPorApodo() {
@@ -69,6 +71,13 @@ export class InicioSesionComponent implements OnInit {
       next: res => {
         this.sesion.usuario = res.resultado as Usuario;
         this.multiEmpresa=this.sesion.usuario.perfil.multiempresa == valores.si? true: false;
+        if (this.multiEmpresa){
+          this.empresa.id = 1; //cambiar ngModel por sesion.empresa
+          // sesion.empresa.id = 1;
+        } else {
+          // Obtener la empresa de estacion
+          // sesion.empresa = estacion.establecimiento.empresa;
+        }
         if (this.sesion.usuario.cambiarContrasena == valores.si) {
           this.cambiarContrasena = true;
         }
@@ -123,6 +132,11 @@ export class InicioSesionComponent implements OnInit {
       },
       error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     });
+  }
+
+  obtenerEstacion(){
+    // Aqui el codigo para obtener la estación segun la IP y nombre del PC
+    // sesion.estacion = estacion obtenida
   }
 
   // PARA VALIDACION DE CONFIRMACIÓN DE CONTRASEÑA

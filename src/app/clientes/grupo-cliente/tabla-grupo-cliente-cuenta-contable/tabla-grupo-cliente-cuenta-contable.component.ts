@@ -1,6 +1,6 @@
 import { Component, OnInit, Output, EventEmitter, ElementRef, Renderer2 } from '@angular/core';
 import Swal from 'sweetalert2';
-import { valores, validarSesion, tab_activo, exito, exito_swal, error, error_swal } from '../../../constantes';
+import { valores, validarSesion, error, error_swal } from '../../../constantes';
 
 import { Sesion } from 'src/app/modelos/usuario/sesion';
 import { SesionService } from 'src/app/servicios/usuario/sesion.service';
@@ -48,20 +48,11 @@ export class TablaGrupoClienteCuentaContableComponent implements OnInit {
     this.consultar();
   }
 
-  filtro(event: Event) {
-    const filterValue = (event.target as HTMLInputElement).value;
-    this.dataSource.filter = filterValue.trim().toUpperCase();
-    if (this.dataSource.paginator) {
-      this.dataSource.paginator.firstPage();
-    }
+  nuevo(){
+    this.cuentaContable = new CuentaContable();
+    this.clickedRows.clear();
   }
 
-  borrarFiltro() {
-    this.renderer.setProperty(this.inputFiltro.nativeElement, 'value', '');
-    this.dataSource.filter = '';
-    this.clickedRows.clear;
-  }
-  
   consultar() {
     this.cuentaContableService.consultarActivos().subscribe({
       next: res => {
@@ -94,9 +85,25 @@ export class TablaGrupoClienteCuentaContableComponent implements OnInit {
       this.clickedRows.add(cuentaContable);
       this.cuentaContable = { ... cuentaContable};
     } else {
-      this.clickedRows.clear();
-      cuentaContable = new CuentaContable();
+      this.nuevo();
     }
-    this.cuentaContableSeleccionado.emit(cuentaContable);
+    if (this.cuentaContable.clasificacion=='M'){
+      this.cuentaContableSeleccionado.emit(this.cuentaContable);
+    } else {
+      this.cuentaContableSeleccionado.emit(new CuentaContable());
+    }
+  }
+
+  filtro(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.dataSource.filter = filterValue.trim().toUpperCase();
+    if (this.dataSource.paginator) {
+      this.dataSource.paginator.firstPage();
+    }
+  }
+  borrarFiltro() {
+    this.renderer.setProperty(this.inputFiltro.nativeElement, 'value', '');
+    this.dataSource.filter = '';
+    this.clickedRows.clear;
   }
 }
