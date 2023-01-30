@@ -54,15 +54,13 @@
                             <div class="col-6">
                                 <mat-form-field appearance="standard">
                                     <mat-label>Valor Factura</mat-label>
-                                    <input matInput type="text" [(ngModel)]="recaudacion.factura.totalConDescuento"
-                                        class="form-control-sm" disabled>
+                                    <input matInput type="text" [(ngModel)]="recaudacion.factura.totalConDescuento" class="form-control-sm" [disabled]="true">
                                 </mat-form-field>
                             </div>
                             <div class="col-6">
                                 <mat-form-field appearance="standard">
                                     <mat-label>Valor Pagado</mat-label>
-                                    <input matInput type="text" [(ngModel)]="recaudacion.total" class="form-control-sm"
-                                        disabled>
+                                    <input matInput type="text" [(ngModel)]="recaudacion.total" class="form-control-sm" [disabled]="true">
                                 </mat-form-field>
                             </div>
                             <div class="col-6">
@@ -188,8 +186,8 @@
                 </div>
                 <div class="col-2">
                     <mat-form-field appearance="standard">
-                        <mat-label>Valor cheq.</mat-label>
-                        <input matInput type="text" class="form-control-sm" [(ngModel)]="cheque.valor">
+                        <mat-label>Valor</mat-label>
+                        <input matInput type="text" class="form-control-sm" [(ngModel)]="cheque.valor" [disabled]="true">
                     </mat-form-field>
                 </div>
                 <div class="col-1 iconos centrar">
@@ -324,7 +322,7 @@
                     <div class="col-2">
                         <mat-form-field appearance="standard">
                             <mat-label>Valor</mat-label>
-                            <input matInput type="text" class="form-control-sm" [(ngModel)]="deposito.valor">
+                            <input matInput type="text" class="form-control-sm" [(ngModel)]="deposito.valor" [disabled]="true">
                         </mat-form-field>
                     </div>
                     <div class="col-1 iconos centrar">
@@ -462,7 +460,7 @@
                     <div class="col-2">
                         <mat-form-field appearance="standard">
                             <mat-label>Valor</mat-label>
-                            <input matInput type="text" class="form-control-sm" [(ngModel)]="transferencia.valor">
+                            <input matInput type="text" class="form-control-sm" [(ngModel)]="transferencia.valor" [disabled]="true">
                         </mat-form-field>
                     </div>
                     <div class="col-1 iconos centrar">
@@ -634,7 +632,7 @@
                     <div class="col-2">
                         <mat-form-field appearance="standard">
                             <mat-label>Valor</mat-label>
-                            <input matInput type="text" class="form-control-sm" [(ngModel)]="tarjetaCredito.valor">
+                            <input matInput type="text" class="form-control-sm" [(ngModel)]="tarjetaCredito.valor" [disabled]="true">
                         </mat-form-field>
                     </div>
                     <div class="col-1 iconos centrar">
@@ -838,7 +836,7 @@
                     <div class="col-2">
                         <mat-form-field appearance="standard">
                             <mat-label>Valor</mat-label>
-                            <input matInput type="text" class="form-control-sm" [(ngModel)]="tarjetaDebito.valor">
+                            <input matInput type="text" class="form-control-sm" [(ngModel)]="tarjetaDebito.valor" [disabled]="true">
                         </mat-form-field>
                     </div>
                     <div class="col-1 iconos centrar">

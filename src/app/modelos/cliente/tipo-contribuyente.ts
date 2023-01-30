@@ -4,13 +4,13 @@ export class TipoContribuyente {
     codigo: string;
     tipo: string;
     subtipo: string;
-    obligadoContabilidad: boolean;
+    obligadoContabilidad: string;
 
     constructor() {
         this.id = valores.cero;
         this.codigo = valores.vacio;
         this.tipo = valores.vacio;
         this.subtipo = valores.vacio;
-        this.obligadoContabilidad = false;
+        this.obligadoContabilidad = valores.no;
     }
 }

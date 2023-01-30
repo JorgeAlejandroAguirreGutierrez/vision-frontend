@@ -2,13 +2,13 @@ import { valores } from "../../constantes";
 
 export class CuentaContable {
     id:number;
-    cuenta:string;
-    descripcion:string;
+    cuenta: string;
+    descripcion: string;
     clasificacion: string;
     nivel: number;
-    fe:boolean;
-    casillero:string;
-    mapeo:string;
+    fe: string;
+    casillero: string;
+    mapeo: string;
     estado: string;
 
     constructor(){
@@ -17,7 +17,7 @@ export class CuentaContable {
         this.descripcion = valores.vacio;
         this.clasificacion = valores.vacio;
         this.nivel = valores.cero;
-        this.fe = false;
+        this.fe = valores.no;
         this.casillero=valores.vacio;
         this.mapeo=valores.vacio;
         this.estado=valores.activo;

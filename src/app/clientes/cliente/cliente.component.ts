@@ -173,8 +173,6 @@ export class ClienteComponent implements OnInit {
       this.crear(null);
     if (($event.shiftKey || $event.metaKey) && $event.key == "N")
       this.nuevo(null);
-    if (($event.shiftKey || $event.metaKey) && $event.key == "E")
-      console.log('SHIFT + E');
   }
 
   constructor(public dialog: MatDialog, private clienteService: ClienteService, private tipoIdentificacionService: TipoIdentificacionService, private generoService: GeneroService,
@@ -211,7 +209,6 @@ export class ClienteComponent implements OnInit {
     this.tipoIdentificacionService.consultar().subscribe({
       next: (res) => {
         this.tiposIdentificaciones = res.resultado as TipoIdentificacion[];
-        console.log(this.tiposIdentificaciones);
       },
       error: (err) => {
         Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje });
@@ -791,7 +788,6 @@ export class ClienteComponent implements OnInit {
   }
 
   dialogoMapasDependiente(): void {
-    //console.log('El dialogo para selección de grupo producto fue abierto');
     const dialogRef = this.dialog.open(DialogoMapaComponent, {
       width: '80%',
       data: this.posicionGeograficaDependiente as Coordenada
@@ -821,7 +817,6 @@ export class DialogoMapaComponent {
 
   onNoClick(): void {
     this.dialogRef.close();
-    //console.log('El dialogo para selección de coordenada fue cancelado');
     this.data = new Coordenada(0, 0);
   }
 

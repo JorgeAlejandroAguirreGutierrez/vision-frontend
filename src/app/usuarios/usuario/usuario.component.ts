@@ -218,10 +218,8 @@ export class UsuarioComponent implements OnInit {
 
   capturarFile(event: any): any {
     const archivoCapturado = event.target.files[0];
-    //console.log(archivoCapturado);
     this.extrarBase64(archivoCapturado).then((imagen: any) => {
       this.usuario.avatar = imagen.base;
-      //console.log(imagen);
     });
   }
 

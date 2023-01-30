@@ -19,7 +19,6 @@ import { Producto } from '../../modelos/inventario/producto';
 import { ImpuestoService } from '../../servicios/inventario/impuesto.service';
 import { Impuesto } from '../../modelos/inventario/impuesto';
 import { FacturaService } from '../../servicios/comprobante/factura.service';
-import { DependienteService } from '../../servicios/cliente/dependiente.service';
 import { Dependiente } from '../../modelos/cliente/dependiente';
 import { Caracteristica } from '../../modelos/inventario/caracteristica';
 import { Bodega } from '../../modelos/inventario/bodega';
@@ -42,16 +41,9 @@ export class FacturaComponent implements OnInit {
 
   @ViewChild('stepper') stepper: MatStepper;
 
-  collapsed = true;
   isLinear = false;
   isEditable = false;
-  completed = false;
-  facturaDetalleIndice = valores.cero;
-  serieBuscar = valores.vacio;
-
   panelOpenState=false;
-  seleccionDependiente: boolean = false;
-  seleccionFacturar: boolean = false;
 
   firstFormGroup: UntypedFormGroup;
   secondFormGroup: UntypedFormGroup;
@@ -60,14 +52,10 @@ export class FacturaComponent implements OnInit {
   seleccionProducto = new UntypedFormControl();
   seleccionIdentificacionCliente = new UntypedFormControl();
   seleccionRazonSocialCliente = new UntypedFormControl();
-  seleccionIdentificacionClienteFactura = new UntypedFormControl();
-  seleccionRazonSocialClienteFactura = new UntypedFormControl();
 
   filtroProductos: Observable<Producto[]> = new Observable<Producto[]>();
   filtroIdentificacionClientes: Observable<Cliente[]> = new Observable<Cliente[]>();
   filtroRazonSocialClientes: Observable<Cliente[]> = new Observable<Cliente[]>();
-  filtroIdentificacionClientesFactura: Observable<Cliente[]> = new Observable<Cliente[]>();
-  filtroRazonSocialClientesFactura: Observable<Cliente[]> = new Observable<Cliente[]>();
 
   columnas: any[] = [
     { nombreColumna: 'codigo', cabecera: 'Código', celda: (row: Factura) => `${row.codigo}`},
@@ -78,17 +66,14 @@ export class FacturaComponent implements OnInit {
   columnasFactura: string[]  = this.columnas.map(titulo => titulo.nombreColumna);
   dataSourceFactura: MatTableDataSource<Factura>;
   clickedRows = new Set<Factura>();
-  abrirPanelNuevoFactura = true;
   abrirPanelAdminFactura = false;
   facturas: Factura[];
-  deshabilitarAgregarFacturaDetalle: boolean = false;
-  verAcordeonFacturaDetalle: boolean = true;
   
   @ViewChild("paginatorFactura") paginatorFactura: MatPaginator;
   @ViewChild("paginatorFacturaDetalle") paginatorFacturaDetalle: MatPaginator;
   
 
-  constructor(private clienteService: ClienteService, private dependienteService: DependienteService, private sesionService: SesionService, 
+  constructor(private clienteService: ClienteService, private sesionService: SesionService, 
     private impuestoService: ImpuestoService, private facturaDetalleService: FacturaDetalleService, private router: Router,
     private facturaService: FacturaService, private facturacionElectronicaService: FacturacionElectronicaService,
     private productoService: ProductoService, private bodegaService: BodegaService, 
@@ -96,23 +81,17 @@ export class FacturaComponent implements OnInit {
     private modalService: NgbModal, private _formBuilder: UntypedFormBuilder) { }
 
   factura: Factura = new Factura();
-  dependienteBuscar: Dependiente=new Dependiente();
 
   columnasDetalleFactura: string[] = ['nombre', 'medida', 'cantidad', 'valor', 'descuento', 'descuentoPorcentaje', 'impuesto', 'total', 'entregado', 'acciones'];
   dataSourceFacturaDetalle = new MatTableDataSource<FacturaDetalle>(this.factura.facturaDetalles);
 
   clientes: Cliente[]=[];
-  dependientes: Dependiente[]= [];
   productos: Producto[] = [];
   bodegas: Bodega[]=[];
   categoriasProductos: CategoriaProducto[] = [];
   categoriaProducto = valores.bien;
 
-  preciosSeleccionados: Precio[]=[];
   sesion: Sesion;
-  habilitar: boolean = true;
-  habilitarClienteTce: boolean =true;
-  habilitarClienteFacturaTce: boolean =true;
   impuestos: Impuesto[];
 
   //VARIABLES MUESTRA
@@ -120,28 +99,15 @@ export class FacturaComponent implements OnInit {
   primerCelularCliente: string = valores.vacio;
   primerCorreoCliente: string = valores.vacio;
 
-  primerTelefonoDependiente: string = valores.vacio;
-  primerCelularDependiente: string = valores.vacio;
-  primerCorreoDependiente: string = valores.vacio;
-
   primerTelefonoClienteFactura: string = valores.vacio;
   primerCelularClienteFactura: string = valores.vacio;
   primerCorreoClienteFactura: string = valores.vacio;
-
-  caracteristica: string= valores.vacio;
-
-  habilitarSeleccionDependiente= true;
-  habilitarFacturar= false;
-
-  dependienteIndice= -1;
-  dependiente: Dependiente= null;
 
   saldoTotal = valores.cero;
   saldo = valores.cero;
   costoUnitario = valores.cero;
   costoPromedio = valores.cero;
   productoIndice = valores.cero;
-  cantidadTransferencia = valores.cero;
   facturaDetalle: FacturaDetalle=new FacturaDetalle();
   
 
@@ -251,13 +217,11 @@ export class FacturaComponent implements OnInit {
 
   construirFactura() {
     if (this.factura.id != 0) {
-        this.factura.normalizar();
         this.seleccionIdentificacionCliente.patchValue(this.factura.cliente);
         this.seleccionRazonSocialCliente.patchValue(this.factura.cliente);
-        this.primerTelefonoCliente= this.factura.cliente.telefonos.length>0? this.factura.cliente.telefonos[0].numero: "";
-        this.primerCelularCliente= this.factura.cliente.celulares.length>0? this.factura.cliente.celulares[0].numero: "";
-        this.primerCorreoCliente= this.factura.cliente.correos.length>0? this.factura.cliente.correos[0].email: "";
-        this.habilitarClienteTce=false;
+        this.primerTelefonoCliente = this.factura.cliente.telefonos.length>0? this.factura.cliente.telefonos[0].numero: "";
+        this.primerCelularCliente = this.factura.cliente.celulares.length>0? this.factura.cliente.celulares[0].numero: "";
+        this.primerCorreoCliente = this.factura.cliente.correos.length>0? this.factura.cliente.correos[0].email: "";
         this.dataSourceFacturaDetalle = new MatTableDataSource<FacturaDetalle>(this.factura.facturaDetalles);
         this.dataSourceFacturaDetalle.paginator = this.paginatorFacturaDetalle;
     }
@@ -337,11 +301,9 @@ export class FacturaComponent implements OnInit {
   seleccionarRazonSocialCliente() {
     let clienteId=undefined;
     clienteId=this.seleccionRazonSocialCliente.value.id;
-    this.dependienteBuscar.cliente.id=clienteId;
     this.clienteService.obtener(clienteId).subscribe(
       res => {
         Object.assign(this.factura.cliente, res.resultado as Cliente);
-        this.factura.cliente.normalizar();
         this.seleccionIdentificacionCliente.patchValue(this.factura.cliente);
         this.seleccionRazonSocialCliente.patchValue(this.factura.cliente);
         if (this.factura.cliente.telefonos.length>0)
@@ -350,19 +312,6 @@ export class FacturaComponent implements OnInit {
           this.primerCelularCliente = this.factura.cliente.celulares[0].numero;
         if (this.factura.cliente.correos.length>0)
           this.primerCorreoCliente = this.factura.cliente.correos[0].email;
-        if (this.factura.cliente.identificacion!="9999999999999")
-        {
-          this.habilitarSeleccionDependiente=false;
-          this.habilitarFacturar=false;
-          this.seleccionFacturar=false;
-        } else {
-          this.habilitarFacturar=true;
-          this.seleccionFacturar=false;
-          this.seleccionIdentificacionClienteFactura.enable();
-          this.seleccionRazonSocialClienteFactura.enable();
-        }
-        this.habilitarClienteTce=false;
-        this.verAcordeonFacturaDetalle=true;
       },
       err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     );
@@ -371,11 +320,9 @@ export class FacturaComponent implements OnInit {
   seleccionarIdentificacionCliente() {
     let cliente_id=undefined;
     cliente_id=this.seleccionIdentificacionCliente.value.id;
-    this.dependienteBuscar.cliente.id=cliente_id;
     this.clienteService.obtener(cliente_id).subscribe(
       res => {
         Object.assign(this.factura.cliente,res.resultado as Cliente);
-        this.factura.cliente.normalizar();
           this.seleccionIdentificacionCliente.patchValue(this.factura.cliente);
           this.seleccionRazonSocialCliente.patchValue(this.factura.cliente);     
         if (this.factura.cliente.telefonos.length>0)
@@ -384,59 +331,22 @@ export class FacturaComponent implements OnInit {
           this.primerCelularCliente = this.factura.cliente.celulares[0].numero;
         if (this.factura.cliente.correos.length>0)
           this.primerCorreoCliente = this.factura.cliente.correos[0].email;
-        if (this.factura.cliente.identificacion!="9999999999999")
-        {
-          this.habilitarSeleccionDependiente=false;
-          this.habilitarFacturar=false;
-          this.seleccionFacturar=false;
-        } else {
-          this.habilitarFacturar=true;
-          this.seleccionFacturar=false;
-          this.seleccionIdentificacionClienteFactura.enable();
-          this.seleccionRazonSocialClienteFactura.enable();
-        }
-        this.habilitarClienteTce=false;
       },
       err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
 
-  asignarFacturar(){
-    if (this.seleccionFacturar){
-      this.seleccionIdentificacionClienteFactura.enable();
-      this.seleccionRazonSocialClienteFactura.enable();
-    } else {
-      this.seleccionIdentificacionClienteFactura.patchValue("");
-      this.seleccionRazonSocialClienteFactura.patchValue("");
-      this.seleccionIdentificacionClienteFactura.disable();
-      this.seleccionRazonSocialClienteFactura.disable();
-    }
-    
-  }
-  
-  seleccionarDependiente(i: number){
-    this.dependienteIndice=i;
-  }
-
-  seleccionarHabilitar() {
-    if (this.habilitar) {
-      this.habilitar = false;
-    } else {
-      this.habilitar = true;
-    }
-  }
-
   limpiarProducto(){
     this.facturaDetalle= new FacturaDetalle();
-    this.seleccionProducto.patchValue("");
-    this.costoPromedio=0;
-    this.saldo=0;
-    this.saldoTotal=0;
+    this.seleccionProducto.patchValue(valores.vacio);
+    this.costoPromedio = valores.cero;
+    this.saldo = valores.cero;
+    this.saldoTotal = valores.cero;
   }
 
   seleccionarProducto() {
     this.facturaDetalle.producto=this.seleccionProducto.value;
-    if(this.facturaDetalle.producto.kardexs.length==0){
+    if(this.facturaDetalle.producto.kardexs.length == valores.cero){
       this.facturaDetalle.producto=new Producto();
       Swal.fire({ icon: error_swal, title: error, text: mensajes.error_kardex_vacio, footer: mensajes.error_kardex_vacio_mensaje });
       return;
@@ -456,111 +366,111 @@ export class FacturaComponent implements OnInit {
   }
 
   seleccionarMedida(){
-    if (this.facturaDetalle.bodega.id==0){
+    if (this.facturaDetalle.bodega.id == valores.cero){
       return;
     }
-    if (this.facturaDetalle.cantidad==0){
+    if (this.facturaDetalle.cantidad == valores.cero){
       return;
     }
-    if (this.facturaDetalle.precio.id==0){
+    if (this.facturaDetalle.precio.id == valores.cero){
       return;
     }
-    if (this.facturaDetalle.impuesto.id==0){
+    if (this.facturaDetalle.impuesto.id == valores.cero){
       return;
     }
     this.calcularFacturaDetalle();
   }
 
   seleccionarPrecio() {
-    if (this.facturaDetalle.bodega.id==0){
+    if (this.facturaDetalle.bodega.id == valores.cero){
       return;
     }
-    if (this.facturaDetalle.cantidad==0){
+    if (this.facturaDetalle.cantidad == valores.cero){
       return;
     }
-    if (this.facturaDetalle.precio.id==0){
+    if (this.facturaDetalle.precio.id == valores.cero){
       return;
     }
-    if (this.facturaDetalle.impuesto.id==0){
+    if (this.facturaDetalle.impuesto.id == valores.cero){
       return;
     }
     this.calcularFacturaDetalle();
   }
   seleccionarCantidad() {
-    if (this.facturaDetalle.bodega.id==0){
+    if (this.facturaDetalle.bodega.id == valores.cero){
       return;
     }
-    if (this.facturaDetalle.cantidad==0){
+    if (this.facturaDetalle.cantidad == valores.cero){
       return;
     }
-    if (this.facturaDetalle.precio.id==0){
+    if (this.facturaDetalle.precio.id == valores.cero){
       return;
     }
-    if (this.facturaDetalle.impuesto.id==0){
+    if (this.facturaDetalle.impuesto.id == valores.cero){
       return;
     }
     this.calcularFacturaDetalle();
   }
 
   seleccionarImpuesto(){
-    if (this.facturaDetalle.bodega.id==0){
+    if (this.facturaDetalle.bodega.id == valores.cero){
       return;
     }
-    if (this.facturaDetalle.cantidad==0){
+    if (this.facturaDetalle.cantidad == valores.cero){
       return;
     }
-    if (this.facturaDetalle.precio.id==0){
+    if (this.facturaDetalle.precio.id == valores.cero){
       return;
     }
-    if (this.facturaDetalle.impuesto.id==0){
+    if (this.facturaDetalle.impuesto.id == valores.cero){
       return;
     }
     this.calcularFacturaDetalle();
   }
 
   seleccionarBodega(){
-    if (this.facturaDetalle.bodega.id==0){
+    if (this.facturaDetalle.bodega.id == valores.cero){
       return;
     }
-    if (this.facturaDetalle.cantidad==0){
+    if (this.facturaDetalle.cantidad == valores.cero){
       return;
     }
-    if (this.facturaDetalle.precio.id==0){
+    if (this.facturaDetalle.precio.id == valores.cero){
       return;
     }
-    if (this.facturaDetalle.impuesto.id==0){
+    if (this.facturaDetalle.impuesto.id == valores.cero){
       return;
     }
     this.calcularFacturaDetalle();
   }
 
   seleccionarValorDescuentoLinea() {
-    if (this.facturaDetalle.bodega.id==0){
+    if (this.facturaDetalle.bodega.id == valores.cero){
       return;
     }
-    if (this.facturaDetalle.cantidad==0){
+    if (this.facturaDetalle.cantidad == valores.cero){
       return;
     }
-    if (this.facturaDetalle.precio.id==0){
+    if (this.facturaDetalle.precio.id == valores.cero){
       return;
     }
-    if (this.facturaDetalle.impuesto.id==0){
+    if (this.facturaDetalle.impuesto.id == valores.cero){
       return;
     }
     this.calcularFacturaDetalle();
   }
 
   seleccionarPorcentajeDescuentoLinea() {
-    if (this.facturaDetalle.bodega.id==0){
+    if (this.facturaDetalle.bodega.id == valores.cero){
       return;
     }
-    if (this.facturaDetalle.cantidad==0){
+    if (this.facturaDetalle.cantidad == valores.cero){
       return;
     }
-    if (this.facturaDetalle.precio.id==0){
+    if (this.facturaDetalle.precio.id == valores.cero){
       return;
     }
-    if (this.facturaDetalle.impuesto.id==0){
+    if (this.facturaDetalle.impuesto.id == valores.cero){
       return;
     }
     this.calcularFacturaDetalle();
@@ -586,8 +496,8 @@ export class FacturaComponent implements OnInit {
     this.facturaService.calcular(this.factura).subscribe(
       res => {
         this.factura = res.resultado as Factura;
-        this.limpiarProducto();
         this.dataSourceFacturaDetalle = new MatTableDataSource<FacturaDetalle>(this.factura.facturaDetalles);
+        this.limpiarProducto();
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
       },
       err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })

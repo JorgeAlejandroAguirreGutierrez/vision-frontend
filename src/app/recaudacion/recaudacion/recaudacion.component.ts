@@ -222,7 +222,6 @@ export class RecaudacionComponent implements OnInit {
       this.dataTarjetasDebitos = new MatTableDataSource<TarjetaDebito>(this.recaudacion.tarjetasDebitos);
     }
     this.calcular();
-    console.log(this.recaudacion);
   }
 
   consultarCuentasPropias(){
@@ -661,11 +660,11 @@ export class RecaudacionComponent implements OnInit {
     this.recaudacionService.calcular(this.recaudacion).subscribe(
       res => {
         this.recaudacion = res.resultado as Recaudacion;
-        this.cheque.valor=this.recaudacion.credito.saldo;
-	      this.deposito.valor=this.recaudacion.credito.saldo;
-	      this.transferencia.valor=this.recaudacion.credito.saldo;
-	      this.tarjetaCredito.valor=this.recaudacion.credito.saldo;
-	      this.tarjetaDebito.valor=this.recaudacion.credito.saldo;
+        this.cheque.valor=this.recaudacion.porPagar;
+	      this.deposito.valor=this.recaudacion.porPagar;
+	      this.transferencia.valor=this.recaudacion.porPagar;
+	      this.tarjetaCredito.valor=this.recaudacion.porPagar;
+	      this.tarjetaDebito.valor=this.recaudacion.porPagar;
       }, err => Swal.fire(error, err.error.mensaje, error_swal)
     );
   }

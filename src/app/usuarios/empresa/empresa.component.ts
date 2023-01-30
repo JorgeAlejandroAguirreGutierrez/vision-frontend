@@ -162,10 +162,8 @@ export class EmpresaComponent implements OnInit {
 
   capturarFile(event : any) : any{
     const archivoCapturado = event.target.files[0];
-    //console.log(archivoCapturado);
     this.extrarBase64(archivoCapturado).then((imagen: any) => {
       this.empresa.logo = imagen.base;
-      //console.log(imagen);
     });
   }
 

@@ -96,8 +96,8 @@
                                 </mat-form-field>
                             </div>
                             <div class="col-1 iconos">
-                                <button mat-icon-button [disabled]="habilitarClienteTce">
-                                    <mat-icon (click)="open(modalTelefonosCliente)">visibility</mat-icon>
+                                <button mat-button mat-icon-button (click)="open(modalTelefonosCliente)">
+                                    <mat-icon>visibility</mat-icon>
                                 </button>
                             </div>
                             <div class="col-3">
@@ -109,8 +109,8 @@
                                 </mat-form-field>
                             </div>
                             <div class="col-1 iconos">
-                                <button mat-icon-button [disabled]="habilitarClienteTce">
-                                    <mat-icon (click)="open(modalCelularesCliente)">visibility</mat-icon>
+                                <button mat-button mat-icon-button (click)="open(modalCelularesCliente)">
+                                    <mat-icon>visibility</mat-icon>
                                 </button>
                             </div>
                             <div class="col-3">
@@ -121,8 +121,8 @@
                                 </mat-form-field>
                             </div>
                             <div class="col-1 iconos">
-                                <button mat-icon-button [disabled]="habilitarClienteTce">
-                                    <mat-icon (click)="open(modalCorreosCliente)">visibility</mat-icon>
+                                <button mat-button mat-icon-button (click)="open(modalCorreosCliente)">
+                                    <mat-icon>visibility</mat-icon>
                                 </button>
                             </div>
                         </div>
@@ -190,8 +190,7 @@
                         </div>
                     </div>
                 </mat-expansion-panel>
-                <mat-expansion-panel (opened)="panelOpenState = true" (closed)="panelOpenState = false"
-                    *ngIf="verAcordeonFacturaDetalle">
+                <mat-expansion-panel (opened)="panelOpenState = true" (closed)="panelOpenState = false">
                     <mat-expansion-panel-header>
                         <mat-panel-title>
                             <i><u>DETALLE FACTURA</u></i>
@@ -245,8 +244,7 @@
                             <div class="col-4">
                                 <mat-form-field appearance="standard">
                                     <mat-label>Saldo T.</mat-label>
-                                    <input matInput type="text " class="form-control-sm " [(ngModel)]="saldoTotal"
-                                        disabled>
+                                    <input matInput type="text " class="form-control-sm " [(ngModel)]="saldoTotal" disabled>
                                 </mat-form-field>
                             </div>
                         </div>
@@ -376,8 +374,8 @@
                                 </mat-form-field>
                             </div>
                             <div class="col-1 iconos">
-                                <button mat-icon-button mat-button [disabled]="deshabilitarAgregarFacturaDetalle">
-                                    <mat-icon (click)="agregarFacturaDetalle(null)">add_shopping_cart</mat-icon>
+                                <button mat-icon-button mat-button (click)="agregarFacturaDetalle(null)">
+                                    <mat-icon>add_shopping_cart</mat-icon>
                                 </button>
                             </div>
                         </div>
@@ -633,133 +631,6 @@
         </mat-step>
     </mat-stepper>
 </div>
-<ng-template #modalSeries let-modal>
-    <div class="modal-header ">
-        <h5 class="modal-title ">Agregar Series</h5>
-        <button type="button " class="close " aria-label="Close " (click)="modal.dismiss( 'Cross click') ">
-            <span aria-hidden="true ">&times;</span>
-        </button>
-    </div>
-    <div class="modal-body ">
-        <ng-container *ngIf="!factura.facturaDetalles[facturaDetalleIndice].producto.serieAutogenerado">
-            <div class="form-row">
-                <div class="form-group col-12">
-                    <mat-form-field appearance="standard">
-                        <mat-label>Buscar Serie</mat-label>
-                        <input matInput type="text" [(ngModel)]="serieBuscar" class="form-control-sm">
-                    </mat-form-field>
-                </div>
-            </div>
-        </ng-container>
-        <div class="form-group form-row table-responsive">
-            <table class="table table-bordered table-hover">
-                <thead>
-                    <tr>
-                        <th>OPCION</th>
-                        <th>DESCRIPCION</th>
-                        <th>MARCA</th>
-                        <th>MODELO</th>
-                        <th>SERIE</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <ng-container
-                        *ngFor="let caracteristica of factura.facturaDetalles[facturaDetalleIndice].producto.caracteristicas | filtroSerie:serieBuscar">
-                        <ng-container
-                            *ngIf="caracteristica.facturaDetalle==null || caracteristica.facturaDetalle.posicion==facturaDetalleIndice || caracteristica.facturaDetalle.posicion==-1">
-                            <tr>
-                                <td>
-                                    <mat-checkbox [(ngModel)]="caracteristica.seleccionado" class="form-control-sm"
-                                        color="primary" [disabled]>
-                                    </mat-checkbox>
-                                </td>
-                                <td>
-                                    {{caracteristica.descripcion}}
-                                </td>
-                                <td>
-                                    {{caracteristica.marca}}
-                                </td>
-                                <td>
-                                    {{caracteristica.modelo}}
-                                </td>
-                                <td>
-                                    {{caracteristica.serie}}
-                                </td>
-                            </tr>
-                        </ng-container>
-                    </ng-container>
-                </tbody>
-            </table>
-        </div>
-    </div>
-    <div class="modal-footer ">
-        <button type="button " class="btn btn-outline-dark " (click)="modal.close('close') ">Cerrar</button>
-        <button type="button " class="btn btn-outline-success " (click)="modal.close('confirmar') ">Confirmar</button>
-    </div>
-</ng-template>
-<ng-template #modalTransferencias let-modal>
-    <div class="modal-header ">
-        <h5 class="modal-title ">Cargar Transferencia</h5>
-        <button type="button " class="close " aria-label="Close " (click)="modal.dismiss( 'Cross click') ">
-            <span aria-hidden="true ">&times;</span>
-        </button>
-    </div>
-    <div class="modal-body ">
-        <div class="form-group form-row">
-            <div class="col-12">
-                <label>Cantidad a transferir</label>
-                <input type="text" [(ngModel)]="cantidadTransferencia" class="form-control form-control-sm">
-            </div>
-        </div>
-        <div class="form-group form-row">
-            <div class="col-12 table-responsive">
-                <table class="table table-bordered table-hover">
-                    <thead>
-                        <tr>
-                            <th>DESCRIPCION</th>
-                            <th>MARCA</th>
-                            <th>MODELO</th>
-                            <th>SERIE</th>
-                            <th>CANT</th>
-                            <th>OPCION</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr
-                            *ngFor="let caracteristica of factura.facturaDetalles[facturaDetalleIndice].producto.caracteristicas let i=index">
-                            <td>
-                                {{caracteristica.descripcion}}
-                            </td>
-                            <td>
-                                {{caracteristica.marca}}
-                            </td>
-                            <td>
-                                {{caracteristica.modelo}}
-                            </td>
-                            <td>
-                                {{caracteristica.serie}}
-                            </td>
-                            <td>
-                                {{caracteristica.color}}
-                            </td>
-                            <td>
-                                {{caracteristica.seleccionado}
-                            </td>
-                            <td>
-                                <button class="btn btn-primary btn-circle ">
-                                    <mat-icon>transfer_within_a_station</mat-icon>
-                                </button>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </div>
-    <div class="modal-footer ">
-        <button type="button " class="btn btn-outline-dark " (click)="modal.close( 'close') ">Cerrar</button>
-    </div>
-</ng-template>
 <ng-template #modalCorreosCliente let-modal>
     <div class="modal-header ">
         <h5 class="modal-title ">Ver Correos</h5>
