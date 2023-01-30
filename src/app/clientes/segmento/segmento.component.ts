@@ -1,6 +1,6 @@
 import { Component, OnInit, HostListener, ElementRef, Renderer2 } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
-import { valores, validarSesion, exito, exito_swal, error, error_swal } from '../../constantes';
+//import { BehaviorSubject } from 'rxjs';
+import { valores, mensajes, validarSesion, exito, exito_swal, error, error_swal } from '../../constantes';
 import Swal from 'sweetalert2';
 
 import { Router } from '@angular/router';
@@ -27,7 +27,8 @@ export class SegmentoComponent implements OnInit {
 
   abrirPanelNuevo: boolean = true;
   abrirPanelAdmin: boolean = true;
-  edicion: boolean = true;
+  formularioValido: boolean = false;
+//  edicion: boolean = true;
 
   sesion: Sesion = null;
   segmento: Segmento = new Segmento();
@@ -36,16 +37,19 @@ export class SegmentoComponent implements OnInit {
   columnas: any[] = [
     { nombreColumna: 'codigo', cabecera: 'Código', celda: (row: Segmento) => `${row.codigo}` },
     { nombreColumna: 'descripcion', cabecera: 'Descripción', celda: (row: Segmento) => `${row.descripcion}` },
-    { nombreColumna: 'margen_ganancia', cabecera: 'Margen Ganancia %', celda: (row: Segmento) => `${row.margenGanancia} %` },
+    { nombreColumna: 'abreviatura', cabecera: 'Abreviatura', celda: (row: Segmento) => `${row.abreviatura}` },
+    { nombreColumna: 'margen_ganancia', cabecera: 'Margen Ganancia', celda: (row: Segmento) => `${row.margenGanancia} %` },
     { nombreColumna: 'estado', cabecera: 'Estado', celda: (row: Segmento) => `${row.estado}` }
   ];
   cabecera: string[] = this.columnas.map(titulo => titulo.nombreColumna);
   dataSource: MatTableDataSource<Segmento>;
+  //dataSource$: BehaviorSubject<MatTableDataSource<Segmento>> = new BehaviorSubject<MatTableDataSource<Segmento>>(null);
   clickedRows = new Set<Segmento>();
 
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
+  @ViewChild("inputFiltro") inputFiltro: ElementRef;
 
   constructor(private renderer: Renderer2, private segmentoService: SegmentoService,
     private sesionService: SesionService, private router: Router) { }
@@ -68,11 +72,16 @@ export class SegmentoComponent implements OnInit {
       event.preventDefault();
     this.segmento = new Segmento();
     this.clickedRows.clear();
+    this.borrarFiltro();
+    this.formularioValido = false;
   }
 
   crear(event) {
     if (event != null)
       event.preventDefault();
+    this.validarFormulario();
+    if (!this.formularioValido)
+      return;         
     this.segmentoService.crear(this.segmento).subscribe({
       next: res => {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
@@ -86,6 +95,9 @@ export class SegmentoComponent implements OnInit {
   actualizar(event) {
     if (event != null)
       event.preventDefault();
+    this.validarFormulario();
+    if (!this.formularioValido)
+      return;        
     this.segmentoService.actualizar(this.segmento).subscribe({
       next: res => {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
@@ -126,11 +138,23 @@ export class SegmentoComponent implements OnInit {
     this.segmentoService.consultar().subscribe({
       next: res => {
         this.segmentos = res.resultado as Segmento[]
-        this.dataSource = new MatTableDataSource(this.segmentos);
-        this.dataSource.paginator = this.paginator;
-        this.dataSource.sort = this.sort;
+        this.llenarTabla(this.segmentos);
       },
       error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+    });
+  }
+
+  llenarTabla(segmentos: Segmento[]) {
+    this.ordenarAsc(segmentos, 'id');
+    this.dataSource = new MatTableDataSource(segmentos);
+    this.dataSource.paginator = this.paginator;
+    this.dataSource.sort = this.sort;
+    //this.dataSource$.next(this.dataSource); //Solo si quiero que se vea en la tablas los cambios
+  }
+
+  ordenarAsc(arrayJson: any, pKey: any) {
+    arrayJson.sort(function (a: any, b: any) {
+      return a[pKey] > b[pKey];
     });
   }
 
@@ -140,8 +164,7 @@ export class SegmentoComponent implements OnInit {
       this.clickedRows.add(segmento);
       this.segmento = { ... segmento};
     } else {
-      this.clickedRows.clear();
-      this.segmento = new Segmento();
+      this.nuevo(null);
     }
   }
 
@@ -150,6 +173,26 @@ export class SegmentoComponent implements OnInit {
     this.dataSource.filter = filterValue.trim().toUpperCase();
     if (this.dataSource.paginator) {
       this.dataSource.paginator.firstPage();
+    }
+  }
+
+  borrarFiltro() {
+    this.renderer.setProperty(this.inputFiltro.nativeElement, 'value', '');
+    this.dataSource.filter = '';
+  }
+
+  validarFormulario(){
+    //validar que los campos esten llenos antes de guardar
+    this.formularioValido = true;
+    if (this.segmento.descripcion == '') {
+      Swal.fire({ icon: error_swal, title: error, text: mensajes.error_falta_datos });
+      this.formularioValido = false;
+      return;
+    }
+    if (this.segmento.margenGanancia <= 0) {
+      Swal.fire({ icon: error_swal, title: error, text: mensajes.error_falta_datos });
+      this.formularioValido = false;
+      return;
     }
   }
 }

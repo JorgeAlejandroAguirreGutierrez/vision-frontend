@@ -1,6 +1,6 @@
 import { Component, OnInit, Output, EventEmitter, ElementRef, Renderer2 } from '@angular/core';
 import Swal from 'sweetalert2';
-import { valores, validarSesion, tab_activo, exito, exito_swal, error, error_swal } from '../../../constantes';
+import { valores, validarSesion, error, error_swal } from '../../../constantes';
 
 import { Sesion } from 'src/app/modelos/usuario/sesion';
 import { SesionService } from 'src/app/servicios/usuario/sesion.service';
@@ -38,13 +38,60 @@ export class TablaGrupoClienteCuentaContableComponent implements OnInit {
   
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
+  @ViewChild("inputFiltro") inputFiltro: ElementRef;
 
-  constructor(private sesionService: SesionService, private router: Router, 
+  constructor(private renderer: Renderer2, private sesionService: SesionService, private router: Router, 
     private cuentaContableService: CuentaContableService) { }
 
   ngOnInit() {
     this.sesion=validarSesion(this.sesionService, this.router);
     this.consultar();
+  }
+
+  nuevo(){
+    this.cuentaContable = new CuentaContable();
+    this.clickedRows.clear();
+  }
+
+  consultar() {
+    this.cuentaContableService.consultarActivos().subscribe({
+      next: res => {
+        this.cuentasContables = res.resultado as CuentaContable[]
+        this.llenarDataSource(this.cuentasContables);
+      },
+      error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+    });
+  }
+
+  llenarDataSource(cuentasContables : CuentaContable[]){
+    this.ordenarAsc(cuentasContables, 'id');
+    this.dataSource = new MatTableDataSource(this.cuentasContables);
+    this.dataSource.filterPredicate = (data: CuentaContable, filter: string): boolean =>
+      data.cuenta.toUpperCase().includes(filter) || data.descripcion.toUpperCase().includes(filter) || 
+      data.clasificacion.toUpperCase().includes(filter) || String(data.nivel).toUpperCase().includes(filter);
+    this.dataSource.paginator = this.paginator;
+    this.dataSource.sort = this.sort;
+  }
+
+  ordenarAsc(arrayJson: any, pKey: any) {
+    arrayJson.sort(function (a: any, b: any) {
+      return a[pKey] > b[pKey];
+    });
+  }
+
+  seleccion(cuentaContable: CuentaContable) {
+    if (!this.clickedRows.has(cuentaContable)){
+      this.clickedRows.clear();
+      this.clickedRows.add(cuentaContable);
+      this.cuentaContable = { ... cuentaContable};
+    } else {
+      this.nuevo();
+    }
+    if (this.cuentaContable.clasificacion=='M'){
+      this.cuentaContableSeleccionado.emit(this.cuentaContable);
+    } else {
+      this.cuentaContableSeleccionado.emit(new CuentaContable());
+    }
   }
 
   filtro(event: Event) {
@@ -54,28 +101,9 @@ export class TablaGrupoClienteCuentaContableComponent implements OnInit {
       this.dataSource.paginator.firstPage();
     }
   }
-  
-  consultar() {
-    this.cuentaContableService.consultarActivos().subscribe({
-      next: res => {
-        this.cuentasContables = res.resultado as CuentaContable[]
-        this.dataSource = new MatTableDataSource(this.cuentasContables);
-        this.dataSource.paginator = this.paginator;
-        this.dataSource.sort = this.sort;
-      },
-      error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
-    });
-  }
-
-  seleccion(cuentaContable: CuentaContable) {
-    if (!this.clickedRows.has(cuentaContable)){
-      this.clickedRows.clear();
-      this.clickedRows.add(cuentaContable);
-      this.cuentaContable = { ... cuentaContable};
-      this.cuentaContableSeleccionado.emit(this.cuentaContable);
-    } else {
-      this.clickedRows.clear();
-      cuentaContable = new CuentaContable();
-    }
+  borrarFiltro() {
+    this.renderer.setProperty(this.inputFiltro.nativeElement, 'value', '');
+    this.dataSource.filter = '';
+    this.clickedRows.clear;
   }
 }

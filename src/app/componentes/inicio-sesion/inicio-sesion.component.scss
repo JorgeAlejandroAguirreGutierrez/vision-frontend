@@ -12,7 +12,7 @@
 }
 
 .imagen-logo {
-    width: 20%;
+    width: 40%;
 }
 
 .iconos-grande {
@@ -24,7 +24,7 @@
 
 //.texto{font-size: 22px;font-weight: bold; } // Para cuando tenia texto los iconos
 .foto{
-    border: 2px solid #5b6582 !important;
+    border: 2px solid #ec731e !important;
     border-radius: 10px !important;
     padding: 0 8px !important;
     margin: 5px;
@@ -76,6 +76,8 @@ p{
 .boton{
     width: 100%;
     height: 40px;
+    border-color: #ec731e;
+    background-color: #ec731e;
 }
 
 /* Invisible texto */

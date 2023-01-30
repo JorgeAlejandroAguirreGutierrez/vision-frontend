@@ -1,6 +1,6 @@
 import { Component, OnInit, HostListener, ElementRef, Inject, Renderer2 } from '@angular/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { valores, validarSesion, tab_activo, exito, exito_swal, error, error_swal } from '../../constantes';
+import { valores, mensajes, validarSesion, exito, exito_swal, error, error_swal } from '../../constantes';
 import Swal from 'sweetalert2';
 
 import { Router } from '@angular/router';
@@ -15,9 +15,9 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 
-export interface DialogData {
-  cuentaContable: CuentaContable;
-}
+//export interface DialogData {
+//  cuentaContable: CuentaContable;
+//}
 
 @Component({
   selector: 'app-grupo-cliente',
@@ -31,7 +31,7 @@ export class GrupoClienteComponent implements OnInit {
 
   abrirPanelNuevo: boolean = true;
   abrirPanelAdmin: boolean = true;
-  edicion: boolean = true;
+  formularioValido: boolean = false;
 
   sesion: Sesion=null;
   grupoCliente= new GrupoCliente();
@@ -50,6 +50,7 @@ export class GrupoClienteComponent implements OnInit {
   
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
+  @ViewChild("inputFiltro") inputFiltro: ElementRef;
 
   constructor(public dialog: MatDialog, private renderer: Renderer2, private grupoClienteService: GrupoClienteService,
     private sesionService: SesionService,private router: Router) { }
@@ -72,11 +73,16 @@ export class GrupoClienteComponent implements OnInit {
       event.preventDefault();
     this.grupoCliente = new GrupoCliente();
     this.clickedRows.clear();
+    this.borrarFiltro();
+    this.formularioValido = false;
   }
 
   crear(event) {
     if (event != null)
       event.preventDefault();
+    this.validarFormulario();
+    if (!this.formularioValido)
+      return;
     this.grupoClienteService.crear(this.grupoCliente).subscribe({
       next: res => {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
@@ -90,6 +96,9 @@ export class GrupoClienteComponent implements OnInit {
   actualizar(event) {
     if (event != null)
       event.preventDefault();
+    this.validarFormulario();
+    if (!this.formularioValido)
+      return;        
     this.grupoClienteService.actualizar(this.grupoCliente).subscribe({
       next: res => {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
@@ -130,11 +139,22 @@ export class GrupoClienteComponent implements OnInit {
     this.grupoClienteService.consultar().subscribe({
       next: res => {
         this.gruposClientes = res.resultado as GrupoCliente[]
-        this.dataSource = new MatTableDataSource(this.gruposClientes);
-        this.dataSource.paginator = this.paginator;
-        this.dataSource.sort = this.sort;
+        this.llenarTabla(this.gruposClientes);
       },
       error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+    });
+  }
+
+  llenarTabla(grupoClientes: GrupoCliente[]) {
+    this.ordenarAsc(grupoClientes, 'id');
+    this.dataSource = new MatTableDataSource(grupoClientes);
+    this.dataSource.paginator = this.paginator;
+    this.dataSource.sort = this.sort;
+  }
+
+  ordenarAsc(arrayJson: any, pKey: any) {
+    arrayJson.sort(function (a: any, b: any) {
+      return a[pKey] > b[pKey];
     });
   }
 
@@ -144,8 +164,7 @@ export class GrupoClienteComponent implements OnInit {
       this.clickedRows.add(grupoCliente);
       this.grupoCliente = { ... grupoCliente};
     } else {
-      this.clickedRows.clear();
-      this.grupoCliente = new GrupoCliente();
+      this.nuevo(null);
     }
   }
 
@@ -157,10 +176,35 @@ export class GrupoClienteComponent implements OnInit {
     }
   }
 
+  borrarFiltro() {
+    this.renderer.setProperty(this.inputFiltro.nativeElement, 'value', '');
+    this.dataSource.filter = '';
+  }
+
+  validarFormulario(){
+    //validar que los campos esten llenos antes de guardar
+    this.formularioValido = true;
+    if (this.grupoCliente.descripcion == '') {
+      Swal.fire({ icon: error_swal, title: error, text: mensajes.error_falta_datos });
+      this.formularioValido = false;
+      return;
+    }
+    if (this.grupoCliente.abreviatura == '') {
+      Swal.fire({ icon: error_swal, title: error, text: mensajes.error_falta_datos });
+      this.formularioValido = false;
+      return;
+    }
+    if (this.grupoCliente.cuentaContable.cuenta == '') {
+      Swal.fire({ icon: error_swal, title: error, text: mensajes.error_falta_datos });
+      this.formularioValido = false;
+      return;
+    }
+  }
+
   dialogoCuentasContables(): void {
     const dialogRef = this.dialog.open(DialogoGrupoClienteCuentaContableComponent, {
       width: '80%',
-      data: {}
+      //data: {}
     });
 
     dialogRef.afterClosed().subscribe(result => {
@@ -177,12 +221,13 @@ export class GrupoClienteComponent implements OnInit {
 })
 export class DialogoGrupoClienteCuentaContableComponent {
 
-  constructor(public dialogRef: MatDialogRef<DialogoGrupoClienteCuentaContableComponent>, @Inject(MAT_DIALOG_DATA) public data: DialogData) { }
+  constructor(public dialogRef: MatDialogRef<DialogoGrupoClienteCuentaContableComponent>, 
+              @Inject(MAT_DIALOG_DATA) public data: CuentaContable) { }
 
   onNoClick(): void {
     this.dialogRef.close();
   }
   cuentaContableSeleccionado(event: any) {
-    this.data.cuentaContable = event;
+      this.data = event;
   }
 }  

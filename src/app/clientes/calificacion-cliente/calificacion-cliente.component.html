@@ -1,10 +1,5 @@
 <nav class="navbar-light nav-fijo">
     <ul class="navbar-nav">
-        <li class="nav-item">
-            <a class="nav-link" title="Nuevo" role="button" (click)="nuevo($event)">
-                <mat-icon>note_add</mat-icon>
-            </a>
-        </li>
         <li class="nav-item" *ngIf="calificacionCliente.id==0">
             <a class="nav-link" title="Guardar" role="button" (click)="crear($event)">
                 <mat-icon>save</mat-icon>
@@ -15,29 +10,36 @@
                 <mat-icon>update</mat-icon>
             </a>
         </li>
-        <li class="nav-item" *ngIf="calificacionCliente.id!=0">
-            <a class="nav-link" title="Activar" role="button" (click)="activar($event)">
-                <mat-icon>check</mat-icon>
+        <li class="nav-item">
+            <a class="nav-link" title="Nuevo" role="button" (click)="nuevo($event)">
+                <mat-icon>file_copy</mat-icon>
             </a>
         </li>
-        <li class="nav-item" *ngIf="calificacionCliente.id!=0">
-            <a class="nav-link" title="Inactivar" role="button" (click)="inactivar($event)">
-                <mat-icon>delete</mat-icon>
-            </a>
-        </li>
+        <ng-container *ngIf="calificacionCliente.id!=0">
+            <li class="nav-item" *ngIf="calificacionCliente.estado!=activo">
+                <a class="nav-link" title="Activar" role="button" (click)="activar($event)">
+                    <mat-icon>assignment_turned_in</mat-icon>
+                </a>
+            </li>
+            <li class="nav-item" *ngIf="calificacionCliente.estado==activo">
+                <a class="nav-link" title="Inactivar" role="button" (click)="inactivar($event)">
+                    <mat-icon>delete_forever</mat-icon>
+                </a>
+            </li>
+        </ng-container>
     </ul>
 </nav>
 
 <div class="contenedor">
     <mat-accordion class="headers-align">
-        <mat-expansion-panel (opened)="abrirPanelNuevo = true"
-            (closed)="abrirPanelNuevo = false" [expanded]="abrirPanelNuevo">
+        <mat-expansion-panel (opened)="abrirPanelNuevo = true" (closed)="abrirPanelNuevo = false" 
+            [expanded]="abrirPanelNuevo">
             <mat-expansion-panel-header>
                 <mat-panel-title>
                     <i><u>CALIFICACIÓN</u></i>
                 </mat-panel-title>
                 <mat-panel-description>
-                    {{abrirPanelNuevo ? 'Ocultar crear calificaciones' : 'Crear nueva calificación'}}
+                    {{abrirPanelNuevo ? 'Ocultar crear calificación para clientes' : 'Crear nueva calificación para clientes'}}
                     <mat-icon>local_activity</mat-icon>
                 </mat-panel-description>
             </mat-expansion-panel-header>
@@ -45,14 +47,14 @@
             <div class="form-group form-row">
                 <div class="col-3">
                     <mat-form-field appearance="standard">
-                        <mat-label>Codigo</mat-label>
+                        <mat-label>Código</mat-label>
                         <input matInput type="text" [(ngModel)]="calificacionCliente.codigo" class="form-control-sm"
                             [disabled]="true">
                     </mat-form-field>
                 </div>
                 <div class="col-5">
                     <mat-form-field appearance="standard">
-                        <mat-label>Descripcion</mat-label>
+                        <mat-label>Descripción</mat-label>
                         <input matInput type="text" [(ngModel)]="calificacionCliente.descripcion"
                             oninput="this.value = this.value.toUpperCase()"
                             class="form-control-sm">
@@ -77,22 +79,25 @@
         </mat-expansion-panel>
     </mat-accordion>
     <mat-accordion class="headers-align">
-        <mat-expansion-panel (opened)="abrirPanelAdmin = true"
-            (closed)="abrirPanelAdmin = false" [expanded]="abrirPanelAdmin">
+        <mat-expansion-panel (opened)="abrirPanelAdmin = true" (closed)="abrirPanelAdmin = false" 
+            [expanded]="abrirPanelAdmin">
             <mat-expansion-panel-header>
                 <mat-panel-title>
                     <i><u>GESTIONAR CALIFICACIONES</u></i>
                 </mat-panel-title>
                 <mat-panel-description>
-                    {{abrirPanelAdmin ? 'Ocultar administrador de calificaciones' : 'Editar
-                    calificaciones existentes'}}
+                    {{abrirPanelAdmin ? 'Ocultar administrador de calificaciones' : 'Administrar calificaciones existentes'}}
                     <mat-icon>playlist_add_check</mat-icon>
                 </mat-panel-description>
             </mat-expansion-panel-header>
             <hr>
             <mat-form-field appearance="standard">
                 <mat-label>Buscar calificaciones</mat-label>
-                <input matInput oninput="this.value = this.value.toUpperCase()" (keyup)="filtro($event)" #input>
+                <input matInput oninput="this.value = this.value.toUpperCase()" (keyup)="filtro($event)" #inputFiltro>
+                <button mat-button *ngIf="inputFiltro.value" matSuffix mat-icon-button
+                    (click)="borrarFiltro()">
+                    <mat-icon>close</mat-icon>
+                </button>
             </mat-form-field>
             <div class="mat-elevation-z8">
                 <table mat-table [dataSource]="dataSource" matSort>
@@ -106,7 +111,8 @@
                         *matRowDef="let row; columns: cabecera;"></tr>
                     <!-- Row shown when there is no matching data. -->
                     <tr class="mat-row" *matNoDataRow>
-                        <td class="mat-cell" colspan="6">No hay datos que coincidan con una calificacion cliente
+                        <td class="mat-cell" colspan="6">No hay datos que coincidan con la calificación para clientes: 
+                            "{{inputFiltro.value}}" 
                         </td>
                     </tr>
                 </table>

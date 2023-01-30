@@ -1,10 +1,5 @@
 <nav class="navbar-light nav-fijo">
     <ul class="navbar-nav">
-        <li class="nav-item">
-            <a class="nav-link" title="Nuevo" role="button" (click)="nuevo($event)">
-                <mat-icon>note_add</mat-icon>
-            </a>
-        </li>
         <li class="nav-item" *ngIf="plazoCredito.id==0">
             <a class="nav-link" title="Guardar" role="button" (click)="crear($event)">
                 <mat-icon>save</mat-icon>
@@ -15,22 +10,29 @@
                 <mat-icon>update</mat-icon>
             </a>
         </li>
-        <li class="nav-item" *ngIf="plazoCredito.id!=0">
-            <a class="nav-link" title="Activar" role="button" (click)="activar($event)">
-                <mat-icon>check</mat-icon>
+        <li class="nav-item">
+            <a class="nav-link" title="Nuevo" role="button" (click)="nuevo($event)">
+                <mat-icon>file_copy</mat-icon>
             </a>
         </li>
-        <li class="nav-item" *ngIf="plazoCredito.id!=0">
-            <a class="nav-link" title="Inactivar" role="button" (click)="inactivar($event)">
-                <mat-icon>delete</mat-icon>
-            </a>
-        </li>
+        <ng-container *ngIf="plazoCredito.id!=0">
+            <li class="nav-item" *ngIf="plazoCredito.estado!=activo">
+                <a class="nav-link" title="Activar" role="button" (click)="activar($event)">
+                    <mat-icon>assignment_turned_in</mat-icon>
+                </a>
+            </li>
+            <li class="nav-item" *ngIf="plazoCredito.estado==activo">
+                <a class="nav-link" title="Inactivar" role="button" (click)="inactivar($event)">
+                    <mat-icon>delete_forever</mat-icon>
+                </a>
+            </li>
+        </ng-container>
     </ul>
 </nav>
 <div class="contenedor">
     <mat-accordion class="headers-align">
-        <mat-expansion-panel (opened)="abrirPanelNuevo = true"
-            (closed)="abrirPanelNuevo = false" [expanded]="abrirPanelNuevo">
+        <mat-expansion-panel (opened)="abrirPanelNuevo = true" (closed)="abrirPanelNuevo = false" 
+            [expanded]="abrirPanelNuevo">
             <mat-expansion-panel-header>
                 <mat-panel-title>
                     <i><u>PLAZO DE CRÉDITO</u></i>
@@ -56,10 +58,17 @@
                             oninput="this.value = this.value.toUpperCase()" class="form-control-sm">
                     </mat-form-field>
                 </div>
-                <div class="col-2">
+                <div class="col-1">
+                    <mat-form-field appearance="standard">
+                        <mat-label>Abreviatura</mat-label>
+                        <input matInput type="text" [(ngModel)]="plazoCredito.abreviatura"
+                            oninput="this.value = this.value.toUpperCase()" class="form-control-sm">
+                    </mat-form-field>
+                </div>
+                <div class="col-1">
                     <mat-form-field appearance="standard">
                         <mat-label>Plazo</mat-label>
-                        <input matInput type="text" [(ngModel)]="plazoCredito.plazo"
+                        <input matInput type="number" [(ngModel)]="plazoCredito.plazo"
                             class="form-control-sm">
                     </mat-form-field>
                 </div>
@@ -76,21 +85,25 @@
         </mat-expansion-panel>
     </mat-accordion>
     <mat-accordion class="headers-align">
-        <mat-expansion-panel (opened)="abrirPanelAdmin = true"
-            (closed)="abrirPanelAdmin = false">
+        <mat-expansion-panel (opened)="abrirPanelAdmin = true" (closed)="abrirPanelAdmin = false"
+            [expanded]="abrirPanelNuevo">
             <mat-expansion-panel-header>
                 <mat-panel-title>
                     <i><u>GESTIONAR PLAZOS DE CRÉDITO</u></i>
                 </mat-panel-title>
                 <mat-panel-description>
-                    {{abrirPanelAdmin ? 'Ocultar administrador de plazo de crédito' : 'Editar plazo de crédito existente'}}
+                    {{abrirPanelAdmin ? 'Ocultar administrador de plazo de crédito' : 'Administrar plazo de crédito existente'}}
                     <mat-icon>playlist_add_check</mat-icon>
                 </mat-panel-description>
             </mat-expansion-panel-header>
             <hr>
             <mat-form-field appearance="standard">
                 <mat-label>Buscar plazo de crédito</mat-label>
-                <input matInput oninput="this.value = this.value.toUpperCase()" (keyup)="filtro($event)" #input>
+                <input matInput oninput="this.value = this.value.toUpperCase()" (keyup)="filtro($event)" #inputFiltro>
+                <button mat-button *ngIf="inputFiltro.value" matSuffix mat-icon-button
+                    (click)="borrarFiltro()">
+                    <mat-icon>close</mat-icon>
+                </button>
             </mat-form-field>
             <div class="mat-elevation-z8">
                 <table mat-table [dataSource]="dataSource" matSort>
@@ -104,7 +117,8 @@
                         *matRowDef="let row; columns: cabecera;"></tr>
                     <!-- Row shown when there is no matching data. -->
                     <tr class="mat-row" *matNoDataRow>
-                        <td class="mat-cell" colspan="6">No hay datos que coincidan con una calificacion cliente
+                        <td class="mat-cell" colspan="6">No hay datos que coincidan con el plazo de crédito: 
+                            "{{inputFiltro.value}}" 
                         </td>
                     </tr>
                 </table>

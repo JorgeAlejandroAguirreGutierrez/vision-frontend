@@ -1,6 +1,6 @@
 import { Component, OnInit, Output, EventEmitter, ElementRef, Renderer2 } from '@angular/core';
 import Swal from 'sweetalert2';
-import { valores, validarSesion, tab_activo, exito, exito_swal, error, error_swal } from '../../../constantes';
+import { valores, validarSesion, exito, exito_swal, error, error_swal } from '../../../constantes';
 import { Router } from '@angular/router';
 import { CuentaContable } from '../../../modelos/contabilidad/cuenta-contable';
 import { CuentaContableService } from '../../../servicios/contabilidad/cuenta-contable.service';
@@ -37,8 +37,9 @@ export class TablaGrupoProductoCuentaContableComponent implements OnInit {
   
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
+  @ViewChild("inputFiltro") inputFiltro: ElementRef;
 
-  constructor(private sesionService: SesionService, private router: Router, 
+  constructor(private renderer: Renderer2, private sesionService: SesionService, private router: Router, 
     private cuentaContableService: CuentaContableService) { }
 
   ngOnInit() {
@@ -46,14 +47,11 @@ export class TablaGrupoProductoCuentaContableComponent implements OnInit {
     this.consultar();
   }
 
-  filtro(event: Event) {
-    const filterValue = (event.target as HTMLInputElement).value;
-    this.dataSource.filter = filterValue.trim().toUpperCase();
-    if (this.dataSource.paginator) {
-      this.dataSource.paginator.firstPage();
-    }
+  nuevo(){
+    this.cuentaContable = new CuentaContable();
+    this.clickedRows.clear();
   }
-  
+
   consultar() {
     this.cuentaContableService.consultarActivos().subscribe({
       next: res => {
@@ -71,10 +69,26 @@ export class TablaGrupoProductoCuentaContableComponent implements OnInit {
       this.clickedRows.clear();
       this.clickedRows.add(cuentaContable);
       this.cuentaContable = { ... cuentaContable};
+    } else {
+      this.nuevo();
+    }
+    if (this.cuentaContable.clasificacion=='M'){
       this.cuentaContableSeleccionado.emit(this.cuentaContable);
     } else {
-      this.clickedRows.clear();
-      cuentaContable = new CuentaContable();
+      this.cuentaContableSeleccionado.emit(new CuentaContable());
     }
+  }
+
+  filtro(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.dataSource.filter = filterValue.trim().toUpperCase();
+    if (this.dataSource.paginator) {
+      this.dataSource.paginator.firstPage();
+    }
+  }
+  borrarFiltro() {
+    this.renderer.setProperty(this.inputFiltro.nativeElement, 'value', '');
+    this.dataSource.filter = '';
+    this.clickedRows.clear;
   }
 }
