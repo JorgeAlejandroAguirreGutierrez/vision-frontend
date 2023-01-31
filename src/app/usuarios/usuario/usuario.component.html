@@ -171,8 +171,7 @@
                 </div>
                 <div class="col-2">
                     <mat-card class="foto">
-                        <img *ngIf="!usuario.avatar" width="100%" height="100%" src="assets/images/users/avatar.jpg">
-                        <img *ngIf="usuario.avatar" width="100%" height="100%" [src]="usuario.avatar">
+                        <img width="100%" height="100%" [src]="usuario.avatar64">
                     </mat-card>
                     <input type="file" (change)="capturarFile($event)">
                 </div>

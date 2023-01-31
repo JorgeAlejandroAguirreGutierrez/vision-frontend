@@ -9,23 +9,24 @@ export class Dependiente {
     id: number;
     codigo: string;
     razonSocial: string;
-    estado: string;
     direccion: string;
+    estado: string;
     ubicacion : Ubicacion;
     cliente: Cliente;
-    telefonos: TelefonoDependiente[];
-    celulares: CelularDependiente[];
-    correos: CorreoDependiente[];
+    telefonosDependiente: TelefonoDependiente[];
+    celularesDependiente: CelularDependiente[];
+    correosDependiente: CorreoDependiente[];
 
     constructor(){
+        this.id = valores.cero;
         this.codigo = valores.vacio;
         this.razonSocial = valores.vacio;
-        this.estado = valores.activo;
         this.direccion = valores.vacio;
+        this.estado = valores.activo;
         this.ubicacion = new Ubicacion();
         this.cliente = new Cliente();
-        this.telefonos = [];
-        this.celulares = [];
-        this.correos = [];
+        this.telefonosDependiente = [];
+        this.celularesDependiente = [];
+        this.correosDependiente = [];
     }
 }

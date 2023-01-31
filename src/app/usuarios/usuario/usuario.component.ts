@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { valores, mensajes, preguntas, validarSesion, exito_swal, error_swal, exito, error } from '../../constantes';
+import { valores, mensajes, preguntas, imagenes, validarSesion, exito_swal, error_swal, exito, error } from '../../constantes';
 import Swal from 'sweetalert2';
 
 import { Router } from '@angular/router';
@@ -62,6 +62,7 @@ export class UsuarioComponent implements OnInit {
 
   ngOnInit() {
     this.sesion = validarSesion(this.sesionService, this.router);
+    this.usuario.avatar64 = imagenes.avatar_usuario;
     this.consultar();
     this.consultarPerfiles();
     this.consultarEstaciones();
@@ -220,8 +221,8 @@ export class UsuarioComponent implements OnInit {
     const archivoCapturado = event.target.files[0];
     //console.log(archivoCapturado);
     this.extrarBase64(archivoCapturado).then((imagen: any) => {
-      this.usuario.avatar = imagen.base;
-      //console.log(imagen);
+      this.usuario.avatar64 = imagen.base;
+      console.log(this.usuario.avatar64);
     });
   }
 

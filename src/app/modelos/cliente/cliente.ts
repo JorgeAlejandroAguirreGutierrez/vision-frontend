@@ -28,6 +28,7 @@ export class Cliente {
    estado:string;
    obligadoContabilidad: string;
    direccion: string;
+   etiqueta: string;
    referencia: string;
    tipoIdentificacion: TipoIdentificacion;
    estacion: Estacion;
@@ -42,6 +43,8 @@ export class Cliente {
    estadoCivil: EstadoCivil;
    calificacionCliente: CalificacionCliente;
    origenIngreso: OrigenIngreso;
+   //latitudgeo: String;
+   //longitudgeo: String;
    
    dependientes: Dependiente[];
    telefonos: Telefono[];
@@ -71,6 +74,8 @@ export class Cliente {
       this.estadoCivil=new EstadoCivil();
       this.calificacionCliente= new CalificacionCliente();
       this.origenIngreso=new OrigenIngreso();
+      //this.latitudgeo=valores.vacio;
+      //this.longitudgeo=valores.vacio;
       this.telefonos=[];
       this.celulares=[];
       this.correos=[];

@@ -1,10 +1,5 @@
 <nav class="navbar-light nav-fijo">
     <ul class="navbar-nav">
-        <li class="nav-item">
-            <a class="nav-link" title="Nuevo" role="button" (click)="nuevo($event)">
-                <mat-icon>note_add</mat-icon>
-            </a>
-        </li>
         <li class="nav-item" *ngIf="cliente.id==0">
             <a class="nav-link" title="Guardar" role="button" (click)="crear($event)">
                 <mat-icon>save</mat-icon>
@@ -15,16 +10,43 @@
                 <mat-icon>update</mat-icon>
             </a>
         </li>
-        <li class="nav-item" *ngIf="cliente.id!=0">
-            <a class="nav-link" title="Activar" role="button" (click)="activar($event)">
-                <mat-icon>check</mat-icon>
+        <li class="nav-item">
+            <a class="nav-link" title="Nuevo" role="button" (click)="nuevo($event)">
+                <mat-icon>file_copy</mat-icon>
             </a>
         </li>
-        <li class="nav-item" *ngIf="cliente.id!=0">
-            <a class="nav-link" title="Inactivar" role="button" (click)="inactivar($event)">
-                <mat-icon>delete</mat-icon>
+        <li class="nav-item" *ngIf="!verPanelDependiente">
+            <a class="nav-link" title="ver Dependientes" role="button" (click)="verPanelDependiente = true">
+                <mat-icon>supervisor_account</mat-icon>
             </a>
         </li>
+        <li class="nav-item" *ngIf="verPanelDependiente">
+            <a class="nav-link" title="Ocultar Dependientes" role="button" (click)="verPanelDependiente = false">
+                <mat-icon>group_remove</mat-icon>
+            </a>
+        </li>
+        <li class="nav-item" *ngIf="!verPanelDatoAdicional">
+            <a class="nav-link" title="ver Datos Adicionales" role="button" (click)="verPanelDatoAdicional = true">
+                <mat-icon>post_add</mat-icon>
+            </a>
+        </li>
+        <li class="nav-item" *ngIf="verPanelDatoAdicional">
+            <a class="nav-link" title="Ocultar Datos Adicionales" role="button" (click)="verPanelDatoAdicional = false">
+                <mat-icon>playlist_remove</mat-icon>
+            </a>
+        </li>
+        <ng-container *ngIf="cliente.id!=0">
+            <li class="nav-item" *ngIf="cliente.estado!=activo">
+                <a class="nav-link" title="Activar" role="button" (click)="activar($event)">
+                    <mat-icon>assignment_turned_in</mat-icon>
+                </a>
+            </li>
+            <li class="nav-item" *ngIf="cliente.estado==activo">
+                <a class="nav-link" title="Inactivar" role="button" (click)="inactivar($event)">
+                    <mat-icon>delete_forever</mat-icon>
+                </a>
+            </li>
+        </ng-container>
     </ul>
 </nav>
 <div class="contenedor">
@@ -155,7 +177,7 @@
             <hr>
             <div class="form-group form-row">
                 <div class="form-row col-8 mr-0">
-                    <div class="col-11">
+                    <div class="col-10">
                         <mat-form-field appearance="standard">
                             <mat-label>Direccion</mat-label>
                             <input matInput type="text" [(ngModel)]="cliente.direccion" [disabled]="deshabilitarDireccion"
@@ -166,10 +188,16 @@
                             </button>
                         </mat-form-field>
                     </div>
-                    <div class="col-1">
-                        <mat-checkbox [(ngModel)]="dirEstablecida" [disabled]="deshabilitarDireccion">Act.</mat-checkbox>
+                    <div class="col-2">
+                        <mat-form-field appearance="standard">
+                            <mat-label>Predeterminada</mat-label>
+                            <mat-select [(ngModel)]="direccionPredeterminada" class="form-control-sm">
+                                <mat-option [value]="si">{{si}}</mat-option>
+                                <mat-option [value]="no">{{no}}</mat-option>
+                            </mat-select>
+                        </mat-form-field>
                     </div>
-                    <div class="col-12">
+                    <div class="col-10">
                         <mat-form-field appearance="standard">
                             <mat-label>Referencia</mat-label>
                             <input matInput type="text" [(ngModel)]="cliente.referencia" [disabled]="deshabilitarDireccion"
@@ -180,10 +208,20 @@
                             </button>
                         </mat-form-field>
                     </div>
+                    <div class="col-2">
+                        <mat-form-field appearance="standard">
+                            <mat-label>Etiqueta</mat-label>
+                            <mat-select [(ngModel)]="cliente.etiqueta" [disabled]="deshabilitarDireccion"
+                                class="form-control-sm">
+                                <mat-option [value]="casa">{{casa}}</mat-option>
+                                <mat-option [value]="trabajo">{{trabajo}}</mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
                     <div class="col-4">
                         <mat-form-field appearance="standard">
                             <mat-label>Provincia</mat-label>
-                            <mat-select type="text" [(ngModel)]="clienteProvincia" [disabled]="deshabilitarDireccion"
+                            <mat-select type="text" [(ngModel)]="provinciaCliente" [disabled]="deshabilitarDireccion"
                                 (selectionChange)="seleccionarProvincia()" class="form-control-sm">
                                 <mat-option *ngFor="let provincia of provincias" [value]="provincia.provincia">
                                     {{provincia.provincia}}
@@ -194,7 +232,7 @@
                     <div class="col-4">
                         <mat-form-field appearance="standard">
                             <mat-label>Canton</mat-label>
-                            <mat-select type="text" [(ngModel)]="clienteCanton" [disabled]="deshabilitarDireccion" 
+                            <mat-select type="text" [(ngModel)]="cantonCliente" [disabled]="deshabilitarDireccion" 
                                 (selectionChange)="seleccionarCanton()" class="form-control-sm">
                                 <mat-option *ngFor="let canton of cantones" [value]="canton.canton">
                                     {{canton.canton}}
@@ -205,7 +243,7 @@
                     <div class="col-4">
                         <mat-form-field appearance="standard">
                             <mat-label>Parroquia</mat-label>
-                            <mat-select type="text" [(ngModel)]="clienteParroquia" [disabled]="deshabilitarDireccion" 
+                            <mat-select type="text" [(ngModel)]="parroquiaCliente" [disabled]="deshabilitarDireccion" 
                                 (selectionChange)="seleccionarParroquia()" class="form-control-sm">
                                 <mat-option *ngFor="let parroquia of parroquias" [value]="parroquia.parroquia">
                                     {{parroquia.parroquia}}
@@ -238,9 +276,9 @@
                                     </mat-form-field>
                                 </div>
                                 <div class="col-3 iconos">
-                                    <button mat-icon-button [disabled]="deshabilitarDireccion">
+                                    <!--button mat-icon-button [disabled]="deshabilitarDireccion">
                                         <mat-icon class="iconos-peque">edit</mat-icon>
-                                    </button>
+                                    </button-->
                                     <button mat-icon-button [disabled]="deshabilitarDireccion" (click)="eliminarTelefono(i)">
                                         <mat-icon class="iconos-peque">close</mat-icon>
                                     </button>
@@ -271,9 +309,6 @@
                                     </mat-form-field>
                                 </div>
                                 <div class="col-3 iconos">
-                                    <button mat-icon-button [disabled]="deshabilitarDireccion">
-                                        <mat-icon class="iconos-peque">edit</mat-icon>
-                                    </button>
                                     <button mat-icon-button [disabled]="deshabilitarDireccion" (click)="eliminarCelular(i)">
                                         <mat-icon class="iconos-peque">close</mat-icon>
                                     </button>
@@ -285,7 +320,7 @@
                                 <mat-form-field appearance="standard">
                                     <mat-label>Correo electrónico</mat-label>
                                     <input matInput type="text " [(ngModel)]="correo.email" [disabled]="deshabilitarDireccion"
-                                        oninput="this.value = this.value.toUpperCase()" class="form-control-sm "
+                                        oninput="this.value = this.value.toLowerCase()" class="form-control-sm "
                                         (change)="validarCorreo()" placeholder="ejemplo@futiristic.com">
                                 </mat-form-field>
                             </div>
@@ -302,9 +337,6 @@
                                     </mat-form-field>
                                 </div>
                                 <div class="col-3 iconos">
-                                    <button mat-icon-button [disabled]="deshabilitarDireccion">
-                                        <mat-icon class="iconos-peque">edit</mat-icon>
-                                    </button>
                                     <button mat-icon-button [disabled]="deshabilitarDireccion" (click)="eliminarCorreo(i)">
                                         <mat-icon class="iconos-peque">close</mat-icon>
                                     </button>
@@ -332,7 +364,7 @@
             </div>
         </mat-expansion-panel>
         <mat-expansion-panel (opened)="abrirPanelDependiente = true" (closed)="abrirPanelDependiente = false"
-            [expanded]="abrirPanelDependiente">
+            [expanded]="abrirPanelDependiente" *ngIf="verPanelDependiente">
             <mat-expansion-panel-header>
                 <mat-panel-title>
                     <i><u>DEPENDIENTES</u></i>
@@ -370,9 +402,9 @@
                     <div class="col-4">
                         <mat-form-field appearance="standard">
                             <mat-label>Provincia</mat-label>
-                            <mat-select type="text" [(ngModel)]="dependienteProvincia" [disabled]="deshabilitarDependiente"
-                                (selectionChange)="seleccionarDependienteProvincia()" class="form-control-sm">
-                                <mat-option *ngFor="let provincia of dependienteProvincias"
+                            <mat-select type="text" [(ngModel)]="provinciaDependiente" [disabled]="deshabilitarDependiente"
+                                (selectionChange)="seleccionarProvinciaDependiente()" class="form-control-sm">
+                                <mat-option *ngFor="let provincia of provinciasDependiente"
                                     [value]="provincia.provincia">
                                     {{provincia.provincia}}
                                 </mat-option>
@@ -382,9 +414,9 @@
                     <div class="col-4">
                         <mat-form-field appearance="standard">
                             <mat-label>Canton</mat-label>
-                            <mat-select type="text" [(ngModel)]="dependienteCanton" [disabled]="deshabilitarDependiente"
-                                (selectionChange)="seleccionarDependienteCanton()" class="form-control-sm">
-                                <mat-option *ngFor="let canton of dependienteCantones" [value]="canton.canton">
+                            <mat-select type="text" [(ngModel)]="cantonDependiente" [disabled]="deshabilitarDependiente"
+                                (selectionChange)="seleccionarCantonDependiente()" class="form-control-sm">
+                                <mat-option *ngFor="let canton of cantonesDependiente" [value]="canton.canton">
                                     {{canton.canton}}
                                 </mat-option>
                             </mat-select>
@@ -393,8 +425,9 @@
                     <div class="col-4">
                         <mat-form-field appearance="standard">
                             <mat-label>Parroquia</mat-label>
-                            <mat-select type="text" [(ngModel)]="dependienteParroquia" [disabled]="deshabilitarDependiente" class="form-control-sm">
-                                <mat-option *ngFor="let parroquia of dependienteParroquias" [value]="parroquia.parroquia">
+                            <mat-select type="text" [(ngModel)]="parroquiaDependiente" [disabled]="deshabilitarDependiente" 
+                                (selectionChange)="seleccionarParroquiaDependiente()" class="form-control-sm">
+                                <mat-option *ngFor="let parroquia of parroquiasDependiente" [value]="parroquia.parroquia">
                                     {{parroquia.parroquia}}
                                 </mat-option>
                             </mat-select>
@@ -406,7 +439,7 @@
                                 <mat-form-field appearance="standard">
                                     <mat-label>Teléfono</mat-label>
                                     <b matPrefix>+593 </b>
-                                    <input matInput type="tel" [(ngModel)]="dependienteTelefono.numero" [disabled]="deshabilitarDependiente" 
+                                    <input matInput type="tel" [(ngModel)]="telefonoDependiente.numero" [disabled]="deshabilitarDependiente" 
                                         (change)="validarTelefonoDependiente()" placeholder="03-2999-123" class="form-control-sm"
                                         oninput="this.value = this.value.replace( /^(\d{2})(\d{4})(\d{3})$/, '$1-$2-$3')">
                                 </mat-form-field>
@@ -416,7 +449,7 @@
                                     <mat-icon>add</mat-icon>
                                 </button>
                             </div>
-                            <ng-container *ngFor="let dependienteTelefono of dependiente.telefonos; let i= index">
+                            <ng-container *ngFor="let dependienteTelefono of dependiente.telefonosDependiente; let i= index">
                                 <div class="col-9">
                                     <mat-form-field appearance="standard">
                                         <mat-label>Teléfono</mat-label>
@@ -426,9 +459,6 @@
                                     </mat-form-field>
                                 </div>
                                 <div class="col-3 iconos">
-                                    <button mat-icon-button>
-                                        <mat-icon class="iconos-peque">edit</mat-icon>
-                                    </button>
                                     <button mat-icon-button [disabled]="deshabilitarDependiente" (click)="eliminarTelefonoDependiente(i)">
                                         <mat-icon class="iconos-peque">close
                                         </mat-icon>
@@ -441,7 +471,7 @@
                                 <mat-form-field appearance="standard">
                                     <mat-label>Celular</mat-label>
                                     <b matPrefix>+593 </b>
-                                    <input matInput type="tel" [(ngModel)]="dependienteCelular.numero" [disabled]="deshabilitarDependiente"
+                                    <input matInput type="tel" [(ngModel)]="celularDependiente.numero" [disabled]="deshabilitarDependiente"
                                         (change)="validarCelularDependiente()" class="form-control-sm" placeholder="09-9999-1234" 
                                         oninput="this.value = this.value.replace( /^(\d{2})(\d{4})(\d{4})$/, '$1-$2-$3')">
                                 </mat-form-field>
@@ -451,7 +481,7 @@
                                     <mat-icon>add</mat-icon>
                                 </button>
                             </div>
-                            <ng-container *ngFor="let dependienteCelular of dependiente.celulares; let i=index ">
+                            <ng-container *ngFor="let dependienteCelular of dependiente.celularesDependiente; let i=index ">
                                 <div class="col-9">
                                     <mat-form-field appearance="standard">
                                         <mat-label>Celular</mat-label>
@@ -461,9 +491,6 @@
                                     </mat-form-field>
                                 </div>
                                 <div class="col-3 iconos">
-                                    <button mat-icon-button>
-                                        <mat-icon class="iconos-peque">edit</mat-icon>
-                                    </button>
                                     <button mat-icon-button [disabled]="deshabilitarDependiente" (click)="eliminarCelularDependiente(i)">
                                         <mat-icon class="iconos-peque" >close
                                         </mat-icon>
@@ -475,7 +502,7 @@
                             <div class="col-9">
                                 <mat-form-field appearance="standard">
                                     <mat-label>Correo electrónico</mat-label>
-                                    <input matInput type="text" [(ngModel)]="dependienteCorreo.email" [disabled]="deshabilitarDependiente"
+                                    <input matInput type="text" [(ngModel)]="correoDependiente.email" [disabled]="deshabilitarDependiente"
                                         (change)="validarCorreoDependiente()" class="form-control-sm" placeholder="ejemplo@futiristic.com"
                                         oninput="this.value = this.value.toLowerCase()" >
                                 </mat-form-field>
@@ -485,7 +512,7 @@
                                     <mat-icon >add</mat-icon>
                                 </button>
                             </div>
-                            <ng-container *ngFor="let dependienteCorreo of dependiente.correos; let i=index ">
+                            <ng-container *ngFor="let dependienteCorreo of dependiente.correosDependiente; let i=index ">
                                 <div class="col-9">
                                     <mat-form-field appearance="standard">
                                         <mat-label>Correo electrónico</mat-label>
@@ -494,9 +521,6 @@
                                     </mat-form-field>
                                 </div>
                                 <div class="col-3 iconos">
-                                    <button mat-icon-button>
-                                        <mat-icon class="iconos-peque">edit</mat-icon>
-                                    </button>
                                     <button mat-icon-button [disabled]="deshabilitarDependiente" (click)="eliminarCorreoDependiente(i)">
                                         <mat-icon class="iconos-peque" >close
                                         </mat-icon>
@@ -524,8 +548,13 @@
                         </mat-card>
                     </div>
                     <div class="col-1 iconos linea-vertical centrar-vertical">
-                        <button mat-icon-button [disabled]="deshabilitarDependiente" (click)="agregarDependiente()">
+                        <button mat-icon-button *ngIf="!verIconoEditarDependiente" [disabled]="deshabilitarDependiente" 
+                            (click)="crearDependiente()">
                             <mat-icon>add</mat-icon>
+                        </button>
+                        <button mat-icon-button *ngIf="verIconoEditarDependiente" [disabled]="deshabilitarDependiente" 
+                            (click)="actualizarDependiente()">
+                            <mat-icon>update</mat-icon>
                         </button>
                     </div>
                 </div>
@@ -535,7 +564,12 @@
                 <mat-divider></mat-divider>
                 <mat-form-field appearance="standard">
                     <mat-label>Buscar dependientes</mat-label>
-                    <input matInput (keyup)="filtroDependiente($event)" placeholder="Ej. BA" #inputDependiente>
+                    <input matInput oninput="this.value = this.value.toUpperCase()" (keyup)="filtroDependiente($event)" 
+                        placeholder="Ej. BA" #inputFiltroDependiente>
+                    <button mat-button *ngIf="inputFiltroDependiente.value" matSuffix mat-icon-button
+                        (click)="borrarFiltroDependiente()">
+                        <mat-icon>close</mat-icon>
+                    </button>
                 </mat-form-field>
                 <div class="mat-elevation-z8">
                     <table mat-table [dataSource]="dataSourceDependiente" matSort>
@@ -548,8 +582,11 @@
                                     {{ columna.celda(row) }}
                                 </ng-container>
                                 <ng-container *ngIf="columna.nombreColumna=='acciones'">
-                                    <button mat-icon-button color="primary" (click)="eliminarDependiente(row)">
+                                    <button mat-icon-button color="warn" (click)="inactivarDependiente(row)">
                                         <i class="fa fa-times mat-icon"></i>
+                                    </button>
+                                    <button mat-icon-button color="primary" (click)="activarDependiente(row)">
+                                        <i class="fa fa-check mat-icon"></i>
                                     </button>
                                 </ng-container>
                             </td>
@@ -557,26 +594,25 @@
                         <tr mat-header-row *matHeaderRowDef="cabeceraDependientes"></tr>
                         <tr mat-row *matRowDef="let row; columns: cabeceraDependientes;"
                             (click)="seleccionDependiente(row)" [class.selected-row]="clickedRowsDependiente.has(row)"></tr>
-
                         <!-- Row shown when there is no matching data. -->
                         <tr class="mat-row" *matNoDataRow>
                             <td class="mat-cell" colspan="5">No hay datos que coincidan con el dependiente
-                                "{{inputDependiente.value}}"
+                                "{{inputFiltroDependiente.value}}"
                             </td>
                         </tr>
                     </table>
                     <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
                 </div>
-                <div class="azul" *ngIf="!clickedRows.size">
+                <div class="azul" *ngIf="!clickedRowsDependiente.size">
                     Seleccione una fila para editar
                 </div>
-                <div class="azul" *ngFor="let clickedRow of clickedRows">
-                    Id: {{clickedRow.id}} seleccionado
+                <div class="azul" *ngFor="let clickedRowDependiente of clickedRowsDependiente">
+                    Código: {{clickedRowDependiente.codigo}} seleccionado
                 </div>
             </div>
         </mat-expansion-panel>
         <mat-expansion-panel (opened)="abrirPanelDatoAdicional = true" (closed)="abrirPanelDatoAdicional = false"
-            [expanded]="abrirPanelDatoAdicional">
+            [expanded]="abrirPanelDatoAdicional" *ngIf="verPanelDatoAdicional">
             <mat-expansion-panel-header>
                 <mat-panel-title>
                     <i><u>DATOS ADICIONALES</u></i>
@@ -598,7 +634,7 @@
                                 <mat-form-field appearance="standard">
                                     <mat-label>Género</mat-label>
                                     <mat-select [(ngModel)]="cliente.genero" [compareWith]="compareFn"
-                                        class="form-control-sm" [disabled]="activacion_s_es_oi">
+                                        class="form-control-sm" [disabled]="deshabilitarDinardap">
                                         <mat-option *ngFor="let genero of generos " [value]="genero">
                                             {{genero.descripcion}}
                                         </mat-option>
@@ -609,7 +645,7 @@
                                 <mat-form-field appearance="standard">
                                     <mat-label>Estado civil</mat-label>
                                     <mat-select [(ngModel)]="cliente.estadoCivil" [compareWith]="compareFn"
-                                        class="form-control-sm " [disabled]="activacion_s_es_oi">
+                                        class="form-control-sm " [disabled]="deshabilitarDinardap">
                                         <mat-option *ngFor="let estadoCivil of estadosCiviles" [value]="estadoCivil">
                                             {{estadoCivil.descripcion}}
                                         </mat-option>
@@ -620,7 +656,7 @@
                                 <mat-form-field appearance="standard">
                                     <mat-label>Origen ingresos</mat-label>
                                     <mat-select [(ngModel)]="cliente.origenIngreso" [compareWith]="compareFn"
-                                        class="form-control-sm " [disabled]="activacion_s_es_oi">
+                                        class="form-control-sm " [disabled]="deshabilitarDinardap">
                                         <mat-option *ngFor="let origenIngreso of origenesIngresos"
                                             [value]="origenIngreso">
                                             {{origenIngreso.descripcion}}
@@ -632,7 +668,7 @@
                                 <mat-form-field appearance="standard">
                                     <mat-label>Calificación</mat-label>
                                     <mat-select [(ngModel)]="cliente.calificacionCliente" [compareWith]="compareFn"
-                                        class="form-control-sm " [disabled]="activacion_s_es_oi">
+                                        class="form-control-sm " [disabled]="deshabilitarDinardap">
                                         <mat-option *ngFor="let calificacionCliente of calificacionesClientes"
                                             [value]="calificacionCliente">
                                             {{calificacionCliente.descripcion}}
@@ -653,9 +689,9 @@
                             <div class="col-12">
                                 <mat-form-field appearance="standard">
                                     <mat-label>Forma de pago</mat-label>
-                                    <mat-select [(ngModel)]="cliente.formaPago.id" [disabled]="deshabilitarDatoAdicional"
-                                        [compareWith]="compareFn" (selectionChange)="cambiarFormaPago()" class="form-control-sm">
-                                        <mat-option *ngFor="let formaPago of formasPagos" [value]="formaPago.id">
+                                    <mat-select [(ngModel)]="cliente.formaPago" [compareWith]="compareFn" class="form-control-sm"
+                                        (selectionChange)="cambiarFormaPago()" [disabled]="deshabilitarDatoAdicional">
+                                        <mat-option *ngFor="let formaPago of formasPagos" [value]="formaPago">
                                             {{formaPago.abreviatura}}
                                         </mat-option>
                                     </mat-select>
@@ -664,9 +700,8 @@
                             <div class="col-6">
                                 <mat-form-field appearance="standard">
                                     <mat-label>Plazo/días</mat-label>
-                                    <mat-select [disabled]="activacionPlazoCredito" [disabled]="deshabilitarDatoAdicional"
-                                        [(ngModel)]="cliente.plazoCredito" [compareWith]="compareFn"
-                                        class="form-control-sm">
+                                    <mat-select [(ngModel)]="cliente.plazoCredito" [compareWith]="compareFn"
+                                        class="form-control-sm" [disabled]="deshabilitarPlazoCredito" >
                                         <mat-option *ngFor="let plazoCredito of plazosCreditos" [value]="plazoCredito">
                                             {{plazoCredito.plazo}}
                                         </mat-option>
@@ -677,7 +712,7 @@
                                 <mat-form-field appearance="standard">
                                     <mat-label>Monto</mat-label>
                                     <input matInput [(ngModel)]="cliente.montoFinanciamiento" class="form-control-sm "
-                                        [disabled]="activacionPlazoCredito" [disabled]="deshabilitarDatoAdicional">
+                                        [disabled]="deshabilitarPlazoCredito">
                                 </mat-form-field>
                             </div>
                         </div>
@@ -816,6 +851,8 @@
                 </div>
             </div>
         </mat-expansion-panel>
+    </mat-accordion>
+    <mat-accordion class="headers-align">
         <mat-expansion-panel (opened)="abrirPanelAdminCliente = true" (closed)="abrirPanelAdminCliente = false"
             [expanded]="abrirPanelAdminCliente">
             <mat-expansion-panel-header>
@@ -830,7 +867,12 @@
             <hr>
             <mat-form-field appearance="standard">
                 <mat-label>Buscar clientes</mat-label>
-                <input matInput (keyup)="filtroCliente($event)" placeholder="Ej. BA" #input>
+                <input matInput oninput="this.value = this.value.toUpperCase()" (keyup)="filtroCliente($event)" 
+                    placeholder="Ej. BA" #inputFiltro>
+                <button mat-button *ngIf="inputFiltro.value" matSuffix mat-icon-button
+                    (click)="borrarFiltroCliente()">
+                    <mat-icon>close</mat-icon>
+                </button>
             </mat-form-field>
             <div class="mat-elevation-z8">
                 <table mat-table [dataSource]="dataSourceCliente" matSort>
@@ -846,7 +888,7 @@
 
                     <!-- Row shown when there is no matching data. -->
                     <tr class="mat-row" *matNoDataRow>
-                        <td class="mat-cell" colspan="5">No hay datos que coincidan con el cliente "{{input.value}}"
+                        <td class="mat-cell" colspan="5">No hay datos que coincidan con el cliente "{{inputFiltro.value}}"
                         </td>
                     </tr>
                 </table>
