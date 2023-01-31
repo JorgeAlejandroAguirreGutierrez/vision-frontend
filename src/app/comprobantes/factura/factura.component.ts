@@ -41,13 +41,12 @@ export class FacturaComponent implements OnInit {
 
   @ViewChild('stepper') stepper: MatStepper;
 
-  isLinear = false;
-  isEditable = false;
-  panelOpenState=false;
+  isLinear = true;
+  isEditable = true;
+  panelOpenState = false;
 
   firstFormGroup: UntypedFormGroup;
   secondFormGroup: UntypedFormGroup;
-  thirdFormGroup: UntypedFormGroup;
 
   seleccionProducto = new UntypedFormControl();
   seleccionIdentificacionCliente = new UntypedFormControl();
@@ -149,14 +148,6 @@ export class FacturaComponent implements OnInit {
 
     this.secondFormGroup = this._formBuilder.group({
       secondCtrl: ['', Validators.required]
-    });
-
-    this.thirdFormGroup = new UntypedFormGroup({
-      thirdCtrl: new UntypedFormControl()
-    });
-
-    this.thirdFormGroup = this._formBuilder.group({
-      thirdCtrl: ['', Validators.required]
     });
 
     this.filtroProductos = this.seleccionProducto.valueChanges
@@ -569,6 +560,10 @@ export class FacturaComponent implements OnInit {
     if (this.categoriaProducto == valores.activoFijo){
       this.consultarActivosFijos();
     }
+  }
+
+  enviarEvento(){
+    this.facturaService.enviarEventoRecaudacion(this.factura.id);
   }
 
   open(content: any) {
