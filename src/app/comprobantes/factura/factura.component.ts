@@ -94,6 +94,9 @@ export class FacturaComponent implements OnInit {
   sesion: Sesion;
   impuestos: Impuesto[];
 
+  si = valores.si;
+  no = valores.no;
+
   //VARIABLES MUESTRA
   primerTelefonoCliente: string = valores.vacio;
   primerCelularCliente: string = valores.vacio;
@@ -108,7 +111,7 @@ export class FacturaComponent implements OnInit {
   costoUnitario = valores.cero;
   costoPromedio = valores.cero;
   productoIndice = valores.cero;
-  facturaDetalle: FacturaDetalle=new FacturaDetalle();
+  facturaDetalle: FacturaDetalle =new FacturaDetalle();
   
 
   @HostListener('window:keypress', ['$event'])

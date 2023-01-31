@@ -10,7 +10,7 @@ export class FacturaDetalle {
   id: number;
   posicion: number;
   comentario: string;
-  entregado: boolean;
+  entregado: string;
   consignacion: number;
   cantidad: number;
   subsidio: number;
@@ -45,7 +45,7 @@ export class FacturaDetalle {
   constructor() {
     this.id = valores.cero;
     this.posicion = valores.cero;
-    this.entregado = false;
+    this.entregado = valores.no;
     this.comentario = valores.vacio;
     this.cantidad = valores.cero;
     this.subsidio = valores.cero;

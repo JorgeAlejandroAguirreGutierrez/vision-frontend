@@ -368,8 +368,8 @@
                                 <mat-form-field appearance="standard">
                                     <mat-label>Entregado</mat-label>
                                     <mat-select class="form-control-sm" [(ngModel)]="facturaDetalle.entregado">
-                                        <mat-option [value]="false">NO</mat-option>
-                                        <mat-option [value]="true">SI</mat-option>
+                                        <mat-option [value]="no">{{no}}</mat-option>
+                                        <mat-option [value]="si">{{si}}</mat-option>
                                     </mat-select>
                                 </mat-form-field>
                             </div>

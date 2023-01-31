@@ -395,8 +395,7 @@ export class ClienteComponent implements OnInit {
   crear(event: any) {
     if (event != null)
       event.preventDefault();
-    this.agregarUbicacion();
-    console.log(this.cliente);
+    this.agregarDatos();
     this.clienteService.crear(this.cliente).subscribe({
       next: res => {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
@@ -407,21 +406,28 @@ export class ClienteComponent implements OnInit {
     });
   }
 
-  agregarUbicacion() {
+  agregarDatos() {
     if (this.telefono.numero != valores.vacio)
-      this.cliente.telefonos.push(this.telefono);
+      this.cliente.telefonos.push({ ... this.telefono});
     if (this.celular.numero != valores.vacio)
-      this.cliente.celulares.push(this.celular);
+      this.cliente.celulares.push({ ... this.celular});
     if (this.correo.email != valores.vacio)
-      this.cliente.correos.push(this.correo);
+      this.cliente.correos.push({ ... this.correo});
+    
+    this.telefono = new Telefono();
+    this.celular = new Celular();
+    this.correo = new Correo();
 
     if (this.dependienteTelefono.numero != valores.vacio)
-      this.dependiente.telefonos.push(this.dependienteTelefono);
+      this.dependiente.telefonos.push({ ... this.dependienteTelefono});
     if (this.dependienteCelular.numero != valores.vacio)
-      this.dependiente.celulares.push(this.dependienteCelular);
+      this.dependiente.celulares.push({ ... this.dependienteCelular});
     if (this.dependienteCorreo.email != valores.vacio)
-      this.dependiente.correos.push(this.dependienteCorreo);
+      this.dependiente.correos.push({ ... this.dependienteCorreo});
 
+    this.dependienteTelefono = new TelefonoDependiente();
+    this.dependienteCelular = new CelularDependiente();
+    this.dependienteCelular = new CelularDependiente();
     this.cliente.estacion = this.sesion.usuario.estacion;
   }
 
