@@ -18,38 +18,37 @@ export class MapsComponent implements OnInit {
   posicionCentral: Coordenada;
   posicionSeleccionada: Coordenada;
 
-  //mapTypeId: string = 'hybrid';
-
   // Configuración de Google Maps 
-    center: google.maps.LatLngLiteral = {lat: valores.latCiudad, lng: valores.lngCiudad};
-    markerPosiciones: google.maps.LatLngLiteral[] = [];
-    zoom = 15;
-    display?: google.maps.LatLngLiteral;
-    options: google.maps.MapOptions = {
-      mapTypeId: 'hybrid',
-      zoomControl: true,
-      scrollwheel: true,
-      disableDoubleClickZoom: false,
-      maxZoom: 20,
-      minZoom: 12,
-    };
+  latInicial: number = valores.latCiudad;
+  center: google.maps.LatLngLiteral = { lat: valores.latCiudad, lng: valores.lngCiudad };
+  markerPosiciones: google.maps.LatLngLiteral[] = [];
+  zoom = 15;
+  display?: google.maps.LatLngLiteral;
+  options: google.maps.MapOptions = {
+    mapTypeId: 'hybrid',
+    zoomControl: true,
+    scrollwheel: true,
+    disableDoubleClickZoom: false,
+    maxZoom: 20,
+    minZoom: 12,
+  };
 
   //coordenadas: Coordenada[] = [];
 
   constructor() { }
 
   ngOnInit() {
-    if (!this.posicionGeografica){
+    if (!this.posicionGeografica) {
       this.posicionCentral = new Coordenada(valores.latCiudad, valores.lngCiudad);
       //this.posicionSeleccionada = this.posicionCentral;
-    }else{
+    } else {
       this.posicionCentral = this.posicionGeografica;
       this.posicionSeleccionada = this.posicionGeografica;
     }
     //this.posicionSeleccionada = new Coordenada(-1.6705413480437092, -78.64974203645144);
   }
 
-  mapClicked($event: google.maps.MapMouseEvent ){
+  mapClicked($event: google.maps.MapMouseEvent) {
     this.posicionSeleccionada = new Coordenada($event.latLng.lat(), $event.latLng.lng());
     //console.log(this.posicionSeleccionada);
     this.infoWindow.close();
@@ -57,7 +56,7 @@ export class MapsComponent implements OnInit {
     //this.coordenadas.push(this.ubicacionSeleccionada);
   }
 
-  getCurrentPosition(){
+  getCurrentPosition() {
     navigator.geolocation.getCurrentPosition(position => {
       this.posicionCentral = new Coordenada(position.coords.latitude, position.coords.longitude);
       //console.log(this.ubicacionCentral);
@@ -77,6 +76,6 @@ export class MapsComponent implements OnInit {
   }
 
   openInfoWindow(marker: MapMarker) {
-      this.infoWindow.open(marker);
+    this.infoWindow.open(marker);
   }
 }

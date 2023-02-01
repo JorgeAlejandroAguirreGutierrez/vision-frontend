@@ -11,7 +11,7 @@
             </a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" title="Nuevo" role="button" (click)="nuevo($event)">
+            <a class="nav-link" title="Nuevo" role="button" (click)="nuevo($event)" (click)="nuevoDependiente()">
                 <mat-icon>file_copy</mat-icon>
             </a>
         </li>
@@ -349,7 +349,7 @@
                     <mat-card title="Doble click para maximizar">
                         <google-map width="100%" [height]="180" [center]="posicionCentralDireccion" [zoom]="15" [options]="options"
                             (dblclick)="dialogoMapasDireccion()">
-                            <map-marker #markerDireccion="mapMarker" *ngIf="posicionGeograficaDireccion"
+                            <map-marker #markerDireccion="mapMarker" *ngIf="posicionGeograficaDireccion.lat != latInicial"
                                 [position]="posicionGeograficaDireccion" (mapClick)="openInfoWindow(markerDireccion, infoWindowDireccion)">
                             </map-marker>
                             <map-info-window #infoWindowDireccion="mapInfoWindow">
@@ -535,7 +535,7 @@
                         <mat-card title="Doble click para maximizar">
                             <google-map width="100%" [height]="180" [center]="posicionCentralDependiente" [zoom]="15" [options]="options"
                                 (dblclick)="dialogoMapasDependiente()">
-                                <map-marker #markerDependiente="mapMarker" *ngIf="posicionGeograficaDependiente"
+                                <map-marker #markerDependiente="mapMarker" *ngIf="posicionGeograficaDependiente.lat != latInicial"
                                     [position]="posicionGeograficaDependiente" (mapClick)="openInfoWindow(markerDependiente, infoWindowDependiente)">
                                 </map-marker>
                                 <map-info-window #infoWindowDependiente="mapInfoWindow">

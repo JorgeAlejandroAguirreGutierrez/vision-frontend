@@ -17,7 +17,6 @@ import { Ubicacion } from '../configuracion/ubicacion';
 import { TipoRetencion } from '../configuracion/tipo-retencion';
 import { TipoIdentificacion } from '../configuracion/tipo-identificacion';
 import { valores } from "../../constantes";
-import { Coordenada } from '../configuracion/coordenada';
 
 export class Cliente {
    id:number;

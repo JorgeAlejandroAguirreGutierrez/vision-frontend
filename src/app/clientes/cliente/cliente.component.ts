@@ -135,10 +135,11 @@ export class ClienteComponent implements OnInit {
 
   archivoImportar: File;
 
+  latInicial: number = valores.latCiudad;
   posicionCentralDireccion: Coordenada = new Coordenada(valores.latCiudad, valores.lngCiudad);
   posicionCentralDependiente: Coordenada = new Coordenada(valores.latCiudad, valores.lngCiudad);
-  posicionGeograficaDireccion: Coordenada;
-  posicionGeograficaDependiente: Coordenada;
+  posicionGeograficaDireccion: Coordenada = new Coordenada(valores.latCiudad, valores.lngCiudad);;
+  posicionGeograficaDependiente: Coordenada = new Coordenada(valores.latCiudad, valores.lngCiudad);;
   //coordenadas: Coordenada[] = [];
   options: google.maps.MapOptions = {
     mapTypeId: 'hybrid',
@@ -395,6 +396,8 @@ export class ClienteComponent implements OnInit {
     this.telefono = new Telefono();
     this.celular = new Celular();
     this.correo = new Correo();
+    this.posicionCentralDireccion = new Coordenada(valores.latCiudad, valores.lngCiudad);
+    this.posicionGeograficaDireccion = new Coordenada(valores.latCiudad, valores.lngCiudad);
     this.clickedRows.clear();
     this.borrarFiltroCliente();
     this.abrirPanelUbicacion = true;
@@ -404,10 +407,9 @@ export class ClienteComponent implements OnInit {
     if (event != null)
       event.preventDefault();
     this.cliente.estacion = this.sesion.usuario.estacion;
-    //this.asignarCoordenada();
     this.agregarTelefonoCorreo();
     this.validarDependiente();
-    console.log(this.cliente);
+    //console.log(this.cliente);
     this.clienteService.crear(this.cliente).subscribe({
       next: res => {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
@@ -432,7 +434,7 @@ export class ClienteComponent implements OnInit {
       event.preventDefault();
     this.agregarTelefonoCorreo();
     this.validarDependiente();
-    console.log(this.cliente);
+    //console.log(this.cliente);
     this.clienteService.actualizar(this.cliente).subscribe({
       next: res => {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
@@ -446,10 +448,8 @@ export class ClienteComponent implements OnInit {
   validarDependiente() {
     if(this.verIconoEditarDependiente){ // Icono Actualizar, se está algún Dependiente seleccionado
       this.actualizarDependiente();
-      console.log("actual");
     } else { // Icono agregar, si es nuevo dependiente
       this.crearDependiente();
-      console.log("nuevo");
     }
   }
 
@@ -503,8 +503,9 @@ export class ClienteComponent implements OnInit {
       this.clickedRows.clear();
       this.clickedRows.add(cliente);
       this.cliente = { ... cliente};
-      console.log(this.cliente);
       this.llenarUbicacion();
+      this.recuperarCoordenadasCliente();
+      //console.log(this.cliente);
       this.llenarTablaDependiente(this.cliente.dependientes);
     } else {
       this.nuevo(null);
@@ -551,6 +552,8 @@ export class ClienteComponent implements OnInit {
     this.telefonoDependiente = new TelefonoDependiente();
     this.celularDependiente = new CelularDependiente();
     this.correoDependiente = new CorreoDependiente();
+    this.posicionCentralDependiente = new Coordenada(valores.latCiudad, valores.lngCiudad);
+    this.posicionGeograficaDependiente = new Coordenada(valores.latCiudad, valores.lngCiudad);;
     this.clickedRowsDependiente.clear();
     if (this.cliente.dependientes.length > 0 && this.verPanelDependiente) // si hay dependientes borra?
       //this.borrarFiltroDependiente(); 
@@ -610,6 +613,7 @@ export class ClienteComponent implements OnInit {
       this.clickedRowsDependiente.add(dependiente);
       this.dependiente = { ... dependiente};
       this.llenarUbicacionDependiente();
+      this.recuperarCoordenadasDependiente();
       this.verIconoEditarDependiente = true;
     } else {
       this.nuevoDependiente();
@@ -876,11 +880,6 @@ export class ClienteComponent implements OnInit {
   }
 
   // MAPA
-  mapClicked($event: google.maps.MapMouseEvent) {
-    let coordenada = new Coordenada($event.latLng.lat(), $event.latLng.lng());
-    //this.coordenadas.push(coordenada);
-  }
-
   openInfoWindow(marker: MapMarker, infoWindow: MapInfoWindow) {
     infoWindow.open(marker);
   }
@@ -897,9 +896,21 @@ export class ClienteComponent implements OnInit {
     this.cliente.longitudgeo = this.posicionGeograficaDireccion.lng;
   }
 
+  recuperarCoordenadasCliente(){
+    this.posicionGeograficaDireccion.lat = this.cliente.latitudgeo;
+    this.posicionGeograficaDireccion.lng = this.cliente.longitudgeo;
+    this.posicionCentralDireccion = this.posicionGeograficaDireccion;
+  }
+
   asignarCoordenadasDependiente(){
     this.dependiente.latitudgeo = this.posicionGeograficaDependiente.lat;
     this.dependiente.longitudgeo = this.posicionGeograficaDependiente.lng;
+  }
+
+  recuperarCoordenadasDependiente(){
+    this.posicionGeograficaDependiente.lat = this.dependiente.latitudgeo;
+    this.posicionGeograficaDependiente.lng = this.dependiente.longitudgeo;
+    this.posicionCentralDependiente = this.posicionGeograficaDependiente;
   }
 
   compareFn(a: any, b: any) {
@@ -936,7 +947,6 @@ export class ClienteComponent implements OnInit {
   }
 
   dialogoMapasDependiente(): void {
-    //console.log('El dialogo para selección de grupo producto fue abierto');
     const dialogRef = this.dialog.open(DialogoMapaComponent, {
       width: '80%',
       data: this.posicionGeograficaDependiente as Coordenada
@@ -967,15 +977,14 @@ export class DialogoMapaComponent {
 
   onNoClick(): void {
     this.dialogRef.close();
-    //console.log('El dialogo para selección de coordenada fue cancelado');
-    this.data = new Coordenada(0, 0);
+    this.data = new Coordenada(valores.latCiudad, valores.lngCiudad);
   }
 
   coordenadaSeleccionada(event: any) {
-    if (event && event.latitud != 0) {
+    if (event && event.latitud != valores.latCiudad) {
       this.data = event as Coordenada;
     } else {
-      this.data = new Coordenada(0, 0);
+      this.data = new Coordenada(valores.latCiudad, valores.lngCiudad);
     }
   }
 }

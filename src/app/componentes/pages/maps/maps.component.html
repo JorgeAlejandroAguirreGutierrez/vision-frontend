@@ -20,8 +20,8 @@
   <mat-card>
     <google-map width="100%" [height]="450" [center]="posicionCentral" [zoom]="zoom" [options]="options"
         (mapClick)="mapClicked($event)">
-      <map-marker #marker="mapMarker" *ngIf="posicionSeleccionada" [position]="posicionSeleccionada"
-        (mapClick)="openInfoWindow(marker)">
+      <map-marker #marker="mapMarker" *ngIf="posicionSeleccionada.lat != latInicial" 
+        [position]="posicionSeleccionada" (mapClick)="openInfoWindow(marker)">
       </map-marker>
       <map-info-window>
         <div>

@@ -147,8 +147,8 @@ export const valores ={
      mensual : "MENSUAL",
      etiquetaCasa: "CASA",
      etiquetaTrabajo: "TRABAJO",
-     latCiudad: -1.6705413480437092,
-     lngCiudad: -78.64974203645144
+     latCiudad: -1.6719601146175727,
+     lngCiudad: -78.65041698970757
 }
 
 export const preguntas = ["¿CUAL ES EL NOMBRE DE TU MASCOTA?", "¿CUAL ES EL APELLIDO DE TU ABUELA MATERNA?", "¿CUAL ES EL NOMBRE DE TU EQUIPO PREFERIDO?", "¿CUAL ES TU MARCA DE VEHICULO PREFERIDO?"]

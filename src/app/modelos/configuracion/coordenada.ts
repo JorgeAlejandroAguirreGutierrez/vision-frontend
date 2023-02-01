@@ -1,4 +1,3 @@
-import { valores } from "src/app/constantes";
 
 export class Coordenada {
     lat: number;
