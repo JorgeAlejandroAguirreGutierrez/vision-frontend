@@ -891,9 +891,10 @@ export class ClienteComponent implements OnInit {
     })
   }
 
-  asignarCoordenada(){
-    //this.cliente.latitudgeo = this.posicionGeograficaDireccion.lat.toString();
-    //this.cliente.longitudgeo = this.posicionGeograficaDireccion.lng.toString();
+  asignarCoordenadasCliente(){
+    //this.cliente.coordenadas.push(this.posicionGeograficaDireccion);
+    this.cliente.latitudgeo = this.posicionGeograficaDireccion.lat;
+    this.cliente.longitudgeo = this.posicionGeograficaDireccion.lng;
   }
 
   compareFn(a: any, b: any) {
@@ -923,6 +924,10 @@ export class ClienteComponent implements OnInit {
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
         this.posicionGeograficaDireccion = result as Coordenada;
+        this.asignarCoordenadasCliente();
+        //this.cliente.coordenadas = [];
+        //this.cliente.coordenadas.push(this.posicionGeograficaDireccion);
+        //console.log(this.cliente.coordenadas);
         this.posicionCentralDireccion = this.posicionGeograficaDireccion;
       }
     });

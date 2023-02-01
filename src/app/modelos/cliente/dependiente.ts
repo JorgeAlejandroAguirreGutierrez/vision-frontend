@@ -11,6 +11,8 @@ export class Dependiente {
     razonSocial: string;
     direccion: string;
     estado: string;
+    latitudgeo: number;
+    longitudgeo: number;
     ubicacion : Ubicacion;
     cliente: Cliente;
     telefonosDependiente: TelefonoDependiente[];
@@ -23,6 +25,8 @@ export class Dependiente {
         this.razonSocial = valores.vacio;
         this.direccion = valores.vacio;
         this.estado = valores.activo;
+        this.latitudgeo=valores.latCiudad;
+        this.longitudgeo=valores.lngCiudad;
         this.ubicacion = new Ubicacion();
         this.cliente = new Cliente();
         this.telefonosDependiente = [];

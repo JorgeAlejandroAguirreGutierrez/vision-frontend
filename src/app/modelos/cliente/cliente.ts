@@ -1,7 +1,6 @@
 import { GrupoCliente } from './grupo-cliente';
 import { TipoContribuyente } from './tipo-contribuyente';
 import { Segmento } from '../inventario/segmento';
-import { Financiamiento } from './financiamiento';
 import { Genero } from './genero';
 import { EstadoCivil } from './estado-civil';
 import { CalificacionCliente } from './calificacion-cliente';
@@ -18,6 +17,7 @@ import { Ubicacion } from '../configuracion/ubicacion';
 import { TipoRetencion } from '../configuracion/tipo-retencion';
 import { TipoIdentificacion } from '../configuracion/tipo-identificacion';
 import { valores } from "../../constantes";
+import { Coordenada } from '../configuracion/coordenada';
 
 export class Cliente {
    id:number;
@@ -43,9 +43,9 @@ export class Cliente {
    estadoCivil: EstadoCivil;
    calificacionCliente: CalificacionCliente;
    origenIngreso: OrigenIngreso;
-   //latitudgeo: String;
-   //longitudgeo: String;
-   
+   latitudgeo: number;
+   longitudgeo: number;
+
    dependientes: Dependiente[];
    telefonos: Telefono[];
    celulares: Celular[];
@@ -74,8 +74,8 @@ export class Cliente {
       this.estadoCivil=new EstadoCivil();
       this.calificacionCliente= new CalificacionCliente();
       this.origenIngreso=new OrigenIngreso();
-      //this.latitudgeo=valores.vacio;
-      //this.longitudgeo=valores.vacio;
+      this.latitudgeo=valores.latCiudad;
+      this.longitudgeo=valores.lngCiudad;
       this.telefonos=[];
       this.celulares=[];
       this.correos=[];
