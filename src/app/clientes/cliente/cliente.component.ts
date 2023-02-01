@@ -64,6 +64,7 @@ export class ClienteComponent implements OnInit {
   no: string = valores.no;
   casa: string = valores.etiquetaCasa;
   trabajo: string = valores.etiquetaTrabajo;
+  empresa: string = valores.etiquetaEmpresa;
   direccionPredeterminada: string = valores.si;
 
   sesion: Sesion;
@@ -79,6 +80,7 @@ export class ClienteComponent implements OnInit {
   verPanelDatoAdicional: boolean = false;
   abrirPanelAdminCliente: boolean = true;
   estadoCliente: boolean = true;
+  deshabilitarObligado: boolean = false;
   deshabilitarDinardap: boolean = true;
   deshabilitarPlazoCredito: boolean = true;
   deshabilitarTipoContribuyente: boolean = true;
@@ -400,12 +402,15 @@ export class ClienteComponent implements OnInit {
     this.posicionGeograficaDireccion = new Coordenada(valores.latCiudad, valores.lngCiudad);
     this.clickedRows.clear();
     this.borrarFiltroCliente();
+    this.deshabilitarObligado = false;
     this.abrirPanelUbicacion = true;
   }
 
   crear(event: any) {
     if (event != null)
       event.preventDefault();
+    if (!this.validarFormularioCliente())
+      return;    
     this.cliente.estacion = this.sesion.usuario.estacion;
     this.agregarTelefonoCorreo();
     this.validarDependiente();
@@ -562,6 +567,8 @@ export class ClienteComponent implements OnInit {
 
   crearDependiente() {
     if (this.dependiente.razonSocial != ''){
+      if (!this.validarFormularioDependiente())
+      return;
       this.agregarTelefonoCorreoDependiente();
       this.cliente.dependientes.push(this.dependiente);
       this.llenarTablaDependiente(this.cliente.dependientes);
@@ -666,6 +673,7 @@ export class ClienteComponent implements OnInit {
       next: (res) => {
         this.cliente.tipoIdentificacion = res.resultado.tipoIdentificacion as TipoIdentificacion;
         this.cliente.tipoContribuyente = res.resultado.tipoContribuyente as TipoContribuyente;
+        this.validarDocumento();
         this.validarDinardap();
         this.inicializarOpciones();
       },
@@ -675,6 +683,14 @@ export class ClienteComponent implements OnInit {
         Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje });
       }
     });
+  }
+
+  validarDocumento(){
+    if (this.cliente.tipoIdentificacion.descripcion == otras.tipoIdentificacion){
+      this.deshabilitarObligado = true;
+    } else {
+      this.deshabilitarObligado = false;  
+    }
   }
 
   validarDinardap() {
@@ -705,6 +721,42 @@ export class ClienteComponent implements OnInit {
       this.deshabilitarPlazoCredito = true;
       //this.cliente.formaPago.id = 0;
     }
+  }
+
+  validarFormularioCliente(): boolean {
+    if (this.cliente.identificacion == '') {
+      Swal.fire({ icon: error_swal, title: error, text: mensajes.error_falta_datos });
+      return false;
+    }
+    if (this.cliente.razonSocial == '') {
+      Swal.fire({ icon: error_swal, title: error, text: mensajes.error_falta_datos });
+      return false;
+    }
+    if (this.cliente.direccion == '') {
+      Swal.fire({ icon: error_swal, title: error, text: mensajes.error_falta_datos });
+      return false;
+    }
+    if (this.cliente.referencia == '') {
+      Swal.fire({ icon: error_swal, title: error, text: mensajes.error_falta_datos });
+      return false;
+    }
+    if (this.provinciaCliente == '' || this.cantonCliente == '' || this.parroquiaCliente == '') {
+      Swal.fire({ icon: error_swal, title: error, text: mensajes.error_falta_datos });
+      return false;
+    }
+    return true;
+  }
+
+  validarFormularioDependiente(): boolean {
+    if (this.dependiente.direccion == '') {
+      Swal.fire({ icon: error_swal, title: error, text: mensajes.error_falta_datos });
+      return false;
+    }
+    if (this.provinciaDependiente == '' || this.cantonDependiente == '' || this.parroquiaDependiente == '') {
+      Swal.fire({ icon: error_swal, title: error, text: mensajes.error_falta_datos });
+      return false;
+    }
+    return true;
   }
 
   // Para crear, validar y eliminar telefono, celular y correo

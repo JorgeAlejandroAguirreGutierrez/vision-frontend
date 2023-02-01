@@ -25,7 +25,6 @@ export class PlazoCreditoComponent implements OnInit {
 
   abrirPanelNuevo: boolean = true;
   abrirPanelAdmin: boolean = true;
-  formularioValido: boolean = false;
 
   sesion: Sesion=null;
   plazoCredito= new PlazoCredito();
@@ -68,14 +67,12 @@ export class PlazoCreditoComponent implements OnInit {
     this.plazoCredito = new PlazoCredito();
     this.clickedRows.clear();
     this.borrarFiltro();
-    this.formularioValido = false;
   }
 
   crear(event) {
     if (event != null)
       event.preventDefault();
-    this.validarFormulario();
-    if (!this.formularioValido)
+    if (!this.validarFormulario())
       return;  
     this.plazoCreditoService.crear(this.plazoCredito).subscribe({
       next: res => {
@@ -90,8 +87,7 @@ export class PlazoCreditoComponent implements OnInit {
   actualizar(event) {
     if (event != null)
       event.preventDefault();
-    this.validarFormulario();
-    if (!this.formularioValido)
+    if (!this.validarFormulario())
       return;  
     this.plazoCreditoService.actualizar(this.plazoCredito).subscribe({
       next: res => {
@@ -169,29 +165,25 @@ export class PlazoCreditoComponent implements OnInit {
       this.dataSource.paginator.firstPage();
     }
   }
-
   borrarFiltro() {
     this.renderer.setProperty(this.inputFiltro.nativeElement, 'value', '');
     this.dataSource.filter = '';
   }
 
-  validarFormulario(){
+  validarFormulario(): boolean{
     //validar que los campos esten llenos antes de guardar
-    this.formularioValido = true;
     if (this.plazoCredito.descripcion == '') {
       Swal.fire({ icon: error_swal, title: error, text: mensajes.error_falta_datos });
-      this.formularioValido = false;
-      return;
+      return false;
     }
     if (this.plazoCredito.abreviatura == '') {
       Swal.fire({ icon: error_swal, title: error, text: mensajes.error_falta_datos });
-      this.formularioValido = false;
-      return;
+      return false;
     }
     if (this.plazoCredito.plazo <= 0) {
       Swal.fire({ icon: error_swal, title: error, text: mensajes.error_falta_datos });
-      this.formularioValido = false;
-      return;
+      return false;
     }
+    return true;
   }
 }

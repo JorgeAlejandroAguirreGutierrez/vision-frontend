@@ -147,6 +147,7 @@ export const valores ={
      mensual : "MENSUAL",
      etiquetaCasa: "CASA",
      etiquetaTrabajo: "TRABAJO",
+     etiquetaEmpresa: "EMPRESA",
      latCiudad: -1.6719601146175727,
      lngCiudad: -78.65041698970757
 }
@@ -225,6 +226,7 @@ export const otras ={
      credito : "CREDITO",
      debito : "DEBITO",
      identificacion_consumidor_final : "9999999999999",
+     tipoIdentificacion : "CÉDULA",
      tipoContribuyenteNatural : "NATURAL",
      tipoContribuyenteJuridica : "JURIDICA",
      tipoContribuyentePublica : "PUBLICA",

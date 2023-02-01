@@ -31,7 +31,6 @@ export class GrupoClienteComponent implements OnInit {
 
   abrirPanelNuevo: boolean = true;
   abrirPanelAdmin: boolean = true;
-  formularioValido: boolean = false;
 
   sesion: Sesion=null;
   grupoCliente= new GrupoCliente();
@@ -74,14 +73,12 @@ export class GrupoClienteComponent implements OnInit {
     this.grupoCliente = new GrupoCliente();
     this.clickedRows.clear();
     this.borrarFiltro();
-    this.formularioValido = false;
   }
 
   crear(event) {
     if (event != null)
       event.preventDefault();
-    this.validarFormulario();
-    if (!this.formularioValido)
+    if (!this.validarFormulario())
       return;
     this.grupoClienteService.crear(this.grupoCliente).subscribe({
       next: res => {
@@ -96,8 +93,7 @@ export class GrupoClienteComponent implements OnInit {
   actualizar(event) {
     if (event != null)
       event.preventDefault();
-    this.validarFormulario();
-    if (!this.formularioValido)
+    if (!this.validarFormulario())
       return;        
     this.grupoClienteService.actualizar(this.grupoCliente).subscribe({
       next: res => {
@@ -175,30 +171,26 @@ export class GrupoClienteComponent implements OnInit {
       this.dataSource.paginator.firstPage();
     }
   }
-
   borrarFiltro() {
     this.renderer.setProperty(this.inputFiltro.nativeElement, 'value', '');
     this.dataSource.filter = '';
   }
 
-  validarFormulario(){
+  validarFormulario(): boolean{
     //validar que los campos esten llenos antes de guardar
-    this.formularioValido = true;
     if (this.grupoCliente.descripcion == '') {
       Swal.fire({ icon: error_swal, title: error, text: mensajes.error_falta_datos });
-      this.formularioValido = false;
-      return;
+      return false;
     }
     if (this.grupoCliente.abreviatura == '') {
       Swal.fire({ icon: error_swal, title: error, text: mensajes.error_falta_datos });
-      this.formularioValido = false;
-      return;
+      return false;
     }
     if (this.grupoCliente.cuentaContable.cuenta == '') {
       Swal.fire({ icon: error_swal, title: error, text: mensajes.error_falta_datos });
-      this.formularioValido = false;
-      return;
+      return false;
     }
+    return true;
   }
 
   dialogoCuentasContables(): void {

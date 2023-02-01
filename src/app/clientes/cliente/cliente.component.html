@@ -133,7 +133,7 @@
                     <mat-form-field appearance="standard">
                         <mat-label>Oblig.</mat-label>
                         <mat-select [(ngModel)]="cliente.obligadoContabilidad"
-                            class="form-control-sm">
+                            class="form-control-sm" [disabled]="deshabilitarObligado">
                             <mat-option [value]="si">{{si}}</mat-option>
                             <mat-option [value]="no">{{no}}</mat-option>
                         </mat-select>
@@ -142,7 +142,7 @@
                 <div class="col-1">
                     <mat-form-field appearance="standard">
                         <mat-label>Especial.</mat-label>
-                        <mat-select [(ngModel)]="cliente.especial"
+                        <mat-select [(ngModel)]="cliente.especial" [disabled]="deshabilitarObligado"
                             class="form-control-sm">
                             <mat-option [value]="si">{{si}}</mat-option>
                             <mat-option [value]="no">{{no}}</mat-option>
@@ -215,6 +215,7 @@
                                 class="form-control-sm">
                                 <mat-option [value]="casa">{{casa}}</mat-option>
                                 <mat-option [value]="trabajo">{{trabajo}}</mat-option>
+                                <mat-option [value]="empresa">{{empresa}}</mat-option>
                             </mat-select>
                         </mat-form-field>
                     </div>
