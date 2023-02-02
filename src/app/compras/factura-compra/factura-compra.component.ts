@@ -323,7 +323,6 @@ export class FacturaCompraComponent implements OnInit {
       this.clienteService.obtener(clienteId).subscribe(
         res => {
           Object.assign(this.cliente, res.resultado as Cliente);
-          this.cliente.normalizar();
           this.validarSexoEstadoCivilOrigenIngreso();
           this.ubicacionNormalizarActualizar();
           this.clienteService.enviar(0);

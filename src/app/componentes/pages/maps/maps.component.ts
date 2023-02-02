@@ -33,8 +33,6 @@ export class MapsComponent implements OnInit {
     minZoom: 12,
   };
 
-  //coordenadas: Coordenada[] = [];
-
   constructor() { }
 
   ngOnInit() {
@@ -45,21 +43,17 @@ export class MapsComponent implements OnInit {
       this.posicionCentral = this.posicionGeografica;
       this.posicionSeleccionada = this.posicionGeografica;
     }
-    //this.posicionSeleccionada = new Coordenada(-1.6705413480437092, -78.64974203645144);
   }
 
   mapClicked($event: google.maps.MapMouseEvent) {
     this.posicionSeleccionada = new Coordenada($event.latLng.lat(), $event.latLng.lng());
-    //console.log(this.posicionSeleccionada);
     this.infoWindow.close();
     this.coordenadaSeleccionada.emit(this.posicionSeleccionada);
-    //this.coordenadas.push(this.ubicacionSeleccionada);
   }
 
   getCurrentPosition() {
     navigator.geolocation.getCurrentPosition(position => {
       this.posicionCentral = new Coordenada(position.coords.latitude, position.coords.longitude);
-      //console.log(this.ubicacionCentral);
     })
   }
 

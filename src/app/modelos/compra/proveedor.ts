@@ -14,12 +14,12 @@ import { Dependiente } from '../cliente/dependiente';
 import { RetencionCliente } from '../cliente/retencion-cliente';
 import { valores } from "../../constantes";
 import { Ubicacion } from '../configuracion/ubicacion';
+import { TipoIdentificacion } from '../configuracion/tipo-identificacion';
 
 export class Proveedor {
     id:number;
     codigo:string;
     identificacion:string;
-    tipoIdentificacion:string;
     razonSocial: string;
     nombreComercial: string;
     direccion: string;
@@ -27,6 +27,7 @@ export class Proveedor {
     obligadoContabilidad: string;
     estado: string;
     
+    tipoIdentificacion: TipoIdentificacion;
     ubicacion: Ubicacion;
     estacion: Estacion;
     grupoProveedor: GrupoProveedor;
@@ -50,13 +51,13 @@ export class Proveedor {
         this.id=valores.cero;
         this.codigo=valores.vacio;
         this.identificacion=valores.vacio;
-        this.tipoIdentificacion=valores.vacio;
         this.razonSocial=valores.vacio;
         this.nombreComercial=valores.vacio;
         this.direccion = valores.vacio;
         this.obligadoContabilidad=valores.no;
         this.estado=valores.activo;
         this.especial=valores.no;
+        this.tipoIdentificacion = new TipoIdentificacion();
         this.ubicacion = new Ubicacion();
         this.estacion=new Estacion();
         this.tipoContribuyente=new TipoContribuyente();

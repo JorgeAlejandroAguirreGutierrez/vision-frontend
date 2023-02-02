@@ -56,8 +56,8 @@ export class Cliente {
       this.razonSocial=valores.vacio;
       this.identificacion=valores.vacio;
       this.obligadoContabilidad = valores.no;
-      this.estado=valores.activo;
       this.especial=valores.no;
+      this.estado=valores.activo;
       this.direccion = valores.vacio;
       this.referencia = valores.vacio;
       this.ubicacion= new Ubicacion();
@@ -84,21 +84,5 @@ export class Cliente {
       this.retencionesCliente.push(new RetencionCliente());
       this.retencionesCliente.push(new RetencionCliente());
       this.retencionesCliente.push(new RetencionCliente());
-   }
-
-   normalizar(){
-      if (this.tipoContribuyente==null) this.tipoContribuyente=new TipoContribuyente();
-      if (this.segmento==null) this.segmento=new Segmento();
-      if (this.grupoCliente==null) this.grupoCliente=new GrupoCliente();
-      if (this.calificacionCliente==null) this.calificacionCliente=new CalificacionCliente();
-      if (this.origenIngreso==null) this.origenIngreso=new OrigenIngreso();
-      if (this.formaPago==null) this.formaPago=new FormaPago();
-      if (this.plazoCredito==null) this.plazoCredito=new PlazoCredito();
-      if (this.genero==null) this.genero=new Genero();
-      if (this.estadoCivil==null) this.estadoCivil=new EstadoCivil();
-      if (this.retencionesCliente[0].tipoRetencion==null) this.retencionesCliente[0].tipoRetencion= new TipoRetencion();
-      if (this.retencionesCliente[1].tipoRetencion==null) this.retencionesCliente[1].tipoRetencion= new TipoRetencion();
-      if (this.retencionesCliente[2].tipoRetencion==null) this.retencionesCliente[2].tipoRetencion= new TipoRetencion();
-      if (this.retencionesCliente[3].tipoRetencion==null) this.retencionesCliente[3].tipoRetencion= new TipoRetencion();
    }
 }

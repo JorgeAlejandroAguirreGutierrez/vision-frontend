@@ -23,16 +23,15 @@ export class Factura {
   totalConDescuento: number;
 
   //DESCUENTO_GENERAL
-  valorDescuentoSubtotal: number=0;
-  porcentajeDescuentoSubtotal: number=0;
-  valorPorcentajeDescuentoSubtotal: number= 0;
-  valorDescuentoTotal: number=0;
-  porcentajeDescuentoTotal: number=0;
-  valorPorcentajeDescuentoTotal: number= 0;
+  valorDescuentoSubtotal: number;
+  porcentajeDescuentoSubtotal: number;
+  valorPorcentajeDescuentoSubtotal: number;
+  valorDescuentoTotal: number;
+  porcentajeDescuentoTotal: number;
+  valorPorcentajeDescuentoTotal: number;
   //FIN DESCUENTO_GENERAL
 
   comentario: string;
-
   cliente: Cliente;
   sesion: Sesion;
   facturaDetalles: FacturaDetalle[];
@@ -58,11 +57,12 @@ export class Factura {
     this.ivaConDescuento=valores.cero;
     this.totalSinDescuento=valores.cero;
     this.totalConDescuento=valores.cero;
-  }
 
-  normalizar(){
-    if (this.cliente==null) this.cliente=new Cliente();
-    if (this.sesion==null) this.sesion=new Sesion();
-    if (this.facturaDetalles==null) this.facturaDetalles=[];
- }
+    this.valorDescuentoSubtotal = valores.cero;
+    this.porcentajeDescuentoSubtotal = valores.cero;
+    this.valorPorcentajeDescuentoSubtotal = valores.cero;
+    this.valorDescuentoTotal = valores.cero;
+    this.porcentajeDescuentoTotal = valores.cero;
+    this.valorPorcentajeDescuentoTotal = valores.cero;
+  }
 }

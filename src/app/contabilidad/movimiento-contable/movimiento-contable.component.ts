@@ -123,16 +123,12 @@ export class MovimientoContableComponent implements OnInit {
   }
 
   seleccion(event: any) {
-    //console.log(event.grupoProductoSeleccionado);
     this.movimientoContable = event.movimientoContableSeleccionado as MovimientoContable;
     if (this.movimientoContable.id != 0) {
-      //this.llenarMovimientoContable();
-      //this.inhabilitarControles();
       this.edicion = false;
     } else {
       this.limpiar();
     }
-    //console.log(this.grupoProducto.codigo);
   }
 
   consultar() {

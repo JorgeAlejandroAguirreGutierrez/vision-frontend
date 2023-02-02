@@ -170,12 +170,6 @@ export class ProveedorComponent implements OnInit {
         this.crear(null);
       if (($event.shiftKey || $event.metaKey) && $event.key == "N")
         this.nuevo(null);
-      if (($event.shiftKey || $event.metaKey) && $event.key == "E")
-        console.log('SHIFT + E');
-      if (($event.shiftKey || $event.metaKey) && $event.key == "B")
-        console.log('SHIFT + B');
-      if (($event.shiftKey || $event.metaKey) && $event.key == "A")
-        console.log('SHIFT + A');
     }
   
   ngOnInit() {
@@ -199,33 +193,13 @@ export class ProveedorComponent implements OnInit {
   }
   
   validarIdentificacion() {
-    this.proveedorService.obtenerIdentificacion(this.proveedor.identificacion).subscribe({
+    this.proveedorService.validarIdentificacion(this.proveedor.identificacion).subscribe({
       next: res => {
-        this.proveedorService.validarIdentificacion(this.proveedor.identificacion).subscribe({
-          next: res => {
-            this.proveedor.tipoIdentificacion = res.resultado.tipo_identificacion;
-            this.proveedor.tipoContribuyente = res.resultado.tipo_contribuyente as TipoContribuyente
-            if (this.proveedor.tipoContribuyente == null) {
-              this.habilitarTipoContribuyente = true;
-            } else {
-              this.proveedor.tipoContribuyente = this.obtenerTipoContribuyente();
-            }
-            this.proveedor.segmento.id = 1;
-            this.proveedor.grupoProveedor.id = 1;
-            this.proveedor.financiamiento.formaPago.id = 1;
-            this.cambiarFormaPago();
-            this.validarSexoEstadoCivilOrigenIngreso();
-          },
-          error: err => {
-            this.proveedor.tipoIdentificacion = valores.vacio;
-            this.proveedor.tipoContribuyente = new TipoContribuyente();
-            Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.message });
-          }
-        });
+        this.proveedor = res.resultado as Proveedor;
+        this.cambiarFormaPago();
+        this.validarSexoEstadoCivilOrigenIngreso();
       },
       error: err => {
-        this.proveedor.tipoIdentificacion = valores.vacio;
-        this.proveedor.tipoContribuyente = new TipoContribuyente();
         Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.message });
       }
     });
@@ -391,8 +365,7 @@ export class ProveedorComponent implements OnInit {
   llenarDataSource(proveedores : Proveedor[]){
     this.dataSource = new MatTableDataSource(proveedores);
     this.dataSource.filterPredicate = (data: Proveedor, filter: string): boolean =>
-      data.codigo.toUpperCase().includes(filter) || data.identificacion.toUpperCase().includes(filter) || data.razonSocial.toUpperCase().includes(filter) ||
-      data.tipoIdentificacion.toUpperCase().includes(filter);
+      data.codigo.toUpperCase().includes(filter) || data.identificacion.toUpperCase().includes(filter) || data.razonSocial.toUpperCase().includes(filter);
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
   }
@@ -730,16 +703,12 @@ export class DialogoMapaProveedorComponent {
 
   onNoClick(): void {
     this.dialogRef.close();
-    //console.log('El dialogo para selección de coordenada fue cancelado');
     this.data = new Coordenada(0,0);
   }
 
   coordenadaSeleccionada(event: any) {
-    //console.log(event);
     if (event && event.latitud != 0) {
       this.data = event as Coordenada;
-      //this.producto.grupo_producto = grupoProductoRecibido;
-      console.log(this.data);
     } else {
       this.data = new Coordenada(0,0);
     }

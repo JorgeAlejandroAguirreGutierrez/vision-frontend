@@ -1,13 +1,11 @@
 import { TarjetaCredito } from './tarjeta-credito';
 import { TarjetaDebito } from './tarjeta-debito';
 import { Cheque } from './cheque';
-import { Compensacion } from './compensacion';
 import { Credito } from './credito';
 import { Deposito } from './deposito';
 import { Transferencia } from './transferencia';
 import { Sesion } from '../usuario/sesion';
 import { Factura } from '../comprobante/factura';
-import { RetencionVenta } from './retencion-venta';
 import { valores } from "../../constantes";
 
 export class Recaudacion {
@@ -16,6 +14,7 @@ export class Recaudacion {
     fecha: Date;
     total: number;
     comentario: string;
+    porPagar: number;
     efectivo: number;
     cambio: number;
     totalCheques: number;

@@ -189,8 +189,6 @@ export class ClienteComponent implements OnInit {
       this.crear(null);
     if (($event.shiftKey || $event.metaKey) && $event.key == "N")
       this.nuevo(null);
-    if (($event.shiftKey || $event.metaKey) && $event.key == "E")
-      console.log('SHIFT + E');
   }
 
   constructor(private renderer: Renderer2, public dialog: MatDialog, private clienteService: ClienteService, private tipoIdentificacionService: TipoIdentificacionService, private generoService: GeneroService,
@@ -227,7 +225,6 @@ export class ClienteComponent implements OnInit {
     this.tipoIdentificacionService.consultar().subscribe({
       next: (res) => {
         this.tiposIdentificaciones = res.resultado as TipoIdentificacion[];
-        //console.log(this.tiposIdentificaciones);
       },
       error: (err) => {
         Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje });
@@ -427,9 +424,9 @@ export class ClienteComponent implements OnInit {
 
   agregarTelefonoCorreo() {
     if (this.telefono.numero != valores.vacio)
-      this.cliente.telefonos.push(this.telefono);
+      this.cliente.telefonos.push({ ... this.telefono});
     if (this.celular.numero != valores.vacio)
-      this.cliente.celulares.push(this.celular);
+      this.cliente.celulares.push({ ... this.celular});
     if (this.correo.email != valores.vacio)
       this.cliente.correos.push(this.correo);
   }
