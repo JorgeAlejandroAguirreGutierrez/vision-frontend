@@ -18,40 +18,40 @@ export class MapsComponent implements OnInit {
   posicionCentral: Coordenada;
   posicionSeleccionada: Coordenada;
 
-  //mapTypeId: string = 'hybrid';
-
   // Configuración de Google Maps 
-    center: google.maps.LatLngLiteral = {lat: valores.latCiudad, lng: valores.lngCiudad};
-    markerPosiciones: google.maps.LatLngLiteral[] = [];
-    zoom = 15;
-    display?: google.maps.LatLngLiteral;
-    options: google.maps.MapOptions = {
-      mapTypeId: 'hybrid',
-      zoomControl: true,
-      scrollwheel: true,
-      disableDoubleClickZoom: false,
-      maxZoom: 20,
-      minZoom: 12,
-    };
+  latInicial: number = valores.latCiudad;
+  center: google.maps.LatLngLiteral = { lat: valores.latCiudad, lng: valores.lngCiudad };
+  markerPosiciones: google.maps.LatLngLiteral[] = [];
+  zoom = 15;
+  display?: google.maps.LatLngLiteral;
+  options: google.maps.MapOptions = {
+    mapTypeId: 'hybrid',
+    zoomControl: true,
+    scrollwheel: true,
+    disableDoubleClickZoom: false,
+    maxZoom: 20,
+    minZoom: 12,
+  };
 
   constructor() { }
 
   ngOnInit() {
-    if (!this.posicionGeografica){
+    if (!this.posicionGeografica) {
       this.posicionCentral = new Coordenada(valores.latCiudad, valores.lngCiudad);
-    }else{
+      //this.posicionSeleccionada = this.posicionCentral;
+    } else {
       this.posicionCentral = this.posicionGeografica;
       this.posicionSeleccionada = this.posicionGeografica;
     }
   }
 
-  mapClicked($event: google.maps.MapMouseEvent ){
+  mapClicked($event: google.maps.MapMouseEvent) {
     this.posicionSeleccionada = new Coordenada($event.latLng.lat(), $event.latLng.lng());
     this.infoWindow.close();
     this.coordenadaSeleccionada.emit(this.posicionSeleccionada);
   }
 
-  getCurrentPosition(){
+  getCurrentPosition() {
     navigator.geolocation.getCurrentPosition(position => {
       this.posicionCentral = new Coordenada(position.coords.latitude, position.coords.longitude);
     })
@@ -70,6 +70,6 @@ export class MapsComponent implements OnInit {
   }
 
   openInfoWindow(marker: MapMarker) {
-      this.infoWindow.open(marker);
+    this.infoWindow.open(marker);
   }
 }

@@ -895,7 +895,7 @@
                         <td>
                             <table class="table table-bordered ">
                                 <tbody>
-                                    <tr *ngFor="let telefono of dependiente.telefonos; let i= index">
+                                    <tr *ngFor="let telefono of dependiente.telefonosDependiente; let i= index">
                                         <td>{{telefono.numero}}</td>
                                         <td>
                                             <button class="btn btn-primary btn-circle "
@@ -944,7 +944,7 @@
                         <td>
                             <table class="table table-bordered ">
                                 <tbody>
-                                    <tr *ngFor="let celular of dependiente.celulares; let i= index">
+                                    <tr *ngFor="let celular of dependiente.celularesDependiente; let i= index">
                                         <td>{{celular.numero}}</td>
                                         <td>
                                             <button class="btn btn-primary btn-circle "
@@ -993,7 +993,7 @@
                         <td>
                             <table class="table table-bordered ">
                                 <tbody>
-                                    <tr *ngFor="let correo of dependiente.correos; let i= index">
+                                    <tr *ngFor="let correo of dependiente.correosDependiente; let i= index">
                                         <td>{{correo.email}}</td>
                                         <td>
                                             <button class="btn btn-primary btn-circle "

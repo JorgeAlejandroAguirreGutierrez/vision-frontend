@@ -226,11 +226,11 @@ export class ProveedorComponent implements OnInit {
     //AGREGAR DEPENDIENTE
     if (this.dependiente.razonSocial != valores.vacio && this.dependiente.direccion != valores.vacio) {
       if (this.dependienteTelefono.numero != valores.vacio)
-        this.dependiente.telefonos.push(this.dependienteTelefono);
+        this.dependiente.telefonosDependiente.push(this.dependienteTelefono);
       if (this.dependienteTelefono.numero != valores.vacio)
-        this.dependiente.celulares.push(this.dependienteCelular);
+        this.dependiente.celularesDependiente.push(this.dependienteCelular);
       if (this.dependienteCorreo.email != valores.vacio)
-        this.dependiente.correos.push(this.dependienteCorreo);
+        this.dependiente.correosDependiente.push(this.dependienteCorreo);
       if (this.telefono.numero != valores.vacio)
         this.proveedor.telefonos.push(this.telefono);
       if (this.celular.numero != valores.vacio)
@@ -252,11 +252,11 @@ export class ProveedorComponent implements OnInit {
   
   crearDependiente() {
     if (this.dependienteTelefono.numero != undefined)
-      this.dependiente.telefonos.push(this.dependienteTelefono);
+      this.dependiente.telefonosDependiente.push(this.dependienteTelefono);
     if (this.dependienteTelefono.numero != undefined)
-      this.dependiente.celulares.push(this.dependienteCelular);
+      this.dependiente.celularesDependiente.push(this.dependienteCelular);
     if (this.dependienteCorreo.email != undefined)
-      this.dependiente.correos.push(this.dependienteCorreo);
+      this.dependiente.correosDependiente.push(this.dependienteCorreo);
     this.proveedor.dependientes.push(this.dependiente);
     this.dependiente = new Dependiente();
     this.habilitarCelularTelefonoCorreoDependiente = false;
@@ -290,11 +290,11 @@ export class ProveedorComponent implements OnInit {
     //AGREGAR DEPENDIENTES
     if (this.dependiente.razonSocial != valores.vacio) {
       if (this.dependienteTelefono.numero != valores.vacio)
-        this.dependiente.telefonos.push(this.dependienteTelefono);
+        this.dependiente.telefonosDependiente.push(this.dependienteTelefono);
       if (this.dependienteTelefono.numero != valores.vacio)
-        this.dependiente.celulares.push(this.dependienteCelular);
+        this.dependiente.celularesDependiente.push(this.dependienteCelular);
       if (this.dependienteCorreo.email != valores.vacio)
-        this.dependiente.correos.push(this.dependienteCorreo);
+        this.dependiente.correosDependiente.push(this.dependienteCorreo);
     }
     this.proveedorService.actualizar(this.proveedor).subscribe({
       next: res => {
@@ -508,9 +508,9 @@ export class ProveedorComponent implements OnInit {
   crearTelefonoDependiente() {
     if (this.dependienteTelefono.numero.length !=0 ){
       if (this.proveedor.dependientes.length > 0 && this.dependiente.razonSocial == "") {
-        this.proveedor.dependientes.slice(-1)[0].telefonos.push(this.dependienteTelefono);
+        this.proveedor.dependientes.slice(-1)[0].telefonosDependiente.push(this.dependienteTelefono);
       } else {
-        this.dependiente.telefonos.push(this.dependienteTelefono);
+        this.dependiente.telefonosDependiente.push(this.dependienteTelefono);
       }
       this.dependienteTelefono = new TelefonoDependiente();
     }
@@ -523,17 +523,17 @@ export class ProveedorComponent implements OnInit {
     }
   }
   eliminarTelefonoDependiente(i: number) {
-    this.dependiente.telefonos.splice(i, 1);
+    this.dependiente.telefonosDependiente.splice(i, 1);
     this.dependienteTelefono = new TelefonoDependiente();
   }
 
   crearCelularDependiente() {
     if (this.dependienteCelular.numero.length != valores.cero ){
       if (this.proveedor.dependientes.length > 0 && this.dependiente.razonSocial == valores.vacio) {
-        this.proveedor.dependientes.slice(-1)[0].celulares.push(this.dependienteCelular);
+        this.proveedor.dependientes.slice(-1)[0].celularesDependiente.push(this.dependienteCelular);
       }
       else {
-        this.dependiente.celulares.push(this.dependienteCelular);
+        this.dependiente.celularesDependiente.push(this.dependienteCelular);
       }
       this.dependienteCelular = new CelularDependiente();
     }
@@ -546,16 +546,16 @@ export class ProveedorComponent implements OnInit {
     }
   }
   eliminarCelularDependiente(i: number) {
-    this.dependiente.celulares.splice(i, 1);
+    this.dependiente.celularesDependiente.splice(i, 1);
     this.dependienteCelular = new CelularDependiente();
   }
 
   crearCorreoDependiente() {
     if (this.dependienteCorreo.email.length != valores.cero ){
       if (this.proveedor.dependientes.length > 0 && this.dependiente.razonSocial == valores.vacio) {
-        this.proveedor.dependientes.slice(-1)[0].correos.push(this.dependienteCorreo);
+        this.proveedor.dependientes.slice(-1)[0].correosDependiente.push(this.dependienteCorreo);
       } else {
-        this.dependiente.correos.push(this.dependienteCorreo);
+        this.dependiente.correosDependiente.push(this.dependienteCorreo);
       }
       this.dependienteCorreo = new CorreoDependiente();
     }
@@ -568,7 +568,7 @@ export class ProveedorComponent implements OnInit {
     }
   }
   eliminarCorreoDependiente(i: number) {
-    this.dependiente.correos.splice(i, 1);
+    this.dependiente.correosDependiente.splice(i, 1);
     this.dependienteCorreo = new CorreoDependiente();
   }
 
