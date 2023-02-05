@@ -73,7 +73,7 @@ export class CalificacionClienteComponent implements OnInit {
     if (event != null)
       event.preventDefault();
     if (!this.validarFormulario())
-      return;  
+      return;
     this.calificacionClienteService.crear(this.calificacionCliente).subscribe({
       next: res => {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });

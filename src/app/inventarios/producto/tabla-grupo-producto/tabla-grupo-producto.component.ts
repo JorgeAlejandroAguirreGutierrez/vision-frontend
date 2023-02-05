@@ -26,7 +26,7 @@ export class TablaGrupoProductoComponent implements OnInit {
   grupoProducto = new GrupoProducto();
 
   columnas: any[] = [
-    { nombreColumna: 'codigo', cabecera: 'Código', celda: (row: GrupoProducto) => `${row.codigo}`},
+    { nombreColumna: 'categoria', cabecera: 'Categoria', celda: (row: GrupoProducto) => `${row.categoriaProducto.descripcion}`},
     { nombreColumna: 'grupo', cabecera: 'Grupo', celda: (row: GrupoProducto) => `${row.grupo}`},
     { nombreColumna: 'subgrupo', cabecera: 'Subgrupo', celda: (row: GrupoProducto) => `${row.subgrupo}`},
     { nombreColumna: 'seccion', cabecera: 'Sección', celda: (row: GrupoProducto) => `${row.seccion}`},
@@ -69,6 +69,16 @@ export class TablaGrupoProductoComponent implements OnInit {
       },
       error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     });
+  }
+
+  llenarTabla(grupoProducto: GrupoProducto[]) {
+    this.dataSource = new MatTableDataSource(grupoProducto);
+    this.dataSource.filterPredicate = (data: GrupoProducto, filter: string): boolean =>
+      data.categoriaProducto.descripcion.includes(filter) || data.grupo.includes(filter) || data.subgrupo.includes(filter) ||
+      data.seccion.includes(filter) || data.linea.includes(filter) || data.sublinea.includes(filter) || data.presentacion.includes(filter) || 
+      data.cuentaContable.cuenta.includes(filter) || data.estado.includes(filter);
+    this.dataSource.paginator = this.paginator;
+    this.dataSource.sort = this.sort;
   }
 
   seleccion(grupoProducto: GrupoProducto) {
