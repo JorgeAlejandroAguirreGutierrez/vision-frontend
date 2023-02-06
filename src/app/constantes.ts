@@ -216,7 +216,8 @@ export const mensajes = {
      error_ubicacion : "ERROR EN PROVINCIA, CANTON O PARROQUIA",
      mensaje_kardex_inicial : "INICIALIZAR KARDEX CON SALDO 0",
      error_medida_kardex : "ERROR MEDIDA KARDEX",
-     error_falta_datos : "DATOS INCOMPLETOS, FAVOR INGRESE TODOS LOS DATOS"
+     error_falta_datos : "DATOS INCOMPLETOS, FAVOR INGRESE TODOS LOS DATOS",
+     error_falta_correo : "DEBE AGREGAR POR LO MENOS UN CORREO ELECTRÓNICO PARA LA FACTURACIÓN"
 }
 
 export const otras ={

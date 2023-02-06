@@ -120,7 +120,7 @@
                     <div class="col-5">
                         <mat-form-field appearance="standard">
                             <mat-label>Categoría</mat-label>
-                            <mat-select [(ngModel)]="producto.categoriaProducto.id" class="form-control-sm">
+                            <mat-select [(ngModel)]="producto.categoriaProducto.id" [disabled]="true" class="form-control-sm">
                                 <mat-option *ngFor="let categoriaProducto of categoriasProductos"
                                     [value]="categoriaProducto.id">
                                     {{categoriaProducto.descripcion}}</mat-option>
@@ -155,7 +155,7 @@
                     <div class="col-4">
                         <mat-form-field appearance="standard">
                             <mat-label>Estado</mat-label>
-                            <mat-select [(ngModel)]="producto.estado" class="form-control-sm">
+                            <mat-select [(ngModel)]="producto.estado" disabled class="form-control-sm">
                                 <mat-option value="ACTIVO">ACTIVO</mat-option>
                                 <mat-option value="INACTIVO">INACTIVO</mat-option>
                             </mat-select>

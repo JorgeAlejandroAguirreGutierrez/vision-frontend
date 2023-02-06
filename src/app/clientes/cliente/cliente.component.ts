@@ -411,7 +411,7 @@ export class ClienteComponent implements OnInit {
     this.cliente.estacion = this.sesion.usuario.estacion;
     this.agregarTelefonoCorreo();
     this.validarDependiente();
-    //console.log(this.cliente);
+    console.log(this.cliente);
     this.clienteService.crear(this.cliente).subscribe({
       next: res => {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
@@ -436,7 +436,7 @@ export class ClienteComponent implements OnInit {
       event.preventDefault();
     this.agregarTelefonoCorreo();
     this.validarDependiente();
-    //console.log(this.cliente);
+    console.log(this.cliente);
     this.clienteService.actualizar(this.cliente).subscribe({
       next: res => {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
@@ -504,14 +504,24 @@ export class ClienteComponent implements OnInit {
     if (!this.clickedRows.has(cliente)){
       this.clickedRows.clear();
       this.clickedRows.add(cliente);
-      this.cliente = { ... cliente};
-      this.llenarUbicacion();
-      this.recuperarCoordenadasCliente();
-      //console.log(this.cliente);
-      this.llenarTablaDependiente(this.cliente.dependientes);
+      //this.cliente = { ... cliente};
+      this.obtenerCliente(cliente.id)
     } else {
       this.nuevo(null);
     }
+  }
+
+  obtenerCliente(id: number){
+    this.clienteService.obtener(id).subscribe({
+      next: res => {
+        this.cliente = res.resultado as Cliente;
+        this.llenarUbicacion();
+        this.recuperarCoordenadasCliente();
+        console.log(this.cliente);
+        this.llenarTablaDependiente(this.cliente.dependientes);
+      },
+      error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+    });
   }
 
   llenarUbicacion(){
@@ -739,6 +749,10 @@ export class ClienteComponent implements OnInit {
     }
     if (this.provinciaCliente == '' || this.cantonCliente == '' || this.parroquiaCliente == '') {
       Swal.fire({ icon: error_swal, title: error, text: mensajes.error_falta_datos });
+      return false;
+    }
+    if (this. correo.email == '' && this.cliente.correos.length == 0) {
+      Swal.fire({ icon: error_swal, title: error, text: mensajes.error_falta_correo });
       return false;
     }
     return true;

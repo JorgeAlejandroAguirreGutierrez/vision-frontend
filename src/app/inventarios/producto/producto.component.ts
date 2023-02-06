@@ -738,6 +738,13 @@ export class ProductoComponent implements OnInit {
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
         Object.assign(this.producto.grupoProducto, result as GrupoProducto);
+        this.producto.categoriaProducto = this.producto.grupoProducto.categoriaProducto;
+        if (this.producto.grupoProducto.categoriaProducto.id == 1){ // BIEN
+          this.producto.nombre = this.producto.grupoProducto.linea + valores.espacio +
+          this.producto.grupoProducto.sublinea + valores.espacio + this.producto.grupoProducto.presentacion;
+        } else {
+          this.producto.nombre = '';
+        }
       }
     });
   }
