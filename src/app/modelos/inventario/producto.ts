@@ -9,22 +9,23 @@ import { Kardex } from './kardex';
 import { ProductoProveedor } from './producto-proveedor';
 import { ProductoBodega } from './producto-bodega';
 import { valores } from "../../constantes";
+
 export class Producto {
   id: number;
   codigo: string;
   nombre: string;
-  consignacion: boolean;
+  consignacion: string;
   stockTotal: number;
-  serieAutogenerado: number;
+  //serieAutogenerado: number;
   estado: string;
   categoriaProducto: CategoriaProducto;
-  tipoGasto: TipoGasto;
-  impuesto: Impuesto;
   grupoProducto: GrupoProducto;
+  impuesto: Impuesto;
   medida: Medida;
+  tipoGasto: TipoGasto;
 
   kardexs: Kardex[];
-  caracteristicas: Caracteristica[];
+  //caracteristicas: Caracteristica[];
   precios: Precio[];
   productosProveedores: ProductoProveedor[];
   productosBodegas: ProductoBodega[];
@@ -34,19 +35,18 @@ export class Producto {
     this.id=valores.cero;
     this.codigo=valores.vacio;
     this.nombre=valores.vacio;
-    this.consignacion=false;
+    this.consignacion=valores.no;
     this.stockTotal=valores.cero;
-    this.serieAutogenerado=valores.cero;
+    //this.serieAutogenerado=valores.cero;
     this.estado=valores.activo;
-    
-    this.impuesto=new Impuesto();
-    this.tipoGasto=new TipoGasto();
-    this.grupoProducto=new GrupoProducto();
     this.categoriaProducto=new CategoriaProducto();
+    this.grupoProducto=new GrupoProducto();
+    this.impuesto=new Impuesto();
     this.medida=new Medida();
+    this.tipoGasto=new TipoGasto();
 
     this.kardexs=[];
-    this.caracteristicas=[];
+    //this.caracteristicas=[];
     this.precios=[];
     this.productosProveedores=[];
     this.productosBodegas=[];

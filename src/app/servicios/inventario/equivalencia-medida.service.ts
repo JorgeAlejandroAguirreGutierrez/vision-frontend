@@ -40,6 +40,14 @@ export class EquivalenciaMedidaService {
       }));
   }
 
+  consultarActivos(): Observable<Respuesta> {
+    return this.http.get(environment.host + urn.ruta + urn.equivalenciaMedida + urn.consultarActivos, options).pipe(
+      map(response => response as Respuesta),
+      catchError(err => {
+        return throwError(()=>err);
+      }));
+  }
+
   obtener(equivalenciaMedidaId: number): Observable<Respuesta> {
     return this.http.get<Respuesta>(environment.host + urn.ruta + urn.equivalenciaMedida + urn.slash + equivalenciaMedidaId, options).pipe(
       map(response => response as Respuesta),
@@ -85,8 +93,8 @@ export class EquivalenciaMedidaService {
     );
   }
 
-  buscarMedidasEquivalentes(medidaId: number): Observable<Respuesta> {
-    return this.http.get(environment.host + urn.ruta + urn.equivalenciaMedida + urn.buscarMedidasEquivalentes + urn.slash + medidaId, options).pipe(
+  obtenerMedidasEquivalentes(medidaId: number): Observable<Respuesta> {
+    return this.http.get(environment.host + urn.ruta + urn.equivalenciaMedida + urn.obtenerMedidasEquivalentes + urn.slash + medidaId, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);

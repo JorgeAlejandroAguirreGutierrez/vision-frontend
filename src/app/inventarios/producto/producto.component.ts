@@ -1,8 +1,8 @@
-import { Component, OnInit, Type, Inject } from '@angular/core';
+import { Component, OnInit, HostListener, Type, Inject, ElementRef, Renderer2 } from '@angular/core';
 import { UntypedFormControl, UntypedFormArray, UntypedFormGroup, Validators } from '@angular/forms';
 import { BehaviorSubject } from 'rxjs';
 import Swal from 'sweetalert2';
-import { valores, mensajes, validarSesion, exito, exito_swal, error, error_swal, warning, warning_swal, si_seguro } from '../../constantes';
+import { valores, mensajes, otras, validarSesion, exito, exito_swal, error, error_swal, warning, warning_swal, si_seguro } from '../../constantes';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 import { Sesion } from '../../modelos/usuario/sesion';
@@ -27,8 +27,10 @@ import { MedidaPrecio } from '../../modelos/inventario/medida-precio';
 import { EquivalenciaMedidaService } from '../../servicios/inventario/equivalencia-medida.service';
 import { EquivalenciaMedida } from '../../modelos/inventario/equivalencia-medida'
 import { Proveedor } from '../../modelos/compra/proveedor';
+import { ProveedorService } from '../../servicios/compra/proveedor.service';
 import { Bodega } from '../../modelos/inventario/bodega';
 import { ProductoBodega } from '../../modelos/inventario/producto-bodega';
+import { ProductoProveedor } from '../../modelos/inventario/producto-proveedor';
 
 import { ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
@@ -47,40 +49,48 @@ export interface DialogData {
 
 export class ProductoComponent implements OnInit {
 
+  activo: string = valores.activo;
+  inactivo: string = valores.inactivo;
+  si: string = valores.si;
+  no: string = valores.no;
+
+  cantidadMedidas: number = 0;
+  precioServicioAF: number = 0;
+
+  sesion: Sesion = null;
   ComponenteProducto: Type<any> = ProductoComponent;
 
-  abrirPanelPrecios: boolean[] = [];
   abrirPanelNuevo: boolean = true;
-  abrirPanelNuevoPrecio: boolean = false;
+  abrirPanelPrecio: boolean = true;
   abrirPanelAdmin: boolean = false;
   //verAcordeonPrecios: boolean = false;
   deshabilitarImpuesto: boolean = false;
   deshabilitarOtrasMedidas: boolean = true;
   deshabilitarSaldoInicial: boolean = false;
+  abrirPanelPrecios: boolean[] = [];
 
-  sesion: Sesion = null;
-  bodega: Bodega = new Bodega();
-  productoBodega: ProductoBodega = new ProductoBodega();
   producto: Producto = new Producto();
+  bodega: Bodega = new Bodega();
   precio: Precio = new Precio();
   medida: Medida = new Medida();
   impuesto: Impuesto = new Impuesto();
-  medidaPrecio: MedidaPrecio = new MedidaPrecio();
   kardexInicial: Kardex = new Kardex();
   kardexFinal: Kardex = new Kardex();
+  equivalenciaMedida: EquivalenciaMedida = new EquivalenciaMedida();
+  medidaPrecio: MedidaPrecio = new MedidaPrecio();
+  productoBodega: ProductoBodega = new ProductoBodega();
+  productoProveedor: ProductoProveedor = new ProductoProveedor();
 
   medidaEquivalenteSeleccionada: EquivalenciaMedida = new EquivalenciaMedida();
   productoActualizar: Producto = new Producto();
   productoBuscar: Producto = new Producto();
 
-  cantidadMedidas: number = 0;
-  precioServicioAF: number = 0;
-  activo: string;
   productos: Producto[];
   tiposGastos: TipoGasto[] = [];
   segmentos: Segmento[] = [];
   impuestos: Impuesto[] = [];
   categoriasProductos: CategoriaProducto[] = [];
+  proveedores: Proveedor[] = [];
   precios: Precio[] = [];
   tablaPrecios: Precio[] = [];
   medidas: Medida[] = [];
@@ -102,16 +112,17 @@ export class ProductoComponent implements OnInit {
   setValue() {
     this.formKardexInicial.setValue({ controlSaldoInicial: true, controlCostoTotal: this.kardexInicial.costoPromedio });
   }
+
+  getErrorMessage() {
+    if (this.controlSaldoInicial.hasError('required')) {
+      return 'Valor inválido';
+    }
+    if (this.controlCostoTotal.hasError('required')) {
+      return 'Valor inválido';
+    }
+    return 'Error';
+  }
   // Variables para las tablas
-  equivalenciaMedida: EquivalenciaMedida = new EquivalenciaMedida();
-
-  cabeceraPrecioSugerido: string[] = ['medida', 'segmento', 'costo', 'margenGanancia', 'precioSinIva', 'precioVentaPublico'];
-  cabeceraPrecioVenta: string[] = ['precioVentaPublicoManual', 'utilidad', 'utilidadPorcentaje'];
-
-  observablePrecios: BehaviorSubject<Precio[]> = new BehaviorSubject<Precio[]>([]);
-  datos: any = [];
-  controls: UntypedFormArray[] = [];
-
   columnas: any[] = [
     { nombreColumna: 'codigo', cabecera: 'Código', celda: (row: Producto) => `${row.codigo}` },
     { nombreColumna: 'nombre', cabecera: 'Nombre', celda: (row: Producto) => `${row.nombre}` },
@@ -123,109 +134,109 @@ export class ProductoComponent implements OnInit {
   cabecera: string[] = this.columnas.map(titulo => titulo.nombreColumna);
   dataSource: MatTableDataSource<Producto>;
   clickedRows = new Set<Producto>();
+  
+  cabeceraPrecioSugerido: string[] = ['medida', 'segmento', 'costo', 'margenGanancia', 'precioSinIva', 'precioVentaPublico'];
+  cabeceraPrecioVenta: string[] = ['precioVentaPublicoManual', 'utilidad', 'utilidadPorcentaje'];
+
+  observablePrecios: BehaviorSubject<Precio[]> = new BehaviorSubject<Precio[]>([]);
+  datos: any = [];
+  controls: UntypedFormArray[] = [];
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
+  @ViewChild("inputFiltro") inputFiltro: ElementRef;
 
-  constructor(public dialog: MatDialog, private sesionService: SesionService, private productoService: ProductoService, 
+  @HostListener('window:keypress', ['$event'])
+  keyEvent($event: KeyboardEvent) {
+    if (($event.shiftKey || $event.metaKey) && $event.key == "G")
+      this.crear(null);
+    if (($event.shiftKey || $event.metaKey) && $event.key == "N")
+      this.nuevo(null);
+  }
+
+  constructor(private renderer: Renderer2, public dialog: MatDialog, private sesionService: SesionService, private productoService: ProductoService, 
     private tipoGastoService: TipoGastoService, private impuestoService: ImpuestoService, private router: Router,
     private segmentoService: SegmentoService, private categoriaProductoService: CategoriaProductoService, 
-    private medidaService: MedidaService, private equivalenciaMedidaService: EquivalenciaMedidaService) { }
-
-  getErrorMessage() {
-    if (this.controlSaldoInicial.hasError('required')) {
-      return 'Valor inválido';
-    }
-    if (this.controlCostoTotal.hasError('required')) {
-      return 'Valor inválido';
-    }
-    return 'Error';
-  }
+    private medidaService: MedidaService, private equivalenciaMedidaService: EquivalenciaMedidaService,
+    private proveedorService: ProveedorService) { }
 
   ngOnInit() {
     this.sesion=validarSesion(this.sesionService, this.router);
     this.consultar();
-    this.categoriaProductoService.consultar().subscribe(
-      res => {
+    this.consultarCategoria();
+    this.consultarImpuesto();
+    this.consultarTipoGasto();
+    this.consultarMedida();
+    this.consultarSegmento();
+    this.consultarProveedor();
+  }
+
+  consultarCategoria(){
+    this.categoriaProductoService.consultar().subscribe({
+      next: res => {
         this.categoriasProductos = res.resultado as CategoriaProducto[];
         this.producto.categoriaProducto.id = this.categoriasProductos[0].id;
       },
-      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
-    );
-    this.impuestoService.consultar().subscribe(
-      res => {
+      error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+    });
+  }
+
+  consultarImpuesto(){
+    this.impuestoService.consultar().subscribe({
+      next: res => {
         this.impuestos = res.resultado as Impuesto[];
         this.producto.impuesto.id = this.impuestos[0].id;
         this.impuesto = this.impuestos[0];
       },
-      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
-    );
-    this.tipoGastoService.consultar().subscribe(
-      res => {
-        this.tiposGastos = res.resultado as TipoGasto[];
-        this.producto.tipoGasto.id = this.tiposGastos[0].id;
-      },
-      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
-    );
-    this.medidaService.consultar().subscribe(
-      res => {
-        this.medidas = res.resultado as Medida[];
-      },
-      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
-    );
-    this.segmentoService.consultar().subscribe(
-      res => {
-        this.segmentos = res.resultado as Segmento[];
-      },
-      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
-    );
-  }
-
-  nuevo(event){
-    if (event != null)
-      event.preventDefault();
-    this.producto = new Producto();
-  }
-
-  crear(event: any) {
-    if (event != null)
-      event.preventDefault();
-    if (this.producto.grupoProducto.id == 0) {
-      Swal.fire(error, mensajes.error_grupo_producto, error_swal);
-      return;
-    }
-    if (this.producto.nombre == '') {
-      Swal.fire(error, mensajes.error_nombre_producto, error_swal);
-      return;
-    }
-    if (this.producto.medida.id == 0) {
-      Swal.fire(error, mensajes.error_medida_kardex, error_swal);
-      return;
-    }
-    if (!this.deshabilitarSaldoInicial) {
-      Swal.fire(error, mensajes.error_saldo_inicial, error_swal);
-      return;
-    }
-    this.producto.precios = this.tablaPrecios;
-    this.bodega.id 
-    this.producto.productosBodegas.push(); 
-    this.productoService.crear(this.producto).subscribe({
-      next: (res) => {
-        Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
-        this.producto = res.resultado as Producto;
-        this.limpiar();
-        this.consultar();
-      },
-      error: (err) => {
-        Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
-      }
+      error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     });
   }
 
-  limpiar() {
+  consultarTipoGasto(){
+    this.tipoGastoService.consultar().subscribe({
+      next: res => {
+        this.tiposGastos = res.resultado as TipoGasto[];
+        this.producto.tipoGasto.id = this.tiposGastos[0].id;
+      },
+      error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+    });
+  }
+
+  consultarMedida(){
+    this.medidaService.consultarActivos().subscribe({
+      next: res => {
+        this.medidas = res.resultado as Medida[];
+      },
+      error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+    });
+  }
+
+  consultarSegmento(){
+    this.segmentoService.consultar().subscribe({
+      next: res => {
+        this.segmentos = res.resultado as Segmento[];
+      },
+      error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+    });
+  }
+
+  consultarProveedor() {
+    this.proveedorService.consultar().subscribe({
+      next: (res) => {
+        this.proveedores = res.resultado as Proveedor[];
+        console.log(this.proveedores);
+      },
+      error: (err) => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.message })
+    });
+  }
+
+  // CRUD
+  nuevo(event){
+    if (event != null)
+      event.preventDefault();
+    this.producto.estado = valores.activo;
+    this.producto.consignacion = valores.no;
     this.producto = new Producto();
-    this.producto.estado = 'ACTIVO';
-    this.producto.consignacion = false;
     this.precio = new Precio();
     this.kardexInicial = new Kardex();
     this.kardexFinal = new Kardex();
@@ -239,7 +250,7 @@ export class ProductoComponent implements OnInit {
     this.producto.tipoGasto = this.tiposGastos[0];
     this.abrirPanelPrecios = [];
     this.abrirPanelNuevo = true;
-    this.abrirPanelNuevoPrecio = false;
+    this.abrirPanelPrecio = false;
     this.abrirPanelAdmin = false;
     this.deshabilitarOtrasMedidas = true;
     this.deshabilitarImpuesto = false;
@@ -249,35 +260,39 @@ export class ProductoComponent implements OnInit {
     this.clickedRows.clear();
   }
 
+  crear(event: any) {
+    if (event != null)
+      event.preventDefault();
+    if (!this.validarFormularioProducto())
+      return;
+    this.producto.precios = this.tablaPrecios;
+    //this.productoProveedor.proveedor = this.proveedores[0];
+    //this.producto.productosProveedores.push(this.productoProveedor);
+    console.log(this.producto);
+    this.productoService.crear(this.producto).subscribe({
+      next: (res) => {
+        Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
+        //this.producto = res.resultado as Producto;
+        this.consultar();
+        this.nuevo(null);
+      },
+      error: (err) => {
+        Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+      }
+    });
+  }
+
   actualizar(event: any) {
     if (event != null)
       event.preventDefault();
-    if (this.producto.grupoProducto.id == 0) {
-      Swal.fire(error, mensajes.error_grupo_producto, error_swal);
+    if (!this.validarFormularioProducto())
       return;
-    }
-    if (this.producto.nombre == '') {
-      Swal.fire(error, mensajes.error_nombre_producto, error_swal);
-      return;
-    }
-    if (this.producto.impuesto.id == 0) {
-      Swal.fire(error, mensajes.error_impuesto, error_swal);
-      return;
-    }
-    if (this.producto.tipoGasto.id == 0) {
-      Swal.fire(error, mensajes.error_tipo_gasto, error_swal);
-      return;
-    }
-    if (this.producto.categoriaProducto.id == 0) {
-      Swal.fire(error, mensajes.error_tipo_producto, error_swal);
-      return;
-    }
     this.producto.precios = this.tablaPrecios;
     this.productoService.actualizar(this.producto).subscribe({
       next: (res) => {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
-        this.limpiar();
         this.consultar();
+        this.nuevo(null);
       },
       error: (err) => {
         Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
@@ -310,20 +325,20 @@ export class ProductoComponent implements OnInit {
   }
 
   consultar() {
-    this.productoService.consultar().subscribe(
-      res => {
+    this.productoService.consultar().subscribe({
+      next: res => {
         this.productos = res.resultado as Producto[];
-        this.llenarDataSource(this.productos);
+        this.llenarTabla(this.productos);
       },
-      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
-    );
+      error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+    });
   }
 
-  llenarDataSource(productos: Producto[]) {
+  llenarTabla(productos: Producto[]) {
     this.dataSource = new MatTableDataSource(productos);
     this.dataSource.filterPredicate = (data: Producto, filter: string): boolean =>
-      data.codigo.toUpperCase().includes(filter) || data.nombre.toUpperCase().includes(filter) || data.tipoGasto.descripcion.toUpperCase().includes(filter) ||
-      data.categoriaProducto.descripcion.toUpperCase().includes(filter) || data.estado.toUpperCase().includes(filter);
+      data.codigo.includes(filter) || data.nombre.includes(filter) || data.tipoGasto.descripcion.includes(filter) ||
+      data.categoriaProducto.descripcion.includes(filter) || data.estado.includes(filter);
     this.dataSource.paginator = this.paginator;
     this.dataSource.paginator.firstPage();
     this.dataSource.sort = this.sort;
@@ -336,16 +351,20 @@ export class ProductoComponent implements OnInit {
       this.dataSource.paginator.firstPage();
     }
   }
+  borrarFiltro() {
+    this.renderer.setProperty(this.inputFiltro.nativeElement, 'value', '');
+    this.dataSource.filter = '';
+  }
 
   // Para la Edición
-  seleccionTablaProducto(productoSeleccionado: Producto) {
+  seleccion(productoSeleccionado: Producto) {
     if (!this.clickedRows.has(productoSeleccionado)) {
-      this.limpiar();
+      this.nuevo(null);
       this.clickedRows.add(productoSeleccionado);
       this.producto = productoSeleccionado;
       this.construirProducto(this.producto);
     } else {
-      this.limpiar();
+      this.nuevo(null);
     }
   }
 
@@ -355,7 +374,7 @@ export class ProductoComponent implements OnInit {
     if (productoSeleccionado.id != 0) {
       this.construirInfoKardex(productoSeleccionado.kardexs);
       this.construirMedidasPrecios(productoSeleccionado.precios);
-      this.buscarMedidasEquivalentes(productoSeleccionado.medida.id);
+      this.obtenerMedidasEquivalentes(productoSeleccionado.medida.id);
       this.deshabilitarOtrasMedidas = false;
       //this.actualizar_precios();
     }
@@ -425,10 +444,6 @@ export class ProductoComponent implements OnInit {
     arrayJson.sort(function (a: any, b: any) {
       return a[pKey] > b[pKey];
     });
-  }
-
-  borrarNombreProducto() {
-    this.producto.nombre = '';
   }
 
   medidaSeleccionada(event: number) {
@@ -504,7 +519,7 @@ export class ProductoComponent implements OnInit {
     }
     this.kardexInicial.costoTotal = Number((this.kardexInicial.cantidad * this.kardexInicial.costoPromedio).toFixed(2));
 // Falta Crear y traer de la tabla operaciones_kardex
-    this.kardexInicial.operacion = valores.vacio;
+    this.kardexInicial.operacion = otras.operacionInicialKardex;
     this.kardexFinal = this.kardexInicial;
     this.producto.stockTotal = this.kardexInicial.cantidad;
     this.producto.kardexs.push(this.kardexInicial);
@@ -514,7 +529,7 @@ export class ProductoComponent implements OnInit {
     Swal.fire('Bien!', 'El kardex fue inicializado', 'success')
     this.deshabilitarMedida();
     this.deshabilitarOtrasMedidas = false;
-    this.buscarMedidasEquivalentes(this.producto.medida.id);
+    this.obtenerMedidasEquivalentes(this.producto.medida.id);
   }
 
   crearBodega(){
@@ -615,7 +630,7 @@ export class ProductoComponent implements OnInit {
     this.controls.splice(i, 1);
     this.abrirPanelPrecios.splice(i, 1);
     this.actualizarAbrirPanel();
-    this.buscarMedidasEquivalentes(this.producto.medida.id);
+    this.obtenerMedidasEquivalentes(this.producto.medida.id);
     this.actualizarTablaPrecios();  
   }
 
@@ -694,10 +709,11 @@ export class ProductoComponent implements OnInit {
     }
   }
 
-  buscarMedidasEquivalentes(medidaId: number) {
-    this.equivalenciaMedidaService.buscarMedidasEquivalentes(medidaId).subscribe(
-      res => {
+  obtenerMedidasEquivalentes(medidaId: number) {
+    this.equivalenciaMedidaService.obtenerMedidasEquivalentes(medidaId).subscribe({
+      next: res => {
         this.medidasEquivalentes = res.resultado as EquivalenciaMedida[];
+        //console.log(this.medidasEquivalentes);
         if (this.medidasPrecios.length > 1) {
           this.actualizarMedidasEquivalentes()
         }
@@ -705,10 +721,10 @@ export class ProductoComponent implements OnInit {
           this.eliminarMedidaEquivalente(this.producto.medida);
         }
       },
-      err => {
+      error: err => {
         Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
       }
-    );
+    });
   }
 
   eliminarMedidaEquivalente(medidaAgregada: Medida) {
@@ -727,6 +743,39 @@ export class ProductoComponent implements OnInit {
         }
       }
     }
+  }
+
+  // VALIDACIONES DE CAMPOS
+  validarFormularioProducto(): boolean {
+    if (this.producto.grupoProducto.id == 0) {
+      Swal.fire(error, mensajes.error_grupo_producto, error_swal);
+      return false;
+    }
+    if (this.producto.nombre == '') {
+      Swal.fire(error, mensajes.error_nombre_producto, error_swal);
+      return false;
+    }
+    if (this.producto.medida.id == 0) {
+      Swal.fire(error, mensajes.error_medida_kardex, error_swal);
+      return false;
+    }
+    if (!this.deshabilitarSaldoInicial) {
+      Swal.fire(error, mensajes.error_saldo_inicial, error_swal);
+      return false;
+    }
+    if (this.producto.impuesto.id == 0) {
+      Swal.fire(error, mensajes.error_impuesto, error_swal);
+      return false;
+    }
+    if (this.producto.tipoGasto.id == 0) {
+      Swal.fire(error, mensajes.error_tipo_gasto, error_swal);
+      return false;
+    }
+    if (this.producto.categoriaProducto.id == 0) {
+      Swal.fire(error, mensajes.error_tipo_producto, error_swal);
+      return false;
+    }
+    return true;
   }
 
   dialogoGruposProductos(): void {

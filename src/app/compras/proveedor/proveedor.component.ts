@@ -232,11 +232,11 @@ export class ProveedorComponent implements OnInit {
       if (this.dependienteCorreo.email != valores.vacio)
         this.dependiente.correosDependiente.push(this.dependienteCorreo);
       if (this.telefono.numero != valores.vacio)
-        this.proveedor.telefonos.push(this.telefono);
+        this.proveedor.telefonosProveedor.push(this.telefono);
       if (this.celular.numero != valores.vacio)
-        this.proveedor.celulares.push(this.celular);
+        this.proveedor.celularesProveedor.push(this.celular);
       if (this.correo.email != valores.vacio)
-        this.proveedor.correos.push(this.correo);
+        this.proveedor.correosProveedor.push(this.correo);
     }
     this.proveedorService.crear(this.proveedor).subscribe({
       next: res => {
@@ -250,39 +250,6 @@ export class ProveedorComponent implements OnInit {
     });
   }
   
-  crearDependiente() {
-    if (this.dependienteTelefono.numero != undefined)
-      this.dependiente.telefonosDependiente.push(this.dependienteTelefono);
-    if (this.dependienteTelefono.numero != undefined)
-      this.dependiente.celularesDependiente.push(this.dependienteCelular);
-    if (this.dependienteCorreo.email != undefined)
-      this.dependiente.correosDependiente.push(this.dependienteCorreo);
-    this.proveedor.dependientes.push(this.dependiente);
-    this.dependiente = new Dependiente();
-    this.habilitarCelularTelefonoCorreoDependiente = false;
-    this.dependienteProvincia = valores.vacio;
-    this.dependienteCanton = valores.vacio;
-    this.dependienteParroquia = valores.vacio;
-    this.dependienteTelefono = new TelefonoDependiente();
-    this.dependienteCelular = new CelularDependiente();
-    this.dependienteCorreo = new CorreoDependiente();
-  }
-
-  eliminarDependiente(dependiente: Dependiente) {
-    let index = this.proveedor.dependientes.indexOf(dependiente);
-    this.proveedor.dependientes.splice(index, 1);
-    if (this.proveedor.dependientes.length < 1)
-      this.habilitarCelularTelefonoCorreoDependiente = true;
-  }
-
-  editarDependiente(dependiente: Dependiente){
-    this.edicion = !this.edicion;
-    this.dependiente = dependiente;
-  }
-
-  confirmarEditarDependiente(row: Dependiente){
-    this.edicion = !this.edicion;
-  }
 
   async actualizar(event) {
     if (event != null)
@@ -347,7 +314,8 @@ export class ProveedorComponent implements OnInit {
   consultar() {
     this.proveedorService.consultar().subscribe({
       next: (res) => {
-        this.proveedores = res.resultado as Proveedor[]
+        this.proveedores = res.resultado as Proveedor[];
+        console.log(this.proveedores);
         this.llenarDataSource(this.proveedores);
       },
       error: (err) => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.message })
@@ -440,9 +408,9 @@ export class ProveedorComponent implements OnInit {
 
   cambiarFormaPago() {
     // forma de pago id=1; es PREPAGO
-    if (this.proveedor.financiamiento.formaPago.id == 1) {
+    if (this.proveedor.formaPago.id == 1) {
       this.activacionPlazoCredito = true;
-      this.proveedor.financiamiento.plazoCredito = null;
+      this.proveedor.plazoCredito = null;
     } else {
       this.activacionPlazoCredito = false;
     }
@@ -450,7 +418,7 @@ export class ProveedorComponent implements OnInit {
 
   crearTelefono() {
     if (this.telefono.numero.length != valores.cero ){
-    this.proveedor.telefonos.push(this.telefono);
+    this.proveedor.telefonosProveedor.push(this.telefono);
     this.telefono = new Telefono();
      } else {
       Swal.fire(error, "Ingrese un número telefónico válido", error_swal);
@@ -464,12 +432,12 @@ export class ProveedorComponent implements OnInit {
     }
   }
   eliminarTelefono(i: number) {
-    this.proveedor.telefonos.splice(i, 1);
+    this.proveedor.telefonosProveedor.splice(i, 1);
   }
 
   crearCelular() {
     if (this.celular.numero.length != valores.cero ){
-      this.proveedor.celulares.push(this.celular);
+      this.proveedor.celularesProveedor.push(this.celular);
       this.celular = new Celular();
        } else {
         Swal.fire(error, "Ingrese un número de celular válido", error_swal);
@@ -483,12 +451,12 @@ export class ProveedorComponent implements OnInit {
     }
   }
   eliminarCelular(i: number) {
-    this.proveedor.celulares.splice(i, 1);
+    this.proveedor.celularesProveedor.splice(i, 1);
   }
 
   crearCorreo() {
     if (this.correo.email.length != 0 ){
-      this.proveedor.correos.push(this.correo);
+      this.proveedor.correosProveedor.push(this.correo);
       this.correo = new Correo();
        } else {
         Swal.fire(error, "Ingrese un correo válido", error_swal);
@@ -502,76 +470,8 @@ export class ProveedorComponent implements OnInit {
     }
   }
   eliminarCorreo(i: number) {
-    this.proveedor.correos.splice(i, 1);
+    this.proveedor.correosProveedor.splice(i, 1);
   }
-
-  crearTelefonoDependiente() {
-    if (this.dependienteTelefono.numero.length !=0 ){
-      if (this.proveedor.dependientes.length > 0 && this.dependiente.razonSocial == "") {
-        this.proveedor.dependientes.slice(-1)[0].telefonosDependiente.push(this.dependienteTelefono);
-      } else {
-        this.dependiente.telefonosDependiente.push(this.dependienteTelefono);
-      }
-      this.dependienteTelefono = new TelefonoDependiente();
-    }
-  }
-  validarTelefonoDependiente() {
-    let digito = this.dependienteTelefono.numero.substring(0, 1);
-    if (this.dependienteTelefono.numero.length != 11 || digito != "0") {
-      this.dependienteTelefono.numero = "";
-      Swal.fire(error, "Telefono Invalido", error_swal);
-    }
-  }
-  eliminarTelefonoDependiente(i: number) {
-    this.dependiente.telefonosDependiente.splice(i, 1);
-    this.dependienteTelefono = new TelefonoDependiente();
-  }
-
-  crearCelularDependiente() {
-    if (this.dependienteCelular.numero.length != valores.cero ){
-      if (this.proveedor.dependientes.length > 0 && this.dependiente.razonSocial == valores.vacio) {
-        this.proveedor.dependientes.slice(-1)[0].celularesDependiente.push(this.dependienteCelular);
-      }
-      else {
-        this.dependiente.celularesDependiente.push(this.dependienteCelular);
-      }
-      this.dependienteCelular = new CelularDependiente();
-    }
-  }
-  validarCelularDependiente() {
-    let digito = this.dependienteCelular.numero.substring(0, 2);
-    if (this.dependienteCelular.numero.length != 12 || digito != "09") {
-      this.dependienteCelular.numero = "";
-      Swal.fire(error, "Celular Invalido", error_swal);
-    }
-  }
-  eliminarCelularDependiente(i: number) {
-    this.dependiente.celularesDependiente.splice(i, 1);
-    this.dependienteCelular = new CelularDependiente();
-  }
-
-  crearCorreoDependiente() {
-    if (this.dependienteCorreo.email.length != valores.cero ){
-      if (this.proveedor.dependientes.length > 0 && this.dependiente.razonSocial == valores.vacio) {
-        this.proveedor.dependientes.slice(-1)[0].correosDependiente.push(this.dependienteCorreo);
-      } else {
-        this.dependiente.correosDependiente.push(this.dependienteCorreo);
-      }
-      this.dependienteCorreo = new CorreoDependiente();
-    }
-  }
-  validarCorreoDependiente() {
-    let arroba = this.dependienteCorreo.email.includes("@");
-    if (!arroba) {
-      this.dependienteCorreo.email = valores.vacio;
-      Swal.fire(error, "Correo Invalido", error_swal);
-    }
-  }
-  eliminarCorreoDependiente(i: number) {
-    this.dependiente.correosDependiente.splice(i, 1);
-    this.dependienteCorreo = new CorreoDependiente();
-  }
-
 
   provincia(provincia: string) {
     this.proveedor.ubicacion.provincia = provincia;
@@ -643,10 +543,7 @@ export class ProveedorComponent implements OnInit {
     } else {
       this.activacion_s_es_oi = false;
       if (this.proveedor.id == 0) {
-        this.proveedor.genero = this.generos[0];
-        this.proveedor.estadoCivil = this.estadosCiviles[0];
-        this.proveedor.origenIngreso = this.origenesIngresos[0];
-        this.proveedor.calificacionCliente = this.calificacionesClientes[0];
+
       }
     }
   }
