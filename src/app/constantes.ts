@@ -108,8 +108,8 @@ export const urn =
      consultarIvaServicio: "/consultarIvaServicio",
      consultarRentaBien: "/consultarRentaBien",
      consultarRentaServicio: "/consultarRentaServicio",
-     equivalenciaMedida: "/tablaEquivalenciaMedida",
-     buscarMedidasEquivalentes: "/buscarMedidasEquivalentes",
+     equivalenciaMedida: "/equivalenciaMedida",
+     obtenerMedidasEquivalentes: "/obtenerMedidasEquivalentes",
      personalizado: "/personalizado",
      generar: "/generar",
      pdf: "/pdf"

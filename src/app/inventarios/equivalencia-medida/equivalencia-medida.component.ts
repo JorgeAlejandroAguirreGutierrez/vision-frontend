@@ -1,5 +1,4 @@
-import { Component, OnInit, HostListener, Type } from '@angular/core';
-import { TabService } from '../../componentes/services/tab.service';
+import { Component, OnInit, HostListener, ElementRef, Renderer2 } from '@angular/core';
 import Swal from 'sweetalert2';
 import { EquivalenciaMedida } from '../../modelos/inventario/equivalencia-medida';
 import { EquivalenciaMedidaService } from '../../servicios/inventario/equivalencia-medida.service';
@@ -23,7 +22,7 @@ import { MatTableDataSource } from '@angular/material/table';
 export class EquivalenciaMedidaComponent implements OnInit {
 
   abrirPanelNuevo = true;
-  abrirPanelAdmin = false;
+  abrirPanelAdmin = true;
 
   sesion: Sesion;
   equivalenciaMedida= new EquivalenciaMedida();
@@ -45,9 +44,10 @@ export class EquivalenciaMedidaComponent implements OnInit {
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
+  @ViewChild("inputFiltro") inputFiltro: ElementRef;
 
-  constructor(private tabService: TabService,private equivalenciaMedidaService: EquivalenciaMedidaService, private medidaService: MedidaService,
-    private sesionService: SesionService,private router: Router) { }
+  constructor(private renderer: Renderer2, private equivalenciaMedidaService: EquivalenciaMedidaService, private medidaService: MedidaService,
+    private sesionService: SesionService,private router: Router ) { }
 
   ngOnInit() {
     this.sesion=validarSesion(this.sesionService, this.router);
@@ -72,14 +72,14 @@ export class EquivalenciaMedidaComponent implements OnInit {
   crear(event: any) {
     if (event!=null)
       event.preventDefault();
-    this.equivalenciaMedidaService.crear(this.equivalenciaMedida).subscribe(
-      res => {
+    this.equivalenciaMedidaService.crear(this.equivalenciaMedida).subscribe({
+      next: res => {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
         this.consultar();
         this.nuevo(null);
       },
-      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
-    );
+      error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+    });
   }
 
   actualizar(event: any) {
@@ -124,15 +124,23 @@ export class EquivalenciaMedidaComponent implements OnInit {
   }
 
   consultar() {
-    this.equivalenciaMedidaService.consultar().subscribe(
-      res => {
-        this.equivalenciasMedidas = res.resultado as EquivalenciaMedida[]
-        this.dataSource = new MatTableDataSource(this.equivalenciasMedidas);
-        this.dataSource.paginator = this.paginator;
-        this.dataSource.sort = this.sort;
+    this.equivalenciaMedidaService.consultar().subscribe({
+      next: res => {
+        this.equivalenciasMedidas = res.resultado as EquivalenciaMedida[];
+        console.log(this.equivalenciasMedidas);
+        this.llenarTabla(this.equivalenciasMedidas);
       },
-      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
-    );
+      error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+    });
+  }
+
+  llenarTabla(equivalenciasMedidas: EquivalenciaMedida[]){
+    this.dataSource = new MatTableDataSource(equivalenciasMedidas);
+    this.dataSource.filterPredicate = (data: EquivalenciaMedida, filter: string): boolean =>
+    data.codigo.includes(filter) || data.medidaIni.descripcion.includes(filter) || String(data.equivalencia).includes(filter) ||
+    data.medidaEqui.descripcion.includes(filter) || data.estado.includes(filter);
+    this.dataSource.paginator = this.paginator;
+    this.dataSource.sort = this.sort;
   }
 
   seleccion(equivalenciaMedida: EquivalenciaMedida) {
@@ -152,5 +160,9 @@ export class EquivalenciaMedidaComponent implements OnInit {
     if (this.dataSource.paginator) {
       this.dataSource.paginator.firstPage();
     }
+  }
+  borrarFiltro() {
+    this.renderer.setProperty(this.inputFiltro.nativeElement, 'value', '');
+    this.dataSource.filter = '';
   }
 }

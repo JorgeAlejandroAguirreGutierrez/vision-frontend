@@ -70,8 +70,6 @@ export class ClienteComponent implements OnInit {
   sesion: Sesion;
   ComponenteCliente: Type<any> = ClienteComponent;
 
-  indiceTipoContribuyente: number = -1;
-
   abrirPanelNuevoCliente: boolean = true;
   abrirPanelUbicacion: boolean = true;
   abrirPanelDependiente: boolean = false;

@@ -16,7 +16,7 @@ export class Kardex {
     costoPromedio: number;
     costoTotal: number;
     //proveedor: Proveedor;
-    producto: Producto;
+    //producto: Producto;
 
     constructor() {
         this.id=valores.cero;
@@ -33,7 +33,7 @@ export class Kardex {
         this.haber=valores.cero;
         this.cantidad=valores.cero;
         //this.proveedor=new Proveedor();
-        this.producto=new Producto();
+        //this.producto=new Producto();
     }
     
 }

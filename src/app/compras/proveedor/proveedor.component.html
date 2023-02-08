@@ -336,7 +336,7 @@
                             <div class="col-12">
                                 <mat-form-field appearance="standard">
                                     <mat-label>Forma de pago</mat-label>
-                                    <mat-select [(ngModel)]="proveedor.financiamiento.formaPago.id"
+                                    <mat-select [(ngModel)]="proveedor.formaPago.id"
                                         [compareWith]="compareFn" (selectionChange)="cambiarFormaPago()"
                                         class="form-control-sm">
                                         <mat-option *ngFor="let formaPago of formasPagos" [value]="formaPago.id">
@@ -349,7 +349,7 @@
                                 <mat-form-field appearance="standard">
                                     <mat-label>Plazo/días</mat-label>
                                     <mat-select [disabled]="activacionPlazoCredito"
-                                        [(ngModel)]="proveedor.financiamiento.plazoCredito" [compareWith]="compareFn"
+                                        [(ngModel)]="proveedor.plazoCredito" [compareWith]="compareFn"
                                         class="form-control-sm">
                                         <mat-option *ngFor="let plazoCredito of plazosCreditos" [value]="plazoCredito">
                                             {{plazoCredito.plazo}}
@@ -360,7 +360,7 @@
                             <div class="col-6">
                                 <mat-form-field appearance="standard">
                                     <mat-label>Monto</mat-label>
-                                    <input matInput [(ngModel)]="proveedor.financiamiento.monto"
+                                    <input matInput [(ngModel)]="proveedor.montoFinanciamiento"
                                         class="form-control-sm " [disabled]="activacionPlazoCredito">
                                 </mat-form-field>
                             </div>
@@ -378,10 +378,10 @@
                                 <br>
                                 <b>BIEN</b>
                             </div>
-                            <div class="col-5">
+                            <!--div class="col-5">
                                 <mat-form-field appearance="standard">
                                     <mat-label>Código</mat-label>
-                                    <mat-select type="text" [(ngModel)]="proveedor.retencionesCliente[0].tipoRetencion"
+                                    <mat-select type="text" [(ngModel)]="proveedor.retencionesProveedor[0].tipoRetencion"
                                         [compareWith]="compareFn" class="form-control-sm ">
                                         <mat-option *ngFor="let tipoRetencionIvaBien of tiposRetencionesIvaBien "
                                             [value]="tipoRetencionIvaBien ">
@@ -393,7 +393,7 @@
                             <div class="col-5">
                                 <mat-form-field appearance="standard">
                                     <mat-label>%</mat-label>
-                                    <mat-select type="text " [(ngModel)]="proveedor.retencionesCliente[0].tipoRetencion"
+                                    <mat-select type="text " [(ngModel)]="proveedor.retencionesProveedor[0].tipoRetencion"
                                         [compareWith]="compareFn" class="form-control-sm ">
                                         <mat-option [value]="tipoRetencionIvaBien"
                                             *ngFor="let tipoRetencionIvaBien of tiposRetencionesIvaBien">
@@ -409,7 +409,7 @@
                             <div class="col-5">
                                 <mat-form-field appearance="standard">
                                     <mat-label>Código</mat-label>
-                                    <mat-select type="text" [(ngModel)]="proveedor.retencionesCliente[2].tipoRetencion"
+                                    <mat-select type="text" [(ngModel)]="proveedor.retencionesProveedor[2].tipoRetencion"
                                         [compareWith]="compareFn" class="form-control-sm ">
                                         <mat-option [value]="tipoRetencionIvaServicio"
                                             *ngFor="let tipoRetencionIvaServicio of tiposRetencionesIvaServicio">
@@ -421,7 +421,7 @@
                             <div class="col-5">
                                 <mat-form-field appearance="standard">
                                     <mat-label>%</mat-label>
-                                    <mat-select type="text" [(ngModel)]="proveedor.retencionesCliente[2].tipoRetencion"
+                                    <mat-select type="text" [(ngModel)]="proveedor.retencionesProveedor[2].tipoRetencion"
                                         [compareWith]="compareFn" class="form-control-sm ">
                                         <mat-option [value]="tipoRetencionIvaServicio"
                                             *ngFor="let tipoRetencionIvaServicio of tiposRetencionesIvaServicio">
@@ -429,7 +429,7 @@
                                         </mat-option>
                                     </mat-select>
                                 </mat-form-field>
-                            </div>
+                            </div-->
                         </div>
                     </mat-card>
                 </div>
@@ -444,10 +444,10 @@
                                 <br>
                                 <b>BIEN</b>
                             </div>
-                            <div class="col-5">
+                            <!--div class="col-5">
                                 <mat-form-field appearance="standard">
                                     <mat-label>Código</mat-label>
-                                    <mat-select type="text " [(ngModel)]="proveedor.retencionesCliente[1].tipoRetencion"
+                                    <mat-select type="text " [(ngModel)]="proveedor.retencionesProveedor[1].tipoRetencion"
                                         [compareWith]="compareFn" class="form-control-sm ">
                                         <mat-option [value]="tipoRetencionRentaBien"
                                             *ngFor="let tipoRetencionRentaBien of tiposRetencionesRentaBien ">
@@ -459,7 +459,7 @@
                             <div class="col-5">
                                 <mat-form-field appearance="standard">
                                     <mat-label>%</mat-label>
-                                    <mat-select type="text " [(ngModel)]="proveedor.retencionesCliente[1].tipoRetencion"
+                                    <mat-select type="text " [(ngModel)]="proveedor.retencionesProveedor[1].tipoRetencion"
                                         [compareWith]="compareFn" class="form-control-sm ">
                                         <mat-option [value]="tipoRetencionRentaBien"
                                             *ngFor="let tipoRetencionRentaBien of tiposRetencionesRentaBien ">
@@ -475,7 +475,7 @@
                             <div class="col-5">
                                 <mat-form-field appearance="standard">
                                     <mat-label>Código</mat-label>
-                                    <mat-select type="text " [(ngModel)]="proveedor.retencionesCliente[3].tipoRetencion"
+                                    <mat-select type="text " [(ngModel)]="proveedor.retencionesProveedor[3].tipoRetencion"
                                         [compareWith]="compareFn" class="form-control-sm ">
                                         <mat-option [value]="tipoRetencionesRentaServicio"
                                             *ngFor="let tipoRetencionesRentaServicio of tiposRetencionesRentaServicio ">
@@ -487,7 +487,7 @@
                             <div class="col-5">
                                 <mat-form-field appearance="standard">
                                     <mat-label>%</mat-label>
-                                    <mat-select type="text " [(ngModel)]="proveedor.retencionesCliente[3].tipoRetencion"
+                                    <mat-select type="text " [(ngModel)]="proveedor.retencionesProveedor[3].tipoRetencion"
                                         [compareWith]="compareFn" class="form-control-sm ">
                                         <mat-option [value]="tipoRetencionRentaServicio"
                                             *ngFor="let tipoRetencionRentaServicio of tiposRetencionesRentaServicio ">
@@ -495,7 +495,7 @@
                                         </mat-option>
                                     </mat-select>
                                 </mat-form-field>
-                            </div>
+                            </div-->
                         </div>
                     </mat-card>
                 </div>
