@@ -24,8 +24,8 @@ export class ProveedorService {
     );
   }
 
-  obtener(proveedor: Proveedor): Observable<Respuesta> {
-    return this.http.get<Respuesta>(environment.host + urn.ruta + urn.proveedor + urn.slash + proveedor.id, options).pipe(
+  obtener(proveedorId: number): Observable<Respuesta> {
+    return this.http.get<Respuesta>(environment.host + urn.ruta + urn.proveedor + urn.slash + proveedorId, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);

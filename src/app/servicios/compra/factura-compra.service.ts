@@ -1,0 +1,87 @@
+import { Injectable } from '@angular/core';
+import { Respuesta } from '../../respuesta';
+import { HttpClient } from '@angular/common/http';
+import { map, catchError } from 'rxjs/operators';
+import { Observable, throwError, BehaviorSubject, lastValueFrom } from 'rxjs';
+import { Router } from '@angular/router';
+import { urn, options } from '../../constantes';
+import { environment } from '../../../environments/environment';
+import { FacturaCompra } from '../../modelos/compra/factura-compra';
+
+@Injectable({
+  providedIn: 'root'
+})
+export class FacturaCompraService {
+
+  constructor(private http: HttpClient, private router: Router) { }
+
+  crear(facturaCompra: FacturaCompra): Observable<Respuesta> {
+    return this.http.post(environment.host + urn.ruta + urn.facturaCompra, facturaCompra, options).pipe(
+      map(response => response as Respuesta),
+      catchError(err => {
+        return throwError(()=>err);
+      })
+    );
+  }
+
+  obtener(facturaCompraId: number): Observable<Respuesta> {
+    return this.http.get<Respuesta>(environment.host + urn.ruta + urn.facturaCompra + urn.slash + facturaCompraId, options).pipe(
+      map(response => response as Respuesta),
+      catchError(err => {
+        return throwError(()=>err);
+      })
+    );
+  }
+
+  consultar(): Observable<Respuesta> {
+    return this.http.get(environment.host + urn.ruta + urn.facturaCompra, options).pipe(
+      map(response => response as Respuesta),
+      catchError(err => {
+        return throwError(()=>err);
+      }));
+  }
+
+  consultarActivos(): Observable<Respuesta> {
+    return this.http.get(environment.host + urn.ruta + urn.facturaCompra + urn.consultarActivos, options).pipe(
+      map(response => response as Respuesta),
+      catchError(err => {
+        return throwError(()=>err);
+      }));
+  }
+
+  actualizar(facturaCompra: FacturaCompra): Observable<Respuesta> {
+    return this.http.put(environment.host + urn.ruta + urn.facturaCompra, facturaCompra, options).pipe(
+      map(response => response as Respuesta),
+      catchError(err => {
+        return throwError(()=>err);
+      })
+    );
+  }
+
+  activar(facturaCompra: FacturaCompra): Observable<Respuesta> {
+    return this.http.patch(environment.host + urn.ruta + urn.facturaCompra + urn.activar, facturaCompra, options).pipe(
+      map(response => response as Respuesta),
+      catchError(err => {
+        return throwError(()=>err);
+      })
+    );
+  }
+
+  inactivar(facturaCompra: FacturaCompra): Observable<Respuesta> {
+    return this.http.patch(environment.host + urn.ruta + urn.facturaCompra + urn.inactivar, facturaCompra, options).pipe(
+      map(response => response as Respuesta),
+      catchError(err => {
+        return throwError(()=>err);
+      })
+    );
+  }
+
+  calcular(facturaCompra: FacturaCompra): Observable<Respuesta> {
+    return this.http.post(environment.host + urn.ruta + urn.facturaCompra + urn.calcular, facturaCompra, options).pipe(
+      map(response => response as Respuesta),
+      catchError(err => {
+        return throwError(err);
+      })
+    );
+  }
+}

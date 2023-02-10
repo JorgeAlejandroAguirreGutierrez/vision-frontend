@@ -44,6 +44,8 @@ export const urn =
      facturaEletronica: "/facturaEletronica",
      facturaFisica: "/facturaFisica",
      facturaDetalle: "/facturaDetalle",
+     facturaCompra: "/facturaCompra",
+     facturaCompraDetalle: "/facturaCompraDetalle",
      tipoRetencion: "/tipoRetencion",
      consultarBien: "/consultarBien",
      consultarServicio: "/consultarServicio",
@@ -108,6 +110,7 @@ export const urn =
      consultarIvaServicio: "/consultarIvaServicio",
      consultarRentaBien: "/consultarRentaBien",
      consultarRentaServicio: "/consultarRentaServicio",
+     obtenerPorAbreviatura: "/obtenerPorAbreviatura",
      equivalenciaMedida: "/tablaEquivalenciaMedida",
      buscarMedidasEquivalentes: "/buscarMedidasEquivalentes",
      personalizado: "/personalizado",
@@ -158,6 +161,7 @@ export const mensajes = {
      exito_agregar_detalle_factura : "SE AGREGO EL DETALLE",
      exito_crear_factura : "SE CREO LA FACTURA",
      exito_actualizar_factura : "SE ACTUALIZO LA FACTURA",
+     exito_kardex_inicializado : "KARDEX INICIALIZADO CON EXITO",
     // Mensajes de Error
      error_usuario : "INGRESE UN USUARIO",
      error_estacion_permiso : "NO TIENE PERMISOS PARA INGRESAR DESDE ESTE DISPOSITIVO",
@@ -179,6 +183,7 @@ export const mensajes = {
      error_impuesto : "ERROR EN IMPUESTO",
      error_costo : "ERROR EN COSTO",
      error_medida : "ERROR EN MEDIDA, DEBE SELECCIONAR UNA MEDIDA PARA EL KARDEX",
+     error_proveedor : "ERROR EN PROVEEDOR",
      error_nombre_producto : "INGRESE UN NOMBRE VÁLIDO",
      error_grupo_producto : "SELECCIONE UN GRUPO PARA EL PRODUCTO",
      error_sub_grupo_producto : "ERROR EN SUB GRUPO DE PRODUCTO",
@@ -213,7 +218,8 @@ export const mensajes = {
      error_ubicacion : "ERROR EN PROVINCIA, CANTON O PARROQUIA",
      mensaje_kardex_inicial : "INICIALIZAR KARDEX CON SALDO 0",
      error_medida_kardex : "ERROR MEDIDA KARDEX",
-     error_falta_datos : "DATOS INCOMPLETOS, FAVOR INGRESE TODOS LOS DATOS"
+     error_falta_datos : "DATOS INCOMPLETOS, FAVOR INGRESE TODOS LOS DATOS",
+     error_precio_venta_publico_manual : "EL PRECIO DE VENTA AL PUBLICO MANUAL DEBE SER MAYOR",
 }
 
 export const otras ={

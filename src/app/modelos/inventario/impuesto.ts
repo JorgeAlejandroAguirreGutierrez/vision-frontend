@@ -3,6 +3,8 @@ export class Impuesto {
     id:number;
     codigo:string;
     codigoSRI:string;
+    descripcion: string;
+    abreviatura: string;
     porcentaje: number;
     estado: string;
 

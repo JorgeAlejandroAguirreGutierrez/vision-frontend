@@ -42,9 +42,6 @@ import { TablaPromoIndComponent } from './inventarios/promocion/tabla-promo-ind/
 import { TablaPromoGrupComponent } from './inventarios/promocion/tabla-promo-grup/tabla-promo-grup.component';
 import { TablaComboComponent } from './inventarios/promocion/tabla-combo/tabla-combo.component';
 import { TablaComponenteComponent } from './inventarios/promocion/tabla-componente/tabla-componente.component';
-import { ProveedorProductoComponent } from './inventarios/proveedor-producto/proveedor-producto.component';
-import { TransferenciaBodegaComponent } from './inventarios/transferencia-bodega/transferencia-bodega.component';
-import { EquivalenciaMedidaComponent } from './inventarios/equivalencia-medida/equivalencia-medida.component';
 import { TipoRetencionComponent } from './configuraciones/tipo-retencion/tipo-retencion.component';
 
 //Módulo de Recaudaciones
@@ -64,7 +61,6 @@ import { VehiculoTransporteComponent } from './entregas/vehiculo-transporte/vehi
 //Módulo de Compras
 import { ProveedorComponent, DialogoMapaProveedorComponent } from './compras/proveedor/proveedor.component';
 import { FacturaCompraComponent } from './compras/factura-compra/factura-compra.component';
-import { PagoCompraComponent } from './compras/pago-compra/pago-compra.component';
 import { GrupoProveedorComponent } from './compras/grupo-proveedor/grupo-proveedor.component';
 
 //Módulo de Contabilidad
@@ -122,7 +118,6 @@ const routes: Routes = [
   { path: 'inventario/medida', component: MedidaComponent },
   { path: 'inventario/grupoproducto', component: GrupoProductoComponent },
   { path: 'promocion', component: PromocionComponent },
-  { path: 'inventario/equivalenciamedida', component: EquivalenciaMedidaComponent },
   // Rutas para el modulo de entregas
   { path: 'entrega', component: EntregaComponent },
   { path: 'cliente/vehiculotransporte', component: VehiculoTransporteComponent },
@@ -130,7 +125,6 @@ const routes: Routes = [
   { path: 'recaudacion', component: RecaudacionComponent },
   // Rutas para el modulo de compras
   { path: 'proveedor', component: ProveedorComponent },
-  { path: 'factura-compra', component: FacturaCompraComponent },
   // Rutas para el módulo de comprobantes
   { path: 'factura', component: FacturaComponent },
   // Estos no se usa, borrar al final
@@ -186,15 +180,12 @@ export const RoutingComponents = [
   BodegaComponent,
   MedidaComponent,
   KardexComponent,
-  ProveedorProductoComponent,
-  TransferenciaBodegaComponent,
   PromocionComponent,
   DialogComponente,
   TablaPromoIndComponent,
   TablaPromoGrupComponent,
   TablaComboComponent,
   TablaComponenteComponent,
-  EquivalenciaMedidaComponent,
   FiltroSerie,
   // Entregas
   EntregaComponent,
@@ -212,7 +203,6 @@ export const RoutingComponents = [
   ProveedorComponent,
   DialogoMapaProveedorComponent,
   FacturaCompraComponent,
-  PagoCompraComponent,
   GrupoProveedorComponent,
   // Contabilidad
   ContabilizacionComponent,
