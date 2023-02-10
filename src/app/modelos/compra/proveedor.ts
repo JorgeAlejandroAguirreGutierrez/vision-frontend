@@ -63,14 +63,8 @@ export class Proveedor {
         this.formaPago = new FormaPago();
         this.plazoCredito = new PlazoCredito();
         this.montoFinanciamiento = valores.cero;
-
         this.telefonosProveedor = [];
         this.celularesProveedor = [];
         this.correosProveedor = [];
-        //this.retencionesProveedor=[];
-        //this.retencionesProveedor.push(new RetencionCliente());
-        //this.retencionesProveedor.push(new RetencionCliente());
-        //this.retencionesProveedor.push(new RetencionCliente());
-        //this.retencionesProveedor.push(new RetencionCliente());
     }
 }

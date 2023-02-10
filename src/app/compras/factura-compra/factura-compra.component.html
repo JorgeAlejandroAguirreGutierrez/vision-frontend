@@ -1,785 +1,459 @@
 <div class="contenedor">
-    <mat-horizontal-stepper [linear]="isLinear" #stepper>
-        <!-- Paso Facturación -->
-        <mat-step [stepControl]="firstFormGroup" [editable]="isEditable" [completed]="false">
-            <ng-template matStepLabel>Factura de Compra</ng-template>
-            <nav class="navbar-light nav-fijo">
-                <ul class="navbar-nav">
-                    <li class="nav-item">
-                        <a class="nav-link" href="#" role="button" (click)="crear($event)"
-                            *ngIf="cliente.id==0; else block_actualizar">
-                            <mat-icon>save</mat-icon>
-                        </a>
-                        <ng-template #block_actualizar>
-                            <a class="nav-link" href="#" role="button" (click)="actualizar($event)">
-                                <mat-icon>update</mat-icon>
-                            </a>
-                        </ng-template>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#" role="button" (click)="nuevo($event)">
-                            <mat-icon>note_add</mat-icon>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#" role="button" (click)="$event.preventDefault()">
-                            <mat-icon>archive</mat-icon>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#" role="button" (click)="$event.preventDefault()">
-                            <mat-icon>publish</mat-icon>
-                        </a>
-                    </li>
-                </ul>
-            </nav>
-            <div class="row">
+    <nav class="navbar-light nav-fijo">
+        <ul class="navbar-nav">
+            <li class="nav-item" *ngIf="facturaCompra.id==0">
+                <a class="nav-link" title="Nuevo" role="button" (click)="nuevo($event)">
+                    <mat-icon>file_copy</mat-icon>
+                </a>
+            </li>
+            <li class="nav-item" *ngIf="facturaCompra.id==0">
+                <a class="nav-link" title="Guardar" role="button" (click)="crear($event)">
+                    <mat-icon>save</mat-icon>
+                </a>
+            </li>
+            <li class="nav-item" *ngIf="facturaCompra.id!=0">
+                <a class="nav-link" title="Actualizar" role="button" (click)="actualizar($event)">
+                    <mat-icon>update</mat-icon>
+                </a>
+            </li>
+            <li class="nav-item" *ngIf="facturaCompra.id!=0">
+                <a class="nav-link" title="Activar" role="button" (click)="activar($event)">
+                    <mat-icon>check</mat-icon>
+                </a>
+            </li>
+            <li class="nav-item" *ngIf="facturaCompra.id!=0">
+                <a class="nav-link" title="Inactivar" role="button" (click)="inactivar($event)">
+                    <mat-icon>delete</mat-icon>
+                </a>
+            </li>
+        </ul>
+    </nav>
+    <ng-template matStepLabel>Factura de Compra</ng-template>
+    <mat-divider></mat-divider>
+    <mat-accordion class="headers-align">
+        <mat-expansion-panel (opened)="panelOpenState = true" (closed)="panelOpenState = false" [expanded]="true">
+            <mat-expansion-panel-header>
+                <mat-panel-title>
+                    <i><u>DATOS PARA FACTURA</u></i>
+                </mat-panel-title>
+                <mat-panel-description>
+                    {{panelOpenState ? 'Ocultar sección' : 'Información del cliente para facturar'}}
+                    <mat-icon>account_circle</mat-icon>
+                </mat-panel-description>
+            </mat-expansion-panel-header>
+            <mat-divider></mat-divider>
+            <div class="form-group form-row">
                 <div class="col-12">
-                    <div class="card">
-                        <div class="card-header">
-                            &nbsp;&nbsp;&nbsp;&nbsp;<i><u>FACTURA DE COMPRA</u></i>
+                    <mat-form-field appearance="standard">
+                        <mat-label>Proveedor</mat-label>
+                        <mat-autocomplete #proveedor="matAutocomplete" [displayWith]="verProveedor"
+                            (optionSelected)="seleccionarProveedor()">
+                            <mat-option *ngFor="let proveedor of filtroProveedores | async" [value]="proveedor">
+                                {{proveedor.razonSocial}}
+                            </mat-option>
+                        </mat-autocomplete>
+                        <input matInput type="text" class="form-control-sm" placeholder="Razon Social"
+                            [formControl]="seleccionProveedor" [matAutocomplete]="proveedor">
+                    </mat-form-field>
+                </div>
+                <div class="col-12">
+                    <mat-form-field appearance="standard">
+                        <mat-label>Direccion</mat-label>
+                        <input matInput type="text" [(ngModel)]="facturaCompra.proveedor.direccion"
+                            class="form-control-sm" [disabled]="true">
+                    </mat-form-field>
+                </div>
+                <div class="col-3">
+                    <mat-form-field appearance="standard">
+                        <mat-label>Teléfono</mat-label>
+                        <b matPrefix>+593 &nbsp;</b>
+                        <input matInput type="tel" [(ngModel)]="telefono" class="form-control-sm" [disabled]="true">
+                    </mat-form-field>
+                </div>
+                <div class="col-1 iconos">
+                    <button mat-button mat-icon-button (click)="open(modalTelefonos)">
+                        <mat-icon>visibility</mat-icon>
+                    </button>
+                </div>
+                <div class="col-3">
+                    <mat-form-field appearance="standard">
+                        <mat-label>Celular</mat-label>
+                        <b matPrefix>+593</b>
+                        <input matInput type="tel" [(ngModel)]="celular" class="form-control-sm" [disabled]="true">
+                    </mat-form-field>
+                </div>
+                <div class="col-1 iconos">
+                    <button mat-button mat-icon-button (click)="open(modalCelulares)">
+                        <mat-icon>visibility</mat-icon>
+                    </button>
+                </div>
+                <div class="col-3">
+                    <mat-form-field appearance="standard">
+                        <mat-label>Correo electrónico</mat-label>
+                        <input matInput type="text" [(ngModel)]="correo" class="form-control-sm" [disabled]="true">
+                    </mat-form-field>
+                </div>
+                <div class="col-1 iconos">
+                    <button mat-button mat-icon-button (click)="open(modalCorreos)">
+                        <mat-icon>visibility</mat-icon>
+                    </button>
+                </div>
+                <div class="col-3">
+                    <mat-form-field appearance="standard">
+                        <mat-label>Bodega</mat-label>
+                        <mat-select [(ngModel)]="facturaCompra.bodega" [compareWith]="compareFn" class="form-control-sm">
+                            <mat-option *ngFor="let bodega of bodegas; let i=index" [value]="bodega">
+                                {{bodega.nombre}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+                <div class="col-2">
+                    <mat-form-field appearance="standard">
+                        <mat-label>Fecha</mat-label>
+                        <input matInput type="date" value="{{facturaCompra.fecha | date:'yyyy-MM-dd'}}"
+                            class="form-control-sm" [disabled]="true">
+                    </mat-form-field>
+                </div>
+                <div class="col-3">
+                    <mat-form-field appearance="standard">
+                        <mat-label>Secuencia</mat-label>
+                        <input matInput type="text" class="form-control-sm" [(ngModel)]="facturaCompra.secuencia"
+                            [disabled]="true">
+                    </mat-form-field>
+                </div>
+                <div class="col-2">
+                    <mat-form-field appearance="standard">
+                        <mat-label>Usuario</mat-label>
+                        <input matInput type="text" class="form-control-sm"
+                            [(ngModel)]="facturaCompra.sesion.usuario.nombre" [disabled]="true">
+                    </mat-form-field>
+                </div>
+                <div class="col-2">
+                    <mat-form-field appearance="standard">
+                        <mat-label>Estado</mat-label>
+                        <mat-select class="form-control-sm" [(ngModel)]="facturaCompra.estado" [disabled]="true">
+                            <mat-option value="EMITIDA">EMITIDA</mat-option>
+                            <mat-option value="ANULADA">ANULADA</mat-option>
+                            <mat-option value="FACTURADA">FACTURADA</mat-option>
+                            <mat-option value="NO FACTURADA">NO FACTURADA</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+            </div>
+        </mat-expansion-panel>
+        <mat-expansion-panel (opened)="panelOpenState = true" (closed)="panelOpenState = false">
+            <mat-expansion-panel-header>
+                <mat-panel-title>
+                    <i><u>DETALLE FACTURA DE COMPRA</u></i>
+                </mat-panel-title>
+                <mat-panel-description>
+                    {{panelOpenState ? 'Ocultar sección' : 'Productos de la factura'}}
+                    <mat-icon>playlist_add_check</mat-icon>
+                </mat-panel-description>
+            </mat-expansion-panel-header>
+            <mat-divider></mat-divider>
+            <div class="form-group form-row">
+                <div class="col-3">
+                    <mat-form-field appearance="standard">
+                        <mat-label>Código</mat-label>
+                        <input matInput type="text" [(ngModel)]="facturaCompraDetalle.producto.codigo" class="form-control-sm" [disabled]="true">
+                    </mat-form-field>
+                </div>
+                <div class="col-3">
+                    <mat-form-field appearance="standard">
+                        <mat-label>Producto</mat-label>
+                        <mat-autocomplete #producto="matAutocomplete" [displayWith]="verProducto"
+                            (optionSelected)="seleccionarProducto()" (opened)="consultarProductos()">
+                            <mat-option *ngFor="let producto of filtroProductos | async" [value]="producto">
+                                {{producto.nombre}}
+                            </mat-option>
+                        </mat-autocomplete>
+                        <input matInput type="text" class="form-control-sm" placeholder="Producto"
+                            [formControl]="seleccionProducto" [matAutocomplete]="producto">
+                    </mat-form-field>
+                </div>
+                <div class="col-3">
+                    <mat-form-field appearance="standard">
+                        <mat-label>Categoría</mat-label>
+                        <input matInput type="text" [(ngModel)]="facturaCompraDetalle.producto.categoriaProducto.abreviatura" class="form-control-sm" [disabled]="true">
+                    </mat-form-field>
+                </div>
+                <div class="col-3">
+                    <mat-form-field appearance="standard">
+                        <mat-label>Medida</mat-label>
+                        <input matInput type="text" [(ngModel)]="facturaCompraDetalle.producto.medida.descripcion" class="form-control-sm" [disabled]="true">
+                    </mat-form-field>
+                </div>
+                <div class="col-2">
+                    <mat-form-field appearance="standard">
+                        <mat-label>Cantidad</mat-label>
+                        <input matInput type="text" [(ngModel)]="facturaCompraDetalle.cantidad"
+                            (change)="seleccionarCantidad()" class="form-control-sm">
+                    </mat-form-field>
+                </div>
+                <div class="col-2">
+                    <mat-form-field appearance="standard">
+                        <mat-label>Costo Unit.</mat-label>
+                        <input matInput type="text" class="form-control-sm" [(ngModel)]="facturaCompraDetalle.costoUnitario">
+                    </mat-form-field>
+                </div>
+                <div class="col-2">
+                    <mat-form-field appearance="standard">
+                        <mat-label>Desc. $</mat-label>
+                        <input matInput type="text" step="0.01" [(ngModel)]="facturaCompraDetalle.valorDescuentoLinea" (change)="seleccionarValorDescuentoLinea()" class="form-control-sm">
+                    </mat-form-field>
+                </div>
+                <div class="col-2">
+                    <mat-form-field appearance="standard">
+                        <mat-label>Desc. %</mat-label>
+                        <input matInput type="text" min="0" max="100" step="0.01" [(ngModel)]="facturaCompraDetalle.porcentajeDescuentoLinea" (change)="seleccionarPorcentajeDescuentoLinea()" class="form-control-sm">
+                    </mat-form-field>
+                </div>
+                <div class="col-2">
+                    <mat-form-field appearance="standard">
+                        <mat-label>IVA</mat-label>
+                        <mat-select [(ngModel)]="facturaCompraDetalle.impuesto" [compareWith]="compareFn"
+                            (selectionChange)="seleccionarImpuesto()" class="form-control-sm">
+                            <mat-option *ngFor="let impuesto of impuestos" [value]="impuesto">
+                                {{impuesto.porcentaje}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+                <div class="col-2">
+                    <mat-form-field appearance="standard">
+                        <mat-label>Total</mat-label>
+                        <input matInput type="text" [(ngModel)]="facturaCompraDetalle.totalSinDescuentoLinea"
+                            class="form-control-sm" [disabled]="true">
+                    </mat-form-field>
+                </div>
+                <div class="col-11">
+                    <mat-form-field appearance="outline">
+                        <mat-label>Comentario</mat-label>
+                        <textarea matInput [(ngModel)]="facturaCompraDetalle.comentario" placeholder="Sobre el producto..."
+                            class="form-control" rows="1"></textarea>
+                    </mat-form-field>
+                </div>
+                <div class="col-1 iconos">
+                    <button mat-icon-button mat-button (click)="agregarFacturaCompraDetalle(null)">
+                        <mat-icon>add_shopping_cart</mat-icon>
+                    </button>
+                </div>
+                <div class="mat-elevation-z8 col-12">
+                    <table mat-table [dataSource]="dataSourceFacturaCompraDetalle" matSort>
+                        <!-- Nombre Columna -->
+                        <ng-container matColumnDef="codigo">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header> Codigo </th>
+                            <td mat-cell *matCellDef="let facturaCompraDetalle"> {{facturaCompraDetalle.producto.codigo}}
+                            </td>
+                        </ng-container>
+                        <ng-container matColumnDef="nombre">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header> Producto </th>
+                            <td mat-cell *matCellDef="let facturaCompraDetalle"> {{facturaCompraDetalle.producto.nombre}}
+                            </td>
+                        </ng-container>
+                        <!-- Descripcion Columna -->
+                        <ng-container matColumnDef="medida">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header> Med </th>
+                            <td mat-cell *matCellDef="let facturaCompraDetalle">
+                                {{facturaCompraDetalle.producto.medida.abreviatura}} </td>
+                        </ng-container>
+                        <!-- Cantidad Columna -->
+                        <ng-container matColumnDef="cantidad">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header>Cant </th>
+                            <td mat-cell *matCellDef="let facturaCompraDetalle">
+                                {{facturaCompraDetalle.cantidad}} </td>
+                        </ng-container>
+                        <!-- Valor Columna -->
+                        <ng-container matColumnDef="costoUnitario">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header>Costo Unit </th>
+                            <td mat-cell *matCellDef="let facturaCompraDetalle">
+                                ${{facturaCompraDetalle.costoUnitario }} </td>
+                        </ng-container>
+                        <!-- Descuento Columna -->
+                        <ng-container matColumnDef="valorDescuento">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header> Desc. </th>
+                            <td mat-cell *matCellDef="let facturaCompraDetalle">
+                                ${{facturaCompraDetalle.valorDescuentoLinea}} </td>
+                        </ng-container>
+                        <!-- Descuento% Columna -->
+                        <ng-container matColumnDef="porcentajeDescuento">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header> Desc% </th>
+                            <td mat-cell *matCellDef="let facturaCompraDetalle">
+                                {{facturaCompraDetalle.porcentajeDescuentoLinea}}% </td>
+                        </ng-container>
+                        <!-- Impuesto Columna -->
+                        <ng-container matColumnDef="impuesto">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header> IVA </th>
+                            <td mat-cell *matCellDef="let facturaCompraDetalle">
+                                {{facturaCompraDetalle.impuesto.porcentaje}}% </td>
+                        </ng-container>
+                        <!-- Total Columna -->
+                        <ng-container matColumnDef="total">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header> Total </th>
+                            <td mat-cell *matCellDef="let facturaCompraDetalle">
+                                ${{facturaCompraDetalle.totalSinDescuentoLinea}} </td>
+                        </ng-container>
+                        <!-- Entregado Columna -->
+                        <ng-container matColumnDef="acciones">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header> Acciones </th>
+                            <td mat-cell *matCellDef="let i=index">
+                                <button mat-icon-button color="primary" focusable="false"
+                                    (click)="eliminarFacturaCompraDetalle(i)">
+                                    <i class="fa fa-times mat-icon"></i>
+                                </button>
+                            </td>
+                        </ng-container>
+                        <tr mat-header-row *matHeaderRowDef="columnasFacturaCompraDetalle"></tr>
+                        <tr mat-row *matRowDef="let row; columns: columnasFacturaCompraDetalle;"></tr>
+                    </table>
+                    <ng-container>
+                        <mat-paginator #paginatorFacturaCompraDetalle [pageSizeOptions]="[5, 10, 25, 100]">
+                        </mat-paginator>
+                    </ng-container>
+                </div>
+                <mat-divider></mat-divider>
+                <div class="form-group form-row">
+                    <div class="form-row col-3 pl-3 pr-3">
+                        <div class="col-12"></div>
+                        <div class="col-6">
+                            <mat-form-field appearance="standard">
+                                <mat-label>Desc $</mat-label>
+                                <input matInput type="text" min="0" max="100" step="0.01"
+                                    [(ngModel)]="facturaCompra.valorDescuentoTotal"
+                                    (change)="seleccionarValorDescuentoTotal()" class="form-control-sm">
+                            </mat-form-field>
                         </div>
-                        <div class="card-body">
-                            <div class="form-row col-12">
-                                <div class="form-group col-2">
+                        <div class="col-6">
+                            <mat-form-field appearance="standard">
+                                <mat-label>Desc %</mat-label>
+                                <input matInput type="text" min="0" max="100" step="0.01"
+                                    [(ngModel)]="facturaCompra.porcentajeDescuentoTotal"
+                                    (change)="seleccionarPorcentajeDescuentoTotal()" class="form-control-sm">
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <div class="col-5 linea-vertical">
+                        <br>
+                        <div class="col-12">
+                            <mat-form-field appearance="outline">
+                                <mat-label>Comentario</mat-label>
+                                <textarea matInput [(ngModel)]="facturaCompra.comentario"
+                                    placeholder="Referente a la factura..." class="form-control" rows="3"></textarea>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        <mat-card>
+                            <div class="form-group form-row">
+                                <div class="col-7 negrita centrar-vertical-izq">
+                                    <mat-label>Subtotal :</mat-label>
+                                </div>
+                                <div class="col-5">
                                     <mat-form-field appearance="standard">
-                                        <mat-label>Fecha</mat-label>
-                                        <input matInput type="date" value="{{factura.fecha | date:'yyyy-MM-dd'}}"
-                                            class="form-control-sm">
+                                        <input matInput type="text" [(ngModel)]="facturaCompra.subtotalSinDescuento"
+                                            class="form-control-sm" [disabled]="true">
                                     </mat-form-field>
                                 </div>
-                                <div class="form-group col-1">
+                                <div class="col-7 negrita centrar-vertical-izq">
+                                    <mat-label>Descuento :</mat-label>
+                                </div>
+                                <div class="col-5">
                                     <mat-form-field appearance="standard">
-                                        <mat-label>Estab.</mat-label>
-                                        <input matInput type="text" class="form-control-sm"
-                                            [(ngModel)]="factura.sesion.usuario.estacion.establecimiento.codigo">
+                                        <input matInput type="text" [(ngModel)]="facturaCompra.descuentoTotal"
+                                            class="form-control-sm" [disabled]="true">
                                     </mat-form-field>
                                 </div>
-                                <div class="form-group col-1">
+                                <div class="col-7 negrita centrar-vertical-izq">
+                                    <mat-label>Subtotal Grabado :</mat-label>
+                                </div>
+                                <div class="col-5">
                                     <mat-form-field appearance="standard">
-                                        <mat-label>Punto V.</mat-label>
-                                        <input matInput type="text" class="form-control-sm"
-                                            [(ngModel)]="factura.sesion.usuario.estacion.codigo">
+                                        <input matInput type="text " [(ngModel)]="facturaCompra.subtotalBase12SinDescuento"
+                                            class="form-control-sm " [disabled]="true">
                                     </mat-form-field>
                                 </div>
-                                <div class="form-group col-2">
+                                <div class="col-7 negrita centrar-vertical-izq">
+                                    <mat-label>Subtotal No Grabado :</mat-label>
+                                </div>
+                                <div class="col-5">
                                     <mat-form-field appearance="standard">
-                                        <mat-label>Secuencia</mat-label>
-                                        <input matInput type="text" class="form-control-sm"
-                                            [(ngModel)]="factura.secuencia">
+                                        <input matInput type="text " [(ngModel)]="facturaCompra.subtotalBase0SinDescuento"
+                                            class="form-control-sm " [disabled]="true">
                                     </mat-form-field>
                                 </div>
-                                <div class="form-group col-2">
+                                <div class="col-7 negrita centrar-vertical-izq">
+                                    <mat-label>Importe IVA :</mat-label>
+                                </div>
+                                <div class="col-5">
                                     <mat-form-field appearance="standard">
-                                        <mat-label>Documento</mat-label>
-                                        <mat-select [(ngModel)]="cliente.grupoCliente.id" class="form-control-sm">
-                                            <mat-option *ngFor="let grupoCliente of gruposClientes"
-                                                [value]="grupoCliente.id">
-                                                {{grupoCliente.descripcion}}
-                                            </mat-option>
-                                        </mat-select>
+                                        <input matInput type="text " [(ngModel)]="facturaCompra.ivaSinDescuento"
+                                            class="form-control-sm " [disabled]="true">
                                     </mat-form-field>
                                 </div>
-                                <div class="form-group col-2">
-                                    <br>
-                                    <mat-checkbox [(ngModel)]="cliente.tipoContribuyente.obligadoContabilidad"
-                                        class="form-control-sm" color="primary">S. Créd. Trib.</mat-checkbox>
+                                <div class="col-7 negrita centrar-vertical-izq">
+                                    <mat-label class="negrita">TOTAL :</mat-label>
                                 </div>
-                                <div class="form-group col-2">
+                                <div class="col-5">
                                     <mat-form-field appearance="standard">
-                                        <mat-label>Estado</mat-label>
-                                        <mat-select class="form-control-sm" [(ngModel)]="estado">
-                                            <mat-option value="EMITIDA">EMITIDA</mat-option>
-                                            <mat-option value="ANULADA">ANULADA</mat-option>
-                                        </mat-select>
+                                        <input matInput type="text " [(ngModel)]="facturaCompra.totalSinDescuento" class="form-control-sm" [disabled]="true">
                                     </mat-form-field>
-                                </div>
-                                <div class="form-group col-2">
-                                    <mat-form-field appearance="standard">
-                                        <mat-label>Identificación</mat-label>
-                                        <input matInput type="text" [(ngModel)]="cliente.identificacion"
-                                            oninput="this.value = this.value.toUpperCase()" class="form-control-sm"
-                                            (change)="validarIdentificacion()">
-                                    </mat-form-field>
-                                </div>
-                                <div class="form-group col-8">
-                                    <mat-form-field appearance="standard" class="grande">
-                                        <mat-label>Razón Social</mat-label>
-                                        <input matInput type="text" [(ngModel)]="cliente.razonSocial"
-                                            oninput="this.value = this.value.toUpperCase()" class="form-control-sm">
-                                        <button mat-button *ngIf="cliente.razonSocial" matSuffix mat-icon-button
-                                            (click)="cliente.razonSocial=''">
-                                            <mat-icon>close</mat-icon>
-                                        </button>
-                                    </mat-form-field>
-                                </div>
-                                <div class="form-group col-2">
-                                    <mat-form-field appearance="standard">
-                                        <mat-label>Deuda Actual</mat-label>
-                                        <input matInput type="text" class="form-control-sm"
-                                            [(ngModel)]="cliente.tipoIdentificacion" disabled>
-                                    </mat-form-field>
-                                </div>
-                                <div class="form-group col-6">
-                                    <mat-form-field appearance="standard" class="grande">
-                                        <mat-label>Autorización</mat-label>
-                                        <input matInput type="text" [(ngModel)]="cliente.codigo"
-                                            class="form-control-sm">
-                                    </mat-form-field>
-                                </div>
-                                <div class="form-group col-2">
-                                    <mat-form-field appearance="standard">
-                                        <mat-label>Referencia</mat-label>
-                                        <mat-select [(ngModel)]="cliente.grupoCliente.id" class="form-control-sm">
-                                            <mat-option *ngFor="let grupoCliente of gruposClientes"
-                                                [value]="grupoCliente.id">
-                                                {{grupoCliente.descripcion}}
-                                            </mat-option>
-                                        </mat-select>
-                                    </mat-form-field>
-                                </div>
-                                <div class="form-group col-2">
-                                    <mat-form-field appearance="standard" class="grande">
-                                        <mat-label>No. Referencia</mat-label>
-                                        <input matInput type="text" [(ngModel)]="cliente.codigo"
-                                            class="form-control-sm">
-                                    </mat-form-field>
-                                </div>
-                                <div class="form-group col-2">
-                                    <br>
-                                    <button mat-raised-button color="primary" focusable="false" (click)="guardar()">
-                                        Importar Factura
-                                    </button>
                                 </div>
                             </div>
-                        </div>
+                        </mat-card>
                     </div>
                 </div>
             </div>
+        </mat-expansion-panel>
+    </mat-accordion>
+    <mat-accordion class="headers-align">
+        <mat-expansion-panel (opened)="abrirPanelAdmin = true" (closed)="abrirPanelAdmin = false">
+            <mat-expansion-panel-header>
+                <mat-panel-title>
+                    <i><u>GESTIONAR FACTURAS DE COMPRAS</u></i>
+                </mat-panel-title>
+                <mat-panel-description>
+                    {{abrirPanelAdmin ? 'Ocultar administrador de facturas de compras' : 'Editar facturas de compras
+                    existentes'}}
+                    <mat-icon>group</mat-icon>
+                </mat-panel-description>
+            </mat-expansion-panel-header>
+            <hr>
+            <mat-form-field appearance="standard">
+                <mat-label>Buscar factura de compra</mat-label>
+                <input matInput (keyup)="filtro($event)" placeholder="Ej. 001" #input>
+            </mat-form-field>
+            <div class="mat-elevation-z8">
+                <table mat-table [dataSource]="dataSourceFacturaCompra" matSort>
+                    <!-- Columnas Dinamicas -->
+                    <ng-container *ngFor="let columna of columnas" [matColumnDef]="columna.nombreColumna">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> {{ columna.cabecera }} </th>
+                        <td mat-cell *matCellDef="let row"> {{ columna.celda(row) }} </td>
 
-            <mat-accordion class="headers-align">
-                <mat-expansion-panel (opened)="panelOpenState = true" (closed)="panelOpenState = false">
-                    <mat-expansion-panel-header>
-                        <mat-panel-title>
-                            <i><u>DETALLE FACTURA</u></i>
-                        </mat-panel-title>
-                        <mat-panel-description>
-                            {{panelOpenState ? 'Ocultar sección' : 'Ingresar la ubicacion del cliente'}}
-                            <mat-icon>map</mat-icon>
-                        </mat-panel-description>
-                    </mat-expansion-panel-header>
-                    <mat-divider></mat-divider>
-                    <div class="row">
-                        <div class="form-row col-12">
-                            <div class="form-group col-2">
-                                <mat-form-field appearance="standard" class="grande">
-                                    <mat-label>Código</mat-label>
-                                    <input matInput type="text" class="form-control-sm"
-                                        [(ngModel)]="facturaDetalle.producto.codigo" disabled>
-                                </mat-form-field>
-                            </div>
-                            <div class="form-group col-1">
-                                <mat-form-field appearance="standard">
-                                    <mat-label>B/S/AF</mat-label>
-                                    <input matInput type="text" [(ngModel)]="facturaDetalle.producto.categoriaProducto.abreviatura"
-                                        class="form-control-sm" disabled>
-                                </mat-form-field>
-                            </div>
-                            <div class="form-group col-1">
-                                <mat-form-field appearance="standard">
-                                    <mat-label>Consig.</mat-label>
-                                    <mat-select class="form-control-sm" [(ngModel)]="facturaDetalle.producto.consignacion"
-                                        disabled>
-                                        <mat-option [value]="false">NO</mat-option>
-                                        <mat-option [value]="true">SI</mat-option>
-                                    </mat-select>
-                                </mat-form-field>
-                            </div>
-                            <div class="form-group col-1">
-                                <mat-form-field appearance="standard">
-                                    <mat-label>Ult. Costo</mat-label>
-                                    <input matInput type="text" [(ngModel)]="costoUltimo" class="form-control-sm"
-                                        disabled>
-                                </mat-form-field>
-                            </div>
-                            <div class="form-group col-1">
-                                <mat-form-field appearance="standard">
-                                    <mat-label>Costo Prom</mat-label>
-                                    <input matInput type="text" [(ngModel)]="costoPromedio" class="form-control-sm"
-                                        disabled>
-                                </mat-form-field>
-                            </div>
-                            <div class="form-group col-1">
-                                <mat-form-field appearance="standard">
-                                    <mat-label>Saldo</mat-label>
-                                    <input matInput type="text" class="form-control-sm" [(ngModel)]="stockIndividual"
-                                        disabled>
-                                </mat-form-field>
-                            </div>
-                            <div class="form-group col-1 ">
-                                <mat-form-field appearance="standard">
-                                    <mat-label>S. Total</mat-label>
-                                    <input matInput type="text " class="form-control-sm " [(ngModel)]="stockTotal"
-                                        disabled>
-                                </mat-form-field>
-                            </div>
-                            <div class="form-group col-2">
-                                <mat-form-field appearance="standard">
-                                    <mat-label>Dist con IVA</mat-label>
-                                    <input matInput type="text" class="form-control-sm" [(ngModel)]="stockIndividual">
-                                </mat-form-field>
-                            </div>
-                            <div class="form-group col-2">
-                                <mat-form-field appearance="standard">
-                                    <mat-label>Dist sin IVA</mat-label>
-                                    <input matInput type="text" class="form-control-sm" [(ngModel)]="stockIndividual">
-                                </mat-form-field>
-                            </div>
-                            <mat-divider></mat-divider>
-                        </div>
-                        <div class="form-row col-12">
-                            <div class="form-group col-7">
-                            </div>
-                            <div class="form-group col-1">
-                                <mat-form-field appearance="standard">
-                                    <mat-label>PR</mat-label>
-                                    <mat-select class="form-control-sm"
-                                        (selectionChange)="cambiarProductos($event.value)" [(value)]="categoriaProducto">
-                                        <mat-option value="B">B</mat-option>
-                                        <mat-option value="S">S</mat-option>
-                                        <mat-option value="AF">AF</mat-option>
-                                    </mat-select>
-                                </mat-form-field>
-                            </div>
-                            <div class="form-group col-3">
-                                <mat-form-field appearance="standard">
-                                    <mat-label>Bodega</mat-label>
-                                    <mat-select class="form-control-sm" >
-                                        <mat-option *ngFor="let bodega of bodegas; let i=index" [value]="bodega">
-                                            {{bodega.codigo}}
-                                        </mat-option>
-                                    </mat-select>
-                                </mat-form-field>
-                            </div>
-                            <div class="form-group col-1 ">
-                                <br>
-                                <button class="btn btn-primary btn-circle " disabled>
-                                    <mat-icon>visibility</mat-icon>
-                                </button>&nbsp;&nbsp;
-                                <button class="btn btn-primary btn-circle" (click)="agregarFacturaDetalle()">
-                                    <mat-icon>add</mat-icon>
-                                </button>
-                            </div>
-                            <div class="form-row">
-                                <div class="form-group col-1">
-                                    <mat-form-field appearance="standard" class="grande">
-                                        <mat-label>Cantidad</mat-label>
-                                        <input matInput type="text" [(ngModel)]="facturaDetalle.cantidad"
-                                            (change)="seleccionarCantidad()" class="form-control-sm">
-                                    </mat-form-field>
-                                </div>
-                                <div class="form-group col-1">
-                                    <mat-form-field appearance="standard" class="grande">
-                                        <mat-label>Medida</mat-label>
-                                        <mat-select [(ngModel)]="facturaDetalle.precio.medida" class="form-control-sm">
-                                            <mat-option *ngFor="let medida of medidas" [value]="medida">
-                                                {{medida.descripcion}}
-                                            </mat-option>
-                                        </mat-select>
-                                    </mat-form-field>
-                                </div>
-                                <div class="form-group col-1">
-                                    <mat-form-field appearance="standard" class="grande">
-                                        <mat-label>P. Unit.</mat-label>
-                                        <mat-select (selectionChange)="seleccionarPrecio()"
-                                            [(ngModel)]="facturaDetalle.precio" class="form-control-sm">
-                                            <mat-option>NA</mat-option>
-                                        </mat-select>
-                                    </mat-form-field>
-                                </div>
-                                <div class="form-group col-1">
-                                    <mat-form-field appearance="standard" class="grande">
-                                        <mat-label>Desc. $</mat-label>
-                                        <input matInput type="text" step="0.01"
-                                            [(ngModel)]="facturaDetalle.valorDescuentoLinea"
-                                            (change)="seleccionarValorDescuentoLinea()" class="form-control-sm">
-                                    </mat-form-field>
-                                </div>
-                                <div class="form-group col-1">
-                                    <mat-form-field appearance="standard" class="grande">
-                                        <mat-label>Desc. %</mat-label>
-                                        <input matInput type="text" min="0" max="100" step="0.01"
-                                            [(ngModel)]="facturaDetalle.porcentajeDescuentoLinea"
-                                            (change)="seleccionarPorcentajeDescuentoLinea()"
-                                            class="form-control-sm">
-                                    </mat-form-field>
-                                </div>
-                                <div class="form-group col-1">
-                                    <mat-form-field appearance="standard" class="grande">
-                                        <mat-label>IVA</mat-label>
-                                        <mat-select class="form-control-sm" [(ngModel)]="facturaDetalle.impuesto">
-                                            <mat-option *ngFor="let impuesto of impuestos" [value]="impuesto">
-                                                {{impuesto.porcentaje}}
-                                            </mat-option>
-                                        </mat-select>
-                                    </mat-form-field>
-                                </div>
-                                <div class="form-group col-1">
-                                    <mat-form-field appearance="standard" class="grande">
-                                        <mat-label>TOTAL</mat-label>
-                                        <input matInput type="text" [(ngModel)]="facturaDetalle.totalConDescuentoLinea"
-                                            class="form-control-sm" disabled>
-                                    </mat-form-field>
-                                </div>
-                                <div class="form-group col-1">
-                                    <mat-form-field appearance="standard" class="grande">
-                                        <mat-label>Inventario</mat-label>
-                                        <mat-select class="form-control-sm" [(ngModel)]="detalleEntregado">
-                                            <mat-option value="F1">I</mat-option>
-                                            <mat-option value="F2">C</mat-option>
-                                            <mat-option value="F3">G</mat-option>
-                                            <mat-option value="F4">P</mat-option>
-                                        </mat-select>
-                                    </mat-form-field>
-                                </div>
-                                <div class="form-group col-4">
-                                    <mat-form-field appearance="outline" class="grande">
-                                        <mat-label>Comentario</mat-label>
-                                        <textarea matInput [(ngModel)]="facturaDetalle.comentario"
-                                            placeholder="Referente al producto..." class="form-control form-control-sm "
-                                            rows="2"></textarea>
-                                    </mat-form-field>
-                                </div>
-                            </div>
-                        </div>
-                        <mat-divider></mat-divider>
-                        <div class="form-row col-12">
-                            <div class="mat-elevation-z8 expandir">
-                                <table mat-table [dataSource]="dataDetalleFacturaPrueba" matSort>
-                                    <!-- Nombre Columna -->
-                                    <ng-container matColumnDef="nombre">
-                                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Producto </th>
-                                        <td mat-cell *matCellDef="let detalle"> {{detalle.nombre}} </td>
-                                    </ng-container>
-                                    <!-- Entregado Columna -->
-                                    <ng-container matColumnDef="entregado">
-                                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Entreg </th>
-                                        <td mat-cell *matCellDef="let detalle"> {{detalle.entregado}} </td>
-                                    </ng-container>
-                                    <!-- Descripcion Columna -->
-                                    <ng-container matColumnDef="descripcion">
-                                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Descripcion </th>
-                                        <td mat-cell *matCellDef="let detalle"> {{detalle.descripcion}} </td>
-                                    </ng-container>
-                                    <!-- Cantidad Columna -->
-                                    <ng-container matColumnDef="cantidad">
-                                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Cant </th>
-                                        <td mat-cell *matCellDef="let detalle"> {{detalle.cantidad}} </td>
-                                    </ng-container>
-                                    <!-- Valor Columna -->
-                                    <ng-container matColumnDef="valor">
-                                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Valor </th>
-                                        <td mat-cell *matCellDef="let detalle"> {{detalle.valor | currency}} </td>
-                                    </ng-container>
-                                    <!-- Descuento Columna -->
-                                    <ng-container matColumnDef="descuento">
-                                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Desc. </th>
-                                        <td mat-cell *matCellDef="let detalle"> {{detalle.descuento}} </td>
-                                    </ng-container>
-                                    <!-- Descuento% Columna -->
-                                    <ng-container matColumnDef="desc_por">
-                                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Desc% </th>
-                                        <td mat-cell *matCellDef="let detalle"> {{detalle.desc_por}} </td>
-                                    </ng-container>
-                                    <!-- Descuento SubTotal Columna -->
-                                    <ng-container matColumnDef="desc_sub">
-                                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Desc. ST. </th>
-                                        <td mat-cell *matCellDef="let detalle"> {{detalle.desc_sub}} </td>
-                                    </ng-container>
-                                    <!-- Descuento SubTotal% Columna -->
-                                    <ng-container matColumnDef="desc_por_sub">
-                                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Desc. ST% </th>
-                                        <td mat-cell *matCellDef="let detalle"> {{detalle.desc_por_sub}} </td>
-                                    </ng-container>
-                                    <!-- Descuento al Total Columna -->
-                                    <ng-container matColumnDef="desc_tot">
-                                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Desc. T </th>
-                                        <td mat-cell *matCellDef="let detalle"> {{detalle.desc_tot}} </td>
-                                    </ng-container>
-                                    <!-- Descuento al Total % Columna -->
-                                    <ng-container matColumnDef="desc_por_tot">
-                                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Desc. T% </th>
-                                        <td mat-cell *matCellDef="let detalle"> {{detalle.desc_por_tot}} </td>
-                                    </ng-container>
-                                    <!-- Impuesto Columna -->
-                                    <ng-container matColumnDef="impuesto">
-                                        <th mat-header-cell *matHeaderCellDef mat-sort-header> IVA </th>
-                                        <td mat-cell *matCellDef="let detalle"> {{detalle.impuesto}} </td>
-                                    </ng-container>
-                                    <!-- Descuento Columna -->
-                                    <ng-container matColumnDef="total">
-                                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Total </th>
-                                        <td mat-cell *matCellDef="let detalle"> {{detalle.total | currency}} </td>
-                                    </ng-container>
-                                    <!-- Serie Columna -->
-                                    <ng-container matColumnDef="serie">
-                                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Serie </th>
-                                        <td mat-cell *matCellDef="let i=index">
-                                            <button mat-icon-button color="primary" focusable="false"
-                                                (click)="asignarSeries(i)">
-                                                <i class="fa fa-plus mat-icon"></i>
-                                            </button>
-                                        </td>
-                                    </ng-container>
-                                    <ng-container matColumnDef="acciones">
-                                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Acciones </th>
-                                        <td mat-cell *matCellDef="let i=index">
-                                            <button mat-icon-button color="primary" focusable="false"
-                                                (click)="actualizarFacturaDetalle(i)">
-                                                <i class="fa fa-pencil mat-icon"></i>
-                                            </button>
-                                            <button mat-icon-button color="primary" focusable="false"
-                                                (click)="eliminarFacturaDetalle(i)">
-                                                <i class="fa fa-times mat-icon"></i>
-                                            </button>
-                                        </td>
-                                    </ng-container>
-                                    <tr mat-header-row *matHeaderRowDef="columnasDetalleFactura"></tr>
-                                    <tr mat-row *matRowDef="let row; columns: columnasDetalleFactura;"></tr>
-                                </table>
-                                <ng-container>
-                                    <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons>
-                                    </mat-paginator>
-                                </ng-container>
-                            </div>
-                        </div>
-                        <div class="form-row col-12">
-                            <div class="form-group col-7">
-                                <div class="form-row">
-                                </div>
-                                <div class="form-row">
-                                    <mat-form-field appearance="outline" class="grande">
-                                        <mat-label>Comentario</mat-label>
-                                        <textarea matInput [(ngModel)]="factura.comentario"
-                                            placeholder="Referente a la factura..." class="form-control form-control-sm"
-                                            rows="2"></textarea>
-                                    </mat-form-field>
-                                </div>
-                            </div>
-                            <div class="form-group col-5">
-                                <mat-card>
-                                    <div class="form-row">
-                                        <div class="form-group col-4">
-                                            <mat-form-field appearance="standard">
-                                                <mat-label>Base 12%</mat-label>
-                                                <input matInput type="text "
-                                                    [(ngModel)]="factura.subtotalBase12ConDescuento"
-                                                    class="form-control-sm " disabled>
-                                            </mat-form-field>
-                                        </div>
-                                        <div class="form-group col-4">
-                                            <mat-form-field appearance="standard">
-                                                <mat-label>Descuento</mat-label>
-                                                <input matInput type="text" [(ngModel)]="factura.descuentoTotal"
-                                                    class="form-control-sm" disabled>
-                                            </mat-form-field>
-                                        </div>
-                                        <div class="form-group col-4">
-                                            <mat-form-field appearance="standard">
-                                                <mat-label>Subtotal</mat-label>
-                                                <input matInput type="text "
-                                                    [(ngModel)]="factura.subtotalSinDescuento"
-                                                    class="form-control-sm " disabled>
-                                            </mat-form-field>
-                                        </div>
-                                        <div class="form-group col-4">
-                                            <mat-form-field appearance="standard">
-                                                <mat-label>Base 0%</mat-label>
-                                                <input matInput type="text "
-                                                    [(ngModel)]="factura.subtotalBase0ConDescuento"
-                                                    class="form-control-sm " disabled>
-                                            </mat-form-field>
-                                        </div>
-                                        <div class="form-group col-4">
-                                            <mat-form-field appearance="standard">
-                                                <mat-label>Importe IVA</mat-label>
-                                                <input matInput type="text "
-                                                    [(ngModel)]="factura.ivaConDescuento"
-                                                    class="form-control-sm " disabled>
-                                            </mat-form-field>
-                                        </div>
-                                        <div class="form-group col-4">
-                                            <mat-form-field appearance="standard">
-                                                <mat-label>Total</mat-label>
-                                                <input matInput type="text" [(ngModel)]="factura.totalConDescuento"
-                                                    class="form-control-sm" disabled>
-                                            </mat-form-field>
-                                        </div>
-                                    </div>
-                                </mat-card>
-                            </div>
-                        </div>
-                    </div>
-                </mat-expansion-panel>
+                    </ng-container>
 
-                <mat-expansion-panel (opened)="panelOpenState = true" (closed)="panelOpenState = false">
-                    <mat-expansion-panel-header>
-                        <mat-panel-title>
-                            <i><u>RETENCIÓN EN COMPRAS</u></i>
-                        </mat-panel-title>
-                        <mat-panel-description>
-                            {{panelOpenState ? 'Ocultar sección' : 'Ingresar datos adicionales'}}
-                            <mat-icon>date_range</mat-icon>
-                        </mat-panel-description>
-                    </mat-expansion-panel-header>
-                    <div class="form-row col-12">
-                        <div class="form-group col-2">
-                            <mat-form-field appearance="standard">
-                                <mat-label>Fecha</mat-label>
-                                <input matInput type="date" value="{{factura.fecha | date:'yyyy-MM-dd'}}"
-                                    class="form-control-sm">
-                            </mat-form-field>
-                        </div>
-                        <div class="form-group col-1">
-                            <mat-form-field appearance="standard">
-                                <mat-label>Estab.</mat-label>
-                                <input matInput type="text" class="form-control-sm"
-                                    [(ngModel)]="factura.sesion.usuario.estacion.establecimiento.codigo">
-                            </mat-form-field>
-                        </div>
-                        <div class="form-group col-1">
-                            <mat-form-field appearance="standard">
-                                <mat-label>Punto V.</mat-label>
-                                <input matInput type="text" class="form-control-sm"
-                                    [(ngModel)]="factura.sesion.usuario.estacion.codigo">
-                            </mat-form-field>
-                        </div>
-                        <div class="form-group col-2">
-                            <mat-form-field appearance="standard">
-                                <mat-label>Secuencia</mat-label>
-                                <input matInput type="text" class="form-control-sm" [(ngModel)]="factura.secuencia">
-                            </mat-form-field>
-                        </div>
-                        <div class="form-group col-2">
-                            <mat-form-field appearance="standard">
-                                <mat-label>Documento</mat-label>
-                                <mat-select [(ngModel)]="cliente.grupoCliente.id" class="form-control-sm">
-                                    <mat-option *ngFor="let grupoCliente of gruposClientes"
-                                        [value]="grupoCliente.id">
-                                        {{grupoCliente.descripcion}}
-                                    </mat-option>
-                                </mat-select>
-                            </mat-form-field>
-                        </div>
-                        <div class="form-group col-2"></div>
-                        <div class="form-group col-2">
-                            <mat-form-field appearance="standard">
-                                <mat-label>Estado</mat-label>
-                                <mat-select class="form-control-sm" [(ngModel)]="estado">
-                                    <mat-option value="EMITIDA">EMITIDA</mat-option>
-                                    <mat-option value="ANULADA">ANULADA</mat-option>
-                                </mat-select>
-                            </mat-form-field>
-                        </div>
-                        <div class="form-group col-6">
-                            <mat-form-field appearance="standard" class="grande">
-                                <mat-label>Autorización</mat-label>
-                                <input matInput type="text" [(ngModel)]="cliente.codigo" class="form-control-sm">
-                            </mat-form-field>
-                        </div>
-                        <div class="form-group col-4"></div>
-                        <div class="form-group col-2">
-                            <br>
-                            <button mat-raised-button color="primary" focusable="false" (click)="guardar()">
-                                Generar retención
-                            </button>
-                        </div>
-                    </div>
-                    <mat-divider></mat-divider>
-                    <div class="form-row col-12" >
-                        <div class="mat-elevation-z8 expandir tablaRetencion">
-                            <table mat-table [dataSource]="dataRetencion" matSort>
-                                <!-- Periodo Columna -->
-                                <ng-container matColumnDef="periodo">
-                                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Periodo </th>
-                                    <td mat-cell *matCellDef="let retencion"> {{retencion.periodo}} </td>
-                                </ng-container>
-                                <!-- Establecimientos Columna -->
-                                <ng-container matColumnDef="establecimiento">
-                                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Establ. </th>
-                                    <td mat-cell *matCellDef="let retencion"> {{retencion.establecimiento}} </td>
-                                </ng-container>
-                                <!-- Serie Columna -->
-                                <ng-container matColumnDef="serie">
-                                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Serie </th>
-                                    <td mat-cell *matCellDef="let retencion"> {{retencion.serie}} </td>
-                                </ng-container>
-                                <!-- Comprobante Columna -->
-                                <ng-container matColumnDef="comprobante">
-                                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Comprobante </th>
-                                    <td mat-cell *matCellDef="let retencion"> {{retencion.comprobante}} </td>
-                                </ng-container>
-                                <!-- Tipo Retención Columna -->
-                                <ng-container matColumnDef="tipo">
-                                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Tipo </th>
-                                    <td mat-cell *matCellDef="let retencion"> {{retencion.tipo}} </td>
-                                </ng-container>
-                                <!-- Código retención Columna -->
-                                <ng-container matColumnDef="codigo">
-                                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Código </th>
-                                    <td mat-cell *matCellDef="let retencion"> {{retencion.codigo}} </td>
-                                </ng-container>
-                                <!-- Descripcion Columna -->
-                                <ng-container matColumnDef="descripcion">
-                                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Descripción </th>
-                                    <td mat-cell *matCellDef="let retencion"> {{retencion.descripcion}} </td>
-                                </ng-container>
-                                <!-- Base Imponible Columna -->
-                                <ng-container matColumnDef="base">
-                                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Base </th>
-                                    <td mat-cell *matCellDef="let retencion"> {{retencion.base | currency}} </td>
-                                </ng-container>
-                                <!-- Porcentaje aplicable de retención Columna -->
-                                <ng-container matColumnDef="porcentaje">
-                                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Porc. </th>
-                                    <td mat-cell *matCellDef="let retencion"> {{retencion.porcentaje}} </td>
-                                </ng-container>
-                                <!-- Valor Columna -->
-                                <ng-container matColumnDef="valor">
-                                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Valor </th>
-                                    <td mat-cell *matCellDef="let retencion"> {{retencion.valor | currency}} </td>
-                                </ng-container>
-                                <ng-container matColumnDef="acciones">
-                                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Acciones </th>
-                                    <td mat-cell *matCellDef="let i=index">
-                                        <button mat-icon-button color="primary" focusable="false"
-                                            (click)="actualizarFacturaDetalle(i)">
-                                            <i class="fa fa-pencil mat-icon"></i>
-                                        </button>
-                                        <button mat-icon-button color="primary" focusable="false"
-                                            (click)="eliminarFacturaDetalle(i)">
-                                            <i class="fa fa-times mat-icon"></i>
-                                        </button>
-                                    </td>
-                                </ng-container>
-                                <tr mat-header-row *matHeaderRowDef="columnasRetencion"></tr>
-                                <tr mat-row *matRowDef="let row; columns: columnasRetencion;"></tr>
-                            </table>
-                            <ng-container>
-                                <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
-                            </ng-container>
-                        </div>
-                    </div>
-                </mat-expansion-panel>
-            </mat-accordion>
-            <div>
-                <button mat-button matStepperNext>Siguiente</button>
+                    <tr mat-header-row *matHeaderRowDef="cabecera"></tr>
+                    <tr mat-row (click)="seleccion(row)" [class.selected-row]="clickedRows.has(row)"
+                        *matRowDef="let row; columns: cabecera;"></tr>
+
+                    <tr class="mat-row" *matNoDataRow>
+                        <td class="mat-cell" colspan="6">No hay datos que coincidan con el grupo
+                            "{{input.value}}"</td>
+                    </tr>
+                </table>
+                <mat-paginator #paginatorFacturaCompra [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
             </div>
-        </mat-step>
-        <!-- Paso Pago -->
-        <mat-step [stepControl]="secondFormGroup" [completed]="false" [editable]="isEditable">
-            <ng-template matStepLabel>Pago Compra</ng-template>
-            <app-pago-compra [factura]="facturaCrear"></app-pago-compra>
-            <mat-divider></mat-divider>
-            <div>
-                <button mat-button matStepperPrevious>Atras</button>
-                <button mat-button (click)="stepper.reset()">Terminar</button>
+            <div class="azul" *ngIf="!clickedRows.size">
+                Seleccione una fila para editar
             </div>
-        </mat-step>
-    </mat-horizontal-stepper>
+            <div class="azul" *ngFor="let clickedRow of clickedRows">
+                Id: {{clickedRow.id}} seleccionado
+            </div>
+        </mat-expansion-panel>
+    </mat-accordion>
 </div>
-
-<!-- Modals-->
-<ng-template #modal_importar let-modal>
-    <div class="modal-header ">
-        <h5 class="modal-title ">Importar un Cliente</h5>
-        <button type="button " class="close " aria-label="Close " (click)="modal.dismiss( 'Cross click') ">
-            <span aria-hidden="true ">&times;</span>
-        </button>
-    </div>
-    <div class="modal-body ">
-        <div class="form-row ">
-            <div class="form-group col-12 ">
-                <label>Cargar Archivo</label>
-                <!--input type="file" id="file" (change)="importar($event.target.files)"-->
-            </div>
-        </div>
-    </div>
-    <div class="modal-footer ">
-        <button type="button " class="btn btn-outline-dark " (click)="modal.close('close') ">Cerrar</button>
-    </div>
-</ng-template>
-<ng-template #modal_telefono let-modal>
-    <div class="modal-header ">
-        <h5 class="modal-title ">Ver Telefonos</h5>
-        <button type="button " class="close " aria-label="Close " (click)="modal.dismiss( 'Cross click') ">
-            <span aria-hidden="true ">&times;</span>
-        </button>
-    </div>
-    <div class="modal-body ">
-        <div class="form-group form-row ">
-            <table class="table table-striped ">
-                <thead>
-                    <tr>
-                        <th>NUMERO</th>
-                        <th>OPCION</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr *ngFor="let telefono of cliente.telefonos; let i=index ">
-                        <td>
-                            {{telefono.numero}}
-                        </td>
-                        <td>
-                            <button class="btn btn-primary btn-circle " (click)="eliminarTelefono(i) ">
-                                <mat-icon>phonelink_erase</mat-icon>
-                            </button>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-    </div>
-    <div class="modal-footer ">
-        <button type="button " class="btn btn-outline-dark " (click)="modal.close( 'close') ">Cerrar</button>
-    </div>
-</ng-template>
-<ng-template #modal_celular let-modal>
-    <div class="modal-header ">
-        <h5 class="modal-title ">Ver Celulares</h5>
-        <button type="button " class="close " aria-label="Close " (click)="modal.dismiss( 'Cross click') ">
-            <span aria-hidden="true ">&times;</span>
-        </button>
-    </div>
-    <div class="modal-body ">
-        <div class="form-group form-row ">
-            <table class="table table-striped ">
-                <thead>
-                    <tr>
-                        <th>NUMERO</th>
-                        <th>OPCION</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr *ngFor="let celular of cliente.celulares; let i = index ">
-                        <td>
-                            {{celular.numero}}
-                        </td>
-                        <td>
-                            <button class="btn btn-primary btn-circle " (click)="eliminarCelular(i) ">
-                                <mat-icon>phonelink_erase</mat-icon>
-                            </button>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-    </div>
-    <div class="modal-footer ">
-        <button type="button " class="btn btn-outline-dark " (click)="modal.close( 'close') ">Cerrar</button>
-    </div>
-</ng-template>
-<ng-template #modal_correo let-modal>
+<ng-template #modalCorreos let-modal>
     <div class="modal-header ">
         <h5 class="modal-title ">Ver Correos</h5>
         <button type="button " class="close " aria-label="Close " (click)="modal.dismiss( 'Cross click') ">
@@ -787,76 +461,17 @@
         </button>
     </div>
     <div class="modal-body ">
-        <div class="form-group form-row ">
-            <table class="table table-striped ">
+        <div class="form-group form-row table-responsive">
+            <table class="table table-bordered table-hover">
                 <thead>
                     <tr>
                         <th>CORREO</th>
-                        <th>OPCION</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr *ngFor="let correo of cliente.correos; let i= index ">
+                    <tr *ngFor="let correo of facturaCompra.proveedor.correosProveedor; let i=index ">
                         <td>
                             {{correo.email}}
-                        </td>
-                        <td>
-                            <button class="btn btn-primary btn-circle " (click)="eliminarCorreo(i) ">
-                                <mat-icon>unsubscribe</mat-icon>
-                            </button>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-    </div>
-    <div class="modal-footer ">
-        <button type="button " class="btn btn-outline-dark " (click)="modal.close('close') ">Cerrar</button>
-    </div>
-</ng-template>
-<ng-template #modal_dependiente let-modal>
-    <div class="modal-header">
-        <h5 class="modal-title ">Ver Dependientees</h5>
-        <button type="button " class="close " aria-label="Close " (click)="modal.dismiss( 'Cross click') ">
-            <span aria-hidden="true ">&times;</span>
-        </button>
-    </div>
-    <div class="modal-body ">
-        <div class="form-group form-row ">
-            <table class="table table-striped ">
-                <thead>
-                    <tr>
-                        <th>Nombre</th>
-                        <th>Direccion</th>
-                        <th>Provincia</th>
-                        <th>Canton</th>
-                        <th>Parroquia</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr *ngFor="let dependiente of cliente.dependientes; let i= index ">
-                        <td>
-                            {{dependiente.razonSocial}}
-                        </td>
-                        <td>
-                            {{dependiente.direccion}}
-                        </td>
-                        <td>
-                            <ng-container *ngIf="dependiente.ubicacion != null">
-                                {{dependiente.ubicacion.provincia}}</ng-container>
-                        </td>
-                        <td>
-                            <ng-container *ngIf="dependiente.ubicacion != null">
-                                {{dependiente.ubicacion.canton}}</ng-container>
-                        </td>
-                        <td>
-                            <ng-container *ngIf="dependiente.ubicacion != null">
-                                {{dependiente.ubicacion.parroquia}}</ng-container>
-                        </td>
-                        <td>
-                            <button class="btn btn-primary btn-circle " (click)="eliminarDependiente(i) ">
-                                <mat-icon>person_remove</mat-icon>
-                            </button>
                         </td>
                     </tr>
                 </tbody>
@@ -867,45 +482,54 @@
         <button type="button " class="btn btn-outline-dark " (click)="modal.close( 'close') ">Cerrar</button>
     </div>
 </ng-template>
-<ng-template #modal_telefono_dependiente let-modal>
-    <div class="modal-header ">
+<ng-template #modalCelulares let-modal>
+    <div class="modal-header">
+        <h5 class="modal-title">Ver Celulares</h5>
+        <button type="button " class="close " aria-label="Close " (click)="modal.dismiss( 'Cross click') ">
+            <span aria-hidden="true ">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body ">
+        <div class="form-group form-row table-responsive">
+            <table class="table table-bordered table-hover ">
+                <thead>
+                    <tr>
+                        <th>NUMERO</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let celular of facturaCompra.proveedor.celularesProveedor; let i=index ">
+                        <td>
+                            {{celular.numero}}
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="modal-footer ">
+        <button type="button " class="btn btn-outline-dark " (click)="modal.close( 'close') ">Cerrar</button>
+    </div>
+</ng-template>
+<ng-template #modalTelefonos let-modal>
+    <div class="modal-header">
         <h5 class="modal-title ">Ver Telefonos</h5>
         <button type="button " class="close " aria-label="Close " (click)="modal.dismiss( 'Cross click') ">
             <span aria-hidden="true ">&times;</span>
         </button>
     </div>
     <div class="modal-body ">
-        <div class="form-group form-row ">
-            <table class="table table-bordered">
+        <div class="form-group form-row table-responsive">
+            <table class="table table-bordered table-hover ">
                 <thead>
                     <tr>
-                        <th>AUXILIAR</th>
-                        <th>DIRECCION</th>
-                        <th>TELEFONOS</th>
+                        <th>NUMERO</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
+                    <tr *ngFor="let telefono of facturaCompra.proveedor.telefonosProveedor; let i=index ">
                         <td>
-                            {{dependiente.razonSocial}}
-                        </td>
-                        <td>
-                            {{dependiente.direccion}}
-                        </td>
-                        <td>
-                            <table class="table table-bordered ">
-                                <tbody>
-                                    <tr *ngFor="let telefono of dependiente.telefonosDependiente; let i= index">
-                                        <td>{{telefono.numero}}</td>
-                                        <td>
-                                            <button class="btn btn-primary btn-circle "
-                                                (click)="eliminarTelefonoDependiente(i) ">
-                                                <mat-icon>phonelink_erase</mat-icon>
-                                            </button>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                            {{telefono.numero}}
                         </td>
                     </tr>
                 </tbody>
@@ -914,103 +538,5 @@
     </div>
     <div class="modal-footer ">
         <button type="button " class="btn btn-outline-dark " (click)="modal.close( 'close') ">Cerrar</button>
-    </div>
-</ng-template>
-<ng-template #modal_celular_dependiente let-modal>
-    <div class="modal-header ">
-        <h5 class="modal-title ">Ver Celulares</h5>
-        <button type="button " class="close " aria-label="Close " (click)="modal.dismiss( 'Cross click') ">
-            <span aria-hidden="true ">&times;</span>
-        </button>
-    </div>
-    <div class="modal-body ">
-        <div class="form-group form-row ">
-            <table class="table table-bordered">
-                <thead>
-                    <tr>
-                        <th>AUXILIAR</th>
-                        <th>DIRECCION</th>
-                        <th>CELULAR</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>
-                            {{dependiente.razonSocial}}
-                        </td>
-                        <td>
-                            {{dependiente.direccion}}
-                        </td>
-                        <td>
-                            <table class="table table-bordered ">
-                                <tbody>
-                                    <tr *ngFor="let celular of dependiente.celularesDependiente; let i= index">
-                                        <td>{{celular.numero}}</td>
-                                        <td>
-                                            <button class="btn btn-primary btn-circle "
-                                                (click)="eliminarCelularDependiente(i) ">
-                                                <mat-icon>phonelink_erase</mat-icon>
-                                            </button>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-    </div>
-    <div class="modal-footer ">
-        <button type="button " class="btn btn-outline-dark " (click)="modal.close( 'close') ">Cerrar</button>
-    </div>
-</ng-template>
-<ng-template #modal_correo_dependiente let-modal>
-    <div class="modal-header ">
-        <h5 class="modal-title ">Ver Correos</h5>
-        <button type="button " class="close " aria-label="Close " (click)="modal.dismiss( 'Cross click') ">
-            <span aria-hidden="true ">&times;</span>
-        </button>
-    </div>
-    <div class="modal-body ">
-        <div class="form-group form-row ">
-            <table class="table table-bordered ">
-                <thead>
-                    <tr>
-                        <th>AUXILIAR</th>
-                        <th>DIRECCION</th>
-                        <th>CORREOS</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>
-                            {{dependiente.razonSocial}}
-                        </td>
-                        <td>
-                            {{dependiente.direccion}}
-                        </td>
-                        <td>
-                            <table class="table table-bordered ">
-                                <tbody>
-                                    <tr *ngFor="let correo of dependiente.correosDependiente; let i= index">
-                                        <td>{{correo.email}}</td>
-                                        <td>
-                                            <button class="btn btn-primary btn-circle "
-                                                (click)="eliminarCorreoDependiente(i) ">
-                                                <mat-icon>person_remove</mat-icon>
-                                            </button>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-    </div>
-    <div class="modal-footer ">
-        <button type="button " class="btn btn-outline-dark " (click)="modal.close('close') ">Cerrar</button>
     </div>
 </ng-template>

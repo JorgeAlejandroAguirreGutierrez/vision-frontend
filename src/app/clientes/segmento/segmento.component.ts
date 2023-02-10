@@ -27,6 +27,7 @@ export class SegmentoComponent implements OnInit {
 
   abrirPanelNuevo: boolean = true;
   abrirPanelAdmin: boolean = true;
+  formularioValido: boolean = false;
 
   sesion: Sesion = null;
   segmento: Segmento = new Segmento();
