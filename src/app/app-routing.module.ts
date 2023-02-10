@@ -65,7 +65,7 @@ import { VehiculoTransporteComponent } from './entregas/vehiculo-transporte/vehi
 import { ProveedorComponent, DialogoMapaProveedorComponent } from './compras/proveedor/proveedor.component';
 import { FacturaCompraComponent } from './compras/factura-compra/factura-compra.component';
 import { PagoCompraComponent } from './compras/pago-compra/pago-compra.component';
-import { GrupoProveedorComponent } from './compras/grupo-proveedor/grupo-proveedor.component';
+import { GrupoProveedorComponent, DialogoGrupoProveedorCuentaContableComponent } from './compras/grupo-proveedor/grupo-proveedor.component';
 
 //Módulo de Contabilidad
 import { ContabilizacionComponent } from './contabilidad/contabilizacion/contabilizacion.component';
@@ -214,6 +214,7 @@ export const RoutingComponents = [
   FacturaCompraComponent,
   PagoCompraComponent,
   GrupoProveedorComponent,
+  DialogoGrupoProveedorCuentaContableComponent,
   // Contabilidad
   ContabilizacionComponent,
   CuentaContableComponent,

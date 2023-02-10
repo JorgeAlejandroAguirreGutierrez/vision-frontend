@@ -1,0 +1,10 @@
+<h1 mat-dialog-title>CUENTAS CONTABLES</h1>
+<!-- para ingresar datos {{data.codigo}} -->
+<div mat-dialog-content>
+  <app-tabla-grupo-cliente-cuenta-contable (cuentaContableSeleccionado)="cuentaContableSeleccionado($event)">
+  </app-tabla-grupo-cliente-cuenta-contable>
+</div>
+<div mat-dialog-actions>
+  <button mat-button (click)="onNoClick()">Cancelar</button>
+  <button mat-button [mat-dialog-close]="data" cdkFocusInitial>Guardar</button>
+</div>

@@ -44,12 +44,12 @@ import { TipoPago } from '../../modelos/cliente/tipo-pago';
 import { TipoPagoService } from '../../servicios/cliente/tipo-pago.service';
 import { TipoRetencion } from '../../modelos/configuracion/tipo-retencion';
 import { TipoRetencionService } from '../../servicios/configuracion/tipo-retencion.service';
+import { TipoIdentificacion } from '../../modelos/configuracion/tipo-identificacion';
+import { TipoIdentificacionService } from '../../servicios/configuracion/tipo-identificacion.service';
 
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { TipoIdentificacion } from '../../modelos/configuracion/tipo-identificacion';
-import { TipoIdentificacionService } from '../../servicios/configuracion/tipo-identificacion.service';
 
 @Component({
   selector: 'app-cliente',
@@ -89,7 +89,7 @@ export class ClienteComponent implements OnInit {
   deshabilitarDatoAdicional: boolean = false;
 
 
-  urlLogo: string = "";
+  urlLogo: string = ""; 
   nombreEmpresa: string = "";
   provinciaCliente: string = "";
   cantonCliente: string = "";
@@ -117,7 +117,6 @@ export class ClienteComponent implements OnInit {
   origenesIngresos: OrigenIngreso[];
   calificacionesClientes: CalificacionCliente[];
   plazosCreditos: PlazoCredito[];
-  tiposPagos: TipoPago[];
   formasPagos: FormaPago[];
   tiposContribuyentes: TipoContribuyente[] = [];
 
@@ -138,8 +137,8 @@ export class ClienteComponent implements OnInit {
   latInicial: number = valores.latCiudad;
   posicionCentralDireccion: Coordenada = new Coordenada(valores.latCiudad, valores.lngCiudad);
   posicionCentralDependiente: Coordenada = new Coordenada(valores.latCiudad, valores.lngCiudad);
-  posicionGeograficaDireccion: Coordenada = new Coordenada(valores.latCiudad, valores.lngCiudad);;
-  posicionGeograficaDependiente: Coordenada = new Coordenada(valores.latCiudad, valores.lngCiudad);;
+  posicionGeograficaDireccion: Coordenada = new Coordenada(valores.latCiudad, valores.lngCiudad);
+  posicionGeograficaDependiente: Coordenada = new Coordenada(valores.latCiudad, valores.lngCiudad);
   //coordenadas: Coordenada[] = [];
   options: google.maps.MapOptions = {
     mapTypeId: 'hybrid',
@@ -189,14 +188,15 @@ export class ClienteComponent implements OnInit {
       this.nuevo(null);
   }
 
-  constructor(private renderer: Renderer2, public dialog: MatDialog, private clienteService: ClienteService, private tipoIdentificacionService: TipoIdentificacionService, private generoService: GeneroService,
+  constructor(private renderer: Renderer2, public dialog: MatDialog, private clienteService: ClienteService, 
+    private tipoIdentificacionService: TipoIdentificacionService, private generoService: GeneroService,
     private estadoCivilService: EstadoCivilService, private origenIngresoService: OrigenIngresoService,
     private calificacionClienteService: CalificacionClienteService, private plazoCreditoService: PlazoCreditoService,
-    private tipoPagoService: TipoPagoService, private formaPagoService: FormaPagoService,
+    private formaPagoService: FormaPagoService,
     private ubicacionService: UbicacionService, private grupoClienteService: GrupoClienteService,
-    private tipoRetencionService: TipoRetencionService, private router: Router, private tabService: TabService,
-    private sesionService: SesionService, private empresaService: EmpresaService, private segmentoService: SegmentoService,
-    private tipoContribuyenteService: TipoContribuyenteService, private modalService: NgbModal) { }
+    private tipoRetencionService: TipoRetencionService, private router: Router, 
+    private sesionService: SesionService, private segmentoService: SegmentoService,
+    private tipoContribuyenteService: TipoContribuyenteService) { }
 
   ngOnInit() {
     this.sesion = validarSesion(this.sesionService, this.router);
@@ -210,7 +210,6 @@ export class ClienteComponent implements OnInit {
     this.consultarOrigenIngreso();
     this.consultarCalificacionCliente();
     this.consultarPlazoCredito();
-    this.consultarTipoPago();
     this.consultarFormaPago();
     this.consultarProvincias();
     this.consultarIvaBien();
@@ -303,16 +302,6 @@ export class ClienteComponent implements OnInit {
     this.plazoCreditoService.consultarActivos().subscribe({
       next: res => {
         this.plazosCreditos = res.resultado as PlazoCredito[]
-      },
-      error: err => {
-        Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje });
-      }
-    });
-  }
-  consultarTipoPago(){
-    this.tipoPagoService.consultarActivos().subscribe({
-      next: res => {
-        this.tiposPagos = res.resultado as TipoPago[]
       },
       error: err => {
         Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje });
@@ -493,7 +482,8 @@ export class ClienteComponent implements OnInit {
     this.dataSourceCliente = new MatTableDataSource(clientes);
     this.dataSourceCliente.filterPredicate = (data: Cliente, filter: string): boolean =>
       data.codigo.includes(filter) || data.identificacion.includes(filter) || data.razonSocial.includes(filter) ||
-      data.direccion.includes(filter) || data.obligadoContabilidad.includes(filter) || data.estado.includes(filter);
+      data.direccion.includes(filter) || data.tipoContribuyente.obligadoContabilidad.includes(filter) || data.especial.includes(filter) ||
+      data.estado.includes(filter);
     this.dataSourceCliente.paginator = this.paginator;
     this.dataSourceCliente.sort = this.sort;
   }

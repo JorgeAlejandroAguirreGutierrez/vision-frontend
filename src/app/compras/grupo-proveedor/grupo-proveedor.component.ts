@@ -1,13 +1,14 @@
-import { Component, OnInit, HostListener, ElementRef, Renderer2 } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
-import { valores, validarSesion, tab_activo, exito, exito_swal, error, error_swal } from '../../constantes';
+import { Component, OnInit, HostListener, ElementRef, Inject, Renderer2 } from '@angular/core';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { valores, mensajes, validarSesion, exito, exito_swal, error, error_swal } from '../../constantes';
 import Swal from 'sweetalert2';
 
 import { Router } from '@angular/router';
 import { Sesion } from '../../modelos/usuario/sesion';
 import { SesionService } from '../../servicios/usuario/sesion.service';
-import { GrupoProveedorService } from '../../servicios/compra/grupo-proveedor.service';
 import { GrupoProveedor } from '../../modelos/compra/grupo-proveedor';
+import { GrupoProveedorService } from '../../servicios/compra/grupo-proveedor.service';
+import { CuentaContable } from '../../modelos/contabilidad/cuenta-contable';
 
 import { ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
@@ -26,30 +27,29 @@ export class GrupoProveedorComponent implements OnInit {
   inactivo: string = valores.inactivo;
 
   abrirPanelNuevo: boolean = true;
-  abrirPanelAdmin: boolean = false;
-  edicion: boolean = true;
+  abrirPanelAdmin: boolean = true;
 
   sesion: Sesion=null;
   grupoProveedor= new GrupoProveedor();
-  grupoProveedores: GrupoProveedor[];
+  gruposProveedores: GrupoProveedor[];
 
   columnas: any[] = [
     { nombreColumna: 'id', cabecera: 'ID', celda: (row: GrupoProveedor) => `${row.id}` },
     { nombreColumna: 'codigo', cabecera: 'Código', celda: (row: GrupoProveedor) => `${row.codigo}` },
     { nombreColumna: 'descripcion', cabecera: 'Descripción', celda: (row: GrupoProveedor) => `${row.descripcion}` },
     { nombreColumna: 'abreviatura', cabecera: 'Abreviatura', celda: (row: GrupoProveedor) => `${row.abreviatura}` },
+    { nombreColumna: 'cuenta', cabecera: 'Cuenta Contable', celda: (row: GrupoProveedor) => `${row.cuentaContable.cuenta}` },
     { nombreColumna: 'estado', cabecera: 'Estado', celda: (row: GrupoProveedor) => `${row.estado}` }
   ];
   cabecera: string[] = this.columnas.map(titulo => titulo.nombreColumna);
   dataSource: MatTableDataSource<GrupoProveedor>;
-  observable: BehaviorSubject<MatTableDataSource<GrupoProveedor>> = new BehaviorSubject<MatTableDataSource<GrupoProveedor>>(null);
   clickedRows = new Set<GrupoProveedor>(); 
   
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
   @ViewChild("inputFiltro") inputFiltro: ElementRef;
 
-  constructor(private renderer: Renderer2, private grupoProveedorService: GrupoProveedorService,
+  constructor(public dialog: MatDialog, private renderer: Renderer2, private grupoProveedorService: GrupoProveedorService,
     private sesionService: SesionService,private router: Router) { }
 
   ngOnInit() {
@@ -65,47 +65,40 @@ export class GrupoProveedorComponent implements OnInit {
       this.nuevo(null);
   }
 
-  limpiar() {
-    this.grupoProveedor = new GrupoProveedor();
-    this.edicion = true;
-    this.clickedRows.clear();
-    this.borrarFiltro();
-  }
-
   nuevo(event) {
     if (event != null)
       event.preventDefault();
-    this.limpiar();
+    this.grupoProveedor = new GrupoProveedor();
+    this.clickedRows.clear();
+    this.borrarFiltro();
   }
 
   crear(event) {
     if (event != null)
       event.preventDefault();
+    if (!this.validarFormulario())
+      return;
+    console.log(this.grupoProveedor);  
     this.grupoProveedorService.crear(this.grupoProveedor).subscribe({
       next: res => {
-        this.grupoProveedor = res.resultado as GrupoProveedor;
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
-        this.grupoProveedores.push(this.grupoProveedor);
-        this.llenarTabla(this.grupoProveedores);
+        this.consultar();
+        this.nuevo(null);
       },
       error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     });
   }
 
-  editar(event) {
-    if (event != null)
-      event.preventDefault();
-    this.edicion = true;
-  }
-
   actualizar(event) {
     if (event != null)
       event.preventDefault();
+    if (!this.validarFormulario())
+      return;        
     this.grupoProveedorService.actualizar(this.grupoProveedor).subscribe({
       next: res => {
-        this.grupoProveedor = res.resultado as GrupoProveedor;
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
-        this.limpiar();
+        this.consultar();
+        this.nuevo(null);
       },
       error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     });
@@ -118,6 +111,7 @@ export class GrupoProveedorComponent implements OnInit {
       next: res => {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
         this.consultar();
+        this.nuevo(null);
       },
       error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     });
@@ -130,6 +124,7 @@ export class GrupoProveedorComponent implements OnInit {
       next: res => {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
         this.consultar();
+        this.nuevo(null);
       },
       error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     });
@@ -138,8 +133,8 @@ export class GrupoProveedorComponent implements OnInit {
   consultar() {
     this.grupoProveedorService.consultar().subscribe({
       next: res => {
-        this.grupoProveedores = res.resultado as GrupoProveedor[]
-        this.llenarTabla(this.grupoProveedores);
+        this.gruposProveedores = res.resultado as GrupoProveedor[]
+        this.llenarTabla(this.gruposProveedores);
       },
       error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     });
@@ -150,17 +145,21 @@ export class GrupoProveedorComponent implements OnInit {
     this.dataSource = new MatTableDataSource(grupoProveedores);
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
-    this.observable.next(this.dataSource);
+  }
+
+  ordenarAsc(arrayJson: any, pKey: any) {
+    arrayJson.sort(function (a: any, b: any) {
+      return a[pKey] > b[pKey];
+    });
   }
 
   seleccion(grupoProveedor: GrupoProveedor) {
-    if (!this.clickedRows.has(grupoProveedor)) {
+    if (!this.clickedRows.has(grupoProveedor)){
       this.clickedRows.clear();
       this.clickedRows.add(grupoProveedor);
-      this.grupoProveedor = grupoProveedor;
-      this.edicion = false;
+      this.grupoProveedor = { ... grupoProveedor};
     } else {
-      this.limpiar();
+      this.nuevo(null);
     }
   }
 
@@ -176,9 +175,50 @@ export class GrupoProveedorComponent implements OnInit {
     this.dataSource.filter = '';
   }
 
-  ordenarAsc(arrayJson: any, pKey: any) {
-    arrayJson.sort(function (a: any, b: any) {
-      return a[pKey] > b[pKey];
+  validarFormulario(): boolean{
+    //validar que los campos esten llenos antes de guardar
+    if (this.grupoProveedor.descripcion == '') {
+      Swal.fire({ icon: error_swal, title: error, text: mensajes.error_falta_datos });
+      return false;
+    }
+    if (this.grupoProveedor.abreviatura == '') {
+      Swal.fire({ icon: error_swal, title: error, text: mensajes.error_falta_datos });
+      return false;
+    }
+    if (this.grupoProveedor.cuentaContable.cuenta == '') {
+      Swal.fire({ icon: error_swal, title: error, text: mensajes.error_falta_datos });
+      return false;
+    }
+    return true;
+  }
+
+  dialogoCuentasContables(): void {
+    const dialogRef = this.dialog.open(DialogoGrupoProveedorCuentaContableComponent, {
+      width: '80%',
+      //data: {}
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        Object.assign(this.grupoProveedor.cuentaContable, result as CuentaContable);
+      }
     });
   }
 }
+
+@Component({
+  selector: 'dialogo-grupo-proveedor-cuenta-contable',
+  templateUrl: 'dialogo-grupo-proveedor-cuenta-contable.component.html',
+})
+export class DialogoGrupoProveedorCuentaContableComponent {
+
+  constructor(public dialogRef: MatDialogRef<DialogoGrupoProveedorCuentaContableComponent>, 
+              @Inject(MAT_DIALOG_DATA) public data: CuentaContable) { }
+
+  onNoClick(): void {
+    this.dialogRef.close();
+  }
+  cuentaContableSeleccionado(event: any) {
+      this.data = event;
+  }
+}  

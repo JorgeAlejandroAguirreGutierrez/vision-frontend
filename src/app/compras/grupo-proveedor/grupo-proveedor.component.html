@@ -5,33 +5,28 @@
                 <mat-icon>save</mat-icon>
             </a>
         </li>
-        <ng-container *ngIf="grupoProveedor.id!=0">
-            <li class="nav-item" *ngIf="!edicion">
-                <a class="nav-link" title="Actualizar" role="button" (click)="editar($event)">
-                    <mat-icon>edit</mat-icon>
-                </a>
-            </li>
-            <li class="nav-item" *ngIf="edicion">
-                <a class="nav-link" title="Actualizar" role="button" (click)="actualizar($event)">
-                    <mat-icon>update</mat-icon>
-                </a>
-            </li>
-        </ng-container>
+        <li class="nav-item" *ngIf="grupoProveedor.id!=0">
+            <a class="nav-link" title="Actualizar" role="button" (click)="actualizar($event)">
+                <mat-icon>update</mat-icon>
+            </a>
+        </li>
         <li class="nav-item">
             <a class="nav-link" title="Nuevo" role="button" (click)="nuevo($event)">
                 <mat-icon>file_copy</mat-icon>
             </a>
         </li>
-        <li class="nav-item" *ngIf="grupoProveedor.id!=0">
-            <a class="nav-link" title="Activar" role="button" (click)="activar($event)">
-                <mat-icon>check</mat-icon>
-            </a>
-        </li>
-        <li class="nav-item" *ngIf="grupoProveedor.id!=0">
-            <a class="nav-link" title="Inactivar" role="button" (click)="inactivar($event)">
-                <mat-icon>delete</mat-icon>
-            </a>
-        </li>
+        <ng-container *ngIf="grupoProveedor.id!=0">
+            <li class="nav-item" *ngIf="grupoProveedor.estado!=activo">
+                <a class="nav-link" title="Activar" role="button" (click)="activar($event)">
+                    <mat-icon>assignment_turned_in</mat-icon>
+                </a>
+            </li>
+            <li class="nav-item" *ngIf="grupoProveedor.estado==activo">
+                <a class="nav-link" title="Inactivar" role="button" (click)="inactivar($event)">
+                    <mat-icon>delete_forever</mat-icon>
+                </a>
+            </li>
+        </ng-container>
     </ul>
 </nav>
 <div class="contenedor">
@@ -40,10 +35,10 @@
             [expanded]="abrirPanelNuevo">
             <mat-expansion-panel-header>
                 <mat-panel-title>
-                    <i><u>GRUPO CLIENTE</u></i>
+                    <i><u>GRUPO PROVEEDOR</u></i>
                 </mat-panel-title>
                 <mat-panel-description>
-                    {{abrirPanelNuevo ? 'Ocultar crear grupo de clientes' : 'Crear un nuevo grupo de clientes'}}
+                    {{abrirPanelNuevo ? 'Ocultar crear grupo de proveedores' : 'Crear un nuevo grupo de proveedores'}}
                     <mat-icon>group_add</mat-icon>
                 </mat-panel-description>
             </mat-expansion-panel-header>
@@ -51,66 +46,74 @@
             <div class="form-group form-row">
                 <div class="col-2">
                     <mat-form-field appearance="standard">
-                        <mat-label>Codigo</mat-label>
+                        <mat-label>Código</mat-label>
                         <input matInput type="text" [(ngModel)]="grupoProveedor.codigo" class="form-control-sm"
                             [disabled]="true">
                     </mat-form-field>
                 </div>
-                <div class="col-4">
+                <div class="col-5">
                     <mat-form-field appearance="standard">
-                        <mat-label>Descripcion</mat-label>
-                        <input matInput type="text" [(ngModel)]="grupoProveedor.descripcion" [disabled]="!edicion"
+                        <mat-label>Descripción</mat-label>
+                        <input matInput type="text" [(ngModel)]="grupoProveedor.descripcion"
                             oninput="this.value = this.value.toUpperCase()" class="form-control-sm">
                     </mat-form-field>
                 </div>
-                <div class="col-1">
-                    <mat-form-field appearance="standard">
-                        <mat-label>Abreviatura</mat-label>
-                        <input matInput type="text" [(ngModel)]="grupoProveedor.abreviatura" [disabled]="!edicion"
-                            oninput="this.value = this.value.toUpperCase()" class="form-control-sm">
-                    </mat-form-field>
-                </div>
-                <div class="col-3">
-                    <mat-form-field appearance="standard">
-                        <mat-label>Cuenta Contable</mat-label>
-                        <input matInput type="text" [(ngModel)]="grupoProveedor.abreviatura" [disabled]="!edicion"
-                            oninput="this.value = this.value.toUpperCase()" class="form-control-sm">
-                    </mat-form-field>
-                </div>
-                <div class="col-2">
-                    <mat-form-field appearance="standard">
-                        <mat-label>Estado</mat-label>
-                        <mat-select [(ngModel)]="grupoProveedor.estado" [disabled]="!edicion" class="form-control-sm">
-                            <mat-option [value]="activo">{{activo}}</mat-option>
-                            <mat-option [value]="inactivo">{{inactivo}}</mat-option>
-                        </mat-select>
-                    </mat-form-field>
+                <div class="form-row col-5">
+                    <div class="col-3">
+                        <mat-form-field appearance="standard">
+                            <mat-label>Abreviatura</mat-label>
+                            <input matInput type="text" [(ngModel)]="grupoProveedor.abreviatura"
+                                oninput="this.value = this.value.toUpperCase()" class="form-control-sm">
+                        </mat-form-field>
+                    </div>
+                    <div class="col-5">
+                        <mat-form-field appearance="standard">
+                            <mat-label>Cuenta Contable</mat-label>
+                            <input matInput type="text" [(ngModel)]="grupoProveedor.cuentaContable.cuenta"
+                                oninput="this.value = this.value.toUpperCase()" class="form-control-sm" disabled>
+                        </mat-form-field>
+                    </div>
+                    <div class="col-1 iconos">
+                        <button mat-icon-button aria-label="Cue. Conta" (click)="dialogoCuentasContables()">
+                            <mat-icon>search</mat-icon>
+                        </button>
+                    </div>
+                    <div class="col-3">
+                        <mat-form-field appearance="standard">
+                            <mat-label>Estado</mat-label>
+                            <mat-select [(ngModel)]="grupoProveedor.estado" [disabled]="true" class="form-control-sm">
+                                <mat-option [value]="activo">{{activo}}</mat-option>
+                                <mat-option [value]="inactivo">{{inactivo}}</mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
                 </div>
             </div>
         </mat-expansion-panel>
     </mat-accordion>    
     <mat-accordion class="headers-align">
-        <mat-expansion-panel (opened)="abrirPanelAdmin = true" (closed)="abrirPanelAdmin = false">
+        <mat-expansion-panel (opened)="abrirPanelAdmin = true" (closed)="abrirPanelAdmin = false"
+            [expanded]="abrirPanelAdmin">
             <mat-expansion-panel-header>
                 <mat-panel-title>
-                    <i><u>GESTIONAR GRUPOS DE CLIENTES</u></i>
+                    <i><u>GESTIONAR GRUPOS DE PROVEEDORS</u></i>
                 </mat-panel-title>
                 <mat-panel-description>
-                    {{abrirPanelAdmin ? 'Ocultar administrador de grupos de clientes' : 'Editar grupos de clientes existentes'}}
+                    {{abrirPanelAdmin ? 'Ocultar administrador de grupos de proveedores' : 'Administrar grupos de proveedores existentes'}}
                     <mat-icon>playlist_add_check</mat-icon>
                 </mat-panel-description>
             </mat-expansion-panel-header>
             <hr>
             <mat-form-field appearance="standard">
-                <mat-label>Buscar grupos de clientes</mat-label>
-                <input matInput (keyup)="filtro($event)" placeholder="Ej. EX" #inputFiltro>
+                <mat-label>Buscar grupos de proveedores</mat-label>
+                <input matInput oninput="this.value = this.value.toUpperCase()" (keyup)="filtro($event)" #inputFiltro>
                 <button mat-button *ngIf="inputFiltro.value" matSuffix mat-icon-button
                     (click)="borrarFiltro()">
-                <mat-icon>close</mat-icon>
-            </button>
+                    <mat-icon>close</mat-icon>
+                </button>
             </mat-form-field>
             <div class="mat-elevation-z8">
-                <table mat-table [dataSource]="observable.value" matSort>
+                <table mat-table [dataSource]="dataSource" matSort>
                     <!-- Columnas Dinamicas -->
                     <ng-container *ngFor="let columna of columnas" [matColumnDef]="columna.nombreColumna">
                         <th mat-header-cell *matHeaderCellDef mat-sort-header> {{ columna.cabecera }} </th>
@@ -121,7 +124,7 @@
                         *matRowDef="let row; columns: cabecera;"></tr>
                     <!-- Row shown when there is no matching data. -->
                     <tr class="mat-row" *matNoDataRow>
-                        <td class="mat-cell" colspan="6">No hay datos que coincidan con el grupo de cliente: 
+                        <td class="mat-cell" colspan="6">No hay datos que coincidan con el grupo de proveedor:
                             "{{inputFiltro.value}}"
                         </td>
                     </tr>
