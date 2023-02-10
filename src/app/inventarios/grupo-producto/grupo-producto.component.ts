@@ -62,10 +62,6 @@ export class GrupoProductoComponent implements OnInit {
   controlSublinea = new UntypedFormControl();
   filtroSublineas: Observable<string[]> = new Observable<string[]>();
 
-  presentaciones: string[] = [];
-  controlPresentacion = new UntypedFormControl();
-  filtroPresentaciones: Observable<string[]> = new Observable<string[]>();
-
   columnas: any[] = [
     { nombreColumna: 'categoria', cabecera: 'Categoría', celda: (row: GrupoProducto) => `${row.categoriaProducto.descripcion}` },
     { nombreColumna: 'grupo', cabecera: 'Grupo', celda: (row: GrupoProducto) => `${row.grupo}` },
@@ -153,6 +149,8 @@ export class GrupoProductoComponent implements OnInit {
   crear(event) {
     if (event != null)
       event.preventDefault();
+    if (!this.validarFormulario())
+      return;
     this.grupoProductoService.crear(this.grupoProducto).subscribe({
       next: res => {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
@@ -166,6 +164,8 @@ export class GrupoProductoComponent implements OnInit {
   actualizar(event) {
     if (event != null)
       event.preventDefault();
+    if (!this.validarFormulario())
+      return;
     this.grupoProductoService.actualizar(this.grupoProducto).subscribe({
       next: res => {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
@@ -215,9 +215,9 @@ export class GrupoProductoComponent implements OnInit {
   llenarDataSource(gruposProductos : GrupoProducto[]){
     this.dataSource = new MatTableDataSource(gruposProductos);
     this.dataSource.filterPredicate = (data: GrupoProducto, filter: string): boolean =>
-      data.categoriaProducto.descripcion.toUpperCase().includes(filter) || data.grupo.toUpperCase().includes(filter) || data.subgrupo.toUpperCase().includes(filter) ||
-      data.seccion.toUpperCase().includes(filter) || data.linea.toUpperCase().includes(filter) || data.sublinea.toUpperCase().includes(filter) || 
-      data.presentacion.toUpperCase().includes(filter) || data.cuentaContable.cuenta.toUpperCase().includes(filter) || data.estado.toUpperCase().includes(filter);
+      data.categoriaProducto.descripcion.includes(filter) || data.grupo.includes(filter) || data.subgrupo.includes(filter) ||
+      data.seccion.includes(filter) || data.linea.includes(filter) || data.sublinea.includes(filter) || 
+      data.presentacion.includes(filter) || data.cuentaContable.cuenta.includes(filter) || data.estado.includes(filter);
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
   }
@@ -400,15 +400,7 @@ consultarGrupos() {
     }
     return [];
   }
-  async seleccionarSublinea() {
-    if (this.controlSublinea.value != null) {
-      await this.grupoProductoService.consultarPresentacionesAsync(this.grupoProducto.grupo, this.grupoProducto.subgrupo, this.grupoProducto.seccion, this.grupoProducto.linea, this.controlSublinea.value).then(
-        res => {
-          this.presentaciones = res.resultado as string[];
-        },
-        err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
-      );
-    }
+  seleccionarSublinea() {
     if (this.controlSublinea.value != null && this.editarGrupoProducto) {
       if (this.controlSublinea.value != this.grupoProducto.sublinea) {
         this.grupoProducto.sublinea = this.controlSublinea.value;
@@ -424,23 +416,23 @@ consultarGrupos() {
       this.controlSeccion.setValue('');
       this.controlLinea.setValue('');
       this.controlSublinea.setValue('');
-      this.controlPresentacion.setValue('');
+      this.grupoProducto.presentacion = "";
     }
     if (controlModificado == 'subgrupo') {
       this.grupoProducto.seccion = '';
       this.controlSeccion.setValue('');
       this.controlLinea.setValue('');
       this.controlSublinea.setValue('');
-      this.controlPresentacion.setValue('');
+      this.grupoProducto.presentacion = "";
     }
     if (controlModificado == 'seccion') {
       this.controlLinea.setValue('');
       this.controlSublinea.setValue('');
-      this.controlPresentacion.setValue('');
+      this.grupoProducto.presentacion = "";
     }
     if (controlModificado == 'linea') {
       this.controlSublinea.setValue('');
-      this.controlPresentacion.setValue('');
+      this.grupoProducto.presentacion = "";
     }
     if (controlModificado == 'sublinea') {
       this.grupoProducto.presentacion = "";
@@ -449,6 +441,30 @@ consultarGrupos() {
 
   compareFn(a: any, b: any) {
     return a && b && a.id == b.id;
+  }
+
+  validarFormulario(): boolean {
+    //validar que los campos esten llenos antes de guardar
+    if (this.grupoProducto.cuentaContable.cuenta == '') {
+      Swal.fire({ icon: error_swal, title: error, text: mensajes.error_falta_datos });
+      return false;
+    }
+    if (this.grupoProducto.categoriaProducto.id = 1){ //Si en Bien
+      if (this.controlGrupo.value == '' || this.controlSubgrupo.value == '' || this.controlSeccion.value == '') {
+        Swal.fire({ icon: error_swal, title: error, text: mensajes.error_falta_datos });
+        return false;
+      }
+      if (this.controlLinea.value == '' || this.controlSublinea.value == '' || this.grupoProducto.presentacion == '') {
+        Swal.fire({ icon: error_swal, title: error, text: mensajes.error_falta_datos });
+        return false;
+      } 
+    } else { // Si es servicio o AF
+      if (this.controlGrupo.value == '' || this.controlSubgrupo.value == '' || this.grupoProducto.seccion == '') {
+        Swal.fire({ icon: error_swal, title: error, text: mensajes.error_falta_datos });
+        return false;
+      }
+    }
+    return true;
   }
 
   dialogoCuentasContables(): void {

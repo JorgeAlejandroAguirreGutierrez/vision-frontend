@@ -1,8 +1,8 @@
-import { Component, OnInit, Type, Inject } from '@angular/core';
+import { Component, OnInit, HostListener, Type, Inject, ElementRef, Renderer2 } from '@angular/core';
 import { UntypedFormControl, UntypedFormArray, UntypedFormGroup, Validators } from '@angular/forms';
 import { BehaviorSubject } from 'rxjs';
 import Swal from 'sweetalert2';
-import { valores, mensajes, validarSesion, exito, exito_swal, error, error_swal, warning, warning_swal, si_seguro } from '../../constantes';
+import { valores, mensajes, otras, validarSesion, exito, exito_swal, error, error_swal, warning, warning_swal, si_seguro } from '../../constantes';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 import { Sesion } from '../../modelos/usuario/sesion';
@@ -22,16 +22,14 @@ import { ProductoService } from '../../servicios/inventario/producto.service';
 import { CategoriaProductoService } from '../../servicios/inventario/categoria-producto.service';
 import { CategoriaProducto } from '../../modelos/inventario/categoria-producto';
 import { Router } from '@angular/router';
-import { Kardex } from '../../modelos/inventario/kardex';
 import { Proveedor } from '../../modelos/compra/proveedor';
+import { ProveedorService } from '../../servicios/compra/proveedor.service';
 import { Bodega } from '../../modelos/inventario/bodega';
-
 import { ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { BodegaService } from 'src/app/servicios/inventario/bodega.service';
-import { ProveedorService } from 'src/app/servicios/compra/proveedor.service';
 
 export interface DialogData {
   grupoProducto: GrupoProducto;
@@ -45,19 +43,18 @@ export interface DialogData {
 
 export class ProductoComponent implements OnInit {
 
-  ComponenteProducto: Type<any> = ProductoComponent;
+  activo: string = valores.activo;
+  inactivo: string = valores.inactivo;
+  si: string = valores.si;
+  no: string = valores.no;
+
+  sesion: Sesion = null;
 
   abrirPanelPrecio: boolean = false;
   abrirPanelNuevo: boolean = true;
   abrirPanelNuevoKardexPrecio: boolean = false;
   abrirPanelAdmin: boolean = false;
 
-  activo = valores.activo;
-  inactivo = valores.inactivo;
-  si = valores.si;
-  no = valores.no;
-
-  sesion: Sesion = null;
   producto: Producto = new Producto();
 
   productos: Producto[];
@@ -82,9 +79,17 @@ export class ProductoComponent implements OnInit {
   cabecera: string[] = this.columnas.map(titulo => titulo.nombreColumna);
   dataSource: MatTableDataSource<Producto>;
   clickedRows = new Set<Producto>();
+  
+  cabeceraPrecioSugerido: string[] = ['medida', 'segmento', 'costo', 'margenGanancia', 'precioSinIva', 'precioVentaPublico'];
+  cabeceraPrecioVenta: string[] = ['precioVentaPublicoManual', 'utilidad', 'utilidadPorcentaje'];
+
+  observablePrecios: BehaviorSubject<Precio[]> = new BehaviorSubject<Precio[]>([]);
+  datos: any = [];
+  controls: UntypedFormArray[] = [];
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
+  @ViewChild("inputFiltro") inputFiltro: ElementRef;
 
   constructor(public dialog: MatDialog, private sesionService: SesionService, private productoService: ProductoService,  private proveedorService: ProveedorService,
     private tipoGastoService: TipoGastoService, private impuestoService: ImpuestoService, private router: Router,
@@ -252,8 +257,8 @@ export class ProductoComponent implements OnInit {
     this.productoService.actualizar(this.producto).subscribe({
       next: (res) => {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
-        this.limpiar();
         this.consultar();
+        this.nuevo(null);
       },
       error: (err) => {
         Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
@@ -286,20 +291,20 @@ export class ProductoComponent implements OnInit {
   }
 
   consultar() {
-    this.productoService.consultar().subscribe(
-      res => {
+    this.productoService.consultar().subscribe({
+      next: res => {
         this.productos = res.resultado as Producto[];
-        this.llenarDataSource(this.productos);
+        this.llenarTabla(this.productos);
       },
-      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
-    );
+      error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+    });
   }
 
-  llenarDataSource(productos: Producto[]) {
+  llenarTabla(productos: Producto[]) {
     this.dataSource = new MatTableDataSource(productos);
     this.dataSource.filterPredicate = (data: Producto, filter: string): boolean =>
-      data.codigo.toUpperCase().includes(filter) || data.nombre.toUpperCase().includes(filter) || data.tipoGasto.descripcion.toUpperCase().includes(filter) ||
-      data.categoriaProducto.descripcion.toUpperCase().includes(filter) || data.estado.toUpperCase().includes(filter);
+      data.codigo.includes(filter) || data.nombre.includes(filter) || data.tipoGasto.descripcion.includes(filter) ||
+      data.categoriaProducto.descripcion.includes(filter) || data.estado.includes(filter);
     this.dataSource.paginator = this.paginator;
     this.dataSource.paginator.firstPage();
     this.dataSource.sort = this.sort;
@@ -315,12 +320,12 @@ export class ProductoComponent implements OnInit {
 
   seleccionarProducto(productoSeleccionado: Producto) {
     if (!this.clickedRows.has(productoSeleccionado)) {
-      this.limpiar();
+      this.nuevo(null);
       this.clickedRows.add(productoSeleccionado);
       this.producto = productoSeleccionado;
       this.cargar();
     } else {
-      this.limpiar();
+      this.nuevo(null);
     }
   }
 
@@ -387,6 +392,35 @@ export class ProductoComponent implements OnInit {
     return a && b && a.id == b.id;
   }
 
+  // VALIDACIONES DE CAMPOS
+  validarFormularioProducto(): boolean {
+    if (this.producto.grupoProducto.id == 0) {
+      Swal.fire(error, mensajes.error_grupo_producto, error_swal);
+      return false;
+    }
+    if (this.producto.nombre == '') {
+      Swal.fire(error, mensajes.error_nombre_producto, error_swal);
+      return false;
+    }
+    if (this.producto.medida.id == 0) {
+      Swal.fire(error, mensajes.error_medida_kardex, error_swal);
+      return false;
+    }
+    if (this.producto.impuesto.id == 0) {
+      Swal.fire(error, mensajes.error_impuesto, error_swal);
+      return false;
+    }
+    if (this.producto.tipoGasto.id == 0) {
+      Swal.fire(error, mensajes.error_tipo_gasto, error_swal);
+      return false;
+    }
+    if (this.producto.categoriaProducto.id == 0) {
+      Swal.fire(error, mensajes.error_tipo_producto, error_swal);
+      return false;
+    }
+    return true;
+  }
+
   dialogoGruposProductos(): void {
     const dialogRef = this.dialog.open(DialogoGrupoProductoComponent, {
       width: '80%',
@@ -396,6 +430,13 @@ export class ProductoComponent implements OnInit {
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
         Object.assign(this.producto.grupoProducto, result as GrupoProducto);
+        this.producto.categoriaProducto = this.producto.grupoProducto.categoriaProducto;
+        if (this.producto.grupoProducto.categoriaProducto.id == 1){ // BIEN
+          this.producto.nombre = this.producto.grupoProducto.linea + valores.espacio +
+          this.producto.grupoProducto.sublinea + valores.espacio + this.producto.grupoProducto.presentacion;
+        } else {
+          this.producto.nombre = '';
+        }
       }
     });
   }

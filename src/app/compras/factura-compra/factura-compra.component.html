@@ -469,7 +469,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr *ngFor="let correo of facturaCompra.proveedor.correos; let i=index ">
+                    <tr *ngFor="let correo of facturaCompra.proveedor.correosProveedor; let i=index ">
                         <td>
                             {{correo.email}}
                         </td>
@@ -498,7 +498,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr *ngFor="let celular of facturaCompra.proveedor.celulares; let i=index ">
+                    <tr *ngFor="let celular of facturaCompra.proveedor.celularesProveedor; let i=index ">
                         <td>
                             {{celular.numero}}
                         </td>
@@ -527,7 +527,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr *ngFor="let telefono of facturaCompra.proveedor.telefonos; let i=index ">
+                    <tr *ngFor="let telefono of facturaCompra.proveedor.telefonosProveedor; let i=index ">
                         <td>
                             {{telefono.numero}}
                         </td>

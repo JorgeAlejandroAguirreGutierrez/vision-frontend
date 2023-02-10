@@ -72,14 +72,12 @@ export class SegmentoComponent implements OnInit {
     this.segmento = new Segmento();
     this.clickedRows.clear();
     this.borrarFiltro();
-    this.formularioValido = false;
   }
 
   crear(event) {
     if (event != null)
       event.preventDefault();
-    this.validarFormulario();
-    if (!this.formularioValido)
+    if (!this.validarFormulario())
       return;         
     this.segmentoService.crear(this.segmento).subscribe({
       next: res => {
@@ -94,8 +92,7 @@ export class SegmentoComponent implements OnInit {
   actualizar(event) {
     if (event != null)
       event.preventDefault();
-    this.validarFormulario();
-    if (!this.formularioValido)
+    if (!this.validarFormulario())
       return;        
     this.segmentoService.actualizar(this.segmento).subscribe({
       next: res => {
@@ -174,24 +171,21 @@ export class SegmentoComponent implements OnInit {
       this.dataSource.paginator.firstPage();
     }
   }
-
   borrarFiltro() {
     this.renderer.setProperty(this.inputFiltro.nativeElement, 'value', '');
     this.dataSource.filter = '';
   }
 
-  validarFormulario(){
+  validarFormulario(): boolean{
     //validar que los campos esten llenos antes de guardar
-    this.formularioValido = true;
     if (this.segmento.descripcion == '') {
       Swal.fire({ icon: error_swal, title: error, text: mensajes.error_falta_datos });
-      this.formularioValido = false;
-      return;
+      return false;
     }
     if (this.segmento.margenGanancia <= 0) {
       Swal.fire({ icon: error_swal, title: error, text: mensajes.error_falta_datos });
-      this.formularioValido = false;
-      return;
+      return false;
     }
+    return true;
   }
 }

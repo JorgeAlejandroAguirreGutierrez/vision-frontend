@@ -1,7 +1,6 @@
 import { Producto } from './producto';
 import { valores } from "../../constantes";
 import { Bodega } from './bodega';
-import { Medida } from './medida';
 export class Kardex {
     id: number;
     codigo: string;

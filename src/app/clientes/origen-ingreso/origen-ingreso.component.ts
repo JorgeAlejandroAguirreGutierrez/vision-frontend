@@ -26,7 +26,6 @@ export class OrigenIngresoComponent implements OnInit {
 
   abrirPanelNuevo: boolean = true;
   abrirPanelAdmin: boolean = true;
-  formularioValido: boolean = false;
 
   sesion: Sesion=null;
   origenIngreso= new OrigenIngreso();
@@ -68,14 +67,12 @@ export class OrigenIngresoComponent implements OnInit {
     this.origenIngreso = new OrigenIngreso();
     this.clickedRows.clear();
     this.borrarFiltro();
-    this.formularioValido = false;
   }
 
   crear(event) {
     if (event != null)
       event.preventDefault();
-    this.validarFormulario();
-    if (!this.formularioValido)
+    if (!this.validarFormulario())
       return;  
     this.origenIngresoService.crear(this.origenIngreso).subscribe({
       next: res => {
@@ -90,8 +87,7 @@ export class OrigenIngresoComponent implements OnInit {
   actualizar(event) {
     if (event != null)
       event.preventDefault();
-    this.validarFormulario();
-    if (!this.formularioValido)
+    if (!this.validarFormulario())
       return;  
     this.origenIngresoService.actualizar(this.origenIngreso).subscribe({
       next: res => {
@@ -169,24 +165,21 @@ export class OrigenIngresoComponent implements OnInit {
       this.dataSource.paginator.firstPage();
     }
   }
-  
   borrarFiltro() {
     this.renderer.setProperty(this.inputFiltro.nativeElement, 'value', '');
     this.dataSource.filter = '';
   }
 
-  validarFormulario(){
+  validarFormulario(): boolean{
     //validar que los campos esten llenos antes de guardar
-    this.formularioValido = true;
     if (this.origenIngreso.descripcion == '') {
       Swal.fire({ icon: error_swal, title: error, text: mensajes.error_falta_datos });
-      this.formularioValido = false;
-      return;
+      return false;
     }
     if (this.origenIngreso.abreviatura == '') {
       Swal.fire({ icon: error_swal, title: error, text: mensajes.error_falta_datos });
-      this.formularioValido = false;
-      return;
+      return false;
     }
+    return true;
   }
 }

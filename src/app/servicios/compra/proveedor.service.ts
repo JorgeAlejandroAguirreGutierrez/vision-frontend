@@ -29,8 +29,7 @@ export class ProveedorService {
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);
-      })
-    );
+      }));
   }
 
   consultar(): Observable<Respuesta> {
@@ -94,7 +93,7 @@ export class ProveedorService {
   }
 
   validarIdentificacion(identificacion: string): Observable<Respuesta> {
-    return this.http.get(environment.host + urn.ruta + urn.proveedor + '/identificacion/validar/' + identificacion, options).pipe(
+    return this.http.get(environment.host + urn.ruta + urn.cliente + '/identificacion/validar/' + identificacion, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);

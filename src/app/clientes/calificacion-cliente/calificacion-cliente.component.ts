@@ -26,7 +26,6 @@ export class CalificacionClienteComponent implements OnInit {
 
   abrirPanelNuevo : boolean= true;
   abrirPanelAdmin: boolean = true;
-  formularioValido: boolean = false;
 
   sesion: Sesion=null;
   calificacionCliente= new CalificacionCliente();
@@ -68,15 +67,13 @@ export class CalificacionClienteComponent implements OnInit {
     this.calificacionCliente = new CalificacionCliente();
     this.clickedRows.clear();
     this.borrarFiltro();
-    this.formularioValido = false;
   }
 
   crear(event) {
     if (event != null)
       event.preventDefault();
-    this.validarFormulario();
-    if (!this.formularioValido)
-      return;  
+    if (!this.validarFormulario())
+      return;
     this.calificacionClienteService.crear(this.calificacionCliente).subscribe({
       next: res => {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
@@ -90,8 +87,7 @@ export class CalificacionClienteComponent implements OnInit {
   actualizar(event) {
     if (event != null)
       event.preventDefault();
-    this.validarFormulario();
-    if (!this.formularioValido)
+    if (!this.validarFormulario())
       return;  
     this.calificacionClienteService.actualizar(this.calificacionCliente).subscribe({
       next: res => {
@@ -169,24 +165,21 @@ export class CalificacionClienteComponent implements OnInit {
       this.dataSource.paginator.firstPage();
     }
   }
-
   borrarFiltro() {
     this.renderer.setProperty(this.inputFiltro.nativeElement, 'value', '');
     this.dataSource.filter = '';
   }
 
-  validarFormulario(){
+  validarFormulario(): boolean {
     //validar que los campos esten llenos antes de guardar
-    this.formularioValido = true;
     if (this.calificacionCliente.descripcion == '') {
       Swal.fire({ icon: error_swal, title: error, text: mensajes.error_falta_datos });
-      this.formularioValido = false;
-      return;
+      return false;
     }
     if (this.calificacionCliente.abreviatura == '') {
       Swal.fire({ icon: error_swal, title: error, text: mensajes.error_falta_datos });
-      this.formularioValido = false;
-      return;
+      return false;
     }
+    return true;
   }
 }

@@ -151,9 +151,9 @@ export class FacturaCompraComponent implements OnInit {
   construirFactura() {
     if (this.facturaCompra.id != 0) {
         this.seleccionProveedor.patchValue(this.facturaCompra.proveedor);
-        this.telefono = this.facturaCompra.proveedor.telefonos.length > 0 ? this.facturaCompra.proveedor.telefonos[0].numero: valores.vacio;
-        this.celular = this.facturaCompra.proveedor.celulares.length > 0 ? this.facturaCompra.proveedor.celulares[0].numero: valores.vacio;
-        this.correo = this.facturaCompra.proveedor.correos.length > 0 ? this.facturaCompra.proveedor.correos[0].email: valores.vacio;
+        this.telefono = this.facturaCompra.proveedor.telefonosProveedor.length > 0 ? this.facturaCompra.proveedor.telefonosProveedor[0].numero: valores.vacio;
+        this.celular = this.facturaCompra.proveedor.celularesProveedor.length > 0 ? this.facturaCompra.proveedor.celularesProveedor[0].numero: valores.vacio;
+        this.correo = this.facturaCompra.proveedor.correosProveedor.length > 0 ? this.facturaCompra.proveedor.correosProveedor[0].email: valores.vacio;
         this.dataSourceFacturaCompraDetalle = new MatTableDataSource<FacturaCompraDetalle>(this.facturaCompra.facturaCompraDetalles);
         this.dataSourceFacturaCompraDetalle.paginator = this.paginatorFacturaCompraDetalle;
     }
@@ -232,12 +232,12 @@ export class FacturaCompraComponent implements OnInit {
         console.log(res);
         this.facturaCompra.proveedor = res.resultado as Proveedor;
         this.seleccionProveedor.patchValue(this.facturaCompra.proveedor);   
-        if (this.facturaCompra.proveedor.telefonos.length > valores.cero)
-          this.telefono = this.facturaCompra.proveedor.telefonos[0].numero;
-        if (this.facturaCompra.proveedor.celulares.length > valores.cero)
-          this.celular = this.facturaCompra.proveedor.celulares[0].numero;
-        if (this.facturaCompra.proveedor.correos.length > valores.cero)
-          this.correo = this.facturaCompra.proveedor.correos[0].email;
+        if (this.facturaCompra.proveedor.telefonosProveedor.length > valores.cero)
+          this.telefono = this.facturaCompra.proveedor.telefonosProveedor[0].numero;
+        if (this.facturaCompra.proveedor.celularesProveedor.length > valores.cero)
+          this.celular = this.facturaCompra.proveedor.celularesProveedor[0].numero;
+        if (this.facturaCompra.proveedor.correosProveedor.length > valores.cero)
+          this.correo = this.facturaCompra.proveedor.correosProveedor[0].email;
       },
       err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     );
