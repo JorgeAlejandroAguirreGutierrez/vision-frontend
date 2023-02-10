@@ -289,67 +289,89 @@ export const tabs = {
     /**
      * TABS
      */
-     tab_auxiliar: "Dependiente",
-     tab_calificacion_cliente: "Calificacion Cliente",
-     tab_cliente: "Cliente",
-     tab_estado_civil: "Estado Civil",
-     tab_forma_pago: "Forma de Pago",
-     tab_genero: "Genero",
-     tab_grupo_cliente: "Grupo Cliente",
-     tab_impuesto: "Impuesto",
-     tab_origen_ingreso: "Origen de Ingreso",
-     tab_plazo_credito: "Plazo de Credito",
-     tab_retencion_cliente: "Retencion Cliente",
-     tab_tipo_contribuyente: "Tipo de Contribuyente",
-     tab_tipo_pago: "Tipo de Pago",
-     tab_tipo_retencion: "Tipo de Retencion",
-     tab_factura_compra: "Factura de Compra",
-     tab_pago_compra: "Pago de Compra",
-     tab_proveedor: "Proveedor",
-     tab_grupo_proveedor: "Grupo Proveedor",
-     tab_proveedor_bodega: "Proveedor Bodega",
-     tab_proveedor_producto: "Proveedor Producto",
-     tab_egreso: " Egreso",
-     tab_factura: "Factura",
-     tab_pedido: "Pedido",
-     tab_proforma:  "Proforma",
-     tab_dato_adicional: "Dato Adicional",
-     tab_empresa: "Empresa",
-     tab_exportacion: "Exportacion",
-     tab_importacion: "Importacion",
-     tab_ubicacion: "Ubicacion",
-     tab_contabilizacion: "Contabilizacion",
-     tab_cuenta: "Cuenta",
-     tab_entrega: "Entrega",
-     tab_transportista: "Transportista",
-     tab_vehiculo_transporte: "Vehiculo de Transporte",
-     tab_activo_fijo: "Activo Fijo",
-     tab_bodega: "Bodegas",
-     tab_kardex: "Kardex",
-     tab_medida: "Medida",
-     tab_producto: "Producto",
-     tab_servicio:  "Servicio",
-     tab_promocion: "Promocion",
-     tab_saldo_inicial_inventario: "Saldo inicial",
-     tab_equivalencia_medida: "Equivalencia Medida",
-     tab_usuario: "Usuario",
-     tab_estacion_usuario: "Estación Usuario",
-     tab_establecimiento: "Establecimiento",
-     tab_estacion: "Estación",
-     tab_perfil: "Pefil",
-     tab_permiso: "Permiso",
-     tab_grupo_producto: "Grupo de Producto",
-     tab_segmento: "Segmentos",
-     tab_movimiento_contable: "Movimiento contable",
-     tab_cuenta_contable: "Cuenta contable",
-     tab_recaudacion: "Recaudacion",
-     tab_transferencia_bodega: "Transferencia Bodega",
-     tab_mapa_cliente: "Mapa Cliente",
-     tab_indicadores: "Indicadores",
+    //Clientes
+    tab_cliente: "Cliente",
+    tab_segmento: "Segmentos",
+    tab_grupo_cliente: "Grupo Cliente",
+    tab_forma_pago: "Forma de Pago",
+    tab_origen_ingreso: "Origen de Ingreso",
+    tab_plazo_credito: "Plazo de Credito",
+    tab_calificacion_cliente: "Calificacion Cliente",
+
+    //Compras
+    tab_proveedor: "Proveedor",
+    tab_grupo_proveedor: "Grupo Proveedor",
+    tab_factura_compra: "Factura de Compra",
+    tab_nota_credito_compra: "Nota de Crédito",
+
+    //Ventas
+    tab_factura: "Factura",
+    tab_pedido: "Pedido",
+    tab_proforma:  "Proforma",
+    tab_egreso: " Egreso",
+    tab_nota_credito_venta: "Nota de Crédito",
+    tab_transportista: "Transportista",
+    tab_vehiculo_transporte: "Vehiculo de Transporte",
+
+    // Inventarios
+    tab_grupo_producto: "Grupo de Producto",
+    tab_producto: "Producto",
+    tab_kardex: "Kardex",
+    tab_promocion: "Promocion",
+    tab_proveedor_producto: "Proveedor Producto",
+    tab_transferencia_bodega: "Transferencia Bodega",
+    tab_bodega: "Bodegas",
+    tab_medida: "Medida",
+    tab_equivalencia_medida: "Equivalencia Medida",
+
+    // Caja Bancos
+    // Cuentas x Cobrar
+    // Cuentas x Pagar
+    // Activos Fijos
+    // Producción
+
+    // Contabilidad
+    tab_cuenta_contable: "Cuenta contable",
+    tab_movimiento_contable: "Movimiento contable",
+
+    // Talento Humano
+    // Financiero
+    // Importaciones
+    // Reportes
+
+    // Accesos
+    tab_usuario: "Usuario",
+    tab_empresa: "Empresa",
+    tab_estacion_usuario: "Estación Usuario",
+    tab_establecimiento: "Establecimiento",
+    tab_estacion: "Estación",
+    tab_perfil: "Pefil",
+    tab_permiso: "Permiso",
+
+    // Configuración
+    tab_ubicacion: "Ubicacion",
+    tab_estado_civil: "Estado Civil",
+    tab_impuesto: "Impuesto",
+    tab_tipo_pago: "Tipo de Pago",
+    tab_tipo_retencion: "Tipo de Retencion",
+    tab_genero: "Genero",
+    tab_exportacion: "Exportacion",
+    tab_importacion: "Importacion",
+
+    // Estadisticas
+    tab_indicadores: "Indicadores",
+
+    // Otros
+    tab_retencion_cliente: "Retencion Cliente",
+    tab_contabilizacion: "Contabilizacion",
+    tab_cuenta: "Cuenta",
+    tab_saldo_inicial_inventario: "Saldo inicial",
+    tab_mapa_cliente: "Mapa Cliente",
+
 }
     
 export const items = {
-    /*** ITEMS PARA OPCIONES DEL MENU*/
+    /*** ITEMS PARA OPCIONES DEL MENU Y PERMISOS*/
     // CLIENTES
     item_cliente : "Clientes",
     item_segmento : "Segmentos",
@@ -363,12 +385,14 @@ export const items = {
     item_proveedor : "Proveedores",
     item_factura_compra : "Facturas de Compra",
     item_grupo_proveedor : "Grupos de Proveedores",
+    item_nota_credito_compra : "Notas de Crédito Compra",
 
     //VENTAS
     item_factura : "Facturas",
     item_pedido : "Pedidos",
     item_proforma : "Proformas",
     item_egreso : "Egresos", 
+    item_nota_credito_venta : "Notas de Crédito Venta",
     item_transportista : "Transportistas",
     item_vehiculo_transporte : "Vehiculos Transporte",
 
@@ -433,64 +457,74 @@ export const items = {
     
 export const icos = {
     /**
-     * ICOS
+     * ICONOS
      */
-     ico_auxiliar : 'fa fa-file-text-o',
-     ico_calificacion_cliente : 'fa fa-star-half-o',
-     ico_cliente : 'fa fa-address-book',
-     ico_estado_civil : 'fa fa-venus-mars',
-     ico_forma_pago : 'fa fa-cc-mastercard',
-     ico_genero : 'fa fa-mars-stroke',
-     ico_grupo_cliente : 'fa fa-users',
-     ico_impuesto : 'fa fa-university',
-     ico_origen_ingreso : 'fa fa-briefcase',
-     ico_plazo_credito : 'fa fa-calendar',
-     ico_retencion_cliente : 'fa fa-file-text-o',
-     ico_tipo_contribuyente : 'fa fa-file-text-o',
-     ico_tipo_pago : 'fa fa-ticket',
-     ico_tipo_retencion : 'fa fa-retweet',
-     ico_factura_compra : 'fa fa-cart-arrow-down',
-     ico_pago_compra : 'fa fa-file-text-o',
-     ico_proveedor : 'fa fa-truck',
-     ico_grupo_proveedor : 'fa fa-suitcase',
-     ico_egreso : 'fa fa-file-text-o',
-     ico_factura : 'fa fa-clipboard',
-     ico_pedido : 'fa fa-file-text-o',
-     ico_proforma : 'fa fa-file-text-o',
-     ico_dato_adicional : 'fa fa-table',
-     ico_empresa : 'fa fa-building',
-     ico_exportacion : 'fa fa-download',
-     ico_importacion : 'fa fa-upload',
-     ico_ubicacion : 'fa fa-globe',
+    // Clientes
+    ico_cliente : 'fa fa-address-book',
+    ico_segmento : 'fa fa-th-list',
+    ico_grupo_cliente : 'fa fa-users',
+    ico_forma_pago : 'fa fa-cc-mastercard',
+    ico_origen_ingreso : 'fa fa-briefcase',
+    ico_plazo_credito : 'fa fa-calendar',
+    ico_calificacion_cliente : 'fa fa-star-half-o',
+
+    // Compras
+    ico_proveedor : 'fa fa-truck',
+    ico_factura_compra : 'fa fa-cart-arrow-down',
+    ico_grupo_proveedor : 'fa fa-suitcase',
+    ico_nota_credito_compra : 'fa fa-reply-all',
+
+    // Ventas
+    ico_factura : 'fa fa-clipboard',
+    ico_pedido : 'fa fa-file-text-o',
+    ico_proforma : 'fa fa-file-text-o',
+    ico_egreso : 'fa fa-file-text-o',
+    ico_nota_credito_venta : 'fa fa-reply-all',
+    ico_transportista : 'fa fa-id-card',
+    ico_vehiculo_transporte : 'fa fa-truck',
+
+    // Inventarios
+    ico_grupo_producto : 'fa fa-object-group',
+    ico_producto : 'fa fa-shopping-basket',
+    ico_kardex : 'fa fa-table',
+    ico_promocion : 'fa fa-product-hunt',
+    ico_proveedor_producto : 'fa fa-bus',
+    ico_transferencia_bodega : 'fa fa-handshake-o',
+    ico_bodega : 'fa fa-archive',
+    ico_medida : 'fa fa-medium',
+    ico_equivalencia_medida : 'fa fa-exchange',
+
+    // Contabilidad
+    ico_cuenta_contable : 'fa fa-sort-amount-asc',
+    ico_movimiento_contable : 'fa fa-retweet',
+
+    // Accesos
+    ico_usuario : 'fa fa-user',
+    ico_empresa : 'fa fa-building',
+    ico_estacion_usuario : 'fa fa-street-view',
+    ico_establecimiento : 'fa fa-home',
+    ico_estacion : 'fa fa-laptop',
+    ico_perfil : 'fa fa-database',
+    ico_permiso : 'fa fa-check-square',
+
+    // Configuración
+    ico_ubicacion : 'fa fa-globe',
+    ico_estado_civil : 'fa fa-venus-mars',
+    ico_impuesto : 'fa fa-university',
+    ico_tipo_pago : 'fa fa-ticket',
+    ico_tipo_retencion : 'fa fa-retweet',
+    ico_genero : 'fa fa-mars-stroke',
+    ico_exportacion : 'fa fa-download',
+    ico_importacion : 'fa fa-upload',
+
+    // Estadisticas
+    ico_indicadores : 'fa fa-bar-chart',
+
+    // Otros
      ico_contabilizacion : 'fa fa-file-text-o',
      ico_cuenta : 'fa fa-file-text-o',
-     ico_entrega : 'fa fa-file-text-o',
-     ico_transportista : 'fa fa-id-card',
-     ico_vehiculo_transporte : 'fa fa-truck',
-     ico_activo_fijo : 'fa fa-file-text-o',
-     ico_bodega : 'fa fa-archive',
-     ico_kardex : 'fa fa-table',
-     ico_medida : 'fa fa-medium',
-     ico_producto : 'fa fa-shopping-basket',
-     ico_servicio : 'fa fa-child',
      ico_proveedor_bodega : 'fa fa-bus',
-     ico_equivalencia_medida : 'fa fa-exchange',
-     ico_usuario : 'fa fa-user',
-     ico_estacion_usuario : 'fa fa-street-view',
-     ico_establecimiento : 'fa fa-home',
-     ico_estacion : 'fa fa-laptop',
-     ico_perfil : 'fa fa-database',
-     ico_permiso : 'fa fa-check-square',
-     ico_grupo_producto : 'fa fa-object-group',
-     ico_segmento : 'fa fa-th-list',
-     ico_movimiento_contable : 'fa fa-retweet',
-     ico_cuenta_contable : 'fa fa-sort-amount-asc',
-     ico_recaudacion :     'fa fa-file-text-o',
-     ico_proveedor_producto : 'fa fa-bus',
-     ico_transferencia_bodega : 'fa fa-handshake-o',
      ico_mapa_cliente : 'fa fa-map',
-     ico_promocion : 'fa fa-product-hunt',
-     ico_indicadores : 'fa fa-bar-chart',
 }
 
 export const exito = "EXITO";

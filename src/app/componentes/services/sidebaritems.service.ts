@@ -17,12 +17,14 @@ import { PlazoCreditoComponent } from '../../clientes/plazo-credito/plazo-credit
 import { ProveedorComponent } from '../../compras/proveedor/proveedor.component';
 import { FacturaCompraComponent } from '../../compras/factura-compra/factura-compra.component';
 import { GrupoProveedorComponent } from '../../compras/grupo-proveedor/grupo-proveedor.component';
+import { NotaCreditoCompraComponent } from '../../compras/nota-credito-compra/nota-credito-compra.component';
 
 //VENTAS
 import { FacturaComponent } from "../../comprobantes/factura/factura.component";
 import { PedidoComponent } from "../../comprobantes/pedido/pedido.component";
 import { ProformaComponent } from "../../comprobantes/proforma/proforma.component";
 import { EgresoComponent } from "../../comprobantes/egreso/egreso.component";
+import { NotaCreditoVentaComponent } from '../../comprobantes/nota-credito-venta/nota-credito-venta.component';
 
 //INVENTARIOS
 import { GrupoProductoComponent } from '../../inventarios/grupo-producto/grupo-producto.component';
@@ -100,6 +102,7 @@ export class SidebarItemsService {
       this.llenarOpciones(ProveedorComponent, tabs.tab_proveedor, items.item_proveedor, icos.ico_proveedor);
       this.llenarOpciones(FacturaCompraComponent, tabs.tab_factura_compra, items.item_factura_compra, icos.ico_factura_compra);     
       this.llenarOpciones(GrupoProveedorComponent, tabs.tab_grupo_proveedor, items.item_grupo_proveedor, icos.ico_grupo_proveedor);
+      this.llenarOpciones(NotaCreditoCompraComponent, tabs.tab_nota_credito_compra, items.item_nota_credito_compra, icos.ico_nota_credito_compra);
     }
 
     if (tabNombre == modulos.modulo_ventas) {
@@ -107,6 +110,7 @@ export class SidebarItemsService {
       this.llenarOpciones(PedidoComponent, tabs.tab_pedido, items.item_pedido, icos.ico_pedido);
       this.llenarOpciones(ProformaComponent, tabs.tab_proforma, items.item_proforma, icos.ico_proforma);
       this.llenarOpciones(EgresoComponent, tabs.tab_egreso, items.item_egreso, icos.ico_egreso);
+      this.llenarOpciones(NotaCreditoVentaComponent, tabs.tab_nota_credito_venta, items.item_nota_credito_venta, icos.ico_nota_credito_venta);
       this.llenarOpciones(TransportistaComponent, tabs.tab_transportista, items.item_transportista, icos.ico_transportista);
       this.llenarOpciones(VehiculoTransporteComponent, tabs.tab_vehiculo_transporte, items.item_vehiculo_transporte, icos.ico_vehiculo_transporte);
     }

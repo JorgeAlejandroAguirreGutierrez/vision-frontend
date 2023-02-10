@@ -305,9 +305,6 @@
                                 </div>
                                 <div class="col-3 iconos">
                                     <button mat-icon-button>
-                                        <mat-icon class="iconos-peque">edit</mat-icon>
-                                    </button>
-                                    <button mat-icon-button>
                                         <mat-icon class="iconos-peque" (click)="eliminarCelular(i)">close</mat-icon>
                                     </button>
                                 </div>
@@ -377,7 +374,7 @@
             <div class="form-group form-row">
                 <div class="col-4">
                     <div class="centrar-titulo col-12 fondo">
-                        <mat-label>DINARDAP</mat-label>
+                        <mat-label>COMERCIALIZACIÓN</mat-label>
                     </div>
                     <mat-divider></mat-divider>
                     <mat-card class="mat-elevation-z8">
@@ -385,11 +382,11 @@
                             <div class="col-12">
                                 <mat-form-field appearance="standard">
                                     <mat-label>Forma de pago</mat-label>
-                                    <mat-select [(ngModel)]="proveedor.formaPago.id"
-                                        [compareWith]="compareFn" (selectionChange)="cambiarFormaPago()"
+                                    <mat-select [(ngModel)]="proveedor.formaPago" [compareWith]="compareFn" 
+                                        (selectionChange)="cambiarFormaPago()"
                                         class="form-control-sm">
-                                        <mat-option *ngFor="let formaPago of formasPagos" [value]="formaPago.id">
-                                            {{formaPago.descripcion}}
+                                        <mat-option *ngFor="let formaPago of formasPagos" [value]="formaPago">
+                                            {{formaPago.abreviatura}}
                                         </mat-option>
                                     </mat-select>
                                 </mat-form-field>
@@ -397,9 +394,8 @@
                             <div class="col-6">
                                 <mat-form-field appearance="standard">
                                     <mat-label>Plazo/días</mat-label>
-                                    <mat-select [disabled]="deshabilitarPlazoCredito"
-                                        [(ngModel)]="proveedor.plazoCredito" [compareWith]="compareFn"
-                                        class="form-control-sm">
+                                    <mat-select [disabled]="deshabilitarPlazoCredito" [compareWith]="compareFn"
+                                        [(ngModel)]="proveedor.plazoCredito" class="form-control-sm">
                                         <mat-option *ngFor="let plazoCredito of plazosCreditos" [value]="plazoCredito">
                                             {{plazoCredito.plazo}}
                                         </mat-option>

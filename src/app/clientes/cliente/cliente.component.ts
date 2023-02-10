@@ -1,15 +1,13 @@
 import { Component, OnInit, HostListener, Type, ViewChild, Inject, ElementRef, Renderer2 } from '@angular/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { MapInfoWindow, MapMarker } from '@angular/google-maps';
 import { Router } from '@angular/router';
 import Swal from 'sweetalert2';
-import { valores, mensajes, otras, tabs, validarSesion, tab_activo, exito, exito_swal, error, error_swal } from '../../constantes';
+import { valores, mensajes, otras, validarSesion, exito, exito_swal, error, error_swal } from '../../constantes';
+
 import { environment } from '../../../environments/environment';
-import { EmpresaService } from '../../servicios/usuario/empresa.service';
 import { Sesion } from '../../modelos/usuario/sesion';
 import { SesionService } from '../../servicios/usuario/sesion.service';
-import { TabService } from '../../componentes/services/tab.service';
 import { Cliente } from '../../modelos/cliente/cliente';
 import { ClienteService } from '../../servicios/cliente/cliente.service';
 import { TipoContribuyente } from '../../modelos/cliente/tipo-contribuyente';
@@ -40,8 +38,6 @@ import { PlazoCredito } from '../../modelos/cliente/plazo-credito';
 import { PlazoCreditoService } from '../../servicios/cliente/plazo-credito.service';
 import { FormaPago } from '../../modelos/cliente/forma-pago';
 import { FormaPagoService } from '../../servicios/cliente/forma-pago.service';
-import { TipoPago } from '../../modelos/cliente/tipo-pago';
-import { TipoPagoService } from '../../servicios/cliente/tipo-pago.service';
 import { TipoRetencion } from '../../modelos/configuracion/tipo-retencion';
 import { TipoRetencionService } from '../../servicios/configuracion/tipo-retencion.service';
 import { TipoIdentificacion } from '../../modelos/configuracion/tipo-identificacion';
@@ -87,7 +83,6 @@ export class ClienteComponent implements OnInit {
   deshabilitarDependiente: boolean = false;
   verIconoEditarDependiente: boolean = false;
   deshabilitarDatoAdicional: boolean = false;
-
 
   urlLogo: string = ""; 
   nombreEmpresa: string = "";
