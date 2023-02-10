@@ -6,8 +6,8 @@ import Swal from 'sweetalert2';
 import { Router } from '@angular/router';
 import { Sesion } from '../../modelos/usuario/sesion';
 import { SesionService } from '../../servicios/usuario/sesion.service';
-import { GrupoClienteService } from '../../servicios/cliente/grupo-cliente.service';
 import { GrupoCliente } from '../../modelos/cliente/grupo-cliente';
+import { GrupoClienteService } from '../../servicios/cliente/grupo-cliente.service';
 import { CuentaContable } from '../../modelos/contabilidad/cuenta-contable';
 
 import { ViewChild } from '@angular/core';

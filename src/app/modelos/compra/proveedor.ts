@@ -18,9 +18,13 @@ export class Proveedor {
     razonSocial: string;
     nombreComercial: string;
     direccion: string;
+    referencia: string;
+    latitudgeo: number;
+    longitudgeo: number;
     especial: string;
     obligadoContabilidad: string;
     fantasma: string;
+    relacionado: string;
     estado: string;
     
     tipoIdentificacion: TipoIdentificacion;
@@ -38,15 +42,20 @@ export class Proveedor {
     //retencionesProveedor: RetencionCliente[];
 
     constructor() {
-        this.id=valores.cero;
-        this.codigo=valores.vacio;
-        this.identificacion=valores.vacio;
-        this.razonSocial=valores.vacio;
-        this.nombreComercial=valores.vacio;
+        this.id = valores.cero;
+        this.codigo = valores.vacio;
+        this.identificacion = valores.vacio;
+        this.razonSocial = valores.vacio;
+        this.nombreComercial = valores.vacio;
         this.direccion = valores.vacio;
-        this.obligadoContabilidad=valores.no;
-        this.estado=valores.activo;
-        this.especial=valores.no;
+        this.referencia = valores.vacio;
+        this.latitudgeo = valores.latCiudad;
+        this.longitudgeo = valores.lngCiudad;
+        this.obligadoContabilidad = valores.no;
+        this.estado = valores.activo;
+        this.especial = valores.no;
+        this.fantasma = valores.no;
+        this.relacionado = valores.no;
         this.tipoIdentificacion = new TipoIdentificacion();
         this.ubicacion = new Ubicacion();
         this.tipoContribuyente = new TipoContribuyente();
@@ -55,9 +64,9 @@ export class Proveedor {
         this.plazoCredito = new PlazoCredito();
         this.montoFinanciamiento = valores.cero;
 
-        this.telefonosProveedor=[];
-        this.celularesProveedor=[];
-        this.correosProveedor=[];
+        this.telefonosProveedor = [];
+        this.celularesProveedor = [];
+        this.correosProveedor = [];
         //this.retencionesProveedor=[];
         //this.retencionesProveedor.push(new RetencionCliente());
         //this.retencionesProveedor.push(new RetencionCliente());
