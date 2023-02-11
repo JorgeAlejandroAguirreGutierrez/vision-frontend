@@ -1,5 +1,5 @@
 import { Proveedor } from './proveedor';
-import { FacturaCompraDetalle } from './factura-compra-detalle';
+import { FacturaCompraLinea } from './factura-compra-linea';
 import { Sesion } from '../usuario/sesion';
 import { valores } from "../../constantes";
 import { TipoComprobante } from '../comprobante/tipo-comprobante';
@@ -20,17 +20,16 @@ export class FacturaCompra {
     totalSinDescuento: number;
     comentario: string;
     proveedor: Proveedor;
-    bodega: Bodega;
     sesion: Sesion;
     tipoComprobante: TipoComprobante;
-    facturaCompraDetalles: FacturaCompraDetalle[];
+    facturaCompraLineas: FacturaCompraLinea[];
 
     constructor() {
         this.id = valores.cero;
         this.codigo = valores.vacio;
         this.secuencia = valores.vacio;
         this.fecha = new Date();
-        this.estado = valores.activo;
+        this.estado = valores.noFacturada;
         this.valorDescuentoTotal = valores.cero;
         this.porcentajeDescuentoTotal = valores.cero;
         this.subtotalSinDescuento = valores.cero;
@@ -41,9 +40,8 @@ export class FacturaCompra {
         this.totalSinDescuento = valores.cero;
         this.comentario = valores.vacio;
         this.proveedor = new Proveedor();
-        this.bodega = new Bodega();
         this.sesion = new Sesion();
         this.tipoComprobante = new TipoComprobante();
-        this.facturaCompraDetalles = [];
+        this.facturaCompraLineas = [];
     }
 }

@@ -1,7 +1,7 @@
 import { valores } from "../../constantes";
 import { Impuesto } from "../inventario/impuesto";
 import { Producto } from "../inventario/producto";
-export class FacturaCompraDetalle {
+export class FacturaCompraLinea {
     id: number;
     codigo: string;
     comentario: string;
