@@ -7,6 +7,7 @@ import { Kardex } from './kardex';
 import { valores } from "../../constantes";
 import { Medida } from './medida';
 import { Proveedor } from '../compra/proveedor';
+import { Bodega } from './bodega';
 export class Producto {
   id: number;
   codigo: string;
@@ -19,6 +20,7 @@ export class Producto {
   impuesto: Impuesto;
   medida: Medida;
   proveedor: Proveedor;
+  bodega: Bodega;
   kardexs: Kardex[];
   precios: Precio[];
   
@@ -35,6 +37,7 @@ export class Producto {
     this.impuesto = new Impuesto();
     this.medida = new Medida();
     this.proveedor = new Proveedor();
+    this.bodega = new Bodega();
     this.kardexs = [];
     this.kardexs.push(new Kardex());
     this.precios=[];    

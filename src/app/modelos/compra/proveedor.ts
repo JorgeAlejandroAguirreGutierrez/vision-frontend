@@ -39,7 +39,6 @@ export class Proveedor {
     telefonosProveedor: TelefonoProveedor[];
     celularesProveedor: CelularProveedor[];
     correosProveedor: CorreoProveedor[];
-    //retencionesProveedor: RetencionCliente[];
 
     constructor() {
         this.id = valores.cero;
