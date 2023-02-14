@@ -29,6 +29,8 @@ import { TabService } from 'src/app/componentes/services/tab.service';
 import { FacturacionElectronicaService } from 'src/app/servicios/comprobante/factura-eletronica.service';
 import { CategoriaProducto } from 'src/app/modelos/inventario/categoria-producto';
 import { CategoriaProductoService } from 'src/app/servicios/inventario/categoria-producto.service';
+import { KardexService } from 'src/app/servicios/inventario/kardex.service';
+import { Kardex } from 'src/app/modelos/inventario/kardex';
 
 @Component({
   selector: 'app-factura',
@@ -73,7 +75,7 @@ export class FacturaComponent implements OnInit {
   constructor(private clienteService: ClienteService, private sesionService: SesionService, 
     private impuestoService: ImpuestoService, private facturaDetalleService: FacturaDetalleService, private router: Router,
     private facturaService: FacturaService, private facturacionElectronicaService: FacturacionElectronicaService,
-    private productoService: ProductoService, private bodegaService: BodegaService, 
+    private productoService: ProductoService, private bodegaService: BodegaService, private kardexService: KardexService,
     private categoriaProductoService: CategoriaProductoService, private tabService: TabService,
     private modalService: NgbModal, private _formBuilder: UntypedFormBuilder) { }
 
@@ -87,6 +89,7 @@ export class FacturaComponent implements OnInit {
   bodegas: Bodega[]=[];
   categoriasProductos: CategoriaProducto[] = [];
   categoriaProducto = valores.bien;
+  kardex: Kardex = new Kardex();
 
   sesion: Sesion;
   impuestos: Impuesto[];
@@ -317,7 +320,7 @@ export class FacturaComponent implements OnInit {
 
   seleccionarRazonSocialCliente() {
     let clienteId=undefined;
-    clienteId=this.seleccionRazonSocialCliente.value.id;
+    clienteId = this.seleccionRazonSocialCliente.value.id;
     this.clienteService.obtener(clienteId).subscribe(
       res => {
         Object.assign(this.factura.cliente, res.resultado as Cliente);
@@ -335,7 +338,8 @@ export class FacturaComponent implements OnInit {
   }
 
   seleccionarIdentificacionCliente() {
-    let clienteId = this.seleccionIdentificacionCliente.value.id;
+    let clienteId=undefined;
+    clienteId = this.seleccionIdentificacionCliente.value.id;
     this.clienteService.obtener(clienteId).subscribe(
       res => {
         Object.assign(this.factura.cliente,res.resultado as Cliente);
@@ -352,24 +356,32 @@ export class FacturaComponent implements OnInit {
     );
   }
 
-  limpiarProducto(){
+  limpiarFacturaDetalle(){
     this.facturaDetalle = new FacturaDetalle();
+    this.kardex = new Kardex();
     this.seleccionProducto.patchValue(valores.vacio);
-    this.costoPromedio = valores.cero;
-    this.saldo = valores.cero;
-    this.saldoTotal = valores.cero;
   }
 
   seleccionarProducto() {
     this.facturaDetalle.producto=this.seleccionProducto.value;
-    if(this.facturaDetalle.producto.kardexs.length == valores.cero){
-      this.facturaDetalle.producto=new Producto();
-      Swal.fire({ icon: error_swal, title: error, text: mensajes.error_kardex_vacio, footer: mensajes.error_kardex_vacio_mensaje });
+    if(this.facturaDetalle.producto.id == valores.cero || this.facturaDetalle.bodega.id == valores.cero || this.factura.cliente.id == valores.cero){
       return;
     }
-    this.costoPromedio=this.facturaDetalle.producto.kardexs[this.facturaDetalle.producto.kardexs.length-1].costoUnitario;
-    this.saldo=this.facturaDetalle.producto.kardexs[this.facturaDetalle.producto.kardexs.length-1].cantidad;
-    this.saldoTotal=this.facturaDetalle.producto.kardexs[this.facturaDetalle.producto.kardexs.length-1].cantidad;
+    for(let precio of this.facturaDetalle.producto.precios){
+      if (precio.segmento.id == this.factura.cliente.segmento.id){
+        this.facturaDetalle.precio = precio;
+      }
+    }
+    this.kardexService.obtenerUltimoPorFecha(this.facturaDetalle.bodega.id, this.facturaDetalle.producto.id).subscribe(
+      res => {
+        if (res.resultado == null){
+          Swal.fire({ icon: error_swal, title: error, text: mensajes.error_kardex_vacio });
+          return;
+        }
+        this.kardex = res.resultado as Kardex;
+      },
+      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+    );
   }
 
   calcularFacturaDetalle(){
@@ -433,16 +445,24 @@ export class FacturaComponent implements OnInit {
   }
 
   seleccionarBodega(){
-    if (this.facturaDetalle.cantidad == valores.cero){
+    if(this.facturaDetalle.producto.id == valores.cero || this.facturaDetalle.bodega.id == valores.cero || this.factura.cliente.id == valores.cero){
       return;
     }
-    if (this.facturaDetalle.precio.id == valores.cero){
-      return;
+    for(let precio of this.facturaDetalle.producto.precios){
+      if (precio.segmento.id == this.factura.cliente.segmento.id){
+        this.facturaDetalle.precio = precio;
+      }
     }
-    if (this.facturaDetalle.impuesto.id == valores.cero){
-      return;
-    }
-    this.calcularFacturaDetalle();
+    this.kardexService.obtenerUltimoPorFecha(this.facturaDetalle.bodega.id, this.facturaDetalle.producto.id).subscribe(
+      res => {
+        if (res.resultado == null){
+          Swal.fire({ icon: error_swal, title: error, text: mensajes.error_kardex_vacio });
+          return;
+        }
+        this.kardex = res.resultado as Kardex;
+      },
+      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+    );
   }
 
   seleccionarValorDescuentoLinea() {
@@ -489,7 +509,7 @@ export class FacturaComponent implements OnInit {
       res => {
         this.factura = res.resultado as Factura;
         this.dataSourceFacturaDetalle = new MatTableDataSource<FacturaDetalle>(this.factura.facturaDetalles);
-        this.limpiarProducto();
+        this.limpiarFacturaDetalle();
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
       },
       err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })

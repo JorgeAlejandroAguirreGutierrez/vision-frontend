@@ -46,6 +46,7 @@ export const urn =
      facturaDetalle: "/facturaDetalle",
      facturaCompra: "/facturaCompra",
      facturaCompraLinea: "/facturaCompraLinea",
+     facturar: "/facturar",
      tipoRetencion: "/tipoRetencion",
      consultarBien: "/consultarBien",
      consultarServicio: "/consultarServicio",
@@ -108,6 +109,7 @@ export const urn =
      segmento: "/segmento",
      saldoInicialInventario: "/saldoInicialInventario",
      kardex: "/kardex",
+     obtenerUltimoPorFecha: "/obtenerUltimoPorFecha",
      consultarIvaBien: "/consultarIvaBien",
      consultarIvaServicio: "/consultarIvaServicio",
      consultarRentaBien: "/consultarRentaBien",
@@ -402,7 +404,7 @@ export const items = {
     item_egreso : "Egresos", 
     item_nota_credito_venta : "Notas de Crédito Venta",
     item_transportista : "Transportistas",
-    item_vehiculo_transporte : "Vehiculos Transporte",
+    item_vehiculo_transporte : "Vehiculos Transportes",
 
     //INVENTARIOS
     item_grupo_producto : "Grupos de Productos",

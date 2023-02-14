@@ -52,8 +52,9 @@ export class ProductoComponent implements OnInit {
 
   abrirPanelPrecio: boolean = true;
   abrirPanelNuevo: boolean = true;
-  abrirPanelNuevoKardexPrecio: boolean = false;
   abrirPanelAdmin: boolean = false;
+  abrirPanelNuevoKardex: boolean = false;
+  abrirPanelNuevoPrecio: boolean = false;
 
   producto: Producto = new Producto();
 
@@ -83,8 +84,6 @@ export class ProductoComponent implements OnInit {
   cabeceraPrecioSugerido: string[] = ['medida', 'segmento', 'costo', 'margenGanancia', 'precioSinIva', 'precioVentaPublico'];
   cabeceraPrecioVenta: string[] = ['precioVentaPublicoManual', 'utilidad', 'utilidadPorcentaje'];
 
-  observablePrecios: BehaviorSubject<Precio[]> = new BehaviorSubject<Precio[]>([]);
-  datos: any = [];
   controls: UntypedFormArray[] = [];
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
@@ -203,12 +202,12 @@ export class ProductoComponent implements OnInit {
       Swal.fire(error, mensajes.error_nombre_producto, error_swal);
       return;
     }
-    if (this.producto.kardexs.length == valores.cero) {
-      Swal.fire(error, mensajes.error_kardex_vacio, error_swal);
-      return;
-    }
     if (this.producto.precios.length == valores.cero) {
       Swal.fire(error, mensajes.error_precio, error_swal);
+      return;
+    }
+    if (this.producto.kardexs.length == valores.cero) {
+      Swal.fire(error, mensajes.error_kardex, error_swal);
       return;
     }
     this.productoService.crear(this.producto).subscribe({
@@ -248,10 +247,6 @@ export class ProductoComponent implements OnInit {
     }
     if (this.producto.categoriaProducto.id == valores.cero) {
       Swal.fire(error, mensajes.error_tipo_producto, error_swal);
-      return;
-    }
-    if (this.producto.kardexs.length <= valores.cero) {
-      Swal.fire(error, mensajes.error_kardex_vacio, error_swal);
       return;
     }
     this.productoService.actualizar(this.producto).subscribe({
@@ -318,11 +313,11 @@ export class ProductoComponent implements OnInit {
     }
   }
 
-  seleccionarProducto(productoSeleccionado: Producto) {
-    if (!this.clickedRows.has(productoSeleccionado)) {
-      this.nuevo(null);
-      this.clickedRows.add(productoSeleccionado);
-      this.producto = productoSeleccionado;
+  seleccion(producto: Producto) {
+    if (!this.clickedRows.has(producto)) {
+      this.clickedRows.clear();
+      this.clickedRows.add(producto);
+      this.producto = { ... producto};
       this.cargar();
     } else {
       this.nuevo(null);
@@ -338,17 +333,13 @@ export class ProductoComponent implements OnInit {
   cargar(){
     this.dataSourcePrecios = new BehaviorSubject<Precio[]>(this.producto.precios);
   }
-
-  rellenarNumero(){
-    this.producto.kardexs[0].numero = this.pad(this.producto.kardexs[0].numero, 13);
-  }
   
   pad(numero:string, size:number): string {
     while (numero.length < size) numero = "0" + numero;
     return numero;
   }
 
-  agregarKardex() {
+  calcularPrecios() {
     if (this.producto.kardexs[0].cantidad < valores.cero) {
       Swal.fire(error, mensajes.error_cantidad, error_swal);
       return;
@@ -358,12 +349,9 @@ export class ProductoComponent implements OnInit {
       return;
     }
     this.producto.kardexs[0].costoTotal = Number((this.producto.kardexs[0].cantidad * this.producto.kardexs[0].costoUnitario).toFixed(2));
-    this.calcularPrecios();
-    this.abrirPanelPrecio = true;
-    Swal.fire({ icon: exito_swal, title: exito, text: mensajes.exito_kardex_inicializado });
-  }
-
-  calcularPrecios() {
+    this.producto.kardexs[0].entrada = this.producto.kardexs[0].cantidad;
+    this.producto.kardexs[0].debe = this.producto.kardexs[0].costoTotal;
+    this.producto.kardexs[0].saldo = this.producto.kardexs[0].cantidad;
     this.producto.precios = [];
     for (let i = 0; i < this.segmentos.length; i++) {
       let precio = new Precio();
@@ -376,8 +364,10 @@ export class ProductoComponent implements OnInit {
       precio.utilidadPorcentaje = Number(((precio.utilidad / precio.precioSinIva) * 100).toFixed(2));
       precio.segmento = this.segmentos[i];
       this.producto.precios.push(precio);
-      this.dataSourcePrecios = new BehaviorSubject<Precio[]>(this.producto.precios);
     }
+    this.dataSourcePrecios = new BehaviorSubject<Precio[]>(this.producto.precios);
+    this.abrirPanelNuevoPrecio = true;
+    Swal.fire({ icon: exito_swal, title: exito, text: mensajes.exito_kardex_inicializado });
   }
 
   actualizarPrecioVentaPublicoManual(){

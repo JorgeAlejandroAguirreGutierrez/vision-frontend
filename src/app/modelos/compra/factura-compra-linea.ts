@@ -1,4 +1,5 @@
 import { valores } from "../../constantes";
+import { Bodega } from "../inventario/bodega";
 import { Impuesto } from "../inventario/impuesto";
 import { Producto } from "../inventario/producto";
 export class FacturaCompraLinea {
@@ -10,8 +11,8 @@ export class FacturaCompraLinea {
     valorDescuentoLinea: number;
     porcentajeDescuentoLinea: number;
     totalSinDescuentoLinea: number;
-    impuesto: Impuesto;
     producto: Producto;
+    bodega: Bodega;
 
     constructor() {
         this.id = valores.cero;
@@ -21,7 +22,7 @@ export class FacturaCompraLinea {
         this.valorDescuentoLinea = valores.cero;
         this.porcentajeDescuentoLinea = valores.cero;
         this.totalSinDescuentoLinea = valores.cero;
-        this.impuesto = new Impuesto();
         this.producto = new Producto();
+        this.bodega = new Bodega();
     }
 }

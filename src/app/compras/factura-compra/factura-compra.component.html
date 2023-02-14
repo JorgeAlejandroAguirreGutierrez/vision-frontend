@@ -26,6 +26,11 @@
                     <mat-icon>delete</mat-icon>
                 </a>
             </li>
+            <li class="nav-item" *ngIf="facturaCompra.id!=0">
+                <a class="nav-link" title="Facturar" role="button" (click)="facturar($event)">
+                    <mat-icon>publish</mat-icon>
+                </a>
+            </li>
         </ul>
     </nav>
     <ng-template matStepLabel>Factura de Compra</ng-template>
@@ -172,7 +177,10 @@
                 <div class="col-2">
                     <mat-form-field appearance="standard">
                         <mat-label>Bodega</mat-label>
-                        <input matInput type="text" [(ngModel)]="facturaCompraLinea.producto.bodega.nombre" class="form-control-sm" [disabled]="true">
+                        <mat-select [(ngModel)]="facturaCompraLinea.bodega" [compareWith]="compareFn" (selectionChange)="seleccionarBodega()" class="form-control-sm">
+                            <mat-option *ngFor="let bodega of bodegas" [value]="bodega" >
+                                {{bodega.nombre}}</mat-option>
+                        </mat-select>
                     </mat-form-field>
                 </div>
                 <div class="col-2">
@@ -197,7 +205,7 @@
                 <div class="col-2">
                     <mat-form-field appearance="standard">
                         <mat-label>Costo Unit.</mat-label>
-                        <input matInput type="text" class="form-control-sm" [(ngModel)]="facturaCompraLinea.costoUnitario">
+                        <input matInput type="text" [(ngModel)]="facturaCompraLinea.costoUnitario" (change)="seleccionarCostoUnitario()" class="form-control-sm">
                     </mat-form-field>
                 </div>
                 <div class="col-2">
@@ -215,8 +223,8 @@
                 <div class="col-2">
                     <mat-form-field appearance="standard">
                         <mat-label>IVA</mat-label>
-                        <mat-select [(ngModel)]="facturaCompraLinea.impuesto" [compareWith]="compareFn"
-                            (selectionChange)="seleccionarImpuesto()" class="form-control-sm">
+                        <mat-select [(ngModel)]="facturaCompraLinea.producto.impuesto" [compareWith]="compareFn"
+                            [disabled]="true" class="form-control-sm">
                             <mat-option *ngFor="let impuesto of impuestos" [value]="impuesto">
                                 {{impuesto.porcentaje}}
                             </mat-option>
@@ -289,7 +297,12 @@
                         <ng-container matColumnDef="impuesto">
                             <th mat-header-cell *matHeaderCellDef mat-sort-header> IVA </th>
                             <td mat-cell *matCellDef="let facturaCompraLinea">
-                                {{facturaCompraLinea.impuesto.porcentaje}}% </td>
+                                {{facturaCompraLinea.producto.impuesto.porcentaje}}% </td>
+                        </ng-container>
+                        <ng-container matColumnDef="bodega">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header> BOD </th>
+                            <td mat-cell *matCellDef="let facturaCompraLinea">
+                                {{facturaCompraLinea.bodega.nombre}} </td>
                         </ng-container>
                         <!-- Total Columna -->
                         <ng-container matColumnDef="total">
