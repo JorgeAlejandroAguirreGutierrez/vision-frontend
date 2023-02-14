@@ -1,28 +1,20 @@
 import { Component, OnInit, Input, ViewChild, HostListener } from '@angular/core';
 import { DatePipe } from '@angular/common';
-import { UntypedFormControl, FormBuilder, FormGroup, Validators, UntypedFormBuilder } from '@angular/forms';
-import { MatSort } from '@angular/material/sort';
+import { UntypedFormControl, UntypedFormBuilder } from '@angular/forms';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
 import { Router } from '@angular/router';
-import { Observable, Subscription } from 'rxjs';
+import { Observable } from 'rxjs';
 import Swal from 'sweetalert2';
-import { Factura } from '../../modelos/comprobante/factura';
 import { startWith, map } from 'rxjs/operators';
-import { AppDateAdapter, APP_DATE_FORMATS } from '../../modelos/format-date-picker';
-import { TipoComprobante } from '../../modelos/comprobante/tipo-comprobante';
-import { TipoComprobanteService } from '../../servicios/comprobante/tipo-comprobante.service';
 import { SesionService } from '../../servicios/usuario/sesion.service';
 import { Sesion } from '../../modelos/usuario/sesion';
-import { Parametro } from '../../modelos/configuracion/parametro';
-import { ParametroService } from '../../servicios/configuracion/parametro.service';
 import { valores, validarSesion, otras, tab_activo, exito, exito_swal, error, error_swal } from '../../constantes';
 import { FacturaCompra } from 'src/app/modelos/compra/factura-compra';
 import { Producto } from 'src/app/modelos/inventario/producto';
 import { ImpuestoService } from 'src/app/servicios/inventario/impuesto.service';
 import { ProveedorService } from 'src/app/servicios/compra/proveedor.service';
-import { BodegaService } from 'src/app/servicios/inventario/bodega.service';
 import { FacturaCompraLinea } from 'src/app/modelos/compra/factura-compra-linea';
 import { Proveedor } from 'src/app/modelos/compra/proveedor';
 import { Impuesto } from 'src/app/modelos/inventario/impuesto';
@@ -30,6 +22,7 @@ import { ProductoService } from 'src/app/servicios/inventario/producto.service';
 import { FacturaCompraService } from 'src/app/servicios/compra/factura-compra.service';
 import { Bodega } from 'src/app/modelos/inventario/bodega';
 import { FacturaCompraLineaService } from 'src/app/servicios/compra/factura-compra-linea.service';
+import { BodegaService } from 'src/app/servicios/inventario/bodega.service';
 
 @Component({
   selector: 'app-factura-compra',
@@ -66,7 +59,7 @@ export class FacturaCompraComponent implements OnInit {
 
   constructor(private proveedorService: ProveedorService, private sesionService: SesionService, private facturaCompraLineaService: FacturaCompraLineaService,
     private impuestoService: ImpuestoService, private router: Router, private facturaCompraService: FacturaCompraService,
-    private productoService: ProductoService,
+    private productoService: ProductoService, private bodegaService: BodegaService,
     private modalService: NgbModal, private _formBuilder: UntypedFormBuilder) { }
 
   facturaCompra: FacturaCompra = new FacturaCompra();
@@ -105,6 +98,7 @@ export class FacturaCompraComponent implements OnInit {
     this.consultar();
     this.consultarProveedores();
     this.consultarImpuestos();
+    this.consultarBodegas();
 
     this.filtroProductos = this.seleccionProducto.valueChanges
       .pipe(
@@ -147,6 +141,11 @@ export class FacturaCompraComponent implements OnInit {
     if (event!=null)
       event.preventDefault();
     this.facturaCompra = new FacturaCompra();
+    this.seleccionProveedor.patchValue(valores.vacio);
+    this.telefono = valores.vacio;
+    this.celular = valores.vacio;
+    this.correo = valores.vacio;
+    this.dataSourceFacturaCompraLinea = new MatTableDataSource<FacturaCompraLinea>([]);
   }
 
   construirFactura() {
@@ -184,6 +183,15 @@ export class FacturaCompraComponent implements OnInit {
     this.proveedorService.consultar().subscribe(
       res => {
         this.proveedores = res.resultado as Proveedor[]
+      },
+      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+    );
+  }
+
+  consultarBodegas(){
+    this.bodegaService.consultar().subscribe(
+      res => {
+        this.bodegas = res.resultado as Bodega[]
       },
       err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     );
@@ -245,7 +253,10 @@ export class FacturaCompraComponent implements OnInit {
     if (this.facturaCompraLinea.costoUnitario <= valores.cero){
       return;
     }
-    if (this.facturaCompraLinea.impuesto.id == valores.cero){
+    if (this.facturaCompraLinea.producto.id == valores.cero){
+      return;
+    }
+    if (this.facturaCompraLinea.bodega.id == valores.cero){
       return;
     }
     this.calcularLinea();
@@ -258,7 +269,10 @@ export class FacturaCompraComponent implements OnInit {
     if (this.facturaCompraLinea.costoUnitario <= valores.cero){
       return;
     }
-    if (this.facturaCompraLinea.impuesto.id == valores.cero){
+    if (this.facturaCompraLinea.producto.id == valores.cero){
+      return;
+    }
+    if (this.facturaCompraLinea.bodega.id == valores.cero){
       return;
     }
     this.calcularLinea();
@@ -271,20 +285,42 @@ export class FacturaCompraComponent implements OnInit {
     if (this.facturaCompraLinea.costoUnitario <= valores.cero){
       return;
     }
-    if (this.facturaCompraLinea.impuesto.id == valores.cero){
+    if (this.facturaCompraLinea.producto.id == valores.cero){
+      return;
+    }
+    if (this.facturaCompraLinea.bodega.id == valores.cero){
       return;
     }
     this.calcularLinea();
   }
 
-  seleccionarImpuesto(){
+  seleccionarBodega(){
     if (this.facturaCompraLinea.cantidad <= valores.cero){
       return;
     }
     if (this.facturaCompraLinea.costoUnitario <= valores.cero){
       return;
     }
-    if (this.facturaCompraLinea.impuesto.id == valores.cero){
+    if (this.facturaCompraLinea.producto.id == valores.cero){
+      return;
+    }
+    if (this.facturaCompraLinea.bodega.id == valores.cero){
+      return;
+    }
+    this.calcularLinea();
+  }
+
+  seleccionarCostoUnitario(){
+    if (this.facturaCompraLinea.cantidad <= valores.cero){
+      return;
+    }
+    if (this.facturaCompraLinea.costoUnitario <= valores.cero){
+      return;
+    }
+    if (this.facturaCompraLinea.producto.id == valores.cero){
+      return;
+    }
+    if (this.facturaCompraLinea.bodega.id == valores.cero){
       return;
     }
     this.calcularLinea();
@@ -299,7 +335,7 @@ export class FacturaCompraComponent implements OnInit {
     if (this.facturaCompraLinea.costoUnitario <= valores.cero){
       return;
     }
-    if (this.facturaCompraLinea.impuesto.id == valores.cero){
+    if (this.facturaCompraLinea.producto.id == valores.cero){
       return;
     }
     if (this.facturaCompraLinea.totalSinDescuentoLinea <= valores.cero){
@@ -344,7 +380,8 @@ export class FacturaCompraComponent implements OnInit {
     this.facturaCompraService.actualizar(this.facturaCompra).subscribe(
       res => {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
-        this.consultar();        
+        this.consultar();
+        this.nuevo(null);        
       },
       err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     );
@@ -357,6 +394,7 @@ export class FacturaCompraComponent implements OnInit {
       next: res => {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
         this.consultar();
+        this.nuevo(null);
       },
       error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     });
@@ -369,6 +407,20 @@ export class FacturaCompraComponent implements OnInit {
       next: res => {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
         this.consultar();
+        this.nuevo(null);
+      },
+      error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+    });
+  }
+
+  facturar(event){
+    if (event != null)
+      event.preventDefault();
+    this.facturaCompraService.facturar(this.facturaCompra.id).subscribe({
+      next: res => {
+        Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
+        this.consultar();
+        this.nuevo(null);
       },
       error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     });
@@ -406,11 +458,18 @@ export class FacturaCompraComponent implements OnInit {
     this.calcular();
   }
 
-  seleccion(factura: any) {
-    if (!this.clickedRows.has(factura)){
+  seleccion(facturaCompra: any) {
+    if (!this.clickedRows.has(facturaCompra)){
       this.clickedRows.clear();
-      this.clickedRows.add(factura);
-      //Falta llamar para traer del backend la factura compra
+      this.clickedRows.add(facturaCompra);
+      this.facturaCompraService.obtener(facturaCompra.id).subscribe({
+        next: res => {
+          this.facturaCompra = res.resultado as FacturaCompra;
+          this.seleccionProveedor.patchValue(this.facturaCompra.proveedor);
+          this.dataSourceFacturaCompraLinea = new MatTableDataSource<FacturaCompraLinea>(this.facturaCompra.facturaCompraLineas);
+        },
+        error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+      });
     } else {
       this.clickedRows.clear();
       this.facturaCompra = new FacturaCompra();

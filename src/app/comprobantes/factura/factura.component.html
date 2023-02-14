@@ -212,38 +212,34 @@
                             <div class="col-3">
                                 <mat-form-field appearance="standard">
                                     <mat-label>Consig.</mat-label>
-                                    <input matInput type="text" class="form-control-sm"
-                                        *ngIf="facturaDetalle.producto.consignacion" value="SI" disabled>
-                                    <input matInput type="text" class="form-control-sm"
-                                        *ngIf="!facturaDetalle.producto.consignacion" value="NO" disabled>
+                                    <input matInput type="text" [(ngModel)]="facturaDetalle.producto.consignacion" [disabled]="true" class="form-control-sm">
                                 </mat-form-field>
                             </div>
                             <div class="col-6">
                                 <mat-form-field appearance="standard">
                                     <mat-label>Categoría</mat-label>
                                     <input matInput type="text" class="form-control-sm"
-                                        [(ngModel)]="facturaDetalle.producto.categoriaProducto.descripcion" disabled>
+                                        [(ngModel)]="facturaDetalle.producto.categoriaProducto.descripcion" [disabled]="true">
                                 </mat-form-field>
                             </div>
                             <div class="col-6">
                                 <mat-form-field appearance="standard">
                                     <mat-label>Tipo de Gasto</mat-label>
                                     <input matInput type="text" class="form-control-sm"
-                                        [(ngModel)]="facturaDetalle.producto.tipoGasto.descripcion" disabled>
+                                        [(ngModel)]="facturaDetalle.producto.tipoGasto.descripcion" [disabled]="true">
                                 </mat-form-field>
                             </div>
                             <div class="col-2"></div>
                             <div class="col-4">
                                 <mat-form-field appearance="standard">
-                                    <mat-label>Costo Prom</mat-label>
-                                    <input matInput type="text" class="form-control-sm" [(ngModel)]="costoPromedio"
-                                        disabled>
+                                    <mat-label>Costo Unit.</mat-label>
+                                    <input matInput type="text" class="form-control-sm" [(ngModel)]="kardex.costoUnitario" [disabled]="true">
                                 </mat-form-field>
                             </div>
                             <div class="col-4">
                                 <mat-form-field appearance="standard">
-                                    <mat-label>Saldo T.</mat-label>
-                                    <input matInput type="text" class="form-control-sm" [(ngModel)]="saldoTotal" [disabled]="true">
+                                    <mat-label>Saldo B.</mat-label>
+                                    <input matInput type="text" class="form-control-sm" [(ngModel)]="kardex.saldo" [disabled]="true">
                                 </mat-form-field>
                             </div>
                         </div>
@@ -284,20 +280,14 @@
                                     <input matInput type="text" [(ngModel)]="facturaDetalle.producto.medida.descripcion" class="form-control-sm" [disabled]="true">
                                 </mat-form-field>
                             </div>
-                            <div class="col-3">
+                            <div class="col-4">
                                 <mat-form-field appearance="standard">
                                     <mat-label>Bodega</mat-label>
-                                    <mat-select [(ngModel)]="facturaDetalle.kardex" (selectionChange)="seleccionarBodega()" [compareWith]="compareFn" class="form-control-sm">
-                                        <mat-option *ngFor="let kardex of facturaDetalle.producto.kardexs; let i=index" [value]="kardex">
-                                            {{kardex.bodega.nombre}}
+                                    <mat-select [(ngModel)]="facturaDetalle.bodega" (selectionChange)="seleccionarBodega()" [compareWith]="compareFn" class="form-control-sm">
+                                        <mat-option *ngFor="let bodega of bodegas; let i=index" [value]="bodega">
+                                            {{bodega.nombre}}
                                         </mat-option>
                                     </mat-select>
-                                </mat-form-field>
-                            </div>
-                            <div class="col-1">
-                                <mat-form-field appearance="standard">
-                                    <mat-label>Saldo Bod</mat-label>
-                                    <input matInput type="text" [(ngModel)]="facturaDetalle.kardex.cantidad" class="form-control-sm" [disabled]="true">
                                 </mat-form-field>
                             </div>
                             <div class="col-1">

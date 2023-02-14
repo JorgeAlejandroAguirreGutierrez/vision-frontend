@@ -146,13 +146,13 @@
                 </div>
             </div>
         </mat-expansion-panel>
-        <mat-expansion-panel (opened)="abrirPanelNuevoKardexPrecio = true" (closed)="abrirPanelNuevoKardexPrecio = false" [expanded]="abrirPanelNuevoKardexPrecio">
+        <mat-expansion-panel (opened)="abrirPanelNuevoKardex = true" (closed)="abrirPanelNuevoKardex = false" [expanded]="abrirPanelNuevoKardex">
             <mat-expansion-panel-header>
                 <mat-panel-title>
                     <i><u>KARDEX Y PRECIOS</u></i>
                 </mat-panel-title>
                 <mat-panel-description>
-                    {{abrirPanelNuevoKardexPrecio ? 'Ocultar crear kardex inicial y precios' : 'Crear el kardex inicial y precios del producto'}}
+                    {{abrirPanelNuevoKardex ? 'Ocultar crear kardex inicial' : 'Crear el kardex inicial'}}
                     <mat-icon>playlist_add</mat-icon>
                 </mat-panel-description>
             </mat-expansion-panel-header>
@@ -168,25 +168,19 @@
                             <div class="col-3">
                                 <mat-form-field appearance="standard">
                                     <mat-label>Bodega</mat-label>
-                                    <mat-select [(ngModel)]="producto.kardexs[0].bodega" [compareWith]="compareFn" class="form-control-sm">
+                                    <mat-select [(ngModel)]="producto.kardexs[0].bodega" [compareWith]="compareFn" () class="form-control-sm">
                                         <mat-option *ngFor="let bodega of bodegas" [value]="bodega" >
                                             {{bodega.nombre}}</mat-option>
                                     </mat-select>
                                 </mat-form-field>
                             </div>
-                            <div class="col-3">
-                                <mat-form-field appearance="standard">
-                                    <mat-label>Numero del Documento</mat-label>
-                                    <input matInput type="text" [(ngModel)]="producto.kardexs[0].numero" (blur)="rellenarNumero()" class="form-control-sm">
-                                </mat-form-field>
-                            </div>
-                            <div class="col-2" >
+                            <div class="col-3" >
                                 <mat-form-field appearance="standard">
                                     <mat-label>Cant.</mat-label>
                                     <input matInput type="text" [(ngModel)]="producto.kardexs[0].cantidad" class="form-control-sm">
                                 </mat-form-field>
                             </div>
-                            <div class="col-2">
+                            <div class="col-4">
                                 <mat-form-field appearance="standard">
                                     <mat-label>Costo Unit.</mat-label>
                                     <input matInput type="text" [(ngModel)]="producto.kardexs[0].costoUnitario" class="form-control-sm">
@@ -200,7 +194,7 @@
                             </div>
                             <div class="col-1 iconos">
                                 <button mat-icon-button mat-button>
-                                    <mat-icon (click)="agregarKardex()">add</mat-icon>
+                                    <mat-icon (click)="calcularPrecios()">add</mat-icon>
                                 </button>
                             </div>
                         </div>
@@ -208,13 +202,13 @@
                 </div>
             </div>
             <mat-accordion class="headers-align">
-                <mat-expansion-panel (opened)="abrirPanelPrecio = true" (closed)="abrirPanelPrecio = false" [expanded]="abrirPanelPrecio">
+                <mat-expansion-panel (opened)="abrirPanelNuevoPrecio = true" (closed)="abrirPanelNuevoPrecio = false" [expanded]="abrirPanelNuevoPrecio">
                     <mat-expansion-panel-header>
                         <mat-panel-title>
                             <i><u>PRECIOS</u></i>
                         </mat-panel-title>
                         <mat-panel-description>
-                            <span class="lowercase">{{abrirPanelPrecio ? 'Ocultar' : 'Ver' }} precio de cada segmento</span>
+                            <span class="lowercase">{{abrirPanelNuevoPrecio ? 'Ocultar' : 'Ver' }} precio de cada segmento</span>
                         </mat-panel-description>
                     </mat-expansion-panel-header>
                     <mat-divider></mat-divider>
