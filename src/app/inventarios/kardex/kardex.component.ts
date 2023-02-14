@@ -47,7 +47,7 @@ export class KardexComponent implements OnInit {
   columnas: any[] = [
     { nombreColumna: 'fecha', cabecera: 'Fecha', celda: (row: Kardex) => `${this.datepipe.transform(row.fecha, 'dd/MM/yyyy') } ` },
     { nombreColumna: 'documento', cabecera: 'Documento', celda: (row: Kardex) => `${row.documento}` },
-    { nombreColumna: 'numero', cabecera: 'Numero', celda: (row: Kardex) => `${row.numero}` },
+    { nombreColumna: 'secuencia', cabecera: 'Secuencia', celda: (row: Kardex) => `${row.secuencia}` },
     { nombreColumna: 'operacion', cabecera: 'Operacion', celda: (row: Kardex) => `${row.operacion}` },
     { nombreColumna: 'entrada', cabecera: 'Entrada', celda: (row: Kardex) => `${row.entrada}` },
     { nombreColumna: 'salida', cabecera: 'Salida', celda: (row: Kardex) => `${row.salida}` },
@@ -92,18 +92,7 @@ export class KardexComponent implements OnInit {
     this.kardexService.actualizar(this.kardex).subscribe({
       next: res => {
         Swal.fire({ icon: constantes.exito_swal, title: constantes.exito, text: res.mensaje });
-        this.consultar();
         this.nuevo(null);
-      },
-      error: err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
-    });
-  }
-
-  consultar() {
-    this.kardexService.consultar().subscribe({
-      next: res => {
-        this.kardexs = res.resultado as Kardex[]
-        this.llenarTablaKardex(this.kardexs);
       },
       error: err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
     });
@@ -167,6 +156,7 @@ export class KardexComponent implements OnInit {
     this.productoService.obtener(productoId).subscribe(
       res => {
         this.producto = res.resultado as Producto;
+        this.llenarTablaKardex(this.producto.kardexs);
       },
       err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     );

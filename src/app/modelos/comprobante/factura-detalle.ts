@@ -3,7 +3,7 @@ import { Precio } from '../inventario/precio';
 import { Producto } from '../inventario/producto';
 import { Impuesto } from '../inventario/impuesto';
 import { valores } from "../../constantes";
-import { Kardex } from '../inventario/kardex';
+import { Bodega } from '../inventario/bodega';
 
 export class FacturaDetalle {
   id: number;
@@ -34,8 +34,8 @@ export class FacturaDetalle {
   producto: Producto;
   //IMPUESTO SELECCIONADO
   impuesto: Impuesto;
-  //KARDEX SELECCIONADO
-  kardex: Kardex;
+  //BODEGA SELECCIONADO
+  bodega: Bodega;
 
   
 
@@ -63,6 +63,6 @@ export class FacturaDetalle {
     this.producto = new Producto();
     this.precio = new Precio();
     this.impuesto = new Impuesto();
-    this.kardex = new Kardex();
+    this.bodega = new Bodega();
   }
 }

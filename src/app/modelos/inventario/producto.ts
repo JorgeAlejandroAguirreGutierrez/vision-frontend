@@ -21,8 +21,8 @@ export class Producto {
   medida: Medida;
   proveedor: Proveedor;
   bodega: Bodega;
-  kardexs: Kardex[];
   precios: Precio[];
+  kardexs: Kardex[];
   
 
   constructor() {
@@ -38,8 +38,8 @@ export class Producto {
     this.medida = new Medida();
     this.proveedor = new Proveedor();
     this.bodega = new Bodega();
-    this.kardexs = [];
-    this.kardexs.push(new Kardex());
-    this.precios=[];    
+    this.precios=[];
+    this.kardexs=[];
+    this.kardexs.push(new Kardex());    
   }
 }

@@ -6,16 +6,16 @@ export class Kardex {
     codigo: string;
     fecha: Date;
     documento: string;
-    numero: string;
     operacion: string;
+    secuencia: string;
     entrada: number;
     salida: number;
+    saldo: number;
     debe: number;
     haber: number;
     cantidad: number;
     costoUnitario: number;
     costoTotal: number;
-    producto: Producto;
     bodega: Bodega;
 
     constructor() {
@@ -23,10 +23,11 @@ export class Kardex {
         this.codigo = valores.vacio;
         this.fecha = new Date();
         this.documento = valores.vacio;
-        this.numero = valores.vacio;
         this.operacion = valores.vacio;
+        this.secuencia = valores.vacio;
         this.entrada = valores.cero;
         this.salida = valores.cero;
+        this.saldo = valores.cero;
         this.costoUnitario = valores.cero;
         this.costoTotal =valores.cero;
         this.debe = valores.cero;
