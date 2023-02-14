@@ -31,8 +31,7 @@
 </nav>
 <div class="contenedor">
     <mat-accordion class="headers-align">
-        <mat-expansion-panel (opened)="abrirPanelNuevo = true" (closed)="abrirPanelNuevo = false"
-            [expanded]="abrirPanelNuevo">
+        <mat-expansion-panel (opened)="abrirPanelNuevo = true" (closed)="abrirPanelNuevo = false" [expanded]="abrirPanelNuevo">
             <mat-expansion-panel-header>
                 <mat-panel-title>
                     <i><u>PRODUCTO</u></i>
@@ -71,83 +70,64 @@
                             <mat-icon (click)="dialogoGruposProductos()">search</mat-icon>
                         </button>
                     </div>
-                    <ng-container *ngIf="producto.categoriaProducto.id==1">
-                        <div class="col-11">
-                            <mat-form-field appearance="standard">
-                                <mat-label>Nombre Producto</mat-label>
-                                <input matInput type="text" oninput="this.value = this.value.toUpperCase()"
-                                    [(ngModel)]="producto.nombre"
-                                    class="form-control-sm">
-                                <button mat-button matSuffix mat-icon-button>
-                                    <mat-icon (click)="producto.nombre = ''">close</mat-icon>
-                                </button>
-                            </mat-form-field>
-                        </div>
-                        <div class="col-1">
-                            <mat-form-field appearance="standard">
-                                <mat-label>Consig.</mat-label>
-                                <mat-select type="text" [(ngModel)]="producto.consignacion" class="form-control-sm">
-                                    <mat-option [value]="si">SI</mat-option>
-                                    <mat-option [value]="no">NO</mat-option>
-                                </mat-select>
-                            </mat-form-field>
-                        </div>
-                    </ng-container>
-                    <ng-container *ngIf="producto.categoriaProducto.id!=1">
-                        <div class="col-9">
-                            <mat-form-field appearance="standard">
-                                <mat-label>Nombre Servicio / Activo Fijo</mat-label>
-                                <input matInput type="text" oninput="this.value = this.value.toUpperCase()"
-                                    [(ngModel)]="producto.nombre" class="form-control-sm">
-                                <button mat-button matSuffix mat-icon-button>
-                                    <mat-icon>close</mat-icon>
-                                </button>
-                            </mat-form-field>
-                        </div>
-                        <div class="col-2">
-                            <mat-form-field appearance="standard">
-                                <mat-label>Precio</mat-label>
-                                <input matInput type="text" [(ngModel)]="precioServicioAF"
-                                    [disabled]="deshabilitarSaldoInicial" class="form-control-sm">
-                            </mat-form-field>
-                        </div>
-                        <div class="col-1 iconos">
-                            <button mat-icon-button mat-button>
-                                <mat-icon (click)="cargarSaldoInicial()">add</mat-icon>
-                            </button>
-                        </div>
-                    </ng-container>
-                </div>
-                <div class="form-row col-4 linea-vertical">
-                    <div class="col-5">
+                    <div class="col-8">
                         <mat-form-field appearance="standard">
-                            <mat-label>Categoría</mat-label>
-                            <mat-select [(ngModel)]="producto.categoriaProducto.id" [disabled]="true" class="form-control-sm">
-                                <mat-option *ngFor="let categoriaProducto of categoriasProductos"
-                                    [value]="categoriaProducto.id">
-                                    {{categoriaProducto.descripcion}}</mat-option>
+                            <mat-label>Nombre Producto</mat-label>
+                            <input matInput type="text" oninput="this.value = this.value.toUpperCase()" [(ngModel)]="producto.nombre" class="form-control-sm">
+                        </mat-form-field>
+                    </div>
+                    <div class="col-3">
+                        <mat-form-field appearance="standard">
+                            <mat-label>Proveedor</mat-label>
+                            <mat-select [(ngModel)]="producto.proveedor" [compareWith]="compareFn" class="form-control-sm">
+                                <mat-option *ngFor="let proveedor of proveedores" [value]="proveedor">{{proveedor.razonSocial}}</mat-option>
                             </mat-select>
                         </mat-form-field>
                     </div>
-                    <div class="col-7">
+                    <div class="col-1">
                         <mat-form-field appearance="standard">
-                            <mat-label>Código</mat-label>
-                            <input matInput type="text" [(ngModel)]="producto.codigo" disabled class="form-control-sm">
+                            <mat-label>Consig.</mat-label>
+                            <mat-select type="text" [(ngModel)]="producto.consignacion" class="form-control-sm">
+                                <mat-option [value]="si">{{si}}</mat-option>
+                                <mat-option [value]="no">{{no}}</mat-option>
+                            </mat-select>
                         </mat-form-field>
                     </div>
-                    <div class="col-2">
+                </div>
+                <div class="form-row col-4 linea-vertical">
+                    <div class="col-4">
+                        <mat-form-field appearance="standard">
+                            <mat-label>Código</mat-label>
+                            <input matInput type="text" [(ngModel)]="producto.codigo" [disabled]="true" class="form-control-sm">
+                        </mat-form-field>
+                    </div>
+                    <div class="col-4">
+                        <mat-form-field appearance="standard">
+                            <mat-label>Categoría</mat-label>
+                            <input matInput type="text" [(ngModel)]="producto.categoriaProducto.descripcion" [disabled]="true" class="form-control-sm">
+                        </mat-form-field>
+                    </div>
+                    <div class="col-4">
+                        <mat-form-field appearance="standard">
+                            <mat-label>Medida</mat-label>
+                            <mat-select [(ngModel)]="producto.medida" [compareWith]="compareFn" class="form-control-sm">
+                                <mat-option *ngFor="let medida of medidas" [value]="medida" >
+                                    {{medida.descripcion}}</mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                    <div class="col-3">
                         <mat-form-field appearance="standard">
                             <mat-label>IVA%</mat-label>
-                            <mat-select [(ngModel)]="producto.impuesto.id" class="form-control-sm"
-                                [disabled]="deshabilitarImpuesto" (ngModelChange)="impuestoSeleccionado($event)">
-                                <mat-option *ngFor="let impuesto of impuestos" [value]="impuesto.id">
+                            <mat-select [(ngModel)]="producto.impuesto" [compareWith]="compareFn" class="form-control-sm">
+                                <mat-option *ngFor="let impuesto of impuestos" [value]="impuesto">
                                     {{impuesto.porcentaje}}</mat-option>
                             </mat-select>
                         </mat-form-field>
                     </div>
-                    <div class="col-6">
+                    <div class="col-5">
                         <mat-form-field appearance="standard">
-                            <mat-label>Tipo de Gasto</mat-label>
+                            <mat-label>Gasto</mat-label>
                             <mat-select [(ngModel)]="producto.tipoGasto.id" class="form-control-sm">
                                 <mat-option *ngFor="let tipoGasto of tiposGastos" [value]="tipoGasto.id">
                                     {{tipoGasto.descripcion}}</mat-option>
@@ -157,127 +137,72 @@
                     <div class="col-4">
                         <mat-form-field appearance="standard">
                             <mat-label>Estado</mat-label>
-                            <mat-select [(ngModel)]="producto.estado" disabled class="form-control-sm">
-                                <mat-option value="ACTIVO">ACTIVO</mat-option>
-                                <mat-option value="INACTIVO">INACTIVO</mat-option>
+                            <mat-select [(ngModel)]="producto.estado" class="form-control-sm" [disabled]="true">
+                                <mat-option [value]="activo">{{activo}}</mat-option>
+                                <mat-option [value]="inactivo">{{inactivo}}</mat-option>
                             </mat-select>
                         </mat-form-field>
                     </div>
                 </div>
             </div>
         </mat-expansion-panel>
-    </mat-accordion>  
-    <mat-accordion class="headers-align">  
-        <mat-expansion-panel (opened)="abrirPanelPrecio = true" (closed)="abrirPanelPrecio = false"
-            [expanded]="abrirPanelPrecio">
+    </mat-accordion>    
+    <mat-accordion class="headers-align">
+        <mat-expansion-panel (opened)="abrirPanelNuevoKardexPrecio = true" (closed)="abrirPanelNuevoKardexPrecio = false" [expanded]="abrirPanelNuevoKardexPrecio">
             <mat-expansion-panel-header>
-                <mat-panel-title *ngIf="producto.categoriaProducto.id==1">
+                <mat-panel-title>
                     <i><u>KARDEX Y PRECIOS</u></i>
                 </mat-panel-title>
-                <mat-panel-title *ngIf="producto.categoriaProducto.id!=1">
-                    <i><u>PRECIOS</u></i>
-                </mat-panel-title>
                 <mat-panel-description>
-                    {{abrirPanelPrecio ? 'Ocultar crear kardex inicial y precios' : 'Crear el kardex inicial y precios del producto'}}
+                    {{abrirPanelNuevoKardexPrecio ? 'Ocultar crear kardex inicial y precios' : 'Crear el kardex inicial y precios del producto'}}
                     <mat-icon>playlist_add</mat-icon>
                 </mat-panel-description>
             </mat-expansion-panel-header>
             <hr>
-            <div class="form-group form-row" *ngIf="producto.categoriaProducto.id==1">
-                <div class="col-6">
-                    <div class="centrar-titulo col-12 fondo">
-                        <mat-label>MEDIDA DEL KARDEX</mat-label>
-                    </div>
-                    <mat-divider></mat-divider>
-                    <mat-card class="mat-elevation-z8">
-                        <div class="form-row" [formGroup]="formKardexInicial">
-                            <div class="col-5">
-                                <mat-form-field appearance="standard">
-                                    <mat-label>Medida</mat-label>
-                                    <mat-select [(ngModel)]="producto.medida.id" (ngModelChange)="medidaSeleccionada($event)"
-                                    [ngModelOptions]="{standalone: true}" [disabled]="deshabilitarSaldoInicial">
-                                        <mat-option *ngFor="let medida of medidas" [value]="medida.id" >
-                                            {{medida.descripcion}}</mat-option>
-                                    </mat-select>
-                                </mat-form-field>
-                            </div>
-                            <div class="col-3" >
-                                <mat-form-field appearance="standard">
-                                    <mat-label>Saldo Ini.</mat-label>
-                                    <input matInput type="text" [(ngModel)]="kardexInicial.cantidad"
-                                        formControlName="controlSaldoInicial" class="form-control-sm">
-                                    <mat-error *ngIf="controlSaldoInicial.invalid">{{getErrorMessage()}}</mat-error>    
-                                </mat-form-field>
-                            </div>
-                            <div class="col-3">
-                                <mat-form-field appearance="standard">
-                                    <mat-label>Costo Unit.</mat-label>
-                                    <input matInput type="text" [(ngModel)]="kardexInicial.costoPromedio"
-                                        formControlName="controlCostoTotal" class="form-control-sm">
-                                    <mat-error *ngIf="controlCostoTotal.invalid">{{getErrorMessage()}}</mat-error>     
-                                </mat-form-field>
-                            </div>
-                            <div class="col-1 iconos">
-                                <button mat-icon-button mat-button (click)="cargarSaldoInicial()" 
-                                    [disabled]="formKardexInicial.invalid" [disabled]="deshabilitarSaldoInicial">
-                                    <mat-icon >add</mat-icon>
-                                </button>
-                            </div>
-                        </div>
-                    </mat-card>
-                </div>
-                <div class="col-3">
-                    <div class="centrar-titulo col-12 fondo">
+            <div class="form-group form-row">
+                <div class="col-12">
+                    <div class="centrar-titulo fondo">
                         <mat-label>INFO KARDEX</mat-label>
                     </div>
                     <mat-divider></mat-divider>
                     <mat-card class="mat-elevation-z8">
-                        <div class="form-group form-row">
-                            <div class="col-4">
+                        <div class="form-row">
+                            <div class="col-3">
                                 <mat-form-field appearance="standard">
-                                    <mat-label>Cant</mat-label>
-                                    <input matInput type="text" [(ngModel)]="kardexFinal.cantidad"
-                                        class="form-control-sm" disabled>
-                                </mat-form-field>
-                            </div>
-                            <div class="col-4">
-                                <mat-form-field appearance="standard">
-                                    <mat-label>Costo Prom</mat-label>
-                                    <input matInput type="text" [(ngModel)]="kardexFinal.costoPromedio"
-                                        class="form-control-sm" disabled>
-                                </mat-form-field>
-                            </div>
-                            <div class="col-4">
-                                <mat-form-field appearance="standard">
-                                    <mat-label>Costo Total</mat-label>
-                                    <input matInput type="text" [(ngModel)]="kardexFinal.costoTotal"
-                                        class="form-control-sm" disabled>
-                                </mat-form-field>
-                            </div>
-                        </div>
-                    </mat-card>
-                </div>
-                <div class="col-3">
-                    <div class="centrar-titulo col-12 fondo">
-                        <mat-label>AGREGAR PRECIO</mat-label>
-                    </div>
-                    <mat-divider></mat-divider>
-                    <mat-card class="mat-elevation-z8">
-                        <div class="form-group form-row">
-                            <div class="col-10">
-                                <mat-form-field appearance="standard">
-                                    <mat-label>Medida</mat-label>
-                                    <mat-select [(ngModel)]="medidaEquivalenteSeleccionada"
-                                        [disabled]="deshabilitarOtrasMedidas">
-                                        <mat-option *ngFor="let medidaEquivalente of medidasEquivalentes"
-                                            [value]="medidaEquivalente">
-                                            {{medidaEquivalente.medidaEqui.descripcion}}</mat-option>
+                                    <mat-label>Bodega</mat-label>
+                                    <mat-select [(ngModel)]="producto.kardexs[0].bodega" [compareWith]="compareFn" class="form-control-sm">
+                                        <mat-option *ngFor="let bodega of bodegas" [value]="bodega" >
+                                            {{bodega.nombre}}</mat-option>
                                     </mat-select>
                                 </mat-form-field>
                             </div>
-                            <div class="col-2 iconos">
-                                <button mat-icon-button mat-button [disabled]="deshabilitarOtrasMedidas">
-                                    <mat-icon (click)="agregarPrecio()">add</mat-icon>
+                            <div class="col-3">
+                                <mat-form-field appearance="standard">
+                                    <mat-label>Numero del Documento</mat-label>
+                                    <input matInput type="text" [(ngModel)]="producto.kardexs[0].numero" (blur)="rellenarNumero()" class="form-control-sm">
+                                </mat-form-field>
+                            </div>
+                            <div class="col-2" >
+                                <mat-form-field appearance="standard">
+                                    <mat-label>Cant.</mat-label>
+                                    <input matInput type="text" [(ngModel)]="producto.kardexs[0].cantidad" class="form-control-sm">
+                                </mat-form-field>
+                            </div>
+                            <div class="col-2">
+                                <mat-form-field appearance="standard">
+                                    <mat-label>Costo Unit.</mat-label>
+                                    <input matInput type="text" [(ngModel)]="producto.kardexs[0].costoUnitario" class="form-control-sm">
+                                </mat-form-field>
+                            </div>
+                            <div class="col-1">
+                                <mat-form-field appearance="standard">
+                                    <mat-label>Costo Total.</mat-label>
+                                    <input matInput type="text" [(ngModel)]="producto.kardexs[0].costoTotal" class="form-control-sm" [disabled]="true">
+                                </mat-form-field>
+                            </div>
+                            <div class="col-1 iconos">
+                                <button mat-icon-button mat-button>
+                                    <mat-icon (click)="agregarKardex()">add</mat-icon>
                                 </button>
                             </div>
                         </div>
@@ -285,33 +210,22 @@
                 </div>
             </div>
             <mat-accordion class="headers-align">
-                <mat-expansion-panel (opened)="cambiarAbrirPanelPrecios(i)" [expanded]="abrirPanelPrecios[i]" *ngFor="let dato of datos; let i = index">
+                <mat-expansion-panel (opened)="abrirPanelPrecio = true" (closed)="abrirPanelPrecio = false" [expanded]="abrirPanelPrecio">
                     <mat-expansion-panel-header>
                         <mat-panel-title>
-                            <i><u>{{dato.value[0].medida.descripcion}}</u></i>
+                            <i><u>PRECIOS</u></i>
                         </mat-panel-title>
                         <mat-panel-description>
-                            <span class="lowercase">{{abrirPanelPrecios ? 'Ocultar' : 'Ver' }} precio de cada
-                                {{dato.value[0].medida.descripcion}} por segmento</span>
-                            <mat-icon *ngIf="i==0">monetization_on</mat-icon>
-                            <mat-icon *ngIf="i!=0" (click)="eliminarMedidaPrecio(i)">delete_sweep</mat-icon>
+                            <span class="lowercase">{{abrirPanelPrecio ? 'Ocultar' : 'Ver' }} precio de cada segmento</span>
                         </mat-panel-description>
                     </mat-expansion-panel-header>
                     <mat-divider></mat-divider>
                     <div class="form-group form-row">
-                        <div class="col-8">
-                            <div class="centrar-titulo col 12 azul">
-                                <mat-label>PRECIO SUGERIDO</mat-label>
+                        <div class="col-12">
+                            <div class="centrar-titulo azul">
+                                <mat-label>PRECIO SUGERIDO Y PRECIO DE VENTA</mat-label>
                             </div>
-                            <table mat-table [dataSource]="dato" class="mat-elevation-z8 centrar">
-                                <!-- Medida Column -->
-                                <ng-container matColumnDef="medida">
-                                    <th mat-header-cell *matHeaderCellDef>MEDIDA</th>
-                                    <td mat-cell *matCellDef="let precio">
-                                        {{precio.medida.descripcion}}
-                                    </td>
-                                </ng-container>
-
+                            <table mat-table [dataSource]="dataSourcePrecios" class="mat-elevation-z8 centrar">
                                 <!-- Segmento Column -->
                                 <ng-container matColumnDef="segmento">
                                     <th mat-header-cell *matHeaderCellDef>SEGMENTO</th>
@@ -327,9 +241,7 @@
                                 <!-- Ganancia Column -->
                                 <ng-container matColumnDef="margenGanancia">
                                     <th mat-header-cell *matHeaderCellDef>MG%</th>
-                                    <td mat-cell *matCellDef="let precio;let index = index">
-                                        {{precio.margenGanancia}}
-                                    </td>
+                                    <td mat-cell *matCellDef="let precio"> {{precio.margenGanancia}} </td>
                                 </ng-container>
                                 <!-- PVP Column -->
                                 <ng-container matColumnDef="precioSinIva">
@@ -341,44 +253,32 @@
                                     <th mat-header-cell *matHeaderCellDef>PVP</th>
                                     <td mat-cell *matCellDef="let precio"> {{precio.precioVentaPublico}} </td>
                                 </ng-container>
-
-                                <tr mat-header-row *matHeaderRowDef="cabeceraPrecioSugerido"></tr>
-                                <tr mat-row *matRowDef="let row; columns: cabeceraPrecioSugerido;"></tr>
-                            </table>
-                        </div>
-                        <div class="col-4">
-                            <div class="centrar-titulo col 12 azul">
-                                <mat-label>PRECIO DE VENTA</mat-label>
-                            </div>
-                            <table mat-table [dataSource]="dato" class="mat-elevation-z8 centrar">
-                                <!-- PvpF Column -->
                                 <ng-container matColumnDef="precioVentaPublicoManual">
                                     <th mat-header-cell *matHeaderCellDef>PVP MAN</th>
-                                    <td mat-cell *matCellDef="let precio;let index = index">
-                                        {{precio.precioVentaPublicoManual}}
+                                    <td mat-cell *matCellDef="let precio">
+                                        <mat-form-field floatLabel="never">
+                                            <input matInput [(ngModel)]="precio.precioVentaPublicoManual" (change)="actualizarPrecioVentaPublicoManual()">
+                                        </mat-form-field>
                                     </td>
                                 </ng-container>
-                                <!-- Segmento Column -->
                                 <ng-container matColumnDef="utilidad">
-                                    <th mat-header-cell *matHeaderCellDef>UTILIDAD</th>
+                                    <th mat-header-cell *matHeaderCellDef>UTIL</th>
                                     <td mat-cell *matCellDef="let precio">{{precio.utilidad}}</td>
                                 </ng-container>
                                 <ng-container matColumnDef="utilidadPorcentaje">
-                                    <th mat-header-cell *matHeaderCellDef> UTIL% </th>
+                                    <th mat-header-cell *matHeaderCellDef> UTIL % </th>
                                     <td mat-cell *matCellDef="let precio">{{precio.utilidadPorcentaje}}</td>
                                 </ng-container>
-                                <tr mat-header-row *matHeaderRowDef="cabeceraPrecioVenta"></tr>
-                                <tr mat-row *matRowDef="let row; columns: cabeceraPrecioVenta;"></tr>
+
+                                <tr mat-header-row *matHeaderRowDef="cabeceraPrecios"></tr>
+                                <tr mat-row *matRowDef="let row; columns: cabeceraPrecios;"></tr>
                             </table>
                         </div>
                     </div>
                 </mat-expansion-panel>
             </mat-accordion>
         </mat-expansion-panel>
-    </mat-accordion>  
-    <mat-accordion class="headers-align">    
-        <mat-expansion-panel (opened)="abrirPanelAdmin = true" (closed)="abrirPanelAdmin = false"
-            [expanded]="abrirPanelAdmin">
+        <mat-expansion-panel (opened)="abrirPanelAdmin = true" (closed)="abrirPanelAdmin = false" [expanded]="abrirPanelAdmin">
             <mat-expansion-panel-header>
                 <mat-panel-title>
                     <i><u>GESTIONAR PRODUCTOS</u></i>
@@ -392,10 +292,6 @@
             <mat-form-field appearance="standard">
                 <mat-label>Buscar productos</mat-label>
                 <input matInput oninput="this.value = this.value.toUpperCase()" (keyup)="filtro($event)" placeholder="Ej. AR" #inputFiltro>
-                <button mat-button *ngIf="inputFiltro.value" matSuffix mat-icon-button
-                    (click)="borrarFiltro()">
-                <mat-icon>close</mat-icon>
-            </button>
             </mat-form-field>
             <div class="mat-elevation-z8">
                 <table mat-table [dataSource]="dataSource" matSort>
@@ -406,7 +302,7 @@
                     </ng-container>
 
                     <tr mat-header-row *matHeaderRowDef="cabecera"></tr>
-                    <tr mat-row (click)="seleccion(row)" [class.selected-row]="clickedRows.has(row)"
+                    <tr mat-row (click)="seleccionarProducto(row)" [class.selected-row]="clickedRows.has(row)"
                         *matRowDef="let row; columns: cabecera;"></tr>
 
                     <!-- Row shown when there is no matching data. -->

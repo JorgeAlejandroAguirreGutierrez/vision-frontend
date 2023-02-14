@@ -28,32 +28,23 @@ import { Router } from '@angular/router';
 })
 export class KardexComponent implements OnInit {
 
-  sesion: Sesion=null;
-  abrirPanelAsignarKardex: boolean = true;
-  deshabilitarEditarKardex: boolean = true;
-  deshabilitarFiltroKardex: boolean = true;
-  verActualizarKardex: boolean = false;
-  verActualizarProducto: boolean = false;
-  editarKardex: boolean = true;
+  sesion: Sesion = null;
+  abrirPanelAdmin: boolean = true;
 
   producto: Producto = new Producto();
   kardex: Kardex = new Kardex();
-
-  codigoEquivalente: string = "";
-
   kardexs: Kardex[] = [];
 
   //Variables para los autocomplete
   productos: Producto[]=[];
-  controlProducto = new UntypedFormControl();
+  seleccionProducto = new UntypedFormControl();
   filtroProductos: Observable<Producto[]> = new Observable<Producto[]>();
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
-  @ViewChild("inputFiltroKardex") inputFiltroKardex: ElementRef;
+  @ViewChild("inputFiltro") inputFiltro: ElementRef;
 
-  columnasKardex: any[] = [
-    { nombreColumna: 'id', cabecera: 'ID', celda: (row: Kardex) => `${row.id}` },
+  columnas: any[] = [
     { nombreColumna: 'fecha', cabecera: 'Fecha', celda: (row: Kardex) => `${this.datepipe.transform(row.fecha, 'dd/MM/yyyy') } ` },
     { nombreColumna: 'documento', cabecera: 'Documento', celda: (row: Kardex) => `${row.documento}` },
     { nombreColumna: 'numero', cabecera: 'Numero', celda: (row: Kardex) => `${row.numero}` },
@@ -63,20 +54,19 @@ export class KardexComponent implements OnInit {
     { nombreColumna: 'cantidad', cabecera: 'Cantidad', celda: (row: Kardex) => `${row.cantidad}` },
     { nombreColumna: 'debe', cabecera: 'Debe', celda: (row: Kardex) => `${row.debe}` },
     { nombreColumna: 'haber', cabecera: 'Haber', celda: (row: Kardex) => `${row.haber}` },
-    { nombreColumna: 'costo_promedio', cabecera: 'Costo Prom.', celda: (row: Kardex) => `${row.costoPromedio}` }
+    { nombreColumna: 'costo_unitario', cabecera: 'Costo Unit.', celda: (row: Kardex) => `${row.costoUnitario}` }
   ];
-  cabeceraKardex: string[] = this.columnasKardex.map(titulo => titulo.nombreColumna);
-  dataSourceKardex: MatTableDataSource<Kardex>;
-  observableDSKardex: BehaviorSubject<MatTableDataSource<Kardex>> = new BehaviorSubject<MatTableDataSource<Kardex>>(null);
+  cabecera: string[] = this.columnas.map(titulo => titulo.nombreColumna);
+  dataSource: MatTableDataSource<Kardex>;
   clickedRows = new Set<Kardex>();
   
-  constructor(private renderer: Renderer2, private productoService: ProductoService, public datepipe: DatePipe,
+  constructor(private productoService: ProductoService, public datepipe: DatePipe,
               private kardexService: KardexService, private sesionService: SesionService, private router: Router) { }
 
   ngOnInit() {
     this.sesion = util.validarSesion(this.sesionService, this.router);
     this.consultarProductos();
-    this.filtroProductos = this.controlProducto.valueChanges
+    this.filtroProductos = this.seleccionProducto.valueChanges
       .pipe(
         startWith(''),
         map(value => typeof value === 'string' || value==null ? value : value.id),
@@ -84,39 +74,16 @@ export class KardexComponent implements OnInit {
       );
   }
 
-  limpiar(){
-    this.producto = new Producto();
-    this.controlProducto.patchValue('');
-    this.kardex = new Kardex();
-    this.editarKardex = true;
-    this.clickedRows.clear();
-    this.borrarFiltroKardex();
-    this.deshabilitarFiltroKardex = true;
-    this.observableDSKardex = new BehaviorSubject<MatTableDataSource<Kardex>>(null);
-  };
-
-  actualizarProducto(event: any){
+  nuevo(event){
     if (event!=null)
       event.preventDefault();
-    if (this.producto.nombre == '') {
-        Swal.fire(error, mensajes.error_producto_proveedor, error_swal);
-        return;
-    }
-    this.productoService.actualizar(this.producto).subscribe({
-      next: (res) => {
-        Swal.fire({ icon: constantes.exito_swal, title: constantes.exito, text: res.mensaje });
-        this.limpiar();
-      },
-      error: (err) => {
-        Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
-      }
-    });
-  }
+    this.producto = new Producto();
+    this.kardex = new Kardex();
+    this.clickedRows.clear();
+  };
 
-  editar(event) {
-    if (event != null)
-      event.preventDefault();
-    this.editarKardex = true;
+  crear(event){
+
   }
 
   actualizar(event) {
@@ -124,15 +91,15 @@ export class KardexComponent implements OnInit {
       event.preventDefault();
     this.kardexService.actualizar(this.kardex).subscribe({
       next: res => {
-        this.kardex = res.resultado as Kardex;
         Swal.fire({ icon: constantes.exito_swal, title: constantes.exito, text: res.mensaje });
-        this.limpiar();
+        this.consultar();
+        this.nuevo(null);
       },
       error: err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
     });
   }
 
-  consultarKardex() {
+  consultar() {
     this.kardexService.consultar().subscribe({
       next: res => {
         this.kardexs = res.resultado as Kardex[]
@@ -144,10 +111,9 @@ export class KardexComponent implements OnInit {
 
   llenarTablaKardex(kardexs: Kardex[]) {
     this.ordenarAsc(kardexs, 'id');
-    this.dataSourceKardex = new MatTableDataSource(kardexs);
-    this.dataSourceKardex.paginator = this.paginator;
-    this.dataSourceKardex.sort = this.sort;
-    this.observableDSKardex.next(this.dataSourceKardex);
+    this.dataSource = new MatTableDataSource(kardexs);
+    this.dataSource.paginator = this.paginator;
+    this.dataSource.sort = this.sort;
   }
 
   seleccion(kardex: Kardex) {
@@ -155,22 +121,17 @@ export class KardexComponent implements OnInit {
       this.clickedRows.clear();
       this.clickedRows.add(kardex);
       this.kardex = kardex;
-      this.editarKardex = false;
     } else {
       this.clickedRows.clear();
     }
   }
 
-  filtroKardex(event: Event) {
+  filtro(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
-    this.dataSourceKardex.filter = filterValue.trim().toUpperCase();
-    if (this.dataSourceKardex.paginator) {
-      this.dataSourceKardex.paginator.firstPage();
+    this.dataSource.filter = filterValue.trim().toUpperCase();
+    if (this.dataSource.paginator) {
+      this.dataSource.paginator.firstPage();
     }
-  }
-  borrarFiltroKardex() {
-    this.renderer.setProperty(this.inputFiltroKardex.nativeElement, 'value', '');
-    this.dataSourceKardex.filter = '';
   }
 
   ordenarAsc(arrayJson: any, pKey: any) {
@@ -188,6 +149,7 @@ export class KardexComponent implements OnInit {
       }
     );
   }
+
   private filtroProducto(value: string): Producto[] {
     if(this.productos.length>0) {
       const filterValue = value.toLowerCase();
@@ -195,17 +157,18 @@ export class KardexComponent implements OnInit {
     }
     return [];
   }
+  
   verProducto(producto: Producto): string {
     return producto && producto.nombre ? producto.nombre : '';
   }
+
   seleccionarProducto(){
-    this.producto = this.controlProducto.value as Producto;
-    this.kardexs = this.producto.kardexs;
-    if (this.kardexs.length > 0) {
-      this.llenarTablaKardex(this.kardexs);
-      this.deshabilitarFiltroKardex = false;
-    }
+    let productoId = this.seleccionProducto.value.id;
+    this.productoService.obtener(productoId).subscribe(
+      res => {
+        this.producto = res.resultado as Producto;
+      },
+      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+    );
   }
-
-
 }

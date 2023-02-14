@@ -39,7 +39,6 @@ export class Proveedor {
     telefonosProveedor: TelefonoProveedor[];
     celularesProveedor: CelularProveedor[];
     correosProveedor: CorreoProveedor[];
-    //retencionesProveedor: RetencionCliente[];
 
     constructor() {
         this.id = valores.cero;
@@ -63,14 +62,8 @@ export class Proveedor {
         this.formaPago = new FormaPago();
         this.plazoCredito = new PlazoCredito();
         this.montoFinanciamiento = valores.cero;
-
         this.telefonosProveedor = [];
         this.celularesProveedor = [];
         this.correosProveedor = [];
-        //this.retencionesProveedor=[];
-        //this.retencionesProveedor.push(new RetencionCliente());
-        //this.retencionesProveedor.push(new RetencionCliente());
-        //this.retencionesProveedor.push(new RetencionCliente());
-        //this.retencionesProveedor.push(new RetencionCliente());
     }
 }

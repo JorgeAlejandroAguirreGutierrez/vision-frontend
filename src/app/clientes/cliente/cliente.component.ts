@@ -406,9 +406,9 @@ export class ClienteComponent implements OnInit {
 
   agregarTelefonoCorreo() {
     if (this.telefono.numero != valores.vacio)
-      this.cliente.telefonos.push({ ... this.telefono});
+      this.cliente.telefonos.push(this.telefono);
     if (this.celular.numero != valores.vacio)
-      this.cliente.celulares.push({ ... this.celular});
+      this.cliente.celulares.push(this.celular);
     if (this.correo.email != valores.vacio)
       this.cliente.correos.push(this.correo);
   }

@@ -1,10 +1,9 @@
 import { Factura } from './factura';
 import { Precio } from '../inventario/precio';
-import { Caracteristica } from '../inventario/caracteristica';
 import { Producto } from '../inventario/producto';
-import { Bodega } from '../inventario/bodega';
 import { Impuesto } from '../inventario/impuesto';
 import { valores } from "../../constantes";
+import { Kardex } from '../inventario/kardex';
 
 export class FacturaDetalle {
   id: number;
@@ -29,16 +28,14 @@ export class FacturaDetalle {
   ivaConDescuentoLinea: number;
   totalConDescuentoLinea: number;
   factura: Factura;
-  //CARACTERISTICAS SELECCIONADAS
-  caracteristicas: Caracteristica[];
   //PRECIO SELECCIONADO
   precio: Precio;
   //PRODUCTO SELECCIONADO
   producto: Producto;
   //IMPUESTO SELECCIONADO
   impuesto: Impuesto;
-  //BODEGA SELECCIONADO
-  bodega: Bodega;
+  //KARDEX SELECCIONADO
+  kardex: Kardex;
 
   
 
@@ -66,7 +63,6 @@ export class FacturaDetalle {
     this.producto = new Producto();
     this.precio = new Precio();
     this.impuesto = new Impuesto();
-    this.bodega = new Bodega();
-    this.caracteristicas = [];
+    this.kardex = new Kardex();
   }
 }

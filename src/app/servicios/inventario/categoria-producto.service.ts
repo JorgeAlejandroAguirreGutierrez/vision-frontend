@@ -32,6 +32,15 @@ export class CategoriaProductoService {
     );
   }
 
+  obtenerPorAbreviatura(abreviatura: string): Observable<Respuesta> {
+    return this.http.get<Respuesta>(environment.host + urn.ruta + urn.categoriaProducto + urn.obtenerPorAbreviatura + urn.slash + abreviatura, options).pipe(
+      map(response => response as Respuesta),
+      catchError(err => {
+        return throwError(()=>err);
+      })
+    );
+  }
+
   consultar(): Observable<Respuesta> {
     return this.http.get(environment.host + urn.ruta + urn.categoriaProducto, options).pipe(
       map(response => response as Respuesta),

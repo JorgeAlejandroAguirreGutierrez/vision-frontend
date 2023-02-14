@@ -19,8 +19,6 @@ import { Producto } from '../../modelos/inventario/producto';
 import { ImpuestoService } from '../../servicios/inventario/impuesto.service';
 import { Impuesto } from '../../modelos/inventario/impuesto';
 import { FacturaService } from '../../servicios/comprobante/factura.service';
-import { Dependiente } from '../../modelos/cliente/dependiente';
-import { Caracteristica } from '../../modelos/inventario/caracteristica';
 import { Bodega } from '../../modelos/inventario/bodega';
 import { BodegaService } from '../../servicios/inventario/bodega.service';
 import { Precio } from '../../modelos/inventario/precio';
@@ -228,7 +226,10 @@ export class FacturaComponent implements OnInit {
         this.dataSourceFactura = new MatTableDataSource(this.facturas);
         this.dataSourceFactura.paginator = this.paginatorFactura;
       },
-      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+      err => {
+        console.log(err);
+        Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+      } 
     );
   }
 
@@ -237,7 +238,10 @@ export class FacturaComponent implements OnInit {
       res => {
         this.clientes = res.resultado as Cliente[]
       },
-      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+      err => {
+        console.log(err);
+        Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+      } 
     );
   }
 
@@ -246,7 +250,10 @@ export class FacturaComponent implements OnInit {
       res => {
         this.impuestos = res.resultado as Impuesto[]
       },
-      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+      err => {
+        console.log(err);
+        Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+      } 
     );
   }
   consultarBodegas(){
@@ -254,7 +261,10 @@ export class FacturaComponent implements OnInit {
       res => {
         this.bodegas = res.resultado as Bodega[]
       },
-      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+      err => {
+        console.log(err);
+        Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+      } 
     );
   }
 
@@ -263,7 +273,10 @@ export class FacturaComponent implements OnInit {
       res => {
         this.categoriasProductos = res.resultado as CategoriaProducto[]
       },
-      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+      err => {
+        console.log(err);
+        Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+      } 
     );
   }
 
@@ -272,15 +285,22 @@ export class FacturaComponent implements OnInit {
       res => {
         this.productos = res.resultado as Producto[]
       },
-      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+      err => {
+        console.log(err);
+        Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+      } 
     );
   }
+
   consultarServicios() {
     this.productoService.consultarServicio().subscribe(
       res => {
         this.productos = res.resultado as Producto[]
       },
-      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+      err => {
+        console.log(err);
+        Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+      } 
     );
   }
   consultarActivosFijos() {
@@ -288,7 +308,10 @@ export class FacturaComponent implements OnInit {
       res => {
         this.productos = res.resultado as Producto[]
       },
-      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+      err => {
+        console.log(err);
+        Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+      }
     );
   }
 
@@ -312,9 +335,8 @@ export class FacturaComponent implements OnInit {
   }
 
   seleccionarIdentificacionCliente() {
-    let cliente_id=undefined;
-    cliente_id=this.seleccionIdentificacionCliente.value.id;
-    this.clienteService.obtener(cliente_id).subscribe(
+    let clienteId = this.seleccionIdentificacionCliente.value.id;
+    this.clienteService.obtener(clienteId).subscribe(
       res => {
         Object.assign(this.factura.cliente,res.resultado as Cliente);
           this.seleccionIdentificacionCliente.patchValue(this.factura.cliente);
@@ -331,7 +353,7 @@ export class FacturaComponent implements OnInit {
   }
 
   limpiarProducto(){
-    this.facturaDetalle= new FacturaDetalle();
+    this.facturaDetalle = new FacturaDetalle();
     this.seleccionProducto.patchValue(valores.vacio);
     this.costoPromedio = valores.cero;
     this.saldo = valores.cero;
@@ -345,7 +367,7 @@ export class FacturaComponent implements OnInit {
       Swal.fire({ icon: error_swal, title: error, text: mensajes.error_kardex_vacio, footer: mensajes.error_kardex_vacio_mensaje });
       return;
     }
-    this.costoPromedio=this.facturaDetalle.producto.kardexs[this.facturaDetalle.producto.kardexs.length-1].costoPromedio;
+    this.costoPromedio=this.facturaDetalle.producto.kardexs[this.facturaDetalle.producto.kardexs.length-1].costoUnitario;
     this.saldo=this.facturaDetalle.producto.kardexs[this.facturaDetalle.producto.kardexs.length-1].cantidad;
     this.saldoTotal=this.facturaDetalle.producto.kardexs[this.facturaDetalle.producto.kardexs.length-1].cantidad;
   }
@@ -360,9 +382,6 @@ export class FacturaComponent implements OnInit {
   }
 
   seleccionarMedida(){
-    if (this.facturaDetalle.bodega.id == valores.cero){
-      return;
-    }
     if (this.facturaDetalle.cantidad == valores.cero){
       return;
     }
@@ -376,9 +395,6 @@ export class FacturaComponent implements OnInit {
   }
 
   seleccionarPrecio() {
-    if (this.facturaDetalle.bodega.id == valores.cero){
-      return;
-    }
     if (this.facturaDetalle.cantidad == valores.cero){
       return;
     }
@@ -391,9 +407,6 @@ export class FacturaComponent implements OnInit {
     this.calcularFacturaDetalle();
   }
   seleccionarCantidad() {
-    if (this.facturaDetalle.bodega.id == valores.cero){
-      return;
-    }
     if (this.facturaDetalle.cantidad == valores.cero){
       return;
     }
@@ -407,9 +420,6 @@ export class FacturaComponent implements OnInit {
   }
 
   seleccionarImpuesto(){
-    if (this.facturaDetalle.bodega.id == valores.cero){
-      return;
-    }
     if (this.facturaDetalle.cantidad == valores.cero){
       return;
     }
@@ -423,9 +433,6 @@ export class FacturaComponent implements OnInit {
   }
 
   seleccionarBodega(){
-    if (this.facturaDetalle.bodega.id == valores.cero){
-      return;
-    }
     if (this.facturaDetalle.cantidad == valores.cero){
       return;
     }
@@ -439,9 +446,6 @@ export class FacturaComponent implements OnInit {
   }
 
   seleccionarValorDescuentoLinea() {
-    if (this.facturaDetalle.bodega.id == valores.cero){
-      return;
-    }
     if (this.facturaDetalle.cantidad == valores.cero){
       return;
     }
@@ -455,9 +459,6 @@ export class FacturaComponent implements OnInit {
   }
 
   seleccionarPorcentajeDescuentoLinea() {
-    if (this.facturaDetalle.bodega.id == valores.cero){
-      return;
-    }
     if (this.facturaDetalle.cantidad == valores.cero){
       return;
     }
@@ -473,9 +474,6 @@ export class FacturaComponent implements OnInit {
   agregarFacturaDetalle(event){
     if (event!=null)
       event.preventDefault();
-    if (this.facturaDetalle.bodega.id == valores.cero){
-      return;
-    }
     if (this.facturaDetalle.cantidad == valores.cero){
       return;
     }
@@ -485,7 +483,7 @@ export class FacturaComponent implements OnInit {
     if (this.facturaDetalle.impuesto.id == valores.cero){
       return;
     }
-    this.factura.sesion=this.sesion;
+    this.factura.sesion = this.sesion;
     this.factura.facturaDetalles.push(this.facturaDetalle);
     this.facturaService.calcular(this.factura).subscribe(
       res => {
@@ -504,7 +502,7 @@ export class FacturaComponent implements OnInit {
     this.factura.sesion=this.sesion;
     this.facturaService.crear(this.factura).subscribe(
       res => {
-        this.facturaService.enviarEventoRecaudacion(res.resultado.id);
+        this.factura = res.resultado as Factura;
         this.stepper.next();
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
       },
@@ -518,7 +516,6 @@ export class FacturaComponent implements OnInit {
     this.facturaService.actualizar(this.factura).subscribe(
       res => {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
-        this.facturaService.enviarEventoRecaudacion(res.resultado.id);
         this.stepper.next();
         
       },

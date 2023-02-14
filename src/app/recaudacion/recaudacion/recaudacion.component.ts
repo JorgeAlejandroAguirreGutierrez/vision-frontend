@@ -771,7 +771,7 @@ export class RecaudacionComponent implements OnInit {
     this.facturacionElectronicaService.enviar(this.recaudacion.factura).subscribe(
       res => {
         let respuesta = res.resultado as String;
-        Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje, footer: respuesta });
+        Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
       },
       err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.message })
     );

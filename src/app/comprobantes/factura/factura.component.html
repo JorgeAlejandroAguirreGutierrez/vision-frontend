@@ -54,8 +54,7 @@
                                     <mat-autocomplete #identificacionCliente="matAutocomplete"
                                         [displayWith]="verIdentificacionCliente"
                                         (optionSelected)="seleccionarIdentificacionCliente()">
-                                        <mat-option *ngFor="let cliente of filtroIdentificacionClientes | async"
-                                            [value]="cliente">
+                                        <mat-option *ngFor="let cliente of filtroIdentificacionClientes | async" [value]="cliente">
                                             {{cliente.identificacion}}
                                         </mat-option>
                                     </mat-autocomplete>
@@ -244,7 +243,7 @@
                             <div class="col-4">
                                 <mat-form-field appearance="standard">
                                     <mat-label>Saldo T.</mat-label>
-                                    <input matInput type="text " class="form-control-sm " [(ngModel)]="saldoTotal" disabled>
+                                    <input matInput type="text" class="form-control-sm" [(ngModel)]="saldoTotal" [disabled]="true">
                                 </mat-form-field>
                             </div>
                         </div>
@@ -282,23 +281,15 @@
                             <div class="col-2">
                                 <mat-form-field appearance="standard">
                                     <mat-label>Medida</mat-label>
-                                    <mat-select [(ngModel)]="facturaDetalle.precio" [compareWith]="compareFn"
-                                        (selectionChange)="seleccionarMedida()" class="form-control-sm">
-                                        <mat-option *ngFor="let precio of facturaDetalle.producto.precios"
-                                            [value]="precio">
-                                            {{precio.medida.descripcion}}
-                                        </mat-option>
-                                    </mat-select>
+                                    <input matInput type="text" [(ngModel)]="facturaDetalle.producto.medida.descripcion" class="form-control-sm" [disabled]="true">
                                 </mat-form-field>
                             </div>
                             <div class="col-3">
                                 <mat-form-field appearance="standard">
                                     <mat-label>Bodega</mat-label>
-                                    <mat-select [(ngModel)]="facturaDetalle.bodega.id"
-                                        (selectionChange)="seleccionarBodega()" [compareWith]="compareFn"
-                                        class="form-control-sm">
-                                        <mat-option *ngFor="let bodega of bodegas; let i=index" [value]="bodega.id">
-                                            {{bodega.codigo}}
+                                    <mat-select [(ngModel)]="facturaDetalle.kardex" (selectionChange)="seleccionarBodega()" [compareWith]="compareFn" class="form-control-sm">
+                                        <mat-option *ngFor="let kardex of facturaDetalle.producto.kardexs; let i=index" [value]="kardex">
+                                            {{kardex.bodega.nombre}}
                                         </mat-option>
                                     </mat-select>
                                 </mat-form-field>
@@ -306,14 +297,13 @@
                             <div class="col-1">
                                 <mat-form-field appearance="standard">
                                     <mat-label>Saldo Bod</mat-label>
-                                    <input matInput type="text" [(ngModel)]="saldo" class="form-control-sm" disabled>
+                                    <input matInput type="text" [(ngModel)]="facturaDetalle.kardex.cantidad" class="form-control-sm" [disabled]="true">
                                 </mat-form-field>
                             </div>
                             <div class="col-1">
                                 <mat-form-field appearance="standard">
                                     <mat-label>Cantidad</mat-label>
-                                    <input matInput type="text" [(ngModel)]="facturaDetalle.cantidad"
-                                        (change)="seleccionarCantidad()" class="form-control-sm">
+                                    <input matInput type="text" [(ngModel)]="facturaDetalle.cantidad" (change)="seleccionarCantidad()" class="form-control-sm">
                                 </mat-form-field>
                             </div>
                             <div class="col-2">
