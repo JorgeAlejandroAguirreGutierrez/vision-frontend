@@ -312,11 +312,11 @@ export class ProductoComponent implements OnInit {
     }
   }
 
-  seleccionarProducto(productoSeleccionado: Producto) {
-    if (!this.clickedRows.has(productoSeleccionado)) {
-      this.nuevo(null);
-      this.clickedRows.add(productoSeleccionado);
-      this.producto = productoSeleccionado;
+  seleccion(producto: Producto) {
+    if (!this.clickedRows.has(producto)) {
+      this.clickedRows.clear();
+      this.clickedRows.add(producto);
+      this.producto = { ... producto};
       this.cargar();
     } else {
       this.nuevo(null);

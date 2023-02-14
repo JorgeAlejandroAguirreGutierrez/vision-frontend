@@ -299,8 +299,7 @@
                             <div class="col-2">
                                 <mat-form-field appearance="standard">
                                     <mat-label>Precio Unit.</mat-label>
-                                    <input matInput type="text" class="form-control-sm"
-                                        [(ngModel)]="facturaDetalle.precio.precioVentaPublicoManual">
+                                    <input matInput type="text" [(ngModel)]="facturaDetalle.precio.precioVentaPublicoManual" [disabled]="true" class="form-control-sm">
                                 </mat-form-field>
                             </div>
                             <div class="col-1">
@@ -371,7 +370,7 @@
                                 <ng-container matColumnDef="medida">
                                     <th mat-header-cell *matHeaderCellDef mat-sort-header> Med </th>
                                     <td mat-cell *matCellDef="let facturaDetalle">
-                                        {{facturaDetalle.precio.medida.abreviatura}} </td>
+                                        {{facturaDetalle.producto.medida.abreviatura}} </td>
                                 </ng-container>
                                 <!-- Cantidad Columna -->
                                 <ng-container matColumnDef="cantidad">

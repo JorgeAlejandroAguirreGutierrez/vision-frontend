@@ -299,6 +299,11 @@
                             <td mat-cell *matCellDef="let facturaCompraLinea">
                                 {{facturaCompraLinea.producto.impuesto.porcentaje}}% </td>
                         </ng-container>
+                        <ng-container matColumnDef="bodega">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header> BOD </th>
+                            <td mat-cell *matCellDef="let facturaCompraLinea">
+                                {{facturaCompraLinea.bodega.nombre}} </td>
+                        </ng-container>
                         <!-- Total Columna -->
                         <ng-container matColumnDef="total">
                             <th mat-header-cell *matHeaderCellDef mat-sort-header> Total </th>

@@ -168,7 +168,7 @@
                             <div class="col-3">
                                 <mat-form-field appearance="standard">
                                     <mat-label>Bodega</mat-label>
-                                    <mat-select [(ngModel)]="producto.kardexs[0].bodega" [compareWith]="compareFn" () class="form-control-sm">
+                                    <mat-select [(ngModel)]="producto.kardexs[0].bodega" [compareWith]="compareFn" class="form-control-sm">
                                         <mat-option *ngFor="let bodega of bodegas" [value]="bodega" >
                                             {{bodega.nombre}}</mat-option>
                                     </mat-select>
@@ -294,7 +294,7 @@
                     </ng-container>
 
                     <tr mat-header-row *matHeaderRowDef="cabecera"></tr>
-                    <tr mat-row (click)="seleccionarProducto(row)" [class.selected-row]="clickedRows.has(row)"
+                    <tr mat-row (click)="seleccion(row)" [class.selected-row]="clickedRows.has(row)"
                         *matRowDef="let row; columns: cabecera;"></tr>
 
                     <!-- Row shown when there is no matching data. -->

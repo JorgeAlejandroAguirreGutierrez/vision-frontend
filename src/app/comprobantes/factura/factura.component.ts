@@ -364,8 +364,13 @@ export class FacturaComponent implements OnInit {
 
   seleccionarProducto() {
     this.facturaDetalle.producto=this.seleccionProducto.value;
-    if(this.facturaDetalle.producto.id == valores.cero || this.facturaDetalle.bodega.id == valores.cero){
+    if(this.facturaDetalle.producto.id == valores.cero || this.facturaDetalle.bodega.id == valores.cero || this.factura.cliente.id == valores.cero){
       return;
+    }
+    for(let precio of this.facturaDetalle.producto.precios){
+      if (precio.segmento.id == this.factura.cliente.segmento.id){
+        this.facturaDetalle.precio = precio;
+      }
     }
     this.kardexService.obtenerUltimoPorFecha(this.facturaDetalle.bodega.id, this.facturaDetalle.producto.id).subscribe(
       res => {
@@ -440,8 +445,13 @@ export class FacturaComponent implements OnInit {
   }
 
   seleccionarBodega(){
-    if(this.facturaDetalle.producto.id == valores.cero || this.facturaDetalle.bodega.id == valores.cero){
+    if(this.facturaDetalle.producto.id == valores.cero || this.facturaDetalle.bodega.id == valores.cero || this.factura.cliente.id == valores.cero){
       return;
+    }
+    for(let precio of this.facturaDetalle.producto.precios){
+      if (precio.segmento.id == this.factura.cliente.segmento.id){
+        this.facturaDetalle.precio = precio;
+      }
     }
     this.kardexService.obtenerUltimoPorFecha(this.facturaDetalle.bodega.id, this.facturaDetalle.producto.id).subscribe(
       res => {
