@@ -103,8 +103,9 @@ export class ProveedorComponent implements OnInit {
     { nombreColumna: 'identificacion', cabecera: 'Indentificación', celda: (row: Proveedor) => `${row.identificacion}` },
     { nombreColumna: 'razon_social', cabecera: 'Razón Social', celda: (row: Proveedor) => `${row.razonSocial}` },
     { nombreColumna: 'direccion', cabecera: 'Direccion', celda: (row: Proveedor) => `${row.direccion}` },
-    { nombreColumna: 'obligado', cabecera: 'Obligado', celda: (row: Proveedor) => `${row.tipoContribuyente.obligadoContabilidad}` },
+    { nombreColumna: 'obligado', cabecera: 'Obligado', celda: (row: Proveedor) => `${row.obligadoContabilidad}` },
     { nombreColumna: 'especial', cabecera: 'Especial', celda: (row: Proveedor) => `${row.especial}` },
+    { nombreColumna: 'fantasma', cabecera: 'Fantasma', celda: (row: Proveedor) => `${row.fantasma}` },
     { nombreColumna: 'estado', cabecera: 'Estado', celda: (row: Proveedor) => `${row.estado}` }
   ];
   cabecera: string[] = this.columnas.map(titulo => titulo.nombreColumna);
@@ -337,7 +338,8 @@ export class ProveedorComponent implements OnInit {
   consultar() {
     this.proveedorService.consultar().subscribe({
       next: res => {
-        this.proveedores = res.resultado as Proveedor[]
+        this.proveedores = res.resultado as Proveedor[];
+        console.log(this.proveedores);
         this.llenarTabla(this.proveedores);
       },
       error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
@@ -348,8 +350,8 @@ export class ProveedorComponent implements OnInit {
     this.dataSource = new MatTableDataSource(proveedores);
     this.dataSource.filterPredicate = (data: Proveedor, filter: string): boolean =>
       data.codigo.includes(filter) || data.identificacion.includes(filter) || data.razonSocial.includes(filter) ||
-      data.direccion.includes(filter) || data.tipoContribuyente.obligadoContabilidad.includes(filter) || 
-      data.especial.includes(filter) || data.estado.includes(filter);
+      data.direccion.includes(filter) || data.obligadoContabilidad.includes(filter) || 
+      data.especial.includes(filter) || data.fantasma.includes(filter) ||data.estado.includes(filter);
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
   }
@@ -358,8 +360,10 @@ export class ProveedorComponent implements OnInit {
     if (!this.clickedRows.has(proveedor)) {
       this.clickedRows.clear();
       this.clickedRows.add(proveedor);
-      //this.cliente = { ... cliente};
-      this.obtenerProveedor(proveedor.id)
+      this.proveedor = { ... proveedor};
+      //this.obtenerProveedor(proveedor.id)
+      this.llenarUbicacion(); // Borrar cuando arregle el obtener
+      this.recuperarCoordenadas();
     } else {
       this.nuevo(null);
     }

@@ -50,6 +50,7 @@ export class ProductoComponent implements OnInit {
 
   sesion: Sesion = null;
 
+  abrirPanelPrecio: boolean = true;
   abrirPanelNuevo: boolean = true;
   abrirPanelAdmin: boolean = false;
   abrirPanelNuevoKardex: boolean = false;

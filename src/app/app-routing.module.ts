@@ -47,11 +47,13 @@ import { TipoRetencionComponent } from './configuraciones/tipo-retencion/tipo-re
 //Módulo de Recaudaciones
 import { RecaudacionComponent } from './recaudacion/recaudacion/recaudacion.component';
 import { BancoComponent } from './recaudacion/banco/banco.component';
-// Módulo de Comprobantes
+
+// Módulo de Ventas
 import { FacturaComponent } from './comprobantes/factura/factura.component';
 import { EgresoComponent } from './comprobantes/egreso/egreso.component';
 import { PedidoComponent } from './comprobantes/pedido/pedido.component';
 import { ProformaComponent } from './comprobantes/proforma/proforma.component';
+import { NotaCreditoVentaComponent } from './comprobantes/nota-credito-venta/nota-credito-venta.component';
 
 //Módulo de Entregas
 import { EntregaComponent } from './entregas/entrega/entrega.component';
@@ -62,6 +64,7 @@ import { VehiculoTransporteComponent } from './entregas/vehiculo-transporte/vehi
 import { ProveedorComponent, DialogoMapaProveedorComponent } from './compras/proveedor/proveedor.component';
 import { FacturaCompraComponent } from './compras/factura-compra/factura-compra.component';
 import { GrupoProveedorComponent, DialogoGrupoProveedorCuentaContableComponent } from './compras/grupo-proveedor/grupo-proveedor.component';
+import { NotaCreditoCompraComponent } from './compras/nota-credito-compra/nota-credito-compra.component';
 
 //Módulo de Contabilidad
 import { ContabilizacionComponent } from './contabilidad/contabilizacion/contabilizacion.component';
@@ -194,17 +197,19 @@ export const RoutingComponents = [
   // Recaudación
   RecaudacionComponent,
   BancoComponent,
-  //Comprobantes
+  //Ventas
   FacturaComponent,
   EgresoComponent,
   PedidoComponent,
   ProformaComponent,
+  NotaCreditoVentaComponent,
   // Compras
   ProveedorComponent,
   DialogoMapaProveedorComponent,
   FacturaCompraComponent,
   GrupoProveedorComponent,
   DialogoGrupoProveedorCuentaContableComponent,
+  NotaCreditoCompraComponent,
   // Contabilidad
   ContabilizacionComponent,
   CuentaContableComponent,
