@@ -149,7 +149,7 @@ export class ClienteComponent implements OnInit {
     { nombreColumna: 'identificacion', cabecera: 'Indentificación', celda: (row: Cliente) => `${row.identificacion}` },
     { nombreColumna: 'razonSocial', cabecera: 'Razón Social', celda: (row: Cliente) => `${row.razonSocial}` },
     { nombreColumna: 'direccion', cabecera: 'Direccion', celda: (row: Cliente) => `${row.direccion}` },
-    { nombreColumna: 'obligado', cabecera: 'Obligado', celda: (row: Cliente) => `${row.tipoContribuyente.obligadoContabilidad}` },
+    { nombreColumna: 'obligado', cabecera: 'Obligado', celda: (row: Cliente) => `${row.obligadoContabilidad}` },
     { nombreColumna: 'especial', cabecera: 'Especial', celda: (row: Cliente) => `${row.especial}` },
     { nombreColumna: 'estado', cabecera: 'Estado', celda: (row: Cliente) => `${row.estado}` }
   ];
@@ -477,7 +477,7 @@ export class ClienteComponent implements OnInit {
     this.dataSourceCliente = new MatTableDataSource(clientes);
     this.dataSourceCliente.filterPredicate = (data: Cliente, filter: string): boolean =>
       data.codigo.includes(filter) || data.identificacion.includes(filter) || data.razonSocial.includes(filter) ||
-      data.direccion.includes(filter) || data.tipoContribuyente.obligadoContabilidad.includes(filter) || data.especial.includes(filter) ||
+      data.direccion.includes(filter) || data.obligadoContabilidad.includes(filter) || data.especial.includes(filter) ||
       data.estado.includes(filter);
     this.dataSourceCliente.paginator = this.paginator;
     this.dataSourceCliente.sort = this.sort;

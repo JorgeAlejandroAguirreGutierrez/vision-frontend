@@ -23,7 +23,7 @@ export class TransportistaComponent implements OnInit {
   inactivo: string = valores.inactivo;
 
   abrirPanelNuevo = true;
-  abrirPanelAdmin = false;
+  abrirPanelAdmin = true;
 
   sesion: Sesion=null;
   transportista= new Transportista();

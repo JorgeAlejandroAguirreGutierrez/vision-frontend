@@ -1,5 +1,5 @@
 import { Component, OnInit, HostListener, Renderer2 } from '@angular/core';
-import { valores, validarSesion, mensajes, exito, exito_swal, error, error_swal } from '../../constantes';
+import { valores, validarSesion, mensajes, imagenes, exito, exito_swal, error, error_swal } from '../../constantes';
 import Swal from 'sweetalert2';
 
 import { Router } from '@angular/router';
@@ -50,6 +50,7 @@ export class EmpresaComponent implements OnInit {
 
   ngOnInit() {
     this.sesion=validarSesion(this.sesionService, this.router);
+    this.empresa.logo64 = imagenes.logo_empresa;
     this.consultar();
   }
   
@@ -121,15 +122,16 @@ export class EmpresaComponent implements OnInit {
   }
 
   consultar() {
-    this.empresaService.consultar().subscribe(
-      res => {
+    this.empresaService.consultar().subscribe({
+      next: res => {
         this.empresas = res.resultado as Empresa[]
+        console.log(this.empresas);
         this.dataSource = new MatTableDataSource(this.empresas);
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
       },
-      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
-    );
+      error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+    });
   }
 
   seleccion(empresa: Empresa) {
@@ -163,7 +165,8 @@ export class EmpresaComponent implements OnInit {
   capturarFile(event : any) : any{
     const archivoCapturado = event.target.files[0];
     this.extrarBase64(archivoCapturado).then((imagen: any) => {
-      this.empresa.logo = imagen.base;
+      this.empresa.logo64 = imagen.base;
+      //console.log(this.empresa.logo64);
     });
   }
 

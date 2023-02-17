@@ -1,10 +1,5 @@
 <nav class="navbar-light nav-fijo">
     <ul class="navbar-nav">
-        <li class="nav-item">
-            <a class="nav-link" title="Nuevo" role="button" (click)="nuevo($event)">
-                <mat-icon>note_add</mat-icon>
-            </a>
-        </li>
         <li class="nav-item" *ngIf="perfil.id==0">
             <a class="nav-link" title="Guardar" role="button" (click)="crear($event)">
                 <mat-icon>save</mat-icon>
@@ -15,16 +10,23 @@
                 <mat-icon>update</mat-icon>
             </a>
         </li>
-        <li class="nav-item" *ngIf="perfil.id!=0">
-            <a class="nav-link" title="Activar" role="button" (click)="activar($event)">
-                <mat-icon>check</mat-icon>
+        <li class="nav-item">
+            <a class="nav-link" title="Nuevo" role="button" (click)="nuevo($event)">
+                <mat-icon>file_copy</mat-icon>
             </a>
         </li>
-        <li class="nav-item" *ngIf="perfil.id!=0">
-            <a class="nav-link" title="Inactivar" role="button" (click)="inactivar($event)">
-                <mat-icon>delete</mat-icon>
-            </a>
-        </li>
+        <ng-container *ngIf="perfil.id!=0">
+            <li class="nav-item" *ngIf="perfil.estado!=activo">
+                <a class="nav-link" title="Activar" role="button" (click)="activar($event)">
+                    <mat-icon>assignment_turned_in</mat-icon>
+                </a>
+            </li>
+            <li class="nav-item" *ngIf="perfil.estado==activo">
+                <a class="nav-link" title="Inactivar" role="button" (click)="inactivar($event)">
+                    <mat-icon>delete_forever</mat-icon>
+                </a>
+            </li>
+        </ng-container>
     </ul>
 </nav>
 <div class="contenedor">
@@ -106,7 +108,7 @@
                         <mat-icon (click)="agregarPermiso()">add</mat-icon>
                     </button>
                 </div>
-                <ng-container *ngFor="let permiso of perfil.permisos; let i=index ">
+                <!--ng-container *ngFor="let permiso of perfil.permisos; let i=index ">
                     <div class="col-11">
                         <mat-form-field appearance="standard">
                             <mat-label>Permisos</mat-label>
@@ -118,7 +120,49 @@
                             <mat-icon class="iconos-peque" (click)="eliminarPermiso(i)">close</mat-icon>
                         </button>
                     </div>
-                </ng-container>
+                </ng-container-->
+                <hr>
+                <div class="col-12" *ngIf="perfil.permisos.length > 0">
+                    <mat-form-field appearance="standard">
+                        <mat-label>Buscar permiso</mat-label>
+                        <input matInput (keyup)="filtro($event)" #inputFiltro>
+                    </mat-form-field>
+                    <div class="mat-elevation-z8">
+                        <table mat-table [dataSource]="dataSourcePermiso" matSort>
+                            <!-- Columnas Dinamicas -->
+                            <ng-container *ngFor="let columna of columnasPermiso" [matColumnDef]="columna.nombreColumna">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header> {{ columna.cabecera }} </th>
+                                <td mat-cell *matCellDef="let row"> 
+                                    <ng-container *ngIf="columna.nombreColumna!='acciones'">
+                                        {{ columna.celda(row) }}
+                                    </ng-container>
+                                    <ng-container *ngIf="columna.nombreColumna=='acciones'">
+                                        <button mat-icon-button color="warn" (click)="inactivarPermiso(row)">
+                                            <i class="fa fa-times mat-icon"></i>
+                                        </button>
+                                        <button mat-icon-button color="primary" (click)="activarPermiso(row)">
+                                            <i class="fa fa-check mat-icon"></i>
+                                        </button>
+                                    </ng-container>
+                                </td>
+                            </ng-container>
+                            <tr mat-header-row *matHeaderRowDef="cabeceraPermiso"></tr>
+                            <tr mat-row [class.selected-row]="clickedRowsPermiso.has(row)"
+                                *matRowDef="let row; columns: cabeceraPermiso;"></tr>
+                            <!-- Row shown when there is no matching data. -->
+                            <tr class="mat-row" *matNoDataRow>
+                                <td class="mat-cell" colspan="6">No hay datos que coincidan con el permiso</td>
+                            </tr>
+                        </table>
+                        <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
+                    </div>
+                    <div class="azul" *ngIf="!clickedRowsPermiso.size">
+                        Seleccione una fila para editar
+                    </div>
+                    <div class="azul" *ngFor="let clickedRow of clickedRowsPermiso">
+                        Id: {{clickedRow.id}} seleccionado
+                    </div>
+                </div>
             </div>
         </mat-expansion-panel>
     </mat-accordion>
