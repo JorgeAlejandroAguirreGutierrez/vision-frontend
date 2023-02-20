@@ -19,7 +19,7 @@ import { MedidaService } from '../../servicios/inventario/medida.service';
 export class MedidaComponent implements OnInit {
 
   abrirPanelNuevo = true;
-  abrirPanelAdmin = false;
+  abrirPanelAdmin = true;
 
   activo = valores.activo;
   inactivo = valores.inactivo;

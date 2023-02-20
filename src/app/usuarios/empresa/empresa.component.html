@@ -74,8 +74,13 @@
                         </mat-form-field>
                     </div>
                     <div class="col-1">
-                        <mat-checkbox (change)="obligadoContabilidad($event)" class="form-control-sm"
-                            color="primary">Oblig.</mat-checkbox>
+                        <mat-form-field appearance="standard">
+                            <mat-label>Oblig.</mat-label>
+                            <mat-select [(ngModel)]="empresa.obligadoContabilidad" class="form-control-sm">
+                                <mat-option [value]="si">{{si}}</mat-option>
+                                <mat-option [value]="no">{{no}}</mat-option>
+                            </mat-select>
+                        </mat-form-field>
                     </div>
                     <div class="col-2">
                         <mat-form-field appearance="standard">

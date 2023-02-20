@@ -1,15 +1,18 @@
 import { Component, HostListener, OnInit } from '@angular/core';
 import { validarSesion, exito, exito_swal, error, error_swal, valores } from '../../constantes';
 import Swal from 'sweetalert2';
+
+import { Router } from '@angular/router';
 import { Sesion } from '../../modelos/usuario/sesion';
 import { SesionService } from '../../servicios/usuario/sesion.service';
 import { BodegaService } from '../../servicios/inventario/bodega.service';
 import { Bodega } from '../../modelos/inventario/bodega';
+
 import { ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { Router } from '@angular/router';
+
 
 @Component({
   selector: 'app-bodega',
@@ -19,7 +22,7 @@ import { Router } from '@angular/router';
 export class BodegaComponent implements OnInit {
 
   abrirPanelNuevo = true;
-  abrirPanelAdmin = false;
+  abrirPanelAdmin = true;
 
   activo = valores.activo;
   inactivo = valores.inactivo;

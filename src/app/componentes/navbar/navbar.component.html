@@ -4,10 +4,12 @@
   </button-->
   <!-- Cabecera -->
   <div class="navbar-header pl-2 pr-2 ml-3">
-    <a class="navbar-brand m-0 w-100" href="#">
+    <div>
+      <img  class="logo-emp" [src]="empresa.logo64"> 
+    </div>
+    <a class="navbar-brand m-0 w-100">
       <!-- <i class="fa fa-flash mr-1"></i> -->
-      <img src="{{url_logo}}" alt="Empresa" width="50px">
-      <span class="ml-2">RioTour S.A.</span>
+      <span class="ml-2">{{empresa.nombreComercial}}</span>
     </a>
   </div>
   <!-- Boton conmutable del sidebar para cuando la pantalla es pequeña  -->
@@ -56,17 +58,19 @@
         </a>
       </li>
       <li class="nav-item">
-        <a class="btn nav-link">
-          <i class="far fa-user"></i>
-          <span class="link-text">Perfil</span>
+        <a class="btn nav-link" href="#">
+          <i class="fa fa-sign-out" title="Salir" ></i>
+          <span class="link-text" >Salir</span>
         </a>
       </li>
       <li class="nav-item">
         <a class="btn nav-link">
-          <i class="fas fa-cog"></i>
-          <span class="link-text">Configuracion</span>
+          <!--i class="far fa-user" title="Usuario"></i-->
+          <img class="avatar-user" [src]="usuario.avatar64">
+          <span class="link-text">Perfil</span>
         </a>
       </li>
+
     </ul>
   </div>
 </nav>

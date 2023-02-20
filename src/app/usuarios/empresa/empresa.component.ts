@@ -24,6 +24,8 @@ export class EmpresaComponent implements OnInit {
 
   activo: string = valores.activo;
   inactivo: string = valores.inactivo;
+  si: string = valores.si;
+  no: string = valores.no;
 
   abrirPanelNuevo: boolean = true;
   abrirPanelAdmin: boolean = true;
@@ -152,15 +154,6 @@ export class EmpresaComponent implements OnInit {
       this.dataSource.paginator.firstPage();
     }
   }
-
-  obligadoContabilidad(event: any){
-    if (event.checked){
-      this.empresa.obligadoContabilidad = valores.si;
-    } else {
-      this.empresa.obligadoContabilidad = valores.no;
-    }
-  }
-
 
   capturarFile(event : any) : any{
     const archivoCapturado = event.target.files[0];
