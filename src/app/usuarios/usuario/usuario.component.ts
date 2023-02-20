@@ -48,6 +48,7 @@ export class UsuarioComponent implements OnInit {
     { nombreColumna: 'codigo', cabecera: 'Código', celda: (row: Usuario) => `${row.codigo}` },
     { nombreColumna: 'identificacion', cabecera: 'Identificación', celda: (row: Usuario) => `${row.identificacion}` },
     { nombreColumna: 'nombre', cabecera: 'Nombre', celda: (row: Usuario) => `${row.nombre}` },
+    { nombreColumna: 'apodo', cabecera: 'Usuario', celda: (row: Usuario) => `${row.apodo}` },
     { nombreColumna: 'perfil', cabecera: 'Perfil', celda: (row: Usuario) => `${row.perfil.descripcion}` },
     { nombreColumna: 'estado', cabecera: 'Estado', celda: (row: Usuario) => `${row.estado}` }
   ];
@@ -58,7 +59,8 @@ export class UsuarioComponent implements OnInit {
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
-  constructor(private usuarioService: UsuarioService, private perfilService: PerfilService, private estacionService: EstacionService, private sesionService: SesionService, private router: Router) { }
+  constructor(private usuarioService: UsuarioService, private perfilService: PerfilService, private estacionService: EstacionService, 
+              private sesionService: SesionService, private router: Router) { }
 
   ngOnInit() {
     this.sesion = validarSesion(this.sesionService, this.router);
@@ -78,6 +80,7 @@ export class UsuarioComponent implements OnInit {
   crear(event) {
     if (event != null)
       event.preventDefault();
+    this.encriptarContrasena();
     this.usuarioService.crear(this.usuario).subscribe({
       next: res => {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
@@ -187,6 +190,11 @@ export class UsuarioComponent implements OnInit {
 
   compareFn(a: any, b: any) {
     return a && b && a.id == b.id;
+  }
+
+  encriptarContrasena(){
+    this.usuario.contrasena = md5(this.usuario.contrasena);
+    this.usuario.confirmarContrasena = md5(this.usuario.confirmarContrasena);
   }
 
   validarContrasena(){

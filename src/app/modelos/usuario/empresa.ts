@@ -7,7 +7,9 @@ export class Empresa {
     identificacion:string;
     razonSocial:string;
     nombreComercial: string;
+    direccion: string;
     obligadoContabilidad: string;
+    logo64: string;
     logo: string;
     estado: string;
     
@@ -17,7 +19,9 @@ export class Empresa {
         this.identificacion=valores.vacio;
         this.razonSocial=valores.vacio;
         this.nombreComercial=valores.vacio;
+        this.direccion=valores.vacio;
         this.obligadoContabilidad=valores.no;
+        this.logo64=valores.vacio;
         this.logo=valores.vacio;
         this.estado=valores.activo;
     }
