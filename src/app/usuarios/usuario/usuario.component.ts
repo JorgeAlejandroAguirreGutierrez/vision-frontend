@@ -34,7 +34,7 @@ export class UsuarioComponent implements OnInit {
   abrirPanelAdmin: boolean = true;
   ocultarContrasena: boolean = true;
   ocultarContrasena2: boolean = true;
-  cambiarContrasena: boolean = false;
+  cambiarContrasena: boolean = true;
 
   sesion: Sesion = null;
   usuario: Usuario = new Usuario();
