@@ -1,14 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { Type } from '@angular/core';
+import { validarSesion } from '../../constantes';
+
+import { environment } from '../../../environments/environment';
+import { Router } from '@angular/router';
+import { TabService } from "../../servicios/componente/tab/tab.service";
+import { FooterComponent } from "../footer/footer.component";
+
 import { Sesion } from '../../modelos/usuario/sesion';
 import { SesionService } from '../../servicios/usuario/sesion.service';
-import { EmpresaService } from '../../servicios/usuario/empresa.service';
-import { Empresa } from '../../modelos/usuario/empresa';
-import { environment } from '../../../environments/environment';
-import { TabService } from "../services/tab.service";
-import { FooterComponent } from "../footer/footer.component";
-import { validarSesion } from '../../constantes';
-import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-menu',
@@ -44,15 +44,6 @@ export class MenuComponent implements OnInit {
   permiso_auditorias: boolean;
   permiso_tutoriales: boolean;
 
-
-  perfil_contador: boolean;
-  perfil_administrativo: boolean;
-
-
-  url_logo: string ="";
-  nombre_empresa: string="";
-  url_avatar: string= environment.prefijoUrlImagenes+"avatar/avatar1.png";
-
   ico_cliente: string = environment.prefijoUrlImagenes+"iconos/icoclientes.jpg";
   ico_proveedor: string = environment.prefijoUrlImagenes+"iconos/icoproveedores.png";
   ico_facturacion: string = environment.prefijoUrlImagenes+"iconos/icofacturacion.png";
@@ -76,11 +67,10 @@ export class MenuComponent implements OnInit {
   ico_tutoriales: string = environment.prefijoUrlImagenes+"iconos/icotutoriales.png";
 
 
-  constructor(private sesionService: SesionService, private empresaService: EmpresaService, public tabService: TabService, private router: Router) { }
+  constructor(private sesionService: SesionService, public tabService: TabService, private router: Router) { }
 
   ngOnInit() {
     this.sesion=validarSesion(this.sesionService, this.router);
-    this.obtenerEmpresa();
     // FINANCIERO
     this.permiso_clientes=this.obtenerPermiso('CLIENTES');
     this.permiso_compras=this.obtenerPermiso('COMPRAS');
@@ -104,17 +94,6 @@ export class MenuComponent implements OnInit {
     this.permiso_control=this.obtenerPermiso('ORGANISMOS_CONTROL');
     this.permiso_auditorias=this.obtenerPermiso('AUDITORIA');
     this.permiso_tutoriales=this.obtenerPermiso('TUTORIALES');
-  }
-
-  obtenerEmpresa(){
-    let empresaId=1;
-    this.empresaService.obtener(empresaId).subscribe(
-      res => {
-        let empresa= res.resultado as Empresa
-        this.url_logo=environment.prefijoUrlImagenes+"logos/"+empresa.logo;
-        this.nombre_empresa=empresa.razonSocial;
-      }
-    );
   }
 
   obtenerPermiso(permisoModulo: string): boolean {

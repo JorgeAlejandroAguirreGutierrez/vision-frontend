@@ -429,17 +429,6 @@ export class ProveedorComponent implements OnInit {
     });
   }
 
-  buscar(event) {
-    if (event != null)
-      event.preventDefault();
-    this.proveedorService.buscar(this.proveedorBuscar).subscribe({
-      next: res => {
-        this.proveedores = res.resultado as Proveedor[]
-      },
-      error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.message })
-    });
-  }
-
   validarDocumento() {
     if (this.proveedor.tipoIdentificacion.descripcion == otras.tipoIdentificacion) {
       this.deshabilitarObligado = true;

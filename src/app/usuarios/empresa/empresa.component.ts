@@ -1,12 +1,15 @@
-import { Component, OnInit, HostListener, Renderer2 } from '@angular/core';
-import { valores, validarSesion, mensajes, imagenes, exito, exito_swal, error, error_swal } from '../../constantes';
+import { Component, OnInit, HostListener, ElementRef, Renderer2 } from '@angular/core';
+import { valores, validarSesion, mensajes, imagenes, otras, exito, exito_swal, error, error_swal } from '../../constantes';
 import Swal from 'sweetalert2';
 
 import { Router } from '@angular/router';
-import { Sesion } from 'src/app/modelos/usuario/sesion';
-import { SesionService } from 'src/app/servicios/usuario/sesion.service';
+import { Sesion } from '../../modelos/usuario/sesion';
+import { SesionService } from '../../servicios/usuario/sesion.service';
+import { ImagenService } from '../../servicios/administracion/imagen.service'
+
 import { Empresa } from '../../modelos/usuario/empresa';
 import { EmpresaService } from '../../servicios/usuario/empresa.service';
+import { TipoIdentificacion } from '../../modelos/configuracion/tipo-identificacion';
 
 import { ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
@@ -29,15 +32,20 @@ export class EmpresaComponent implements OnInit {
 
   abrirPanelNuevo: boolean = true;
   abrirPanelAdmin: boolean = true;
+  deshabilitarIdentificacion: boolean = false;
 
   sesion: Sesion=null;
-  empresa= new Empresa();
+  empresa: Empresa = new Empresa();
+  //tipoIdentificacion: TipoIdentificacion = new TipoIdentificacion();
+
   empresas: Empresa[];
 
   columnas: any[] = [
     { nombreColumna: 'codigo', cabecera: 'Código', celda: (row: Empresa) => `${row.codigo}` },
     { nombreColumna: 'identificacion', cabecera: 'Identificacion', celda: (row: Empresa) => `${row.identificacion}` },
     { nombreColumna: 'razonSocial', cabecera: 'Razon Social', celda: (row: Empresa) => `${row.razonSocial}` },
+    { nombreColumna: 'nombreComercial', cabecera: 'Nombre Comercial', celda: (row: Empresa) => `${row.nombreComercial}` },
+    { nombreColumna: 'obligado', cabecera: 'Obligado', celda: (row: Empresa) => `${row.obligadoContabilidad}` },
     { nombreColumna: 'estado', cabecera: 'Estado', celda: (row: Empresa) => `${row.estado}` }
   ];
   cabecera: string[] = this.columnas.map(titulo => titulo.nombreColumna);
@@ -46,8 +54,9 @@ export class EmpresaComponent implements OnInit {
   
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
+  @ViewChild("inputFiltro") inputFiltro: ElementRef;
 
-  constructor(private renderer: Renderer2, private router: Router, 
+  constructor(private renderer: Renderer2, private router: Router, private imagenService: ImagenService,
     private sesionService: SesionService, private empresaService: EmpresaService) { }
 
   ngOnInit() {
@@ -68,12 +77,16 @@ export class EmpresaComponent implements OnInit {
     if (event != null)
       event.preventDefault();
     this.empresa= new Empresa();
+    this.empresa.logo64 = imagenes.logo_empresa;
+    this.deshabilitarIdentificacion = false;
     this.clickedRows.clear();
   }
 
   crear(event) {
     if (event != null)
       event.preventDefault();
+    if (!this.validarFormulario())
+      return;      
     this.empresaService.crear(this.empresa).subscribe({
       next: res => {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
@@ -87,6 +100,8 @@ export class EmpresaComponent implements OnInit {
   actualizar(event) {
     if (event != null)
       event.preventDefault();
+    if (!this.validarFormulario())
+      return;      
     this.empresaService.actualizar(this.empresa).subscribe({
       next: res => {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
@@ -126,13 +141,26 @@ export class EmpresaComponent implements OnInit {
   consultar() {
     this.empresaService.consultar().subscribe({
       next: res => {
-        this.empresas = res.resultado as Empresa[]
-        console.log(this.empresas);
-        this.dataSource = new MatTableDataSource(this.empresas);
-        this.dataSource.paginator = this.paginator;
-        this.dataSource.sort = this.sort;
+        this.empresas = res.resultado as Empresa[];
+        this.llenarTabla(this.empresas);
       },
       error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+    });
+  }
+
+  llenarTabla(empresas: Empresa[]){
+    this.ordenarAsc(empresas, 'id');
+    this.dataSource = new MatTableDataSource(empresas);
+    this.dataSource.filterPredicate = (data: Empresa, filter: string): boolean =>
+      data.identificacion.includes(filter) || data.razonSocial.includes(filter) || data.nombreComercial.includes(filter) || 
+      data.obligadoContabilidad.includes(filter) || data.estado.includes(filter);
+    this.dataSource.paginator = this.paginator;
+    this.dataSource.sort = this.sort;
+  }
+
+  ordenarAsc(arrayJson: any, pKey: any) {
+    arrayJson.sort(function (a: any, b: any) {
+      return a[pKey] > b[pKey];
     });
   }
 
@@ -141,9 +169,9 @@ export class EmpresaComponent implements OnInit {
       this.clickedRows.clear();
       this.clickedRows.add(empresa);
       this.empresa = { ... empresa};
+      this.deshabilitarIdentificacion = true;
     } else {
-      this.clickedRows.clear();
-      this.empresa = new Empresa();
+      this.nuevo(null);
     }
   }
 
@@ -154,31 +182,58 @@ export class EmpresaComponent implements OnInit {
       this.dataSource.paginator.firstPage();
     }
   }
+  borrarFiltro() {
+    this.renderer.setProperty(this.inputFiltro.nativeElement, 'value', '');
+    this.dataSource.filter = '';
+  }
 
   capturarFile(event : any) : any{
     const archivoCapturado = event.target.files[0];
-    this.extrarBase64(archivoCapturado).then((imagen: any) => {
-      this.empresa.logo64 = imagen.base;
+    this.imagenService.convertirBase64(archivoCapturado).then((imagen: any) => {
+      this.empresa.logo64 = imagen.base64;
       //console.log(this.empresa.logo64);
     });
   }
 
-  extrarBase64 = async ($event: any) => new Promise((resolve) => {
-    try {
-      const reader = new FileReader();
-      reader.readAsDataURL($event);
-      reader.onload = () => {
-        resolve({
-          base: reader.result
-        })
-      };
-      reader.onerror = error => {
-        resolve({
-          base: reader.result
-        })
-      };
-    } catch (e) {
-      return null;
+  //VALIDACIONES
+  validarIdentificacion() {
+    this.empresaService.validarIdentificacion(this.empresa.identificacion).subscribe({
+      next: (res) => {
+        this.empresa.tipoIdentificacion = res.resultado.tipoIdentificacion as TipoIdentificacion;
+      },
+      error: (err) => {
+        this.empresa.tipoIdentificacion = null;
+        Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje });
+      }
+    });
+  }
+
+  validarFormulario(): boolean {
+    //validar que los campos esten llenos antes de guardar
+    if (this.empresa.identificacion == '') {
+      Swal.fire({ icon: error_swal, title: error, text: mensajes.error_falta_datos });
+      return false;
     }
-  }); 
+    if (this.empresa.tipoIdentificacion == null || this.empresa.tipoIdentificacion.descripcion != otras.tipoIdentificacionRUC) {
+      Swal.fire({ icon: error_swal, title: error, text: mensajes.error_ruc });
+      return false;
+    }
+    if (this.empresa.razonSocial == '') {
+      Swal.fire({ icon: error_swal, title: error, text: mensajes.error_falta_datos });
+      return false;
+    }
+    if (this.empresa.nombreComercial == '') {
+      Swal.fire({ icon: error_swal, title: error, text: mensajes.error_falta_datos });
+      return false;
+    }
+    if (this.empresa.direccion == '') {
+      Swal.fire({ icon: error_swal, title: error, text: mensajes.error_falta_datos });
+      return false;
+    }
+    if (this.empresa.logo64 == '') {
+      Swal.fire({ icon: error_swal, title: error, text: mensajes.error_falta_imagen });
+      return false;
+    }
+    return true;
+  }
 }

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Type } from '@angular/core';
-import { TabService } from "../services/tab.service";
+import { TabService } from "../../servicios/componente/tab/tab.service";
 import { MainComponent } from "../main/main.component";
 
 @Component({

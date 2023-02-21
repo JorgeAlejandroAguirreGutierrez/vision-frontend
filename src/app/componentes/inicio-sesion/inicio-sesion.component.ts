@@ -90,9 +90,8 @@ export class InicioSesionComponent implements OnInit {
         if (this.multiEmpresa){
           this.sesion.empresa.id = 1; //Iniciar combo empresa
         } else {
-          // Obtener la empresa de estacion
-          // sesion.empresa = estacion.establecimiento.empresa; // Cuando ya esté establecimiento
-          this.sesion.empresa.id = 1; // Borrar
+          // Obtener la empresa de estacion no de usuario, sirve para MVP 1
+          this.sesion.empresa = this.usuario.estacion.establecimiento.empresa; // Cambiar cuando se impl usuario-estación
         }
         if (this.sesion.usuario.cambiarContrasena == valores.si) {
           this.cambiarContrasena = true;

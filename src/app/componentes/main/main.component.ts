@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { TabService } from "../services/tab.service";
-import { SidebarService } from '../../componentes/services/sidebar.service';
-import { SidebarItemsService } from '../../componentes/services/sidebaritems.service';
+import { TabService } from "../../servicios/componente/tab/tab.service";
+import { SidebarService } from '../../servicios/componente/sidebar/sidebar.service';
+import { SidebarItemsService } from '../../servicios/componente/sidebar/sidebaritems.service';
 import { Tab } from "../../modelos/tab.model";
 import { MenuComponent } from '../menu/menu.component';
 import { SidebarItem } from "../../modelos/sidebar-item.model";

@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { Tab } from "../../modelos/tab.model";
+import { Tab } from "../../../modelos/tab.model";
 import { BehaviorSubject } from "rxjs";
 import { Type } from '@angular/core';
 

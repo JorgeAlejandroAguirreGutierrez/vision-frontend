@@ -1,4 +1,4 @@
-import { TabService } from './componentes/services/tab.service';
+import { TabService } from './servicios/componente/tab/tab.service';
 import { HttpHeaders } from '@angular/common/http';
 import { SesionService } from './servicios/usuario/sesion.service';
 import { Router } from '@angular/router';
@@ -227,7 +227,9 @@ export const mensajes = {
      error_medida_kardex : "ERROR MEDIDA KARDEX",
      error_falta_datos : "DATOS INCOMPLETOS, FAVOR INGRESE TODOS LOS DATOS",
      error_precio_venta_publico_manual : "EL PRECIO DE VENTA AL PUBLICO MANUAL DEBE SER MAYOR",
-     error_falta_correo : "DEBE AGREGAR POR LO MENOS UN CORREO ELECTRÓNICO PARA LA FACTURACIÓN"
+     error_falta_correo : "DEBE AGREGAR POR LO MENOS UN CORREO ELECTRÓNICO PARA LA FACTURACIÓN",
+     error_falta_imagen : "DEBE SELECCIONAR UNA IMAGEN",
+     error_ruc : "DEBE INGRESAR UN RUC"
 }
 
 export const otras ={
@@ -238,6 +240,7 @@ export const otras ={
      debito : "DEBITO",
      identificacion_consumidor_final : "9999999999999",
      tipoIdentificacion : "CÉDULA",
+     tipoIdentificacionRUC : "RUC",
      tipoContribuyenteNatural : "NATURAL",
      tipoContribuyenteJuridica : "JURIDICA",
      tipoContribuyentePublica : "PUBLICA",

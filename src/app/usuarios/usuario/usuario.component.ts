@@ -5,6 +5,7 @@ import Swal from 'sweetalert2';
 import { Router } from '@angular/router';
 import { Sesion } from '../../modelos/usuario/sesion';
 import { SesionService } from '../../servicios/usuario/sesion.service';
+import { ImagenService } from '../../servicios/administracion/imagen.service'
 import { md5 } from '../../servicios/administracion/md5.service';
 
 import { Usuario } from '../../modelos/usuario/usuario';
@@ -34,7 +35,7 @@ export class UsuarioComponent implements OnInit {
   abrirPanelAdmin: boolean = true;
   ocultarContrasena: boolean = true;
   ocultarContrasena2: boolean = true;
-  cambiarContrasena: boolean = false;
+  cambiarContrasena: boolean = true;
 
   sesion: Sesion = null;
   usuario: Usuario = new Usuario();
@@ -60,7 +61,7 @@ export class UsuarioComponent implements OnInit {
   @ViewChild(MatSort) sort: MatSort;
 
   constructor(private usuarioService: UsuarioService, private perfilService: PerfilService, private estacionService: EstacionService, 
-              private sesionService: SesionService, private router: Router) { }
+            private imagenService: ImagenService, private sesionService: SesionService, private router: Router) { }
 
   ngOnInit() {
     this.sesion = validarSesion(this.sesionService, this.router);
@@ -227,29 +228,10 @@ export class UsuarioComponent implements OnInit {
 
   capturarFile(event: any): any {
     const archivoCapturado = event.target.files[0];
-    this.extrarBase64(archivoCapturado).then((imagen: any) => {
-      this.usuario.avatar64 = imagen.base;
-      console.log(this.usuario.avatar64);
+    this.imagenService.convertirBase64(archivoCapturado).then((imagen: any) => {
+      this.usuario.avatar64 = imagen.base64;
+      //console.log(this.usuario.avatar64);
     });
   }
-
-  extrarBase64 = async ($event: any) => new Promise((resolve) => {
-    try {
-      const reader = new FileReader();
-      reader.readAsDataURL($event);
-      reader.onload = () => {
-        resolve({
-          base: reader.result
-        })
-      };
-      reader.onerror = error => {
-        resolve({
-          base: reader.result
-        })
-      };
-    } catch (e) {
-      return null;
-    }
-  });
 
 }
