@@ -1,4 +1,4 @@
-import { SidebarService } from '../../componentes/services/sidebar.service';
+import { SidebarService } from '../../servicios/componente/sidebar/sidebar.service';
 import { valores, mensajes, validarSesion, exito_swal, error_swal, exito, error } from '../../constantes';
 import { Component, OnInit, Input } from '@angular/core';
 

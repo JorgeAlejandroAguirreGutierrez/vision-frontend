@@ -1,58 +1,58 @@
 import { Injectable, Type } from '@angular/core';
-import { modulos, tabs, items, icos, valores } from '../../constantes';
-import { SidebarItem } from "../../modelos/sidebar-item.model";
-import { Sesion } from '../../modelos/usuario/sesion';
-import { Permiso } from '../../modelos/usuario/permiso';
+import { modulos, tabs, items, icos, valores } from '../../../constantes';
+import { SidebarItem } from "../../../modelos/sidebar-item.model";
+import { Sesion } from '../../../modelos/usuario/sesion';
+import { Permiso } from '../../../modelos/usuario/permiso';
 //CLIENTES
-import { ClienteComponent } from "../../clientes/cliente/cliente.component";
-import { GrupoClienteComponent } from '../../clientes/grupo-cliente/grupo-cliente.component';
-import { SegmentoComponent } from '../../clientes/segmento/segmento.component';
-import { CalificacionClienteComponent } from '../../clientes/calificacion-cliente/calificacion-cliente.component';
-import { FormaPagoComponent } from '../../clientes/forma-pago/forma-pago.component';
-import { OrigenIngresoComponent } from '../../clientes/origen-ingreso/origen-ingreso.component';
-import { PlazoCreditoComponent } from '../../clientes/plazo-credito/plazo-credito.component';
+import { ClienteComponent } from "../../../clientes/cliente/cliente.component";
+import { GrupoClienteComponent } from '../../../clientes/grupo-cliente/grupo-cliente.component';
+import { SegmentoComponent } from '../../../clientes/segmento/segmento.component';
+import { CalificacionClienteComponent } from '../../../clientes/calificacion-cliente/calificacion-cliente.component';
+import { FormaPagoComponent } from '../../../clientes/forma-pago/forma-pago.component';
+import { OrigenIngresoComponent } from '../../../clientes/origen-ingreso/origen-ingreso.component';
+import { PlazoCreditoComponent } from '../../../clientes/plazo-credito/plazo-credito.component';
 //COMPRAS
-import { ProveedorComponent } from '../../compras/proveedor/proveedor.component';
-import { GrupoProveedorComponent } from '../../compras/grupo-proveedor/grupo-proveedor.component';
-import { NotaCreditoCompraComponent } from '../../compras/nota-credito-compra/nota-credito-compra.component';
+import { ProveedorComponent } from '../../../compras/proveedor/proveedor.component';
+import { GrupoProveedorComponent } from '../../../compras/grupo-proveedor/grupo-proveedor.component';
+import { NotaCreditoCompraComponent } from '../../../compras/nota-credito-compra/nota-credito-compra.component';
 import { FacturaCompraComponent } from 'src/app/compras/factura-compra/factura-compra.component';
 //VENTAS
-import { FacturaComponent } from "../../comprobantes/factura/factura.component";
-import { PedidoComponent } from "../../comprobantes/pedido/pedido.component";
-import { ProformaComponent } from "../../comprobantes/proforma/proforma.component";
-import { EgresoComponent } from "../../comprobantes/egreso/egreso.component";
-import { NotaCreditoVentaComponent } from '../../comprobantes/nota-credito-venta/nota-credito-venta.component';
+import { FacturaComponent } from "../../../comprobantes/factura/factura.component";
+import { PedidoComponent } from "../../../comprobantes/pedido/pedido.component";
+import { ProformaComponent } from "../../../comprobantes/proforma/proforma.component";
+import { EgresoComponent } from "../../../comprobantes/egreso/egreso.component";
+import { NotaCreditoVentaComponent } from '../../../comprobantes/nota-credito-venta/nota-credito-venta.component';
 
 //INVENTARIOS
-import { GrupoProductoComponent } from '../../inventarios/grupo-producto/grupo-producto.component';
-import { ProductoComponent } from "../../inventarios/producto/producto.component";
-import { KardexComponent } from "../../inventarios/kardex/kardex.component";
-import { PromocionComponent } from "../../inventarios/promocion/promocion.component";
-import { BodegaComponent } from "../../inventarios/bodega/bodega.component";
-import { MedidaComponent } from '../../inventarios/medida/medida.component';
+import { GrupoProductoComponent } from '../../../inventarios/grupo-producto/grupo-producto.component';
+import { ProductoComponent } from "../../../inventarios/producto/producto.component";
+import { KardexComponent } from "../../../inventarios/kardex/kardex.component";
+import { PromocionComponent } from "../../../inventarios/promocion/promocion.component";
+import { BodegaComponent } from "../../../inventarios/bodega/bodega.component";
+import { MedidaComponent } from '../../../inventarios/medida/medida.component';
 //ENTREGA
-import { TransportistaComponent } from '../../entregas/transportista/transportista.component';
-import { VehiculoTransporteComponent } from '../../entregas/vehiculo-transporte/vehiculo-transporte.component';
+import { TransportistaComponent } from '../../../entregas/transportista/transportista.component';
+import { VehiculoTransporteComponent } from '../../../entregas/vehiculo-transporte/vehiculo-transporte.component';
 //ACCESOS
-import { UsuarioComponent } from '../../usuarios/usuario/usuario.component';
-import { EmpresaComponent } from '../../usuarios/empresa/empresa.component';
-import { EstablecimientoComponent } from '../../usuarios/establecimiento/establecimiento.component';
-import { EstacionComponent } from '../../usuarios/estacion/estacion.component';
-import { PerfilComponent } from '../../usuarios/perfil/perfil.component';
+import { UsuarioComponent } from '../../../usuarios/usuario/usuario.component';
+import { EmpresaComponent } from '../../../usuarios/empresa/empresa.component';
+import { EstablecimientoComponent } from '../../../usuarios/establecimiento/establecimiento.component';
+import { EstacionComponent } from '../../../usuarios/estacion/estacion.component';
+import { PerfilComponent } from '../../../usuarios/perfil/perfil.component';
 //CONFIGURACIONES
-import { UbicacionComponent } from '../../configuraciones/ubicacion/ubicacion.component';
-import { EstadoCivilComponent } from '../../configuraciones/estado-civil/estado-civil.component';
-import { ImpuestoComponent } from '../../configuraciones/impuesto/impuesto.component';
-import { TipoPagoComponent } from '../../configuraciones/tipo-pago/tipo-pago.component';
-import { GeneroComponent } from '../../configuraciones/genero/genero.component';
-import { ImportarComponent } from '../../configuraciones/importar/importar.component';
-import { ExportarComponent } from '../../configuraciones/exportar/exportar.component';
-import { TipoRetencionComponent } from '../../configuraciones/tipo-retencion/tipo-retencion.component';
+import { UbicacionComponent } from '../../../configuraciones/ubicacion/ubicacion.component';
+import { EstadoCivilComponent } from '../../../configuraciones/estado-civil/estado-civil.component';
+import { ImpuestoComponent } from '../../../configuraciones/impuesto/impuesto.component';
+import { TipoPagoComponent } from '../../../configuraciones/tipo-pago/tipo-pago.component';
+import { GeneroComponent } from '../../../configuraciones/genero/genero.component';
+import { ImportarComponent } from '../../../configuraciones/importar/importar.component';
+import { ExportarComponent } from '../../../configuraciones/exportar/exportar.component';
+import { TipoRetencionComponent } from '../../../configuraciones/tipo-retencion/tipo-retencion.component';
 //INDICADORES
-import { DashboardComponent } from '../../componentes/pages/dashboard/dashboard.component';
+import { DashboardComponent } from '../../../componentes/pages/dashboard/dashboard.component';
 //CONTABILIDAD
-import { MovimientoContableComponent } from '../../contabilidad/movimiento-contable/movimiento-contable.component';
-import { CuentaContableComponent } from '../../contabilidad/cuenta-contable/cuenta-contable.component';
+import { MovimientoContableComponent } from '../../../contabilidad/movimiento-contable/movimiento-contable.component';
+import { CuentaContableComponent } from '../../../contabilidad/cuenta-contable/cuenta-contable.component';
 
 
 

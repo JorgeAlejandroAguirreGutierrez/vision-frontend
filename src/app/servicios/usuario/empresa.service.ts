@@ -74,4 +74,13 @@ export class EmpresaService {
       })
     );
   }
+
+  validarIdentificacion(identificacion: string): Observable<Respuesta> {
+    return this.http.get(environment.host + urn.ruta + urn.cliente + '/identificacion/validar/' + identificacion, options).pipe(
+      map(response => response as Respuesta),
+      catchError(err => {
+        return throwError(()=>err);
+      })
+    );
+  }  
 }

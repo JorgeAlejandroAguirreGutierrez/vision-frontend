@@ -47,39 +47,54 @@
                 <div class="form-row col-10">
                     <div class="col-2">
                         <mat-form-field appearance="standard">
-                            <mat-label>Código</mat-label>
-                            <input matInput type="text" [(ngModel)]="empresa.codigo" class="form-control-sm"
-                                [disabled]="true">
-                        </mat-form-field>
-                    </div>
-                    <div class="col-2">
-                        <mat-form-field appearance="standard">
                             <mat-label>Identificación</mat-label>
                             <input matInput type="text" [(ngModel)]="empresa.identificacion"
-                                oninput="this.value = this.value.toUpperCase()" class="form-control-sm">
+                                oninput="this.value = this.value.toUpperCase()" class="form-control-sm"
+                                (change)="validarIdentificacion()" [disabled]="deshabilitarIdentificacion">
                         </mat-form-field>
                     </div>
-                    <div class="col-8">
+                    <div class="col-1">
                         <mat-form-field appearance="standard">
-                            <mat-label>Razón Social</mat-label>
-                            <input matInput type="text" [(ngModel)]="empresa.razonSocial"
-                                oninput="this.value = this.value.toUpperCase()" class="form-control-sm">
+                            <mat-label>Documento</mat-label>
+                            <input matInput type="text" [(ngModel)]="empresa.tipoIdentificacion.abreviatura"
+                                class="form-control-sm" disabled>
                         </mat-form-field>
                     </div>
-                    <div class="col-9">
+                    <div class="col-7">
                         <mat-form-field appearance="standard">
                             <mat-label>Nombre Comercial</mat-label>
                             <input matInput type="text" [(ngModel)]="empresa.nombreComercial"
                                 oninput="this.value = this.value.toUpperCase()" class="form-control-sm">
                         </mat-form-field>
                     </div>
-                    <div class="col-1">
+                    <div class="col-2">
+                        <mat-form-field appearance="standard">
+                            <mat-label>Código</mat-label>
+                            <input matInput type="text" [(ngModel)]="empresa.codigo" class="form-control-sm"
+                                [disabled]="true">
+                        </mat-form-field>
+                    </div>
+                    <div class="col-10">
+                        <mat-form-field appearance="standard">
+                            <mat-label>Razón Social</mat-label>
+                            <input matInput type="text" [(ngModel)]="empresa.razonSocial"
+                                oninput="this.value = this.value.toUpperCase()" class="form-control-sm">
+                        </mat-form-field>
+                    </div>
+                    <div class="col-2">
                         <mat-form-field appearance="standard">
                             <mat-label>Oblig.</mat-label>
                             <mat-select [(ngModel)]="empresa.obligadoContabilidad" class="form-control-sm">
                                 <mat-option [value]="si">{{si}}</mat-option>
                                 <mat-option [value]="no">{{no}}</mat-option>
                             </mat-select>
+                        </mat-form-field>
+                    </div>
+                    <div class="col-10">
+                        <mat-form-field appearance="standard">
+                            <mat-label>Dirección</mat-label>
+                            <input matInput type="text" [(ngModel)]="empresa.direccion"
+                                oninput="this.value = this.value.toUpperCase()" class="form-control-sm">
                         </mat-form-field>
                     </div>
                     <div class="col-2">
@@ -110,15 +125,18 @@
                     <i><u>GESTIONAR EMPRESAS</u></i>
                 </mat-panel-title>
                 <mat-panel-description>
-                    {{abrirPanelAdmin ? 'Ocultar administrador de empresas' : 'Editar
-                    empresa existente'}}
+                    {{abrirPanelAdmin ? 'Ocultar administrador de empresas' : 'Administrar empresas existente'}}
                     <mat-icon>playlist_add_check</mat-icon>
                 </mat-panel-description>
             </mat-expansion-panel-header>
             <hr>
             <mat-form-field appearance="standard">
                 <mat-label>Buscar empresa</mat-label>
-                <input matInput (keyup)="filtro($event)">
+                <input matInput oninput="this.value = this.value.toUpperCase()" (keyup)="filtro($event)" #inputFiltro>
+                <button mat-button *ngIf="inputFiltro.value" matSuffix mat-icon-button
+                    (click)="borrarFiltro()">
+                    <mat-icon>close</mat-icon>
+                </button>
             </mat-form-field>
             <div class="mat-elevation-z8">
                 <table mat-table [dataSource]="dataSource" matSort>
@@ -131,7 +149,8 @@
                     <tr mat-row (click)="seleccion(row)" [class.selected-row]="clickedRows.has(row)"
                         *matRowDef="let row; columns: cabecera;"></tr>
                     <tr class="mat-row" *matNoDataRow>
-                        <td class="mat-cell" colspan="6">No hay datos que coincidan con la empresa
+                        <td class="mat-cell" colspan="6">No hay datos que coincidan con la empresa: 
+                            "{{inputFiltro.value}}"
                         </td>
                     </tr>
                 </table>
