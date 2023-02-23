@@ -9,7 +9,7 @@ import { Sesion } from '../../modelos/usuario/sesion';
 import { SesionService } from '../../servicios/usuario/sesion.service';
 import { TipoContribuyente } from '../../modelos/cliente/tipo-contribuyente';
 import { TipoContribuyenteService } from '../../servicios/cliente/tipo-contribuyente.service';
-import { Segmento } from '../../modelos/inventario/segmento';
+import { Segmento } from '../../modelos/cliente/segmento';
 import { GrupoProveedor } from '../../modelos/compra/grupo-proveedor'
 import { GrupoProveedorService } from '../../servicios/compra/grupo-proveedor.service';
 import { Ubicacion } from '../../modelos/configuracion/ubicacion';

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { TipoPago } from '../../modelos/cliente/tipo-pago';
+import { TipoPago } from '../../modelos/configuracion/tipo-pago';
 import { Respuesta } from '../../respuesta';
 import { urn, options } from '../../constantes';
 import {HttpClient} from '@angular/common/http';

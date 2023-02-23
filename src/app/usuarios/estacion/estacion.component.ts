@@ -42,7 +42,7 @@ export class EstacionComponent implements OnInit {
     { nombreColumna: 'empresa', cabecera: 'Empresa', celda: (row: Estacion) => `${row.establecimiento.empresa.razonSocial}` },
     { nombreColumna: 'establecimiento', cabecera: 'Establecimiento', celda: (row: Estacion) => `${row.establecimiento.descripcion}` },
     { nombreColumna: 'dispositivo', cabecera: 'Dispositivo', celda: (row: Estacion) => `${row.dispositivo}` },
-    { nombreColumna: 'nombre', cabecera: 'Estación', celda: (row: Estacion) => `${row.nombre}` },
+    { nombreColumna: 'nombre', cabecera: 'Estación', celda: (row: Estacion) => `${row.descripcion}` },
     { nombreColumna: 'estado', cabecera: 'Estado', celda: (row: Estacion) => `${row.estado}` }
   ];
   cabecera: string[] = this.columnas.map(titulo => titulo.nombreColumna);

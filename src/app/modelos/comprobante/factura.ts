@@ -6,6 +6,8 @@ import { valores } from "../../constantes";
 export class Factura {
   id: number;
   codigo: string;
+  codigoNumerico: String;
+  claveAcceso: String;
   secuencia: string;
   fecha: Date;
   estado: string;
@@ -38,6 +40,8 @@ export class Factura {
   
   constructor() {
     this.id=valores.cero;
+    this.codigoNumerico=valores.vacio;
+    this.claveAcceso=valores.vacio;
     this.secuencia=valores.vacio;
     this.fecha=new Date();
     this.estado=valores.noFacturada;

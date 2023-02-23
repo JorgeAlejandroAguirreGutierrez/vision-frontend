@@ -1,4 +1,4 @@
-import { Segmento } from './segmento';
+import { Segmento } from '../cliente/segmento';
 import { valores } from "../../constantes";
 import { Producto } from './producto';
 export class Precio {

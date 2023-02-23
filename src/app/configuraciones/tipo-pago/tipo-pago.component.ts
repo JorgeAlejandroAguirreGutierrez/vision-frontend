@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild, HostListener } from '@angular/core';
 import Swal from 'sweetalert2';
-import { TipoPago } from '../../modelos/cliente/tipo-pago';
-import { TipoPagoService } from '../../servicios/cliente/tipo-pago.service';
+import { TipoPago } from '../../modelos/configuracion/tipo-pago';
+import { TipoPagoService } from '../../servicios/configuracion/tipo-pago.service';
 import { valores, validarSesion, tab_activo, exito, exito_swal, error, error_swal } from '../../constantes';
 import { SesionService } from 'src/app/servicios/usuario/sesion.service';
 import { Sesion } from 'src/app/modelos/usuario/sesion';

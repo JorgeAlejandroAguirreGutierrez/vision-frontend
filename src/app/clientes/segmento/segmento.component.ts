@@ -6,7 +6,7 @@ import Swal from 'sweetalert2';
 import { Router } from '@angular/router';
 import { Sesion } from '../../modelos/usuario/sesion';
 import { SesionService } from '../../servicios/usuario/sesion.service';
-import { Segmento } from '../../modelos/inventario/segmento';
+import { Segmento } from '../../modelos/cliente/segmento';
 import { SegmentoService } from '../../servicios/cliente/segmento.service';
 
 import { ViewChild } from '@angular/core';
