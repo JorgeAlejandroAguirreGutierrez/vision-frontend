@@ -14,14 +14,7 @@ import { FacturaDetalle } from '../../modelos/comprobante/factura-detalle';
 })
 export class FacturaDetalleService {
 
-  private messageSource = new BehaviorSubject(0);
-  currentMessage = this.messageSource.asObservable();
-
   constructor(private http: HttpClient, private router: Router) { }
-
-  enviar(facturaDetalleId: number) {
-    this.messageSource.next(facturaDetalleId);
-  }
 
   crear(facturaDetalle: FacturaDetalle): Observable<Respuesta> {
     return this.http.post(environment.host + urn.ruta + urn.facturaDetalle, facturaDetalle, options).pipe(

@@ -436,7 +436,7 @@ export class ProveedorComponent implements OnInit {
       next: res => {
         this.proveedores = res.resultado as Proveedor[]
       },
-      error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.message })
+      error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     });
   }
 

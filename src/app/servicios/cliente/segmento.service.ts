@@ -15,14 +15,7 @@ import { Segmento } from '../../modelos/inventario/segmento';
 
 export class SegmentoService {
 
-  private messageSource = new BehaviorSubject(0);
-  currentMessage = this.messageSource.asObservable();
-
   constructor(private http: HttpClient) { }
-
-  enviar(segmentoId: number) {
-    this.messageSource.next(segmentoId);
-  }
 
   crear(segmento: Segmento): Observable<Respuesta> {
     return this.http.post(environment.host + urn.ruta + urn.segmento, segmento, options).pipe(

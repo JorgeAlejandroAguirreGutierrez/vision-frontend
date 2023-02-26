@@ -277,9 +277,6 @@
                                     </mat-form-field>
                                 </div>
                                 <div class="col-3 iconos">
-                                    <!--button mat-icon-button [disabled]="deshabilitarDireccion">
-                                        <mat-icon class="iconos-peque">edit</mat-icon>
-                                    </button-->
                                     <button mat-icon-button [disabled]="deshabilitarDireccion" (click)="eliminarTelefono(i)">
                                         <mat-icon class="iconos-peque">close</mat-icon>
                                     </button>
@@ -306,7 +303,7 @@
                                     <mat-form-field appearance="standard">
                                         <mat-label>Celular</mat-label>
                                         <b matPrefix>+593 &nbsp;</b>
-                                        <input matInput type="tel" [value]="celular.numero" class="form-control-sm" disabled>
+                                        <input matInput type="tel" [value]="celular.numero" class="form-control-sm" [disabled]="true">
                                     </mat-form-field>
                                 </div>
                                 <div class="col-3 iconos">
@@ -904,22 +901,3 @@
         </mat-expansion-panel>
     </mat-accordion>
 </div>
-<ng-template #modal_importar let-modal>
-    <div class="modal-header ">
-        <h5 class="modal-title ">Importar un Cliente</h5>
-        <button type="button " class="close " aria-label="Close " (click)="modal.dismiss( 'Cross click') ">
-            <span aria-hidden="true ">&times;</span>
-        </button>
-    </div>
-    <div class="modal-body ">
-        <div class="form-row ">
-            <div class="form-group col-12 ">
-                <label>Cargar Archivo</label>
-                <!--input type="file" id="file" (change)="importar($event.target.files)"-->
-            </div>
-        </div>
-    </div>
-    <div class="modal-footer ">
-        <button type="button " class="btn btn-outline-dark " (click)="modal.close('close') ">Cerrar</button>
-    </div>
-</ng-template>

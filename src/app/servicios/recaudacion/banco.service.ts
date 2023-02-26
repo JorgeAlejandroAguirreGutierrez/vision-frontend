@@ -12,14 +12,7 @@ import { Banco } from '../../modelos/recaudacion/banco';
 })
 export class BancoService {
 
-  private messageSource = new BehaviorSubject(0);
-  currentMessage = this.messageSource.asObservable();
-
   constructor(private http: HttpClient) { }
-
-  enviar(calificacion_cliente_id: number) {
-    this.messageSource.next(calificacion_cliente_id);
-  }
 
   crear(banco: Banco): Observable<Respuesta> {
     return this.http.post(environment.host + urn.ruta + urn.banco, banco, options).pipe(

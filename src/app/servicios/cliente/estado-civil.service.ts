@@ -13,14 +13,7 @@ import { environment } from '../../../environments/environment';
 })
 export class EstadoCivilService {
 
-  private messageSource = new BehaviorSubject(0);
-  currentMessage = this.messageSource.asObservable();
-
   constructor(private http: HttpClient, private router: Router) { }
-
-  enviar(estadoCivilId: number) {
-    this.messageSource.next(estadoCivilId);
-  }
 
   crear(estado_civil: EstadoCivil): Observable<Respuesta> {
     return this.http.post(environment.host + urn.ruta + urn.estadoCivil, estado_civil, options).pipe(

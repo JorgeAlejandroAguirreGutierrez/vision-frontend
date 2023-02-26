@@ -47,6 +47,8 @@ export const urn =
      facturaCompra: "/facturaCompra",
      facturaCompraLinea: "/facturaCompraLinea",
      facturar: "/facturar",
+     notaCreditoCompra: "/notaCreditoCompra",
+     obtenerPorFacturaCompra: "/obtenerPorFacturaCompra",
      tipoRetencion: "/tipoRetencion",
      consultarBien: "/consultarBien",
      consultarServicio: "/consultarServicio",
@@ -156,7 +158,10 @@ export const valores ={
      etiquetaTrabajo: "TRABAJO",
      etiquetaEmpresa: "EMPRESA",
      latCiudad: -1.6719601146175727,
-     lngCiudad: -78.65041698970757
+     lngCiudad: -78.65041698970757,
+     devolucion: "DEVOLUCION",
+     descuento: "DESCUENTO",
+     conjunta: "CONJUNTA"   
 }
 
 export const preguntas = ["¿CUAL ES EL NOMBRE DE TU MASCOTA?", "¿CUAL ES EL APELLIDO DE TU ABUELA MATERNA?", "¿CUAL ES EL NOMBRE DE TU EQUIPO PREFERIDO?", "¿CUAL ES TU MARCA DE VEHICULO PREFERIDO?"]

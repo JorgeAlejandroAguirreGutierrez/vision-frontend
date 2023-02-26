@@ -40,7 +40,6 @@ import { ClienteService } from './servicios/cliente/cliente.service';
 import { FacturaService } from './servicios/comprobante/factura.service';
 import { GrupoProductoService } from './servicios/inventario/grupo-producto.service';
 import { FacturaCompraService } from './servicios/compra/factura-compra.service';
-import { FacturaCompraLineaService } from './servicios/compra/factura-compra-linea.service';
 
 // Importar las Rutas
 import { AppRoutingModule } from './app-routing.module';
@@ -70,7 +69,7 @@ import { TipoRetencionService } from './servicios/configuracion/tipo-retencion.s
     providers: [PlazoCreditoService, ImpuestoService, RetencionService, ModeloService,
         TransportistaService, UbicacionService, TipoContribuyenteService, VehiculoTransporteService,
         EmpresaService, EstablecimientoService, EstacionService, UsuarioService, DatePipe,
-        ClienteService, FacturaService, FacturaCompraService, FacturaCompraLineaService, TipoRetencionService, TabService, GrupoProductoService,
+        ClienteService, FacturaService, FacturaCompraService, TipoRetencionService, TabService, GrupoProductoService,
         {
             provide: LocationStrategy,
             useClass: PathLocationStrategy

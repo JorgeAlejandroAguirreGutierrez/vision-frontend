@@ -644,7 +644,7 @@ export class FacturaComponent implements OnInit {
         this.dataSourceFacturaDetalle = new MatTableDataSource<FacturaDetalle>(this.factura.facturaDetalles);
         this.dataSourceFacturaDetalle.paginator = this.paginatorFacturaDetalle;
       },
-      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.message })
+      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
 
@@ -669,7 +669,7 @@ export class FacturaComponent implements OnInit {
         let respuesta = res.resultado as String;
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje, footer: respuesta });
       },
-      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.message })
+      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
 

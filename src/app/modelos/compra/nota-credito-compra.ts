@@ -1,12 +1,15 @@
 import { Proveedor } from './proveedor';
-import { FacturaCompraLinea } from './factura-compra-linea';
 import { Sesion } from '../usuario/sesion';
 import { valores } from "../../constantes";
 import { TipoComprobante } from '../comprobante/tipo-comprobante';
-export class FacturaCompra {
+import { NotaCreditoCompraLinea } from './nota-credito-compra-linea';
+import { FacturaCompra } from './factura-compra';
+import { Bodega } from '../inventario/bodega';
+export class NotaCreditoCompra {
     id: number;
     codigo: string;
     secuencia: string;
+    operacion: string;
     fecha: Date;
     estado: string;
     valorDescuentoTotal: number;
@@ -18,15 +21,16 @@ export class FacturaCompra {
     ivaSinDescuento: number;
     totalSinDescuento: number;
     comentario: string;
-    proveedor: Proveedor;
+    facturaCompra: FacturaCompra;
     sesion: Sesion;
     tipoComprobante: TipoComprobante;
-    facturaCompraLineas: FacturaCompraLinea[];
+    notaCreditoCompraLineas: NotaCreditoCompraLinea[];
 
     constructor() {
         this.id = valores.cero;
         this.codigo = valores.vacio;
         this.secuencia = valores.vacio;
+        this.operacion = valores.vacio;
         this.fecha = new Date();
         this.estado = valores.noFacturada;
         this.valorDescuentoTotal = valores.cero;
@@ -38,9 +42,9 @@ export class FacturaCompra {
         this.ivaSinDescuento = valores.cero;
         this.totalSinDescuento = valores.cero;
         this.comentario = valores.vacio;
-        this.proveedor = new Proveedor();
+        this.facturaCompra = new FacturaCompra();
         this.sesion = new Sesion();
         this.tipoComprobante = new TipoComprobante();
-        this.facturaCompraLineas = [];
+        this.notaCreditoCompraLineas = [];
     }
 }

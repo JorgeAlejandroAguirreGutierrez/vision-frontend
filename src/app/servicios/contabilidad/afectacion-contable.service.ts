@@ -12,14 +12,7 @@ import { AfectacionContable } from '../../modelos/contabilidad/afectacion-contab
 })
 export class AfectacionContableService {
 
-  private messageSource = new BehaviorSubject(0);
-  currentMessage = this.messageSource.asObservable();
-
   constructor(private http: HttpClient) { }
-
-  enviar(afectacionContableId: number) {
-    this.messageSource.next(afectacionContableId);
-  }
 
   crear(afectacionContable: AfectacionContable): Observable<Respuesta> {
     return this.http.post(environment.host + urn.ruta + urn.afectacionContable, afectacionContable, options).pipe(
