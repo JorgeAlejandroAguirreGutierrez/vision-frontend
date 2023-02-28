@@ -1,10 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ElementRef, Renderer2  } from '@angular/core';
 import { valores, mensajes, preguntas, imagenes, validarSesion, exito_swal, error_swal, exito, error } from '../../constantes';
 import Swal from 'sweetalert2';
 
 import { Router } from '@angular/router';
 import { Sesion } from '../../modelos/usuario/sesion';
 import { SesionService } from '../../servicios/usuario/sesion.service';
+import { ImagenService } from '../../servicios/administracion/imagen.service'
 import { md5 } from '../../servicios/administracion/md5.service';
 
 import { Usuario } from '../../modelos/usuario/usuario';
@@ -34,7 +35,7 @@ export class UsuarioComponent implements OnInit {
   abrirPanelAdmin: boolean = true;
   ocultarContrasena: boolean = true;
   ocultarContrasena2: boolean = true;
-  cambiarContrasena: boolean = false;
+  cambiarContrasena: boolean = true;
 
   sesion: Sesion = null;
   usuario: Usuario = new Usuario();
@@ -48,6 +49,7 @@ export class UsuarioComponent implements OnInit {
     { nombreColumna: 'codigo', cabecera: 'Código', celda: (row: Usuario) => `${row.codigo}` },
     { nombreColumna: 'identificacion', cabecera: 'Identificación', celda: (row: Usuario) => `${row.identificacion}` },
     { nombreColumna: 'nombre', cabecera: 'Nombre', celda: (row: Usuario) => `${row.nombre}` },
+    { nombreColumna: 'apodo', cabecera: 'Usuario', celda: (row: Usuario) => `${row.apodo}` },
     { nombreColumna: 'perfil', cabecera: 'Perfil', celda: (row: Usuario) => `${row.perfil.descripcion}` },
     { nombreColumna: 'estado', cabecera: 'Estado', celda: (row: Usuario) => `${row.estado}` }
   ];
@@ -57,8 +59,10 @@ export class UsuarioComponent implements OnInit {
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
+  @ViewChild("inputFiltro") inputFiltro: ElementRef;
 
-  constructor(private usuarioService: UsuarioService, private perfilService: PerfilService, private estacionService: EstacionService, private sesionService: SesionService, private router: Router) { }
+  constructor(private renderer: Renderer2, private usuarioService: UsuarioService, private perfilService: PerfilService, private estacionService: EstacionService, 
+            private imagenService: ImagenService, private sesionService: SesionService, private router: Router) { }
 
   ngOnInit() {
     this.sesion = validarSesion(this.sesionService, this.router);
@@ -78,6 +82,9 @@ export class UsuarioComponent implements OnInit {
   crear(event) {
     if (event != null)
       event.preventDefault();
+    if (!this.validarFormulario())
+      return;    
+    this.encriptarContrasena();
     this.usuarioService.crear(this.usuario).subscribe({
       next: res => {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
@@ -91,6 +98,8 @@ export class UsuarioComponent implements OnInit {
   actualizar(event) {
     if (event != null)
       event.preventDefault();
+    if (!this.validarFormulario())
+      return;  
     this.usuarioService.actualizar(this.usuario).subscribe({
       next: res => {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
@@ -131,12 +140,19 @@ export class UsuarioComponent implements OnInit {
     this.usuarioService.consultar().subscribe({
       next: res => {
         this.usuarios = res.resultado as Usuario[]
-        this.dataSource = new MatTableDataSource(this.usuarios);
-        this.dataSource.paginator = this.paginator;
-        this.dataSource.sort = this.sort;
+        this.llenarTabla(this.usuarios);
       },
       error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     });
+  }
+
+  llenarTabla(usuarios: Usuario[]){
+    this.dataSource = new MatTableDataSource(usuarios);
+    this.dataSource.filterPredicate = (data: Usuario, filter: string): boolean =>
+    data.codigo.includes(filter) || data.identificacion.includes(filter) || data.nombre.includes(filter) || 
+    data.apodo.includes(filter) || data.perfil.descripcion.includes(filter) || data.estado.includes(filter);
+    this.dataSource.paginator = this.paginator;
+    this.dataSource.sort = this.sort;
   }
 
   seleccion(usuario: Usuario) {
@@ -144,9 +160,9 @@ export class UsuarioComponent implements OnInit {
       this.clickedRows.clear();
       this.clickedRows.add(usuario);
       this.usuario = { ... usuario};
+      this.cambiarContrasena = this.usuario.cambiarContrasena == valores.si? true : false;
     } else {
-      this.clickedRows.clear();
-      this.usuario = new Usuario();
+      this.nuevo(null);
     }
   }
 
@@ -156,6 +172,10 @@ export class UsuarioComponent implements OnInit {
     if (this.dataSource.paginator) {
       this.dataSource.paginator.firstPage();
     }
+  }
+  borrarFiltro() {
+    this.renderer.setProperty(this.inputFiltro.nativeElement, 'value', '');
+    this.dataSource.filter = '';
   }
 
   consultarPerfiles() {
@@ -176,7 +196,7 @@ export class UsuarioComponent implements OnInit {
     });
   }
 
-  cambiarSiNo(){
+  alternarCambiarContrasena(){
     this.cambiarContrasena = !this.cambiarContrasena;
     if (this.cambiarContrasena){
       this.usuario.cambiarContrasena = valores.si;
@@ -189,16 +209,23 @@ export class UsuarioComponent implements OnInit {
     return a && b && a.id == b.id;
   }
 
+  capturarFile(event: any): any {
+    const archivoCapturado = event.target.files[0];
+    this.imagenService.convertirBase64(archivoCapturado).then((imagen: any) => {
+      this.usuario.avatar64 = imagen.base64;
+      //console.log(this.usuario.avatar64);
+    });
+  }
+
+  encriptarContrasena(){
+    this.usuario.contrasena = md5(this.usuario.contrasena);
+    this.usuario.confirmarContrasena = md5(this.usuario.confirmarContrasena);
+  }
+
+  // VALIDACIONES
   validarContrasena(){
     if (this.usuario.contrasena != this.usuario.confirmarContrasena) {
       Swal.fire({ icon: error_swal, title: error, text: mensajes.error_contrasena_invalida });
-    }
-  }
-
-  validarCorreo() {
-    let arroba = this.usuario.correo.includes("@");
-    if (!arroba) {
-      Swal.fire({ icon: error_swal, title: error, text: mensajes.error_correo_invalido });
     }
   }
 
@@ -217,31 +244,49 @@ export class UsuarioComponent implements OnInit {
     }
   }
 
-  capturarFile(event: any): any {
-    const archivoCapturado = event.target.files[0];
-    this.extrarBase64(archivoCapturado).then((imagen: any) => {
-      this.usuario.avatar64 = imagen.base;
-      console.log(this.usuario.avatar64);
-    });
+  validarCorreo() {
+    let arroba = this.usuario.correo.includes("@");
+    if (!arroba) {
+      Swal.fire({ icon: error_swal, title: error, text: mensajes.error_correo_invalido });
+    }
   }
 
-  extrarBase64 = async ($event: any) => new Promise((resolve) => {
-    try {
-      const reader = new FileReader();
-      reader.readAsDataURL($event);
-      reader.onload = () => {
-        resolve({
-          base: reader.result
-        })
-      };
-      reader.onerror = error => {
-        resolve({
-          base: reader.result
-        })
-      };
-    } catch (e) {
-      return null;
+  validarFormulario(): boolean {
+    //validar que los campos esten llenos antes de guardar
+    if (this.usuario.identificacion == '') {
+      Swal.fire({ icon: error_swal, title: error, text: mensajes.error_falta_datos });
+      return false;
     }
-  });
+    if (this.usuario.nombre == '') {
+      Swal.fire({ icon: error_swal, title: error, text: mensajes.error_falta_datos });
+      return false;
+    }
+    if (this.usuario.correo == '') {
+      Swal.fire({ icon: error_swal, title: error, text: mensajes.error_falta_correo });
+      return false;
+    }
+    if (this.usuario.perfil.descripcion == '') {
+      Swal.fire({ icon: error_swal, title: error, text: mensajes.error_falta_datos });
+      return false;
+    }
+    if (this.usuario.estacion.descripcion == '') {
+      Swal.fire({ icon: error_swal, title: error, text: mensajes.error_falta_datos });
+      return false;
+    }
+    if (this.usuario.pregunta == '') {
+      Swal.fire({ icon: error_swal, title: error, text: mensajes.error_falta_datos });
+      return false;
+    }
+    if (this.usuario.respuesta == '') {
+      Swal.fire({ icon: error_swal, title: error, text: mensajes.error_falta_datos });
+      return false;
+    }
+    if (this.usuario.avatar64 == '') {
+      Swal.fire({ icon: error_swal, title: error, text: mensajes.error_falta_imagen });
+      return false;
+    }
+    return true;
+  }
+
 
 }

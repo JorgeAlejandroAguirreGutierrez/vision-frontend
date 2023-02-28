@@ -35,9 +35,9 @@ export class InicioSesionComponent implements OnInit {
   ocultarConfirmarContrasena: boolean = true;
   cambiarContrasena: boolean = false;
   multiEmpresa: boolean = false;
-  formularioValido: boolean = true;
 
   sesion = new Sesion();
+  usuario: Usuario = new Usuario();
   empresa: Empresa = new Empresa();
   estacion: Estacion = new Estacion();
 
@@ -66,17 +66,32 @@ export class InicioSesionComponent implements OnInit {
     this.obtenerEstacion();
   }
 
+  nuevo(){
+    this.contrasena = '';
+    this.ocultarContrasena = true;
+    this.ocultarNuevaContrasena = true;
+    this.ocultarConfirmarContrasena = true;
+    this.cambiarContrasena = false;
+    this.multiEmpresa = false;
+  
+    this.sesion = new Sesion();
+    this.usuario = new Usuario();
+    this.empresa = new Empresa();
+    this.estacion = new Estacion();
+  }
+
   obtenerPorApodo() {
     this.usuarioService.obtenerPorApodo(this.sesion.usuario.apodo).subscribe({
       next: res => {
         this.sesion.usuario = res.resultado as Usuario;
+        this.usuario = this.sesion.usuario;
+        //console.log(this.sesion.usuario);
         this.multiEmpresa=this.sesion.usuario.perfil.multiempresa == valores.si? true: false;
         if (this.multiEmpresa){
-          this.empresa.id = 1; //cambiar ngModel por sesion.empresa
-          // sesion.empresa.id = 1;
+          this.sesion.empresa.id = 1; //Iniciar combo empresa
         } else {
-          // Obtener la empresa de estacion
-          // sesion.empresa = estacion.establecimiento.empresa;
+          // Obtener la empresa de estacion no de usuario, sirve para MVP 1
+          this.sesion.empresa = this.usuario.estacion.establecimiento.empresa; // Cambiar cuando se impl usuario-estación
         }
         if (this.sesion.usuario.cambiarContrasena == valores.si) {
           this.cambiarContrasena = true;
@@ -100,6 +115,24 @@ export class InicioSesionComponent implements OnInit {
           this.navegarError();
         }
       });
+    } else {
+      Swal.fire({ icon: error_swal, title: error, text: mensajes.error_contrasena });
+    }  
+  }
+
+  crearNuevaContrasena(){
+    if (this.contrasena!='' && this.sesion.usuario.contrasena==md5(this.contrasena)){
+      this.usuario.contrasena = md5(this.formGroupContrasena.get('password').value);
+      this.usuario.confirmarContrasena = md5(this.formGroupContrasena.get('confirmPassword').value);
+      this.usuario.cambiarContrasena = valores.no;
+      this.usuarioService.actualizar(this.usuario).subscribe({
+        next: res => {
+          Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
+          this.nuevo();
+        },
+        error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+      });
+      //console.log(this.usuario);
     } else {
       Swal.fire({ icon: error_swal, title: error, text: mensajes.error_contrasena });
     }  

@@ -1,22 +1,22 @@
 import { Injectable } from '@angular/core';
-import { Genero } from '../../modelos/cliente/genero';
+import { TipoPago } from '../../modelos/configuracion/tipo-pago';
 import { Respuesta } from '../../respuesta';
 import { urn, options } from '../../constantes';
 import {HttpClient} from '@angular/common/http';
 import { map, catchError } from 'rxjs/operators';
-import { Observable, throwError, BehaviorSubject, lastValueFrom } from 'rxjs';
-import { Router } from '@angular/router';
+import {BehaviorSubject, Observable, throwError, lastValueFrom } from 'rxjs';
 import { environment } from '../../../environments/environment';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
 })
-export class GeneroService {
+export class TipoPagoService {
 
   constructor(private http: HttpClient, private router: Router) { }
 
-  crear(genero: Genero): Observable<Respuesta> {
-    return this.http.post(environment.host + urn.ruta + urn.genero, genero, options).pipe(
+  crear(tipoPago: TipoPago): Observable<Respuesta> {
+    return this.http.post(environment.host + urn.ruta + urn.tipoPago, tipoPago, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);
@@ -24,8 +24,8 @@ export class GeneroService {
     );
   }
 
-  obtener(generoId: number): Observable<Respuesta> {
-    return this.http.get<Respuesta>(environment.host + urn.ruta + urn.genero + urn.slash + generoId, options).pipe(
+  obtener(tipoPagoId: number): Observable<Respuesta> {
+    return this.http.get<Respuesta>(environment.host + urn.ruta + urn.tipoPago + urn.slash + tipoPagoId, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);
@@ -34,7 +34,7 @@ export class GeneroService {
   }
 
   consultar(): Observable<Respuesta> {
-    return this.http.get(environment.host + urn.ruta + urn.genero, options).pipe(
+    return this.http.get(environment.host + urn.ruta + urn.tipoPago, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);
@@ -42,15 +42,15 @@ export class GeneroService {
   }
 
   consultarActivos(): Observable<Respuesta> {
-    return this.http.get(environment.host + urn.ruta + urn.genero + urn.consultarActivos, options).pipe(
+    return this.http.get(environment.host + urn.ruta + urn.tipoPago + urn.consultarActivos, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);
       }));
   }
 
-  actualizar(genero: Genero): Observable<Respuesta> {
-    return this.http.put(environment.host + urn.ruta + urn.genero, genero, options).pipe(
+  buscar(tipoPago: TipoPago): Observable<Respuesta> {
+    return this.http.post(environment.host + urn.ruta + urn.tipoPago + urn.buscar, tipoPago, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);
@@ -58,8 +58,8 @@ export class GeneroService {
     );
   }
 
-  activar(genero: Genero): Observable<Respuesta> {
-    return this.http.patch(environment.host + urn.ruta + urn.genero + urn.activar, genero, options).pipe(
+  actualizar(tipoPago: TipoPago): Observable<Respuesta> {
+    return this.http.put(environment.host + urn.ruta + urn.tipoPago, tipoPago, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);
@@ -67,8 +67,8 @@ export class GeneroService {
     );
   }
 
-  inactivar(genero: Genero): Observable<Respuesta> {
-    return this.http.patch(environment.host + urn.ruta + urn.genero + urn.inactivar, genero, options).pipe(
+  activar(tipoPago: TipoPago): Observable<Respuesta> {
+    return this.http.patch(environment.host + urn.ruta + urn.tipoPago + urn.activar, tipoPago, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);
@@ -76,8 +76,8 @@ export class GeneroService {
     );
   }
 
-  buscar(genero: Genero): Observable<Respuesta> {
-    return this.http.post(environment.host + urn.ruta + urn.genero + urn.buscar, genero, options).pipe(
+  inactivar(tipoPago: TipoPago): Observable<Respuesta> {
+    return this.http.patch(environment.host + urn.ruta + urn.tipoPago + urn.inactivar, tipoPago, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);

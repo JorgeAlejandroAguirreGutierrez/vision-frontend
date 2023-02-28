@@ -13,7 +13,7 @@ import { ClienteService } from '../../servicios/cliente/cliente.service';
 import { TipoContribuyente } from '../../modelos/cliente/tipo-contribuyente';
 import { TipoContribuyenteService } from '../../servicios/cliente/tipo-contribuyente.service';
 import { SegmentoService } from '../../servicios/cliente/segmento.service';
-import { Segmento } from '../../modelos/inventario/segmento';
+import { Segmento } from '../../modelos/cliente/segmento';
 import { GrupoCliente } from '../../modelos/cliente/grupo-cliente'
 import { GrupoClienteService } from '../../servicios/cliente/grupo-cliente.service';
 import { Ubicacion } from '../../modelos/configuracion/ubicacion';
@@ -26,8 +26,8 @@ import { Dependiente } from '../../modelos/cliente/dependiente';
 import { TelefonoDependiente } from '../../modelos/cliente/telefono-dependiente';
 import { CorreoDependiente } from '../../modelos/cliente/correo-dependiente';
 import { CelularDependiente } from '../../modelos/cliente/celular-dependiente';
-import { Genero } from '../../modelos/cliente/genero';
-import { GeneroService } from '../../servicios/cliente/genero.service';
+import { Genero } from '../../modelos/configuracion/genero';
+import { GeneroService } from '../../servicios/configuracion/genero.service';
 import { EstadoCivil } from '../../modelos/cliente/estado-civil';
 import { EstadoCivilService } from '../../servicios/cliente/estado-civil.service';
 import { OrigenIngreso } from '../../modelos/cliente/origen-ingreso';
@@ -149,7 +149,7 @@ export class ClienteComponent implements OnInit {
     { nombreColumna: 'identificacion', cabecera: 'Indentificación', celda: (row: Cliente) => `${row.identificacion}` },
     { nombreColumna: 'razonSocial', cabecera: 'Razón Social', celda: (row: Cliente) => `${row.razonSocial}` },
     { nombreColumna: 'direccion', cabecera: 'Direccion', celda: (row: Cliente) => `${row.direccion}` },
-    { nombreColumna: 'obligado', cabecera: 'Obligado', celda: (row: Cliente) => `${row.tipoContribuyente.obligadoContabilidad}` },
+    { nombreColumna: 'obligado', cabecera: 'Obligado', celda: (row: Cliente) => `${row.obligadoContabilidad}` },
     { nombreColumna: 'especial', cabecera: 'Especial', celda: (row: Cliente) => `${row.especial}` },
     { nombreColumna: 'estado', cabecera: 'Estado', celda: (row: Cliente) => `${row.estado}` }
   ];
@@ -477,7 +477,7 @@ export class ClienteComponent implements OnInit {
     this.dataSourceCliente = new MatTableDataSource(clientes);
     this.dataSourceCliente.filterPredicate = (data: Cliente, filter: string): boolean =>
       data.codigo.includes(filter) || data.identificacion.includes(filter) || data.razonSocial.includes(filter) ||
-      data.direccion.includes(filter) || data.tipoContribuyente.obligadoContabilidad.includes(filter) || data.especial.includes(filter) ||
+      data.direccion.includes(filter) || data.obligadoContabilidad.includes(filter) || data.especial.includes(filter) ||
       data.estado.includes(filter);
     this.dataSourceCliente.paginator = this.paginator;
     this.dataSourceCliente.sort = this.sort;

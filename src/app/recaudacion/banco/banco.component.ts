@@ -1,5 +1,5 @@
 import { Component, OnInit, HostListener, ViewChild, ElementRef, Renderer2 } from '@angular/core';
-import { TabService } from '../../componentes/services/tab.service';
+import { TabService } from '../../servicios/componente/tab/tab.service';
 import Swal from 'sweetalert2';
 import { validarSesion, exito, exito_swal, error, error_swal, valores } from '../../constantes';
 import { Banco } from '../../modelos/recaudacion/banco';

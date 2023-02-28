@@ -23,7 +23,7 @@ import { Bodega } from '../../modelos/inventario/bodega';
 import { BodegaService } from '../../servicios/inventario/bodega.service';
 import { valores, mensajes, validarSesion, exito, exito_swal, error, error_swal } from '../../constantes';
 import { MatSort } from '@angular/material/sort';
-import { TabService } from 'src/app/componentes/services/tab.service';
+import { TabService } from 'src/app/servicios/componente/tab/tab.service';
 import { FacturacionElectronicaService } from 'src/app/servicios/comprobante/factura-eletronica.service';
 import { CategoriaProducto } from 'src/app/modelos/inventario/categoria-producto';
 import { CategoriaProductoService } from 'src/app/servicios/inventario/categoria-producto.service';

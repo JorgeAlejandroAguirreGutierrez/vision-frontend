@@ -1,8 +1,14 @@
-import { SidebarService } from '../../componentes/services/sidebar.service';
+import { SidebarService } from '../../servicios/componente/sidebar/sidebar.service';
+import { valores, mensajes, validarSesion, exito_swal, error_swal, exito, error } from '../../constantes';
 import { Component, OnInit, Input } from '@angular/core';
+
+import { Router } from '@angular/router';
+import { Sesion } from '../../modelos/usuario/sesion';
+import { SesionService } from '../../servicios/usuario/sesion.service';
+import { Usuario } from '../../modelos/usuario/usuario';
+import { UsuarioService } from '../../servicios/usuario/usuario.service';
 import { EmpresaService } from '../../servicios/usuario/empresa.service';
 import { Empresa } from '../../modelos/usuario/empresa';
-import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-navbar',
@@ -12,25 +18,36 @@ import { environment } from '../../../environments/environment';
 export class NavbarComponent implements OnInit {
 
   @Input() istabMenu:boolean;
-  url_logo: string = "";
-  nombre_empresa: string = "";
 
-  constructor(private sidebarService: SidebarService, private empresaService: EmpresaService) { }
-  isCollapsed = true;
+  isCollapsed: boolean = true;
+
+  sesion: Sesion = null;
+  usuario: Usuario = new Usuario();
+  empresa: Empresa = new Empresa();
+
+  constructor(private sesionService: SesionService, private sidebarService: SidebarService, private empresaService: EmpresaService,
+            private usuarioService: UsuarioService, private router: Router) { }
 
 
   ngOnInit() {
+    this.sesion = validarSesion(this.sesionService, this.router);
     this.obtenerEmpresa();
-
+    this.obtenerUsuario();
   }
 
   obtenerEmpresa() {
-    let empresaId = 1;
-    this.empresaService.obtener(empresaId).subscribe(
+    this.empresaService.obtener(this.sesion.empresa.id).subscribe(
       res => {
-        let empresa = res.resultado as Empresa
-        this.url_logo = environment.prefijoUrlImagenes + "logos/" + empresa.logo;
-        this.nombre_empresa = empresa.razonSocial;
+        this.empresa = res.resultado as Empresa;
+      }
+    );
+  }
+
+  obtenerUsuario() {
+    this.usuarioService.obtener(this.sesion.usuario.id).subscribe(
+      res => {
+        this.usuario = res.resultado as Usuario;
+        //console.log(this.usuario);
       }
     );
   }

@@ -14,7 +14,7 @@ export class Dependiente {
     latitudgeo: number;
     longitudgeo: number;
     ubicacion : Ubicacion;
-    cliente: Cliente;
+    //cliente: Cliente;
     telefonosDependiente: TelefonoDependiente[];
     celularesDependiente: CelularDependiente[];
     correosDependiente: CorreoDependiente[];
@@ -28,7 +28,7 @@ export class Dependiente {
         this.latitudgeo=valores.latCiudad;
         this.longitudgeo=valores.lngCiudad;
         this.ubicacion = new Ubicacion();
-        this.cliente = new Cliente();
+        //this.cliente = new Cliente();
         this.telefonosDependiente = [];
         this.celularesDependiente = [];
         this.correosDependiente = [];

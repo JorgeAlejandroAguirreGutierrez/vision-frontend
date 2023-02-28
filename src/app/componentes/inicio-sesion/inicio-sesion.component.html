@@ -51,9 +51,9 @@
                             <div class="col-6 centrar">
                                 <mat-form-field appearance="standard">
                                     <mat-label>Empresa</mat-label>
-                                    <mat-select [(ngModel)]="empresa.id" class="form-control-sm">
+                                    <mat-select [(ngModel)]="sesion.empresa.id" class="form-control-sm">
                                         <mat-option *ngFor="let empresa of empresas" [value]="empresa.id">
-                                            {{empresa.razonSocial}}
+                                            {{empresa.nombreComercial}}
                                         </mat-option>
                                     </mat-select>
                                 </mat-form-field>
@@ -124,8 +124,8 @@
                         </div>
                         <div class="col-6"></div>
                         <div class="col-6 centrar-titulo m-t-10">
-                            <button type="button" class="btn btn-primary boton text-center" (click)="iniciarSesion()">
-                                <b>Cambiar Contraseña</b></button>
+                            <button type="button" class="btn btn-primary boton text-center" (click)="crearNuevaContrasena()">
+                                <b>Guardar</b></button>
                         </div>
                     </ng-container>
 
@@ -136,7 +136,7 @@
                             <img width="100%" height="100%" src="assets/images/users/avatar.jpg">
                         </mat-card>
                         <mat-card class="foto" *ngIf="sesion.usuario.id!=0">
-                            <img width="100%" height="100%" src="assets/images/users/avataractivo.jpg">
+                            <img width="100%" height="100%" [src]="sesion.usuario.avatar64">
                         </mat-card>
                     </div>
                     <div class="col-4"></div>

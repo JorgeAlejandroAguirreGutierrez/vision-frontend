@@ -42,6 +42,14 @@ export class UsuarioService {
       }));
   }
 
+  consultarActivos(): Observable<Respuesta> {
+    return this.http.get(environment.host + urn.ruta + urn.usuario + urn.consultarActivos, options).pipe(
+      map(response => response as Respuesta),
+      catchError(err => {
+        return throwError(()=>err);
+      }));
+  }
+
   actualizar(usuario: Usuario): Observable<Respuesta> {
     return this.http.put(environment.host + urn.ruta + urn.usuario, usuario, options).pipe(
       map(response => response as Respuesta),

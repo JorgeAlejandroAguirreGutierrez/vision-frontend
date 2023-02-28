@@ -6,6 +6,8 @@ import { valores } from "../../constantes";
 export class Factura {
   id: number;
   codigo: string;
+  codigoNumerico: String;
+  claveAcceso: String;
   secuencia: string;
   fecha: Date;
   estado: string;
@@ -37,14 +39,16 @@ export class Factura {
   facturaLineas: FacturaLinea[];
   
   constructor() {
-    this.id = valores.cero;
-    this.secuencia = valores.vacio;
-    this.fecha = new Date();
-    this.estado = valores.noFacturada;
-    this.cliente = new Cliente();
-    this.facturaLineas = [];
-    this.comentario = valores.vacio;
-    this.sesion = new Sesion();
+    this.id=valores.cero;
+    this.codigoNumerico=valores.vacio;
+    this.claveAcceso=valores.vacio;
+    this.secuencia=valores.vacio;
+    this.fecha=new Date();
+    this.estado=valores.noFacturada;
+    this.cliente=new Cliente();
+    this.facturaLineas=[];
+    this.comentario=valores.vacio;
+    this.sesion=new Sesion();
 
     this.subtotalSinDescuento = valores.cero;
     this.subtotalConDescuento = valores.cero;

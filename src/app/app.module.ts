@@ -16,9 +16,9 @@ import { AppComponent } from './app.component';
 import { ModeloService } from './servicios/administracion/modelo.service';
 
 // Componentes generales para las pestañas
-import { TabContentComponent } from "./componentes/tab-content.component";
-import { ContentContainerDirective } from "./componentes/content-container.directive";
-import { TabService } from "./componentes/services/tab.service";
+import { TabContentComponent } from "./componentes/tab/tab-content.component";
+import { ContentContainerDirective } from "./componentes/tab/content-container.directive";
+import { TabService } from "./servicios/componente/tab/tab.service";
 
 //Tienda - Estructura: Cabecera y Menu
 import { LocationStrategy, PathLocationStrategy } from '@angular/common';
