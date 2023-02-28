@@ -1,7 +1,7 @@
 import { GrupoCliente } from './grupo-cliente';
 import { TipoContribuyente } from './tipo-contribuyente';
-import { Segmento } from '../inventario/segmento';
-import { Genero } from './genero';
+import { Segmento } from './segmento';
+import { Genero } from '../configuracion/genero';
 import { EstadoCivil } from './estado-civil';
 import { CalificacionCliente } from './calificacion-cliente';
 import { OrigenIngreso } from './origen-ingreso';

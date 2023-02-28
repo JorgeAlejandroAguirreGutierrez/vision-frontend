@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Genero } from '../../modelos/cliente/genero';
+import { Genero } from '../../modelos/configuracion/genero';
 import { Respuesta } from '../../respuesta';
 import { urn, options } from '../../constantes';
 import {HttpClient} from '@angular/common/http';

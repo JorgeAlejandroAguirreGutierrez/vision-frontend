@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Type } from '@angular/core';
-import { validarSesion } from '../../constantes';
+import { validarSesion, modulos } from '../../constantes';
 
 import { environment } from '../../../environments/environment';
 import { Router } from '@angular/router';
@@ -43,6 +43,7 @@ export class MenuComponent implements OnInit {
   permiso_control: boolean;
   permiso_auditorias: boolean;
   permiso_tutoriales: boolean;
+  verAdministracion: boolean = true;
 
   ico_cliente: string = environment.prefijoUrlImagenes+"iconos/icoclientes.jpg";
   ico_proveedor: string = environment.prefijoUrlImagenes+"iconos/icoproveedores.png";
@@ -71,39 +72,80 @@ export class MenuComponent implements OnInit {
 
   ngOnInit() {
     this.sesion=validarSesion(this.sesionService, this.router);
-    // FINANCIERO
-    this.permiso_clientes=this.obtenerPermiso('CLIENTES');
-    this.permiso_compras=this.obtenerPermiso('COMPRAS');
-    this.permiso_ventas=this.obtenerPermiso('VENTAS');
-    this.permiso_inventarios=this.obtenerPermiso('INVENTARIOS');
-    this.permiso_caja_bancos=this.obtenerPermiso('CAJA_BANCOS');
-    this.permiso_cuentasxcobrar=this.obtenerPermiso('CUENTAS_COBRAR');
-    this.permiso_cuentasxpagar=this.obtenerPermiso('CUENTAS_PAGAR');
-    this.permiso_activos_fijos=this.obtenerPermiso('ACTIVOS_FIJOS');
-    this.permiso_produccion= this.obtenerPermiso('PRODUCCION');
-    this.permiso_contabilidad=this.obtenerPermiso('CONTABILIDAD');
-    this.permiso_talento_humano=this.obtenerPermiso('TALENTO_HUMANO');
-    this.permiso_financiero=this.obtenerPermiso('FINANCIERO');
-    this.permiso_importacion= this.obtenerPermiso('IMPORTACION');
-    this.permiso_reportes= this.obtenerPermiso('REPORTES');
-    
-    // ADMINISTRACION  
-    this.permiso_accesos=this.obtenerPermiso('ACCESOS');
-    this.permiso_configuraciones=this.obtenerPermiso('CONFIGURACIONES');
-    this.permiso_estadisticas=this.obtenerPermiso('ESTADISTICAS');
-    this.permiso_control=this.obtenerPermiso('ORGANISMOS_CONTROL');
-    this.permiso_auditorias=this.obtenerPermiso('AUDITORIA');
-    this.permiso_tutoriales=this.obtenerPermiso('TUTORIALES');
+    this.obtenerPermiso();
   }
 
-  obtenerPermiso(permisoModulo: string): boolean {
-    let bandera=false;
+  obtenerPermiso(){
     this.sesion.usuario.perfil.permisos.forEach(elemento => {
-      if (elemento.modulo==permisoModulo){
-        bandera=true;
+      // FINANCIERO
+      if (elemento.modulo==modulos.modulo_clientes){
+        this.permiso_clientes = true;
+      }
+      if (elemento.modulo==modulos.modulo_compras){
+        this.permiso_compras = true;
+      }
+      if (elemento.modulo==modulos.modulo_ventas){
+        this.permiso_ventas = true;
+      }
+      if (elemento.modulo==modulos.modulo_inventarios){
+        this.permiso_inventarios = true;
+      }
+      if (elemento.modulo==modulos.modulo_caja_bancos){
+        this.permiso_caja_bancos = true;
+      }
+      if (elemento.modulo==modulos.modulo_cuentas_cobrar){
+        this.permiso_cuentasxcobrar = true;
+      }
+      if (elemento.modulo==modulos.modulo_cuentas_pagar){
+        this.permiso_cuentasxpagar = true;
+      }
+      if (elemento.modulo==modulos.modulo_activos_fijos){
+        this.permiso_activos_fijos = true;
+      }
+      if (elemento.modulo==modulos.modulo_produccion){
+        this.permiso_produccion = true;
+      }
+      if (elemento.modulo==modulos.modulo_contabilidad){
+        this.permiso_contabilidad = true;
+      }
+      if (elemento.modulo==modulos.modulo_talento_humano){
+        this.permiso_talento_humano = true;
+      }
+      if (elemento.modulo==modulos.modulo_financiero){
+        this.permiso_financiero = true;
+      }
+      if (elemento.modulo==modulos.modulo_importacion){
+        this.permiso_importacion = true;
+      }
+      if (elemento.modulo==modulos.modulo_reportes){
+        this.permiso_reportes = true;
+      }
+      // ADMINISTRACIÓN
+      if (elemento.modulo==modulos.modulo_accesos){
+        this.permiso_accesos = true;
+      }
+      if (elemento.modulo==modulos.modulo_configuracion){
+        this.permiso_configuraciones = true;
+      }
+      if (elemento.modulo==modulos.modulo_estadisticas){
+        this.permiso_estadisticas = true;
+      }
+      if (elemento.modulo==modulos.modulo_control){
+        this.permiso_control = true;
+      }
+      if (elemento.modulo==modulos.modulo_auditoria){
+        this.permiso_auditorias = true;
+      }
+      if (elemento.modulo==modulos.modulo_tutoriales){
+        this.permiso_tutoriales = true;
       }
     });
-    return bandera;
+    if (this.permiso_accesos || this.permiso_configuraciones || this.permiso_estadisticas || 
+        this.permiso_control || this.permiso_auditorias || this.permiso_tutoriales){
+      this.verAdministracion = true;
+    } else {
+      this.verAdministracion = false;
+    }
   }
 
   abrirOpcion(opcion: string){

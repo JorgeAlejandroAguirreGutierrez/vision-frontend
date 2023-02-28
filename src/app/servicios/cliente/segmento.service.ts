@@ -7,7 +7,7 @@ import { map, catchError } from 'rxjs/operators';
 import { Observable, throwError, BehaviorSubject, lastValueFrom } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { Modelo } from '../../modelos/administracion/modelo';
-import { Segmento } from '../../modelos/inventario/segmento';
+import { Segmento } from '../../modelos/cliente/segmento';
 
 @Injectable({
   providedIn: 'root'

@@ -36,7 +36,6 @@ export class EmpresaComponent implements OnInit {
 
   sesion: Sesion=null;
   empresa: Empresa = new Empresa();
-  //tipoIdentificacion: TipoIdentificacion = new TipoIdentificacion();
 
   empresas: Empresa[];
 
