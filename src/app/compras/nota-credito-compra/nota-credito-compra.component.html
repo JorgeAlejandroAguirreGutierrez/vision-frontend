@@ -26,13 +26,6 @@
                     <mat-icon>delete</mat-icon>
                 </a>
             </li>
-            <li class="nav-item">
-                <ng-container *ngIf="notaCreditoCompra.id!=0">
-                    <a class="nav-link" title="Crear Factura Electronica" href="#" role="button" (click)="crearNotaCreditoCompraElectronica($event)">
-                        <mat-icon>publish</mat-icon>
-                    </a>
-                </ng-container>
-            </li>
         </ul>
     </nav>
     <ng-template matStepLabel>Nota Credito de Compra</ng-template>
@@ -272,7 +265,7 @@
                         <tr mat-row *matRowDef="let row; columns: columnasLinea;"></tr>
                     </table>
                     <ng-container>
-                        <mat-paginator #paginatorNotaCreditoCompraLinea [pageSizeOptions]="[5, 10, 25, 100]">
+                        <mat-paginator #paginatorLinea [pageSizeOptions]="[5, 10, 25, 100]">
                         </mat-paginator>
                     </ng-container>
                 </div>
@@ -405,7 +398,7 @@
                             "{{input.value}}"</td>
                     </tr>
                 </table>
-                <mat-paginator #paginatorFacturaCompra [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
+                <mat-paginator #paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
             </div>
             <div class="azul" *ngIf="!clickedRows.size">
                 Seleccione una fila para editar
@@ -416,90 +409,3 @@
         </mat-expansion-panel>
     </mat-accordion>
 </div>
-<ng-template #modalCorreos let-modal>
-    <div class="modal-header ">
-        <h5 class="modal-title ">Ver Correos</h5>
-        <button type="button " class="close " aria-label="Close " (click)="modal.dismiss( 'Cross click') ">
-            <span aria-hidden="true ">&times;</span>
-        </button>
-    </div>
-    <div class="modal-body ">
-        <div class="form-group form-row table-responsive">
-            <table class="table table-bordered table-hover">
-                <thead>
-                    <tr>
-                        <th>CORREO</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr *ngFor="let correo of notaCreditoCompra.facturaCompra.proveedor.correosProveedor; let i=index ">
-                        <td>
-                            {{correo.email}}
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-    </div>
-    <div class="modal-footer ">
-        <button type="button " class="btn btn-outline-dark " (click)="modal.close( 'close') ">Cerrar</button>
-    </div>
-</ng-template>
-<ng-template #modalCelulares let-modal>
-    <div class="modal-header">
-        <h5 class="modal-title">Ver Celulares</h5>
-        <button type="button " class="close " aria-label="Close " (click)="modal.dismiss( 'Cross click') ">
-            <span aria-hidden="true ">&times;</span>
-        </button>
-    </div>
-    <div class="modal-body ">
-        <div class="form-group form-row table-responsive">
-            <table class="table table-bordered table-hover ">
-                <thead>
-                    <tr>
-                        <th>NUMERO</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr *ngFor="let celular of notaCreditoCompra.facturaCompra.proveedor.celularesProveedor; let i=index ">
-                        <td>
-                            {{celular.numero}}
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-    </div>
-    <div class="modal-footer ">
-        <button type="button " class="btn btn-outline-dark " (click)="modal.close( 'close') ">Cerrar</button>
-    </div>
-</ng-template>
-<ng-template #modalTelefonos let-modal>
-    <div class="modal-header">
-        <h5 class="modal-title ">Ver Telefonos</h5>
-        <button type="button " class="close " aria-label="Close " (click)="modal.dismiss( 'Cross click') ">
-            <span aria-hidden="true ">&times;</span>
-        </button>
-    </div>
-    <div class="modal-body ">
-        <div class="form-group form-row table-responsive">
-            <table class="table table-bordered table-hover ">
-                <thead>
-                    <tr>
-                        <th>NUMERO</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr *ngFor="let telefono of notaCreditoCompra.facturaCompra.proveedor.telefonosProveedor; let i=index ">
-                        <td>
-                            {{telefono.numero}}
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-    </div>
-    <div class="modal-footer ">
-        <button type="button " class="btn btn-outline-dark " (click)="modal.close( 'close') ">Cerrar</button>
-    </div>
-</ng-template>

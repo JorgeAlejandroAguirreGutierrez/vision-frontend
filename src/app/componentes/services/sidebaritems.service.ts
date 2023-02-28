@@ -68,7 +68,7 @@ export class SidebarItemsService {
 
   llenarOpciones(Componente: Type<any>, tabTitulo: string, itemNombre: string, icoItem: string) {
     this.permisoOpciones.forEach(elemento => {
-      if (elemento.operacion==itemNombre.toUpperCase() && elemento.habilitado==valores.si && elemento.estado==valores.activo){ //opciones sidebar
+      if (elemento.operacion == itemNombre.toUpperCase() && elemento.habilitado==valores.si && elemento.estado==valores.activo){ //opciones sidebar
         this.opciones.push(new SidebarItem(Componente, tabTitulo, itemNombre, icoItem));
       }
     });

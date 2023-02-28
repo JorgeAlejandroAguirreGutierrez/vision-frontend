@@ -206,27 +206,27 @@
                                 <mat-form-field appearance="standard">
                                     <mat-label>Código</mat-label>
                                     <input matInput type="text" class="form-control-sm"
-                                        [(ngModel)]="facturaDetalle.producto.codigo" disabled>
+                                        [(ngModel)]="facturaLinea.producto.codigo" disabled>
                                 </mat-form-field>
                             </div>
                             <div class="col-3">
                                 <mat-form-field appearance="standard">
                                     <mat-label>Consig.</mat-label>
-                                    <input matInput type="text" [(ngModel)]="facturaDetalle.producto.consignacion" [disabled]="true" class="form-control-sm">
+                                    <input matInput type="text" [(ngModel)]="facturaLinea.producto.consignacion" [disabled]="true" class="form-control-sm">
                                 </mat-form-field>
                             </div>
                             <div class="col-6">
                                 <mat-form-field appearance="standard">
                                     <mat-label>Categoría</mat-label>
                                     <input matInput type="text" class="form-control-sm"
-                                        [(ngModel)]="facturaDetalle.producto.categoriaProducto.descripcion" [disabled]="true">
+                                        [(ngModel)]="facturaLinea.producto.categoriaProducto.descripcion" [disabled]="true">
                                 </mat-form-field>
                             </div>
                             <div class="col-6">
                                 <mat-form-field appearance="standard">
                                     <mat-label>Tipo de Gasto</mat-label>
                                     <input matInput type="text" class="form-control-sm"
-                                        [(ngModel)]="facturaDetalle.producto.tipoGasto.descripcion" [disabled]="true">
+                                        [(ngModel)]="facturaLinea.producto.tipoGasto.descripcion" [disabled]="true">
                                 </mat-form-field>
                             </div>
                             <div class="col-2"></div>
@@ -277,13 +277,13 @@
                             <div class="col-2">
                                 <mat-form-field appearance="standard">
                                     <mat-label>Medida</mat-label>
-                                    <input matInput type="text" [(ngModel)]="facturaDetalle.producto.medida.descripcion" class="form-control-sm" [disabled]="true">
+                                    <input matInput type="text" [(ngModel)]="facturaLinea.producto.medida.descripcion" class="form-control-sm" [disabled]="true">
                                 </mat-form-field>
                             </div>
                             <div class="col-4">
                                 <mat-form-field appearance="standard">
                                     <mat-label>Bodega</mat-label>
-                                    <mat-select [(ngModel)]="facturaDetalle.bodega" (selectionChange)="seleccionarBodega()" [compareWith]="compareFn" class="form-control-sm">
+                                    <mat-select [(ngModel)]="facturaLinea.bodega" (selectionChange)="seleccionarBodega()" [compareWith]="compareFn" class="form-control-sm">
                                         <mat-option *ngFor="let bodega of bodegas; let i=index" [value]="bodega">
                                             {{bodega.nombre}}
                                         </mat-option>
@@ -293,20 +293,20 @@
                             <div class="col-1">
                                 <mat-form-field appearance="standard">
                                     <mat-label>Cantidad</mat-label>
-                                    <input matInput type="text" [(ngModel)]="facturaDetalle.cantidad" (change)="seleccionarCantidad()" class="form-control-sm">
+                                    <input matInput type="text" [(ngModel)]="facturaLinea.cantidad" (change)="seleccionarCantidad()" class="form-control-sm">
                                 </mat-form-field>
                             </div>
                             <div class="col-2">
                                 <mat-form-field appearance="standard">
                                     <mat-label>Precio Unit.</mat-label>
-                                    <input matInput type="text" [(ngModel)]="facturaDetalle.precio.precioVentaPublicoManual" [disabled]="true" class="form-control-sm">
+                                    <input matInput type="text" [(ngModel)]="facturaLinea.precio.precioVentaPublicoManual" [disabled]="true" class="form-control-sm">
                                 </mat-form-field>
                             </div>
                             <div class="col-1">
                                 <mat-form-field appearance="standard">
                                     <mat-label>Desc. $</mat-label>
                                     <input matInput type="text" step="0.01"
-                                        [(ngModel)]="facturaDetalle.valorDescuentoLinea"
+                                        [(ngModel)]="facturaLinea.valorDescuentoLinea"
                                         (change)="seleccionarValorDescuentoLinea()" class="form-control-sm">
                                 </mat-form-field>
                             </div>
@@ -314,14 +314,14 @@
                                 <mat-form-field appearance="standard">
                                     <mat-label>Desc. %</mat-label>
                                     <input matInput type="text" min="0" max="100" step="0.01"
-                                        [(ngModel)]="facturaDetalle.porcentajeDescuentoLinea"
+                                        [(ngModel)]="facturaLinea.porcentajeDescuentoLinea"
                                         (change)="seleccionarPorcentajeDescuentoLinea()" class="form-control-sm">
                                 </mat-form-field>
                             </div>
                             <div class="col-1">
                                 <mat-form-field appearance="standard">
                                     <mat-label>IVA</mat-label>
-                                    <mat-select [(ngModel)]="facturaDetalle.impuesto" [compareWith]="compareFn"
+                                    <mat-select [(ngModel)]="facturaLinea.impuesto" [compareWith]="compareFn"
                                         (selectionChange)="seleccionarImpuesto()" class="form-control-sm">
                                         <mat-option *ngFor="let impuesto of impuestos" [value]="impuesto">
                                             {{impuesto.porcentaje}}
@@ -332,104 +332,104 @@
                             <div class="col-2">
                                 <mat-form-field appearance="standard">
                                     <mat-label>Subtotal</mat-label>
-                                    <input matInput type="text" [(ngModel)]="facturaDetalle.totalConDescuentoLinea"
+                                    <input matInput type="text" [(ngModel)]="facturaLinea.totalConDescuentoLinea"
                                         class="form-control-sm" disabled>
                                 </mat-form-field>
                             </div>
                             <div class="col-10">
                                 <mat-form-field appearance="outline">
                                     <mat-label>Comentario</mat-label>
-                                    <textarea matInput [(ngModel)]="facturaDetalle.comentario"
+                                    <textarea matInput [(ngModel)]="facturaLinea.comentario"
                                         placeholder="Sobre el producto..." class="form-control" rows="1"></textarea>
                                 </mat-form-field>
                             </div>
                             <div class="col-1">
                                 <mat-form-field appearance="standard">
                                     <mat-label>Entregado</mat-label>
-                                    <mat-select class="form-control-sm" [(ngModel)]="facturaDetalle.entregado">
+                                    <mat-select class="form-control-sm" [(ngModel)]="facturaLinea.entregado">
                                         <mat-option [value]="no">{{no}}</mat-option>
                                         <mat-option [value]="si">{{si}}</mat-option>
                                     </mat-select>
                                 </mat-form-field>
                             </div>
                             <div class="col-1 iconos">
-                                <button mat-icon-button mat-button (click)="agregarFacturaDetalle(null)">
+                                <button mat-icon-button mat-button (click)="agregarFacturaLinea(null)">
                                     <mat-icon>add_shopping_cart</mat-icon>
                                 </button>
                             </div>
                         </div>
                         <div class="mat-elevation-z8 col-12">
-                            <table mat-table [dataSource]="dataSourceFacturaDetalle" matSort>
+                            <table mat-table [dataSource]="dataSourceLinea" matSort>
                                 <!-- Nombre Columna -->
                                 <ng-container matColumnDef="nombre">
                                     <th mat-header-cell *matHeaderCellDef mat-sort-header> Producto </th>
-                                    <td mat-cell *matCellDef="let facturaDetalle"> {{facturaDetalle.producto.nombre}}
+                                    <td mat-cell *matCellDef="let facturaLinea"> {{facturaLinea.producto.nombre}}
                                     </td>
                                 </ng-container>
                                 <!-- Descripcion Columna -->
                                 <ng-container matColumnDef="medida">
                                     <th mat-header-cell *matHeaderCellDef mat-sort-header> Med </th>
-                                    <td mat-cell *matCellDef="let facturaDetalle">
-                                        {{facturaDetalle.producto.medida.abreviatura}} </td>
+                                    <td mat-cell *matCellDef="let facturaLinea">
+                                        {{facturaLinea.producto.medida.abreviatura}} </td>
                                 </ng-container>
                                 <!-- Cantidad Columna -->
                                 <ng-container matColumnDef="cantidad">
                                     <th mat-header-cell *matHeaderCellDef mat-sort-header>Cant </th>
-                                    <td mat-cell *matCellDef="let facturaDetalle">
-                                        {{facturaDetalle.cantidad}} </td>
+                                    <td mat-cell *matCellDef="let facturaLinea">
+                                        {{facturaLinea.cantidad}} </td>
                                 </ng-container>
                                 <!-- Valor Columna -->
                                 <ng-container matColumnDef="valor">
                                     <th mat-header-cell *matHeaderCellDef mat-sort-header>Valor </th>
-                                    <td mat-cell *matCellDef="let facturaDetalle">
-                                        ${{facturaDetalle.precio.precioVentaPublicoManual }} </td>
+                                    <td mat-cell *matCellDef="let facturaLinea">
+                                        ${{facturaLinea.precio.precioVentaPublicoManual }} </td>
                                 </ng-container>
                                 <!-- Descuento Columna -->
                                 <ng-container matColumnDef="descuento">
                                     <th mat-header-cell *matHeaderCellDef mat-sort-header> Desc. </th>
-                                    <td mat-cell *matCellDef="let facturaDetalle">
-                                        ${{facturaDetalle.valorDescuentoLinea}} </td>
+                                    <td mat-cell *matCellDef="let facturaLinea">
+                                        ${{facturaLinea.valorDescuentoLinea}} </td>
                                 </ng-container>
                                 <!-- Descuento% Columna -->
                                 <ng-container matColumnDef="descuentoPorcentaje">
                                     <th mat-header-cell *matHeaderCellDef mat-sort-header> Desc% </th>
-                                    <td mat-cell *matCellDef="let facturaDetalle">
-                                        {{facturaDetalle.porcentajeDescuentoLinea}}% </td>
+                                    <td mat-cell *matCellDef="let facturaLinea">
+                                        {{facturaLinea.porcentajeDescuentoLinea}}% </td>
                                 </ng-container>
                                 <!-- Impuesto Columna -->
                                 <ng-container matColumnDef="impuesto">
                                     <th mat-header-cell *matHeaderCellDef mat-sort-header> IVA </th>
-                                    <td mat-cell *matCellDef="let facturaDetalle">
-                                        {{facturaDetalle.impuesto.porcentaje}}% </td>
+                                    <td mat-cell *matCellDef="let facturaLinea">
+                                        {{facturaLinea.impuesto.porcentaje}}% </td>
                                 </ng-container>
                                 <!-- Total Columna -->
                                 <ng-container matColumnDef="total">
                                     <th mat-header-cell *matHeaderCellDef mat-sort-header> Total </th>
-                                    <td mat-cell *matCellDef="let facturaDetalle">
-                                        ${{facturaDetalle.totalConDescuentoLinea}} </td>
+                                    <td mat-cell *matCellDef="let facturaLinea">
+                                        ${{facturaLinea.totalConDescuentoLinea}} </td>
                                 </ng-container>
                                 <!-- Entregado Columna -->
                                 <ng-container matColumnDef="entregado">
                                     <th mat-header-cell *matHeaderCellDef mat-sort-header> Entreg </th>
-                                    <td mat-cell *matCellDef="let facturaDetalle">
-                                        <ng-container *ngIf="facturaDetalle.entregado">SI</ng-container>
-                                        <ng-container *ngIf="!facturaDetalle.entregado">NO</ng-container>
+                                    <td mat-cell *matCellDef="let facturaLinea">
+                                        <ng-container *ngIf="facturaLinea.entregado">SI</ng-container>
+                                        <ng-container *ngIf="!facturaLinea.entregado">NO</ng-container>
                                     </td>
                                 </ng-container>
                                 <ng-container matColumnDef="acciones">
                                     <th mat-header-cell *matHeaderCellDef mat-sort-header> Acciones </th>
                                     <td mat-cell *matCellDef="let i=index">
                                         <button mat-icon-button color="primary" focusable="false"
-                                            (click)="eliminarFacturaDetalle(i)">
+                                            (click)="eliminarFacturaLinea(i)">
                                             <i class="fa fa-times mat-icon"></i>
                                         </button>
                                     </td>
                                 </ng-container>
-                                <tr mat-header-row *matHeaderRowDef="columnasDetalleFactura"></tr>
-                                <tr mat-row *matRowDef="let row; columns: columnasDetalleFactura;"></tr>
+                                <tr mat-header-row *matHeaderRowDef="columnasLinea"></tr>
+                                <tr mat-row *matRowDef="let row; columns: columnasLinea;"></tr>
                             </table>
                             <ng-container>
-                                <mat-paginator #paginatorFacturaDetalle [pageSizeOptions]="[5, 10, 25, 100]">
+                                <mat-paginator #paginatorLinea [pageSizeOptions]="[5, 10, 25, 100]">
                                 </mat-paginator>
                             </ng-container>
                         </div>
@@ -570,7 +570,7 @@
                         <input matInput (keyup)="filtroFactura($event)" placeholder="Ej. 001" #input>
                     </mat-form-field>
                     <div class="mat-elevation-z8">
-                        <table mat-table [dataSource]="dataSourceFactura" matSort>
+                        <table mat-table [dataSource]="dataSource" matSort>
                             <!-- Columnas Dinamicas -->
                             <ng-container *ngFor="let columna of columnas" [matColumnDef]="columna.nombreColumna">
                                 <th mat-header-cell *matHeaderCellDef mat-sort-header> {{ columna.cabecera }} </th>
@@ -578,16 +578,16 @@
 
                             </ng-container>
 
-                            <tr mat-header-row *matHeaderRowDef="columnasFactura"></tr>
-                            <tr mat-row (click)="seleccionActualizar(row)" [class.selected-row]="clickedRows.has(row)"
-                                *matRowDef="let row; columns: columnasFactura;"></tr>
+                            <tr mat-header-row *matHeaderRowDef="cabecera"></tr>
+                            <tr mat-row (click)="seleccion(row)" [class.selected-row]="clickedRows.has(row)"
+                                *matRowDef="let row; columns: cabecera;"></tr>
 
                             <tr class="mat-row" *matNoDataRow>
                                 <td class="mat-cell" colspan="6">No hay datos que coincidan con el grupo
                                     "{{input.value}}"</td>
                             </tr>
                         </table>
-                        <mat-paginator #paginatorFactura [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
+                        <mat-paginator #paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
                     </div>
                     <div class="azul" *ngIf="!clickedRows.size">
                         Seleccione una fila para editar

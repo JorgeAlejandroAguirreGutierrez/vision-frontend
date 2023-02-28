@@ -1,5 +1,5 @@
 import { Cliente } from '../cliente/cliente';
-import { FacturaDetalle } from './factura-detalle';
+import { FacturaLinea } from './factura-linea';
 import { Sesion } from '../usuario/sesion';
 import { valores } from "../../constantes";
 
@@ -34,29 +34,29 @@ export class Factura {
   comentario: string;
   cliente: Cliente;
   sesion: Sesion;
-  facturaDetalles: FacturaDetalle[];
+  facturaLineas: FacturaLinea[];
   
   constructor() {
-    this.id=valores.cero;
-    this.secuencia=valores.vacio;
-    this.fecha=new Date();
-    this.estado=valores.noFacturada;
-    this.cliente=new Cliente();
-    this.facturaDetalles=[];
-    this.comentario=valores.vacio;
-    this.sesion=new Sesion();
+    this.id = valores.cero;
+    this.secuencia = valores.vacio;
+    this.fecha = new Date();
+    this.estado = valores.noFacturada;
+    this.cliente = new Cliente();
+    this.facturaLineas = [];
+    this.comentario = valores.vacio;
+    this.sesion = new Sesion();
 
-    this.subtotalSinDescuento=valores.cero;
-    this.subtotalConDescuento=valores.cero;
-    this.descuentoTotal=valores.cero;
-    this.subtotalBase12SinDescuento=valores.cero;
-    this.subtotalBase0SinDescuento=valores.cero;
-    this.subtotalBase12ConDescuento=valores.cero;
-    this.subtotalBase0ConDescuento=valores.cero;
-    this.ivaSinDescuento=valores.cero;
-    this.ivaConDescuento=valores.cero;
-    this.totalSinDescuento=valores.cero;
-    this.totalConDescuento=valores.cero;
+    this.subtotalSinDescuento = valores.cero;
+    this.subtotalConDescuento = valores.cero;
+    this.descuentoTotal = valores.cero;
+    this.subtotalBase12SinDescuento = valores.cero;
+    this.subtotalBase0SinDescuento = valores.cero;
+    this.subtotalBase12ConDescuento = valores.cero;
+    this.subtotalBase0ConDescuento = valores.cero;
+    this.ivaSinDescuento = valores.cero;
+    this.ivaConDescuento = valores.cero;
+    this.totalSinDescuento = valores.cero;
+    this.totalConDescuento = valores.cero;
 
     this.valorDescuentoSubtotal = valores.cero;
     this.porcentajeDescuentoSubtotal = valores.cero;

@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild, HostListener } from '@angular/core';
 import { DatePipe } from '@angular/common';
-import { UntypedFormControl, UntypedFormBuilder } from '@angular/forms';
+import { UntypedFormControl } from '@angular/forms';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
@@ -275,18 +275,6 @@ export class NotaCreditoCompraComponent implements OnInit {
       },
       error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     });
-  }
-
-  crearNotaCreditoCompraElectronica(event){
-    if (event != null)
-      event.preventDefault();
-    this.NotaCreditoCompraElectronicaService.enviar(this.notaCreditoCompra).subscribe(
-      res => {
-        let respuesta = res.resultado as String;
-        Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
-      },
-      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
-    );
   }
 
   open(content: any) {

@@ -56,7 +56,7 @@ import { ProformaComponent } from './comprobantes/proforma/proforma.component';
 import { NotaCreditoVentaComponent } from './comprobantes/nota-credito-venta/nota-credito-venta.component';
 
 //Módulo de Entregas
-import { EntregaComponent } from './entregas/entrega/entrega.component';
+import { GuiaRemisionComponent } from './entregas/guia-remision/guia-remision.component';
 import { TransportistaComponent } from './entregas/transportista/transportista.component';
 import { VehiculoTransporteComponent } from './entregas/vehiculo-transporte/vehiculo-transporte.component';
 
@@ -122,7 +122,7 @@ const routes: Routes = [
   { path: 'inventario/grupoproducto', component: GrupoProductoComponent },
   { path: 'promocion', component: PromocionComponent },
   // Rutas para el modulo de entregas
-  { path: 'entrega', component: EntregaComponent },
+  { path: 'guiaremision', component: GuiaRemisionComponent },
   { path: 'cliente/vehiculotransporte', component: VehiculoTransporteComponent },
   // Rutas para el modulo de recaudación
   { path: 'recaudacion', component: RecaudacionComponent },
@@ -191,7 +191,7 @@ export const RoutingComponents = [
   TablaComponenteComponent,
   FiltroSerie,
   // Entregas
-  EntregaComponent,
+  GuiaRemisionComponent,
   TransportistaComponent,
   VehiculoTransporteComponent,
   // Recaudación

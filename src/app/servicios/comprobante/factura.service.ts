@@ -7,7 +7,7 @@ import { Observable, throwError } from 'rxjs';
 import { Router } from '@angular/router';
 import { urn, options } from '../../constantes';
 import { environment } from '../../../environments/environment';
-import { FacturaDetalle } from '../../modelos/comprobante/factura-detalle';
+import { FacturaLinea } from '../../modelos/comprobante/factura-linea';
 
 @Injectable({
   providedIn: 'root'
@@ -44,6 +44,14 @@ export class FacturaService {
         return throwError(err);
       })
     );
+  }
+
+  consultarPorCliente(clienteId: number): Observable<Respuesta> {
+    return this.http.get(environment.host + urn.ruta + urn.factura + urn.consultarPorCliente + urn.slash + clienteId, options).pipe(
+      map(response => response as Respuesta),
+      catchError(err => {
+        return throwError(() => err);
+      }));
   }
 
   obtener(facturaId: number): Observable<Respuesta> {
@@ -90,15 +98,6 @@ export class FacturaService {
     );
   }
 
-  calcularFacturaDetalleTemp(facturaDetalle: FacturaDetalle){
-    return this.http.post(environment.host + urn.ruta + urn.factura + urn.calcularFacturaDetalleTemp, facturaDetalle, options).pipe(
-      map(response => response as Respuesta),
-      catchError(err => {
-        return throwError(err);
-      })
-    );
-  }
-
   calcular(factura: Factura): Observable<Respuesta> {
     return this.http.post(environment.host + urn.ruta + urn.factura + urn.calcular, factura, options).pipe(
       map(response => response as Respuesta),
@@ -106,5 +105,14 @@ export class FacturaService {
         return throwError(err);
       })
     );
-  }  
+  }
+  
+  calcularLinea(facturaLinea: FacturaLinea): Observable<Respuesta> {
+    return this.http.post(environment.host + urn.ruta + urn.factura + urn.calcularLinea, facturaLinea, options).pipe(
+      map(response => response as Respuesta),
+      catchError(err => {
+        return throwError(err);
+      })
+    );
+  }
 }

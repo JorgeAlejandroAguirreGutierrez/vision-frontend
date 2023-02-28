@@ -8,27 +8,27 @@ import { Ubicacion } from '../../modelos/configuracion/ubicacion';
 import { UbicacionService } from '../../servicios/configuracion/ubicacion.service';
 import { TransportistaService } from '../../servicios/entrega/transportista.service';
 import { Transportista } from '../../modelos/entrega/transportista';
-import { Entrega } from '../../modelos/entrega/entrega';
-import { EntregaService } from '../../servicios/entrega/entrega.service';
+import { GuiaRemision } from '../../modelos/entrega/guia-remision';
+import { GuiaRemisionService } from '../../servicios/entrega/guia-remision.service';
 import { Sesion } from '../../modelos/usuario/sesion';
 import { FacturaService } from '../../servicios/comprobante/factura.service';
 import { valores, mensajes, otras, tabs, validarSesion, tab_activo, exito, exito_swal, error, error_swal } from '../../constantes';
 import { MatTableDataSource } from '@angular/material/table';
-import { FacturaDetalle } from '../../modelos/comprobante/factura-detalle';
+import { FacturaLinea } from '../../modelos/comprobante/factura-linea';
 import { FacturacionElectronicaService } from 'src/app/servicios/comprobante/factura-eletronica.service';
 
 @Component({
-  selector: 'app-entrega',
-  templateUrl: './entrega.component.html',
-  styleUrls: ['./entrega.component.scss']
+  selector: 'app-guia-remision',
+  templateUrl: './guia-remision.component.html',
+  styleUrls: ['./guia-remision.component.scss']
 })
-export class EntregaComponent implements OnInit {
+export class GuiaRemisionComponent implements OnInit {
 
   panelGuiaRemision=true;
   panelGuiaDetalle=false;
 
   transportistas: Transportista[];
-  entrega: Entrega = new Entrega();
+  guiaRemision: GuiaRemision = new GuiaRemision();
   sesion: Sesion;
   provincias: Ubicacion[];
   cantones: Ubicacion[];
@@ -42,12 +42,12 @@ export class EntregaComponent implements OnInit {
   nuevaDireccion = valores.nuevaDireccion;
 
 
-  columnasFacturaDetalle: string[] = ['nombre', 'cantidad', 'precio_unitario', 'iva', 'total'];
-  dataFacturaDetalle = new MatTableDataSource<FacturaDetalle>(this.entrega.factura.facturaDetalles);
+  columnas: string[] = ['nombre', 'cantidad', 'precio_unitario', 'iva', 'total'];
+  dataSource = new MatTableDataSource<FacturaLinea>(this.guiaRemision.factura.facturaLineas);
 
   constructor(private transportistaService: TransportistaService, private sesionService: SesionService, private router: Router,
     private facturaService: FacturaService, private facturacionElectronicaService: FacturacionElectronicaService, private modalService: NgbModal,
-    private ubicacionService: UbicacionService, private entregaService: EntregaService) { }
+    private ubicacionService: UbicacionService, private guiaRemisionService: GuiaRemisionService) { }
 
   ngOnInit() {
     this.sesion=validarSesion(this.sesionService, this.router);
@@ -57,7 +57,7 @@ export class EntregaComponent implements OnInit {
     this.facturaService.eventoEntrega.subscribe((data:number) => {
       this.facturaService.obtener(data).subscribe(
         res => {
-          this.entrega.factura = res.resultado as Factura;
+          this.guiaRemision.factura = res.resultado as Factura;
           this.cargar();
         },
         err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
@@ -66,23 +66,23 @@ export class EntregaComponent implements OnInit {
   }
 
   cargar(){
-    this.entregaService.obtenerPorFactura(this.entrega.factura.id).subscribe(
+    this.guiaRemisionService.obtenerPorFactura(this.guiaRemision.factura.id).subscribe(
       res => {
         if (res.resultado!= null){
-          Object.assign(this.entrega, res.resultado as Entrega);
+          Object.assign(this.guiaRemision, res.resultado as GuiaRemision);
           this.seleccionarProvincia();
           this.seleccionarCanton();
         } else{
-          this.entrega.direccion=this.entrega.factura.cliente.direccion;
-          this.entrega.ubicacion=this.entrega.factura.cliente.ubicacion;
+          this.guiaRemision.direccion=this.guiaRemision.factura.cliente.direccion;
+          this.guiaRemision.ubicacion=this.guiaRemision.factura.cliente.ubicacion;
           this.seleccionarProvincia();
           this.seleccionarCanton();
-          this.entrega.telefono=this.entrega.factura.cliente.telefonos[0].numero;
-          this.entrega.celular=this.entrega.factura.cliente.celulares[0].numero;
-          this.entrega.correo=this.entrega.factura.cliente.correos[0].email;
+          this.guiaRemision.telefono=this.guiaRemision.factura.cliente.telefonos[0].numero;
+          this.guiaRemision.celular=this.guiaRemision.factura.cliente.celulares[0].numero;
+          this.guiaRemision.correo=this.guiaRemision.factura.cliente.correos[0].email;
           this.deshabilitar=true;
         }
-        this.dataFacturaDetalle = new MatTableDataSource<FacturaDetalle>(this.entrega.factura.facturaDetalles);
+        this.dataSource = new MatTableDataSource<FacturaLinea>(this.guiaRemision.factura.facturaLineas);
       },
       err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     );
@@ -109,9 +109,9 @@ export class EntregaComponent implements OnInit {
   crear(event: any) {
     if (event!=null)
       event.preventDefault();
-    this.entregaService.crear(this.entrega).subscribe(
+    this.guiaRemisionService.crear(this.guiaRemision).subscribe(
       res => {
-        this.entrega = res.resultado as Entrega;
+        this.guiaRemision = res.resultado as GuiaRemision;
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
       },
       err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
@@ -121,17 +121,17 @@ export class EntregaComponent implements OnInit {
   actualizar(event: any) {
     if (event!=null)
       event.preventDefault();
-    this.entregaService.actualizar(this.entrega).subscribe(
+    this.guiaRemisionService.actualizar(this.guiaRemision).subscribe(
       res => {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
-        this.entrega = res.resultado as Entrega;
+        this.guiaRemision = res.resultado as GuiaRemision;
       },
       err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
 
   seleccionarProvincia() {
-    this.ubicacionService.consultarCantones(this.entrega.ubicacion.provincia).subscribe(
+    this.ubicacionService.consultarCantones(this.guiaRemision.ubicacion.provincia).subscribe(
       res => {
           this.cantones = res.resultado as Ubicacion[];
       },
@@ -140,7 +140,7 @@ export class EntregaComponent implements OnInit {
   }
 
   seleccionarCanton() {
-    this.ubicacionService.consultarParroquias(this.entrega.ubicacion.canton).subscribe(
+    this.ubicacionService.consultarParroquias(this.guiaRemision.ubicacion.canton).subscribe(
       res => {
           this.parroquias = res.resultado as Ubicacion[];
       },
@@ -149,25 +149,25 @@ export class EntregaComponent implements OnInit {
   }
 
   validarTelefono() {
-    let digito = this.entrega.telefono.substring(0, 1);
-    if (this.entrega.telefono.length != 11 || digito != "0") {
-      this.entrega.telefono = valores.vacio;
+    let digito = this.guiaRemision.telefono.substring(0, 1);
+    if (this.guiaRemision.telefono.length != 11 || digito != "0") {
+      this.guiaRemision.telefono = valores.vacio;
       Swal.fire({ icon: error_swal, title: error, text: mensajes.error_telefono_invalido });
     }
   }
 
   validarCelular() {
-    let digito = this.entrega.celular.substring(0, 2);
-    if (this.entrega.celular.length != 12 || digito != "09") {
-      this.entrega.celular = valores.vacio;
+    let digito = this.guiaRemision.celular.substring(0, 2);
+    if (this.guiaRemision.celular.length != 12 || digito != "09") {
+      this.guiaRemision.celular = valores.vacio;
       Swal.fire({ icon: error_swal, title: error, text: mensajes.error_celular_invalido });
     }
   }
 
   validarCorreo() {
-    let arroba = this.entrega.correo.includes("@");
+    let arroba = this.guiaRemision.correo.includes("@");
     if (!arroba) {
-      this.entrega.correo = valores.vacio;
+      this.guiaRemision.correo = valores.vacio;
       Swal.fire({ icon: error_swal, title: error, text: mensajes.error_correo_invalido });
     }
   }
@@ -182,45 +182,45 @@ export class EntregaComponent implements OnInit {
   }
 
   seleccionarOpcionGuia(){
-    if (this.entrega.opcionGuia==this.clienteDireccion){
-      this.entrega.direccion=this.entrega.factura.cliente.direccion;
-      this.entrega.ubicacion=this.entrega.factura.cliente.ubicacion;
+    if (this.guiaRemision.opcionGuia==this.clienteDireccion){
+      this.guiaRemision.direccion=this.guiaRemision.factura.cliente.direccion;
+      this.guiaRemision.ubicacion=this.guiaRemision.factura.cliente.ubicacion;
       this.seleccionarProvincia();
       this.seleccionarCanton();
-      this.entrega.telefono=this.entrega.factura.cliente.telefonos[0].numero;
-      this.entrega.celular=this.entrega.factura.cliente.celulares[0].numero;
-      this.entrega.correo=this.entrega.factura.cliente.correos[0].email;
+      this.guiaRemision.telefono=this.guiaRemision.factura.cliente.telefonos[0].numero;
+      this.guiaRemision.celular=this.guiaRemision.factura.cliente.celulares[0].numero;
+      this.guiaRemision.correo=this.guiaRemision.factura.cliente.correos[0].email;
       this.deshabilitar=true;
       this.deshabilitarTransportista = false;
-    } else if (this.entrega.opcionGuia==this.nuevaDireccion) {
-      this.entrega.direccion = valores.vacio;
-      this.entrega.ubicacion = new Ubicacion();
-      this.entrega.telefono = valores.vacio;
-      this.entrega.celular = valores.vacio;
-      this.entrega.correo = valores.vacio;
-      this.entrega.transportista = new Transportista();
+    } else if (this.guiaRemision.opcionGuia==this.nuevaDireccion) {
+      this.guiaRemision.direccion = valores.vacio;
+      this.guiaRemision.ubicacion = new Ubicacion();
+      this.guiaRemision.telefono = valores.vacio;
+      this.guiaRemision.celular = valores.vacio;
+      this.guiaRemision.correo = valores.vacio;
+      this.guiaRemision.transportista = new Transportista();
       this.deshabilitar=false;
       this.deshabilitarTransportista = false;
-    } else if (this.entrega.opcionGuia==this.sinGuia){
-      this.entrega.direccion= valores.vacio;
-      this.entrega.ubicacion = new Ubicacion();
-      this.entrega.telefono= valores.vacio;
-      this.entrega.celular= valores.vacio;
-      this.entrega.correo= valores.vacio;
-      this.entrega.transportista = new Transportista();
+    } else if (this.guiaRemision.opcionGuia==this.sinGuia){
+      this.guiaRemision.direccion= valores.vacio;
+      this.guiaRemision.ubicacion = new Ubicacion();
+      this.guiaRemision.telefono= valores.vacio;
+      this.guiaRemision.celular= valores.vacio;
+      this.guiaRemision.correo= valores.vacio;
+      this.guiaRemision.transportista = new Transportista();
       this.deshabilitar=true
       this.deshabilitarTransportista = true;
     }
   }
 
   nuevo(event: any){
-    this.entrega=new Entrega();
+    this.guiaRemision=new GuiaRemision();
   }
 
   crearFacturaElectronica(event){
     if (event != null)
       event.preventDefault();
-    this.facturacionElectronicaService.enviar(this.entrega.factura).subscribe(
+    this.facturacionElectronicaService.enviar(this.guiaRemision.factura).subscribe(
       res => {
         let respuesta = res.resultado as String;
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje, footer: respuesta });
