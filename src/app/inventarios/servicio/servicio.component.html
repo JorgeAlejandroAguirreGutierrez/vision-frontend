@@ -1,0 +1,234 @@
+<nav class="navbar-light nav-fijo">
+    <ul class="navbar-nav">
+        <li class="nav-item" *ngIf="servicio.id==0">
+            <a class="nav-link" title="Guardar" role="button" (click)="crear($event)">
+                <mat-icon>save</mat-icon>
+            </a>
+        </li>
+        <li class="nav-item" *ngIf="servicio.id!=0">
+            <a class="nav-link" title="Actualizar" role="button" (click)="actualizar($event)">
+                <mat-icon>update</mat-icon>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" title="Nuevo" role="button" (click)="nuevo($event)">
+                <mat-icon>file_copy</mat-icon>
+            </a>
+        </li>
+        <ng-container *ngIf="servicio.id!=0">
+            <li class="nav-item" *ngIf="servicio.estado!=activo">
+                <a class="nav-link" title="Activar" role="button" (click)="activar($event)">
+                    <mat-icon>assignment_turned_in</mat-icon>
+                </a>
+            </li>
+            <li class="nav-item" *ngIf="servicio.estado==activo">
+                <a class="nav-link" title="Inactivar" role="button" (click)="inactivar($event)">
+                    <mat-icon>delete_forever</mat-icon>
+                </a>
+            </li>
+        </ng-container>
+    </ul>
+</nav>
+<div class="contenedor">
+    <mat-accordion class="headers-align">
+        <mat-expansion-panel (opened)="abrirPanelNuevo = true" (closed)="abrirPanelNuevo = false" [expanded]="abrirPanelNuevo">
+            <mat-expansion-panel-header>
+                <mat-panel-title>
+                    <i><u>SERVICIO</u></i>
+                </mat-panel-title>
+                <mat-panel-description>
+                    {{abrirPanelNuevo ? 'Ocultar crear servicio' : 'Crear nuevo servicio'}}
+                    <mat-icon>playlist_add</mat-icon>
+                </mat-panel-description>
+            </mat-expansion-panel-header>
+            <hr>
+            <div class="form-group form-row">
+                <div class="form-row col-8 pr-3">
+                    <div class="col-8">
+                        <mat-form-field appearance="standard">
+                            <mat-label>Nombre Servicio</mat-label>
+                            <input matInput type="text" oninput="this.value = this.value.toUpperCase()"
+                                [(ngModel)]="servicio.nombre" class="form-control-sm">
+                        </mat-form-field>
+                    </div>
+                    <div class="col-3">
+                        <mat-form-field appearance="standard">
+                            <mat-label>Proveedor</mat-label>
+                            <mat-select [(ngModel)]="servicio.proveedor" [compareWith]="compareFn"
+                                class="form-control-sm">
+                                <mat-option *ngFor="let proveedor of proveedores"
+                                    [value]="proveedor">{{proveedor.razonSocial}}</mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                    <div class="col-1">
+                        <mat-form-field appearance="standard">
+                            <mat-label>Consig.</mat-label>
+                            <mat-select type="text" [(ngModel)]="servicio.consignacion" class="form-control-sm">
+                                <mat-option [value]="si">{{si}}</mat-option>
+                                <mat-option [value]="no">{{no}}</mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                </div>
+                <div class="form-row col-4 linea-vertical">
+                    <div class="col-4">
+                        <mat-form-field appearance="standard">
+                            <mat-label>Código</mat-label>
+                            <input matInput type="text" [(ngModel)]="servicio.codigo" [disabled]="true"
+                                class="form-control-sm">
+                        </mat-form-field>
+                    </div>
+                    <div class="col-4">
+                        <mat-form-field appearance="standard">
+                            <mat-label>Categoría</mat-label>
+                            <input matInput type="text" [(ngModel)]="servicio.categoriaProducto.descripcion"
+                                [disabled]="true" class="form-control-sm">
+                        </mat-form-field>
+                    </div>
+                    <div class="col-3">
+                        <mat-form-field appearance="standard">
+                            <mat-label>IVA%</mat-label>
+                            <mat-select [(ngModel)]="servicio.impuesto" [compareWith]="compareFn"
+                                class="form-control-sm">
+                                <mat-option *ngFor="let impuesto of impuestos" [value]="impuesto">
+                                    {{impuesto.porcentaje}}</mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                    <div class="col-5">
+                        <mat-form-field appearance="standard">
+                            <mat-label>Gasto</mat-label>
+                            <mat-select [(ngModel)]="servicio.tipoGasto" class="form-control-sm">
+                                <mat-option *ngFor="let tipoGasto of tiposGastos" [value]="tipoGasto">
+                                    {{tipoGasto.descripcion}}</mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                    <div class="col-4">
+                        <mat-form-field appearance="standard">
+                            <mat-label>Estado</mat-label>
+                            <mat-select [(ngModel)]="servicio.estado" class="form-control-sm" [disabled]="true">
+                                <mat-option [value]="activo">{{activo}}</mat-option>
+                                <mat-option [value]="inactivo">{{inactivo}}</mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                </div>
+            </div>
+        </mat-expansion-panel>
+        <mat-expansion-panel (opened)="abrirPanelPrecio = true" (closed)="abrirPanelPrecio = false" [expanded]="abrirPanelPrecio">
+            <mat-expansion-panel-header>
+                <mat-panel-title>
+                    <i><u>PRECIOS</u></i>
+                </mat-panel-title>
+                <mat-panel-description>
+                    <span class="lowercase">{{abrirPanelNuevoPrecio ? 'Ocultar' : 'Ver' }} precio de cada segmento</span>
+                </mat-panel-description>
+            </mat-expansion-panel-header>
+            <mat-divider></mat-divider>
+            <div class="form-group form-row">
+                <div class="col-12">
+                    <div class="centrar-titulo azul">
+                        <mat-label>PRECIO SUGERIDO Y PRECIO DE VENTA</mat-label>
+                    </div>
+                    <table mat-table [dataSource]="dataSourcePrecios" class="mat-elevation-z8 centrar">
+                        <!-- Segmento Column -->
+                        <ng-container matColumnDef="segmento">
+                            <th mat-header-cell *matHeaderCellDef>SEGMENTO</th>
+                            <td mat-cell *matCellDef="let precio"> {{precio.segmento.descripcion}} </td>
+                        </ng-container>
+
+                        <!-- Costo Column -->
+                        <ng-container matColumnDef="costo">
+                            <th mat-header-cell *matHeaderCellDef>COSTO</th>
+                            <td mat-cell *matCellDef="let precio"> {{precio.costo}} </td>
+                        </ng-container>
+
+                        <!-- Ganancia Column -->
+                        <ng-container matColumnDef="margenGanancia">
+                            <th mat-header-cell *matHeaderCellDef>MG%</th>
+                            <td mat-cell *matCellDef="let precio"> {{precio.margenGanancia}} </td>
+                        </ng-container>
+                        <!-- PVP Column -->
+                        <ng-container matColumnDef="precioSinIva">
+                            <th mat-header-cell *matHeaderCellDef>PRECIO</th>
+                            <td mat-cell *matCellDef="let precio"> {{precio.precioSinIva}} </td>
+                        </ng-container>
+                        <!-- PVP Column -->
+                        <ng-container matColumnDef="precioVentaPublico">
+                            <th mat-header-cell *matHeaderCellDef>PVP</th>
+                            <td mat-cell *matCellDef="let precio"> {{precio.precioVentaPublico}} </td>
+                        </ng-container>
+                        <ng-container matColumnDef="precioVentaPublicoManual">
+                            <th mat-header-cell *matHeaderCellDef>PVP MAN</th>
+                            <td mat-cell *matCellDef="let precio">
+                                <mat-form-field floatLabel="never">
+                                    <input matInput [(ngModel)]="precio.precioVentaPublicoManual"
+                                        (change)="actualizarPrecioVentaPublicoManual()">
+                                </mat-form-field>
+                            </td>
+                        </ng-container>
+                        <ng-container matColumnDef="utilidad">
+                            <th mat-header-cell *matHeaderCellDef>UTIL</th>
+                            <td mat-cell *matCellDef="let precio">{{precio.utilidad}}</td>
+                        </ng-container>
+                        <ng-container matColumnDef="utilidadPorcentaje">
+                            <th mat-header-cell *matHeaderCellDef> UTIL % </th>
+                            <td mat-cell *matCellDef="let precio">{{precio.utilidadPorcentaje}}</td>
+                        </ng-container>
+
+                        <tr mat-header-row *matHeaderRowDef="cabeceraPrecios"></tr>
+                        <tr mat-row *matRowDef="let row; columns: cabeceraPrecios;"></tr>
+                    </table>
+                </div>
+            </div>
+        </mat-expansion-panel>
+    </mat-accordion>
+    <mat-accordion class="headers-align">
+        <mat-expansion-panel (opened)="abrirPanelAdmin = true" (closed)="abrirPanelAdmin = false" [expanded]="abrirPanelAdmin">
+            <mat-expansion-panel-header>
+                <mat-panel-title>
+                    <i><u>GESTIONAR PRODUCTOS</u></i>
+                </mat-panel-title>
+                <mat-panel-description>
+                    {{abrirPanelAdmin ? 'Ocultar administrador de productos' : 'Editar productos existentes'}}
+                    <mat-icon>playlist_add_check</mat-icon>
+                </mat-panel-description>
+            </mat-expansion-panel-header>
+            <hr>
+            <mat-form-field appearance="standard">
+                <mat-label>Buscar productos</mat-label>
+                <input matInput oninput="this.value = this.value.toUpperCase()" (keyup)="filtro($event)"
+                    placeholder="Ej. AR" #inputFiltro>
+            </mat-form-field>
+            <div class="mat-elevation-z8">
+                <table mat-table [dataSource]="dataSource" matSort>
+                    <!-- Columnas Dinamicas -->
+                    <ng-container *ngFor="let columna of columnas" [matColumnDef]="columna.nombreColumna">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> {{ columna.cabecera }} </th>
+                        <td mat-cell *matCellDef="let row"> {{ columna.celda(row) }} </td>
+                    </ng-container>
+
+                    <tr mat-header-row *matHeaderRowDef="cabecera"></tr>
+                    <tr mat-row (click)="seleccion(row)" [class.selected-row]="clickedRows.has(row)"
+                        *matRowDef="let row; columns: cabecera;"></tr>
+
+                    <!-- Row shown when there is no matching data. -->
+                    <tr class="mat-row" *matNoDataRow>
+                        <td class="mat-cell" colspan="6">No hay datos que coincidan con el producto
+                            "{{inputFiltro.value}}"
+                        </td>
+                    </tr>
+                </table>
+                <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
+            </div>
+            <div class="azul" *ngIf="!clickedRows.size">
+                Seleccione una fila para editar
+            </div>
+            <div class="azul" *ngFor="let clickedRow of clickedRows">
+                Id: {{clickedRow.id}} seleccionado
+            </div>
+        </mat-expansion-panel>
+    </mat-accordion>
+</div>
