@@ -1,11 +1,10 @@
 import { valores } from "../../constantes";
 import { Bodega } from "../inventario/bodega";
 import { Producto } from "../inventario/producto";
-export class NotaCreditoCompraLinea {
+export class NotaDebitoCompraLinea {
     id: number;
     codigo: string;
     cantidad: number;
-    devolucion: number;
     costoUnitario: number;
     valorDescuentoLinea: number;
     porcentajeDescuentoLinea: number;
@@ -17,7 +16,6 @@ export class NotaCreditoCompraLinea {
         this.id = valores.cero;
         this.codigo = valores.vacio;
         this.cantidad = valores.cero;
-        this.devolucion = valores.cero;
         this.costoUnitario = valores.cero;
         this.valorDescuentoLinea = valores.cero;
         this.porcentajeDescuentoLinea = valores.cero;

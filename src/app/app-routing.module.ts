@@ -54,6 +54,7 @@ import { EgresoComponent } from './comprobantes/egreso/egreso.component';
 import { PedidoComponent } from './comprobantes/pedido/pedido.component';
 import { ProformaComponent } from './comprobantes/proforma/proforma.component';
 import { NotaCreditoVentaComponent } from './comprobantes/nota-credito-venta/nota-credito-venta.component';
+import { NotaDebitoVentaComponent } from './comprobantes/nota-debito-venta/nota-debito-venta.component';
 
 //Módulo de Entregas
 import { GuiaRemisionComponent } from './entregas/guia-remision/guia-remision.component';
@@ -65,6 +66,7 @@ import { ProveedorComponent, DialogoMapaProveedorComponent } from './compras/pro
 import { FacturaCompraComponent } from './compras/factura-compra/factura-compra.component';
 import { GrupoProveedorComponent, DialogoGrupoProveedorCuentaContableComponent } from './compras/grupo-proveedor/grupo-proveedor.component';
 import { NotaCreditoCompraComponent } from './compras/nota-credito-compra/nota-credito-compra.component';
+import { NotaDebitoCompraComponent } from './compras/nota-debito-compra/nota-debito-compra.component';
 
 //Módulo de Contabilidad
 import { ContabilizacionComponent } from './contabilidad/contabilizacion/contabilizacion.component';
@@ -203,6 +205,7 @@ export const RoutingComponents = [
   PedidoComponent,
   ProformaComponent,
   NotaCreditoVentaComponent,
+  NotaDebitoVentaComponent,
   // Compras
   ProveedorComponent,
   DialogoMapaProveedorComponent,
@@ -210,6 +213,7 @@ export const RoutingComponents = [
   GrupoProveedorComponent,
   DialogoGrupoProveedorCuentaContableComponent,
   NotaCreditoCompraComponent,
+  NotaDebitoCompraComponent,
   // Contabilidad
   ContabilizacionComponent,
   CuentaContableComponent,

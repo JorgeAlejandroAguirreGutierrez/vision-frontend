@@ -49,6 +49,8 @@ export const urn =
      facturar: "/facturar",
      notaCreditoCompra: "/notaCreditoCompra",
      notaCreditoVenta: "/notaCreditoVenta",
+     notaDebitoCompra: "/notaDebitoCompra",
+     notaDebitoVenta: "/notaDebitoVenta",
      obtenerPorFacturaCompra: "/obtenerPorFacturaCompra",
      obtenerPorFactura: "/obtenerPorFactura",
      tipoRetencion: "/tipoRetencion",
@@ -323,6 +325,7 @@ export const tabs = {
     tab_grupo_proveedor: "Grupo Proveedor",
     tab_factura_compra: "Factura de Compra",
     tab_nota_credito_compra: "Nota de Crédito",
+    tab_nota_debito_compra: "Nota de Débito",
 
     //Ventas
     tab_factura: "Factura",
@@ -330,6 +333,7 @@ export const tabs = {
     tab_proforma:  "Proforma",
     tab_egreso: " Egreso",
     tab_nota_credito_venta: "Nota de Crédito",
+    tab_nota_debito_venta: "Nota de Débito",
     tab_transportista: "Transportista",
     tab_vehiculo_transporte: "Vehiculo de Transporte",
 
@@ -406,6 +410,7 @@ export const items = {
     item_factura_compra : "Facturas de Compra",
     item_grupo_proveedor : "Grupos de Proveedores",
     item_nota_credito_compra : "Notas de Crédito Compra",
+    item_nota_debito_compra : "Notas de Débito Compra",
 
     //VENTAS
     item_factura : "Facturas",
@@ -413,6 +418,7 @@ export const items = {
     item_proforma : "Proformas",
     item_egreso : "Egresos", 
     item_nota_credito_venta : "Notas de Crédito Venta",
+    item_nota_debito_venta : "Notas de Débito Venta",
     item_transportista : "Transportistas",
     item_vehiculo_transporte : "Vehiculos Transportes",
 
@@ -493,6 +499,7 @@ export const icos = {
     ico_factura_compra : 'fa fa-cart-arrow-down',
     ico_grupo_proveedor : 'fa fa-suitcase',
     ico_nota_credito_compra : 'fa fa-reply-all',
+    ico_nota_debito_compra : 'fa fa-reply-all',
 
     // Ventas
     ico_factura : 'fa fa-clipboard',
@@ -500,6 +507,7 @@ export const icos = {
     ico_proforma : 'fa fa-file-text-o',
     ico_egreso : 'fa fa-file-text-o',
     ico_nota_credito_venta : 'fa fa-reply-all',
+    ico_nota_debito_venta : 'fa fa-reply-all',
     ico_transportista : 'fa fa-id-card',
     ico_vehiculo_transporte : 'fa fa-truck',
 
