@@ -15,7 +15,7 @@ import { FacturaService } from '../../servicios/comprobante/factura.service';
 import { valores, mensajes, otras, tabs, validarSesion, tab_activo, exito, exito_swal, error, error_swal } from '../../constantes';
 import { MatTableDataSource } from '@angular/material/table';
 import { FacturaLinea } from '../../modelos/comprobante/factura-linea';
-import { FacturacionElectronicaService } from 'src/app/servicios/comprobante/factura-eletronica.service';
+import { FacturaElectronicaService } from 'src/app/servicios/comprobante/factura-eletronica.service';
 
 @Component({
   selector: 'app-guia-remision',
@@ -46,7 +46,7 @@ export class GuiaRemisionComponent implements OnInit {
   dataSource = new MatTableDataSource<FacturaLinea>(this.guiaRemision.factura.facturaLineas);
 
   constructor(private transportistaService: TransportistaService, private sesionService: SesionService, private router: Router,
-    private facturaService: FacturaService, private facturacionElectronicaService: FacturacionElectronicaService, private modalService: NgbModal,
+    private facturaService: FacturaService, private facturaElectronicaService: FacturaElectronicaService, private modalService: NgbModal,
     private ubicacionService: UbicacionService, private guiaRemisionService: GuiaRemisionService) { }
 
   ngOnInit() {
@@ -220,7 +220,7 @@ export class GuiaRemisionComponent implements OnInit {
   crearFacturaElectronica(event){
     if (event != null)
       event.preventDefault();
-    this.facturacionElectronicaService.enviar(this.guiaRemision.factura).subscribe(
+    this.facturaElectronicaService.enviar(this.guiaRemision.factura.id).subscribe(
       res => {
         let respuesta = res.resultado as String;
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje, footer: respuesta });

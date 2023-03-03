@@ -29,6 +29,11 @@
                             <mat-icon>delete</mat-icon>
                         </a>
                     </li>
+                    <li class="nav-item" *ngIf="factura.id!=0">
+                        <a class="nav-link" title="Crear Factura Electronica" href="#" role="button" (click)="crearFacturaElectronica($event)">
+                            <mat-icon>publish</mat-icon>
+                        </a>
+                    </li>
                 </ul>
             </nav>
             <ng-template matStepLabel>Facturación</ng-template>

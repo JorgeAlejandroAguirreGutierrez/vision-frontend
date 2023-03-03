@@ -36,7 +36,7 @@ import { Parametro } from '../../modelos/configuracion/parametro';
 import { ParametroService } from '../../servicios/configuracion/parametro.service';
 import { valores, mensajes, otras, validarSesion, exito, exito_swal, error, error_swal } from '../../constantes';
 import { MatStepper } from '@angular/material/stepper';
-import { FacturacionElectronicaService } from 'src/app/servicios/comprobante/factura-eletronica.service';
+import { FacturaElectronicaService } from 'src/app/servicios/comprobante/factura-eletronica.service';
 import { Factura } from 'src/app/modelos/comprobante/factura';
 
 @Component({
@@ -63,7 +63,7 @@ export class RecaudacionComponent implements OnInit {
   recaudado = valores.recaudado;
   noRecaudado = valores.noRecaudado;
 
-  constructor(private facturaService: FacturaService, private facturacionElectronicaService: FacturacionElectronicaService, private clienteService: ClienteService, private bancoService: BancoService, private sesionService: SesionService,
+  constructor(private facturaService: FacturaService, private facturaElectronicaService: FacturaElectronicaService, private clienteService: ClienteService, private bancoService: BancoService, private sesionService: SesionService,
     private cuentaPropiaService: CuentaPropiaService, private operadorTarjetaService: OperadorTarjetaService, private datePipe: DatePipe,
     private franquiciaTarjetaService: FranquiciaTarjetaService, private formaPagoService: FormaPagoService,
     private parametroService: ParametroService, private recaudacionService: RecaudacionService, private modalService: NgbModal, private router: Router) { }
@@ -768,7 +768,7 @@ export class RecaudacionComponent implements OnInit {
   crearFacturaElectronica(event){
     if (event != null)
       event.preventDefault();
-    this.facturacionElectronicaService.enviar(this.recaudacion.factura).subscribe(
+    this.facturaElectronicaService.enviar(this.recaudacion.factura.id).subscribe(
       res => {
         let respuesta = res.resultado as String;
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });

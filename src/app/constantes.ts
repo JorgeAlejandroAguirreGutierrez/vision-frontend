@@ -53,6 +53,8 @@ export const urn =
      notaDebitoVenta: "/notaDebitoVenta",
      obtenerPorFacturaCompra: "/obtenerPorFacturaCompra",
      obtenerPorFactura: "/obtenerPorFactura",
+     notaDebitoEletronica: "/notaDebitoEletronica",
+     notaCreditoEletronica: "/notaCreditoEletronica",
      tipoRetencion: "/tipoRetencion",
      consultarBien: "/consultarBien",
      consultarServicio: "/consultarServicio",

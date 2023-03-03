@@ -325,7 +325,6 @@ export class FacturaCompraComponent implements OnInit {
       return;
     }
     this.facturaCompra.facturaCompraLineas.push(this.facturaCompraLinea);
-    console.log(this.facturaCompra);
     this.facturaCompraService.calcular(this.facturaCompra).subscribe(
       res => {
         this.facturaCompra = res.resultado as FacturaCompra;

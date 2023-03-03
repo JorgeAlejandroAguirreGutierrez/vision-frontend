@@ -185,7 +185,6 @@ export class ProductoComponent implements OnInit {
   crear(event: any) {
     if (event != null)
       event.preventDefault();
-    console.log(this.producto);
     if (this.producto.grupoProducto.id == valores.cero) {
       Swal.fire(error, mensajes.error_grupo_producto, error_swal);
       return;

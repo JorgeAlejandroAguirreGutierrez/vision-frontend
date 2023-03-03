@@ -158,7 +158,6 @@ export class ServicioComponent implements OnInit {
   crear(event: any) {
     if (event != null)
       event.preventDefault();
-    console.log(this.servicio);
     if (this.servicio.categoriaProducto.id == valores.cero) {
       Swal.fire(error, mensajes.error_tipo_producto, error_swal);
       return;

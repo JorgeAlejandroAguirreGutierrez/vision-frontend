@@ -26,6 +26,11 @@
                     <mat-icon>delete</mat-icon>
                 </a>
             </li>
+            <li class="nav-item" *ngIf="notaCreditoVenta.id!=0">
+                <a class="nav-link" title="Crear Nota Credito Electronica" href="#" role="button" (click)="crearNotaCreditoElectronica($event)">
+                    <mat-icon>publish</mat-icon>
+                </a>
+            </li>
         </ul>
     </nav>
     <ng-template matStepLabel>Nota Credito de Venta</ng-template>

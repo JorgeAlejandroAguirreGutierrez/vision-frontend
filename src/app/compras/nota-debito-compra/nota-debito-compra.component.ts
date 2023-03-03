@@ -187,7 +187,6 @@ export class NotaDebitoCompraComponent implements OnInit {
     this.notaDebitoCompraService.obtenerPorFacturaCompra(facturaCompraId).subscribe(
       res => {
         this.notaDebitoCompra = res.resultado as NotaDebitoCompra;
-        console.log(this.notaDebitoCompra);
         this.seleccionFacturaCompra.patchValue(this.notaDebitoCompra.facturaCompra);
         this.dataSourceLinea = new MatTableDataSource(this.notaDebitoCompra.notaDebitoCompraLineas);
       },

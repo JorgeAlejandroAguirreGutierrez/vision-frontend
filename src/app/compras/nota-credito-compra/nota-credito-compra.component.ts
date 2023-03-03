@@ -189,7 +189,6 @@ export class NotaCreditoCompraComponent implements OnInit {
     this.notaCreditoCompraService.obtenerPorFacturaCompra(facturaCompraId).subscribe(
       res => {
         this.notaCreditoCompra = res.resultado as NotaCreditoCompra;
-        console.log(this.notaCreditoCompra);
         this.seleccionFacturaCompra.patchValue(this.notaCreditoCompra.facturaCompra);
         this.dataSourceLinea = new MatTableDataSource(this.notaCreditoCompra.notaCreditoCompraLineas);
       },

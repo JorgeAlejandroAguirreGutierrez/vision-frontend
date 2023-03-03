@@ -17,6 +17,7 @@ import { NotaCreditoVenta } from 'src/app/modelos/comprobante/nota-credito-venta
 import { NotaCreditoVentaService } from 'src/app/servicios/comprobante/nota-credito-venta.service';
 import { Factura } from 'src/app/modelos/comprobante/factura';
 import { FacturaService } from 'src/app/servicios/comprobante/factura.service';
+import { NotaCreditoElectronicaService } from 'src/app/servicios/comprobante/nota-credito-eletronica.service';
 
 @Component({
   selector: 'app-nota-credito-venta',
@@ -66,7 +67,7 @@ export class NotaCreditoVentaComponent implements OnInit {
   si = valores.si;
   no = valores.no;
 
-  constructor(private clienteService: ClienteService, private sesionService: SesionService,
+  constructor(private clienteService: ClienteService, private sesionService: SesionService, private notaCreditoElectronicaService: NotaCreditoElectronicaService,
     private router: Router, private notaCreditoVentaService: NotaCreditoVentaService, private facturaService: FacturaService,
     private modalService: NgbModal) { }
 
@@ -318,6 +319,18 @@ export class NotaCreditoVentaComponent implements OnInit {
   }
   seleccionarPorcentajeDescuentoTotal(){
     this.calcular();   
+  }
+
+  crearNotaCreditoElectronica(event){
+    if (event != null)
+      event.preventDefault();
+    this.notaCreditoElectronicaService.enviar(this.notaCreditoVenta.id).subscribe(
+      res => {
+        let respuesta = res.resultado as String;
+        Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
+      },
+      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+    );
   }
 
   filtro(event: Event) {

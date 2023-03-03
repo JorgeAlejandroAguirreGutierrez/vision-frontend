@@ -26,6 +26,11 @@
                     <mat-icon>delete</mat-icon>
                 </a>
             </li>
+            <li class="nav-item" *ngIf="notaDebitoVenta.id!=0">
+                <a class="nav-link" title="Crear Nota Debito Electronica" href="#" role="button" (click)="crearNotaDebitoElectronica($event)">
+                    <mat-icon>publish</mat-icon>
+                </a>
+            </li>
         </ul>
     </nav>
     <ng-template matStepLabel>Nota Debito de Venta</ng-template>
@@ -310,10 +315,9 @@
                     <div class="col-1">
                         <mat-form-field appearance="standard">
                             <mat-label>Tipo</mat-label>
-                            <mat-select [(ngModel)]="categoriaProducto" (change)="consultarProductos()"
+                            <mat-select [(ngModel)]="categoriaProducto" (selectionChange)="consultarProductos()"
                                 class="form-control-sm">
-                                <mat-option *ngFor="let categoriaProducto of categoriasProductos"
-                                    [value]="categoriaProducto.abreviatura">
+                                <mat-option *ngFor="let categoriaProducto of categoriasProductos" [value]="categoriaProducto.abreviatura">
                                     {{categoriaProducto.descripcion}}
                                 </mat-option>
                             </mat-select>
@@ -396,7 +400,7 @@
                     <div class="col-2">
                         <mat-form-field appearance="standard">
                             <mat-label>Subtotal</mat-label>
-                            <input matInput type="text" [(ngModel)]="notaDebitoVentaLinea.totalConDescuentoLinea"
+                            <input matInput type="text" [(ngModel)]="notaDebitoVentaLinea.totalSinDescuentoLinea"
                                 class="form-control-sm" disabled>
                         </mat-form-field>
                     </div>
@@ -446,7 +450,7 @@
                         <ng-container matColumnDef="costoUnitario">
                             <th mat-header-cell *matHeaderCellDef mat-sort-header>Costo Unit </th>
                             <td mat-cell *matCellDef="let notaDebitoVentaLinea">
-                                ${{notaDebitoVentaLinea.costoUnitario }} </td>
+                                ${{notaDebitoVentaLinea.precio.precioVentaPublicoManual }} </td>
                         </ng-container>
                         <!-- Descuento Columna -->
                         <ng-container matColumnDef="valorDescuento">
@@ -476,6 +480,15 @@
                             <th mat-header-cell *matHeaderCellDef mat-sort-header> Total </th>
                             <td mat-cell *matCellDef="let notaDebitoVentaLinea">
                                 ${{notaDebitoVentaLinea.totalSinDescuentoLinea}} </td>
+                        </ng-container>
+                        <ng-container matColumnDef="acciones">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header> Acciones </th>
+                            <td mat-cell *matCellDef="let i=index">
+                                <button mat-icon-button color="primary" focusable="false"
+                                    (click)="eliminarNotaDebitoVentaLinea(i)">
+                                    <i class="fa fa-times mat-icon"></i>
+                                </button>
+                            </td>
                         </ng-container>
                         <tr mat-header-row *matHeaderRowDef="columnasLinea"></tr>
                         <tr mat-row *matRowDef="let row; columns: columnasLinea;"></tr>

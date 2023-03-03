@@ -85,7 +85,6 @@ export class InicioSesionComponent implements OnInit {
       next: res => {
         this.sesion.usuario = res.resultado as Usuario;
         this.usuario = this.sesion.usuario;
-        //console.log(this.sesion.usuario);
         this.multiEmpresa=this.sesion.usuario.perfil.multiempresa == valores.si? true: false;
         if (this.multiEmpresa){
           this.sesion.empresa.id = 1; //Iniciar combo empresa
@@ -132,7 +131,6 @@ export class InicioSesionComponent implements OnInit {
         },
         error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
       });
-      //console.log(this.usuario);
     } else {
       Swal.fire({ icon: error_swal, title: error, text: mensajes.error_contrasena });
     }  

@@ -24,7 +24,7 @@ import { BodegaService } from '../../servicios/inventario/bodega.service';
 import { valores, mensajes, validarSesion, exito, exito_swal, error, error_swal } from '../../constantes';
 import { MatSort } from '@angular/material/sort';
 import { TabService } from 'src/app/servicios/componente/tab/tab.service';
-import { FacturacionElectronicaService } from 'src/app/servicios/comprobante/factura-eletronica.service';
+import { FacturaElectronicaService } from 'src/app/servicios/comprobante/factura-eletronica.service';
 import { CategoriaProducto } from 'src/app/modelos/inventario/categoria-producto';
 import { CategoriaProductoService } from 'src/app/servicios/inventario/categoria-producto.service';
 import { KardexService } from 'src/app/servicios/inventario/kardex.service';
@@ -73,7 +73,7 @@ export class FacturaComponent implements OnInit {
 
   constructor(private clienteService: ClienteService, private sesionService: SesionService, 
     private impuestoService: ImpuestoService, private router: Router,
-    private facturaService: FacturaService, private facturacionElectronicaService: FacturacionElectronicaService,
+    private facturaService: FacturaService, private facturaElectronicaService: FacturaElectronicaService,
     private productoService: ProductoService, private bodegaService: BodegaService, private kardexService: KardexService,
     private categoriaProductoService: CategoriaProductoService, private tabService: TabService,
     private modalService: NgbModal, private _formBuilder: UntypedFormBuilder) { }
@@ -656,7 +656,7 @@ export class FacturaComponent implements OnInit {
   crearFacturaElectronica(event){
     if (event != null)
       event.preventDefault();
-    this.facturacionElectronicaService.enviar(this.factura).subscribe(
+    this.facturaElectronicaService.enviar(this.factura.id).subscribe(
       res => {
         let respuesta = res.resultado as String;
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje, footer: respuesta });

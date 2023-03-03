@@ -29,6 +29,7 @@ import { CategoriaProducto } from 'src/app/modelos/inventario/categoria-producto
 import { CategoriaProductoService } from 'src/app/servicios/inventario/categoria-producto.service';
 import { KardexService } from 'src/app/servicios/inventario/kardex.service';
 import { FacturaLinea } from 'src/app/modelos/comprobante/factura-linea';
+import { NotaDebitoElectronicaService } from 'src/app/servicios/comprobante/nota-debito-eletronica.service';
 
 @Component({
   selector: 'app-nota-debito-venta',
@@ -75,9 +76,9 @@ export class NotaDebitoVentaComponent implements OnInit {
   notaDebitoVenta: NotaDebitoVenta = new NotaDebitoVenta();
   notaDebitoVentaLinea: NotaDebitoVentaLinea = new NotaDebitoVentaLinea();
   kardex: Kardex = new Kardex();
-  categoriaProducto = valores.bien;
+  categoriaProducto = valores.vacio;
 
-  columnasLinea: string[] = ["codigo", 'nombre', 'medida', 'cantidad', 'costoUnitario', 'valorDescuento', 'porcentajeDescuento', 'impuesto', 'bodega', 'total'];
+  columnasLinea: string[] = ["codigo", 'nombre', 'medida', 'cantidad', 'costoUnitario', 'valorDescuento', 'porcentajeDescuento', 'impuesto', 'bodega', 'total', 'acciones'];
   dataSourceLinea = new MatTableDataSource<NotaDebitoVentaLinea>(this.notaDebitoVenta.notaDebitoVentaLineas);
   columnasFacturaLinea: string[] = ['nombre', 'medida', 'cantidad', 'valor', 'descuento', 'descuentoPorcentaje', 'impuesto', 'total', 'entregado'];
   dataSourceFacturaLinea = new MatTableDataSource<FacturaLinea>(this.notaDebitoVenta.factura.facturaLineas);
@@ -86,7 +87,7 @@ export class NotaDebitoVentaComponent implements OnInit {
   no = valores.no;
 
   constructor(private clienteService: ClienteService, private sesionService: SesionService, private impuestoService: ImpuestoService, private bodegaService: BodegaService,
-    private router: Router, private notaDebitoVentaService: NotaDebitoVentaService, private facturaService: FacturaService, private productoService: ProductoService,
+    private router: Router, private notaDebitoVentaService: NotaDebitoVentaService, private facturaService: FacturaService, private productoService: ProductoService, private notaDebitoElectronicaService: NotaDebitoElectronicaService,
     private categoriaProductoService: CategoriaProductoService, private kardexService: KardexService, private modalService: NgbModal) { }
 
   @HostListener('window:keypress', ['$event'])
@@ -102,6 +103,8 @@ export class NotaDebitoVentaComponent implements OnInit {
     this.consultar();
     this.consultarClientes();
     this.consultarImpuestos();
+    this.consultarCategoriasProductos();
+    this.consultarBodegas();
     this.filtroClientes = this.seleccionCliente.valueChanges
       .pipe(
         startWith(''),
@@ -308,7 +311,6 @@ export class NotaDebitoVentaComponent implements OnInit {
     this.notaDebitoVentaService.obtenerPorFactura(facturaId).subscribe(
       res => {
         this.notaDebitoVenta = res.resultado as NotaDebitoVenta;
-        console.log(this.notaDebitoVenta);
         this.seleccionFactura.patchValue(this.notaDebitoVenta.factura);
         this.dataSourceLinea = new MatTableDataSource(this.notaDebitoVenta.notaDebitoVentaLineas);
         this.dataSourceFacturaLinea = new MatTableDataSource(this.notaDebitoVenta.factura.facturaLineas);
@@ -342,24 +344,47 @@ export class NotaDebitoVentaComponent implements OnInit {
     );
   }
 
-  seleccionarCantidad() {
+  eliminarNotaDebitoVentaLinea(i: number){
+    this.notaDebitoVenta.notaDebitoVentaLineas.splice(i, 1);
     this.calcular();
   }
 
   seleccionarBodega(){
-    this.calcular();
+    if(this.notaDebitoVentaLinea.producto.id == valores.cero || this.notaDebitoVentaLinea.bodega.id == valores.cero || this.notaDebitoVenta.factura.id == valores.cero){
+      return;
+    }
+    for(let precio of this.notaDebitoVentaLinea.producto.precios){
+      if (precio.segmento.id == this.notaDebitoVenta.factura.cliente.segmento.id){
+        this.notaDebitoVentaLinea.precio = precio;
+      }
+    }
+    this.kardexService.obtenerUltimoPorFecha(this.notaDebitoVentaLinea.bodega.id, this.notaDebitoVentaLinea.producto.id).subscribe(
+      res => {
+        if (res.resultado == null){
+          Swal.fire({ icon: error_swal, title: error, text: mensajes.error_kardex_vacio });
+          return;
+        }
+        this.kardex = res.resultado as Kardex;
+      },
+      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+    );
+    this.calcularLinea();
+  }
+
+  seleccionarCantidad() {
+    this.calcularLinea();
   }
 
   seleccionarImpuesto(){
-    this.calcular();
+    this.calcularLinea();
   }
   
   seleccionarValorDescuentoLinea() {
-    this.calcular();
+    this.calcularLinea();
   }
 
   seleccionarPorcentajeDescuentoLinea() {
-    this.calcular();
+    this.calcularLinea();
   }
 
   crear(event) {
@@ -469,11 +494,32 @@ export class NotaDebitoVentaComponent implements OnInit {
     );
   }
 
+  calcularLinea(){
+    this.notaDebitoVentaService.calcularLinea(this.notaDebitoVentaLinea).subscribe(
+      res => {
+        this.notaDebitoVentaLinea = res.resultado as NotaDebitoVentaLinea;
+      },
+      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+    );
+  }
+
   seleccionarValorDescuentoTotal(){
     this.calcular(); 
   }
   seleccionarPorcentajeDescuentoTotal(){
     this.calcular();   
+  }
+
+  crearNotaDebitoElectronica(event){
+    if (event != null)
+      event.preventDefault();
+    this.notaDebitoElectronicaService.enviar(this.notaDebitoVenta.id).subscribe(
+      res => {
+        let respuesta = res.resultado as String;
+        Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
+      },
+      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+    );
   }
 
   filtro(event: Event) {
