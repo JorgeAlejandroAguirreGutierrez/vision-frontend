@@ -95,6 +95,12 @@ export class FacturaComponent implements OnInit {
 
   si = valores.si;
   no = valores.no;
+  emitida = valores.emitida;
+  anulada = valores.anulada;
+  noFacturada = valores.noFacturada;
+  facturada = valores.facturada;
+  noRecaudada = valores.noRecaudada;
+  recaudada = valores.recaudada;
 
   //VARIABLES MUESTRA
   primerTelefonoCliente: string = valores.vacio;
@@ -572,7 +578,7 @@ export class FacturaComponent implements OnInit {
   }
 
   enviarEvento(){
-    this.facturaService.enviarEventoRecaudacion(this.factura.id);
+    this.facturaService.enviarEventoRecaudacion(this.factura);
   }
 
   open(content: any) {
@@ -659,7 +665,7 @@ export class FacturaComponent implements OnInit {
     this.facturaElectronicaService.enviar(this.factura.id).subscribe(
       res => {
         let respuesta = res.resultado as String;
-        Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje, footer: respuesta });
+        Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
       },
       err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     );

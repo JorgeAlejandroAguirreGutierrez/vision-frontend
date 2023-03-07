@@ -8,11 +8,12 @@ import { DateAdapter, MAT_DATE_FORMATS } from '@angular/material/core';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import Swal from 'sweetalert2';
-import { Cheque } from '../../modelos/recaudacion/cheque';
-import { Deposito } from '../../modelos/recaudacion/deposito';
-import { TarjetaCredito } from '../../modelos/recaudacion/tarjeta-credito';
-import { TarjetaDebito } from '../../modelos/recaudacion/tarjeta-debito';
-import { FacturaService } from '../../servicios/comprobante/factura.service';
+import { NotaDebitoVentaCheque } from '../../modelos/recaudacion/nota-debito-venta-cheque';
+import { NotaDebitoVentaDeposito } from '../../modelos/recaudacion/nota-debito-venta-deposito';
+import { NotaDebitoVentaTarjetaCredito } from '../../modelos/recaudacion/nota-debito-venta-tarjeta-credito';
+import { NotaDebitoVentaTarjetaDebito } from '../../modelos/recaudacion/nota-debito-venta-tarjeta-debito';
+import { NotaDebitoVentaTransferencia } from 'src/app/modelos/recaudacion/nota-debito-venta-transferencia';
+import { NotaDebitoVentaService } from '../../servicios/comprobante/nota-debito-venta.service';
 import { Banco } from '../../modelos/recaudacion/banco';
 import { startWith, map } from 'rxjs/operators';
 import { ClienteService } from '../../servicios/cliente/cliente.service';
@@ -21,7 +22,6 @@ import { FormaPagoService } from '../../servicios/cliente/forma-pago.service';
 import { FormaPago } from '../../modelos/cliente/forma-pago';
 import { CuentaPropia } from '../../modelos/recaudacion/cuenta-propia';
 import { CuentaPropiaService } from '../../servicios/contabilidad/cuenta-propia.service';
-import { Transferencia } from '../../modelos/recaudacion/transferencia';
 import { FranquiciaTarjeta } from '../../modelos/recaudacion/franquicia-tarjeta';
 import { FranquiciaTarjetaService } from '../../servicios/recaudacion/franquicia-tarjeta.service';
 import { AppDateAdapter, APP_DATE_FORMATS } from '../../modelos/format-date-picker';
@@ -33,20 +33,20 @@ import { Parametro } from '../../modelos/configuracion/parametro';
 import { ParametroService } from '../../servicios/configuracion/parametro.service';
 import { valores, mensajes, otras, validarSesion, exito, exito_swal, error, error_swal } from '../../constantes';
 import { MatStepper } from '@angular/material/stepper';
-import { FacturaElectronicaService } from 'src/app/servicios/comprobante/factura-eletronica.service';
-import { Factura } from 'src/app/modelos/comprobante/factura';
+import { NotaDebitoElectronicaService } from 'src/app/servicios/comprobante/nota-debito-eletronica.service';
+import { NotaDebitoVenta } from 'src/app/modelos/comprobante/nota-debito-venta';
 
 @Component({
-  selector: 'app-recaudacion',
-  templateUrl: './recaudacion.component.html',
-  styleUrls: ['./recaudacion.component.scss'],
+  selector: 'app-recaudacion-nota-debito',
+  templateUrl: './recaudacion-nota-debito.component.html',
+  styleUrls: ['./recaudacion-nota-debito.component.scss'],
   providers: [
     {provide: DateAdapter, useClass: AppDateAdapter},
     {provide: MAT_DATE_FORMATS, useValue: APP_DATE_FORMATS}
   ]
 })
 
-export class RecaudacionComponent implements OnInit {
+export class RecaudacionNotaDebitoComponent implements OnInit {
 
   @Input('stepper') stepper: MatStepper;
 
@@ -66,18 +66,18 @@ export class RecaudacionComponent implements OnInit {
   noRecaudada = valores.noRecaudada;
   recaudada = valores.recaudada;
 
-  constructor(private facturaService: FacturaService, private facturaElectronicaService: FacturaElectronicaService, 
+  constructor(private notaDebitoVentaService: NotaDebitoVentaService, private notaDebitoElectronicaService: NotaDebitoElectronicaService, 
     private clienteService: ClienteService, private bancoService: BancoService, private sesionService: SesionService,
     private cuentaPropiaService: CuentaPropiaService, private operadorTarjetaService: OperadorTarjetaService, private datePipe: DatePipe,
     private franquiciaTarjetaService: FranquiciaTarjetaService, private formaPagoService: FormaPagoService,
     private parametroService: ParametroService, private router: Router) { }
 
-  factura: Factura = new Factura();
-  cheque: Cheque = new Cheque();
-  deposito: Deposito=new Deposito();
-  transferencia: Transferencia=new Transferencia();
-  tarjetaDebito: TarjetaDebito=new TarjetaDebito();
-  tarjetaCredito: TarjetaCredito=new TarjetaCredito();
+  notaDebitoVenta: NotaDebitoVenta = new NotaDebitoVenta();
+  cheque: NotaDebitoVentaCheque = new NotaDebitoVentaCheque();
+  deposito: NotaDebitoVentaDeposito = new NotaDebitoVentaDeposito();
+  transferencia: NotaDebitoVentaTransferencia = new NotaDebitoVentaTransferencia();
+  tarjetaDebito: NotaDebitoVentaTarjetaDebito = new NotaDebitoVentaTarjetaDebito();
+  tarjetaCredito: NotaDebitoVentaTarjetaCredito = new NotaDebitoVentaTarjetaCredito();
   periodicidades: Parametro[];
   formasPagos: FormaPago[]=[];
   cuentasPropias: CuentaPropia[]=[];
@@ -85,19 +85,19 @@ export class RecaudacionComponent implements OnInit {
   franquiciasTarjetasDebitos: FranquiciaTarjeta[];
   operadoresTarjetasCreditos: OperadorTarjeta[]=[];
   operadoresTarjetasDebitos: OperadorTarjeta[]=[];
-  bancosCheques: Banco[]=[];
+  bancosCheques: Banco[] = [];
   seleccionBancoCheque = new UntypedFormControl();
   filtroBancosCheques: Observable<Banco[]> = new Observable<Banco[]>();
-  bancosDepositos: Banco[]=[];
+  bancosDepositos: Banco[] = [];
   seleccionBancoDeposito = new UntypedFormControl();
   filtroBancosDepositos: Observable<Banco[]> = new Observable<Banco[]>();
-  bancosTransferencias: Banco[]=[];
+  bancosTransferencias: Banco[] = [];
   seleccionBancoTransferencia = new UntypedFormControl();
   filtroBancosTransferencias: Observable<Banco[]> = new Observable<Banco[]>();
-  bancosTarjetasCreditos: Banco[]=[];
+  bancosTarjetasCreditos: Banco[] = [];
   seleccionBancoTarjetaCredito = new UntypedFormControl();
   filtroBancosTarjetasCreditos: Observable<Banco[]> = new Observable<Banco[]>();
-  bancosTarjetasDebitos: Banco[]=[];
+  bancosTarjetasDebitos: Banco[] = [];
   seleccionBancoTarjetaDebito = new UntypedFormControl();
   filtroBancosTarjetasDebitos: Observable<Banco[]> = new Observable<Banco[]>();
   @ViewChild(MatSort, { static: true }) sort: MatSort;
@@ -105,36 +105,36 @@ export class RecaudacionComponent implements OnInit {
 
   habilitarCheques: boolean = false;
   columnasCheques: string[] = ['id', 'fecha', 'tipo', 'numero', 'banco', 'valor', 'acciones'];
-  dataCheques = new MatTableDataSource<Cheque>(this.factura.cheques);
+  dataCheques = new MatTableDataSource<NotaDebitoVentaCheque>(this.notaDebitoVenta.cheques);
 
   habilitarDepositos: boolean = false;
   columnasDepositos: string[] = ['id', 'fecha', 'cuenta', 'banco', 'comprobante', 'valor', 'acciones'];
-  dataDepositos = new MatTableDataSource<Deposito>(this.factura.depositos);
+  dataDepositos = new MatTableDataSource<NotaDebitoVentaDeposito>(this.notaDebitoVenta.depositos);
 
   // Variables para transferencias
   habilitarTransferencias: boolean = false;
   columnasTransferencias: string[] = ['id', 'fecha', 'cuenta', 'banco', 'comprobante', 'valor', 'acciones'];
-  dataTransferencias = new MatTableDataSource<Transferencia>(this.factura.transferencias);
+  dataTransferencias = new MatTableDataSource<NotaDebitoVentaTransferencia>(this.notaDebitoVenta.transferencias);
 
   // Variables para Tarjetas de crédito
   habilitarTarjetasCreditos: boolean = false;
   columnasTarjetasCredito: string[] = ['id', 'franquicia', 'banco', 'identificacion', 'nombre', 'titular', 'diferido', 'operador', 'lote', 'valor', 'acciones'];
-  dataTarjetasCreditos = new MatTableDataSource<TarjetaCredito>(this.factura.tarjetasCreditos);
+  dataTarjetasCreditos = new MatTableDataSource<NotaDebitoVentaTarjetaCredito>(this.notaDebitoVenta.tarjetasCreditos);
 
   // Variables para Tarjetas de débito
   habilitarTarjetasDebitos: boolean = false;
   columnasTarjetasDebito: string[] = ['id', 'franquicia', 'banco', 'identificacion', 'nombre', 'operador', 'lote', 'valor', 'acciones'];
-  dataTarjetasDebitos= new MatTableDataSource<TarjetaDebito>(this.factura.tarjetasDebitos);
+  dataTarjetasDebitos = new MatTableDataSource<NotaDebitoVentaTarjetaDebito>(this.notaDebitoVenta.tarjetasDebitos);
 
   sesion: Sesion;
 
-  indiceEditar: number =-1;
+  indiceEditar: number = -1;
   habilitarEditarCheque: boolean = false;
   habilitarEditarDeposito: boolean = false;
   habilitarEditarTransferencia: boolean = false;
   habilitarEditarTarjetaCredito: boolean = false;
   habilitarEditarTarjetaDebito: boolean = false;
-  habilitarTitularTarjetaDebito: boolean = true;
+  habilitarTitularTarjetaDebito: boolean =true;
   habilitarTitularTarjetaCredito: boolean = true;
   
 
@@ -151,9 +151,8 @@ export class RecaudacionComponent implements OnInit {
     this.consultarBancosTarjetasCreditos();
     this.consultarBancosTarjetasDebitos();
 
-    this.facturaService.eventoRecaudacion.subscribe((data: Factura) => {
-        this.factura = data;
-        this.calcular();
+    this.notaDebitoVentaService.eventoRecaudacion.subscribe((data: NotaDebitoVenta) => {
+      this.notadebitoVenta = data;
     });
     
     this.filtroBancosCheques = this.seleccionBancoCheque.valueChanges
@@ -189,25 +188,25 @@ export class RecaudacionComponent implements OnInit {
   }
 
   cargar(){
-    if(this.factura.cheques.length > valores.cero){
+    if(this.notaDebitoVenta.cheques.length > valores.cero){
       this.habilitarSeccionPago(otras.formasPagos[0]);
-      this.dataCheques = new MatTableDataSource<Cheque>(this.factura.cheques);
+      this.dataCheques = new MatTableDataSource<NotaDebitoVentaCheque>(this.notaDebitoVenta.cheques);
     }
-    if(this.factura.depositos.length > valores.cero){
+    if(this.notaDebitoVenta.depositos.length > valores.cero){
       this.habilitarSeccionPago(otras.formasPagos[1]);
-      this.dataDepositos = new MatTableDataSource<Deposito>(this.factura.depositos);
+      this.dataDepositos = new MatTableDataSource<NotaDebitoVentaDeposito>(this.notaDebitoVenta.depositos);
     }
-    if(this.factura.transferencias.length > valores.cero){
+    if(this.notaDebitoVenta.transferencias.length > valores.cero){
       this.habilitarSeccionPago(otras.formasPagos[2]);
-      this.dataTransferencias = new MatTableDataSource<Transferencia>(this.factura.transferencias);
+      this.dataTransferencias = new MatTableDataSource<NotaDebitoVentaTransferencia>(this.notaDebitoVenta.transferencias);
     }
-    if(this.factura.tarjetasCreditos.length > valores.cero){
+    if(this.notaDebitoVenta.tarjetasCreditos.length > valores.cero){
       this.habilitarSeccionPago(otras.formasPagos[3]);
-      this.dataTarjetasCreditos = new MatTableDataSource<TarjetaCredito>(this.factura.tarjetasCreditos);
+      this.dataTarjetasCreditos = new MatTableDataSource<NotaDebitoVentaTarjetaCredito>(this.notaDebitoVenta.tarjetasCreditos);
     }
-    if(this.factura.tarjetasDebitos.length > valores.cero){
+    if(this.notaDebitoVenta.tarjetasDebitos.length > valores.cero){
       this.habilitarSeccionPago(otras.formasPagos[4]);
-      this.dataTarjetasDebitos = new MatTableDataSource<TarjetaDebito>(this.factura.tarjetasDebitos);
+      this.dataTarjetasDebitos = new MatTableDataSource<NotaDebitoVentaTarjetaDebito>(this.notaDebitoVenta.tarjetasDebitos);
     }
     this.calcular();
   }
@@ -307,7 +306,7 @@ export class RecaudacionComponent implements OnInit {
   }
 
   private filtroBancoCheque(value: string): Banco[] {
-    if(this.bancosCheques.length > valores.cero) {
+    if(this.bancosCheques.length > 0) {
       const filterValue = value.toLowerCase();
       return this.bancosCheques.filter(banco => banco.abreviatura.toLowerCase().includes(filterValue));
     }
@@ -318,7 +317,7 @@ export class RecaudacionComponent implements OnInit {
   }
 
   private filtroBancoDeposito(value: string): Banco[] {
-    if(this.bancosDepositos.length > valores.cero) {
+    if(this.bancosDepositos.length > 0) {
       const filterValue = value.toLowerCase();
       return this.bancosDepositos.filter(bancoDeposito => bancoDeposito.abreviatura.toLowerCase().includes(filterValue));
     }
@@ -328,29 +327,29 @@ export class RecaudacionComponent implements OnInit {
     return bancoDeposito && bancoDeposito.nombre ? bancoDeposito.nombre : valores.vacio;
   }
   private filtroBancoTransferencia(value: string): Banco[] {
-    if(this.bancosTransferencias.length > valores.cero) {
+    if(this.bancosTransferencias.length > 0) {
       const filterValue = value.toLowerCase();
       return this.bancosTransferencias.filter(bancoTransferencia => bancoTransferencia.abreviatura.toLowerCase().includes(filterValue));
     }
     return [];
   }
   verBancoTransferencia(bancoTransferencia: Banco): string {
-    return bancoTransferencia && bancoTransferencia.nombre ? bancoTransferencia.nombre : valores.vacio;
+    return bancoTransferencia && bancoTransferencia.nombre ? bancoTransferencia.nombre : '';
   }
 
   private filtroBancoTarjetaCredito(value: string): Banco[] {
-    if(this.bancosTarjetasCreditos.length > valores.cero) {
+    if(this.bancosTarjetasCreditos.length > 0) {
       const filterValue = value.toLowerCase();
       return this.bancosTarjetasCreditos.filter(bancoTarjetaCredito => bancoTarjetaCredito.abreviatura.toLowerCase().includes(filterValue));
     }
     return [];
   }
   verBancoTarjetaCredito(bancoTarjetaCredito: Banco): string {
-    return bancoTarjetaCredito && bancoTarjetaCredito.nombre ? bancoTarjetaCredito.nombre : valores.vacio;
+    return bancoTarjetaCredito && bancoTarjetaCredito.nombre ? bancoTarjetaCredito.nombre : '';
   }
 
   private filtroBancoTarjetaDebito(value: string): Banco[] {
-    if(this.bancosTarjetasDebitos.length > valores.cero) {
+    if(this.bancosTarjetasDebitos.length > 0) {
       const filterValue = value.toLowerCase();
       return this.bancosTarjetasDebitos.filter(banco_tarjeta_debito => banco_tarjeta_debito.abreviatura.toLowerCase().includes(filterValue));
     }
@@ -382,13 +381,13 @@ export class RecaudacionComponent implements OnInit {
   }
 
   agregarCheque() {
-    if (this.factura.totalRecaudacion + Number(this.cheque.valor) <= this.factura.totalConDescuento && this.seleccionBancoCheque.value != null && this.cheque.tipo != null) {
-      this.cheque.banco=this.seleccionBancoCheque.value;
-      this.factura.cheques.push(this.cheque);
-      this.factura.totalCheques;
-      this.cheque=new Cheque();
+    if (this.notaDebitoVenta.totalRecaudacion + Number(this.cheque.valor)<=this.notaDebitoVenta.totalConDescuento && this.seleccionBancoCheque.value!=null && this.cheque.tipo!=null) {
+      this.cheque.banco = this.seleccionBancoCheque.value;
+      this.notaDebitoVenta.cheques.push(this.cheque);
+      this.notaDebitoVenta.totalCheques;
+      this.cheque = new NotaDebitoVentaCheque();
       this.seleccionBancoCheque.patchValue(valores.vacio);
-      this.dataCheques = new MatTableDataSource<Cheque>(this.factura.cheques);
+      this.dataCheques = new MatTableDataSource<NotaDebitoVentaCheque>(this.notaDebitoVenta.cheques);
       this.dataCheques.sort = this.sort;
       this.dataCheques.paginator = this.paginator;
     } else {
@@ -399,17 +398,17 @@ export class RecaudacionComponent implements OnInit {
 
   editarCheque(i: number){
     this.indiceEditar = i;
-    this.cheque = {... this.factura.cheques[this.indiceEditar] };
+    this.cheque = {... this.notaDebitoVenta.cheques[this.indiceEditar] };
     this.seleccionBancoCheque.setValue(this.cheque.banco);
     this.habilitarEditarCheque=true;
   }
 
   confirmarEditarCheque(){
-    this.factura.cheques[this.indiceEditar]=this.cheque;
-    this.cheque=new Cheque();
-    this.seleccionBancoCheque.setValue(valores.vacio);
+    this.notaDebitoVenta.cheques[this.indiceEditar] = this.cheque;
+    this.cheque = new NotaDebitoVentaCheque();
+    this.seleccionBancoCheque.setValue(null);
     this.habilitarEditarCheque=false;
-    this.dataCheques = new MatTableDataSource<Cheque>(this.factura.cheques);
+    this.dataCheques = new MatTableDataSource<NotaDebitoVentaCheque>(this.notaDebitoVenta.cheques);
     this.dataCheques.sort = this.sort;
     this.dataCheques.paginator = this.paginator;
     this.calcular();
@@ -417,8 +416,8 @@ export class RecaudacionComponent implements OnInit {
 
   eliminarCheque(i: number) {
     if (confirm(otras.pregunta_eliminar_cheque)) {
-      this.factura.cheques.splice(i, 1);
-      this.dataCheques = new MatTableDataSource<Cheque>(this.factura.cheques);
+      this.notaDebitoVenta.cheques.splice(i, 1);
+      this.dataCheques = new MatTableDataSource<NotaDebitoVentaCheque>(this.notaDebitoVenta.cheques);
       this.dataCheques.sort = this.sort;
       this.dataCheques.paginator = this.paginator;
       this.calcular();
@@ -426,16 +425,16 @@ export class RecaudacionComponent implements OnInit {
   }
 
   totalCheques() {
-    return this.factura.cheques.map(t => Number(t.valor)).reduce((acc, value) => acc + value, 0);
+    return this.notaDebitoVenta.cheques.map(t => Number(t.valor)).reduce((acc, value) => acc + value, 0);
   }
 
   agregarDeposito() {
-    if (this.factura.totalRecaudacion + Number(this.deposito.valor) <= this.factura.totalConDescuento){
-      this.deposito.banco=this.seleccionBancoDeposito.value;
-      this.factura.depositos.push(this.deposito);
-      this.deposito=new Deposito();
+    if (this.notaDebitoVenta.totalRecaudacion + Number(this.deposito.valor) <= this.notaDebitoVenta.notaDebitoVenta.totalConDescuento){
+      this.deposito.banco = this.seleccionBancoDeposito.value;
+      this.notaDebitoVenta.depositos.push(this.deposito);
+      this.deposito = new NotaDebitoVentaDeposito();
       this.seleccionBancoDeposito.patchValue(valores.vacio);
-      this.dataDepositos = new MatTableDataSource<Deposito>(this.factura.depositos);
+      this.dataDepositos = new MatTableDataSource<NotaDebitoVentaDeposito>(this.notaDebitoVenta.depositos);
       this.dataDepositos.sort = this.sort;
       this.dataDepositos.paginator = this.paginator;
     } else {
@@ -446,16 +445,16 @@ export class RecaudacionComponent implements OnInit {
 
   editarDeposito(i: number){
     this.indiceEditar = i;
-    this.deposito = {... this.factura.depositos [this.indiceEditar] };
+    this.deposito = {... this.notaDebitoVenta.depositos [this.indiceEditar] };
     this.seleccionBancoDeposito.setValue(this.deposito.banco);
     this.habilitarEditarDeposito = true;
   }
   confirmarEditarDeposito(){
-    this.factura.depositos[this.indiceEditar] = this.deposito;
-    this.deposito=new Deposito();
+    this.notaDebitoVenta.depositos[this.indiceEditar] = this.deposito;
+    this.deposito = new NotaDebitoVentaDeposito();
     this.seleccionBancoDeposito.setValue(valores.vacio);
-    this.habilitarEditarDeposito=false;
-    this.dataDepositos = new MatTableDataSource<Deposito>(this.factura.depositos);
+    this.habilitarEditarDeposito = false;
+    this.dataDepositos = new MatTableDataSource<NotaDebitoVentaDeposito>(this.notaDebitoVenta.depositos);
     this.dataDepositos.sort = this.sort;
     this.dataDepositos.paginator = this.paginator;
     this.calcular();
@@ -463,8 +462,8 @@ export class RecaudacionComponent implements OnInit {
 
   eliminarDeposito(i: number) {
     if (confirm(otras.pregunta_eliminar_deposito)) {
-      this.factura.depositos.splice(i, 1);
-      this.dataDepositos = new MatTableDataSource<Deposito>(this.factura.depositos);
+      this.notaDebitoVenta.depositos.splice(i, 1);
+      this.dataDepositos = new MatTableDataSource<NotaDebitoVentaDeposito>(this.notaDebitoVenta.depositos);
       this.dataDepositos.sort = this.sort;
       this.dataDepositos.paginator = this.paginator;
       this.calcular();
@@ -472,16 +471,16 @@ export class RecaudacionComponent implements OnInit {
   }
 
   totalDepositos() {
-    return this.factura.depositos.map(t => Number(t.valor)).reduce((acc, value) => acc + value, 0);
+    return this.notaDebitoVenta.depositos.map(t => Number(t.valor)).reduce((acc, value) => acc + value, 0);
   }
 
   agregarTransferencia() {
-    if (this.factura.totalRecaudacion + Number(this.transferencia.valor) <= this.factura.totalConDescuento){
+    if (this.notaDebitoVenta.totalRecaudacion + Number(this.transferencia.valor) <= this.notaDebitoVenta.notaDebitoVenta.totalConDescuento){
       this.transferencia.banco = this.seleccionBancoTransferencia.value;
-      this.factura.transferencias.push(this.transferencia);
-      this.transferencia = new Transferencia();
+      this.notaDebitoVenta.transferencias.push(this.transferencia);
+      this.transferencia = new NotaDebitoVentaTransferencia();
       this.seleccionBancoTransferencia.patchValue(valores.vacio);
-      this.dataTransferencias = new MatTableDataSource<Transferencia>(this.factura.transferencias);
+      this.dataTransferencias = new MatTableDataSource<NotaDebitoVentaTransferencia>(this.notaDebitoVenta.transferencias);
       this.dataTransferencias.sort = this.sort;
       this.dataTransferencias.paginator = this.paginator;
     } else {
@@ -493,16 +492,16 @@ export class RecaudacionComponent implements OnInit {
 
   editarTransferencia(i: number){
     this.indiceEditar = i;
-    this.transferencia = { ... this.factura.transferencias[this.indiceEditar]};
+    this.transferencia = { ... this.notaDebitoVenta.transferencias[this.indiceEditar]};
     this.seleccionBancoTransferencia.setValue(this.transferencia.banco);
-    this.habilitarEditarTransferencia=true;
+    this.habilitarEditarTransferencia = true;
   }
   confirmarEditarTransferencia(){
-    this.factura.transferencias[this.indiceEditar] = this.transferencia;
-    this.transferencia = new Deposito();
+    this.notaDebitoVenta.transferencias[this.indiceEditar] = this.transferencia;
+    this.transferencia = new NotaDebitoVentaTransferencia();
     this.seleccionBancoTransferencia.setValue(valores.vacio);
     this.habilitarEditarTransferencia = false;
-    this.dataTransferencias = new MatTableDataSource<Transferencia>(this.factura.transferencias);
+    this.dataTransferencias = new MatTableDataSource<NotaDebitoVentaTransferencia>(this.notaDebitoVenta.transferencias);
     this.dataTransferencias.sort = this.sort;
     this.dataTransferencias.paginator = this.paginator;
     this.calcular();
@@ -510,8 +509,8 @@ export class RecaudacionComponent implements OnInit {
 
   eliminarTransferencia(i: number) {
     if (confirm(otras.pregunta_eliminar_transferencia)) {
-      this.factura.transferencias.splice(i, 1);
-      this.dataTransferencias = new MatTableDataSource<Transferencia>(this.factura.transferencias);
+      this.notaDebitoVenta.transferencias.splice(i, 1);
+      this.dataTransferencias = new MatTableDataSource<NotaDebitoVentaTransferencia>(this.notaDebitoVenta.transferencias);
       this.dataTransferencias.sort = this.sort;
       this.dataTransferencias.paginator = this.paginator;
       this.calcular();
@@ -519,16 +518,16 @@ export class RecaudacionComponent implements OnInit {
   }
 
   totalTransferencias() {
-    return this.factura.transferencias.map(t => Number(t.valor)).reduce((acc, value) => acc + value, 0);
+    return this.notaDebitoVenta.transferencias.map(t => Number(t.valor)).reduce((acc, value) => acc + value, 0);
   }
 
   agregarTarjetaCredito() {
-    if (this.factura.totalRecaudacion + Number(this.tarjetaCredito.valor) <= this.factura.totalConDescuento){
-      this.tarjetaCredito.banco=this.seleccionBancoTarjetaCredito.value;
-      this.factura.tarjetasCreditos.push(this.tarjetaCredito);
-      this.tarjetaCredito=new TarjetaCredito();
+    if (this.notaDebitoVenta.totalRecaudacion + Number(this.tarjetaCredito.valor) <= this.notaDebitoVenta.notaDebitoVenta.totalConDescuento){
+      this.tarjetaCredito.banco = this.seleccionBancoTarjetaCredito.value;
+      this.notaDebitoVenta.tarjetasCreditos.push(this.tarjetaCredito);
+      this.tarjetaCredito = new NotaDebitoVentaTarjetaCredito();
       this.seleccionBancoTarjetaCredito.patchValue(valores.vacio);
-      this.dataTarjetasCreditos = new MatTableDataSource<TarjetaCredito>(this.factura.tarjetasCreditos);
+      this.dataTarjetasCreditos = new MatTableDataSource<NotaDebitoVentaTarjetaCredito>(this.notaDebitoVenta.tarjetasCreditos);
       this.dataTarjetasCreditos.sort = this.sort;
       this.dataTarjetasCreditos.paginator = this.paginator;
     } else {
@@ -539,17 +538,17 @@ export class RecaudacionComponent implements OnInit {
   }
   editarTarjetaCredito(i: number){
     this.indiceEditar = i;
-    this.tarjetaCredito = { ... this.factura.tarjetasCreditos[this.indiceEditar]};
+    this.tarjetaCredito = { ... this.notaDebitoVenta.tarjetasCreditos[this.indiceEditar]};
     this.seleccionBancoTarjetaCredito.setValue(this.tarjetaCredito.banco);
     this.habilitarEditarTarjetaCredito = true;
   }
 
   confirmarEditarTarjetaCredito(){
-    this.factura.tarjetasCreditos[this.indiceEditar] = this.tarjetaCredito;
-    this.tarjetaCredito=new TarjetaCredito();
+    this.notaDebitoVenta.tarjetasCreditos[this.indiceEditar]=this.tarjetaCredito;
+    this.tarjetaCredito = new NotaDebitoVentaTarjetaCredito();
     this.seleccionBancoTarjetaCredito.setValue(valores.vacio);
     this.habilitarEditarTarjetaCredito=false;
-    this.dataTarjetasCreditos = new MatTableDataSource<TarjetaCredito>(this.factura.tarjetasCreditos);
+    this.dataTarjetasCreditos = new MatTableDataSource<NotaDebitoVentaTarjetaCredito>(this.notaDebitoVenta.tarjetasCreditos);
     this.dataTarjetasCreditos.sort = this.sort;
     this.dataTarjetasCreditos.paginator = this.paginator;
     this.calcular();
@@ -557,8 +556,8 @@ export class RecaudacionComponent implements OnInit {
 
   eliminarTarjetaCredito(i: number) {
     if (confirm(otras.pregunta_eliminar_tarjeta_credito)) {
-      this.factura.tarjetasCreditos.splice(i, 1);
-      this.dataTarjetasCreditos = new MatTableDataSource<TarjetaCredito>(this.factura.tarjetasCreditos);
+      this.notaDebitoVenta.tarjetasCreditos.splice(i, 1);
+      this.dataTarjetasCreditos = new MatTableDataSource<NotaDebitoVentaTarjetaCredito>(this.notaDebitoVenta.tarjetasCreditos);
       this.dataTarjetasCreditos.sort = this.sort;
       this.dataTarjetasCreditos.paginator = this.paginator;
       this.calcular();
@@ -566,7 +565,7 @@ export class RecaudacionComponent implements OnInit {
   }
 
   totalTarjetasCreditos() {
-    return this.factura.tarjetasCreditos.map(t => Number(t.valor)).reduce((acc, value) => acc + value, 0);
+    return this.notaDebitoVenta.tarjetasCreditos.map(t => Number(t.valor)).reduce((acc, value) => acc + value, 0);
   }
 
   validarIdentificacionTarjetaCredito(){
@@ -584,12 +583,12 @@ export class RecaudacionComponent implements OnInit {
   }
 
   agregarTarjetaDebito() {
-    if (this.factura.totalRecaudacion + Number(this.tarjetaDebito.valor) <= this.factura.totalConDescuento){
+    if (this.notaDebitoVenta.totalRecaudacion + Number(this.tarjetaDebito.valor) <= this.notaDebitoVenta.notaDebitoVenta.totalConDescuento){
       this.tarjetaDebito.banco=this.seleccionBancoTarjetaDebito.value;
-      this.factura.tarjetasDebitos.push(this.tarjetaDebito);
-      this.tarjetaDebito=new TarjetaDebito();
-      this.seleccionBancoTarjetaDebito.setValue(valores.vacio);
-      this.dataTarjetasDebitos = new MatTableDataSource<TarjetaDebito>(this.factura.tarjetasDebitos);
+      this.notaDebitoVenta.tarjetasDebitos.push(this.tarjetaDebito);
+      this.tarjetaDebito = new NotaDebitoVentaTarjetaDebito();
+      this.seleccionBancoTarjetaDebito.setValue(null);
+      this.dataTarjetasDebitos = new MatTableDataSource<NotaDebitoVentaTarjetaDebito>(this.notaDebitoVenta.tarjetasDebitos);
       this.dataTarjetasDebitos.sort = this.sort;
       this.dataTarjetasDebitos.paginator = this.paginator;
     } else {
@@ -601,16 +600,16 @@ export class RecaudacionComponent implements OnInit {
 
   editarTarjetaDebito(i: number){
     this.indiceEditar = i;
-    this.tarjetaDebito = { ... this.factura.tarjetasDebitos[this.indiceEditar]};
-    this.habilitarEditarTarjetaDebito = true;
+    this.tarjetaDebito = { ... this.notaDebitoVenta.tarjetasDebitos[this.indiceEditar]};
+    this.habilitarEditarTarjetaDebito=true;
   }
   
   confirmarEditarTarjetaDebito(){
-    this.factura.tarjetasDebitos[this.indiceEditar] = this.tarjetaDebito;
-    this.tarjetaDebito = new TarjetaDebito();
-    this.seleccionBancoTarjetaDebito.setValue(valores.vacio);
-    this.habilitarEditarTarjetaDebito = false;
-    this.dataTarjetasDebitos = new MatTableDataSource<TarjetaDebito>(this.factura.tarjetasDebitos);
+    this.notaDebitoVenta.tarjetasDebitos[this.indiceEditar] = this.tarjetaDebito;
+    this.tarjetaDebito = new NotaDebitoVentaTarjetaDebito();
+    this.seleccionBancoTarjetaDebito.setValue(null);
+    this.habilitarEditarTarjetaDebito=false;
+    this.dataTarjetasDebitos = new MatTableDataSource<NotaDebitoVentaTarjetaDebito>(this.notaDebitoVenta.tarjetasDebitos);
     this.dataTarjetasDebitos.sort = this.sort;
     this.dataTarjetasDebitos.paginator = this.paginator;
     this.calcular();
@@ -618,8 +617,8 @@ export class RecaudacionComponent implements OnInit {
 
   eliminarTarjetaDebito(i: number) {
     if (confirm(otras.pregunta_eliminar_tarjeta_debito)) {
-      this.factura.tarjetasDebitos.splice(i, 1);
-      this.dataTarjetasDebitos = new MatTableDataSource<TarjetaDebito>(this.factura.tarjetasDebitos);
+      this.notaDebitoVenta.tarjetasDebitos.splice(i, 1);
+      this.dataTarjetasDebitos = new MatTableDataSource<NotaDebitoVentaTarjetaDebito>(this.notaDebitoVenta.tarjetasDebitos);
       this.dataTarjetasDebitos.sort = this.sort;
       this.dataTarjetasDebitos.paginator = this.paginator;
       this.calcular();
@@ -627,7 +626,7 @@ export class RecaudacionComponent implements OnInit {
   }
 
   totalTarjetasDebitos() {
-    return this.factura.tarjetasDebitos.map(t => Number(t.valor)).reduce((acc, value) => acc + value, 0);
+    return this.notaDebitoVenta.tarjetasDebitos.map(t => Number(t.valor)).reduce((acc, value) => acc + value, 0);
   }
 
   validarIdentificacionTarjetaDebito(){
@@ -645,14 +644,14 @@ export class RecaudacionComponent implements OnInit {
   }
 
   calcular(){
-    this.facturaService.calcularRecaudacion(this.factura).subscribe(
+    this.notaDebitoVentaService.calcular(this.notaDebitoVenta).subscribe(
       res => {
-        this.factura = res.resultado as Factura;
-        this.cheque.valor = this.factura.porPagar;
-	      this.deposito.valor = this.factura.porPagar;
-	      this.transferencia.valor = this.factura.porPagar;
-	      this.tarjetaCredito.valor = this.factura.porPagar;
-	      this.tarjetaDebito.valor = this.factura.porPagar;
+        this.notaDebitoVenta = res.resultado as NotaDebitoVenta;
+        this.cheque.valor = this.notaDebitoVenta.porPagar;
+	      this.deposito.valor = this.notaDebitoVenta.porPagar;
+	      this.transferencia.valor = this.notaDebitoVenta.porPagar;
+	      this.tarjetaCredito.valor = this.notaDebitoVenta.porPagar;
+	      this.tarjetaDebito.valor = this.notaDebitoVenta.porPagar;
       }, err => Swal.fire(error, err.error.mensaje, error_swal)
     );
   }
@@ -661,15 +660,39 @@ export class RecaudacionComponent implements OnInit {
     this.calcular();
   }
 
+  nuevo(event){
+    if (event!=null)
+      event.preventDefault();
+    let notaDebitoVentaId = this.notaDebitoVenta.notaDebitoVenta.id;
+    this.notaDebitoVentaService.obtener(notaDebitoVentaId).subscribe({
+      next: res => {
+        this.notaDebitoVenta = new NotaDebitoVenta();
+        this.notaDebitoVenta.notaDebitoVenta = res.resultado as NotaDebitoVenta;
+        this.cargar();
+      },
+      error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+    });
+  }
+
+  crear(event) {
+    if (event!=null)
+      event.preventDefault();
+    this.notaDebitoVenta.sesion = this.sesion;
+    this.notaDebitoVentaService.crear(this.notaDebitoVenta).subscribe(
+      res => {
+        Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
+        this.notaDebitoVenta = res.resultado as NotaDebitoVenta;
+      }, 
+      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+    );
+  }
+
   actualizar(event){
     if (event!=null)
       event.preventDefault();
-    this.facturaService.actualizar(this.factura).subscribe(
+    this.notaDebitoVentaService.actualizar(this.notaDebitoVenta).subscribe(
       res => {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
-        this.factura = res.resultado as Factura;
-        //this.facturaService.enviarEventoEntrega(res.resultado.id);
-        //this.stepper.next();
       }, 
       err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     );
@@ -680,45 +703,45 @@ export class RecaudacionComponent implements OnInit {
     return numero;
   }
   rellenarNumeroCheque(){
-    this.cheque.numero = this.pad(this.cheque.numero, 13);
+    this.cheque.numero= this.pad(this.cheque.numero, 13);
   }
   rellenarNumeroDeposito(){
-    this.deposito.comprobante = this.pad(this.deposito.comprobante, 13);
+    this.deposito.comprobante= this.pad(this.deposito.comprobante, 13);
   }
   rellenarNumeroTransferencia(){
-    this.transferencia.comprobante = this.pad(this.transferencia.comprobante, 13);
+    this.transferencia.comprobante= this.pad(this.transferencia.comprobante, 13);
   }
 
   defectoTransferencia(){
   }
 
   defectoTarjetaCredito(){
-    this.tarjetaCredito.titular = true;
-    this.tarjetaCredito.identificacion = this.factura.cliente.identificacion;
-    this.tarjetaCredito.nombre = this.factura.cliente.razonSocial;
+    this.tarjetaCredito.titular = valores.si;
+    this.tarjetaCredito.identificacion = this.notaDebitoVenta.factura.cliente.identificacion;
+    this.tarjetaCredito.nombre = this.notaDebitoVenta.factura.cliente.razonSocial;
   }
 
   defectoTarjetaDebito(){
-    this.tarjetaDebito.titular = true;
-    this.tarjetaDebito.identificacion = this.factura.cliente.identificacion;
-    this.tarjetaDebito.nombre = this.factura.cliente.razonSocial;
+    this.tarjetaDebito.titular = valores.si;
+    this.tarjetaDebito.identificacion = this.notaDebitoVenta.factura.cliente.identificacion;
+    this.tarjetaDebito.nombre = this.notaDebitoVenta.factura.cliente.razonSocial;
   }
 
   asignarTitularTarjetaCredito(){
     if (this.tarjetaCredito.titular){
-      this.tarjetaCredito.identificacion = this.factura.cliente.identificacion;
-      this.tarjetaCredito.nombre = this.factura.cliente.razonSocial;
+      this.tarjetaCredito.identificacion = this.notaDebitoVenta.factura.cliente.identificacion;
+      this.tarjetaCredito.nombre = this.notaDebitoVenta.factura.cliente.razonSocial;
       this.habilitarTitularTarjetaCredito = true;
     } else{
       this.tarjetaCredito.identificacion = valores.vacio;
       this.tarjetaCredito.nombre = valores.vacio;
-      this.habilitarTitularTarjetaCredito=false;
+      this.habilitarTitularTarjetaCredito = false;
     }
   }
   asignarTitularTarjetaDebito(){
     if (this.tarjetaDebito.titular){
-      this.tarjetaDebito.identificacion = this.factura.cliente.identificacion;
-      this.tarjetaDebito.nombre = this.factura.cliente.razonSocial;
+      this.tarjetaDebito.identificacion = this.notaDebitoVenta.factura.cliente.identificacion;
+      this.tarjetaDebito.nombre = this.notaDebitoVenta.factura.cliente.razonSocial;
       this.habilitarTitularTarjetaDebito = true;
     } else{
       this.tarjetaDebito.identificacion = valores.vacio;
@@ -727,10 +750,10 @@ export class RecaudacionComponent implements OnInit {
     }
   }
 
-  crearFacturaElectronica(event){
+  crearNotaDebitoElectronica(event){
     if (event != null)
       event.preventDefault();
-    this.facturaElectronicaService.enviar(this.factura.id).subscribe(
+    this.notaDebitoElectronicaService.enviar(this.notaDebitoVenta.id).subscribe(
       res => {
         let respuesta = res.resultado as String;
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });

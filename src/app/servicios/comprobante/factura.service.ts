@@ -16,13 +16,13 @@ export class FacturaService {
 
   constructor(private http: HttpClient, private router: Router) { }
 
-  @Output() eventoRecaudacion= new EventEmitter<number>();
+  @Output() eventoRecaudacion = new EventEmitter<Factura>();
 
-  enviarEventoRecaudacion(data: number) {
+  enviarEventoRecaudacion(data: Factura) {
     this.eventoRecaudacion.emit(data);
   }
 
-  @Output() eventoEntrega= new EventEmitter<number>();
+  @Output() eventoEntrega = new EventEmitter<number>();
 
   enviarEventoEntrega(data: number) {
     this.eventoEntrega.emit(data);
@@ -109,6 +109,15 @@ export class FacturaService {
   
   calcularLinea(facturaLinea: FacturaLinea): Observable<Respuesta> {
     return this.http.post(environment.host + urn.ruta + urn.factura + urn.calcularLinea, facturaLinea, options).pipe(
+      map(response => response as Respuesta),
+      catchError(err => {
+        return throwError(err);
+      })
+    );
+  }
+
+  calcularRecaudacion(factura: Factura): Observable<Respuesta> {
+    return this.http.post(environment.host + urn.ruta + urn.factura + urn.calcularRecaudacion, factura, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(err);

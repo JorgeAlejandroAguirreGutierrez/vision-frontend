@@ -1,13 +1,27 @@
 <div class="container">
     <nav class="navbar-light nav-fijo">
         <ul class="navbar-nav">
-            <li class="nav-item" *ngIf="factura.id != 0">
-                <a class="nav-link" title="Guardar" href="#" role="button" (click)="actualizar($event)">
-                    <mat-icon>save</mat-icon>
-                </a>
+            <li class="nav-item">
+                <ng-container *ngIf="notaDebitoVentaRecaudacion.id==0">
+                    <a class="nav-link" title="Nuevo" href="#" role="button" (click)="nuevo($event)">
+                        <mat-icon>file_copy</mat-icon>
+                    </a>
+                </ng-container>
             </li>
-            <li class="nav-item" *ngIf="factura.id != 0 && factura.estado == 'RECAUDADA'">
-                <a class="nav-link" title="Crear Factura Electronica" href="#" role="button" (click)="crearFacturaElectronica($event)">
+            <li class="nav-item">
+                <ng-container *ngIf="notaDebitoVentaRecaudacion.id==0">
+                    <a class="nav-link" title="Guardar" href="#" role="button" (click)="crear($event)">
+                        <mat-icon>save</mat-icon>
+                    </a>
+                </ng-container>
+                <ng-container *ngIf="notaDebitoVentaRecaudacion.id!=0">
+                    <a class="nav-link" title="Guardar" href="#" role="button" (click)="actualizar($event)">
+                        <mat-icon>update</mat-icon>
+                    </a>
+                </ng-container>
+            </li>
+            <li class="nav-item" *ngIf="notaDebitoVentaRecaudacion.id!=0 && notaDebitoVentaRecaudacion.notaDebitoVenta.id!=0">
+                <a class="nav-link" title="Crear Nota Debito Electronica" href="#" role="button" (click)="crearNotaDebitoElectronica($event)">
                     <mat-icon>publish</mat-icon>
                 </a>
             </li>
@@ -38,26 +52,27 @@
                             <div class="col-6">
                                 <mat-form-field appearance="standard">
                                     <mat-label>Valor Factura</mat-label>
-                                    <input matInput type="text" [(ngModel)]="factura.totalConDescuento" class="form-control-sm" [disabled]="true">
+                                    <input matInput type="text" [(ngModel)]="notaDebitoVentaRecaudacion.notaDebitoVenta.factura.totalConDescuento" class="form-control-sm" [disabled]="true">
                                 </mat-form-field>
                             </div>
                             <div class="col-6">
                                 <mat-form-field appearance="standard">
                                     <mat-label>Valor Pagado</mat-label>
-                                    <input matInput type="text" [(ngModel)]="factura.totalRecaudacion" class="form-control-sm" [disabled]="true">
+                                    <input matInput type="text" [(ngModel)]="notaDebitoVentaRecaudacion.total" class="form-control-sm" [disabled]="true">
                                 </mat-form-field>
                             </div>
                             <div class="col-6">
                                 <mat-form-field appearance="standard">
                                     <mat-label>Efectivo</mat-label>
-                                    <input matInput type="text" [(ngModel)]="factura.efectivo"
+                                    <input matInput type="text" [(ngModel)]="notaDebitoVentaRecaudacion.efectivo"
                                         (change)="seleccionarEfectivo()" class="form-control-sm">
                                 </mat-form-field>
                             </div>
                             <div class="col-6">
                                 <mat-form-field appearance="standard">
                                     <mat-label>Cambio</mat-label>
-                                    <input matInput type="text" class="form-control-sm" [(ngModel)]="factura.cambio" [disabled]="true">
+                                    <input matInput type="text" class="form-control-sm" [(ngModel)]="notaDebitoVentaRecaudacion.cambio"
+                                        disabled>
                                 </mat-form-field>
                             </div>
                         </div>
@@ -73,13 +88,13 @@
                             <div class="col-4">
                                 <mat-form-field appearance="standard">
                                     <mat-label>Crédito</mat-label>
-                                    <input matInput type="text" class="form-control-sm" [value]="factura.credito.saldo" [disabled]="true">
+                                    <input matInput type="text" class="form-control-sm" [value]="notaDebitoVentaRecaudacion.credito.saldo" [disabled]="true">
                                 </mat-form-field>
                             </div>
                             <div class="col-6">
                                 <mat-form-field appearance="standard">
                                     <mat-label>Unidad de Tiempo</mat-label>
-                                    <mat-select class="form-control-sm" [(ngModel)]="factura.credito.unidadTiempo">
+                                    <mat-select class="form-control-sm" [(ngModel)]="notaDebitoVentaRecaudacion.credito.unidadTiempo">
                                         <mat-option *ngFor="let periodicidad of periodicidades" [value]="periodicidad.nombre">
                                             {{periodicidad.nombre}}
                                         </mat-option>
@@ -89,7 +104,7 @@
                             <div class="col-2">
                                 <mat-form-field appearance="standard">
                                     <mat-label>Plazo</mat-label>
-                                    <input matInput type="text" class="form-control-sm" [(ngModel)]="factura.credito.plazo">
+                                    <input matInput type="text" class="form-control-sm" [(ngModel)]="notaDebitoVentaRecaudacion.credito.plazo">
                                 </mat-form-field>
                             </div>
                         </div>
@@ -100,20 +115,16 @@
                     <div class="col-12">
                         <mat-form-field appearance="standard">
                             <mat-label>Fecha</mat-label>
-                            <input matInput type="text" value="{{factura.fecha | date:'dd-MM-yyyy'}}"
+                            <input matInput type="text" value="{{notaDebitoVentaRecaudacion.notaDebitoVenta.factura.fecha | date:'dd-MM-yyyy'}}"
                                 class="form-control-sm" disabled>
                         </mat-form-field>
                     </div>
                     <div class="col-12">
                         <mat-form-field appearance="standard">
                             <mat-label>Estado</mat-label>
-                            <mat-select [(ngModel)]="factura.estado" [disabled]="true" class="form-control-sm">
-                                <mat-option [value]="emitida">{{emitida}}</mat-option>
-                                <mat-option [value]="anulada">{{anulada}}</mat-option>
-                                <mat-option [value]="noFacturada">{{noFacturada}}</mat-option>
-                                <mat-option [value]="facturada">{{facturada}}</mat-option>
-                                <mat-option [value]="noRecaudada">{{noRecaudada}}</mat-option>
-                                <mat-option [value]="recaudada">{{recaudada}}</mat-option>
+                            <mat-select [(ngModel)]="notaDebitoVentaRecaudacion.estado" [disabled]="true" class="form-control-sm">
+                                <mat-option [value]="recaudado">{{recaudado}}</mat-option>
+                                <mat-option [value]="noRecaudado">{{noRecaudado}}</mat-option>
                             </mat-select>
                         </mat-form-field>
                     </div>
@@ -130,7 +141,7 @@
                 </mat-panel-title>
                 <mat-panel-description>
                     {{panelCheques ? 'Ocultar cheques' : 'Recaudación con cheque'}}
-                    <div class="derecha">Total en cheques: {{factura.totalCheques | currency}}</div>
+                    <div class="derecha">Total en cheques: {{notaDebitoVentaRecaudacion.totalCheques | currency}}</div>
                 </mat-panel-description>
             </mat-expansion-panel-header>
             <mat-divider></mat-divider>
@@ -228,7 +239,7 @@
                         <ng-container matColumnDef="valor">
                             <th mat-header-cell *matHeaderCellDef mat-sort-header> Valor </th>
                             <td mat-cell *matCellDef="let cheque"> {{cheque.valor | currency}} </td>
-                            <td mat-footer-cell *matFooterCellDef> {{factura.totalCheques | currency}} </td>
+                            <td mat-footer-cell *matFooterCellDef> {{notaDebitoVentaRecaudacion.totalCheques | currency}} </td>
                         </ng-container>
                         <ng-container matColumnDef="acciones">
                             <th mat-header-cell *matHeaderCellDef mat-sort-header> Acciones </th>
@@ -262,7 +273,7 @@
                 </mat-panel-title>
                 <mat-panel-description>
                     {{panelDepositos ? 'Ocultar depósitos' : 'Recaudación con depósito'}}
-                    <div class="derecha">Total en depósitos: {{factura.totalDepositos | currency}}</div>
+                    <div class="derecha">Total en depósitos: {{notaDebitoVentaRecaudacion.totalDepositos | currency}}</div>
                     <!--mat-icon>account_circle</mat-icon-->
                 </mat-panel-description>
             </mat-expansion-panel-header>
@@ -363,7 +374,7 @@
                             <ng-container matColumnDef="valor">
                                 <th mat-header-cell *matHeaderCellDef mat-sort-header> Valor </th>
                                 <td mat-cell *matCellDef="let deposito"> {{deposito.valor | currency}} </td>
-                                <td mat-footer-cell *matFooterCellDef> {{factura.totalDepositos | currency}} </td>
+                                <td mat-footer-cell *matFooterCellDef> {{notaDebitoVentaRecaudacion.totalDepositos | currency}} </td>
                             </ng-container>
                             <ng-container matColumnDef="acciones">
                                 <th mat-header-cell *matHeaderCellDef mat-sort-header> Acciones </th>
@@ -401,7 +412,7 @@
                 </mat-panel-title>
                 <mat-panel-description>
                     {{panelTransferencias ? 'Ocultar transferencias' : 'Recaudación con transferencia'}}
-                    <div class="derecha">Total en transferencias: {{factura.totalTransferencias | currency}}</div>
+                    <div class="derecha">Total en transferencias: {{notaDebitoVentaRecaudacion.totalTransferencias | currency}}</div>
                 </mat-panel-description>
             </mat-expansion-panel-header>
             <mat-divider></mat-divider>
@@ -503,7 +514,7 @@
                             <ng-container matColumnDef="valor">
                                 <th mat-header-cell *matHeaderCellDef mat-sort-header> Valor </th>
                                 <td mat-cell *matCellDef="let transferencia"> {{transferencia.valor | currency}} </td>
-                                <td mat-footer-cell *matFooterCellDef> {{factura.totalTransferencias | currency}}
+                                <td mat-footer-cell *matFooterCellDef> {{notaDebitoVentaRecaudacion.totalTransferencias | currency}}
                                 </td>
                             </ng-container>
                             <ng-container matColumnDef="acciones">
@@ -542,7 +553,7 @@
                 </mat-panel-title>
                 <mat-panel-description>
                     {{panelTarjetasCredito ? 'Ocultar pagos con tarjeta de crédito' : 'Recaudación con tarjeta de crédito'}}
-                    <div class="derecha">Total tarjetas de crédito: {{factura.totalTarjetasCreditos | currency}}</div>
+                    <div class="derecha">Total tarjetas de crédito: {{notaDebitoVentaRecaudacion.totalTarjetasCreditos | currency}}</div>
                 </mat-panel-description>
             </mat-expansion-panel-header>
             <mat-divider></mat-divider>
@@ -713,7 +724,7 @@
                             <ng-container matColumnDef="valor">
                                 <th mat-header-cell *matHeaderCellDef mat-sort-header> Valor </th>
                                 <td mat-cell *matCellDef="let tarjetaCredito"> {{tarjetaCredito.valor | currency}} </td>
-                                <td mat-footer-cell *matFooterCellDef> {{factura.totalTarjetasCreditos | currency}}
+                                <td mat-footer-cell *matFooterCellDef> {{notaDebitoVentaRecaudacion.totalTarjetasCreditos | currency}}
                                 </td>
                             </ng-container>
                             <ng-container matColumnDef="acciones">
@@ -752,7 +763,7 @@
                 </mat-panel-title>
                 <mat-panel-description>
                     {{panelTarjetasDebito ? 'Ocultar pagos con tarjeta de débito' : 'Recaudación con tarjeta de débito'}}
-                    <div class="derecha">Total tarjetas de débito: {{factura.totalTarjetasDebitos | currency}}</div>
+                    <div class="derecha">Total tarjetas de débito: {{notaDebitoVentaRecaudacion.totalTarjetasDebitos | currency}}</div>
                 </mat-panel-description>
             </mat-expansion-panel-header>
             <mat-divider></mat-divider>
@@ -891,7 +902,7 @@
                             <ng-container matColumnDef="valor">
                                 <th mat-header-cell *matHeaderCellDef mat-sort-header> Valor </th>
                                 <td mat-cell *matCellDef="let tarjetaDebito"> {{tarjetaDebito.valor | currency}} </td>
-                                <td mat-footer-cell *matFooterCellDef> {{factura.totalTarjetasDebitos | currency}}
+                                <td mat-footer-cell *matFooterCellDef> {{notaDebitoVentaRecaudacion.totalTarjetasDebitos | currency}}
                                 </td>
                             </ng-container>
                             <ng-container matColumnDef="acciones">

@@ -1,8 +1,8 @@
-import { Injectable } from '@angular/core';
+import { Injectable, EventEmitter, Output } from '@angular/core';
 import { Respuesta } from '../../respuesta';
 import { HttpClient } from '@angular/common/http';
 import { map, catchError } from 'rxjs/operators';
-import { Observable, throwError, BehaviorSubject, lastValueFrom } from 'rxjs';
+import { Observable, throwError } from 'rxjs';
 import { Router } from '@angular/router';
 import { urn, options } from '../../constantes';
 import { environment } from '../../../environments/environment';
@@ -15,6 +15,12 @@ import { NotaDebitoVentaLinea } from 'src/app/modelos/comprobante/nota-debito-ve
 export class NotaDebitoVentaService {
 
   constructor(private http: HttpClient, private router: Router) { }
+
+  @Output() eventoRecaudacion= new EventEmitter<NotaDebitoVenta>();
+
+  enviarEventoRecaudacion(data: NotaDebitoVenta) {
+    this.eventoRecaudacion.emit(data);
+  }
 
   crear(notaDebitoVenta: NotaDebitoVenta): Observable<Respuesta> {
     return this.http.post(environment.host + urn.ruta + urn.notaDebitoVenta, notaDebitoVenta, options).pipe(
