@@ -152,7 +152,8 @@ export class RecaudacionNotaDebitoComponent implements OnInit {
     this.consultarBancosTarjetasDebitos();
 
     this.notaDebitoVentaService.eventoRecaudacion.subscribe((data: NotaDebitoVenta) => {
-      this.notadebitoVenta = data;
+      this.notaDebitoVenta = data;
+      this.calcular();
     });
     
     this.filtroBancosCheques = this.seleccionBancoCheque.valueChanges
@@ -429,7 +430,7 @@ export class RecaudacionNotaDebitoComponent implements OnInit {
   }
 
   agregarDeposito() {
-    if (this.notaDebitoVenta.totalRecaudacion + Number(this.deposito.valor) <= this.notaDebitoVenta.notaDebitoVenta.totalConDescuento){
+    if (this.notaDebitoVenta.totalRecaudacion + Number(this.deposito.valor) <= this.notaDebitoVenta.totalConDescuento){
       this.deposito.banco = this.seleccionBancoDeposito.value;
       this.notaDebitoVenta.depositos.push(this.deposito);
       this.deposito = new NotaDebitoVentaDeposito();
@@ -475,7 +476,7 @@ export class RecaudacionNotaDebitoComponent implements OnInit {
   }
 
   agregarTransferencia() {
-    if (this.notaDebitoVenta.totalRecaudacion + Number(this.transferencia.valor) <= this.notaDebitoVenta.notaDebitoVenta.totalConDescuento){
+    if (this.notaDebitoVenta.totalRecaudacion + Number(this.transferencia.valor) <= this.notaDebitoVenta.totalConDescuento){
       this.transferencia.banco = this.seleccionBancoTransferencia.value;
       this.notaDebitoVenta.transferencias.push(this.transferencia);
       this.transferencia = new NotaDebitoVentaTransferencia();
@@ -522,7 +523,7 @@ export class RecaudacionNotaDebitoComponent implements OnInit {
   }
 
   agregarTarjetaCredito() {
-    if (this.notaDebitoVenta.totalRecaudacion + Number(this.tarjetaCredito.valor) <= this.notaDebitoVenta.notaDebitoVenta.totalConDescuento){
+    if (this.notaDebitoVenta.totalRecaudacion + Number(this.tarjetaCredito.valor) <= this.notaDebitoVenta.totalConDescuento){
       this.tarjetaCredito.banco = this.seleccionBancoTarjetaCredito.value;
       this.notaDebitoVenta.tarjetasCreditos.push(this.tarjetaCredito);
       this.tarjetaCredito = new NotaDebitoVentaTarjetaCredito();
@@ -583,7 +584,7 @@ export class RecaudacionNotaDebitoComponent implements OnInit {
   }
 
   agregarTarjetaDebito() {
-    if (this.notaDebitoVenta.totalRecaudacion + Number(this.tarjetaDebito.valor) <= this.notaDebitoVenta.notaDebitoVenta.totalConDescuento){
+    if (this.notaDebitoVenta.totalRecaudacion + Number(this.tarjetaDebito.valor) <= this.notaDebitoVenta.totalConDescuento){
       this.tarjetaDebito.banco=this.seleccionBancoTarjetaDebito.value;
       this.notaDebitoVenta.tarjetasDebitos.push(this.tarjetaDebito);
       this.tarjetaDebito = new NotaDebitoVentaTarjetaDebito();
@@ -663,11 +664,11 @@ export class RecaudacionNotaDebitoComponent implements OnInit {
   nuevo(event){
     if (event!=null)
       event.preventDefault();
-    let notaDebitoVentaId = this.notaDebitoVenta.notaDebitoVenta.id;
+    let notaDebitoVentaId = this.notaDebitoVenta.id;
     this.notaDebitoVentaService.obtener(notaDebitoVentaId).subscribe({
       next: res => {
         this.notaDebitoVenta = new NotaDebitoVenta();
-        this.notaDebitoVenta.notaDebitoVenta = res.resultado as NotaDebitoVenta;
+        this.notaDebitoVenta = res.resultado as NotaDebitoVenta;
         this.cargar();
       },
       error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })

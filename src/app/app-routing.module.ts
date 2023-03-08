@@ -46,6 +46,7 @@ import { TipoRetencionComponent } from './configuraciones/tipo-retencion/tipo-re
 
 //Módulo de Recaudaciones
 import { RecaudacionComponent } from './recaudacion/recaudacion/recaudacion.component';
+import { RecaudacionNotaDebitoComponent } from './recaudacion/recaudacion-nota-debito/recaudacion-nota-debito.component';
 import { BancoComponent } from './recaudacion/banco/banco.component';
 
 // Módulo de Ventas
@@ -198,6 +199,7 @@ export const RoutingComponents = [
   VehiculoTransporteComponent,
   // Recaudación
   RecaudacionComponent,
+  RecaudacionNotaDebitoComponent,
   BancoComponent,
   //Ventas
   FacturaComponent,

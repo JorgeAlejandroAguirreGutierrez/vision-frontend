@@ -1,9 +1,8 @@
 import { Component, OnInit, ViewChild, HostListener } from '@angular/core';
 import { DatePipe } from '@angular/common';
-import { UntypedFormControl } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
-import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import Swal from 'sweetalert2';
@@ -30,6 +29,7 @@ import { CategoriaProductoService } from 'src/app/servicios/inventario/categoria
 import { KardexService } from 'src/app/servicios/inventario/kardex.service';
 import { FacturaLinea } from 'src/app/modelos/comprobante/factura-linea';
 import { NotaDebitoElectronicaService } from 'src/app/servicios/comprobante/nota-debito-eletronica.service';
+import { MatStepper } from '@angular/material/stepper';
 
 @Component({
   selector: 'app-nota-debito-venta',
@@ -38,7 +38,13 @@ import { NotaDebitoElectronicaService } from 'src/app/servicios/comprobante/nota
 })
 export class NotaDebitoVentaComponent implements OnInit {
 
+  @ViewChild('stepper') stepper: MatStepper;
+
   panelOpenState = false;
+  isLinear = true;
+  isEditable = true;
+  firstFormGroup: UntypedFormGroup;
+  secondFormGroup: UntypedFormGroup;
 
   deshabilitarDevolucion = true;
   deshabilitarDescuento = true;  
@@ -60,7 +66,7 @@ export class NotaDebitoVentaComponent implements OnInit {
     { nombreColumna: 'codigo', cabecera: 'Código', celda: (row: NotaDebitoVenta) => `${row.codigo}`},
     { nombreColumna: 'fecha', cabecera: 'Fecha', celda: (row: NotaDebitoVenta) => `${row.fecha}`},
     { nombreColumna: 'cliente', cabecera: 'Cliente', celda: (row: NotaDebitoVenta) => `${row.factura.cliente.razonSocial}`},
-    { nombreColumna: 'total', cabecera: 'Total', celda: (row: NotaDebitoVenta) => `$${row.totalSinDescuento}`},
+    { nombreColumna: 'total', cabecera: 'Total', celda: (row: NotaDebitoVenta) => `$${row.totalConDescuento}`},
     { nombreColumna: 'estado', cabecera: 'Estado', celda: (row: NotaDebitoVenta) => `$${row.estado}`}
   ];
   cabecera: string[]  = this.columnas.map(titulo => titulo.nombreColumna);
@@ -83,12 +89,19 @@ export class NotaDebitoVentaComponent implements OnInit {
   columnasFacturaLinea: string[] = ['nombre', 'medida', 'cantidad', 'valor', 'descuento', 'descuentoPorcentaje', 'impuesto', 'total', 'entregado'];
   dataSourceFacturaLinea = new MatTableDataSource<FacturaLinea>(this.notaDebitoVenta.factura.facturaLineas);
   sesion: Sesion;
+  
   si = valores.si;
   no = valores.no;
+  emitida = valores.emitida;
+  anulada = valores.anulada;
+  noFacturada = valores.noFacturada;
+  facturada = valores.facturada;
+  noRecaudada = valores.noRecaudada;
+  recaudada = valores.recaudada;
 
   constructor(private clienteService: ClienteService, private sesionService: SesionService, private impuestoService: ImpuestoService, private bodegaService: BodegaService,
     private router: Router, private notaDebitoVentaService: NotaDebitoVentaService, private facturaService: FacturaService, private productoService: ProductoService, private notaDebitoElectronicaService: NotaDebitoElectronicaService,
-    private categoriaProductoService: CategoriaProductoService, private kardexService: KardexService, private modalService: NgbModal) { }
+    private categoriaProductoService: CategoriaProductoService, private kardexService: KardexService, private _formBuilder: UntypedFormBuilder) { }
 
   @HostListener('window:keypress', ['$event'])
   keyEvent($event: KeyboardEvent) {
@@ -105,6 +118,22 @@ export class NotaDebitoVentaComponent implements OnInit {
     this.consultarImpuestos();
     this.consultarCategoriasProductos();
     this.consultarBodegas();
+    this.firstFormGroup = new UntypedFormGroup({
+      firstCtrl: new UntypedFormControl()
+    });
+
+    this.firstFormGroup = this._formBuilder.group({
+      firstCtrl: ['', Validators.required]
+    });
+
+    this.secondFormGroup = new UntypedFormGroup({
+      secondCtrl: new UntypedFormControl()
+    });
+
+    this.secondFormGroup = this._formBuilder.group({
+      secondCtrl: ['', Validators.required]
+    });
+
     this.filtroClientes = this.seleccionCliente.valueChanges
       .pipe(
         startWith(''),
@@ -446,24 +475,6 @@ export class NotaDebitoVentaComponent implements OnInit {
     this.seleccionProducto.patchValue(valores.vacio);
   }
 
-  open(content: any) {
-    this.modalService.open(content, { size: 'lg' }).result.then((result) => {
-      
-    }, (reason) => {
-      console.log(`Dismissed ${this.getDismissReason(reason)}`);
-    });
-  }
-
-  private getDismissReason(reason: any): string {
-    if (reason === ModalDismissReasons.ESC) {
-      return 'by pressing ESC';
-    } else if (reason === ModalDismissReasons.BACKDROP_CLICK) {
-      return 'by clicking on a backdrop';
-    } else {
-      return  `with: ${reason}`;
-    }
-  }
-
   seleccion(notaDebitoVenta: any) {
     if (!this.clickedRows.has(notaDebitoVenta)){
       this.clickedRows.clear();
@@ -508,6 +519,10 @@ export class NotaDebitoVentaComponent implements OnInit {
   }
   seleccionarPorcentajeDescuentoTotal(){
     this.calcular();   
+  }
+
+  enviarEvento(){
+    this.notaDebitoVentaService.enviarEventoRecaudacion(this.notaDebitoVenta);
   }
 
   crearNotaDebitoElectronica(event){

@@ -15,10 +15,8 @@ export class NotaDebitoVenta {
     secuencia: string;
     fecha: Date;
     estado: string;
-    valorDescuentoTotal: number;
-    porcentajeDescuentoTotal: number;
     subtotalSinDescuento: number;
-    descuentoTotal: number;
+    totalDescuento: number;
     subtotalBase12SinDescuento: number;
     subtotalBase0SinDescuento: number;
     ivaSinDescuento: number;
@@ -53,10 +51,8 @@ export class NotaDebitoVenta {
         this.secuencia = valores.vacio;
         this.fecha = new Date();
         this.estado = valores.noFacturada;
-        this.valorDescuentoTotal = valores.cero;
-        this.porcentajeDescuentoTotal = valores.cero;
         this.subtotalSinDescuento = valores.cero;
-        this.descuentoTotal = valores.cero;
+        this.totalDescuento = valores.cero;
         this.subtotalBase12SinDescuento = valores.cero;
         this.subtotalBase0SinDescuento = valores.cero;
         this.ivaSinDescuento = valores.cero;
@@ -78,7 +74,7 @@ export class NotaDebitoVenta {
         this.totalTarjetasCreditos = valores.cero;
         this.totalCredito = valores.cero;
         this.cheques = [];
-        this.depositos =[];
+        this.depositos = [];
         this.transferencias = [];
         this.tarjetasDebitos = []
         this.tarjetasCreditos = []

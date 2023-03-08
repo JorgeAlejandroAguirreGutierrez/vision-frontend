@@ -88,46 +88,58 @@
                                 <mat-form-field appearance="standard">
                                     <mat-label>Direccion</mat-label>
                                     <input matInput type="text" [(ngModel)]="factura.cliente.direccion"
-                                        class="form-control-sm" disabled>
+                                        class="form-control-sm" [disabled]="true">
                                 </mat-form-field>
                             </div>
-                            <div class="col-3">
-                                <mat-form-field appearance="standard">
-                                    <mat-label>Teléfono</mat-label>
-                                    <b matPrefix>+593 &nbsp;</b>
-                                    <input matInput type="tel" [(ngModel)]="primerTelefonoCliente"
-                                        class="form-control-sm" disabled>
-                                </mat-form-field>
+                            <div class="form-row col-4">
+                                <ng-container *ngFor="let telefono of factura.cliente.telefonos; let i=index ">
+                                    <div class="col-9">
+                                        <mat-form-field appearance="standard">
+                                            <mat-label>Teléfono</mat-label>
+                                            <b matPrefix>+593 &nbsp;</b>
+                                            <input matInput type="tel" [value]="telefono.numero" class="form-control-sm"
+                                                [disabled]="true">
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col-3 iconos">
+                                        <button mat-icon-button [disabled]="true">
+                                            <mat-icon class="iconos-peque">close</mat-icon>
+                                        </button>
+                                    </div>
+                                </ng-container>
                             </div>
-                            <div class="col-1 iconos">
-                                <button mat-button mat-icon-button (click)="open(modalTelefonosCliente)">
-                                    <mat-icon>visibility</mat-icon>
-                                </button>
+                            <div class="form-row col-4">
+                                <ng-container *ngFor="let celular of factura.cliente.celulares; let i=index ">
+                                    <div class="col-9">
+                                        <mat-form-field appearance="standard">
+                                            <mat-label>Celular</mat-label>
+                                            <b matPrefix>+593 &nbsp;</b>
+                                            <input matInput type="tel" [value]="celular.numero" class="form-control-sm"
+                                                [disabled]="true">
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col-3 iconos">
+                                        <button mat-icon-button [disabled]="true">
+                                            <mat-icon class="iconos-peque">close</mat-icon>
+                                        </button>
+                                    </div>
+                                </ng-container>
                             </div>
-                            <div class="col-3">
-                                <mat-form-field appearance="standard">
-                                    <mat-label>Celular</mat-label>
-                                    <b matPrefix>+593 </b>
-                                    <input matInput type="tel" [(ngModel)]="primerCelularCliente"
-                                        class="form-control-sm" disabled>
-                                </mat-form-field>
-                            </div>
-                            <div class="col-1 iconos">
-                                <button mat-button mat-icon-button (click)="open(modalCelularesCliente)">
-                                    <mat-icon>visibility</mat-icon>
-                                </button>
-                            </div>
-                            <div class="col-3">
-                                <mat-form-field appearance="standard">
-                                    <mat-label>Correo electrónico</mat-label>
-                                    <input matInput type="text" [(ngModel)]="primerCorreoCliente"
-                                        class="form-control-sm" disabled>
-                                </mat-form-field>
-                            </div>
-                            <div class="col-1 iconos">
-                                <button mat-button mat-icon-button (click)="open(modalCorreosCliente)">
-                                    <mat-icon>visibility</mat-icon>
-                                </button>
+                            <div class="form-row col-4">
+                                <ng-container *ngFor="let correo of factura.cliente.correos; let i=index ">
+                                    <div class="col-9">
+                                        <mat-form-field appearance="standard">
+                                            <mat-label>Correo electrónico</mat-label>
+                                            <input matInput type="text " [(ngModel)]="correo.email" class="form-control-sm "
+                                                [disabled]="true">
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col-3 iconos">
+                                        <button mat-icon-button [disabled]="true">
+                                            <mat-icon class="iconos-peque">close</mat-icon>
+                                        </button>
+                                    </div>
+                                </ng-container>
                             </div>
                         </div>
                         <div class="form-row col-4 linea-vertical">
@@ -616,90 +628,3 @@
         </mat-step>
     </mat-stepper>
 </div>
-<ng-template #modalCorreosCliente let-modal>
-    <div class="modal-header ">
-        <h5 class="modal-title ">Ver Correos</h5>
-        <button type="button " class="close " aria-label="Close " (click)="modal.dismiss( 'Cross click') ">
-            <span aria-hidden="true ">&times;</span>
-        </button>
-    </div>
-    <div class="modal-body ">
-        <div class="form-group form-row table-responsive">
-            <table class="table table-bordered table-hover">
-                <thead>
-                    <tr>
-                        <th>CORREO</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr *ngFor="let correo of factura.cliente?.correos; let i=index ">
-                        <td>
-                            {{correo.email}}
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-    </div>
-    <div class="modal-footer ">
-        <button type="button " class="btn btn-outline-dark " (click)="modal.close( 'close') ">Cerrar</button>
-    </div>
-</ng-template>
-<ng-template #modalCelularesCliente let-modal>
-    <div class="modal-header">
-        <h5 class="modal-title">Ver Celulares</h5>
-        <button type="button " class="close " aria-label="Close " (click)="modal.dismiss( 'Cross click') ">
-            <span aria-hidden="true ">&times;</span>
-        </button>
-    </div>
-    <div class="modal-body ">
-        <div class="form-group form-row table-responsive">
-            <table class="table table-bordered table-hover ">
-                <thead>
-                    <tr>
-                        <th>NUMERO</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr *ngFor="let celular of factura.cliente?.celulares; let i=index ">
-                        <td>
-                            {{celular.numero}}
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-    </div>
-    <div class="modal-footer ">
-        <button type="button " class="btn btn-outline-dark " (click)="modal.close( 'close') ">Cerrar</button>
-    </div>
-</ng-template>
-<ng-template #modalTelefonosCliente let-modal>
-    <div class="modal-header">
-        <h5 class="modal-title ">Ver Telefonos</h5>
-        <button type="button " class="close " aria-label="Close " (click)="modal.dismiss( 'Cross click') ">
-            <span aria-hidden="true ">&times;</span>
-        </button>
-    </div>
-    <div class="modal-body ">
-        <div class="form-group form-row table-responsive">
-            <table class="table table-bordered table-hover ">
-                <thead>
-                    <tr>
-                        <th>NUMERO</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr *ngFor="let telefono of factura.cliente?.telefonos; let i=index ">
-                        <td>
-                            {{telefono.numero}}
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-    </div>
-    <div class="modal-footer ">
-        <button type="button " class="btn btn-outline-dark " (click)="modal.close( 'close') ">Cerrar</button>
-    </div>
-</ng-template>
