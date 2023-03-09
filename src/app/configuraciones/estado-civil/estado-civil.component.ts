@@ -1,7 +1,7 @@
-import { Component, OnInit, HostListener, ViewChild } from '@angular/core';
+import { Component, OnInit, HostListener, ViewChild, ElementRef, Renderer2 } from '@angular/core';
 import { EstadoCivil } from '../../modelos/cliente/estado-civil';
 import { EstadoCivilService } from '../../servicios/cliente/estado-civil.service';
-import { valores, validarSesion, tab_activo, exito, exito_swal, error, error_swal } from '../../constantes';
+import { valores, mensajes, validarSesion, exito, exito_swal, error, error_swal } from '../../constantes';
 import Swal from 'sweetalert2';
 import { Router } from '@angular/router';
 import { Sesion } from '../../modelos/usuario/sesion';
@@ -21,7 +21,7 @@ export class EstadoCivilComponent implements OnInit {
   inactivo: string = valores.inactivo;
   
   abrirPanelNuevo = true;
-  abrirPanelAdmin = false;
+  abrirPanelAdmin = true;
 
   sesion: Sesion=null;
   estadoCivil= new EstadoCivil();
@@ -39,8 +39,9 @@ export class EstadoCivilComponent implements OnInit {
   
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
+  @ViewChild("inputFiltro") inputFiltro: ElementRef;
 
-  constructor(private estadoCivilService: EstadoCivilService,
+  constructor(private renderer: Renderer2, private estadoCivilService: EstadoCivilService,
     private sesionService: SesionService,private router: Router) { }
 
   ngOnInit() {
@@ -66,29 +67,33 @@ export class EstadoCivilComponent implements OnInit {
   crear(event) {
     if (event!=null)
       event.preventDefault();
-    this.estadoCivilService.crear(this.estadoCivil).subscribe(
-      res => {
+    if (!this.validarFormulario())
+      return;
+    this.estadoCivilService.crear(this.estadoCivil).subscribe({
+      next: res => {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
         this.estadoCivil=res.resultado as EstadoCivil;
         this.consultar();
         this.nuevo(null);
       },
-      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
-    );
+      error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+    });
   }
 
   actualizar(event) {
     if (event!=null)
       event.preventDefault();
-    this.estadoCivilService.actualizar(this.estadoCivil).subscribe(
-      res => {
+    if (!this.validarFormulario())
+      return;
+    this.estadoCivilService.actualizar(this.estadoCivil).subscribe({
+      next: res => {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
         this.estadoCivil=res.resultado as EstadoCivil;
         this.consultar();
         this.nuevo(null);
       },
-      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
-    );
+      error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+    });
   }
 
   activar(event) {
@@ -118,15 +123,26 @@ export class EstadoCivilComponent implements OnInit {
   }
   
   consultar() {
-    this.estadoCivilService.consultar().subscribe(
-      res => {
+    this.estadoCivilService.consultar().subscribe({
+      next: res => {
         this.estadosCiviles = res.resultado as EstadoCivil[]
-        this.dataSource = new MatTableDataSource(this.estadosCiviles);
-        this.dataSource.paginator = this.paginator;
-        this.dataSource.sort = this.sort;
+        this.llenarTabla(this.estadosCiviles);
       },
-      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
-    );
+      error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+    });
+  }
+
+  llenarTabla(estadoCivil: EstadoCivil[]) {
+    this.ordenarAsc(estadoCivil, 'id');
+    this.dataSource = new MatTableDataSource(estadoCivil);
+    this.dataSource.paginator = this.paginator;
+    this.dataSource.sort = this.sort;
+  }
+
+  ordenarAsc(arrayJson: any, pKey: any) {
+    arrayJson.sort(function (a: any, b: any) {
+      return a[pKey] > b[pKey];
+    });
   }
 
   seleccion(estadoCivil: EstadoCivil) {
@@ -135,8 +151,7 @@ export class EstadoCivilComponent implements OnInit {
       this.clickedRows.add(estadoCivil);
       this.estadoCivil = { ... estadoCivil};
     } else {
-      this.clickedRows.clear();
-      this.estadoCivil = new EstadoCivil();
+      this.nuevo(null);
     }
   }
 
@@ -146,5 +161,21 @@ export class EstadoCivilComponent implements OnInit {
     if (this.dataSource.paginator) {
       this.dataSource.paginator.firstPage();
     }
+  }
+  borrarFiltro() {
+    this.renderer.setProperty(this.inputFiltro.nativeElement, 'value', '');
+    this.dataSource.filter = '';
+  }
+
+  validarFormulario(): boolean {
+    if (this.estadoCivil.descripcion == valores.vacio) {
+      Swal.fire({ icon: error_swal, title: error, text: mensajes.error_falta_datos });
+      return false;
+    }
+    if (this.estadoCivil.abreviatura == valores.vacio) {
+      Swal.fire({ icon: error_swal, title: error, text: mensajes.error_falta_datos });
+      return false;
+    }
+    return true;
   }
 }

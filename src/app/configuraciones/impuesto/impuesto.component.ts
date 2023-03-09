@@ -1,11 +1,13 @@
-import { Component, HostListener, OnInit, ViewChild } from '@angular/core';
-import { ImpuestoService } from '../../servicios/inventario/impuesto.service';
-import { Impuesto } from '../../modelos/inventario/impuesto';
+import { Component, HostListener, OnInit, ViewChild, ElementRef, Renderer2 } from '@angular/core';
 import Swal from 'sweetalert2';
-import { valores, validarSesion, tab_activo, exito, exito_swal, error, error_swal } from '../../constantes';
-import { SesionService } from 'src/app/servicios/usuario/sesion.service';
+import { valores, validarSesion, mensajes, exito, exito_swal, error, error_swal } from '../../constantes';
+
+import { SesionService } from '../../servicios/usuario/sesion.service';
 import { Router } from '@angular/router';
-import { Sesion } from 'src/app/modelos/usuario/sesion';
+import { Sesion } from '../../modelos/usuario/sesion';
+import { Impuesto } from '../../modelos/inventario/impuesto';
+import { ImpuestoService } from '../../servicios/inventario/impuesto.service';
+
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
@@ -21,7 +23,7 @@ export class ImpuestoComponent implements OnInit {
   inactivo: string = valores.inactivo;
   
   abrirPanelNuevo = true;
-  abrirPanelAdmin = false;
+  abrirPanelAdmin = true;
 
   sesion: Sesion=null;
   impuesto = new Impuesto();
@@ -29,6 +31,8 @@ export class ImpuestoComponent implements OnInit {
 
   columnas: any[] = [
     { nombreColumna: 'codigo', cabecera: 'Código', celda: (row: Impuesto) => `${row.codigo}` },
+    { nombreColumna: 'descripcion', cabecera: 'Descripción', celda: (row: Impuesto) => `${row.descripcion}` },
+    { nombreColumna: 'abreviatura', cabecera: 'Abreviatura', celda: (row: Impuesto) => `${row.abreviatura}` },
     { nombreColumna: 'codigoSRI', cabecera: 'Codigo SRI', celda: (row: Impuesto) => `${row.codigoSRI}` },
     { nombreColumna: 'porcentaje', cabecera: 'Porcentaje', celda: (row: Impuesto) => `${row.porcentaje}` },
     { nombreColumna: 'estado', cabecera: 'Estado', celda: (row: Impuesto) => `${row.estado}` },
@@ -39,8 +43,9 @@ export class ImpuestoComponent implements OnInit {
   
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
+  @ViewChild("inputFiltro") inputFiltro: ElementRef;
 
-  constructor(private impuestoService: ImpuestoService,
+  constructor(private renderer: Renderer2, private impuestoService: ImpuestoService,
     private sesionService: SesionService,private router: Router) { }
 
   ngOnInit() {
@@ -66,29 +71,33 @@ export class ImpuestoComponent implements OnInit {
   crear(event) {
     if (event!=null)
       event.preventDefault();
-    this.impuestoService.crear(this.impuesto).subscribe(
-      res => {
+    if (!this.validarFormulario())
+      return;
+    this.impuestoService.crear(this.impuesto).subscribe({
+      next: res => {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
         this.impuesto=res.resultado as Impuesto;
         this.consultar();
         this.nuevo(null);
       },
-      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
-    );
+      error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+    });
   }
 
   actualizar(event) {
     if (event!=null)
       event.preventDefault();
-    this.impuestoService.actualizar(this.impuesto).subscribe(
-      res => {
+    if (!this.validarFormulario())
+      return;
+    this.impuestoService.actualizar(this.impuesto).subscribe({
+      next: res => {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
         this.impuesto=res.resultado as Impuesto;
         this.consultar();
         this.nuevo(null);
       },
-      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
-    );
+      error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+    });
   }
 
   activar(event) {
@@ -118,15 +127,26 @@ export class ImpuestoComponent implements OnInit {
   }
   
   consultar() {
-    this.impuestoService.consultar().subscribe(
-      res => {
+    this.impuestoService.consultar().subscribe({
+      next: res => {
         this.impuestos = res.resultado as Impuesto[]
-        this.dataSource = new MatTableDataSource(this.impuestos);
-        this.dataSource.paginator = this.paginator;
-        this.dataSource.sort = this.sort;
+        this.llenarTabla(this.impuestos);
       },
-      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
-    );
+      error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+    });
+  }
+
+  llenarTabla(impuesto: Impuesto[]) {
+    this.ordenarAsc(impuesto, 'id');
+    this.dataSource = new MatTableDataSource(impuesto);
+    this.dataSource.paginator = this.paginator;
+    this.dataSource.sort = this.sort;
+  }
+
+  ordenarAsc(arrayJson: any, pKey: any) {
+    arrayJson.sort(function (a: any, b: any) {
+      return a[pKey] > b[pKey];
+    });
   }
 
   seleccion(impuesto: Impuesto) {
@@ -135,8 +155,7 @@ export class ImpuestoComponent implements OnInit {
       this.clickedRows.add(impuesto);
       this.impuesto = { ... impuesto};
     } else {
-      this.clickedRows.clear();
-      this.impuesto = new Impuesto();
+      this.nuevo(null);
     }
   }
 
@@ -147,5 +166,28 @@ export class ImpuestoComponent implements OnInit {
       this.dataSource.paginator.firstPage();
     }
   }
+  borrarFiltro() {
+    this.renderer.setProperty(this.inputFiltro.nativeElement, 'value', '');
+    this.dataSource.filter = '';
+  }
 
+  validarFormulario(): boolean {
+    if (this.impuesto.descripcion == valores.vacio) {
+      Swal.fire({ icon: error_swal, title: error, text: mensajes.error_falta_datos });
+      return false;
+    }
+    if (this.impuesto.abreviatura == valores.vacio) {
+      Swal.fire({ icon: error_swal, title: error, text: mensajes.error_falta_datos });
+      return false;
+    }
+    if (this.impuesto.codigoSRI == valores.vacio) {
+      Swal.fire({ icon: error_swal, title: error, text: mensajes.error_falta_datos });
+      return false;
+    }
+    if (this.impuesto.porcentaje == valores.cero) {
+      Swal.fire({ icon: error_swal, title: error, text: mensajes.error_falta_datos });
+      return false;
+    }
+    return true;
+  }
 }
