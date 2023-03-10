@@ -21,7 +21,7 @@ export class TipoPagoComponent implements OnInit {
   inactivo: string = valores.inactivo;
   
   abrirPanelNuevo = true;
-  abrirPanelAdmin = false;
+  abrirPanelAdmin = true;
 
   sesion: Sesion=null;
   tipoPago= new TipoPago();

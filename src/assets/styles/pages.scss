@@ -26,12 +26,25 @@ Global Styles
   box-sizing:border-box;
   -webkit-box-sizing: border-box;
 	-moz-box-sizing: border-box;
+  -webkit-scrollbar: none;
+  scrollbar-width: none; // funciona en firefox
 }
 
 html {
   position: relative;
   min-height: 100%;
   background: $white;
+}
+
+// Por si quiero darle estilo a la barra de desplazamiento // Funciona en edge
+body::-webkit-scrollbar{
+  width: 0px;
+  display: none;
+}
+
+body::-webkit-scrollbar-thumb{
+  background:#5b6582;
+  border-radius: 5px;
 }
 
 html, body { 
@@ -41,7 +54,8 @@ html, body {
   height: 100%;
   min-height: 100%;
   font-family: $bodyfont;
-  overflow-x: hidden; // Oculta la barra horizontal
+  overflow-x: hidden; // Oculta la barra horizontal 
+  //overflow-y: hidden; // Oculto porque no funciona igual en firefox que en edge
   color: $bodytext;
   font-weight: 300;
   background: $light; //incluye color, fondos: imagen, posición, repetición, adjunto, clip, origen, tamaño

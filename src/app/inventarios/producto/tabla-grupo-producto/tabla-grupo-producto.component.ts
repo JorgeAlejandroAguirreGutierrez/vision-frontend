@@ -1,6 +1,6 @@
-import { Component, OnInit, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter, ElementRef, Renderer2 } from '@angular/core';
 import Swal from 'sweetalert2';
-import { valores, validarSesion, tab_activo, exito, exito_swal, error, error_swal } from '../../../constantes';
+import { valores, validarSesion, exito, exito_swal, error, error_swal } from '../../../constantes';
 import { Router } from '@angular/router';
 import { ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
@@ -42,8 +42,9 @@ export class TablaGrupoProductoComponent implements OnInit {
   
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
+  @ViewChild("inputFiltro") inputFiltro: ElementRef;
 
-  constructor(private sesionService: SesionService, private router: Router, 
+  constructor(private renderer: Renderer2, private sesionService: SesionService, private router: Router, 
     private grupoProductoService: GrupoProductoService) { }
 
   ngOnInit() {
@@ -58,14 +59,16 @@ export class TablaGrupoProductoComponent implements OnInit {
       this.dataSource.paginator.firstPage();
     }
   }
+  borrarFiltro() {
+    this.renderer.setProperty(this.inputFiltro.nativeElement, 'value', '');
+    this.dataSource.filter = '';
+  }
   
   consultar() {
     this.grupoProductoService.consultarActivos().subscribe({
       next: res => {
         this.gruposProductos = res.resultado as GrupoProducto[];
-        this.dataSource = new MatTableDataSource(this.gruposProductos);
-        this.dataSource.paginator = this.paginator;
-        this.dataSource.sort = this.sort;
+        this.llenarTabla(this.gruposProductos);
       },
       error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     });

@@ -1,7 +1,11 @@
 <div>
     <mat-form-field appearance="standard">
         <mat-label>Buscar grupo producto</mat-label>
-        <input matInput oninput="this.value = this.value.toUpperCase()" (keyup)="filtro($event)" #input>
+        <input matInput oninput="this.value = this.value.toUpperCase()" (keyup)="filtro($event)" #inputFiltro>
+        <button mat-button *ngIf="inputFiltro.value" matSuffix mat-icon-button
+            (click)="borrarFiltro()">
+            <mat-icon>close</mat-icon>
+        </button>
     </mat-form-field>
     <div class="mat-elevation-z8">
         <table mat-table [dataSource]="dataSource" matSort>
@@ -18,13 +22,13 @@
 
             <!-- Row shown when there is no matching data. -->
             <tr class="mat-row" *matNoDataRow>
-                <td class="mat-cell" colspan="7">No hay datos que coincidan con una cuenta contable</td>
+                <td class="mat-cell" colspan="7">No hay datos que coincidan con el grupo producto</td>
             </tr>
         </table>
         <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
     </div>
     <div class="azul" *ngIf="!clickedRows.size">
-        Seleccione una fila para editar
+        Seleccione una fila para egregar
     </div>
     <div class="azul" *ngFor="let clickedRow of clickedRows">
         Id: {{clickedRow.id}} seleccionado

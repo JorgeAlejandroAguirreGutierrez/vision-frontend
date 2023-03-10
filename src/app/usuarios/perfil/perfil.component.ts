@@ -30,6 +30,7 @@ export class PerfilComponent implements OnInit {
 
   abrirPanelNuevo: boolean = true;
   abrirPanelAdmin: boolean = true;
+  abrirPanelPermiso: boolean = false;
 
   sesion: Sesion = null;
   perfil: Perfil = new Perfil();
