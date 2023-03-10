@@ -22,7 +22,7 @@ export class GeneroComponent implements OnInit {
   inactivo: string = valores.inactivo;
   
   abrirPanelNuevo = true;
-  abrirPanelAdmin = false;
+  abrirPanelAdmin = true;
 
   sesion: Sesion=null;
   genero= new Genero();

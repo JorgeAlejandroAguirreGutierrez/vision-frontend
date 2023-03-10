@@ -1,11 +1,13 @@
-import { Component, OnInit, HostListener, ViewChild } from '@angular/core';
+import { Component, OnInit, HostListener, ViewChild, ElementRef, Renderer2 } from '@angular/core';
 import Swal from 'sweetalert2';
+import { valores, validarSesion, mensajes, exito, exito_swal, error, error_swal } from '../../constantes';
+import { Router } from '@angular/router';
+
+import { Sesion } from '../../modelos/usuario/sesion';
+import { SesionService } from '../../servicios/usuario/sesion.service';
 import { UbicacionService } from '../../servicios/configuracion/ubicacion.service';
 import { Ubicacion } from '../../modelos/configuracion/ubicacion';
-import { valores, validarSesion, tab_activo, exito, exito_swal, error, error_swal } from '../../constantes';
-import { Sesion } from 'src/app/modelos/usuario/sesion';
-import { SesionService } from 'src/app/servicios/usuario/sesion.service';
-import { Router } from '@angular/router';
+
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
@@ -21,7 +23,7 @@ export class UbicacionComponent implements OnInit {
   inactivo: string = valores.inactivo;
   
   abrirPanelNuevo = true;
-  abrirPanelAdmin = false;
+  abrirPanelAdmin = true;
 
   sesion: Sesion=null;
   ubicacion= new Ubicacion();
@@ -41,8 +43,9 @@ export class UbicacionComponent implements OnInit {
   
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
+  @ViewChild("inputFiltro") inputFiltro: ElementRef;
 
-  constructor(private ubicacionService: UbicacionService,
+  constructor(private renderer: Renderer2, private ubicacionService: UbicacionService,
     private sesionService: SesionService,private router: Router) { }
 
   ngOnInit() {
@@ -68,6 +71,8 @@ export class UbicacionComponent implements OnInit {
   crear(event) {
     if (event!=null)
       event.preventDefault();
+    if (!this.validarFormulario())
+      return;
     this.ubicacionService.crear(this.ubicacion).subscribe(
       res => {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
@@ -82,6 +87,8 @@ export class UbicacionComponent implements OnInit {
   actualizar(event) {
     if (event!=null)
       event.preventDefault();
+    if (!this.validarFormulario())
+      return;
     this.ubicacionService.actualizar(this.ubicacion).subscribe(
       res => {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
@@ -120,15 +127,26 @@ export class UbicacionComponent implements OnInit {
   }
   
   consultar() {
-    this.ubicacionService.consultar().subscribe(
-      res => {
+    this.ubicacionService.consultar().subscribe({
+      next: res => {
         this.ubicaciones = res.resultado as Ubicacion[]
-        this.dataSource = new MatTableDataSource(this.ubicaciones);
-        this.dataSource.paginator = this.paginator;
-        this.dataSource.sort = this.sort;
+        this.llenarTabla(this.ubicaciones);
       },
-      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
-    );
+      error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+    });
+  }
+
+  llenarTabla(ubicacion: Ubicacion[]) {
+    this.ordenarAsc(ubicacion, 'id');
+    this.dataSource = new MatTableDataSource(ubicacion);
+    this.dataSource.paginator = this.paginator;
+    this.dataSource.sort = this.sort;
+  }
+
+  ordenarAsc(arrayJson: any, pKey: any) {
+    arrayJson.sort(function (a: any, b: any) {
+      return a[pKey] > b[pKey];
+    });
   }
 
   seleccion(ubicacion: Ubicacion) {
@@ -137,8 +155,7 @@ export class UbicacionComponent implements OnInit {
       this.clickedRows.add(ubicacion);
       this.ubicacion = { ... ubicacion};
     } else {
-      this.clickedRows.clear();
-      this.ubicacion = new Ubicacion();
+      this.nuevo(null);
     }
   }
 
@@ -148,5 +165,29 @@ export class UbicacionComponent implements OnInit {
     if (this.dataSource.paginator) {
       this.dataSource.paginator.firstPage();
     }
+  }
+  borrarFiltro() {
+    this.renderer.setProperty(this.inputFiltro.nativeElement, 'value', '');
+    this.dataSource.filter = '';
+  }
+
+  validarFormulario(): boolean {
+    if (this.ubicacion.codigoNorma == valores.vacio) {
+      Swal.fire({ icon: error_swal, title: error, text: mensajes.error_falta_datos });
+      return false;
+    }
+    if (this.ubicacion.provincia == valores.vacio) {
+      Swal.fire({ icon: error_swal, title: error, text: mensajes.error_falta_datos });
+      return false;
+    }
+    if (this.ubicacion.canton == valores.vacio) {
+      Swal.fire({ icon: error_swal, title: error, text: mensajes.error_falta_datos });
+      return false;
+    }
+    if (this.ubicacion.parroquia == valores.vacio) {
+      Swal.fire({ icon: error_swal, title: error, text: mensajes.error_falta_datos });
+      return false;
+    }
+    return true;
   }
 }

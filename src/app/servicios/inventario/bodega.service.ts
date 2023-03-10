@@ -47,6 +47,14 @@ export class BodegaService {
       }));
   }
 
+  consultarActivos(): Observable<Respuesta> {
+    return this.http.get(environment.host + urn.ruta + urn.bodega + urn.consultarActivos, options).pipe(
+      map(response => response as Respuesta),
+      catchError(err => {
+        return throwError(()=>err);
+      }));
+  }
+
   actualizar(bodega: Bodega): Observable<Respuesta> {
     return this.http.put(environment.host + urn.ruta + urn.bodega, bodega, options).pipe(
       map(response => response as Respuesta),
