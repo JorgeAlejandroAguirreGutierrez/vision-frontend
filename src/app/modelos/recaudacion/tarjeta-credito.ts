@@ -12,9 +12,9 @@ export class TarjetaCredito {
   diferido: boolean;
   lote: string;
   valor: number;
+  banco: Banco;
   operadorTarjeta: OperadorTarjeta;
   franquiciaTarjeta:FranquiciaTarjeta;
-  banco: Banco;
 
   constructor(){
     this.id=valores.cero;
