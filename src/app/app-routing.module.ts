@@ -46,6 +46,7 @@ import { TipoRetencionComponent } from './configuraciones/tipo-retencion/tipo-re
 
 //Módulo de Recaudaciones
 import { RecaudacionComponent } from './recaudacion/recaudacion/recaudacion.component';
+import { RecaudacionNotaDebitoComponent } from './recaudacion/recaudacion-nota-debito/recaudacion-nota-debito.component';
 import { BancoComponent } from './recaudacion/banco/banco.component';
 
 // Módulo de Ventas
@@ -54,9 +55,10 @@ import { EgresoComponent } from './comprobantes/egreso/egreso.component';
 import { PedidoComponent } from './comprobantes/pedido/pedido.component';
 import { ProformaComponent } from './comprobantes/proforma/proforma.component';
 import { NotaCreditoVentaComponent } from './comprobantes/nota-credito-venta/nota-credito-venta.component';
+import { NotaDebitoVentaComponent } from './comprobantes/nota-debito-venta/nota-debito-venta.component';
 
 //Módulo de Entregas
-import { EntregaComponent } from './entregas/entrega/entrega.component';
+import { GuiaRemisionComponent } from './entregas/guia-remision/guia-remision.component';
 import { TransportistaComponent } from './entregas/transportista/transportista.component';
 import { VehiculoTransporteComponent } from './entregas/vehiculo-transporte/vehiculo-transporte.component';
 
@@ -65,6 +67,7 @@ import { ProveedorComponent, DialogoMapaProveedorComponent } from './compras/pro
 import { FacturaCompraComponent } from './compras/factura-compra/factura-compra.component';
 import { GrupoProveedorComponent, DialogoGrupoProveedorCuentaContableComponent } from './compras/grupo-proveedor/grupo-proveedor.component';
 import { NotaCreditoCompraComponent } from './compras/nota-credito-compra/nota-credito-compra.component';
+import { NotaDebitoCompraComponent } from './compras/nota-debito-compra/nota-debito-compra.component';
 
 //Módulo de Contabilidad
 import { ContabilizacionComponent } from './contabilidad/contabilizacion/contabilizacion.component';
@@ -122,7 +125,7 @@ const routes: Routes = [
   { path: 'inventario/grupoproducto', component: GrupoProductoComponent },
   { path: 'promocion', component: PromocionComponent },
   // Rutas para el modulo de entregas
-  { path: 'entrega', component: EntregaComponent },
+  { path: 'guiaremision', component: GuiaRemisionComponent },
   { path: 'cliente/vehiculotransporte', component: VehiculoTransporteComponent },
   // Rutas para el modulo de recaudación
   { path: 'recaudacion', component: RecaudacionComponent },
@@ -191,11 +194,12 @@ export const RoutingComponents = [
   TablaComponenteComponent,
   FiltroSerie,
   // Entregas
-  EntregaComponent,
+  GuiaRemisionComponent,
   TransportistaComponent,
   VehiculoTransporteComponent,
   // Recaudación
   RecaudacionComponent,
+  RecaudacionNotaDebitoComponent,
   BancoComponent,
   //Ventas
   FacturaComponent,
@@ -203,6 +207,7 @@ export const RoutingComponents = [
   PedidoComponent,
   ProformaComponent,
   NotaCreditoVentaComponent,
+  NotaDebitoVentaComponent,
   // Compras
   ProveedorComponent,
   DialogoMapaProveedorComponent,
@@ -210,6 +215,7 @@ export const RoutingComponents = [
   GrupoProveedorComponent,
   DialogoGrupoProveedorCuentaContableComponent,
   NotaCreditoCompraComponent,
+  NotaDebitoCompraComponent,
   // Contabilidad
   ContabilizacionComponent,
   CuentaContableComponent,

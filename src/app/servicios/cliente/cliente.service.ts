@@ -14,14 +14,7 @@ import { environment } from '../../../environments/environment';
 })
 export class ClienteService {
 
-  private messageSource = new BehaviorSubject(0);
-  currentMessage = this.messageSource.asObservable();
-
   constructor(private http: HttpClient, private router: Router) { }
-
-  enviar(clienteId: number) {
-    this.messageSource.next(clienteId);
-  }
 
   crear(cliente: Cliente): Observable<Respuesta> {
     return this.http.post(environment.host + urn.ruta + urn.cliente, JSON.stringify(cliente), options).pipe(

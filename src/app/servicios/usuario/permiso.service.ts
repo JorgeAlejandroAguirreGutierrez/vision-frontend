@@ -13,14 +13,7 @@ import { Permiso } from '../../modelos/usuario/permiso';
 })
 export class PermisoService {
 
-  private messageSource = new BehaviorSubject(0);
-  currentMessage = this.messageSource.asObservable();
-
   constructor(private http: HttpClient, private router: Router) { }
-
-  enviar(perfil_id: number) {
-    this.messageSource.next(perfil_id);
-  }
 
   crear(permiso: Permiso): Observable<Respuesta> {
     return this.http.post(environment.host + urn.ruta + urn.permiso, permiso, options).pipe(

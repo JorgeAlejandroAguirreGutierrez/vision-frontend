@@ -3,7 +3,6 @@ import { FacturaCompraLinea } from './factura-compra-linea';
 import { Sesion } from '../usuario/sesion';
 import { valores } from "../../constantes";
 import { TipoComprobante } from '../comprobante/tipo-comprobante';
-import { Bodega } from '../inventario/bodega';
 export class FacturaCompra {
     id: number;
     codigo: string;

@@ -21,7 +21,6 @@ import { Impuesto } from 'src/app/modelos/inventario/impuesto';
 import { ProductoService } from 'src/app/servicios/inventario/producto.service';
 import { FacturaCompraService } from 'src/app/servicios/compra/factura-compra.service';
 import { Bodega } from 'src/app/modelos/inventario/bodega';
-import { FacturaCompraLineaService } from 'src/app/servicios/compra/factura-compra-linea.service';
 import { BodegaService } from 'src/app/servicios/inventario/bodega.service';
 
 @Component({
@@ -57,10 +56,10 @@ export class FacturaCompraComponent implements OnInit {
   @ViewChild("paginatorFacturaCompraLinea") paginatorFacturaCompraLinea: MatPaginator;
   
 
-  constructor(private proveedorService: ProveedorService, private sesionService: SesionService, private facturaCompraLineaService: FacturaCompraLineaService,
+  constructor(private proveedorService: ProveedorService, private sesionService: SesionService,
     private impuestoService: ImpuestoService, private router: Router, private facturaCompraService: FacturaCompraService,
     private productoService: ProductoService, private bodegaService: BodegaService,
-    private modalService: NgbModal, private _formBuilder: UntypedFormBuilder) { }
+    private modalService: NgbModal) { }
 
   facturaCompra: FacturaCompra = new FacturaCompra();
   facturaCompraLinea: FacturaCompraLinea = new FacturaCompraLinea();
@@ -77,11 +76,6 @@ export class FacturaCompraComponent implements OnInit {
 
   si = valores.si;
   no = valores.no;
-
-  //VARIABLES MUESTRA
-  telefono: string = valores.vacio;
-  celular: string = valores.vacio;
-  correo: string = valores.vacio;
 
   @HostListener('window:keypress', ['$event'])
   keyEvent($event: KeyboardEvent) {
@@ -142,18 +136,13 @@ export class FacturaCompraComponent implements OnInit {
       event.preventDefault();
     this.facturaCompra = new FacturaCompra();
     this.seleccionProveedor.patchValue(valores.vacio);
-    this.telefono = valores.vacio;
-    this.celular = valores.vacio;
-    this.correo = valores.vacio;
+    this.seleccionProducto.patchValue(valores.vacio);
     this.dataSourceFacturaCompraLinea = new MatTableDataSource<FacturaCompraLinea>([]);
   }
 
   construirFactura() {
     if (this.facturaCompra.id != 0) {
         this.seleccionProveedor.patchValue(this.facturaCompra.proveedor);
-        this.telefono = this.facturaCompra.proveedor.telefonosProveedor.length > 0 ? this.facturaCompra.proveedor.telefonosProveedor[0].numero: valores.vacio;
-        this.celular = this.facturaCompra.proveedor.celularesProveedor.length > 0 ? this.facturaCompra.proveedor.celularesProveedor[0].numero: valores.vacio;
-        this.correo = this.facturaCompra.proveedor.correosProveedor.length > 0 ? this.facturaCompra.proveedor.correosProveedor[0].email: valores.vacio;
         this.dataSourceFacturaCompraLinea = new MatTableDataSource<FacturaCompraLinea>(this.facturaCompra.facturaCompraLineas);
         this.dataSourceFacturaCompraLinea.paginator = this.paginatorFacturaCompraLinea;
     }
@@ -229,13 +218,7 @@ export class FacturaCompraComponent implements OnInit {
     this.proveedorService.obtener(proveedorId).subscribe(
       res => {
         this.facturaCompra.proveedor = res.resultado as Proveedor;
-        this.seleccionProveedor.patchValue(this.facturaCompra.proveedor);   
-        if (this.facturaCompra.proveedor.telefonosProveedor.length > valores.cero)
-          this.telefono = this.facturaCompra.proveedor.telefonosProveedor[0].numero;
-        if (this.facturaCompra.proveedor.celularesProveedor.length > valores.cero)
-          this.celular = this.facturaCompra.proveedor.celularesProveedor[0].numero;
-        if (this.facturaCompra.proveedor.correosProveedor.length > valores.cero)
-          this.correo = this.facturaCompra.proveedor.correosProveedor[0].email;
+        this.seleccionProveedor.patchValue(this.facturaCompra.proveedor);
         this.consultarProductos();
       },
       err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
@@ -342,7 +325,6 @@ export class FacturaCompraComponent implements OnInit {
       return;
     }
     this.facturaCompra.facturaCompraLineas.push(this.facturaCompraLinea);
-    console.log(this.facturaCompra);
     this.facturaCompraService.calcular(this.facturaCompra).subscribe(
       res => {
         this.facturaCompra = res.resultado as FacturaCompra;
@@ -477,11 +459,11 @@ export class FacturaCompraComponent implements OnInit {
   }
 
   calcularLinea(){
-    this.facturaCompraLineaService.calcularLinea(this.facturaCompraLinea).subscribe(
+    this.facturaCompraService.calcularLinea(this.facturaCompraLinea).subscribe(
       res => {
         this.facturaCompraLinea = res.resultado as FacturaCompraLinea;
       },
-      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.message })
+      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
 
@@ -492,7 +474,7 @@ export class FacturaCompraComponent implements OnInit {
         this.dataSourceFacturaCompraLinea = new MatTableDataSource<FacturaCompraLinea>(this.facturaCompra.facturaCompraLineas);
         this.dataSourceFacturaCompraLinea.paginator = this.paginatorFacturaCompraLinea;
       },
-      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.message })
+      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
 

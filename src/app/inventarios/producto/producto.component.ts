@@ -1,5 +1,5 @@
-import { Component, OnInit, HostListener, Type, Inject, ElementRef, Renderer2 } from '@angular/core';
-import { UntypedFormControl, UntypedFormArray, UntypedFormGroup, Validators } from '@angular/forms';
+import { Component, OnInit, Inject, ElementRef, Renderer2 } from '@angular/core';
+import { UntypedFormArray } from '@angular/forms';
 import { BehaviorSubject } from 'rxjs';
 import Swal from 'sweetalert2';
 import { valores, mensajes, otras, validarSesion, exito, exito_swal, error, error_swal, warning, warning_swal, si_seguro } from '../../constantes';
@@ -20,7 +20,6 @@ import { SegmentoService } from '../../servicios/cliente/segmento.service';
 import { Segmento } from '../../modelos/cliente/segmento';
 import { ProductoService } from '../../servicios/inventario/producto.service';
 import { CategoriaProductoService } from '../../servicios/inventario/categoria-producto.service';
-import { CategoriaProducto } from '../../modelos/inventario/categoria-producto';
 import { Router } from '@angular/router';
 import { Proveedor } from '../../modelos/compra/proveedor';
 import { ProveedorService } from '../../servicios/compra/proveedor.service';
@@ -166,7 +165,10 @@ export class ProductoComponent implements OnInit {
   crear(event: any) {
     if (event != null)
       event.preventDefault();
-    console.log(this.producto);
+    if (this.producto.grupoProducto.id == valores.cero) {
+      Swal.fire(error, mensajes.error_grupo_producto, error_swal);
+      return;
+    }
     if (!this.validarFormulario())
       return;
     this.productoService.crear(this.producto).subscribe({

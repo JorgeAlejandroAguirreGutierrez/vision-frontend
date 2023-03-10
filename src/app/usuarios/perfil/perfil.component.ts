@@ -186,7 +186,6 @@ export class PerfilComponent implements OnInit {
   }
 
   inactivarPermiso(permiso: Permiso){
-    console.log(permiso);
     this.permisoService.inactivar(permiso).subscribe({
       next: res => {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });

@@ -14,13 +14,6 @@ export class BodegaService {
 
   constructor(private http: HttpClient) { }
 
-  private messageSource = new BehaviorSubject(0);
-  currentMessage = this.messageSource.asObservable();
-
-  enviar(bodega_id: number) {
-    this.messageSource.next(bodega_id);
-  }
-
   crear(bodega: Bodega): Observable<Respuesta> {
     return this.http.post(environment.host + urn.ruta + urn.bodega, bodega, options).pipe(
       map(response => response as Respuesta),

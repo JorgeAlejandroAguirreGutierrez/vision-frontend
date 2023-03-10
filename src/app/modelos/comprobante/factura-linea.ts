@@ -5,7 +5,7 @@ import { Impuesto } from '../inventario/impuesto';
 import { valores } from "../../constantes";
 import { Bodega } from '../inventario/bodega';
 
-export class FacturaDetalle {
+export class FacturaLinea {
   id: number;
   posicion: number;
   comentario: string;
@@ -36,8 +36,6 @@ export class FacturaDetalle {
   impuesto: Impuesto;
   //BODEGA SELECCIONADO
   bodega: Bodega;
-
-  
 
   constructor() {
     this.id = valores.cero;

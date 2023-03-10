@@ -213,7 +213,6 @@ export class UsuarioComponent implements OnInit {
     const archivoCapturado = event.target.files[0];
     this.imagenService.convertirBase64(archivoCapturado).then((imagen: any) => {
       this.usuario.avatar64 = imagen.base64;
-      //console.log(this.usuario.avatar64);
     });
   }
 

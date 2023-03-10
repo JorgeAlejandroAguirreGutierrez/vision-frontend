@@ -13,14 +13,7 @@ import { Router } from '@angular/router';
 })
 export class TipoPagoService {
 
-  private messageSource = new BehaviorSubject(0);
-  currentMessage = this.messageSource.asObservable();
-
   constructor(private http: HttpClient, private router: Router) { }
-
-  enviar(tipoPagoId: number) {
-    this.messageSource.next(tipoPagoId);
-  }
 
   crear(tipoPago: TipoPago): Observable<Respuesta> {
     return this.http.post(environment.host + urn.ruta + urn.tipoPago, tipoPago, options).pipe(

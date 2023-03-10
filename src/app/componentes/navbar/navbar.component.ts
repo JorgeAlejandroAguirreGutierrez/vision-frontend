@@ -47,7 +47,6 @@ export class NavbarComponent implements OnInit {
     this.usuarioService.obtener(this.sesion.usuario.id).subscribe(
       res => {
         this.usuario = res.resultado as Usuario;
-        //console.log(this.usuario);
       }
     );
   }

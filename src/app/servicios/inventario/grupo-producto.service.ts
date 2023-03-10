@@ -12,14 +12,7 @@ import { GrupoProducto } from '../../modelos/inventario/grupo-producto';
 })
 export class GrupoProductoService {
 
-  private messageSource = new BehaviorSubject(0);
-  currentMessage = this.messageSource.asObservable();
-
   constructor(private http: HttpClient) { }
-
-  enviar(clienteId: number) {
-    this.messageSource.next(clienteId);
-  }
 
   crear(grupoProducto: GrupoProducto): Observable<Respuesta> {
     return this.http.post(environment.host + urn.ruta + urn.grupoProducto, grupoProducto, options).pipe(

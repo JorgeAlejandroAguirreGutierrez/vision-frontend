@@ -78,7 +78,6 @@ export class GrupoProveedorComponent implements OnInit {
       event.preventDefault();
     if (!this.validarFormulario())
       return;
-    console.log(this.grupoProveedor);  
     this.grupoProveedorService.crear(this.grupoProveedor).subscribe({
       next: res => {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });

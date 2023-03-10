@@ -10,16 +10,15 @@ import { environment } from '../../../environments/environment';
 @Injectable({
   providedIn: 'root'
 })
-export class FacturacionElectronicaService {
+export class FacturaElectronicaService {
 
   constructor(private http: HttpClient, private router: Router) { }
 
-  enviar(factura: Factura): Observable<Respuesta> {
-    return this.http.post(environment.host + urn.ruta + urn.facturaEletronica, factura, options).pipe(
+  enviar(facturaId: number): Observable<Respuesta> {
+    return this.http.get(environment.host + urn.ruta + urn.facturaEletronica + urn.slash + facturaId, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
-        return throwError(err);
-      })
-    );
+        return throwError(() => err);
+      }));
   }
 }

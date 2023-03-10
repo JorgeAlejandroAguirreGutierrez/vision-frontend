@@ -14,14 +14,7 @@ import { MovimientoContable } from '../../modelos/contabilidad/movimiento-contab
 
 export class MovimientoContableService {
 
-  private messageSource = new BehaviorSubject(0);
-  currentMessage = this.messageSource.asObservable();
-
   constructor(private http: HttpClient) { }
-
-  enviar(movimientoContableId: number) {
-    this.messageSource.next(movimientoContableId);
-  }
 
   crear(movimientoContable: MovimientoContable): Observable<Respuesta> {
     return this.http.post(environment.host + urn.ruta + urn.movimientoContable, movimientoContable, options).pipe(

@@ -2,7 +2,7 @@ import { Transportista } from './transportista';
 import { Factura } from '../comprobante/factura';
 import { valores } from "../../constantes";
 import { Ubicacion } from '../configuracion/ubicacion';
-export class Entrega {
+export class GuiaRemision {
     id: number;
     codigo: string;
     fecha: Date;

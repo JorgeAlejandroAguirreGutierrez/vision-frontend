@@ -26,11 +26,6 @@
                     <mat-icon>delete</mat-icon>
                 </a>
             </li>
-            <li class="nav-item" *ngIf="facturaCompra.id!=0">
-                <a class="nav-link" title="Facturar" role="button" (click)="facturar($event)">
-                    <mat-icon>publish</mat-icon>
-                </a>
-            </li>
         </ul>
     </nav>
     <ng-template matStepLabel>Factura de Compra</ng-template>
@@ -64,7 +59,8 @@
                 <div class="col-4">
                     <mat-form-field appearance="standard">
                         <mat-label>Ruc</mat-label>
-                        <input matInput type="text" [(ngModel)]="facturaCompra.proveedor.identificacion" class="form-control-sm" [disabled]="true">
+                        <input matInput type="text" [(ngModel)]="facturaCompra.proveedor.identificacion"
+                            class="form-control-sm" [disabled]="true">
                     </mat-form-field>
                 </div>
                 <div class="col-12">
@@ -74,40 +70,55 @@
                             class="form-control-sm" [disabled]="true">
                     </mat-form-field>
                 </div>
-                <div class="col-3">
-                    <mat-form-field appearance="standard">
-                        <mat-label>Teléfono</mat-label>
-                        <b matPrefix>+593 &nbsp;</b>
-                        <input matInput type="tel" [(ngModel)]="telefono" class="form-control-sm" [disabled]="true">
-                    </mat-form-field>
+                <div class="form-row col-4">
+                    <ng-container *ngFor="let telefono of facturaCompra.proveedor.telefonosProveedor; let i=index ">
+                        <div class="col-9">
+                            <mat-form-field appearance="standard">
+                                <mat-label>Teléfono</mat-label>
+                                <b matPrefix>+593 &nbsp;</b>
+                                <input matInput type="tel" [value]="telefono.numero" class="form-control-sm"
+                                    [disabled]="true">
+                            </mat-form-field>
+                        </div>
+                        <div class="col-3 iconos">
+                            <button mat-icon-button [disabled]="true">
+                                <mat-icon class="iconos-peque">close</mat-icon>
+                            </button>
+                        </div>
+                    </ng-container>
                 </div>
-                <div class="col-1 iconos">
-                    <button mat-button mat-icon-button (click)="open(modalTelefonos)">
-                        <mat-icon>visibility</mat-icon>
-                    </button>
+                <div class="form-row col-4">
+                    <ng-container *ngFor="let celular of facturaCompra.proveedor.celularesProveedor; let i=index ">
+                        <div class="col-9">
+                            <mat-form-field appearance="standard">
+                                <mat-label>Celular</mat-label>
+                                <b matPrefix>+593 &nbsp;</b>
+                                <input matInput type="tel" [value]="celular.numero" class="form-control-sm"
+                                    [disabled]="true">
+                            </mat-form-field>
+                        </div>
+                        <div class="col-3 iconos">
+                            <button mat-icon-button [disabled]="true">
+                                <mat-icon class="iconos-peque">close</mat-icon>
+                            </button>
+                        </div>
+                    </ng-container>
                 </div>
-                <div class="col-3">
-                    <mat-form-field appearance="standard">
-                        <mat-label>Celular</mat-label>
-                        <b matPrefix>+593</b>
-                        <input matInput type="tel" [(ngModel)]="celular" class="form-control-sm" [disabled]="true">
-                    </mat-form-field>
-                </div>
-                <div class="col-1 iconos">
-                    <button mat-button mat-icon-button (click)="open(modalCelulares)">
-                        <mat-icon>visibility</mat-icon>
-                    </button>
-                </div>
-                <div class="col-3">
-                    <mat-form-field appearance="standard">
-                        <mat-label>Correo electrónico</mat-label>
-                        <input matInput type="text" [(ngModel)]="correo" class="form-control-sm" [disabled]="true">
-                    </mat-form-field>
-                </div>
-                <div class="col-1 iconos">
-                    <button mat-button mat-icon-button (click)="open(modalCorreos)">
-                        <mat-icon>visibility</mat-icon>
-                    </button>
+                <div class="form-row col-4">
+                    <ng-container *ngFor="let correo of facturaCompra.proveedor.correosProveedor; let i=index ">
+                        <div class="col-9">
+                            <mat-form-field appearance="standard">
+                                <mat-label>Correo electrónico</mat-label>
+                                <input matInput type="text " [(ngModel)]="correo.email" class="form-control-sm "
+                                    [disabled]="true">
+                            </mat-form-field>
+                        </div>
+                        <div class="col-3 iconos">
+                            <button mat-icon-button [disabled]="true">
+                                <mat-icon class="iconos-peque">close</mat-icon>
+                            </button>
+                        </div>
+                    </ng-container>
                 </div>
                 <div class="col-3">
                     <mat-form-field appearance="standard">
@@ -158,7 +169,8 @@
                 <div class="col-2">
                     <mat-form-field appearance="standard">
                         <mat-label>Código</mat-label>
-                        <input matInput type="text" [(ngModel)]="facturaCompraLinea.producto.codigo" class="form-control-sm" [disabled]="true">
+                        <input matInput type="text" [(ngModel)]="facturaCompraLinea.producto.codigo"
+                            class="form-control-sm" [disabled]="true">
                     </mat-form-field>
                 </div>
                 <div class="col-4">
@@ -171,14 +183,16 @@
                             </mat-option>
                         </mat-autocomplete>
                         <input matInput type="text" class="form-control-sm" placeholder="Producto"
-                            [formControl]="seleccionProducto" [matAutocomplete]="producto" [disabled]="deshabilitarProveedor">
+                            [formControl]="seleccionProducto" [matAutocomplete]="producto"
+                            [disabled]="deshabilitarProveedor">
                     </mat-form-field>
                 </div>
                 <div class="col-2">
                     <mat-form-field appearance="standard">
                         <mat-label>Bodega</mat-label>
-                        <mat-select [(ngModel)]="facturaCompraLinea.bodega" [compareWith]="compareFn" (selectionChange)="seleccionarBodega()" class="form-control-sm">
-                            <mat-option *ngFor="let bodega of bodegas" [value]="bodega" >
+                        <mat-select [(ngModel)]="facturaCompraLinea.bodega" [compareWith]="compareFn"
+                            (selectionChange)="seleccionarBodega()" class="form-control-sm">
+                            <mat-option *ngFor="let bodega of bodegas" [value]="bodega">
                                 {{bodega.nombre}}</mat-option>
                         </mat-select>
                     </mat-form-field>
@@ -186,13 +200,16 @@
                 <div class="col-2">
                     <mat-form-field appearance="standard">
                         <mat-label>Categoría</mat-label>
-                        <input matInput type="text" [(ngModel)]="facturaCompraLinea.producto.categoriaProducto.abreviatura" class="form-control-sm" [disabled]="true">
+                        <input matInput type="text"
+                            [(ngModel)]="facturaCompraLinea.producto.categoriaProducto.abreviatura"
+                            class="form-control-sm" [disabled]="true">
                     </mat-form-field>
                 </div>
                 <div class="col-2">
                     <mat-form-field appearance="standard">
                         <mat-label>Medida</mat-label>
-                        <input matInput type="text" [(ngModel)]="facturaCompraLinea.producto.medida.descripcion" class="form-control-sm" [disabled]="true">
+                        <input matInput type="text" [(ngModel)]="facturaCompraLinea.producto.medida.descripcion"
+                            class="form-control-sm" [disabled]="true">
                     </mat-form-field>
                 </div>
                 <div class="col-2">
@@ -205,22 +222,26 @@
                 <div class="col-2">
                     <mat-form-field appearance="standard">
                         <mat-label>Costo Unit.</mat-label>
-                        <input matInput type="text" [(ngModel)]="facturaCompraLinea.costoUnitario" (change)="seleccionarCostoUnitario()" class="form-control-sm">
+                        <input matInput type="text" [(ngModel)]="facturaCompraLinea.costoUnitario"
+                            (change)="seleccionarCostoUnitario()" class="form-control-sm">
                     </mat-form-field>
                 </div>
                 <div class="col-2">
                     <mat-form-field appearance="standard">
                         <mat-label>Desc. $</mat-label>
-                        <input matInput type="text" step="0.01" [(ngModel)]="facturaCompraLinea.valorDescuentoLinea" (change)="seleccionarValorDescuentoLinea()" class="form-control-sm">
+                        <input matInput type="text" step="0.01" [(ngModel)]="facturaCompraLinea.valorDescuentoLinea"
+                            (change)="seleccionarValorDescuentoLinea()" class="form-control-sm">
                     </mat-form-field>
                 </div>
                 <div class="col-2">
                     <mat-form-field appearance="standard">
                         <mat-label>Desc. %</mat-label>
-                        <input matInput type="text" min="0" max="100" step="0.01" [(ngModel)]="facturaCompraLinea.porcentajeDescuentoLinea" (change)="seleccionarPorcentajeDescuentoLinea()" class="form-control-sm">
+                        <input matInput type="text" min="0" max="100" step="0.01"
+                            [(ngModel)]="facturaCompraLinea.porcentajeDescuentoLinea"
+                            (change)="seleccionarPorcentajeDescuentoLinea()" class="form-control-sm">
                     </mat-form-field>
                 </div>
-                <div class="col-2">
+                <div class="col-1">
                     <mat-form-field appearance="standard">
                         <mat-label>IVA</mat-label>
                         <mat-select [(ngModel)]="facturaCompraLinea.producto.impuesto" [compareWith]="compareFn"
@@ -236,13 +257,6 @@
                         <mat-label>Total</mat-label>
                         <input matInput type="text" [(ngModel)]="facturaCompraLinea.totalSinDescuentoLinea"
                             class="form-control-sm" [disabled]="true">
-                    </mat-form-field>
-                </div>
-                <div class="col-11">
-                    <mat-form-field appearance="outline">
-                        <mat-label>Comentario</mat-label>
-                        <textarea matInput [(ngModel)]="facturaCompraLinea.comentario" placeholder="Sobre el producto..."
-                            class="form-control" rows="1"></textarea>
                     </mat-form-field>
                 </div>
                 <div class="col-1 iconos">
@@ -385,7 +399,8 @@
                                 </div>
                                 <div class="col-5">
                                     <mat-form-field appearance="standard">
-                                        <input matInput type="text " [(ngModel)]="facturaCompra.subtotalBase12SinDescuento"
+                                        <input matInput type="text "
+                                            [(ngModel)]="facturaCompra.subtotalBase12SinDescuento"
                                             class="form-control-sm " [disabled]="true">
                                     </mat-form-field>
                                 </div>
@@ -394,7 +409,8 @@
                                 </div>
                                 <div class="col-5">
                                     <mat-form-field appearance="standard">
-                                        <input matInput type="text " [(ngModel)]="facturaCompra.subtotalBase0SinDescuento"
+                                        <input matInput type="text "
+                                            [(ngModel)]="facturaCompra.subtotalBase0SinDescuento"
                                             class="form-control-sm " [disabled]="true">
                                     </mat-form-field>
                                 </div>
@@ -412,7 +428,8 @@
                                 </div>
                                 <div class="col-5">
                                     <mat-form-field appearance="standard">
-                                        <input matInput type="text " [(ngModel)]="facturaCompra.totalSinDescuento" class="form-control-sm" [disabled]="true">
+                                        <input matInput type="text " [(ngModel)]="facturaCompra.totalSinDescuento"
+                                            class="form-control-sm" [disabled]="true">
                                     </mat-form-field>
                                 </div>
                             </div>
@@ -468,90 +485,3 @@
         </mat-expansion-panel>
     </mat-accordion>
 </div>
-<ng-template #modalCorreos let-modal>
-    <div class="modal-header ">
-        <h5 class="modal-title ">Ver Correos</h5>
-        <button type="button " class="close " aria-label="Close " (click)="modal.dismiss( 'Cross click') ">
-            <span aria-hidden="true ">&times;</span>
-        </button>
-    </div>
-    <div class="modal-body ">
-        <div class="form-group form-row table-responsive">
-            <table class="table table-bordered table-hover">
-                <thead>
-                    <tr>
-                        <th>CORREO</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr *ngFor="let correo of facturaCompra.proveedor.correosProveedor; let i=index ">
-                        <td>
-                            {{correo.email}}
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-    </div>
-    <div class="modal-footer ">
-        <button type="button " class="btn btn-outline-dark " (click)="modal.close( 'close') ">Cerrar</button>
-    </div>
-</ng-template>
-<ng-template #modalCelulares let-modal>
-    <div class="modal-header">
-        <h5 class="modal-title">Ver Celulares</h5>
-        <button type="button " class="close " aria-label="Close " (click)="modal.dismiss( 'Cross click') ">
-            <span aria-hidden="true ">&times;</span>
-        </button>
-    </div>
-    <div class="modal-body ">
-        <div class="form-group form-row table-responsive">
-            <table class="table table-bordered table-hover ">
-                <thead>
-                    <tr>
-                        <th>NUMERO</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr *ngFor="let celular of facturaCompra.proveedor.celularesProveedor; let i=index ">
-                        <td>
-                            {{celular.numero}}
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-    </div>
-    <div class="modal-footer ">
-        <button type="button " class="btn btn-outline-dark " (click)="modal.close( 'close') ">Cerrar</button>
-    </div>
-</ng-template>
-<ng-template #modalTelefonos let-modal>
-    <div class="modal-header">
-        <h5 class="modal-title ">Ver Telefonos</h5>
-        <button type="button " class="close " aria-label="Close " (click)="modal.dismiss( 'Cross click') ">
-            <span aria-hidden="true ">&times;</span>
-        </button>
-    </div>
-    <div class="modal-body ">
-        <div class="form-group form-row table-responsive">
-            <table class="table table-bordered table-hover ">
-                <thead>
-                    <tr>
-                        <th>NUMERO</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr *ngFor="let telefono of facturaCompra.proveedor.telefonosProveedor; let i=index ">
-                        <td>
-                            {{telefono.numero}}
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-    </div>
-    <div class="modal-footer ">
-        <button type="button " class="btn btn-outline-dark " (click)="modal.close( 'close') ">Cerrar</button>
-    </div>
-</ng-template>

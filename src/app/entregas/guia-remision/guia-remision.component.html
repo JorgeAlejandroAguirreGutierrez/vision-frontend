@@ -2,12 +2,12 @@
     <nav class="navbar-light nav-fijo">
         <ul class="navbar-nav">
             <li class="nav-item">
-                <ng-container *ngIf="entrega.id==0">
+                <ng-container *ngIf="guiaRemision.id==0">
                     <a class="nav-link" title="Guardar" href="#" role="button" (click)="crear($event)">
                         <mat-icon>save</mat-icon>
                     </a>
                 </ng-container>
-                <ng-container *ngIf="entrega.id!=0">
+                <ng-container *ngIf="guiaRemision.id!=0">
                     <a class="nav-link" title="Guardar" href="#" role="button" (click)="actualizar($event)">
                         <mat-icon>update</mat-icon>
                     </a>
@@ -18,12 +18,10 @@
                     <mat-icon>note_add</mat-icon>
                 </a>
             </li>
-            <li class="nav-item">
-                <ng-container *ngIf="entrega.factura.id!=0">
-                    <a class="nav-link" title="Crear Factura Electronica" role="button" (click)="crearFacturaElectronica($event)">
-                        <mat-icon>publish</mat-icon>
-                    </a>
-                </ng-container>
+            <li class="nav-item" *ngIf="guiaRemision.id!=0 && guiaRemision.factura.id!=0">
+                <a class="nav-link" title="Crear Factura Electronica" href="#" role="button" (click)="crearFacturaElectronica($event)">
+                    <mat-icon>publish</mat-icon>
+                </a>
             </li>
         </ul>
     </nav>
@@ -47,26 +45,26 @@
                         <mat-form-field appearance="standard">
                             <mat-label>Identificación</mat-label>
                             <input matInput type="text" class="form-control-sm"
-                                [value]="entrega.factura.cliente.identificacion" [disabled]="true">
+                                [value]="guiaRemision.factura.cliente.identificacion" [disabled]="true">
                         </mat-form-field>
                     </div>
                     <div class="col-9">
                         <mat-form-field appearance="standard">
                             <mat-label>Cliente</mat-label>
-                            <input matInput type="text" class="form-control-sm" [value]="entrega.factura.cliente.razonSocial" [disabled]="true">
+                            <input matInput type="text" class="form-control-sm" [value]="guiaRemision.factura.cliente.razonSocial" [disabled]="true">
                         </mat-form-field>
                     </div>
                     <div class="col-12">
                         <mat-form-field appearance="standard">
                             <mat-label>Direccion</mat-label>
-                            <input matInput type="text" [(ngModel)]="entrega.direccion" [disabled]="deshabilitar" oninput="this.value = this.value.toUpperCase()"
+                            <input matInput type="text" [(ngModel)]="guiaRemision.direccion" [disabled]="deshabilitar" oninput="this.value = this.value.toUpperCase()"
                                 class="form-control-sm">
                         </mat-form-field>
                     </div>
                     <div class="col-4">
                         <mat-form-field appearance="standard">
                             <mat-label>Provincia</mat-label>
-                            <mat-select type="text" (selectionChange)="seleccionarProvincia()" [(ngModel)]="entrega.ubicacion.provincia" [disabled]="deshabilitar" class="form-control-sm">
+                            <mat-select type="text" (selectionChange)="seleccionarProvincia()" [(ngModel)]="guiaRemision.ubicacion.provincia" [disabled]="deshabilitar" class="form-control-sm">
                                 <mat-option *ngFor="let provincia of provincias" [value]="provincia.provincia">
                                     {{provincia.provincia}}
                                 </mat-option>
@@ -76,7 +74,7 @@
                     <div class="col-4">
                         <mat-form-field appearance="standard">
                             <mat-label>Canton</mat-label>
-                            <mat-select type="text" (selectionChange)="seleccionarCanton()" [(ngModel)]="entrega.ubicacion.canton" [disabled]="deshabilitar" class="form-control-sm">
+                            <mat-select type="text" (selectionChange)="seleccionarCanton()" [(ngModel)]="guiaRemision.ubicacion.canton" [disabled]="deshabilitar" class="form-control-sm">
                                 <mat-option *ngFor="let canton of cantones" [value]="canton.canton">
                                     {{canton.canton}}
                                 </mat-option>
@@ -86,7 +84,7 @@
                     <div class="col-4">
                         <mat-form-field appearance="standard">
                             <mat-label>Parroquia</mat-label>
-                            <mat-select type="text" [(ngModel)]="entrega.ubicacion.parroquia" [disabled]="deshabilitar" class="form-control-sm">
+                            <mat-select type="text" [(ngModel)]="guiaRemision.ubicacion.parroquia" [disabled]="deshabilitar" class="form-control-sm">
                                 <mat-option *ngFor="let parroquia of parroquias" [value]="parroquia.parroquia">
                                     {{parroquia.parroquia}}
                                 </mat-option>
@@ -97,7 +95,7 @@
                         <mat-form-field appearance="standard">
                             <mat-label>Teléfono</mat-label>
                             <b matPrefix>+593 &nbsp;</b>
-                            <input matInput type="tel" [(ngModel)]="entrega.telefono" class="form-control-sm" [disabled]="deshabilitar" (change)="validarTelefono()" placeholder="03-2999-123"
+                            <input matInput type="tel" [(ngModel)]="guiaRemision.telefono" class="form-control-sm" [disabled]="deshabilitar" (change)="validarTelefono()" placeholder="03-2999-123"
                                 oninput="this.value = this.value.replace
                                     ( /^(\d{2})(\d{4})(\d{3})$/, '$1-$2-$3')">
                         </mat-form-field>
@@ -106,7 +104,7 @@
                         <mat-form-field appearance="standard">
                             <mat-label>Celular</mat-label>
                             <b matPrefix>+593 </b>
-                            <input matInput type="tel" [(ngModel)]="entrega.celular" class="form-control-sm" [disabled]="deshabilitar" (change)="validarCelular()" placeholder="09-9999-1234"
+                            <input matInput type="tel" [(ngModel)]="guiaRemision.celular" class="form-control-sm" [disabled]="deshabilitar" (change)="validarCelular()" placeholder="09-9999-1234"
                                 oninput="this.value = this.value.replace
                                     ( /^(\d{2})(\d{4})(\d{4})$/, '$1-$2-$3')">
                         </mat-form-field>
@@ -114,19 +112,19 @@
                     <div class="col-4">
                         <mat-form-field appearance="standard">
                             <mat-label>Correo electrónico</mat-label>
-                            <input matInput type="text" [(ngModel)]="entrega.correo" [disabled]="deshabilitar" oninput="this.value = this.value.toLowerCase()" class="form-control-sm "
+                            <input matInput type="text" [(ngModel)]="guiaRemision.correo" [disabled]="deshabilitar" oninput="this.value = this.value.toLowerCase()" class="form-control-sm "
                                 (change)="validarCorreo()" placeholder="ejemplo@futiristic.com">
                         </mat-form-field>
                     </div>
                     <div class="col-12">
                         <mat-form-field appearance="standard">
                             <mat-label>Referencia</mat-label>
-                            <input matInput type="text" [(ngModel)]="entrega.referencia" oninput="this.value = this.value.toUpperCase()" [disabled]="deshabilitar" class="form-control-sm">
+                            <input matInput type="text" [(ngModel)]="guiaRemision.referencia" oninput="this.value = this.value.toUpperCase()" [disabled]="deshabilitar" class="form-control-sm">
                         </mat-form-field>
                     </div>
                 </div>
                 <div class="form-row col-4 linea-vertical">
-                    <mat-radio-group class="col-12" aria-label="Selecione una opción" [(ngModel)]="entrega.opcionGuia" (change)="seleccionarOpcionGuia()">
+                    <mat-radio-group class="col-12" aria-label="Selecione una opción" [(ngModel)]="guiaRemision.opcionGuia" (change)="seleccionarOpcionGuia()">
                         <mat-radio-button [value]="clienteDireccion" [checked]="true">Dir. Cliente</mat-radio-button>
                         <mat-radio-button [value]="nuevaDireccion">Nueva Dir.</mat-radio-button>
                         <mat-radio-button [value]="sinGuia">Sin Guia</mat-radio-button>
@@ -134,19 +132,19 @@
                     <div class="col-6">
                         <mat-form-field appearance="standard">
                             <mat-label># Factura</mat-label>
-                            <input matInput type="text" [value]="entrega.factura.secuencia" class="form-control-sm" [disabled]="true">
+                            <input matInput type="text" [value]="guiaRemision.factura.secuencia" class="form-control-sm" [disabled]="true">
                         </mat-form-field>
                     </div>
                     <div class="col-6">
                         <mat-form-field appearance="standard">
                             <mat-label>Fecha Compra</mat-label>
-                            <input matInput type="date" value="{{entrega.factura.fecha | date:'yyyy-MM-dd'}}" class="form-control-sm" [disabled]="true">
+                            <input matInput type="date" value="{{guiaRemision.factura.fecha | date:'yyyy-MM-dd'}}" class="form-control-sm" [disabled]="true">
                         </mat-form-field>
                     </div>
                     <div class="col-12">
                         <mat-form-field appearance="standard">
                             <mat-label>Transportista</mat-label>
-                            <mat-select class="form-control-sm" [(ngModel)]="entrega.transportista" [compareWith]="compareFn" [disabled]="deshabilitarTransportista">
+                            <mat-select class="form-control-sm" [(ngModel)]="guiaRemision.transportista" [compareWith]="compareFn" [disabled]="deshabilitarTransportista">
                                 <mat-option *ngFor="let transportista of transportistas" [value]="transportista">
                                     {{transportista.nombre}}
                                 </mat-option>
@@ -156,7 +154,7 @@
                     <div class="col-4">
                         <mat-form-field appearance="standard">
                             <mat-label>Placa</mat-label>
-                            <mat-select class="form-control-sm" [(ngModel)]="entrega.transportista" [compareWith]="compareFn" [disabled]="deshabilitarTransportista">
+                            <mat-select class="form-control-sm" [(ngModel)]="guiaRemision.transportista" [compareWith]="compareFn" [disabled]="deshabilitarTransportista">
                                 <mat-option *ngFor="let transportista of transportistas" [value]="transportista">
                                     {{transportista.vehiculoTransporte.placa}}
                                 </mat-option>
@@ -167,26 +165,26 @@
                         <mat-form-field appearance="standard">
                             <mat-label># Vehiculo</mat-label>
                             <input matInput type="text" class="form-control-sm"
-                                [(ngModel)]="entrega.transportista.vehiculoTransporte.numero" [disabled]="true">
+                                [(ngModel)]="guiaRemision.transportista.vehiculoTransporte.numero" [disabled]="true">
                         </mat-form-field>
                     </div>
                     <div class="col-4">
                         <mat-form-field appearance="standard">
                             <mat-label>Propio</mat-label>
-                            <input matInput type="text" [(ngModel)]="entrega.transportista.vehiculoPropio" [disabled]="true"
+                            <input matInput type="text" [(ngModel)]="guiaRemision.transportista.vehiculoPropio" [disabled]="true"
                             oninput="this.value = this.value.toUpperCase()" class="form-control-sm">
                         </mat-form-field>
                     </div>
                     <div class="col-6">
                         <mat-form-field appearance="standard">
                             <mat-label>No. Guia</mat-label>
-                            <input matInput type="text" class="form-control-sm" [(ngModel)]="entrega.guiaNumero" [disabled]="true">
+                            <input matInput type="text" class="form-control-sm" [(ngModel)]="guiaRemision.guiaNumero" [disabled]="true">
                         </mat-form-field>
                     </div>
                     <div class="col-6">
                         <mat-form-field appearance="standard">
                             <mat-label>Estado</mat-label>
-                            <mat-select class="form-control-sm" [(ngModel)]="entrega.estado" [disabled]="true">
+                            <mat-select class="form-control-sm" [(ngModel)]="guiaRemision.estado" [disabled]="true">
                                 <mat-option [value]="entregado">{{entregado}}</mat-option>
                                 <mat-option [value]="pendiente">{{pendiente}}</mat-option>
                                 <mat-option [value]="sinGuia">{{sinGuia}}</mat-option>
@@ -208,37 +206,37 @@
             </mat-expansion-panel-header>
             <mat-divider></mat-divider>
             <div class="mat-elevation-z8">
-                <table mat-table [dataSource]="dataFacturaDetalle" matSort>
+                <table mat-table [dataSource]="dataSource" matSort>
                     <!-- Nombre Columna -->
                     <ng-container matColumnDef="nombre">
                         <th mat-header-cell *matHeaderCellDef mat-sort-header>Producto </th>
-                        <td mat-cell *matCellDef="let facturaDetalle"> {{facturaDetalle.producto.nombre}} </td>
+                        <td mat-cell *matCellDef="let facturaLinea"> {{facturaLinea.producto.nombre}} </td>
                     </ng-container>
                     <!-- Cantidad Columna -->
                     <ng-container matColumnDef="cantidad">
                         <th mat-header-cell *matHeaderCellDef mat-sort-header>Cant </th>
-                        <td mat-cell *matCellDef="let facturaDetalle"> {{facturaDetalle.cantidad}} </td>
+                        <td mat-cell *matCellDef="let facturaLinea"> {{facturaLinea.cantidad}} </td>
                     </ng-container>
                     <!-- Precio unitario Columna -->
                     <ng-container matColumnDef="precio_unitario">
                         <th mat-header-cell *matHeaderCellDef mat-sort-header>P/U </th>
-                        <td mat-cell *matCellDef="let facturaDetalle">
-                            ${{facturaDetalle.precio.precioVentaPublicoManual }} </td>
+                        <td mat-cell *matCellDef="let facturaLinea">
+                            ${{facturaLinea.precio.precioVentaPublicoManual }} </td>
                     </ng-container>
                     <!-- Impuesto Columna -->
                     <ng-container matColumnDef="iva">
                         <th mat-header-cell *matHeaderCellDef mat-sort-header> IVA </th>
-                        <td mat-cell *matCellDef="let facturaDetalle">
-                            {{facturaDetalle.impuesto.porcentaje}}% </td>
+                        <td mat-cell *matCellDef="let facturaLinea">
+                            {{facturaLinea.impuesto.porcentaje}}% </td>
                     </ng-container>
                     <!-- Total Columna -->
                     <ng-container matColumnDef="total">
                         <th mat-header-cell *matHeaderCellDef mat-sort-header> Total </th>
-                        <td mat-cell *matCellDef="let facturaDetalle">
-                            ${{facturaDetalle.totalConDescuentoLinea}} </td>
+                        <td mat-cell *matCellDef="let facturaLinea">
+                            ${{facturaLinea.totalConDescuentoLinea}} </td>
                     </ng-container>
-                    <tr mat-header-row *matHeaderRowDef="columnasFacturaDetalle"></tr>
-                    <tr mat-row *matRowDef="let row; columns: columnasFacturaDetalle;"></tr>
+                    <tr mat-header-row *matHeaderRowDef="columnas"></tr>
+                    <tr mat-row *matRowDef="let row; columns: columnas;"></tr>
                 </table>
                 <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
             </div>

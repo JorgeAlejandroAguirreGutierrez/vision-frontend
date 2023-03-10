@@ -272,9 +272,7 @@ export class ProveedorComponent implements OnInit {
       event.preventDefault();
     if (!this.validarFormulario())
       return;
-    //this.cliente.estacion = this.sesion.usuario.estacion;
     this.agregarTelefonoCorreo();
-    console.log(this.proveedor);
     this.proveedorService.crear(this.proveedor).subscribe({
       next: res => {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
@@ -298,7 +296,6 @@ export class ProveedorComponent implements OnInit {
     if (event != null)
       event.preventDefault();
     this.agregarTelefonoCorreo();
-    console.log(this.proveedor);
     this.proveedorService.actualizar(this.proveedor).subscribe({
       next: res => {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
@@ -339,7 +336,6 @@ export class ProveedorComponent implements OnInit {
     this.proveedorService.consultar().subscribe({
       next: res => {
         this.proveedores = res.resultado as Proveedor[];
-        console.log(this.proveedores);
         this.llenarTabla(this.proveedores);
       },
       error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
@@ -375,7 +371,6 @@ export class ProveedorComponent implements OnInit {
         this.proveedor = res.resultado as Proveedor;
         this.llenarUbicacion();
         this.recuperarCoordenadas();
-        console.log(this.proveedor);
       },
       error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     });
@@ -426,6 +421,17 @@ export class ProveedorComponent implements OnInit {
         this.proveedor.tipoContribuyente = new TipoContribuyente();
         Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje });
       }
+    });
+  }
+
+  buscar(event) {
+    if (event != null)
+      event.preventDefault();
+    this.proveedorService.buscar(this.proveedorBuscar).subscribe({
+      next: res => {
+        this.proveedores = res.resultado as Proveedor[]
+      },
+      error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     });
   }
 

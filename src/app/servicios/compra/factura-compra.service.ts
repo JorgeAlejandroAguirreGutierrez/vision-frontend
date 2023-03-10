@@ -7,6 +7,7 @@ import { Router } from '@angular/router';
 import { urn, options } from '../../constantes';
 import { environment } from '../../../environments/environment';
 import { FacturaCompra } from '../../modelos/compra/factura-compra';
+import { FacturaCompraLinea } from 'src/app/modelos/compra/factura-compra-linea';
 
 @Injectable({
   providedIn: 'root'
@@ -35,6 +36,14 @@ export class FacturaCompraService {
 
   consultar(): Observable<Respuesta> {
     return this.http.get(environment.host + urn.ruta + urn.facturaCompra, options).pipe(
+      map(response => response as Respuesta),
+      catchError(err => {
+        return throwError(()=>err);
+      }));
+  }
+
+  consultarPorProveedor(proveedorId: number): Observable<Respuesta> {
+    return this.http.get(environment.host + urn.ruta + urn.facturaCompra + urn.consultarPorProveedor + urn.slash + proveedorId, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);
@@ -78,6 +87,15 @@ export class FacturaCompraService {
 
   calcular(facturaCompra: FacturaCompra): Observable<Respuesta> {
     return this.http.post(environment.host + urn.ruta + urn.facturaCompra + urn.calcular, facturaCompra, options).pipe(
+      map(response => response as Respuesta),
+      catchError(err => {
+        return throwError(err);
+      })
+    );
+  }
+
+  calcularLinea(facturaCompraLinea: FacturaCompraLinea): Observable<Respuesta> {
+    return this.http.post(environment.host + urn.ruta + urn.facturaCompra + urn.calcularLinea, facturaCompraLinea, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(err);

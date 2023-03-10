@@ -40,7 +40,10 @@ import { ClienteService } from './servicios/cliente/cliente.service';
 import { FacturaService } from './servicios/comprobante/factura.service';
 import { GrupoProductoService } from './servicios/inventario/grupo-producto.service';
 import { FacturaCompraService } from './servicios/compra/factura-compra.service';
-import { FacturaCompraLineaService } from './servicios/compra/factura-compra-linea.service';
+import { NotaCreditoCompraService } from './servicios/compra/nota-credito-compra.service';
+import { NotaCreditoVentaService } from './servicios/comprobante/nota-credito-venta.service';
+import { NotaDebitoCompraService } from './servicios/compra/nota-debito-compra.service';
+import { NotaDebitoVentaService } from './servicios/comprobante/nota-debito-venta.service';
 
 // Importar las Rutas
 import { AppRoutingModule } from './app-routing.module';
@@ -70,7 +73,8 @@ import { TipoRetencionService } from './servicios/configuracion/tipo-retencion.s
     providers: [PlazoCreditoService, ImpuestoService, RetencionService, ModeloService,
         TransportistaService, UbicacionService, TipoContribuyenteService, VehiculoTransporteService,
         EmpresaService, EstablecimientoService, EstacionService, UsuarioService, DatePipe,
-        ClienteService, FacturaService, FacturaCompraService, FacturaCompraLineaService, TipoRetencionService, TabService, GrupoProductoService,
+        ClienteService, FacturaService, FacturaCompraService, TipoRetencionService, TabService, GrupoProductoService,
+        NotaCreditoCompraService, NotaCreditoVentaService, NotaDebitoCompraService, NotaDebitoVentaService,
         {
             provide: LocationStrategy,
             useClass: PathLocationStrategy

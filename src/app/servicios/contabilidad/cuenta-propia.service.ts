@@ -12,15 +12,8 @@ import { Respuesta } from '../../respuesta';
   providedIn: 'root'
 })
 export class CuentaPropiaService {
-  
-  private messageSource = new BehaviorSubject(0);
-  currentMessage = this.messageSource.asObservable();
 
   constructor(private http: HttpClient, private router: Router) { }
-
-  enviar(cuentaPropiaId: number) {
-    this.messageSource.next(cuentaPropiaId);
-  }
 
   crear(cuentaPropia: CuentaPropia): Observable<Respuesta> {
     return this.http.post(environment.host + urn.ruta + urn.cuentaPropia, cuentaPropia, options).pipe(
