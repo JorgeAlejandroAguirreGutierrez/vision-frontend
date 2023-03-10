@@ -230,7 +230,7 @@ export class RecaudacionNotaDebitoComponent implements OnInit {
     );
   }
   consultarOperadoresTarjetasCreditos(){
-    let tipo= otras.credito;
+    let tipo = otras.credito;
     this.operadorTarjetaService.consultarPorTipo(tipo).subscribe(
       res => {
         this.operadoresTarjetasCreditos = res.resultado as OperadorTarjeta[]
@@ -239,7 +239,7 @@ export class RecaudacionNotaDebitoComponent implements OnInit {
     );
   }
   consultarOperadoresTarjetasDebitos(){
-    let tipo= otras.debito;
+    let tipo = otras.debito;
     this.operadorTarjetaService.consultarPorTipo(tipo).subscribe(
       res => {
         this.operadoresTarjetasDebitos = res.resultado as OperadorTarjeta[]
@@ -645,7 +645,7 @@ export class RecaudacionNotaDebitoComponent implements OnInit {
   }
 
   calcular(){
-    this.notaDebitoVentaService.calcular(this.notaDebitoVenta).subscribe(
+    this.notaDebitoVentaService.calcularRecaudacion(this.notaDebitoVenta).subscribe(
       res => {
         this.notaDebitoVenta = res.resultado as NotaDebitoVenta;
         this.cheque.valor = this.notaDebitoVenta.porPagar;

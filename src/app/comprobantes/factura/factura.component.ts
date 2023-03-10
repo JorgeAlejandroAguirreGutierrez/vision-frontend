@@ -38,7 +38,7 @@ export class FacturaComponent implements OnInit {
 
   @ViewChild('stepper') stepper: MatStepper;
 
-  isLinear = true;
+  isLinear = false;
   isEditable = true;
   panelOpenState = false;
 

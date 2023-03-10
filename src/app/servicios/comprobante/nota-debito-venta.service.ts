@@ -16,7 +16,7 @@ export class NotaDebitoVentaService {
 
   constructor(private http: HttpClient, private router: Router) { }
 
-  @Output() eventoRecaudacion= new EventEmitter<NotaDebitoVenta>();
+  @Output() eventoRecaudacion = new EventEmitter<NotaDebitoVenta>();
 
   enviarEventoRecaudacion(data: NotaDebitoVenta) {
     this.eventoRecaudacion.emit(data);
@@ -99,6 +99,16 @@ export class NotaDebitoVentaService {
       })
     );
   }
+
+  calcularRecaudacion(notaDebitoVenta: NotaDebitoVenta): Observable<Respuesta> {
+    return this.http.post(environment.host + urn.ruta + urn.notaDebitoVenta + urn.calcularRecaudacion, notaDebitoVenta, options).pipe(
+      map(response => response as Respuesta),
+      catchError(err => {
+        return throwError(err);
+      })
+    );
+  }
+
   obtenerPorFactura(facturaId: number): Observable<Respuesta> {
     return this.http.get(environment.host + urn.ruta + urn.notaDebitoVenta + urn.obtenerPorFactura + urn.slash + facturaId, options).pipe(
       map(response => response as Respuesta),

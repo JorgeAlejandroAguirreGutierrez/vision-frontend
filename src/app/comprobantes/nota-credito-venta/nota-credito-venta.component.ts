@@ -127,6 +127,7 @@ export class NotaCreditoVentaComponent implements OnInit {
     this.seleccionCliente.patchValue(valores.vacio);
     this.seleccionFactura.patchValue(valores.vacio);
     this.dataSourceLinea = new MatTableDataSource<NotaCreditoVentaLinea>([]);
+    this.clickedRows.clear();
   }
 
   construirFactura() {
@@ -329,6 +330,8 @@ export class NotaCreditoVentaComponent implements OnInit {
       res => {
         let respuesta = res.resultado as String;
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
+        this.consultar();
+        this.nuevo(null);
       },
       err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     );

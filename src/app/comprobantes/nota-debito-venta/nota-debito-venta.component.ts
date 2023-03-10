@@ -40,14 +40,12 @@ export class NotaDebitoVentaComponent implements OnInit {
 
   @ViewChild('stepper') stepper: MatStepper;
 
-  panelOpenState = false;
-  isLinear = true;
+  isLinear = false;
   isEditable = true;
+  panelOpenState = false;
+  
   firstFormGroup: UntypedFormGroup;
   secondFormGroup: UntypedFormGroup;
-
-  deshabilitarDevolucion = true;
-  deshabilitarDescuento = true;  
   
   seleccionCliente = new UntypedFormControl();
   filtroClientes: Observable<Cliente[]> = new Observable<Cliente[]>();
@@ -67,7 +65,7 @@ export class NotaDebitoVentaComponent implements OnInit {
     { nombreColumna: 'fecha', cabecera: 'Fecha', celda: (row: NotaDebitoVenta) => `${row.fecha}`},
     { nombreColumna: 'cliente', cabecera: 'Cliente', celda: (row: NotaDebitoVenta) => `${row.factura.cliente.razonSocial}`},
     { nombreColumna: 'total', cabecera: 'Total', celda: (row: NotaDebitoVenta) => `$${row.totalConDescuento}`},
-    { nombreColumna: 'estado', cabecera: 'Estado', celda: (row: NotaDebitoVenta) => `$${row.estado}`}
+    { nombreColumna: 'estado', cabecera: 'Estado', celda: (row: NotaDebitoVenta) => `${row.estado}`}
   ];
   cabecera: string[]  = this.columnas.map(titulo => titulo.nombreColumna);
   dataSource: MatTableDataSource<NotaDebitoVenta>;
@@ -194,6 +192,8 @@ export class NotaDebitoVentaComponent implements OnInit {
     this.seleccionCliente.patchValue(valores.vacio);
     this.seleccionFactura.patchValue(valores.vacio);
     this.dataSourceLinea = new MatTableDataSource<NotaDebitoVentaLinea>([]);
+    this.dataSourceFacturaLinea = new MatTableDataSource<FacturaLinea>([]);
+    this.clickedRows.clear();
   }
 
   construir() {
@@ -422,9 +422,10 @@ export class NotaDebitoVentaComponent implements OnInit {
     this.notaDebitoVenta.sesion=this.sesion;
     this.notaDebitoVentaService.crear(this.notaDebitoVenta).subscribe(
       res => {
-        Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
+        this.notaDebitoVenta = res.resultado as NotaDebitoVenta;
+        this.stepper.next();
         this.consultar();
-        this.nuevo(null);
+        Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
       },
       err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     );
@@ -435,9 +436,11 @@ export class NotaDebitoVentaComponent implements OnInit {
       event.preventDefault();
     this.notaDebitoVentaService.actualizar(this.notaDebitoVenta).subscribe(
       res => {
-        Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
+        this.notaDebitoVenta = res.resultado as NotaDebitoVenta;
+        this.stepper.next();
+        console.log(this.stepper);
         this.consultar();
-        this.nuevo(null);        
+        Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });        
       },
       err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     );
@@ -484,6 +487,7 @@ export class NotaDebitoVentaComponent implements OnInit {
           this.notaDebitoVenta = res.resultado as NotaDebitoVenta;
           this.seleccionCliente.patchValue(this.notaDebitoVenta.factura.cliente);
           this.seleccionFactura.patchValue(this.notaDebitoVenta.factura);
+          this.dataSourceFacturaLinea = new MatTableDataSource<FacturaLinea>(this.notaDebitoVenta.factura.facturaLineas);
           this.dataSourceLinea = new MatTableDataSource<NotaDebitoVentaLinea>(this.notaDebitoVenta.notaDebitoVentaLineas);
         },
         error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
@@ -506,9 +510,19 @@ export class NotaDebitoVentaComponent implements OnInit {
   }
 
   calcularLinea(){
+    if (this.notaDebitoVentaLinea.cantidad == valores.cero){
+      return;
+    }
+    if (this.notaDebitoVentaLinea.precio.id == valores.cero){
+      return;
+    }
+    if (this.notaDebitoVentaLinea.impuesto.id == valores.cero){
+      return;
+    }
     this.notaDebitoVentaService.calcularLinea(this.notaDebitoVentaLinea).subscribe(
       res => {
         this.notaDebitoVentaLinea = res.resultado as NotaDebitoVentaLinea;
+        console.log(this.notaDebitoVentaLinea);
       },
       err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     );
@@ -532,6 +546,8 @@ export class NotaDebitoVentaComponent implements OnInit {
       res => {
         let respuesta = res.resultado as String;
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
+        this.consultar();
+        this.nuevo(null);
       },
       err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     );
