@@ -366,14 +366,13 @@ export class ClienteComponent implements OnInit {
     });
   }
 
-  //CRUD CLIENTE
   nuevo(event){
     if (event != null)
       event.preventDefault();
     this.cliente = new Cliente();
-    this.provinciaCliente = "";
-    this.cantonCliente = "";
-    this.parroquiaCliente = "";
+    this.provinciaCliente = valores.vacio;
+    this.cantonCliente = valores.vacio;
+    this.parroquiaCliente = valores.vacio;
     this.telefono = new Telefono();
     this.celular = new Celular();
     this.correo = new Correo();

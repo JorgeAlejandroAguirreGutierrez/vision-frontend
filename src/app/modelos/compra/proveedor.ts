@@ -63,10 +63,7 @@ export class Proveedor {
         this.plazoCredito = new PlazoCredito();
         this.montoFinanciamiento = valores.cero;
         this.telefonosProveedor = [];
-        this.telefonosProveedor.push(new TelefonoProveedor());
         this.celularesProveedor = [];
-        this.celularesProveedor.push(new CelularProveedor());
         this.correosProveedor = [];
-        this.correosProveedor.push(new CorreoProveedor());
     }
 }
