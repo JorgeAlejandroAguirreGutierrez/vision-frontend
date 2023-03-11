@@ -14,10 +14,7 @@ import { GrupoProveedor } from '../../modelos/compra/grupo-proveedor'
 import { GrupoProveedorService } from '../../servicios/compra/grupo-proveedor.service';
 import { Ubicacion } from '../../modelos/configuracion/ubicacion';
 import { UbicacionService } from '../../servicios/configuracion/ubicacion.service';
-import { Telefono } from '../../modelos/cliente/telefono';
-import { Celular } from '../../modelos/cliente/celular';
 import { Coordenada } from '../../modelos/configuracion/coordenada';
-import { Correo } from '../../modelos/cliente/correo';
 import { PlazoCredito } from '../../modelos/cliente/plazo-credito';
 import { PlazoCreditoService } from '../../servicios/cliente/plazo-credito.service';
 import { FormaPago } from '../../modelos/cliente/forma-pago';
@@ -28,6 +25,9 @@ import { Proveedor } from '../../modelos/compra/proveedor';
 import { ProveedorService } from '../../servicios/compra/proveedor.service';
 import { TipoIdentificacion } from '../../modelos/configuracion/tipo-identificacion';
 import { TipoIdentificacionService } from '../../servicios/configuracion/tipo-identificacion.service';
+import { TelefonoProveedor } from 'src/app/modelos/compra/telefono-proveedor';
+import { CelularProveedor } from 'src/app/modelos/compra/celular-proveedor';
+import { CorreoProveedor } from 'src/app/modelos/compra/correo-proveedor';
 
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
@@ -60,9 +60,9 @@ export class ProveedorComponent implements OnInit {
   proveedor: Proveedor = new Proveedor();
   proveedorBuscar = new Proveedor();
   segmento: Segmento = new Segmento();
-  telefono: Telefono = new Telefono();
-  celular: Celular = new Celular();
-  correo: Correo = new Correo();
+  telefono: TelefonoProveedor = new TelefonoProveedor();
+  celular: CelularProveedor = new CelularProveedor();
+  correo: CorreoProveedor = new CorreoProveedor();
 
   proveedores: Proveedor[];
   tiposIdentificaciones: TipoIdentificacion[];
@@ -253,12 +253,12 @@ export class ProveedorComponent implements OnInit {
     if (event != null)
       event.preventDefault();
     this.proveedor = new Proveedor();
-    this.provincia = "";
-    this.canton = "";
-    this.parroquia = "";
-    this.telefono = new Telefono();
-    this.celular = new Celular();
-    this.correo = new Correo();
+    this.provincia = valores.vacio;
+    this.canton = valores.vacio;
+    this.parroquia = valores.vacio;
+    this.telefono = new TelefonoProveedor();
+    this.celular = new CelularProveedor();
+    this.correo = new CorreoProveedor();
     this.posicionCentral = new Coordenada(valores.latCiudad, valores.lngCiudad);
     this.posicionGeografica = new Coordenada(valores.latCiudad, valores.lngCiudad);
     this.clickedRows.clear();
@@ -458,27 +458,27 @@ export class ProveedorComponent implements OnInit {
   }
 
   validarFormulario(): boolean {
-    if (this.proveedor.identificacion == '') {
+    if (this.proveedor.identificacion == valores.vacio) {
       Swal.fire({ icon: error_swal, title: error, text: mensajes.error_falta_datos });
       return false;
     }
-    if (this.proveedor.razonSocial == '') {
+    if (this.proveedor.razonSocial == valores.vacio) {
       Swal.fire({ icon: error_swal, title: error, text: mensajes.error_falta_datos });
       return false;
     }
-    if (this.proveedor.direccion == '') {
+    if (this.proveedor.direccion == valores.vacio) {
       Swal.fire({ icon: error_swal, title: error, text: mensajes.error_falta_datos });
       return false;
     }
-    if (this.proveedor.referencia == '') {
+    if (this.proveedor.referencia == valores.vacio) {
       Swal.fire({ icon: error_swal, title: error, text: mensajes.error_falta_datos });
       return false;
     }
-    if (this.provincia == '' || this.canton == '' || this.parroquia == '') {
+    if (this.provincia == valores.vacio || this.canton == valores.vacio || this.parroquia == valores.vacio) {
       Swal.fire({ icon: error_swal, title: error, text: mensajes.error_falta_datos });
       return false;
     }
-    if (this.correo.email == '' && this.proveedor.correosProveedor.length == 0) {
+    if (this.correo.email == valores.vacio && this.proveedor.correosProveedor.length == valores.cero) {
       Swal.fire({ icon: error_swal, title: error, text: mensajes.error_falta_correo });
       return false;
     }
@@ -489,7 +489,7 @@ export class ProveedorComponent implements OnInit {
   crearTelefono() {
     if (this.telefono.numero.length != valores.cero) {
       this.proveedor.telefonosProveedor.push({ ... this.telefono });
-      this.telefono = new Telefono();
+      this.telefono = new TelefonoProveedor();
     } else {
       Swal.fire({ icon: error_swal, title: error, text: mensajes.error_telefono_ingresado });
     }
@@ -508,7 +508,7 @@ export class ProveedorComponent implements OnInit {
   crearCelular() {
     if (this.celular.numero.length != valores.cero) {
       this.proveedor.celularesProveedor.push({ ... this.celular });
-      this.celular = new Celular();
+      this.celular = new CelularProveedor();
     } else {
       Swal.fire({ icon: error_swal, title: error, text: mensajes.error_celular_ingresado });
     }
@@ -527,7 +527,7 @@ export class ProveedorComponent implements OnInit {
   crearCorreo() {
     if (this.correo.email.length != valores.cero) {
       this.proveedor.correosProveedor.push({ ... this.correo });
-      this.correo = new Correo();
+      this.correo = new CorreoProveedor();
     } else {
       Swal.fire({ icon: error_swal, title: error, text: mensajes.error_correo_ingresado });
     }
@@ -548,9 +548,9 @@ export class ProveedorComponent implements OnInit {
     this.proveedor.ubicacion.provincia = this.provincia;
     this.ubicacionService.consultarCantones(this.provincia).subscribe({
       next: res => {
-        this.canton = "";
+        this.canton = valores.vacio;
         this.cantones = res.resultado as Ubicacion[];
-        this.parroquia = "";
+        this.parroquia = valores.vacio;
         this.parroquias = [];
       },
       error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
@@ -561,7 +561,7 @@ export class ProveedorComponent implements OnInit {
     this.proveedor.ubicacion.canton = this.canton;
     this.ubicacionService.consultarParroquias(this.canton).subscribe({
       next: res => {
-        this.parroquia = "";
+        this.parroquia = valores.vacio;
         this.parroquias = res.resultado as Ubicacion[];
       },
       error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
