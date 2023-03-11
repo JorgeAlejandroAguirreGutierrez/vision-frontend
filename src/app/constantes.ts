@@ -57,6 +57,7 @@ export const urn =
      notaCreditoEletronica: "/notaCreditoEletronica",
      tipoRetencion: "/tipoRetencion",
      consultarBien: "/consultarBien",
+     consultarBienPorProveedor: "/consultarBienPorProveedor",
      consultarServicio: "/consultarServicio",
      consultarActivoFijo: "/consultarActivoFijo",
      caracteristica: "/caracteristica",

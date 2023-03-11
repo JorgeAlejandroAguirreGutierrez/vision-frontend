@@ -186,8 +186,8 @@ export class FacturaCompraComponent implements OnInit {
     );
   }
 
-  consultarBienes() {
-    this.productoService.consultarBien().subscribe(
+  consultarBienPorProveedor(proveedorId: number) {
+    this.productoService.consultarBienPorProveedor(proveedorId).subscribe(
       res => {
         this.productos = res.resultado as Producto[]
       },
@@ -219,7 +219,7 @@ export class FacturaCompraComponent implements OnInit {
       res => {
         this.facturaCompra.proveedor = res.resultado as Proveedor;
         this.seleccionProveedor.patchValue(this.facturaCompra.proveedor);
-        this.consultarProductos();
+        this.consultarBienPorProveedor(this.facturaCompra.proveedor.id);
       },
       err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     );
@@ -403,15 +403,6 @@ export class FacturaCompraComponent implements OnInit {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
         this.consultar();
         this.nuevo(null);
-      },
-      error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
-    });
-  }
-
-  consultarProductos(){
-    this.productoService.consultarPorProveedor(this.facturaCompra.proveedor.id).subscribe({
-      next: res => {
-        this.productos = res.resultado as Producto[];
       },
       error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     });
