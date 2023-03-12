@@ -3,7 +3,6 @@ import { DatePipe } from '@angular/common';
 import { UntypedFormControl, UntypedFormBuilder } from '@angular/forms';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
-import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import Swal from 'sweetalert2';
@@ -44,7 +43,8 @@ export class FacturaCompraComponent implements OnInit {
     { nombreColumna: 'codigo', cabecera: 'Código', celda: (row: FacturaCompra) => `${row.codigo}`},
     { nombreColumna: 'fecha', cabecera: 'Fecha', celda: (row: FacturaCompra) => `${row.fecha}`},
     { nombreColumna: 'proveedor', cabecera: 'Proveedor', celda: (row: FacturaCompra) => `${row.proveedor.razonSocial}`},
-    { nombreColumna: 'total', cabecera: 'Total', celda: (row: FacturaCompra) => `$${row.totalSinDescuento}`}
+    { nombreColumna: 'total', cabecera: 'Total', celda: (row: FacturaCompra) => `$${row.totalSinDescuento}`},
+    { nombreColumna: 'estado', cabecera: 'Estado', celda: (row: FacturaCompra) => `$${row.estado}`}
   ];
   cabecera: string[]  = this.columnas.map(titulo => titulo.nombreColumna);
   dataSourceFacturaCompra: MatTableDataSource<FacturaCompra>;
@@ -58,8 +58,7 @@ export class FacturaCompraComponent implements OnInit {
 
   constructor(private proveedorService: ProveedorService, private sesionService: SesionService,
     private impuestoService: ImpuestoService, private router: Router, private facturaCompraService: FacturaCompraService,
-    private productoService: ProductoService, private bodegaService: BodegaService,
-    private modalService: NgbModal) { }
+    private productoService: ProductoService, private bodegaService: BodegaService) { }
 
   facturaCompra: FacturaCompra = new FacturaCompra();
   facturaCompraLinea: FacturaCompraLinea = new FacturaCompraLinea();
@@ -117,7 +116,7 @@ export class FacturaCompraComponent implements OnInit {
   }
 
   verProducto(producto: Producto): string {
-    return producto && producto.nombre ? producto.nombre : '';
+    return producto && producto.nombre ? producto.nombre : valores.vacio;
   }
 
   private filtroProveedor(value: string): Proveedor[] {
@@ -128,7 +127,7 @@ export class FacturaCompraComponent implements OnInit {
     return [];
   }
   verProveedor(proveedor: Proveedor): string {
-    return proveedor && proveedor.razonSocial ? proveedor.razonSocial : '';
+    return proveedor && proveedor.razonSocial ? proveedor.razonSocial : valores.vacio;
   }
 
   nuevo(event){
@@ -406,24 +405,6 @@ export class FacturaCompraComponent implements OnInit {
       },
       error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     });
-  }
-
-  open(content: any) {
-    this.modalService.open(content, { size: 'lg' }).result.then((result) => {
-      
-    }, (reason) => {
-      console.log(`Dismissed ${this.getDismissReason(reason)}`);
-    });
-  }
-
-  private getDismissReason(reason: any): string {
-    if (reason === ModalDismissReasons.ESC) {
-      return 'by pressing ESC';
-    } else if (reason === ModalDismissReasons.BACKDROP_CLICK) {
-      return 'by clicking on a backdrop';
-    } else {
-      return  `with: ${reason}`;
-    }
   }
 
   eliminarFacturaCompraLinea(i: number){
