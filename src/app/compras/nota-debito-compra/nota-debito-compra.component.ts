@@ -105,48 +105,48 @@ export class NotaDebitoCompraComponent implements OnInit {
     this.consultarCategoriasProductos();
     this.filtroProveedores = this.seleccionProveedor.valueChanges
       .pipe(
-        startWith(''),
+        startWith(valores.vacio),
         map(value => typeof value === 'string' || value==null ? value : value.id),
         map(proveedor => typeof proveedor === 'string' ? this.filtroProveedor(proveedor) : this.proveedores.slice())
       );
     this.filtroFacturasCompras = this.seleccionFacturaCompra.valueChanges
       .pipe(
-        startWith(''),
+        startWith(valores.vacio),
         map(value => typeof value === 'string' || value==null ? value : value.id),
         map(facturaCompra => typeof facturaCompra === 'string' ? this.filtroFacturaCompra(facturaCompra) : this.facturasCompras.slice())
       );
     this.filtroProductos = this.seleccionProducto.valueChanges
       .pipe(
-        startWith(''),
+        startWith(valores.vacio),
         map(value => typeof value === 'string' || value == null ? value : value.id),
         map(producto => typeof producto === 'string' ? this.filtroProducto(producto) : this.productos.slice())
       );
   }
   
   private filtroProveedor(value: string): Proveedor[] {
-    if(this.proveedores.length > 0) {
+    if(this.proveedores.length > valores.cero) {
       const filterValue = value.toLowerCase();
       return this.proveedores.filter(proveedor => proveedor.razonSocial.toLowerCase().includes(filterValue));
     }
     return [];
   }
   verProveedor(proveedor: Proveedor): string {
-    return proveedor && proveedor.razonSocial ? proveedor.razonSocial : '';
+    return proveedor && proveedor.razonSocial ? proveedor.razonSocial : valores.vacio;
   }
 
   private filtroFacturaCompra(value: string): FacturaCompra[] {
-    if(this.facturasCompras.length > 0) {
+    if(this.facturasCompras.length > valores.cero) {
       const filterValue = value.toLowerCase();
       return this.facturasCompras.filter(facturaCompra => facturaCompra.secuencia.toLowerCase().includes(filterValue));
     }
     return [];
   }
   verFacturaCompra(facturaCompra: FacturaCompra): string {
-    return facturaCompra && facturaCompra.secuencia ? facturaCompra.secuencia : '';
+    return facturaCompra && facturaCompra.secuencia ? facturaCompra.secuencia : valores.vacio;
   }
 
   private filtroProducto(value: string): Producto[] {
-    if(this.productos.length > 0) {
+    if(this.productos.length > valores.cero) {
       const filterValue = value.toLowerCase();
       return this.productos.filter(producto => producto.nombre.toLowerCase().includes(filterValue));
     }
@@ -456,6 +456,7 @@ export class NotaDebitoCompraComponent implements OnInit {
           return;
         }
         this.kardex = res.resultado as Kardex;
+        this.notaDebitoCompraLinea.costoUnitario = this.kardex.costoUnitario;
       },
       err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     );

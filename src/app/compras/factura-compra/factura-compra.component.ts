@@ -95,20 +95,20 @@ export class FacturaCompraComponent implements OnInit {
 
     this.filtroProductos = this.seleccionProducto.valueChanges
       .pipe(
-        startWith(''),
+        startWith(valores.vacio),
         map(value => typeof value === 'string' || value==null ? value : value.id),
         map(nombre => typeof nombre === 'string' ? this.filtroProducto(nombre) : this.productos.slice())
       );
     this.filtroProveedores = this.seleccionProveedor.valueChanges
       .pipe(
-        startWith(''),
+        startWith(valores.vacio),
         map(value => typeof value === 'string' || value==null ? value : value.id),
         map(proveedor => typeof proveedor === 'string' ? this.filtroProveedor(proveedor) : this.proveedores.slice())
       );
   }
 
   private filtroProducto(value: string): Producto[] {
-    if(this.productos.length>0) {
+    if(this.productos.length > valores.cero) {
       const filterValue = value.toLowerCase();
       return this.productos.filter(producto => producto.nombre.toLowerCase().includes(filterValue));
     }
@@ -120,7 +120,7 @@ export class FacturaCompraComponent implements OnInit {
   }
 
   private filtroProveedor(value: string): Proveedor[] {
-    if(this.proveedores.length > 0) {
+    if(this.proveedores.length > valores.cero) {
       const filterValue = value.toLowerCase();
       return this.proveedores.filter(proveedor => proveedor.razonSocial.toLowerCase().includes(filterValue));
     }
@@ -140,7 +140,7 @@ export class FacturaCompraComponent implements OnInit {
   }
 
   construirFactura() {
-    if (this.facturaCompra.id != 0) {
+    if (this.facturaCompra.id != valores.cero) {
         this.seleccionProveedor.patchValue(this.facturaCompra.proveedor);
         this.dataSourceFacturaCompraLinea = new MatTableDataSource<FacturaCompraLinea>(this.facturaCompra.facturaCompraLineas);
         this.dataSourceFacturaCompraLinea.paginator = this.paginatorFacturaCompraLinea;
