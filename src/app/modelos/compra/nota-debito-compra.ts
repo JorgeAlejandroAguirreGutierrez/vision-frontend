@@ -12,7 +12,7 @@ export class NotaDebitoCompra {
     valorDescuentoTotal: number;
     porcentajeDescuentoTotal: number;
     subtotalSinDescuento: number;
-    descuentoTotal: number;
+    totalDescuento: number;
     subtotalBase12SinDescuento: number;
     subtotalBase0SinDescuento: number;
     ivaSinDescuento: number;
@@ -32,7 +32,7 @@ export class NotaDebitoCompra {
         this.valorDescuentoTotal = valores.cero;
         this.porcentajeDescuentoTotal = valores.cero;
         this.subtotalSinDescuento = valores.cero;
-        this.descuentoTotal = valores.cero;
+        this.totalDescuento = valores.cero;
         this.subtotalBase12SinDescuento = valores.cero;
         this.subtotalBase0SinDescuento = valores.cero;
         this.ivaSinDescuento = valores.cero;

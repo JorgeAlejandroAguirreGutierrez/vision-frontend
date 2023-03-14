@@ -248,7 +248,7 @@
                         <ng-container matColumnDef="impuesto">
                             <th mat-header-cell *matHeaderCellDef mat-sort-header> IVA </th>
                             <td mat-cell *matCellDef="let notaCreditoCompraLinea">
-                                {{notaCreditoCompraLinea.producto.impuesto.porcentaje}}% </td>
+                                {{notaCreditoCompraLinea.impuesto.porcentaje}}% </td>
                         </ng-container>
                         <ng-container matColumnDef="bodega">
                             <th mat-header-cell *matHeaderCellDef mat-sort-header> BOD </th>
@@ -271,26 +271,7 @@
                 </div>
                 <mat-divider></mat-divider>
                 <div class="form-group form-row">
-                    <div class="form-row col-3 pl-3 pr-3">
-                        <div class="col-12"></div>
-                        <div class="col-6">
-                            <mat-form-field appearance="standard">
-                                <mat-label>Desc $</mat-label>
-                                <input matInput type="text" min="0" max="100" step="0.01"
-                                    [(ngModel)]="notaCreditoCompra.valorDescuentoTotal"
-                                    (change)="seleccionarValorDescuentoTotal()" [disabled]="deshabilitarDescuento" class="form-control-sm">
-                            </mat-form-field>
-                        </div>
-                        <div class="col-6">
-                            <mat-form-field appearance="standard">
-                                <mat-label>Desc %</mat-label>
-                                <input matInput type="text" min="0" max="100" step="0.01"
-                                    [(ngModel)]="notaCreditoCompra.porcentajeDescuentoTotal"
-                                    (change)="seleccionarPorcentajeDescuentoTotal()" [disabled]="deshabilitarDescuento" class="form-control-sm">
-                            </mat-form-field>
-                        </div>
-                    </div>
-                    <div class="col-5 linea-vertical">
+                    <div class="col-8">
                         <br>
                         <div class="col-12">
                             <mat-form-field appearance="outline">
@@ -317,7 +298,7 @@
                                 </div>
                                 <div class="col-5">
                                     <mat-form-field appearance="standard">
-                                        <input matInput type="text" [(ngModel)]="notaCreditoCompra.descuentoTotal"
+                                        <input matInput type="text" [(ngModel)]="notaCreditoCompra.totalDescuento"
                                             class="form-control-sm" [disabled]="true">
                                     </mat-form-field>
                                 </div>
