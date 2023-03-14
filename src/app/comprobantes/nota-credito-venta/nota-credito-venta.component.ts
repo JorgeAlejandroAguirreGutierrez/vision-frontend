@@ -131,7 +131,7 @@ export class NotaCreditoVentaComponent implements OnInit {
   }
 
   construirFactura() {
-    if (this.notaCreditoVenta.id != 0) {
+    if (this.notaCreditoVenta.id != valores.cero) {
       this.seleccionCliente.patchValue(this.notaCreditoVenta.factura.cliente);
       this.seleccionFactura.patchValue(this.notaCreditoVenta.factura);
       this.dataSourceLinea = new MatTableDataSource<NotaCreditoVentaLinea>(this.notaCreditoVenta.notaCreditoVentaLineas);
@@ -266,24 +266,6 @@ export class NotaCreditoVentaComponent implements OnInit {
       },
       error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     });
-  }
-
-  open(content: any) {
-    this.modalService.open(content, { size: 'lg' }).result.then((result) => {
-      
-    }, (reason) => {
-      console.log(`Dismissed ${this.getDismissReason(reason)}`);
-    });
-  }
-
-  private getDismissReason(reason: any): string {
-    if (reason === ModalDismissReasons.ESC) {
-      return 'by pressing ESC';
-    } else if (reason === ModalDismissReasons.BACKDROP_CLICK) {
-      return 'by clicking on a backdrop';
-    } else {
-      return  `with: ${reason}`;
-    }
   }
 
   seleccion(notaCreditoCompra: any) {

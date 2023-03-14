@@ -127,10 +127,11 @@ export class NotaCreditoCompraComponent implements OnInit {
     this.seleccionProveedor.patchValue(valores.vacio);
     this.seleccionFacturaCompra.patchValue(valores.vacio);
     this.dataSourceLinea = new MatTableDataSource<NotaCreditoCompraLinea>([]);
+    this.clickedRows.clear();
   }
 
   construirFactura() {
-    if (this.notaCreditoCompra.id != 0) {
+    if (this.notaCreditoCompra.id != valores.cero) {
       this.seleccionProveedor.patchValue(this.notaCreditoCompra.facturaCompra.proveedor);
       this.seleccionFacturaCompra.patchValue(this.notaCreditoCompra.facturaCompra);
       this.dataSourceLinea = new MatTableDataSource<NotaCreditoCompraLinea>(this.notaCreditoCompra.notaCreditoCompraLineas);
@@ -275,25 +276,7 @@ export class NotaCreditoCompraComponent implements OnInit {
       error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     });
   }
-
-  open(content: any) {
-    this.modalService.open(content, { size: 'lg' }).result.then((result) => {
-      
-    }, (reason) => {
-      console.log(`Dismissed ${this.getDismissReason(reason)}`);
-    });
-  }
-
-  private getDismissReason(reason: any): string {
-    if (reason === ModalDismissReasons.ESC) {
-      return 'by pressing ESC';
-    } else if (reason === ModalDismissReasons.BACKDROP_CLICK) {
-      return 'by clicking on a backdrop';
-    } else {
-      return  `with: ${reason}`;
-    }
-  }
-
+  
   seleccion(notaCreditoCompra: any) {
     if (!this.clickedRows.has(notaCreditoCompra)){
       this.clickedRows.clear();

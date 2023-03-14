@@ -5,12 +5,12 @@ import { Producto } from "../inventario/producto";
 export class FacturaCompraLinea {
     id: number;
     codigo: string;
-    comentario: string;
     cantidad: number;
     costoUnitario: number;
     valorDescuentoLinea: number;
     porcentajeDescuentoLinea: number;
     totalSinDescuentoLinea: number;
+    impuesto: Impuesto;
     producto: Producto;
     bodega: Bodega;
 
@@ -22,6 +22,7 @@ export class FacturaCompraLinea {
         this.valorDescuentoLinea = valores.cero;
         this.porcentajeDescuentoLinea = valores.cero;
         this.totalSinDescuentoLinea = valores.cero;
+        this.impuesto = new Impuesto();
         this.producto = new Producto();
         this.bodega = new Bodega();
     }

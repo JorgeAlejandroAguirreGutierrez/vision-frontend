@@ -12,14 +12,13 @@ export class NotaCreditoCompra {
     operacion: string;
     fecha: Date;
     estado: string;
-    valorDescuentoTotal: number;
-    porcentajeDescuentoTotal: number;
     subtotalSinDescuento: number;
     descuentoTotal: number;
     subtotalBase12SinDescuento: number;
     subtotalBase0SinDescuento: number;
     ivaSinDescuento: number;
     totalSinDescuento: number;
+    totalConDescuento: number;
     comentario: string;
     facturaCompra: FacturaCompra;
     sesion: Sesion;
@@ -33,8 +32,6 @@ export class NotaCreditoCompra {
         this.operacion = valores.vacio;
         this.fecha = new Date();
         this.estado = valores.noFacturada;
-        this.valorDescuentoTotal = valores.cero;
-        this.porcentajeDescuentoTotal = valores.cero;
         this.subtotalSinDescuento = valores.cero;
         this.descuentoTotal = valores.cero;
         this.subtotalBase12SinDescuento = valores.cero;
