@@ -357,14 +357,7 @@
                         </mat-form-field>
                     </div>
                     <div class="col-2"></div>
-                    <div class="col-4">
-                        <mat-form-field appearance="standard">
-                            <mat-label>Costo Unit.</mat-label>
-                            <input matInput type="text" [(ngModel)]="kardex.costoUnitario" [disabled]="true"
-                                class="form-control-sm">
-                        </mat-form-field>
-                    </div>
-                    <div class="col-4">
+                    <div class="col-8">
                         <mat-form-field appearance="standard">
                             <mat-label>Saldo B.</mat-label>
                             <input matInput type="text" [(ngModel)]="kardex.saldo" [disabled]="true"
@@ -429,7 +422,7 @@
                         <mat-form-field appearance="standard">
                             <mat-label>Costo Unit.</mat-label>
                             <input matInput type="text"
-                                [(ngModel)]="notaDebitoCompraLinea.costoUnitario" class="form-control-sm">
+                                [(ngModel)]="notaDebitoCompraLinea.costoUnitario" class="form-control-sm" [disabled]="true">
                         </mat-form-field>
                     </div>
                     <div class="col-1">
