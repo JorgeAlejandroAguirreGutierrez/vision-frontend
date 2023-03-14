@@ -64,7 +64,7 @@ export class ProductoService {
       }));
   }
 
-  consultarBienPorProveedor(proveedorId): Observable<Respuesta> {
+  consultarBienPorProveedor(proveedorId: number): Observable<Respuesta> {
     return this.http.get(environment.host + urn.ruta + urn.producto + urn.consultarBienPorProveedor + urn.slash + proveedorId, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
@@ -80,8 +80,24 @@ export class ProductoService {
       }));
   }
 
+  consultarServicioPorProveedor(proveedorId: number): Observable<Respuesta> {
+    return this.http.get(environment.host + urn.ruta + urn.producto + urn.consultarServicioPorProveedor + urn.slash + proveedorId, options).pipe(
+      map(response => response as Respuesta),
+      catchError(err => {
+        return throwError(()=>err);
+      }));
+  }
+
   consultarActivoFijo(): Observable<Respuesta> {
     return this.http.get(environment.host + urn.ruta + urn.producto + urn.consultarActivoFijo, options).pipe(
+      map(response => response as Respuesta),
+      catchError(err => {
+        return throwError(()=>err);
+      }));
+  }
+
+  consultarActivoFijoPorProveedor(proveedorId: number): Observable<Respuesta> {
+    return this.http.get(environment.host + urn.ruta + urn.producto + urn.consultarActivoFijoPorProveedor + urn.slash + proveedorId, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);

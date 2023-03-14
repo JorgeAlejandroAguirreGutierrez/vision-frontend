@@ -27,6 +27,7 @@ import { CategoriaProducto } from 'src/app/modelos/inventario/categoria-producto
 import { CategoriaProductoService } from 'src/app/servicios/inventario/categoria-producto.service';
 import { BodegaService } from 'src/app/servicios/inventario/bodega.service';
 import { ProductoService } from 'src/app/servicios/inventario/producto.service';
+import { FacturaCompraLinea } from 'src/app/modelos/compra/factura-compra-linea';
 
 @Component({
   selector: 'app-nota-debito-compra',
@@ -58,7 +59,7 @@ export class NotaDebitoCompraComponent implements OnInit {
     { nombreColumna: 'fecha', cabecera: 'Fecha', celda: (row: NotaDebitoCompra) => `${row.fecha}`},
     { nombreColumna: 'proveedor', cabecera: 'Proveedor', celda: (row: NotaDebitoCompra) => `${row.facturaCompra.proveedor.razonSocial}`},
     { nombreColumna: 'total', cabecera: 'Total', celda: (row: NotaDebitoCompra) => `$${row.totalSinDescuento}`},
-    { nombreColumna: 'estado', cabecera: 'Estado', celda: (row: NotaDebitoCompra) => `$${row.estado}`}
+    { nombreColumna: 'estado', cabecera: 'Estado', celda: (row: NotaDebitoCompra) => `${row.estado}`}
   ];
   cabecera: string[]  = this.columnas.map(titulo => titulo.nombreColumna);
   dataSource: MatTableDataSource<NotaDebitoCompra>;
@@ -68,6 +69,7 @@ export class NotaDebitoCompraComponent implements OnInit {
   
   @ViewChild("paginator") paginator: MatPaginator;
   @ViewChild("paginatorLinea") paginatorLinea: MatPaginator;
+  @ViewChild("paginatorFacturaCompraLinea") paginatorFacturaCompraLinea: MatPaginator;
 
   notaDebitoCompra: NotaDebitoCompra = new NotaDebitoCompra();
   notaDebitoCompraLinea: NotaDebitoCompraLinea = new NotaDebitoCompraLinea();
@@ -76,6 +78,8 @@ export class NotaDebitoCompraComponent implements OnInit {
 
   columnasLinea: string[] = ["codigo", 'nombre', 'medida', 'cantidad', 'costoUnitario', 'valorDescuento', 'porcentajeDescuento', 'impuesto', 'bodega', 'total'];
   dataSourceLinea = new MatTableDataSource<NotaDebitoCompraLinea>(this.notaDebitoCompra.notaDebitoCompraLineas);
+  columnasFacturaCompraLinea: string[] = ["codigo", 'nombre', 'medida', 'cantidad', 'costoUnitario', 'valorDescuento', 'porcentajeDescuento', 'impuesto', 'bodega', 'total'];
+  dataSourceFacturaCompraLinea = new MatTableDataSource<FacturaCompraLinea>(this.notaDebitoCompra.facturaCompra.facturaCompraLineas);
   sesion: Sesion;
   si = valores.si;
   no = valores.no;
@@ -97,6 +101,8 @@ export class NotaDebitoCompraComponent implements OnInit {
     this.consultarProveedores();
     this.consultarFacturasCompras();
     this.consultarImpuestos();
+    this.consultarBodegas();
+    this.consultarCategoriasProductos();
     this.filtroProveedores = this.seleccionProveedor.valueChanges
       .pipe(
         startWith(''),
@@ -147,7 +153,7 @@ export class NotaDebitoCompraComponent implements OnInit {
     return [];
   }
   verProducto(producto: Producto): string {
-    return producto && producto.nombre ? producto.nombre : '';
+    return producto && producto.nombre ? producto.nombre : valores.vacio;
   }
 
   nuevo(event){
@@ -165,6 +171,8 @@ export class NotaDebitoCompraComponent implements OnInit {
       this.seleccionFacturaCompra.patchValue(this.notaDebitoCompra.facturaCompra);
       this.dataSourceLinea = new MatTableDataSource<NotaDebitoCompraLinea>(this.notaDebitoCompra.notaDebitoCompraLineas);
       this.dataSourceLinea.paginator = this.paginatorLinea;
+      this.dataSourceFacturaCompraLinea = new MatTableDataSource<FacturaCompraLinea>(this.notaDebitoCompra.facturaCompra.facturaCompraLineas);
+      this.dataSourceFacturaCompraLinea.paginator = this.paginatorFacturaCompraLinea;
     }
   }
 
@@ -228,17 +236,17 @@ export class NotaDebitoCompraComponent implements OnInit {
 
   consultarProductos(){
     if (this.categoriaProducto == valores.bien){
-      this.consultarBienes();
+      this.consultarBienPorProveedor(this.notaDebitoCompra.facturaCompra.proveedor.id);
     }
     if (this.categoriaProducto == valores.servicio){
-      this.consultarServicios();
+      this.consultarServicioPorProveedor(this.notaDebitoCompra.facturaCompra.proveedor.id);
     }
     if (this.categoriaProducto == valores.activoFijo){
-      this.consultarActivosFijos();
+      this.consultarActivoFijoPorProveedor(this.notaDebitoCompra.facturaCompra.proveedor.id);
     }
   }
-  consultarBienes() {
-    this.productoService.consultarBien().subscribe(
+  consultarBienPorProveedor(proveedorId: number) {
+    this.productoService.consultarBienPorProveedor(proveedorId).subscribe(
       res => {
         this.productos = res.resultado as Producto[]
       },
@@ -247,8 +255,8 @@ export class NotaDebitoCompraComponent implements OnInit {
       } 
     );
   }
-  consultarServicios() {
-    this.productoService.consultarServicio().subscribe(
+  consultarServicioPorProveedor(proveedorId: number) {
+    this.productoService.consultarServicioPorProveedor(proveedorId).subscribe(
       res => {
         this.productos = res.resultado as Producto[]
       },
@@ -257,8 +265,8 @@ export class NotaDebitoCompraComponent implements OnInit {
       } 
     );
   }
-  consultarActivosFijos() {
-    this.productoService.consultarActivoFijo().subscribe(
+  consultarActivoFijoPorProveedor(proveedorId: number) {
+    this.productoService.consultarActivoFijoPorProveedor(proveedorId).subscribe(
       res => {
         this.productos = res.resultado as Producto[]
       },
@@ -291,7 +299,8 @@ export class NotaDebitoCompraComponent implements OnInit {
       res => {
         this.notaDebitoCompra = res.resultado as NotaDebitoCompra;
         this.seleccionFacturaCompra.patchValue(this.notaDebitoCompra.facturaCompra);
-        this.dataSourceLinea = new MatTableDataSource(this.notaDebitoCompra.notaDebitoCompraLineas);
+        this.dataSourceFacturaCompraLinea = new MatTableDataSource(this.notaDebitoCompra.facturaCompra.facturaCompraLineas);
+        this.dataSourceFacturaCompraLinea.paginator = this.paginatorFacturaCompraLinea;
       },
       err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     );
@@ -375,7 +384,10 @@ export class NotaDebitoCompraComponent implements OnInit {
           this.notaDebitoCompra = res.resultado as NotaDebitoCompra;
           this.seleccionProveedor.patchValue(this.notaDebitoCompra.facturaCompra.proveedor);
           this.seleccionFacturaCompra.patchValue(this.notaDebitoCompra.facturaCompra);
+          this.dataSourceFacturaCompraLinea = new MatTableDataSource<FacturaCompraLinea>(this.notaDebitoCompra.facturaCompra.facturaCompraLineas);
+          this.dataSourceFacturaCompraLinea.paginator = this.paginatorFacturaCompraLinea;
           this.dataSourceLinea = new MatTableDataSource<NotaDebitoCompraLinea>(this.notaDebitoCompra.notaDebitoCompraLineas);
+          this.dataSourceLinea.paginator = this.paginatorLinea;
         },
         error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
       });
@@ -473,6 +485,7 @@ export class NotaDebitoCompraComponent implements OnInit {
       res => {
         this.notaDebitoCompra = res.resultado as NotaDebitoCompra;
         this.dataSourceLinea = new MatTableDataSource<NotaDebitoCompraLinea>(this.notaDebitoCompra.notaDebitoCompraLineas);
+        this.dataSourceLinea.paginator = this.paginatorLinea;
         this.limpiarNotaDebitoCompraLinea();
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
       },

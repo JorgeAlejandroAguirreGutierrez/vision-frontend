@@ -178,69 +178,64 @@
             <mat-divider></mat-divider>
             <div class="form-group form-row">
                 <div class="mat-elevation-z8 col-12">
-                    <table mat-table [dataSource]="dataSourceLinea" matSort>
+                    <table mat-table [dataSource]="dataSourceFacturaCompraLinea" matSort>
                         <!-- Nombre Columna -->
                         <ng-container matColumnDef="codigo">
                             <th mat-header-cell *matHeaderCellDef mat-sort-header> Codigo </th>
-                            <td mat-cell *matCellDef="let notaDebitoCompraLinea"> {{notaDebitoCompraLinea.producto.codigo}}
+                            <td mat-cell *matCellDef="let facturaCompraLinea"> {{facturaCompraLinea.producto.codigo}}
                             </td>
                         </ng-container>
                         <ng-container matColumnDef="nombre">
                             <th mat-header-cell *matHeaderCellDef mat-sort-header> Producto </th>
-                            <td mat-cell *matCellDef="let notaDebitoCompraLinea"> {{notaDebitoCompraLinea.producto.nombre}}
+                            <td mat-cell *matCellDef="let facturaCompraLinea"> {{facturaCompraLinea.producto.nombre}}
                             </td>
                         </ng-container>
                         <!-- Descripcion Columna -->
                         <ng-container matColumnDef="medida">
                             <th mat-header-cell *matHeaderCellDef mat-sort-header> Med </th>
-                            <td mat-cell *matCellDef="let notaDebitoCompraLinea"> {{notaDebitoCompraLinea.producto.medida.abreviatura}} </td>
+                            <td mat-cell *matCellDef="let facturaCompraLinea"> {{facturaCompraLinea.producto.medida.abreviatura}} </td>
                         </ng-container>
                         <!-- Cantidad Columna -->
                         <ng-container matColumnDef="cantidad">
                             <th mat-header-cell *matHeaderCellDef mat-sort-header>Cant </th>
-                            <td mat-cell *matCellDef="let notaDebitoCompraLinea"> {{notaDebitoCompraLinea.cantidad}} </td>
+                            <td mat-cell *matCellDef="let facturaCompraLinea"> {{facturaCompraLinea.cantidad}} </td>
                         </ng-container>
                         <!-- Valor Columna -->
                         <ng-container matColumnDef="costoUnitario">
                             <th mat-header-cell *matHeaderCellDef mat-sort-header>Costo Unit </th>
-                            <td mat-cell *matCellDef="let notaDebitoCompraLinea"> ${{notaDebitoCompraLinea.costoUnitario }} </td>
+                            <td mat-cell *matCellDef="let facturaCompraLinea"> ${{facturaCompraLinea.costoUnitario }} </td>
                         </ng-container>
                         <!-- Descuento Columna -->
                         <ng-container matColumnDef="valorDescuento">
                             <th mat-header-cell *matHeaderCellDef mat-sort-header> Desc. </th>
-                            <td mat-cell *matCellDef="let notaDebitoCompraLinea">
-                                ${{notaDebitoCompraLinea.valorDescuentoLinea }}
-                            </td>
+                            <td mat-cell *matCellDef="let facturaCompraLinea">${{facturaCompraLinea.valorDescuentoLinea }}</td>
                         </ng-container>
                         <!-- Descuento% Columna -->
                         <ng-container matColumnDef="porcentajeDescuento">
                             <th mat-header-cell *matHeaderCellDef mat-sort-header> Desc% </th>
-                            <td mat-cell *matCellDef="let notaDebitoCompraLinea">
-                                ${{notaDebitoCompraLinea.porcentajeDescuentoLinea }}
-                            </td>
+                            <td mat-cell *matCellDef="let facturaCompraLinea">${{facturaCompraLinea.porcentajeDescuentoLinea }}</td>
                         </ng-container>
                         <!-- Impuesto Columna -->
                         <ng-container matColumnDef="impuesto">
                             <th mat-header-cell *matHeaderCellDef mat-sort-header> IVA </th>
-                            <td mat-cell *matCellDef="let notaDebitoCompraLinea">
-                                {{notaDebitoCompraLinea.producto.impuesto.porcentaje}}% </td>
+                            <td mat-cell *matCellDef="let facturaCompraLinea">{{facturaCompraLinea.impuesto.porcentaje}}% </td>
                         </ng-container>
                         <ng-container matColumnDef="bodega">
                             <th mat-header-cell *matHeaderCellDef mat-sort-header> BOD </th>
-                            <td mat-cell *matCellDef="let notaDebitoCompraLinea">
-                                {{notaDebitoCompraLinea.bodega.nombre}} </td>
+                            <td mat-cell *matCellDef="let facturaCompraLinea">
+                                {{facturaCompraLinea.bodega.nombre}} </td>
                         </ng-container>
                         <!-- Total Columna -->
                         <ng-container matColumnDef="total">
                             <th mat-header-cell *matHeaderCellDef mat-sort-header> Total </th>
-                            <td mat-cell *matCellDef="let notaDebitoCompraLinea">
-                                ${{notaDebitoCompraLinea.totalSinDescuentoLinea}} </td>
+                            <td mat-cell *matCellDef="let facturaCompraLinea">
+                                ${{facturaCompraLinea.totalSinDescuentoLinea}} </td>
                         </ng-container>
                         <tr mat-header-row *matHeaderRowDef="columnasLinea"></tr>
                         <tr mat-row *matRowDef="let row; columns: columnasLinea;"></tr>
                     </table>
                     <ng-container>
-                        <mat-paginator #paginatorLinea [pageSizeOptions]="[5, 10, 25, 100]">
+                        <mat-paginator #paginatorFacturaCompraLinea [pageSizeOptions]="[5, 10, 25, 100]">
                         </mat-paginator>
                     </ng-container>
                 </div>
@@ -251,7 +246,7 @@
                         <div class="col-12">
                             <mat-form-field appearance="outline">
                                 <mat-label>Comentario</mat-label>
-                                <textarea matInput [(ngModel)]="notaDebitoCompra.comentario"
+                                <textarea matInput [(ngModel)]="notaDebitoCompra.facturaCompra.comentario"
                                     placeholder="Referente a la nota de debito..." class="form-control" rows="3"></textarea>
                             </mat-form-field>
                         </div>
@@ -264,7 +259,7 @@
                                 </div>
                                 <div class="col-5">
                                     <mat-form-field appearance="standard">
-                                        <input matInput type="text" [(ngModel)]="notaDebitoCompra.subtotalSinDescuento"
+                                        <input matInput type="text" [(ngModel)]="notaDebitoCompra.facturaCompra.subtotalSinDescuento"
                                             class="form-control-sm" [disabled]="true">
                                     </mat-form-field>
                                 </div>
@@ -273,7 +268,7 @@
                                 </div>
                                 <div class="col-5">
                                     <mat-form-field appearance="standard">
-                                        <input matInput type="text" [(ngModel)]="notaDebitoCompra.totalDescuento"
+                                        <input matInput type="text" [(ngModel)]="notaDebitoCompra.facturaCompra.descuentoTotal"
                                             class="form-control-sm" [disabled]="true">
                                     </mat-form-field>
                                 </div>
@@ -282,7 +277,7 @@
                                 </div>
                                 <div class="col-5">
                                     <mat-form-field appearance="standard">
-                                        <input matInput type="text " [(ngModel)]="notaDebitoCompra.subtotalBase12SinDescuento"
+                                        <input matInput type="text " [(ngModel)]="notaDebitoCompra.facturaCompra.subtotalBase12SinDescuento"
                                             class="form-control-sm" [disabled]="true">
                                     </mat-form-field>
                                 </div>
@@ -291,7 +286,7 @@
                                 </div>
                                 <div class="col-5">
                                     <mat-form-field appearance="standard">
-                                        <input matInput type="text " [(ngModel)]="notaDebitoCompra.subtotalBase0SinDescuento"
+                                        <input matInput type="text " [(ngModel)]="notaDebitoCompra.facturaCompra.subtotalBase0SinDescuento"
                                             class="form-control-sm " [disabled]="true">
                                     </mat-form-field>
                                 </div>
@@ -300,7 +295,7 @@
                                 </div>
                                 <div class="col-5">
                                     <mat-form-field appearance="standard">
-                                        <input matInput type="text " [(ngModel)]="notaDebitoCompra.ivaSinDescuento"
+                                        <input matInput type="text " [(ngModel)]="notaDebitoCompra.facturaCompra.ivaSinDescuento"
                                             class="form-control-sm " [disabled]="true">
                                     </mat-form-field>
                                 </div>
@@ -309,7 +304,7 @@
                                 </div>
                                 <div class="col-5">
                                     <mat-form-field appearance="standard">
-                                        <input matInput type="text " [(ngModel)]="notaDebitoCompra.totalSinDescuento" class="form-control-sm" [disabled]="true">
+                                        <input matInput type="text " [(ngModel)]="notaDebitoCompra.facturaCompra.totalSinDescuento" class="form-control-sm" [disabled]="true">
                                     </mat-form-field>
                                 </div>
                             </div>
@@ -519,7 +514,7 @@
                         <ng-container matColumnDef="costoUnitario">
                             <th mat-header-cell *matHeaderCellDef mat-sort-header>Costo Unit </th>
                             <td mat-cell *matCellDef="let notaDebitoCompraLinea">
-                                ${{notaDebitoCompraLinea.precio.precioVentaPublicoManual }} </td>
+                                ${{notaDebitoCompraLinea.costoUnitario }} </td>
                         </ng-container>
                         <!-- Descuento Columna -->
                         <ng-container matColumnDef="valorDescuento">
@@ -598,7 +593,7 @@
                                 </div>
                                 <div class="col-5">
                                     <mat-form-field appearance="standard">
-                                        <input matInput type="text" [(ngModel)]="notaDebitoCompra.totalDescuento"
+                                        <input matInput type="text" [(ngModel)]="notaDebitoCompra.descuentoTotal"
                                             class="form-control-sm" [disabled]="true">
                                     </mat-form-field>
                                 </div>
