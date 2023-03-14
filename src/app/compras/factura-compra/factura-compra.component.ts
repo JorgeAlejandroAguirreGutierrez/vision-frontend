@@ -44,7 +44,7 @@ export class FacturaCompraComponent implements OnInit {
     { nombreColumna: 'fecha', cabecera: 'Fecha', celda: (row: FacturaCompra) => `${row.fecha}`},
     { nombreColumna: 'proveedor', cabecera: 'Proveedor', celda: (row: FacturaCompra) => `${row.proveedor.razonSocial}`},
     { nombreColumna: 'total', cabecera: 'Total', celda: (row: FacturaCompra) => `$${row.totalSinDescuento}`},
-    { nombreColumna: 'estado', cabecera: 'Estado', celda: (row: FacturaCompra) => `$${row.estado}`}
+    { nombreColumna: 'estado', cabecera: 'Estado', celda: (row: FacturaCompra) => `${row.estado}`}
   ];
   cabecera: string[]  = this.columnas.map(titulo => titulo.nombreColumna);
   dataSourceFacturaCompra: MatTableDataSource<FacturaCompra>;
