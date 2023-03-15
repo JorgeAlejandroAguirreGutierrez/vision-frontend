@@ -356,10 +356,14 @@ export class ProveedorComponent implements OnInit {
     if (!this.clickedRows.has(proveedor)) {
       this.clickedRows.clear();
       this.clickedRows.add(proveedor);
-      this.proveedor = { ... proveedor};
-      //this.obtenerProveedor(proveedor.id)
-      this.llenarUbicacion(); // Borrar cuando arregle el obtener
-      this.recuperarCoordenadas();
+      this.proveedorService.obtener(proveedor.id).subscribe({
+        next: res => {
+          this.proveedor = res.resultado as Proveedor;
+          this.llenarUbicacion();
+          this.recuperarCoordenadas();
+        },
+        error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+      });
     } else {
       this.nuevo(null);
     }

@@ -166,7 +166,7 @@
                 <div class="col-4">
                     <mat-form-field appearance="standard">
                         <mat-label>Operacion</mat-label>
-                        <mat-select class="form-control-sm" [(ngModel)]="notaCreditoCompra.operacion" (selectionChange)="seleccionarOperacion()">
+                        <mat-select [(ngModel)]="notaCreditoCompra.operacion" (selectionChange)="seleccionarOperacion()" class="form-control-sm">
                             <mat-option [value]="devolucion">{{devolucion}}</mat-option>
                             <mat-option [value]="descuento">{{descuento}}</mat-option>
                             <mat-option [value]="conjunta">{{conjunta}}</mat-option>
