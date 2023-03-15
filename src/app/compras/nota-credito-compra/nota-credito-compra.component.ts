@@ -111,14 +111,14 @@ export class NotaCreditoCompraComponent implements OnInit {
   }
 
   private filtroFacturaCompra(value: string): FacturaCompra[] {
-    if(this.facturasCompras.length > 0) {
+    if(this.facturasCompras.length > valores.cero) {
       const filterValue = value.toLowerCase();
       return this.facturasCompras.filter(facturaCompra => facturaCompra.secuencia.toLowerCase().includes(filterValue));
     }
     return [];
   }
   verFacturaCompra(facturaCompra: FacturaCompra): string {
-    return facturaCompra && facturaCompra.secuencia ? facturaCompra.secuencia : '';
+    return facturaCompra && facturaCompra.secuencia ? facturaCompra.secuencia : valores.vacio;
   }
 
   nuevo(event){
