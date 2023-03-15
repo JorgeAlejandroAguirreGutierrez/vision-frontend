@@ -288,6 +288,7 @@ export class NotaCreditoCompraComponent implements OnInit {
           this.seleccionProveedor.patchValue(this.notaCreditoCompra.facturaCompra.proveedor);
           this.seleccionFacturaCompra.patchValue(this.notaCreditoCompra.facturaCompra);
           this.dataSourceLinea = new MatTableDataSource<NotaCreditoCompraLinea>(this.notaCreditoCompra.notaCreditoCompraLineas);
+          this.seleccionarOperacion();
         },
         error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
       });
