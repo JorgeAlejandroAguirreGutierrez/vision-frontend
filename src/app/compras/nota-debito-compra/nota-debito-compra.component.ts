@@ -438,6 +438,7 @@ export class NotaDebitoCompraComponent implements OnInit {
           return;
         }
         this.kardex = res.resultado as Kardex;
+        this.notaDebitoCompraLinea.costoUnitario = this.kardex.costoUnitario;
       },
       err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     );
