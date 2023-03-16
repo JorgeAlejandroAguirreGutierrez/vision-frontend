@@ -16,12 +16,11 @@ import { ProveedorComponent } from '../../../compras/proveedor/proveedor.compone
 import { GrupoProveedorComponent } from '../../../compras/grupo-proveedor/grupo-proveedor.component';
 import { NotaCreditoCompraComponent } from '../../../compras/nota-credito-compra/nota-credito-compra.component';
 import { FacturaCompraComponent } from 'src/app/compras/factura-compra/factura-compra.component';
+import { NotaDebitoCompraComponent } from 'src/app/compras/nota-debito-compra/nota-debito-compra.component';
 //VENTAS
 import { FacturaComponent } from "../../../comprobantes/factura/factura.component";
-import { PedidoComponent } from "../../../comprobantes/pedido/pedido.component";
-import { ProformaComponent } from "../../../comprobantes/proforma/proforma.component";
-import { EgresoComponent } from "../../../comprobantes/egreso/egreso.component";
 import { NotaCreditoVentaComponent } from '../../../comprobantes/nota-credito-venta/nota-credito-venta.component';
+import { NotaDebitoVentaComponent } from 'src/app/comprobantes/nota-debito-venta/nota-debito-venta.component';
 //INVENTARIOS
 import { GrupoProductoComponent } from '../../../inventarios/grupo-producto/grupo-producto.component';
 import { ProductoComponent } from "../../../inventarios/producto/producto.component";
@@ -52,8 +51,6 @@ import { DashboardComponent } from '../../../componentes/pages/dashboard/dashboa
 //CONTABILIDAD
 import { MovimientoContableComponent } from '../../../contabilidad/movimiento-contable/movimiento-contable.component';
 import { CuentaContableComponent } from '../../../contabilidad/cuenta-contable/cuenta-contable.component';
-import { NotaDebitoVentaComponent } from 'src/app/comprobantes/nota-debito-venta/nota-debito-venta.component';
-import { NotaDebitoCompraComponent } from 'src/app/compras/nota-debito-compra/nota-debito-compra.component';
 
 @Injectable({
   providedIn: 'root'
@@ -77,9 +74,9 @@ export class SidebarItemsService {
     this.opciones = [];
     this.permisoOpciones = sesion.usuario.perfil.permisos;
     if (tabNombre == modulos.modulo_clientes) {
+      this.llenarOpciones(GrupoClienteComponent, tabs.tab_grupo_cliente, items.item_grupo_cliente, icos.ico_grupo_cliente);
       this.llenarOpciones(ClienteComponent, tabs.tab_cliente, items.item_cliente, icos.ico_cliente);
       this.llenarOpciones(SegmentoComponent, tabs.tab_segmento, items.item_segmento, icos.ico_segmento);
-      this.llenarOpciones(GrupoClienteComponent, tabs.tab_grupo_cliente, items.item_grupo_cliente, icos.ico_grupo_cliente);
       this.llenarOpciones(FormaPagoComponent, tabs.tab_forma_pago, items.item_forma_pago, icos.ico_forma_pago);
       this.llenarOpciones(OrigenIngresoComponent, tabs.tab_origen_ingreso, items.item_origen_ingreso, icos.ico_origen_ingreso);
       this.llenarOpciones(PlazoCreditoComponent, tabs.tab_plazo_credito, items.item_plazo_credito, icos.ico_plazo_credito);
@@ -87,8 +84,8 @@ export class SidebarItemsService {
     }
 
     if (tabNombre == modulos.modulo_compras) {
-      this.llenarOpciones(ProveedorComponent, tabs.tab_proveedor, items.item_proveedor, icos.ico_proveedor);
       this.llenarOpciones(GrupoProveedorComponent, tabs.tab_grupo_proveedor, items.item_grupo_proveedor, icos.ico_grupo_proveedor);
+      this.llenarOpciones(ProveedorComponent, tabs.tab_proveedor, items.item_proveedor, icos.ico_proveedor);
       this.llenarOpciones(FacturaCompraComponent, tabs.tab_factura_compra, items.item_factura_compra, icos.ico_factura_compra);
       this.llenarOpciones(NotaCreditoCompraComponent, tabs.tab_nota_credito_compra, items.item_nota_credito_compra, icos.ico_nota_credito_compra);
       this.llenarOpciones(NotaDebitoCompraComponent, tabs.tab_nota_debito_compra, items.item_nota_debito_compra, icos.ico_nota_debito_compra);
@@ -96,9 +93,6 @@ export class SidebarItemsService {
 
     if (tabNombre == modulos.modulo_ventas) {
       this.llenarOpciones(FacturaComponent, tabs.tab_factura, items.item_factura, icos.ico_factura);
-      this.llenarOpciones(PedidoComponent, tabs.tab_pedido, items.item_pedido, icos.ico_pedido);
-      this.llenarOpciones(ProformaComponent, tabs.tab_proforma, items.item_proforma, icos.ico_proforma);
-      this.llenarOpciones(EgresoComponent, tabs.tab_egreso, items.item_egreso, icos.ico_egreso);
       this.llenarOpciones(NotaCreditoVentaComponent, tabs.tab_nota_credito_venta, items.item_nota_credito_venta, icos.ico_nota_credito_venta);
       this.llenarOpciones(NotaDebitoVentaComponent, tabs.tab_nota_debito_venta, items.item_nota_debito_venta, icos.ico_nota_debito_venta);
       this.llenarOpciones(TransportistaComponent, tabs.tab_transportista, items.item_transportista, icos.ico_transportista);

@@ -51,9 +51,6 @@ import { BancoComponent } from './recaudacion/banco/banco.component';
 
 // Módulo de Ventas
 import { FacturaComponent } from './comprobantes/factura/factura.component';
-import { EgresoComponent } from './comprobantes/egreso/egreso.component';
-import { PedidoComponent } from './comprobantes/pedido/pedido.component';
-import { ProformaComponent } from './comprobantes/proforma/proforma.component';
 import { NotaCreditoVentaComponent } from './comprobantes/nota-credito-venta/nota-credito-venta.component';
 import { NotaDebitoVentaComponent } from './comprobantes/nota-debito-venta/nota-debito-venta.component';
 
@@ -138,14 +135,13 @@ const routes: Routes = [
   { path: 'forms', component: FormsComponent },
   { path: 'maps', component: MapsComponent },
   { path: 'tables', component: TablesComponent },
-  { path: 'typography', component: TypographyComponent },
-  { path: 'proforma', component: ProformaComponent },
+  { path: 'typography', component: TypographyComponent }
 ];
 
 @NgModule({
     imports: [RouterModule.forRoot(routes, { relativeLinkResolution: 'legacy' })],
     exports: [RouterModule],
-    bootstrap: [ProformaComponent]
+    bootstrap: [ClienteComponent]
 })
 export class AppRoutingModule { }
 export const RoutingComponents = [
@@ -203,9 +199,6 @@ export const RoutingComponents = [
   BancoComponent,
   //Ventas
   FacturaComponent,
-  EgresoComponent,
-  PedidoComponent,
-  ProformaComponent,
   NotaCreditoVentaComponent,
   NotaDebitoVentaComponent,
   // Compras
