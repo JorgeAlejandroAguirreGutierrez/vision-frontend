@@ -28,7 +28,7 @@ export class InicioSesionComponent implements OnInit {
 
   minContrasena: number = 8;
   ip: string;
-  contrasena: string = '';
+  contrasena: string = valores.vacio;
 
   ocultarContrasena: boolean = true;
   ocultarNuevaContrasena: boolean = true;
@@ -43,11 +43,11 @@ export class InicioSesionComponent implements OnInit {
 
   empresas: Empresa[] = [];
 
-  urlLogo: string = "";
-  urlEmpresa: string = "";
-  urlIcoempresa: string = environment.prefijoUrlImagenes + "iconos/icoempresa.png";
-  urlIcousuario: string = environment.prefijoUrlImagenes + "iconos/icousuario.png";
-  urlIcocontrasenia: string = environment.prefijoUrlImagenes + "iconos/icocontrasenia.png";
+  urlLogo: string = valores.vacio;
+  urlEmpresa: string = valores.vacio;
+  urlIcoempresa: string = "./assets/icons/icoempresa.png";
+  urlIcousuario: string = "./assets/icons/icousuario.png";
+  urlIcocontrasenia: string = "./assets/icons/icocontrasenia.png";
 
   formGroupContrasena = new FormGroup(
     {
@@ -67,7 +67,7 @@ export class InicioSesionComponent implements OnInit {
   }
 
   nuevo(){
-    this.contrasena = '';
+    this.contrasena = valores.vacio;
     this.ocultarContrasena = true;
     this.ocultarNuevaContrasena = true;
     this.ocultarConfirmarContrasena = true;
@@ -101,7 +101,7 @@ export class InicioSesionComponent implements OnInit {
   }
 
   iniciarSesion() {
-    if (this.contrasena!='' && this.sesion.usuario.contrasena==md5(this.contrasena)){
+    if (this.contrasena != valores.vacio && this.sesion.usuario.contrasena == md5(this.contrasena)){
       this.sesionService.crear(this.sesion).subscribe({
         next: res => {
           this.sesion = res.resultado as Sesion;
@@ -120,7 +120,7 @@ export class InicioSesionComponent implements OnInit {
   }
 
   crearNuevaContrasena(){
-    if (this.contrasena!='' && this.sesion.usuario.contrasena==md5(this.contrasena)){
+    if (this.contrasena != valores.vacio && this.sesion.usuario.contrasena==md5(this.contrasena)){
       this.usuario.contrasena = md5(this.formGroupContrasena.get('password').value);
       this.usuario.confirmarContrasena = md5(this.formGroupContrasena.get('confirmPassword').value);
       this.usuario.cambiarContrasena = valores.no;
