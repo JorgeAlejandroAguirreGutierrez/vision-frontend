@@ -75,6 +75,12 @@ export class FacturaCompraComponent implements OnInit {
 
   si = valores.si;
   no = valores.no;
+  emitida = valores.emitida;
+  anulada = valores.anulada;
+  noFacturada = valores.noFacturada;
+  facturada = valores.facturada;
+  noRecaudada = valores.noRecaudada;
+  recaudada = valores.recaudada;
 
   @HostListener('window:keypress', ['$event'])
   keyEvent($event: KeyboardEvent) {

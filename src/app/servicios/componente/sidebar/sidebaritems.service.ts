@@ -29,6 +29,7 @@ import { PromocionComponent } from "../../../inventarios/promocion/promocion.com
 import { BodegaComponent } from "../../../inventarios/bodega/bodega.component";
 import { MedidaComponent } from '../../../inventarios/medida/medida.component';
 //ENTREGA
+import { GuiaRemisionComponent } from '../../../entregas/guia-remision/guia-remision.component';
 import { TransportistaComponent } from '../../../entregas/transportista/transportista.component';
 import { VehiculoTransporteComponent } from '../../../entregas/vehiculo-transporte/vehiculo-transporte.component';
 //ACCESOS
@@ -95,6 +96,7 @@ export class SidebarItemsService {
       this.llenarOpciones(FacturaComponent, tabs.tab_factura, items.item_factura, icos.ico_factura);
       this.llenarOpciones(NotaCreditoVentaComponent, tabs.tab_nota_credito_venta, items.item_nota_credito_venta, icos.ico_nota_credito_venta);
       this.llenarOpciones(NotaDebitoVentaComponent, tabs.tab_nota_debito_venta, items.item_nota_debito_venta, icos.ico_nota_debito_venta);
+      this.llenarOpciones(GuiaRemisionComponent, tabs.tab_guia_remision, items.item_guia_remision, icos.ico_guia_remision);
       this.llenarOpciones(TransportistaComponent, tabs.tab_transportista, items.item_transportista, icos.ico_transportista);
       this.llenarOpciones(VehiculoTransporteComponent, tabs.tab_vehiculo_transporte, items.item_vehiculo_transporte, icos.ico_vehiculo_transporte);
     }

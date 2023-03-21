@@ -34,7 +34,15 @@ export class NotaCreditoVentaComponent implements OnInit {
   devolucion = valores.devolucion;
   descuento = valores.descuento;
   conjunta = valores.conjunta;
-  
+
+  si = valores.si;
+  no = valores.no;
+  emitida = valores.emitida;
+  anulada = valores.anulada;
+  noFacturada = valores.noFacturada;
+  facturada = valores.facturada;
+  noRecaudada = valores.noRecaudada;
+  recaudada = valores.recaudada;
   
   seleccionCliente = new UntypedFormControl();
   filtroClientes: Observable<Cliente[]> = new Observable<Cliente[]>();
@@ -65,8 +73,6 @@ export class NotaCreditoVentaComponent implements OnInit {
   columnasLinea: string[] = ["codigo", 'nombre', 'medida', 'cantidad', 'devolucion', 'costoUnitario', 'valorDescuento', 'porcentajeDescuento', 'impuesto', 'bodega', 'total'];
   dataSourceLinea = new MatTableDataSource<NotaCreditoVentaLinea>(this.notaCreditoVenta.notaCreditoVentaLineas);
   sesion: Sesion;
-  si = valores.si;
-  no = valores.no;
 
   constructor(private clienteService: ClienteService, private sesionService: SesionService, private notaCreditoElectronicaService: NotaCreditoElectronicaService,
     private router: Router, private notaCreditoVentaService: NotaCreditoVentaService, private facturaService: FacturaService,

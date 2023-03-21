@@ -55,6 +55,7 @@ export const urn =
      obtenerPorFactura: "/obtenerPorFactura",
      notaDebitoEletronica: "/notaDebitoEletronica",
      notaCreditoEletronica: "/notaCreditoEletronica",
+     guiaRemisionEletronica: "/guiaRemisionEletronica",
      tipoRetencion: "/tipoRetencion",
      consultarBien: "/consultarBien",
      consultarBienPorProveedor: "/consultarBienPorProveedor",
@@ -341,6 +342,7 @@ export const tabs = {
     tab_egreso: " Egreso",
     tab_nota_credito_venta: "Nota de Crédito",
     tab_nota_debito_venta: "Nota de Débito",
+    tab_guia_remision: "Guia de Remision",
     tab_transportista: "Transportista",
     tab_vehiculo_transporte: "Vehiculo de Transporte",
 
@@ -426,6 +428,7 @@ export const items = {
     item_egreso : "Egresos", 
     item_nota_credito_venta : "Notas de Crédito Venta",
     item_nota_debito_venta : "Notas de Débito Venta",
+    item_guia_remision : "Guias de Remision",
     item_transportista : "Transportistas",
     item_vehiculo_transporte : "Vehiculos Transportes",
 
@@ -515,6 +518,7 @@ export const icos = {
     ico_egreso : 'fa fa-file-text-o',
     ico_nota_credito_venta : 'fa fa-reply-all',
     ico_nota_debito_venta : 'fa fa-reply-all',
+    ico_guia_remision : 'fa fa-reply-all',
     ico_transportista : 'fa fa-id-card',
     ico_vehiculo_transporte : 'fa fa-truck',
 

@@ -1,38 +1,44 @@
 import { Transportista } from './transportista';
 import { Factura } from '../comprobante/factura';
 import { valores } from "../../constantes";
-import { Ubicacion } from '../configuracion/ubicacion';
+import { Sesion } from '../usuario/sesion';
 export class GuiaRemision {
     id: number;
     codigo: string;
+    secuencia: string;
     fecha: Date;
-    guiaNumero: string;
-    direccion: string;
-    telefono: string;
-    celular: string;
-    correo: string;
-    referencia: string;
+    fechaInicioTransporte: Date;
+    fechaFinTransporte: Date;
+    motivoTraslado: string;
+    ruta: string;
+    identificacionDestinatario: string;
+    razonSocialDestinatario: string;
+    direccionDestinatario: string;
+    telefonoDestinatario: string;
+    celularDestinatario: string;
+    correoDestinatario: string;
     opcionGuia: string;
     estado: string;
-    ubicacion : Ubicacion;
+    sesion: Sesion;
     transportista: Transportista;
     factura: Factura;
-    inhabilitar: boolean;
 
     constructor(){
         this.id = valores.cero;
         this.codigo = valores.vacio;
         this.fecha = new Date();
-        this.guiaNumero = valores.vacio;
-        this.direccion = valores.vacio;
-        this.telefono = valores.vacio;
-        this.celular = valores.vacio;
-        this.correo = valores.vacio;
+        this.fechaInicioTransporte = new Date();
+        this.fechaFinTransporte = new Date();
+        this.motivoTraslado = valores.vacio;
+        this.ruta = valores.vacio;
+        this.direccionDestinatario = valores.vacio;
+        this.telefonoDestinatario = valores.vacio;
+        this.celularDestinatario = valores.vacio;
+        this.correoDestinatario = valores.vacio;
         this.opcionGuia = valores.clienteDireccion;
         this.estado = valores.pendiente;
-        this.ubicacion = new Ubicacion();
+        this.sesion = new Sesion();
         this.transportista = new Transportista();
         this.factura = new Factura();
-        this.inhabilitar = false;
     }
 }

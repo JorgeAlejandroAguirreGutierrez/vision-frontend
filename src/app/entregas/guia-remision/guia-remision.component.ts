@@ -1,11 +1,8 @@
-import { Component, OnInit } from '@angular/core';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { Component, HostListener, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
+import { map, Observable, startWith } from 'rxjs';
 import Swal from 'sweetalert2';
 import { SesionService } from '../../servicios/usuario/sesion.service';
-import { Factura } from '../../modelos/comprobante/factura';
-import { Ubicacion } from '../../modelos/configuracion/ubicacion';
-import { UbicacionService } from '../../servicios/configuracion/ubicacion.service';
 import { TransportistaService } from '../../servicios/entrega/transportista.service';
 import { Transportista } from '../../modelos/entrega/transportista';
 import { GuiaRemision } from '../../modelos/entrega/guia-remision';
@@ -15,7 +12,12 @@ import { FacturaService } from '../../servicios/comprobante/factura.service';
 import { valores, mensajes, otras, tabs, validarSesion, tab_activo, exito, exito_swal, error, error_swal } from '../../constantes';
 import { MatTableDataSource } from '@angular/material/table';
 import { FacturaLinea } from '../../modelos/comprobante/factura-linea';
-import { FacturaElectronicaService } from 'src/app/servicios/comprobante/factura-eletronica.service';
+import { UntypedFormControl } from '@angular/forms';
+import { Cliente } from 'src/app/modelos/cliente/cliente';
+import { Factura } from 'src/app/modelos/comprobante/factura';
+import { ClienteService } from 'src/app/servicios/cliente/cliente.service';
+import { MatPaginator } from '@angular/material/paginator';
+import { GuiaRemisionElectronicaService } from 'src/app/servicios/entrega/guia-remision-eletronica.service';
 
 @Component({
   selector: 'app-guia-remision',
@@ -24,74 +26,158 @@ import { FacturaElectronicaService } from 'src/app/servicios/comprobante/factura
 })
 export class GuiaRemisionComponent implements OnInit {
 
-  panelGuiaRemision=true;
-  panelGuiaDetalle=false;
+  panelOpenState = false;
 
-  transportistas: Transportista[];
-  guiaRemision: GuiaRemision = new GuiaRemision();
-  sesion: Sesion;
-  provincias: Ubicacion[];
-  cantones: Ubicacion[];
-  parroquias: Ubicacion[];
-  deshabilitar: boolean = false;
-  deshabilitarTransportista: boolean = false;
-  pendiente = valores.pendiente;
-  entregado = valores.entregado;
-  sinGuia = valores.sinGuia;
+  si = valores.si;
+  no = valores.no;
+  emitida = valores.emitida;
+  anulada = valores.anulada;
+  noFacturada = valores.noFacturada;
+  facturada = valores.facturada;
+  noRecaudada = valores.noRecaudada;
+  recaudada = valores.recaudada;
   clienteDireccion = valores.clienteDireccion;
   nuevaDireccion = valores.nuevaDireccion;
 
+  deshabilitarNuevaDireccion = true;
 
-  columnas: string[] = ['nombre', 'cantidad', 'precio_unitario', 'iva', 'total'];
-  dataSource = new MatTableDataSource<FacturaLinea>(this.guiaRemision.factura.facturaLineas);
+  seleccionCliente = new UntypedFormControl();
+  filtroClientes: Observable<Cliente[]> = new Observable<Cliente[]>();
+  clientes: Cliente[] = [];
+  seleccionFactura = new UntypedFormControl();
+  filtroFacturas: Observable<Factura[]> = new Observable<Factura[]>();
+  facturas: Factura[] = [];
+  transportistas: Transportista[] = [];
 
-  constructor(private transportistaService: TransportistaService, private sesionService: SesionService, private router: Router,
-    private facturaService: FacturaService, private facturaElectronicaService: FacturaElectronicaService, private modalService: NgbModal,
-    private ubicacionService: UbicacionService, private guiaRemisionService: GuiaRemisionService) { }
+  columnas: any[] = [
+    { nombreColumna: 'codigo', cabecera: 'Código', celda: (row: GuiaRemision) => `${row.codigo}`},
+    { nombreColumna: 'fecha', cabecera: 'Fecha', celda: (row: GuiaRemision) => `${row.fecha}`},
+    { nombreColumna: 'cliente', cabecera: 'Cliente', celda: (row: GuiaRemision) => `${row.factura.cliente.razonSocial}`},
+    { nombreColumna: 'factura', cabecera: 'Factura', celda: (row: GuiaRemision) => `${row.factura.secuencia}`},
+    { nombreColumna: 'direccion', cabecera: 'Direccion', celda: (row: GuiaRemision) => row.opcionGuia == valores.clienteDireccion ? `${row.factura.cliente.direccion}` : `${row.direccionDestinatario}`},
+    { nombreColumna: 'estado', cabecera: 'Estado', celda: (row: GuiaRemision) => `${row.estado}`}
+  ];
+  cabecera: string[]  = this.columnas.map(titulo => titulo.nombreColumna);
+  dataSource: MatTableDataSource<GuiaRemision>;
+  clickedRows = new Set<GuiaRemision>();
+  abrirPanelAdmin = false;
+  guiasRemisiones: GuiaRemision[] = [];
+  
+  @ViewChild("paginator") paginator: MatPaginator;
+  @ViewChild("paginatorLinea") paginatorLinea: MatPaginator;
+
+  guiaRemision: GuiaRemision = new GuiaRemision();
+
+  columnasLinea: string[] = ["codigo", "bodega", "nombre", "medida", "cantidad", "precio", "descuento", "descuentoPorcentaje", "impuesto", "total"];
+  dataSourceLinea = new MatTableDataSource<FacturaLinea>(this.guiaRemision.factura.facturaLineas);
+  sesion: Sesion;
+
+  constructor(private clienteService: ClienteService, private sesionService: SesionService, private guiaRemisionElectronicaService: GuiaRemisionElectronicaService,
+    private router: Router, private guiaRemisionService: GuiaRemisionService, private facturaService: FacturaService, private transportistaService: TransportistaService) { }
+
+  @HostListener('window:keypress', ['$event'])
+  keyEvent($event: KeyboardEvent) {
+    if (($event.shiftKey || $event.metaKey) && $event.key == "G") //SHIFT + G
+      this.crear(null);
+    if (($event.shiftKey || $event.metaKey) && $event.key == "N") //ASHIFT + N
+      this.nuevo(null);
+  }
 
   ngOnInit() {
     this.sesion=validarSesion(this.sesionService, this.router);
+    this.consultar();
+    this.consultarClientes();
     this.consultarTransportistas();
-    this.consultarUbicaciones();
-
-    this.facturaService.eventoEntrega.subscribe((data:number) => {
-      this.facturaService.obtener(data).subscribe(
-        res => {
-          this.guiaRemision.factura = res.resultado as Factura;
-          this.cargar();
-        },
-        err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+    this.filtroClientes = this.seleccionCliente.valueChanges
+      .pipe(
+        startWith(valores.vacio),
+        map(value => typeof value === 'string' || value==null ? value : value.id),
+        map(cliente => typeof cliente === 'string' ? this.filtroCliente(cliente) : this.clientes.slice())
       );
-    });
+    this.filtroFacturas = this.seleccionFactura.valueChanges
+      .pipe(
+        startWith(valores.vacio),
+        map(value => typeof value === 'string' || value==null ? value : value.id),
+        map(factura => typeof factura === 'string' ? this.filtroFactura(factura) : this.facturas.slice())
+      );
+  }
+  
+  private filtroCliente(value: string): Cliente[] {
+    if(this.clientes.length > valores.cero) {
+      const filterValue = value.toLowerCase();
+      return this.clientes.filter(cliente => cliente.razonSocial.toLowerCase().includes(filterValue));
+    }
+    return [];
+  }
+  verCliente(cliente: Cliente): string {
+    return cliente && cliente.razonSocial ? cliente.razonSocial : valores.vacio;
   }
 
-  cargar(){
-    this.guiaRemisionService.obtenerPorFactura(this.guiaRemision.factura.id).subscribe(
+  private filtroFactura(value: string): Factura[] {
+    if(this.facturas.length > valores.cero) {
+      const filterValue = value.toLowerCase();
+      return this.facturas.filter(factura => factura.secuencia.toLowerCase().includes(filterValue));
+    }
+    return [];
+  }
+  verFactura(factura: Factura): string {
+    return factura && factura.secuencia ? factura.secuencia : valores.vacio;
+  }
+
+  nuevo(event){
+    if (event!=null)
+      event.preventDefault();
+    this.guiaRemision = new GuiaRemision();
+    this.seleccionCliente.patchValue(valores.vacio);
+    this.seleccionFactura.patchValue(valores.vacio);
+    this.dataSourceLinea = new MatTableDataSource<FacturaLinea>([]);
+    this.clickedRows.clear();
+  }
+
+  consultar() {
+    this.guiaRemisionService.consultar().subscribe(
       res => {
-        if (res.resultado!= null){
-          Object.assign(this.guiaRemision, res.resultado as GuiaRemision);
-          this.seleccionarProvincia();
-          this.seleccionarCanton();
-        } else{
-          this.guiaRemision.direccion=this.guiaRemision.factura.cliente.direccion;
-          this.guiaRemision.ubicacion=this.guiaRemision.factura.cliente.ubicacion;
-          this.seleccionarProvincia();
-          this.seleccionarCanton();
-          this.guiaRemision.telefono=this.guiaRemision.factura.cliente.telefonos[0].numero;
-          this.guiaRemision.celular=this.guiaRemision.factura.cliente.celulares[0].numero;
-          this.guiaRemision.correo=this.guiaRemision.factura.cliente.correos[0].email;
-          this.deshabilitar=true;
-        }
-        this.dataSource = new MatTableDataSource<FacturaLinea>(this.guiaRemision.factura.facturaLineas);
+        this.guiasRemisiones = res.resultado as GuiaRemision[]
+        this.dataSource = new MatTableDataSource(this.guiasRemisiones);
+        this.dataSource.paginator = this.paginator;
       },
       err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
 
-  consultarUbicaciones(){
-    this.ubicacionService.consultarProvincias().subscribe(
+  consultarClientes(){
+    this.clienteService.consultar().subscribe(
       res => {
-        this.provincias = res.resultado as Ubicacion[];
+        this.clientes = res.resultado as Cliente[]
+      },
+      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+    );
+  }
+  
+  seleccionarCliente() {
+    let clienteId = this.seleccionCliente.value.id;
+    this.clienteService.obtener(clienteId).subscribe(
+      res => {
+        this.guiaRemision.factura.cliente = res.resultado as Cliente;
+        this.seleccionCliente.patchValue(this.guiaRemision.factura.cliente);
+        this.facturaService.consultarPorCliente(this.guiaRemision.factura.cliente.id).subscribe(
+          res => {
+            this.facturas = res.resultado as Factura[]
+          },
+          err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+        );
+      },
+      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+    );
+  }
+
+  seleccionarFactura() {
+    let facturaId = this.seleccionFactura.value.id;
+    this.guiaRemisionService.obtenerPorFactura(facturaId).subscribe(
+      res => {
+        this.guiaRemision = res.resultado as GuiaRemision;
+        this.seleccionFactura.patchValue(this.guiaRemision.factura);
+        this.dataSourceLinea = new MatTableDataSource(this.guiaRemision.factura.facturaLineas);
       },
       err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     );
@@ -106,130 +192,112 @@ export class GuiaRemisionComponent implements OnInit {
     );
   }
 
-  crear(event: any) {
+  crear(event) {
     if (event!=null)
       event.preventDefault();
+    this.guiaRemision.sesion = this.sesion;
     this.guiaRemisionService.crear(this.guiaRemision).subscribe(
       res => {
-        this.guiaRemision = res.resultado as GuiaRemision;
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
+        this.consultar();
+        this.nuevo(null);
       },
       err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
 
-  actualizar(event: any) {
+  actualizar(event){
     if (event!=null)
       event.preventDefault();
     this.guiaRemisionService.actualizar(this.guiaRemision).subscribe(
       res => {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
-        this.guiaRemision = res.resultado as GuiaRemision;
+        this.consultar();
+        this.nuevo(null);        
       },
       err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
 
-  seleccionarProvincia() {
-    this.ubicacionService.consultarCantones(this.guiaRemision.ubicacion.provincia).subscribe(
-      res => {
-          this.cantones = res.resultado as Ubicacion[];
-      },
-      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
-    );
-  }
-
-  seleccionarCanton() {
-    this.ubicacionService.consultarParroquias(this.guiaRemision.ubicacion.canton).subscribe(
-      res => {
-          this.parroquias = res.resultado as Ubicacion[];
-      },
-      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
-    );
-  }
-
-  validarTelefono() {
-    let digito = this.guiaRemision.telefono.substring(0, 1);
-    if (this.guiaRemision.telefono.length != 11 || digito != "0") {
-      this.guiaRemision.telefono = valores.vacio;
-      Swal.fire({ icon: error_swal, title: error, text: mensajes.error_telefono_invalido });
-    }
-  }
-
-  validarCelular() {
-    let digito = this.guiaRemision.celular.substring(0, 2);
-    if (this.guiaRemision.celular.length != 12 || digito != "09") {
-      this.guiaRemision.celular = valores.vacio;
-      Swal.fire({ icon: error_swal, title: error, text: mensajes.error_celular_invalido });
-    }
-  }
-
-  validarCorreo() {
-    let arroba = this.guiaRemision.correo.includes("@");
-    if (!arroba) {
-      this.guiaRemision.correo = valores.vacio;
-      Swal.fire({ icon: error_swal, title: error, text: mensajes.error_correo_invalido });
-    }
-  }
-
-  open(content: any, event: any) {
-    if (event!=null)
+  activar(event) {
+    if (event != null)
       event.preventDefault();
-    this.modalService.open(content, { size: 'lg' }).result.then((result) => {
-    }, (reason) => {
+    this.guiaRemisionService.activar(this.guiaRemision).subscribe({
+      next: res => {
+        Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
+        this.consultar();
+        this.nuevo(null);
+      },
+      error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+    });
+  }
 
+  inactivar(event) {
+    if (event != null)
+      event.preventDefault();
+    this.guiaRemisionService.inactivar(this.guiaRemision).subscribe({
+      next: res => {
+        Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
+        this.consultar();
+        this.nuevo(null);
+      },
+      error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     });
   }
 
   seleccionarOpcionGuia(){
-    if (this.guiaRemision.opcionGuia==this.clienteDireccion){
-      this.guiaRemision.direccion=this.guiaRemision.factura.cliente.direccion;
-      this.guiaRemision.ubicacion=this.guiaRemision.factura.cliente.ubicacion;
-      this.seleccionarProvincia();
-      this.seleccionarCanton();
-      this.guiaRemision.telefono=this.guiaRemision.factura.cliente.telefonos[0].numero;
-      this.guiaRemision.celular=this.guiaRemision.factura.cliente.celulares[0].numero;
-      this.guiaRemision.correo=this.guiaRemision.factura.cliente.correos[0].email;
-      this.deshabilitar=true;
-      this.deshabilitarTransportista = false;
-    } else if (this.guiaRemision.opcionGuia==this.nuevaDireccion) {
-      this.guiaRemision.direccion = valores.vacio;
-      this.guiaRemision.ubicacion = new Ubicacion();
-      this.guiaRemision.telefono = valores.vacio;
-      this.guiaRemision.celular = valores.vacio;
-      this.guiaRemision.correo = valores.vacio;
-      this.guiaRemision.transportista = new Transportista();
-      this.deshabilitar=false;
-      this.deshabilitarTransportista = false;
-    } else if (this.guiaRemision.opcionGuia==this.sinGuia){
-      this.guiaRemision.direccion= valores.vacio;
-      this.guiaRemision.ubicacion = new Ubicacion();
-      this.guiaRemision.telefono= valores.vacio;
-      this.guiaRemision.celular= valores.vacio;
-      this.guiaRemision.correo= valores.vacio;
-      this.guiaRemision.transportista = new Transportista();
-      this.deshabilitar=true
-      this.deshabilitarTransportista = true;
+    if(this.guiaRemision.opcionGuia == valores.clienteDireccion){
+      this.deshabilitarNuevaDireccion = true;
+    } 
+    if(this.guiaRemision.opcionGuia == valores.nuevaDireccion){
+      this.deshabilitarNuevaDireccion = false;
     }
   }
 
-  nuevo(event: any){
-    this.guiaRemision=new GuiaRemision();
+  seleccion(guiaRemision: any) {
+    if (!this.clickedRows.has(guiaRemision)){
+      this.clickedRows.clear();
+      this.clickedRows.add(guiaRemision);
+      this.guiaRemisionService.obtener(guiaRemision.id).subscribe({
+        next: res => {
+          this.guiaRemision = res.resultado as GuiaRemision;
+          this.seleccionCliente.patchValue(this.guiaRemision.factura.cliente);
+          this.seleccionFactura.patchValue(this.guiaRemision.factura);
+          this.dataSourceLinea = new MatTableDataSource<FacturaLinea>(this.guiaRemision.factura.facturaLineas);
+          this.seleccionarOpcionGuia();
+        },
+        error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+      });
+    } else {
+      this.clickedRows.clear();
+      this.guiaRemision = new GuiaRemision();
+    }
   }
 
-  crearFacturaElectronica(event){
+  crearGuiaRemisionElectronica(event){
     if (event != null)
       event.preventDefault();
-    this.facturaElectronicaService.enviar(this.guiaRemision.factura.id).subscribe(
+    this.guiaRemisionElectronicaService.enviar(this.guiaRemision.id).subscribe(
       res => {
         let respuesta = res.resultado as String;
-        Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje, footer: respuesta });
+        Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
+        this.consultar();
+        this.nuevo(null);
       },
       err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     );
+  }
+
+  filtro(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.dataSource.filter = filterValue.trim().toUpperCase();
+    if (this.dataSource.paginator) {
+      this.dataSource.paginator.firstPage();
+    }
   }
 
   compareFn(a: any, b: any) {
     return a && b && a.id == b.id;
   }
+
 }
