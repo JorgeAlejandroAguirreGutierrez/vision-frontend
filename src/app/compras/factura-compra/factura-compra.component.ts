@@ -241,6 +241,9 @@ export class FacturaCompraComponent implements OnInit {
     if (this.facturaCompraLinea.costoUnitario <= valores.cero){
       return;
     }
+    if (this.facturaCompraLinea.impuesto.id == valores.cero){
+      return;
+    }
     if (this.facturaCompraLinea.producto.id == valores.cero){
       return;
     }
@@ -255,6 +258,9 @@ export class FacturaCompraComponent implements OnInit {
       return;
     }
     if (this.facturaCompraLinea.costoUnitario <= valores.cero){
+      return;
+    }
+    if (this.facturaCompraLinea.impuesto.id == valores.cero){
       return;
     }
     if (this.facturaCompraLinea.producto.id == valores.cero){
@@ -273,6 +279,9 @@ export class FacturaCompraComponent implements OnInit {
     if (this.facturaCompraLinea.costoUnitario <= valores.cero){
       return;
     }
+    if (this.facturaCompraLinea.impuesto.id == valores.cero){
+      return;
+    }
     if (this.facturaCompraLinea.producto.id == valores.cero){
       return;
     }
@@ -287,6 +296,9 @@ export class FacturaCompraComponent implements OnInit {
       return;
     }
     if (this.facturaCompraLinea.costoUnitario <= valores.cero){
+      return;
+    }
+    if (this.facturaCompraLinea.impuesto.id == valores.cero){
       return;
     }
     if (this.facturaCompraLinea.producto.id == valores.cero){
@@ -305,6 +317,9 @@ export class FacturaCompraComponent implements OnInit {
     if (this.facturaCompraLinea.costoUnitario <= valores.cero){
       return;
     }
+    if (this.facturaCompraLinea.impuesto.id == valores.cero){
+      return;
+    }
     if (this.facturaCompraLinea.producto.id == valores.cero){
       return;
     }
@@ -321,6 +336,9 @@ export class FacturaCompraComponent implements OnInit {
       return;
     }
     if (this.facturaCompraLinea.costoUnitario <= valores.cero){
+      return;
+    }
+    if (this.facturaCompraLinea.impuesto.id == valores.cero){
       return;
     }
     if (this.facturaCompraLinea.producto.id == valores.cero){
