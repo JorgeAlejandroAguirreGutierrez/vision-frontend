@@ -45,27 +45,27 @@ export class MenuComponent implements OnInit {
   permiso_tutoriales: boolean;
   verAdministracion: boolean = true;
 
-  ico_cliente: string = environment.prefijoUrlImagenes+"iconos/icoclientes.jpg";
-  ico_proveedor: string = environment.prefijoUrlImagenes+"iconos/icoproveedores.png";
-  ico_facturacion: string = environment.prefijoUrlImagenes+"iconos/icofacturacion.png";
-  ico_inventario: string = environment.prefijoUrlImagenes+"iconos/icoinventarios.png";
-  ico_caja_bancos: string = environment.prefijoUrlImagenes+"iconos/icocajabancos.png";
-  ico_cuentasxcobrar: string = environment.prefijoUrlImagenes+"iconos/icocuentasxcobrar.png";
-  ico_cuentasxpagar: string = environment.prefijoUrlImagenes+"iconos/icocuentasxpagar.png";
-  ico_contabilidad: string = environment.prefijoUrlImagenes+"iconos/icocontabilidad.png";
-  ico_financiero: string = environment.prefijoUrlImagenes+"iconos/icofinanciero.png";
-  ico_activosfijos: string = environment.prefijoUrlImagenes+"iconos/icoactivosfijos.png";
-  ico_talentohumano: string = environment.prefijoUrlImagenes+"iconos/icotalentohumano.png";
-  ico_produccion: string = environment.prefijoUrlImagenes+"iconos/icoproduccion.png";
-  ico_importacion: string = environment.prefijoUrlImagenes+"iconos/icoimportacion.png";
-  ico_reportes: string = environment.prefijoUrlImagenes+"iconos/icoreportes.png";
+  ico_cliente: string = "./assets/icons/icoclientes.jpg";
+  ico_proveedor: string = "./assets/icons/icoproveedores.png";
+  ico_facturacion: string = "./assets/icons/icofacturacion.png";
+  ico_inventario: string = "./assets/icons/icoinventarios.png";
+  ico_caja_bancos: string = "./assets/icons/icocajabancos.png";
+  ico_cuentasxcobrar: string = "./assets/icons/icocuentasxcobrar.png";
+  ico_cuentasxpagar: string = "./assets/icons/icocuentasxpagar.png";
+  ico_contabilidad: string = "./assets/icons/icocontabilidad.png";
+  ico_financiero: string = "./assets/icons/icofinanciero.png";
+  ico_activosfijos: string = "./assets/icons/icoactivosfijos.png";
+  ico_talentohumano: string = "./assets/icons/icotalentohumano.png";
+  ico_produccion: string = "./assets/icons/icoproduccion.png";
+  ico_importacion: string = "./assets/icons/icoimportacion.png";
+  ico_reportes: string = "./assets/icons/icoreportes.png";
 
-  ico_accesos: string = environment.prefijoUrlImagenes+"iconos/icoacceso.png";
-  ico_configuracion: string = environment.prefijoUrlImagenes+"iconos/icoconfiguraciones.png";
-  ico_estadistica: string = environment.prefijoUrlImagenes+"iconos/icoestadisticas.png";
-  ico_organismoscontrol: string = environment.prefijoUrlImagenes+"iconos/icoorganismoscontrol.png";
-  ico_auditoria: string = environment.prefijoUrlImagenes+"iconos/icoauditoria.png";
-  ico_tutoriales: string = environment.prefijoUrlImagenes+"iconos/icotutoriales.png";
+  ico_accesos: string = "./assets/icons/icoacceso.png";
+  ico_configuracion: string = "./assets/icons/icoconfiguraciones.png";
+  ico_estadistica: string = "./assets/icons/icoestadisticas.png";
+  ico_organismoscontrol: string = "./assets/icons/icoorganismoscontrol.png";
+  ico_auditoria: string = "./assets/icons/icoauditoria.png";
+  ico_tutoriales: string = "./assets/icons/icotutoriales.png";
 
 
   constructor(private sesionService: SesionService, public tabService: TabService, private router: Router) { }

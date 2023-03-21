@@ -92,7 +92,7 @@ export class ClienteComponent implements OnInit {
   provinciaDependiente: string = "";
   cantonDependiente: string = "";
   parroquiaDependiente: string = "";
-  urlAvatar: string = environment.prefijoUrlImagenes + "avatar/avatar1.png";
+  urlAvatar: string = "./assets/icons/avatar1.png";
 
   cliente: Cliente = new Cliente();
   telefono: Telefono = new Telefono();
