@@ -59,17 +59,21 @@
                 <div class="col-4">
                     <mat-form-field appearance="standard">
                         <mat-label>Ruc</mat-label>
-                        <input matInput type="text" [(ngModel)]="notaDebitoCompra.facturaCompra.proveedor.identificacion" class="form-control-sm" [disabled]="true">
+                        <input matInput type="text"
+                            [(ngModel)]="notaDebitoCompra.facturaCompra.proveedor.identificacion"
+                            class="form-control-sm" [disabled]="true">
                     </mat-form-field>
                 </div>
                 <div class="col-12">
                     <mat-form-field appearance="standard">
                         <mat-label>Direccion</mat-label>
-                        <input matInput type="text" [(ngModel)]="notaDebitoCompra.facturaCompra.proveedor.direccion" class="form-control-sm" [disabled]="true">
+                        <input matInput type="text" [(ngModel)]="notaDebitoCompra.facturaCompra.proveedor.direccion"
+                            class="form-control-sm" [disabled]="true">
                     </mat-form-field>
                 </div>
                 <div class="form-row col-4">
-                    <ng-container *ngFor="let telefono of notaDebitoCompra.facturaCompra.proveedor.telefonosProveedor; let i=index ">
+                    <ng-container
+                        *ngFor="let telefono of notaDebitoCompra.facturaCompra.proveedor.telefonosProveedor; let i=index ">
                         <div class="col-9">
                             <mat-form-field appearance="standard">
                                 <mat-label>Teléfono</mat-label>
@@ -86,7 +90,8 @@
                     </ng-container>
                 </div>
                 <div class="form-row col-4">
-                    <ng-container *ngFor="let celular of notaDebitoCompra.facturaCompra.proveedor.celularesProveedor; let i=index ">
+                    <ng-container
+                        *ngFor="let celular of notaDebitoCompra.facturaCompra.proveedor.celularesProveedor; let i=index ">
                         <div class="col-9">
                             <mat-form-field appearance="standard">
                                 <mat-label>Celular</mat-label>
@@ -103,7 +108,8 @@
                     </ng-container>
                 </div>
                 <div class="form-row col-4">
-                    <ng-container *ngFor="let correo of notaDebitoCompra.facturaCompra.proveedor.correosProveedor; let i=index ">
+                    <ng-container
+                        *ngFor="let correo of notaDebitoCompra.facturaCompra.proveedor.correosProveedor; let i=index ">
                         <div class="col-9">
                             <mat-form-field appearance="standard">
                                 <mat-label>Correo electrónico</mat-label>
@@ -143,10 +149,12 @@
                     <mat-form-field appearance="standard">
                         <mat-label>Estado</mat-label>
                         <mat-select class="form-control-sm" [(ngModel)]="notaDebitoCompra.estado" [disabled]="true">
-                            <mat-option value="EMITIDA">EMITIDA</mat-option>
-                            <mat-option value="ANULADA">ANULADA</mat-option>
-                            <mat-option value="FACTURADA">FACTURADA</mat-option>
-                            <mat-option value="NO FACTURADA">NO FACTURADA</mat-option>
+                            <mat-option [value]="emitida">{{emitida}}</mat-option>
+                            <mat-option [value]="anulada">{{anulada}}</mat-option>
+                            <mat-option [value]="noFacturada">{{noFacturada}}</mat-option>
+                            <mat-option [value]="facturada">{{facturada}}</mat-option>
+                            <mat-option [value]="noRecaudada">{{noRecaudada}}</mat-option>
+                            <mat-option [value]="recaudada">{{recaudada}}</mat-option>
                         </mat-select>
                     </mat-form-field>
                 </div>
@@ -155,7 +163,8 @@
                         <mat-label>Factura de Compra</mat-label>
                         <mat-autocomplete #facturaCompra="matAutocomplete" [displayWith]="verFacturaCompra"
                             (optionSelected)="seleccionarFacturaCompra()">
-                            <mat-option *ngFor="let facturaCompra of filtroFacturasCompras | async" [value]="facturaCompra">
+                            <mat-option *ngFor="let facturaCompra of filtroFacturasCompras | async"
+                                [value]="facturaCompra">
                                 {{facturaCompra.secuencia}}
                             </mat-option>
                         </mat-autocomplete>
@@ -193,7 +202,8 @@
                         <!-- Descripcion Columna -->
                         <ng-container matColumnDef="medida">
                             <th mat-header-cell *matHeaderCellDef mat-sort-header> Med </th>
-                            <td mat-cell *matCellDef="let facturaCompraLinea"> {{facturaCompraLinea.producto.medida.abreviatura}} </td>
+                            <td mat-cell *matCellDef="let facturaCompraLinea">
+                                {{facturaCompraLinea.producto.medida.abreviatura}} </td>
                         </ng-container>
                         <!-- Cantidad Columna -->
                         <ng-container matColumnDef="cantidad">
@@ -203,22 +213,26 @@
                         <!-- Valor Columna -->
                         <ng-container matColumnDef="costoUnitario">
                             <th mat-header-cell *matHeaderCellDef mat-sort-header>Costo Unit </th>
-                            <td mat-cell *matCellDef="let facturaCompraLinea"> ${{facturaCompraLinea.costoUnitario }} </td>
+                            <td mat-cell *matCellDef="let facturaCompraLinea"> ${{facturaCompraLinea.costoUnitario }}
+                            </td>
                         </ng-container>
                         <!-- Descuento Columna -->
                         <ng-container matColumnDef="valorDescuento">
                             <th mat-header-cell *matHeaderCellDef mat-sort-header> Desc. </th>
-                            <td mat-cell *matCellDef="let facturaCompraLinea">${{facturaCompraLinea.valorDescuentoLinea }}</td>
+                            <td mat-cell *matCellDef="let facturaCompraLinea">${{facturaCompraLinea.valorDescuentoLinea
+                                }}</td>
                         </ng-container>
                         <!-- Descuento% Columna -->
                         <ng-container matColumnDef="porcentajeDescuento">
                             <th mat-header-cell *matHeaderCellDef mat-sort-header> Desc% </th>
-                            <td mat-cell *matCellDef="let facturaCompraLinea">${{facturaCompraLinea.porcentajeDescuentoLinea }}</td>
+                            <td mat-cell *matCellDef="let facturaCompraLinea">
+                                ${{facturaCompraLinea.porcentajeDescuentoLinea }}</td>
                         </ng-container>
                         <!-- Impuesto Columna -->
                         <ng-container matColumnDef="impuesto">
                             <th mat-header-cell *matHeaderCellDef mat-sort-header> IVA </th>
-                            <td mat-cell *matCellDef="let facturaCompraLinea">{{facturaCompraLinea.impuesto.porcentaje}}% </td>
+                            <td mat-cell *matCellDef="let facturaCompraLinea">
+                                {{facturaCompraLinea.impuesto.porcentaje}}% </td>
                         </ng-container>
                         <ng-container matColumnDef="bodega">
                             <th mat-header-cell *matHeaderCellDef mat-sort-header> BOD </th>
@@ -247,7 +261,8 @@
                             <mat-form-field appearance="outline">
                                 <mat-label>Comentario</mat-label>
                                 <textarea matInput [(ngModel)]="notaDebitoCompra.facturaCompra.comentario"
-                                    placeholder="Referente a la nota de debito..." class="form-control" rows="3"></textarea>
+                                    placeholder="Referente a la nota de debito..." class="form-control"
+                                    rows="3"></textarea>
                             </mat-form-field>
                         </div>
                     </div>
@@ -259,7 +274,8 @@
                                 </div>
                                 <div class="col-5">
                                     <mat-form-field appearance="standard">
-                                        <input matInput type="text" [(ngModel)]="notaDebitoCompra.facturaCompra.subtotalSinDescuento"
+                                        <input matInput type="text"
+                                            [(ngModel)]="notaDebitoCompra.facturaCompra.subtotalSinDescuento"
                                             class="form-control-sm" [disabled]="true">
                                     </mat-form-field>
                                 </div>
@@ -268,7 +284,8 @@
                                 </div>
                                 <div class="col-5">
                                     <mat-form-field appearance="standard">
-                                        <input matInput type="text" [(ngModel)]="notaDebitoCompra.facturaCompra.descuentoTotal"
+                                        <input matInput type="text"
+                                            [(ngModel)]="notaDebitoCompra.facturaCompra.descuentoTotal"
                                             class="form-control-sm" [disabled]="true">
                                     </mat-form-field>
                                 </div>
@@ -277,7 +294,8 @@
                                 </div>
                                 <div class="col-5">
                                     <mat-form-field appearance="standard">
-                                        <input matInput type="text " [(ngModel)]="notaDebitoCompra.facturaCompra.subtotalBase12SinDescuento"
+                                        <input matInput type="text "
+                                            [(ngModel)]="notaDebitoCompra.facturaCompra.subtotalBase12SinDescuento"
                                             class="form-control-sm" [disabled]="true">
                                     </mat-form-field>
                                 </div>
@@ -286,7 +304,8 @@
                                 </div>
                                 <div class="col-5">
                                     <mat-form-field appearance="standard">
-                                        <input matInput type="text " [(ngModel)]="notaDebitoCompra.facturaCompra.subtotalBase0SinDescuento"
+                                        <input matInput type="text "
+                                            [(ngModel)]="notaDebitoCompra.facturaCompra.subtotalBase0SinDescuento"
                                             class="form-control-sm " [disabled]="true">
                                     </mat-form-field>
                                 </div>
@@ -295,7 +314,8 @@
                                 </div>
                                 <div class="col-5">
                                     <mat-form-field appearance="standard">
-                                        <input matInput type="text " [(ngModel)]="notaDebitoCompra.facturaCompra.ivaSinDescuento"
+                                        <input matInput type="text "
+                                            [(ngModel)]="notaDebitoCompra.facturaCompra.ivaSinDescuento"
                                             class="form-control-sm " [disabled]="true">
                                     </mat-form-field>
                                 </div>
@@ -304,7 +324,9 @@
                                 </div>
                                 <div class="col-5">
                                     <mat-form-field appearance="standard">
-                                        <input matInput type="text " [(ngModel)]="notaDebitoCompra.facturaCompra.totalSinDescuento" class="form-control-sm" [disabled]="true">
+                                        <input matInput type="text "
+                                            [(ngModel)]="notaDebitoCompra.facturaCompra.totalSinDescuento"
+                                            class="form-control-sm" [disabled]="true">
                                     </mat-form-field>
                                 </div>
                             </div>
@@ -352,8 +374,8 @@
                         <mat-form-field appearance="standard">
                             <mat-label>Tipo de Gasto</mat-label>
                             <input matInput type="text"
-                                [(ngModel)]="notaDebitoCompraLinea.producto.tipoGasto.descripcion"
-                                [disabled]="true" class="form-control-sm">
+                                [(ngModel)]="notaDebitoCompraLinea.producto.tipoGasto.descripcion" [disabled]="true"
+                                class="form-control-sm">
                         </mat-form-field>
                     </div>
                     <div class="col-2"></div>
@@ -394,8 +416,7 @@
                     <div class="col-2">
                         <mat-form-field appearance="standard">
                             <mat-label>Medida</mat-label>
-                            <input matInput type="text"
-                                [(ngModel)]="notaDebitoCompraLinea.producto.medida.descripcion"
+                            <input matInput type="text" [(ngModel)]="notaDebitoCompraLinea.producto.medida.descripcion"
                                 class="form-control-sm" [disabled]="true">
                         </mat-form-field>
                     </div>
@@ -421,8 +442,8 @@
                     <div class="col-2">
                         <mat-form-field appearance="standard">
                             <mat-label>Costo Unit.</mat-label>
-                            <input matInput type="text"
-                                [(ngModel)]="notaDebitoCompraLinea.costoUnitario" class="form-control-sm" [disabled]="true">
+                            <input matInput type="text" [(ngModel)]="notaDebitoCompraLinea.costoUnitario"
+                                class="form-control-sm" [disabled]="true">
                         </mat-form-field>
                     </div>
                     <div class="col-1">
@@ -455,8 +476,7 @@
                     <div class="col-2">
                         <mat-form-field appearance="standard">
                             <mat-label>Subtotal</mat-label>
-                            <input matInput type="text"
-                                [(ngModel)]="notaDebitoCompraLinea.totalSinDescuentoLinea"
+                            <input matInput type="text" [(ngModel)]="notaDebitoCompraLinea.totalSinDescuentoLinea"
                                 class="form-control-sm" disabled>
                         </mat-form-field>
                     </div>
@@ -576,8 +596,7 @@
                                 </div>
                                 <div class="col-5">
                                     <mat-form-field appearance="standard">
-                                        <input matInput type="text"
-                                            [(ngModel)]="notaDebitoCompra.subtotalSinDescuento"
+                                        <input matInput type="text" [(ngModel)]="notaDebitoCompra.subtotalSinDescuento"
                                             class="form-control-sm" [disabled]="true">
                                     </mat-form-field>
                                 </div>
@@ -615,8 +634,7 @@
                                 </div>
                                 <div class="col-5">
                                     <mat-form-field appearance="standard">
-                                        <input matInput type="text"
-                                            [(ngModel)]="notaDebitoCompra.ivaSinDescuento"
+                                        <input matInput type="text" [(ngModel)]="notaDebitoCompra.ivaSinDescuento"
                                             class="form-control-sm" [disabled]="true">
                                     </mat-form-field>
                                 </div>
@@ -625,8 +643,7 @@
                                 </div>
                                 <div class="col-5">
                                     <mat-form-field appearance="standard">
-                                        <input matInput type="text "
-                                            [(ngModel)]="notaDebitoCompra.totalSinDescuento"
+                                        <input matInput type="text " [(ngModel)]="notaDebitoCompra.totalSinDescuento"
                                             class="form-control-sm" [disabled]="true">
                                     </mat-form-field>
                                 </div>
@@ -644,7 +661,8 @@
                     <i><u>GESTIONAR NOTAS DEBITO DE COMPRA</u></i>
                 </mat-panel-title>
                 <mat-panel-description>
-                    {{abrirPanelAdmin ? 'Ocultar administrador de nota debito de compras' : 'Editar nota debito de compras existentes'}}
+                    {{abrirPanelAdmin ? 'Ocultar administrador de nota debito de compras' : 'Editar nota debito de
+                    compras existentes'}}
                     <mat-icon>group</mat-icon>
                 </mat-panel-description>
             </mat-expansion-panel-header>
@@ -661,7 +679,8 @@
                         <td mat-cell *matCellDef="let row"> {{ columna.celda(row) }} </td>
                     </ng-container>
                     <tr mat-header-row *matHeaderRowDef="cabecera"></tr>
-                    <tr mat-row (click)="seleccion(row)" [class.selected-row]="clickedRows.has(row)" *matRowDef="let row; columns: cabecera;"></tr>
+                    <tr mat-row (click)="seleccion(row)" [class.selected-row]="clickedRows.has(row)"
+                        *matRowDef="let row; columns: cabecera;"></tr>
                     <tr class="mat-row" *matNoDataRow>
                         <td class="mat-cell" colspan="6">No hay datos que coincidan con el grupo "{{input.value}}"</td>
                     </tr>

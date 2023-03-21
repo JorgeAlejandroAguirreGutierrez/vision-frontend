@@ -39,7 +39,16 @@ export class NotaDebitoCompraComponent implements OnInit {
   panelOpenState = false;
 
   deshabilitarDevolucion = true;
-  deshabilitarDescuento = true;  
+  deshabilitarDescuento = true;
+  
+  si = valores.si;
+  no = valores.no;
+  emitida = valores.emitida;
+  anulada = valores.anulada;
+  noFacturada = valores.noFacturada;
+  facturada = valores.facturada;
+  noRecaudada = valores.noRecaudada;
+  recaudada = valores.recaudada;
   
   seleccionProveedor = new UntypedFormControl();
   filtroProveedores: Observable<Proveedor[]> = new Observable<Proveedor[]>();
@@ -81,8 +90,6 @@ export class NotaDebitoCompraComponent implements OnInit {
   columnasFacturaCompraLinea: string[] = ["codigo", 'nombre', 'medida', 'cantidad', 'costoUnitario', 'valorDescuento', 'porcentajeDescuento', 'impuesto', 'bodega', 'total'];
   dataSourceFacturaCompraLinea = new MatTableDataSource<FacturaCompraLinea>(this.notaDebitoCompra.facturaCompra.facturaCompraLineas);
   sesion: Sesion;
-  si = valores.si;
-  no = valores.no;
 
   constructor(private proveedorService: ProveedorService, private sesionService: SesionService, private kardexService: KardexService, private impuestoService: ImpuestoService, private productoService: ProductoService,
     private router: Router, private notaDebitoCompraService: NotaDebitoCompraService, private facturaCompraService: FacturaCompraService, private bodegaService: BodegaService, private categoriaProductoService: CategoriaProductoService) { }

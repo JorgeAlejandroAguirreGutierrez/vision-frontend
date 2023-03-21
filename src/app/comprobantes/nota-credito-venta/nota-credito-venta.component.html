@@ -27,7 +27,8 @@
                 </a>
             </li>
             <li class="nav-item" *ngIf="notaCreditoVenta.id!=0">
-                <a class="nav-link" title="Crear Nota Credito Electronica" href="#" role="button" (click)="crearNotaCreditoElectronica($event)">
+                <a class="nav-link" title="Crear Nota Credito Electronica" href="#" role="button"
+                    (click)="crearNotaCreditoElectronica($event)">
                     <mat-icon>publish</mat-icon>
                 </a>
             </li>
@@ -64,13 +65,15 @@
                 <div class="col-4">
                     <mat-form-field appearance="standard">
                         <mat-label>Ruc</mat-label>
-                        <input matInput type="text" [(ngModel)]="notaCreditoVenta.factura.cliente.identificacion" class="form-control-sm" [disabled]="true">
+                        <input matInput type="text" [(ngModel)]="notaCreditoVenta.factura.cliente.identificacion"
+                            class="form-control-sm" [disabled]="true">
                     </mat-form-field>
                 </div>
                 <div class="col-12">
                     <mat-form-field appearance="standard">
                         <mat-label>Direccion</mat-label>
-                        <input matInput type="text" [(ngModel)]="notaCreditoVenta.factura.cliente.direccion" class="form-control-sm" [disabled]="true">
+                        <input matInput type="text" [(ngModel)]="notaCreditoVenta.factura.cliente.direccion"
+                            class="form-control-sm" [disabled]="true">
                     </mat-form-field>
                 </div>
                 <div class="form-row col-4">
@@ -148,10 +151,12 @@
                     <mat-form-field appearance="standard">
                         <mat-label>Estado</mat-label>
                         <mat-select class="form-control-sm" [(ngModel)]="notaCreditoVenta.estado" [disabled]="true">
-                            <mat-option value="EMITIDA">EMITIDA</mat-option>
-                            <mat-option value="ANULADA">ANULADA</mat-option>
-                            <mat-option value="FACTURADA">FACTURADA</mat-option>
-                            <mat-option value="NO FACTURADA">NO FACTURADA</mat-option>
+                            <mat-option [value]="emitida">{{emitida}}</mat-option>
+                            <mat-option [value]="anulada">{{anulada}}</mat-option>
+                            <mat-option [value]="noFacturada">{{noFacturada}}</mat-option>
+                            <mat-option [value]="facturada">{{facturada}}</mat-option>
+                            <mat-option [value]="noRecaudada">{{noRecaudada}}</mat-option>
+                            <mat-option [value]="recaudada">{{recaudada}}</mat-option>
                         </mat-select>
                     </mat-form-field>
                 </div>
@@ -171,7 +176,8 @@
                 <div class="col-4">
                     <mat-form-field appearance="standard">
                         <mat-label>Operacion</mat-label>
-                        <mat-select class="form-control-sm" [(ngModel)]="notaCreditoVenta.operacion" (selectionChange)="seleccionarOperacion()">
+                        <mat-select class="form-control-sm" [(ngModel)]="notaCreditoVenta.operacion"
+                            (selectionChange)="seleccionarOperacion()">
                             <mat-option [value]="devolucion">{{devolucion}}</mat-option>
                             <mat-option [value]="descuento">{{descuento}}</mat-option>
                             <mat-option [value]="conjunta">{{conjunta}}</mat-option>
@@ -197,12 +203,14 @@
                         <!-- Nombre Columna -->
                         <ng-container matColumnDef="codigo">
                             <th mat-header-cell *matHeaderCellDef mat-sort-header> Codigo </th>
-                            <td mat-cell *matCellDef="let notaCreditoVentaLinea"> {{notaCreditoVentaLinea.producto.codigo}}
+                            <td mat-cell *matCellDef="let notaCreditoVentaLinea">
+                                {{notaCreditoVentaLinea.producto.codigo}}
                             </td>
                         </ng-container>
                         <ng-container matColumnDef="nombre">
                             <th mat-header-cell *matHeaderCellDef mat-sort-header> Producto </th>
-                            <td mat-cell *matCellDef="let notaCreditoVentaLinea"> {{notaCreditoVentaLinea.producto.nombre}}
+                            <td mat-cell *matCellDef="let notaCreditoVentaLinea">
+                                {{notaCreditoVentaLinea.producto.nombre}}
                             </td>
                         </ng-container>
                         <!-- Descripcion Columna -->
@@ -221,7 +229,8 @@
                             <th mat-header-cell *matHeaderCellDef mat-sort-header>Dev </th>
                             <td mat-cell *matCellDef="let notaCreditoVentaLinea">
                                 <mat-form-field floatLabel="never">
-                                    <input matInput [(ngModel)]="notaCreditoVentaLinea.devolucion" (change)="seleccionarDevolucion()" [disabled]="deshabilitarDevolucion">
+                                    <input matInput [(ngModel)]="notaCreditoVentaLinea.devolucion"
+                                        (change)="seleccionarDevolucion()" [disabled]="deshabilitarDevolucion">
                                 </mat-form-field>
                             </td>
                         </ng-container>
@@ -236,7 +245,8 @@
                             <th mat-header-cell *matHeaderCellDef mat-sort-header> Desc. </th>
                             <td mat-cell *matCellDef="let notaCreditoVentaLinea">
                                 <mat-form-field floatLabel="never">
-                                    <input matInput [(ngModel)]="notaCreditoVentaLinea.valorDescuentoLinea" (change)="seleccionarValorDescuentoLinea()" [disabled]="deshabilitarDescuento">
+                                    <input matInput [(ngModel)]="notaCreditoVentaLinea.valorDescuentoLinea"
+                                        (change)="seleccionarValorDescuentoLinea()" [disabled]="deshabilitarDescuento">
                                 </mat-form-field>
                             </td>
                         </ng-container>
@@ -245,7 +255,9 @@
                             <th mat-header-cell *matHeaderCellDef mat-sort-header> Desc% </th>
                             <td mat-cell *matCellDef="let notaCreditoVentaLinea">
                                 <mat-form-field floatLabel="never">
-                                    <input matInput [(ngModel)]="notaCreditoVentaLinea.porcentajeDescuentoLinea" (change)="seleccionarPorcentajeDescuentoLinea()" [disabled]="deshabilitarDescuento">
+                                    <input matInput [(ngModel)]="notaCreditoVentaLinea.porcentajeDescuentoLinea"
+                                        (change)="seleccionarPorcentajeDescuentoLinea()"
+                                        [disabled]="deshabilitarDescuento">
                                 </mat-form-field>
                             </td>
                         </ng-container>
@@ -282,7 +294,8 @@
                             <mat-form-field appearance="outline">
                                 <mat-label>Comentario</mat-label>
                                 <textarea matInput [(ngModel)]="notaCreditoVenta.comentario"
-                                    placeholder="Referente a la nota de credito..." class="form-control" rows="3"></textarea>
+                                    placeholder="Referente a la nota de credito..." class="form-control"
+                                    rows="3"></textarea>
                             </mat-form-field>
                         </div>
                     </div>
@@ -312,7 +325,8 @@
                                 </div>
                                 <div class="col-5">
                                     <mat-form-field appearance="standard">
-                                        <input matInput type="text " [(ngModel)]="notaCreditoVenta.subtotalBase12SinDescuento"
+                                        <input matInput type="text "
+                                            [(ngModel)]="notaCreditoVenta.subtotalBase12SinDescuento"
                                             class="form-control-sm" [disabled]="true">
                                     </mat-form-field>
                                 </div>
@@ -321,7 +335,8 @@
                                 </div>
                                 <div class="col-5">
                                     <mat-form-field appearance="standard">
-                                        <input matInput type="text " [(ngModel)]="notaCreditoVenta.subtotalBase0SinDescuento"
+                                        <input matInput type="text "
+                                            [(ngModel)]="notaCreditoVenta.subtotalBase0SinDescuento"
                                             class="form-control-sm " [disabled]="true">
                                     </mat-form-field>
                                 </div>
@@ -339,7 +354,8 @@
                                 </div>
                                 <div class="col-5">
                                     <mat-form-field appearance="standard">
-                                        <input matInput type="text " [(ngModel)]="notaCreditoVenta.totalConDescuento" class="form-control-sm" [disabled]="true">
+                                        <input matInput type="text " [(ngModel)]="notaCreditoVenta.totalConDescuento"
+                                            class="form-control-sm" [disabled]="true">
                                     </mat-form-field>
                                 </div>
                             </div>

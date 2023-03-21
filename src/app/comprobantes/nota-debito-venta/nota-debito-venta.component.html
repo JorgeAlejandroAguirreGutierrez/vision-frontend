@@ -156,8 +156,7 @@
                         <div class="col-3">
                             <mat-form-field appearance="standard">
                                 <mat-label>Estado</mat-label>
-                                <mat-select class="form-control-sm" [(ngModel)]="notaDebitoVenta.estado"
-                                    [disabled]="true">
+                                <mat-select class="form-control-sm" [(ngModel)]="notaDebitoVenta.estado" [disabled]="true">
                                     <mat-option [value]="emitida">{{emitida}}</mat-option>
                                     <mat-option [value]="anulada">{{anulada}}</mat-option>
                                     <mat-option [value]="noFacturada">{{noFacturada}}</mat-option>
