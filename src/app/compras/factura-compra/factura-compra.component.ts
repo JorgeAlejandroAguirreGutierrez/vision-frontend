@@ -329,6 +329,25 @@ export class FacturaCompraComponent implements OnInit {
     this.calcularLinea();
   }
 
+  seleccionarImpuesto(){
+    if (this.facturaCompraLinea.cantidad <= valores.cero){
+      return;
+    }
+    if (this.facturaCompraLinea.costoUnitario <= valores.cero){
+      return;
+    }
+    if (this.facturaCompraLinea.impuesto.id == valores.cero){
+      return;
+    }
+    if (this.facturaCompraLinea.producto.id == valores.cero){
+      return;
+    }
+    if (this.facturaCompraLinea.bodega.id == valores.cero){
+      return;
+    }
+    this.calcularLinea();
+  }
+
   agregarFacturaCompraLinea(event){
     if (event!=null)
       event.preventDefault();

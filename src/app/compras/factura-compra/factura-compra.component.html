@@ -246,8 +246,7 @@
                 <div class="col-1">
                     <mat-form-field appearance="standard">
                         <mat-label>IVA</mat-label>
-                        <mat-select [(ngModel)]="facturaCompraLinea.impuesto" [compareWith]="compareFn"
-                            class="form-control-sm">
+                        <mat-select [(ngModel)]="facturaCompraLinea.impuesto" (selectionChange)="seleccionarImpuesto()" [compareWith]="compareFn" class="form-control-sm">
                             <mat-option *ngFor="let impuesto of impuestos" [value]="impuesto">
                                 {{impuesto.porcentaje}}
                             </mat-option>
