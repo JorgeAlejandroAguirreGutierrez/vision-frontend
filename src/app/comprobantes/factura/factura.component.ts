@@ -123,7 +123,6 @@ export class FacturaComponent implements OnInit {
     this.sesion=validarSesion(this.sesionService, this.router);
     this.consultar();
     this.consultarClientes();
-    this.construirFactura();
     this.consultarCategoriasProductos();
     this.consultarProductos();
     this.consultarImpuestos();
@@ -174,7 +173,7 @@ export class FacturaComponent implements OnInit {
   }
 
   verProducto(producto: Producto): string {
-    return producto && producto.nombre ? producto.nombre : '';
+    return producto && producto.nombre ? producto.nombre : valores.vacio;
   }
 
   private filtroIdentificacionCliente(value: string): Cliente[] {
@@ -185,7 +184,7 @@ export class FacturaComponent implements OnInit {
     return [];
   }
   verIdentificacionCliente(cliente: Cliente): string {
-    return cliente && cliente.identificacion ? cliente.identificacion : '';
+    return cliente && cliente.identificacion ? cliente.identificacion : valores.vacio;
   }
   private filtroRazonSocialCliente(value: string): Cliente[] {
     if(this.clientes.length>0) {
@@ -195,7 +194,7 @@ export class FacturaComponent implements OnInit {
     return [];
   }
   verRazonSocialCliente(cliente: Cliente): string {
-    return cliente && cliente.razonSocial ? cliente.razonSocial : '';
+    return cliente && cliente.razonSocial ? cliente.razonSocial : valores.vacio;
   }
 
   nuevo(event){
@@ -208,7 +207,7 @@ export class FacturaComponent implements OnInit {
   }
 
   construirFactura() {
-    if (this.factura.id != 0) {
+    if (this.factura.id != valores.cero) {
         this.seleccionIdentificacionCliente.patchValue(this.factura.cliente);
         this.seleccionRazonSocialCliente.patchValue(this.factura.cliente);
         this.dataSourceLinea = new MatTableDataSource<FacturaLinea>(this.factura.facturaLineas);

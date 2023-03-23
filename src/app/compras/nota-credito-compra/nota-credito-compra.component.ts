@@ -205,6 +205,11 @@ export class NotaCreditoCompraComponent implements OnInit {
   }
 
   seleccionarOperacion(){
+    for(let notaCreditoCompraLinea of this.notaCreditoCompra.notaCreditoCompraLineas){
+      notaCreditoCompraLinea.devolucion = valores.cero;
+      notaCreditoCompraLinea.porcentajeDescuentoLinea = valores.cero;
+      notaCreditoCompraLinea.valorDescuentoLinea = valores.cero;
+    }
     if(this.notaCreditoCompra.operacion == valores.devolucion){
       this.deshabilitarDevolucion = false;
       this.deshabilitarDescuento = true;

@@ -105,25 +105,25 @@ export class NotaCreditoVentaComponent implements OnInit {
   }
   
   private filtroCliente(value: string): Cliente[] {
-    if(this.clientes.length > 0) {
+    if(this.clientes.length > valores.cero) {
       const filterValue = value.toLowerCase();
       return this.clientes.filter(cliente => cliente.razonSocial.toLowerCase().includes(filterValue));
     }
     return [];
   }
   verCliente(cliente: Cliente): string {
-    return cliente && cliente.razonSocial ? cliente.razonSocial : '';
+    return cliente && cliente.razonSocial ? cliente.razonSocial : valores.vacio;
   }
 
   private filtroFactura(value: string): Factura[] {
-    if(this.facturas.length > 0) {
+    if(this.facturas.length > valores.cero) {
       const filterValue = value.toLowerCase();
       return this.facturas.filter(factura => factura.secuencia.toLowerCase().includes(filterValue));
     }
     return [];
   }
   verFactura(factura: Factura): string {
-    return factura && factura.secuencia ? factura.secuencia : '';
+    return factura && factura.secuencia ? factura.secuencia : valores.vacio;
   }
 
   nuevo(event){
@@ -195,6 +195,11 @@ export class NotaCreditoVentaComponent implements OnInit {
   }
 
   seleccionarOperacion(){
+    for(let notaCreditoVentaLinea of this.notaCreditoVenta.notaCreditoVentaLineas){
+      notaCreditoVentaLinea.devolucion = valores.cero;
+      notaCreditoVentaLinea.porcentajeDescuentoLinea = valores.cero;
+      notaCreditoVentaLinea.valorDescuentoLinea = valores.cero;
+    }
     if(this.notaCreditoVenta.operacion == valores.devolucion){
       this.deshabilitarDevolucion = false;
       this.deshabilitarDescuento = true;
