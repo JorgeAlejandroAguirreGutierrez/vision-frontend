@@ -1,8 +1,8 @@
 import { Component, OnInit, ViewChild, HostListener } from '@angular/core';
+import { DatePipe } from '@angular/common';
 import { UntypedFormControl } from '@angular/forms';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
-import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import Swal from 'sweetalert2';
@@ -53,7 +53,7 @@ export class NotaCreditoVentaComponent implements OnInit {
 
   columnas: any[] = [
     { nombreColumna: 'codigo', cabecera: 'Código', celda: (row: NotaCreditoVenta) => `${row.codigo}`},
-    { nombreColumna: 'fecha', cabecera: 'Fecha', celda: (row: NotaCreditoVenta) => `${row.fecha}`},
+    { nombreColumna: 'fecha', cabecera: 'Fecha', celda: (row: NotaCreditoVenta) => `${this.datepipe.transform(row.fecha, "dd/MM/yyyy")}`},
     { nombreColumna: 'cliente', cabecera: 'Cliente', celda: (row: NotaCreditoVenta) => `${row.factura.cliente.razonSocial}`},
     { nombreColumna: 'total', cabecera: 'Total', celda: (row: NotaCreditoVenta) => `$${row.totalConDescuento}`},
     { nombreColumna: 'estado', cabecera: 'Estado', celda: (row: NotaCreditoVenta) => `${row.estado}`}
@@ -75,8 +75,7 @@ export class NotaCreditoVentaComponent implements OnInit {
   sesion: Sesion;
 
   constructor(private clienteService: ClienteService, private sesionService: SesionService, private notaCreditoElectronicaService: NotaCreditoElectronicaService,
-    private router: Router, private notaCreditoVentaService: NotaCreditoVentaService, private facturaService: FacturaService,
-    private modalService: NgbModal) { }
+    private router: Router, private notaCreditoVentaService: NotaCreditoVentaService, private facturaService: FacturaService, private datepipe: DatePipe) { }
 
   @HostListener('window:keypress', ['$event'])
   keyEvent($event: KeyboardEvent) {
