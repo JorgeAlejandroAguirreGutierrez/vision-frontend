@@ -129,7 +129,6 @@ export class FacturaComponent implements OnInit {
     this.consultarImpuestos();
     this.consultarBodegas();
     
-
     this.firstFormGroup = new UntypedFormGroup({
       firstCtrl: new UntypedFormControl()
     });
@@ -203,6 +202,9 @@ export class FacturaComponent implements OnInit {
     if (event!=null)
       event.preventDefault();
     this.factura = new Factura();
+    this.seleccionIdentificacionCliente.patchValue(valores.vacio);
+    this.seleccionRazonSocialCliente.patchValue(valores.vacio);
+    this.dataSourceLinea = new MatTableDataSource<FacturaLinea>([]);
   }
 
   construirFactura() {
@@ -619,6 +621,8 @@ export class FacturaComponent implements OnInit {
     this.facturaElectronicaService.enviar(this.factura.id).subscribe(
       res => {
         let respuesta = res.resultado as String;
+        this.consultar();
+        this.nuevo(null);
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
       },
       err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
