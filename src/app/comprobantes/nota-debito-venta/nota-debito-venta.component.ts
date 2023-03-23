@@ -62,7 +62,7 @@ export class NotaDebitoVentaComponent implements OnInit {
 
   columnas: any[] = [
     { nombreColumna: 'codigo', cabecera: 'Código', celda: (row: NotaDebitoVenta) => `${row.codigo}`},
-    { nombreColumna: 'fecha', cabecera: 'Fecha', celda: (row: NotaDebitoVenta) => `${row.fecha}`},
+    { nombreColumna: 'fecha', cabecera: 'Fecha', celda: (row: NotaDebitoVenta) => `${this.datepipe.transform(row.fecha, "dd/MM/yyyy")}`},
     { nombreColumna: 'cliente', cabecera: 'Cliente', celda: (row: NotaDebitoVenta) => `${row.factura.cliente.razonSocial}`},
     { nombreColumna: 'total', cabecera: 'Total', celda: (row: NotaDebitoVenta) => `$${row.totalConDescuento}`},
     { nombreColumna: 'estado', cabecera: 'Estado', celda: (row: NotaDebitoVenta) => `${row.estado}`}
@@ -99,7 +99,7 @@ export class NotaDebitoVentaComponent implements OnInit {
 
   constructor(private clienteService: ClienteService, private sesionService: SesionService, private impuestoService: ImpuestoService, private bodegaService: BodegaService,
     private router: Router, private notaDebitoVentaService: NotaDebitoVentaService, private facturaService: FacturaService, private productoService: ProductoService, private notaDebitoElectronicaService: NotaDebitoElectronicaService,
-    private categoriaProductoService: CategoriaProductoService, private kardexService: KardexService, private _formBuilder: UntypedFormBuilder) { }
+    private categoriaProductoService: CategoriaProductoService, private kardexService: KardexService, private datepipe: DatePipe, private _formBuilder: UntypedFormBuilder) { }
 
   @HostListener('window:keypress', ['$event'])
   keyEvent($event: KeyboardEvent) {
