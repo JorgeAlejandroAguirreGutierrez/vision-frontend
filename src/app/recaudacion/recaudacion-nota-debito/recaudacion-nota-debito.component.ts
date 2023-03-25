@@ -79,6 +79,7 @@ export class RecaudacionNotaDebitoComponent implements OnInit {
   tarjetaDebito: NotaDebitoVentaTarjetaDebito = new NotaDebitoVentaTarjetaDebito();
   tarjetaCredito: NotaDebitoVentaTarjetaCredito = new NotaDebitoVentaTarjetaCredito();
   periodicidades: Parametro[];
+  tiposTransacciones: Parametro[];
   formasPagos: FormaPago[]=[];
   cuentasPropias: CuentaPropia[]=[];
   franquiciasTarjetasCreditos: FranquiciaTarjeta[];
@@ -145,6 +146,7 @@ export class RecaudacionNotaDebitoComponent implements OnInit {
     this.consultarOperadoresTarjetasCreditos();
     this.consultarOperadoresTarjetasDebitos();
     this.consultarPeriodicidades();
+    this.consultarTiposTransacciones();
     this.consultarBancosCheques();
     this.consultarBancosDepositos();
     this.consultarBancosTransferencias();
@@ -158,31 +160,31 @@ export class RecaudacionNotaDebitoComponent implements OnInit {
     
     this.filtroBancosCheques = this.seleccionBancoCheque.valueChanges
       .pipe(
-        startWith(''),
+        startWith(valores.vacio),
         map(value => typeof value === 'string' || value==null ? value : value.id),
         map(banco => typeof banco === 'string' ? this.filtroBancoCheque(banco) : this.bancosCheques.slice())
       );
     this.filtroBancosDepositos = this.seleccionBancoDeposito.valueChanges
       .pipe(
-        startWith(''),
+        startWith(valores.vacio),
         map(value => typeof value === 'string' || value==null ? value : value.id),
         map(bancoDeposito => typeof bancoDeposito === 'string' ? this.filtroBancoDeposito(bancoDeposito) : this.bancosDepositos.slice())
       );
     this.filtroBancosTransferencias = this.seleccionBancoTransferencia.valueChanges
       .pipe(
-        startWith(''),
+        startWith(valores.vacio),
         map(value => typeof value === 'string' || value==null ? value : value.id),
         map(bancoTransferencia => typeof bancoTransferencia === 'string' ? this.filtroBancoTransferencia(bancoTransferencia) : this.bancosTransferencias.slice())
       );
     this.filtroBancosTarjetasCreditos = this.seleccionBancoTarjetaCredito.valueChanges
       .pipe(
-        startWith(''),
+        startWith(valores.vacio),
         map(value => typeof value === 'string' || value==null ? value : value.id),
         map(bancoTarjetaCredito => typeof bancoTarjetaCredito === 'string' ? this.filtroBancoTarjetaCredito(bancoTarjetaCredito) : this.bancosTarjetasCreditos.slice())
       );
     this.filtroBancosTarjetasDebitos = this.seleccionBancoTarjetaDebito.valueChanges
       .pipe(
-        startWith(''),
+        startWith(valores.vacio),
         map(value => typeof value === 'string' || value==null ? value : value.id),
         map(bancoTarjetaDebito => typeof bancoTarjetaDebito === 'string' ? this.filtroBancoTarjetaDebito(bancoTarjetaDebito) : this.bancosTarjetasDebitos.slice())
       );
@@ -253,6 +255,15 @@ export class RecaudacionNotaDebitoComponent implements OnInit {
     this.parametroService.consultarPorTipo(tipo).subscribe(
       res => {
         this.periodicidades = res.resultado as Parametro[]
+      },
+      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+    );
+  }
+  consultarTiposTransacciones(){
+    let tipo = otras.tipo_transaccion;
+    this.parametroService.consultarPorTipo(tipo).subscribe(
+      res => {
+        this.tiposTransacciones = res.resultado as Parametro[]
       },
       err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     );
@@ -704,13 +715,13 @@ export class RecaudacionNotaDebitoComponent implements OnInit {
     return numero;
   }
   rellenarNumeroCheque(){
-    this.cheque.numero= this.pad(this.cheque.numero, 13);
+    this.cheque.numero = this.pad(this.cheque.numero, 13);
   }
   rellenarNumeroDeposito(){
-    this.deposito.comprobante= this.pad(this.deposito.comprobante, 13);
+    this.deposito.comprobante = this.pad(this.deposito.comprobante, 13);
   }
   rellenarNumeroTransferencia(){
-    this.transferencia.comprobante= this.pad(this.transferencia.comprobante, 13);
+    this.transferencia.numeroTransaccion = this.pad(this.transferencia.numeroTransaccion, 13);
   }
 
   defectoTransferencia(){

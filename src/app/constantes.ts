@@ -266,6 +266,7 @@ export const otras ={
      amortizacion : "AMORTIZACION",
      periodicidad : "PERIODICIDAD",
      periodo : "PERIODO",
+     tipo_transaccion : "TIPO TRANSACCION",
      operacionInicialKardex : 'INVENTARIO INICIAL',
      formasPagos : ["CHEQUES", "DEPOSITOS", "TRANSFERENCIAS", "TARJETA DE CREDITO", "TARJETA DE DEBITO", "COMPENSACIONES", "RETENCION VENTAS"],
      pregunta_eliminar_cheque : "Realmente quiere eliminar el cheque?",
