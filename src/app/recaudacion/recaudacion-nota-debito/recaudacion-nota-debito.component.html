@@ -417,19 +417,26 @@
                     <mat-form-field appearance="standard">
                         <mat-label>Fecha</mat-label>
                         <input matInput [matDatepicker]="picker3" class="form-control-sm"
-                            [(ngModel)]="transferencia.fecha">
+                            [(ngModel)]="transferencia.fechaTransaccion">
                         <mat-datepicker-toggle matSuffix [for]="picker3"></mat-datepicker-toggle>
                         <mat-datepicker #picker3></mat-datepicker>
                     </mat-form-field>
                 </div>
                 <div class="col-2">
                     <mat-form-field appearance="standard">
-                        <mat-label>Cuenta</mat-label>
-                        <mat-select class="form-control-sm" [(ngModel)]="transferencia.cuentaPropia">
-                            <mat-option *ngFor="let cuentaPropia of cuentasPropias" [value]="cuentaPropia">
-                                {{cuentaPropia.numero}}
+                        <mat-label>Tipo Transaccion</mat-label>
+                        <mat-select class="form-control-sm" [(ngModel)]="transferencia.tipoTransaccion">
+                            <mat-option *ngFor="let tipoTransaccion of tiposTransacciones" [value]="tipoTransaccion.nombre">
+                                {{tipoTransaccion.nombre}}
                             </mat-option>
                         </mat-select>
+                    </mat-form-field>
+                </div>
+                <div class="col-2">
+                    <mat-form-field appearance="standard">
+                        <mat-label>No. Transaccion</mat-label>
+                        <input matInput type="text" class="form-control-sm" [(ngModel)]="transferencia.numeroTransaccion"
+                            (blur)="rellenarNumeroTransferencia()">
                     </mat-form-field>
                 </div>
                 <div class="col-3">
@@ -442,13 +449,6 @@
                         </mat-autocomplete>
                         <input matInput type="text" class="form-control-sm" [formControl]="seleccionBancoTransferencia"
                             [matAutocomplete]="bancoTransferencia">
-                    </mat-form-field>
-                </div>
-                <div class="col-2">
-                    <mat-form-field appearance="standard">
-                        <mat-label>No. Comprobante</mat-label>
-                        <input matInput type="text" class="form-control-sm" [(ngModel)]="transferencia.comprobante"
-                            (blur)="rellenarNumeroTransferencia()">
                     </mat-form-field>
                 </div>
                 <div class="col-2">

@@ -3,22 +3,22 @@ import { Banco } from './banco';
 import { valores } from "../../constantes";
 
 export class Transferencia {
-    id:number;
+    id: number;
     codigo: string;
-    fecha: Date;
-    comprobante: string;
+    fechaTransaccion: Date;
+    tipoTransaccion: string;
+    numeroTransaccion: string;
     valor: number;
-    cuentaPropia: CuentaPropia;
     banco: Banco;
 
     constructor(){
-        this.id=valores.cero;
-        this.codigo=valores.vacio;
-        this.fecha=new Date();
-        this.comprobante=valores.vacio;
-        this.valor=valores.cero;
-        this.cuentaPropia=new CuentaPropia();
-        this.banco=new Banco();
+        this.id = valores.cero;
+        this.codigo = valores.vacio;
+        this.fechaTransaccion = new Date();
+        this.tipoTransaccion = valores.vacio;
+        this.numeroTransaccion = valores.vacio;
+        this.valor = valores.cero;
+        this.banco = new Banco();
     }
 
 }

@@ -134,55 +134,55 @@ export class NotaDebitoVentaComponent implements OnInit {
 
     this.filtroClientes = this.seleccionCliente.valueChanges
       .pipe(
-        startWith(''),
+        startWith(valores.vacio),
         map(value => typeof value === 'string' || value == null ? value : value.id),
         map(cliente => typeof cliente === 'string' ? this.filtroCliente(cliente) : this.clientes.slice())
       );
     this.filtroFacturas = this.seleccionFactura.valueChanges
       .pipe(
-        startWith(''),
+        startWith(valores.vacio),
         map(value => typeof value === 'string' || value == null ? value : value.id),
         map(factura => typeof factura === 'string' ? this.filtroFactura(factura) : this.facturas.slice())
       );
     this.filtroProductos = this.seleccionProducto.valueChanges
       .pipe(
-        startWith(''),
+        startWith(valores.vacio),
         map(value => typeof value === 'string' || value == null ? value : value.id),
         map(producto => typeof producto === 'string' ? this.filtroProducto(producto) : this.productos.slice())
       );
   }
   
   private filtroCliente(value: string): Cliente[] {
-    if(this.clientes.length > 0) {
+    if(this.clientes.length > valores.cero) {
       const filterValue = value.toLowerCase();
       return this.clientes.filter(cliente => cliente.razonSocial.toLowerCase().includes(filterValue));
     }
     return [];
   }
   verCliente(cliente: Cliente): string {
-    return cliente && cliente.razonSocial ? cliente.razonSocial : '';
+    return cliente && cliente.razonSocial ? cliente.razonSocial : valores.vacio;
   }
 
   private filtroFactura(value: string): Factura[] {
-    if(this.facturas.length > 0) {
+    if(this.facturas.length > valores.cero) {
       const filterValue = value.toLowerCase();
       return this.facturas.filter(factura => factura.secuencia.toLowerCase().includes(filterValue));
     }
     return [];
   }
   verFactura(factura: Factura): string {
-    return factura && factura.secuencia ? factura.secuencia : '';
+    return factura && factura.secuencia ? factura.secuencia : valores.vacio;
   }
 
   private filtroProducto(value: string): Producto[] {
-    if(this.productos.length > 0) {
+    if(this.productos.length > valores.cero) {
       const filterValue = value.toLowerCase();
       return this.productos.filter(producto => producto.nombre.toLowerCase().includes(filterValue));
     }
     return [];
   }
   verProducto(producto: Producto): string {
-    return producto && producto.nombre ? producto.nombre : '';
+    return producto && producto.nombre ? producto.nombre : valores.vacio;
   }
 
   nuevo(event){
