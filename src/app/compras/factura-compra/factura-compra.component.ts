@@ -143,6 +143,7 @@ export class FacturaCompraComponent implements OnInit {
     this.seleccionProveedor.patchValue(valores.vacio);
     this.seleccionProducto.patchValue(valores.vacio);
     this.dataSourceFacturaCompraLinea = new MatTableDataSource<FacturaCompraLinea>([]);
+    this.clickedRows.clear();
   }
 
   construirFactura() {

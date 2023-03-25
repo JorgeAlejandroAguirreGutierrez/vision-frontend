@@ -171,6 +171,7 @@ export class NotaDebitoCompraComponent implements OnInit {
     this.seleccionFacturaCompra.patchValue(valores.vacio);
     this.dataSourceLinea = new MatTableDataSource<NotaDebitoCompraLinea>([]);
     this.dataSourceFacturaCompraLinea = new MatTableDataSource<FacturaCompraLinea>([]);
+    this.clickedRows.clear();
   }
 
   construir() {

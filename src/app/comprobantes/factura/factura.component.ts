@@ -205,6 +205,7 @@ export class FacturaComponent implements OnInit {
     this.seleccionIdentificacionCliente.patchValue(valores.vacio);
     this.seleccionRazonSocialCliente.patchValue(valores.vacio);
     this.dataSourceLinea = new MatTableDataSource<FacturaLinea>([]);
+    this.clickedRows.clear();
   }
 
   construirFactura() {
