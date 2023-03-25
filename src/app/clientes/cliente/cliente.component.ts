@@ -537,9 +537,9 @@ export class ClienteComponent implements OnInit {
   // CRUD DEPENDIENTE
   nuevoDependiente(){
     this.dependiente = new Dependiente();
-    this.provinciaDependiente = "";
-    this.cantonDependiente = "";
-    this.parroquiaDependiente = "";
+    this.provinciaDependiente = valores.vacio;
+    this.cantonDependiente = valores.vacio;
+    this.parroquiaDependiente = valores.vacio;
     this.telefonoDependiente = new TelefonoDependiente();
     this.celularDependiente = new CelularDependiente();
     this.correoDependiente = new CorreoDependiente();

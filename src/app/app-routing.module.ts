@@ -74,7 +74,6 @@ import { TablaCuentaContableComponent } from './contabilidad/cuenta-contable/tab
 import { TablaMovimientoContableComponent } from './contabilidad/movimiento-contable/tabla-movimiento-contable/tabla-movimiento-contable.component';
 
 // Módulo de Usuarios
-import { SesionComponent } from './usuarios/sesion/sesion.component';
 import { UsuarioComponent } from './usuarios/usuario/usuario.component';
 import { EmpresaComponent } from './usuarios/empresa/empresa.component';
 import { EstablecimientoComponent, DialogoMapaEstablecimientoComponent } from './usuarios/establecimiento/establecimiento.component';
@@ -216,7 +215,6 @@ export const RoutingComponents = [
   TablaCuentaContableComponent,
   TablaMovimientoContableComponent,
   //Usuarios
-  SesionComponent,
   UsuarioComponent,
   EmpresaComponent,
   EstablecimientoComponent,

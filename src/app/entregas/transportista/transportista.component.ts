@@ -66,6 +66,7 @@ export class TransportistaComponent implements OnInit {
     if (event!=null)
       event.preventDefault();
     this.transportista = new Transportista();
+    this.clickedRows.clear();
   }
 
   crear(event) {

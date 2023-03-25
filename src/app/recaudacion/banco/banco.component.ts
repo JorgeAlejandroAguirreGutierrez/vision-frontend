@@ -19,9 +19,9 @@ import { MatPaginator } from '@angular/material/paginator';
 })
 export class BancoComponent implements OnInit {
 
-  activo=valores.activo;
-  inactivo=valores.inactivo;
-  banco= new Banco();
+  activo = valores.activo;
+  inactivo = valores.inactivo;
+  banco = new Banco();
   bancos: Banco[] = [];
   sesion: Sesion=null;
   @ViewChild(MatPaginator) paginator: MatPaginator;
@@ -48,12 +48,14 @@ export class BancoComponent implements OnInit {
 
   ngOnInit() {
     this.sesion=validarSesion(this.sesionService, this.router);
+    this.consultar();
   }
 
   nuevo(event) {
     if (event!=null)
       event.preventDefault();
     this.banco = new Banco();
+    this.clickedRows.clear();
   }
 
   crear(event) {

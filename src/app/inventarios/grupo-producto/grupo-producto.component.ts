@@ -136,11 +136,11 @@ export class GrupoProductoComponent implements OnInit {
     if (event != null)
       event.preventDefault();
     this.grupoProducto = new GrupoProducto();
-    this.controlGrupo.setValue('');
-    this.controlSubgrupo.setValue('');
-    this.controlSeccion.setValue('');
-    this.controlLinea.setValue('');
-    this.controlSublinea.setValue('');
+    this.controlGrupo.setValue(valores.vacio);
+    this.controlSubgrupo.setValue(valores.vacio);
+    this.controlSeccion.setValue(valores.vacio);
+    this.controlLinea.setValue(valores.vacio);
+    this.controlSublinea.setValue(valores.vacio);
     this.verInputSeccion = false;
     this.clickedRows.clear();
     this.grupoProducto.categoriaProducto.id = 1;
