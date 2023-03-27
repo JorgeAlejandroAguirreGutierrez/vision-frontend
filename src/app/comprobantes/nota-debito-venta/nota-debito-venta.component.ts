@@ -552,11 +552,12 @@ export class NotaDebitoVentaComponent implements OnInit {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
         this.consultar();
         this.nuevo(null);
+        this.carga = false;
       },
       error: err => {
         Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje });
-      },
-      complete: () => this.carga = false
+        this.carga = false;
+      }
     });
   }
 
