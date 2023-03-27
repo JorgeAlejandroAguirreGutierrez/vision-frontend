@@ -6,7 +6,7 @@ import { valores } from "../../constantes";
 export class TarjetaDebito {
   id: number;
   codigo: string;
-  titular: boolean;
+  titular: string;
   identificacion: string;
   nombre: string;
   lote: string;
@@ -18,7 +18,7 @@ export class TarjetaDebito {
   constructor(){
     this.id = valores.cero;
     this.codigo = valores.vacio;
-    this.titular = false;
+    this.titular = valores.si;
     this.identificacion = valores.vacio;
     this.nombre = valores.vacio;
     this.lote = valores.vacio;

@@ -135,8 +135,8 @@ export class RecaudacionNotaDebitoComponent implements OnInit {
   habilitarEditarTransferencia: boolean = false;
   habilitarEditarTarjetaCredito: boolean = false;
   habilitarEditarTarjetaDebito: boolean = false;
-  habilitarTitularTarjetaDebito: boolean =true;
-  habilitarTitularTarjetaCredito: boolean = true;
+  habilitarTitularTarjetaDebito: boolean = false;
+  habilitarTitularTarjetaCredito: boolean = false;
   
 
   ngOnInit() {
@@ -152,6 +152,8 @@ export class RecaudacionNotaDebitoComponent implements OnInit {
     this.consultarBancosTransferencias();
     this.consultarBancosTarjetasCreditos();
     this.consultarBancosTarjetasDebitos();
+    this.defectoTarjetaCredito();
+    this.defectoTarjetaDebito();
 
     this.notaDebitoVentaService.eventoRecaudacion.subscribe((data: NotaDebitoVenta) => {
       this.notaDebitoVenta = data;
@@ -729,13 +731,13 @@ export class RecaudacionNotaDebitoComponent implements OnInit {
   }
 
   defectoTarjetaCredito(){
-    this.tarjetaCredito.titular = valores.si;
+    this.tarjetaCredito = new NotaDebitoVentaTarjetaCredito();
     this.tarjetaCredito.identificacion = this.notaDebitoVenta.factura.cliente.identificacion;
     this.tarjetaCredito.nombre = this.notaDebitoVenta.factura.cliente.razonSocial;
   }
 
   defectoTarjetaDebito(){
-    this.tarjetaDebito.titular = valores.si;
+    this.tarjetaDebito = new NotaDebitoVentaTarjetaDebito();
     this.tarjetaDebito.identificacion = this.notaDebitoVenta.factura.cliente.identificacion;
     this.tarjetaDebito.nombre = this.notaDebitoVenta.factura.cliente.razonSocial;
   }

@@ -589,16 +589,22 @@
                         </mat-form-field>
                     </div>
                     <div class="col-1">
-                        <br>
-                        <mat-checkbox [(ngModel)]="tarjetaCredito.titular" (change)="asignarTitularTarjetaCredito()"
-                            class="form-control-sm" color="primary">
-                            Titular</mat-checkbox>
+                        <mat-form-field appearance="standard">
+                            <mat-label>Titular</mat-label>
+                            <mat-select class="form-control-sm" [(ngModel)]="tarjetaCredito.titular" (selectionChange)="asignarTitularTarjetaCredito()">
+                                <mat-option [value]="si">{{si}}</mat-option>
+                                <mat-option [value]="no">{{no}}</mat-option>
+                            </mat-select>
+                        </mat-form-field>
                     </div>
                     <div class="col-1">
-                        <br>
-                        <mat-checkbox [(ngModel)]="tarjetaCredito.diferido" class="form-control-sm" color="primary">
-                            Diferido
-                        </mat-checkbox>
+                        <mat-form-field appearance="standard">
+                            <mat-label>Diferido</mat-label>
+                            <mat-select class="form-control-sm" [(ngModel)]="tarjetaCredito.diferido">
+                                <mat-option [value]="si">{{si}}</mat-option>
+                                <mat-option [value]="no">{{no}}</mat-option>
+                            </mat-select>
+                        </mat-form-field>
                     </div>
                     <div class="col-2">
                         <mat-form-field appearance="standard">
@@ -769,7 +775,7 @@
                             </mat-select>
                         </mat-form-field>
                     </div>
-                    <div class="col-4">
+                    <div class="col-3">
                         <mat-form-field appearance="standard">
                             <mat-label>Banco</mat-label>
                             <mat-autocomplete #bancoTarjetaDebito="matAutocomplete" [displayWith]="verBancoTarjetaDebito">
@@ -781,7 +787,7 @@
                                 [formControl]="seleccionBancoTarjetaDebito" [matAutocomplete]="bancoTarjetaDebito">
                         </mat-form-field>
                     </div>
-                    <div class="col-2">
+                    <div class="col-3">
                         <mat-form-field appearance="standard">
                             <mat-label>Cédula</mat-label>
                             <input matInput type="text" class="form-control-sm"
@@ -799,10 +805,13 @@
                         </mat-form-field>
                     </div>
                     <div class="col-1">
-                        <br>
-                        <mat-checkbox [(ngModel)]="tarjetaDebito.titular" (change)="asignarTitularTarjetaDebito()"
-                            class="form-control-sm" color="primary">
-                            Titular</mat-checkbox>
+                        <mat-form-field appearance="standard">
+                            <mat-label>Titular</mat-label>
+                            <mat-select class="form-control-sm" [(ngModel)]="tarjetaDebito.titular" (selectionChange)="asignarTitularTarjetaDebito()">
+                                <mat-option [value]="si">{{si}}</mat-option>
+                                <mat-option [value]="no">{{no}}</mat-option>
+                            </mat-select>
+                        </mat-form-field>
                     </div>
                     <div class="col-2">
                         <mat-form-field appearance="standard">
