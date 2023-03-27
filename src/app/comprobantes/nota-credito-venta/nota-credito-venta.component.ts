@@ -324,8 +324,8 @@ export class NotaCreditoVentaComponent implements OnInit {
       event.preventDefault();
     this.notaCreditoElectronicaService.enviar(this.notaCreditoVenta.id).subscribe(
       res => {
-        let respuesta = res.resultado as String;
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
+        this.notaCreditoVenta = res.resultado as NotaCreditoVenta;
         this.consultar();
         this.nuevo(null);
         this.cargar = false;

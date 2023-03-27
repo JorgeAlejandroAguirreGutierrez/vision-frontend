@@ -50,6 +50,8 @@ export class RecaudacionNotaDebitoComponent implements OnInit {
 
   @Input('stepper') stepper: MatStepper;
 
+  cargar = false;
+
   panelRecaudacion = false;
   panelCheques = false;
   panelDepositos = false;
@@ -138,7 +140,6 @@ export class RecaudacionNotaDebitoComponent implements OnInit {
   habilitarTitularTarjetaDebito: boolean = true;
   habilitarTitularTarjetaCredito: boolean = true;
   
-
   ngOnInit() {
     this.sesion=validarSesion(this.sesionService, this.router);
     this.consultarCuentasPropias();
@@ -158,6 +159,7 @@ export class RecaudacionNotaDebitoComponent implements OnInit {
     this.notaDebitoVentaService.eventoRecaudacion.subscribe((data: NotaDebitoVenta) => {
       this.notaDebitoVenta = data;
       this.calcular();
+      this.recargar();
       this.defectoTarjetaCredito();
       this.defectoTarjetaDebito();
     });
@@ -194,7 +196,7 @@ export class RecaudacionNotaDebitoComponent implements OnInit {
       );
   }
 
-  cargar(){
+  recargar(){
     if(this.notaDebitoVenta.cheques.length > valores.cero){
       this.habilitarSeccionPago(otras.formasPagos[0]);
       this.dataCheques = new MatTableDataSource<NotaDebitoVentaCheque>(this.notaDebitoVenta.cheques);
@@ -676,20 +678,6 @@ export class RecaudacionNotaDebitoComponent implements OnInit {
     this.calcular();
   }
 
-  nuevo(event){
-    if (event!=null)
-      event.preventDefault();
-    let notaDebitoVentaId = this.notaDebitoVenta.id;
-    this.notaDebitoVentaService.obtener(notaDebitoVentaId).subscribe({
-      next: res => {
-        this.notaDebitoVenta = new NotaDebitoVenta();
-        this.notaDebitoVenta = res.resultado as NotaDebitoVenta;
-        this.cargar();
-      },
-      error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
-    });
-  }
-
   crear(event) {
     if (event!=null)
       event.preventDefault();
@@ -772,12 +760,17 @@ export class RecaudacionNotaDebitoComponent implements OnInit {
   crearNotaDebitoElectronica(event){
     if (event != null)
       event.preventDefault();
+    this.cargar = true;
     this.notaDebitoElectronicaService.enviar(this.notaDebitoVenta.id).subscribe(
       res => {
-        let respuesta = res.resultado as String;
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
+        this.notaDebitoVenta = res.resultado as NotaDebitoVenta;
+        this.cargar = false;
       },
-      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+      err => {
+        Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+        this.cargar = false;
+      }
     );
   }
 }
