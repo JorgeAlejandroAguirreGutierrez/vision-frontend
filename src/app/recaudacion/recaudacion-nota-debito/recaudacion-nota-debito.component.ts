@@ -745,22 +745,24 @@ export class RecaudacionNotaDebitoComponent implements OnInit {
   }
 
   asignarTitularTarjetaCredito(){
-    if (this.tarjetaCredito.titular){
+    if (this.tarjetaCredito.titular == valores.si){
       this.tarjetaCredito.identificacion = this.notaDebitoVenta.factura.cliente.identificacion;
       this.tarjetaCredito.nombre = this.notaDebitoVenta.factura.cliente.razonSocial;
       this.habilitarTitularTarjetaCredito = true;
-    } else{
+    } 
+    if (this.tarjetaCredito.titular == valores.no) {
       this.tarjetaCredito.identificacion = valores.vacio;
       this.tarjetaCredito.nombre = valores.vacio;
       this.habilitarTitularTarjetaCredito = false;
     }
   }
   asignarTitularTarjetaDebito(){
-    if (this.tarjetaDebito.titular){
+    if (this.tarjetaDebito.titular == valores.si){
       this.tarjetaDebito.identificacion = this.notaDebitoVenta.factura.cliente.identificacion;
       this.tarjetaDebito.nombre = this.notaDebitoVenta.factura.cliente.razonSocial;
       this.habilitarTitularTarjetaDebito = true;
-    } else{
+    } 
+    if (this.tarjetaDebito.titular == valores.no) {
       this.tarjetaDebito.identificacion = valores.vacio;
       this.tarjetaDebito.nombre = valores.vacio;
       this.habilitarEditarTarjetaDebito = false;
