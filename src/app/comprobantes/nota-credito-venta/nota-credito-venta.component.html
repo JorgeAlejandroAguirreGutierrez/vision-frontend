@@ -34,6 +34,9 @@
             </li>
         </ul>
     </nav>
+    <div *ngIf="cargar">
+        <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+    </div>
     <ng-template matStepLabel>Nota Credito de Venta</ng-template>
     <mat-divider></mat-divider>
     <mat-accordion class="headers-align">
