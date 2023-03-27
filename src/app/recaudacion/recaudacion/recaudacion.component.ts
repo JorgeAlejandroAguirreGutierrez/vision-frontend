@@ -152,6 +152,8 @@ export class RecaudacionComponent implements OnInit {
     this.consultarBancosTransferencias();
     this.consultarBancosTarjetasCreditos();
     this.consultarBancosTarjetasDebitos();
+    this.defectoTarjetaCredito();
+    this.defectoTarjetaDebito();
 
     this.facturaService.eventoRecaudacion.subscribe((data: Factura) => {
         this.factura = data;
@@ -702,13 +704,13 @@ export class RecaudacionComponent implements OnInit {
   }
 
   defectoTarjetaCredito(){
-    this.tarjetaCredito.titular = true;
+    this.tarjetaCredito = new TarjetaCredito();
     this.tarjetaCredito.identificacion = this.factura.cliente.identificacion;
     this.tarjetaCredito.nombre = this.factura.cliente.razonSocial;
   }
 
   defectoTarjetaDebito(){
-    this.tarjetaDebito.titular = true;
+    this.tarjetaDebito = new TarjetaDebito();
     this.tarjetaDebito.identificacion = this.factura.cliente.identificacion;
     this.tarjetaDebito.nombre = this.factura.cliente.razonSocial;
   }
