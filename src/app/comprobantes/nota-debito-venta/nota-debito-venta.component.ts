@@ -40,6 +40,8 @@ export class NotaDebitoVentaComponent implements OnInit {
 
   @ViewChild('stepper') stepper: MatStepper;
 
+  carga = false;
+
   isLinear = false;
   isEditable = true;
   panelOpenState = false;
@@ -541,6 +543,7 @@ export class NotaDebitoVentaComponent implements OnInit {
   }
 
   crearNotaDebitoElectronica(event){
+    this.carga = true;
     if (event != null)
       event.preventDefault();
     this.notaDebitoElectronicaService.enviar(this.notaDebitoVenta.id).subscribe(
@@ -550,7 +553,8 @@ export class NotaDebitoVentaComponent implements OnInit {
         this.consultar();
         this.nuevo(null);
       },
-      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje }),
+      () => this.carga = false
     );
   }
 
