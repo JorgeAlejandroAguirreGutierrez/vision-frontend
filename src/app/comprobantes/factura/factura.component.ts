@@ -625,8 +625,8 @@ export class FacturaComponent implements OnInit {
       event.preventDefault();
     this.facturaElectronicaService.enviar(this.factura.id).subscribe(
       res => {
-        let respuesta = res.resultado as String;
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
+        this.factura = res.resultado as Factura;
         this.consultar();
         this.nuevo(null);
         this.cargar = true;

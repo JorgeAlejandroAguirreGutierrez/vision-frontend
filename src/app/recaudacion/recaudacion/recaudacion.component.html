@@ -13,6 +13,9 @@
             </li>
         </ul>
     </nav>
+    <div *ngIf="cargar">
+        <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+    </div>
     <mat-divider></mat-divider>
     <!-- SECCIÓN EFECTIVO Y CRÉDITO -->
     <mat-accordion class="headers-align">

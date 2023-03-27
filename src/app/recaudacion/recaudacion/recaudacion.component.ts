@@ -50,6 +50,8 @@ export class RecaudacionComponent implements OnInit {
 
   @Input('stepper') stepper: MatStepper;
 
+  cargar = false;
+
   panelRecaudacion = false;
   panelCheques = false;
   panelDepositos = false;
@@ -158,6 +160,7 @@ export class RecaudacionComponent implements OnInit {
     this.facturaService.eventoRecaudacion.subscribe((data: Factura) => {
         this.factura = data;
         this.calcular();
+        this.recargar();
         this.defectoTarjetaCredito();
         this.defectoTarjetaDebito();
     });
@@ -194,7 +197,7 @@ export class RecaudacionComponent implements OnInit {
       );
   }
 
-  cargar(){
+  recargar(){
     if(this.factura.cheques.length > valores.cero){
       this.habilitarSeccionPago(otras.formasPagos[0]);
       this.dataCheques = new MatTableDataSource<Cheque>(this.factura.cheques);
@@ -745,12 +748,17 @@ export class RecaudacionComponent implements OnInit {
   crearFacturaElectronica(event){
     if (event != null)
       event.preventDefault();
+    this.cargar = true;
     this.facturaElectronicaService.enviar(this.factura.id).subscribe(
       res => {
-        let respuesta = res.resultado as String;
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
+        this.factura = res.resultado as Factura;
+        this.cargar = false;
       },
-      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+      err => {
+        Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+        this.cargar = false;
+      }
     );
   }
 }

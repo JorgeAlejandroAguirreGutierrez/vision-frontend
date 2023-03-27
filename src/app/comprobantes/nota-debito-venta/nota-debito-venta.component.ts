@@ -549,8 +549,8 @@ export class NotaDebitoVentaComponent implements OnInit {
       event.preventDefault();
     this.notaDebitoElectronicaService.enviar(this.notaDebitoVenta.id).subscribe({
       next: res => {
-        let respuesta = res.resultado as String;
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
+        this.notaDebitoVenta = res.resultado as NotaDebitoVenta;
         this.consultar();
         this.nuevo(null);
         this.cargar = false;
