@@ -556,6 +556,7 @@ export class FacturaComponent implements OnInit {
   }
 
   enviarEvento(){
+    this.consultar();
     this.facturaService.enviarEventoRecaudacion(this.factura);
   }
 

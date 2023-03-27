@@ -536,6 +536,7 @@ export class NotaDebitoVentaComponent implements OnInit {
   }
 
   enviarEvento(){
+    this.consultar();
     this.notaDebitoVentaService.enviarEventoRecaudacion(this.notaDebitoVenta);
   }
 
