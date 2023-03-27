@@ -114,7 +114,7 @@ export class RecaudacionComponent implements OnInit {
 
   // Variables para transferencias
   habilitarTransferencias: boolean = false;
-  columnasTransferencias: string[] = ['id', 'fecha', 'cuenta', 'banco', 'comprobante', 'valor', 'acciones'];
+  columnasTransferencias: string[] = ['id', 'fecha', 'tipoTransaccion', 'numeroTransaccion', 'banco', 'valor', 'acciones'];;
   dataTransferencias = new MatTableDataSource<Transferencia>(this.factura.transferencias);
 
   // Variables para Tarjetas de crédito
