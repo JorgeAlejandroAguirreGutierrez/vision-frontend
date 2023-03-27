@@ -57,6 +57,7 @@ export class NotaCreditoVentaComponent implements OnInit {
     { nombreColumna: 'codigo', cabecera: 'Código', celda: (row: NotaCreditoVenta) => `${row.codigo}`},
     { nombreColumna: 'fecha', cabecera: 'Fecha', celda: (row: NotaCreditoVenta) => `${this.datepipe.transform(row.fecha, "dd/MM/yyyy")}`},
     { nombreColumna: 'cliente', cabecera: 'Cliente', celda: (row: NotaCreditoVenta) => `${row.factura.cliente.razonSocial}`},
+    { nombreColumna: 'factura', cabecera: 'Factura', celda: (row: NotaCreditoVenta) => `${row.factura.secuencia}`},
     { nombreColumna: 'total', cabecera: 'Total', celda: (row: NotaCreditoVenta) => `$${row.totalConDescuento}`},
     { nombreColumna: 'estado', cabecera: 'Estado', celda: (row: NotaCreditoVenta) => `${row.estado}`}
   ];
