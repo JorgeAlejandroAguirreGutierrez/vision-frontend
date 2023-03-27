@@ -74,7 +74,7 @@ export class RecaudacionComponent implements OnInit {
 
   factura: Factura = new Factura();
   cheque: Cheque = new Cheque();
-  deposito: Deposito=new Deposito();
+  deposito: Deposito = new Deposito();
   transferencia: Transferencia = new Transferencia();
   tarjetaDebito: TarjetaDebito = new TarjetaDebito();
   tarjetaCredito: TarjetaCredito = new TarjetaCredito();
