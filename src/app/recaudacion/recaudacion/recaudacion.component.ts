@@ -158,6 +158,8 @@ export class RecaudacionComponent implements OnInit {
     this.facturaService.eventoRecaudacion.subscribe((data: Factura) => {
         this.factura = data;
         this.calcular();
+        this.defectoTarjetaCredito();
+        this.defectoTarjetaDebito();
     });
     
     this.filtroBancosCheques = this.seleccionBancoCheque.valueChanges
