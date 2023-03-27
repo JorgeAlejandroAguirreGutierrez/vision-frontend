@@ -37,6 +37,9 @@
                     </li>
                 </ul>
             </nav>
+            <div *ngIf="carga">
+                <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+            </div>
             <ng-template matStepLabel>Nota Debito de Venta</ng-template>
             <mat-divider></mat-divider>
             <mat-accordion class="headers-align">
@@ -44,9 +47,6 @@
                     [expanded]="true">
                     <mat-expansion-panel-header>
                         <mat-panel-title>
-                            <div *ngIf="carga">
-                                <mat-progress-bar mode="indeterminate"></mat-progress-bar>
-                            </div>
                             <i><u>DATOS PARA NOTA DEBITO DE VENTA</u></i>
                         </mat-panel-title>
                         <mat-panel-description>
