@@ -705,6 +705,7 @@ export class RecaudacionNotaDebitoComponent implements OnInit {
     this.notaDebitoVentaService.actualizar(this.notaDebitoVenta).subscribe(
       res => {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
+        this.notaDebitoVenta = res.resultado as NotaDebitoVenta;
       }, 
       err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     );
