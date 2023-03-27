@@ -124,7 +124,7 @@ export class RecaudacionNotaDebitoComponent implements OnInit {
 
   // Variables para Tarjetas de débito
   habilitarTarjetasDebitos: boolean = false;
-  columnasTarjetasDebito: string[] = ['id', 'franquicia', 'banco', 'identificacion', 'nombre', 'operador', 'lote', 'valor', 'acciones'];
+  columnasTarjetasDebito: string[] = ['id', 'franquicia', 'banco', 'identificacion', 'nombre', 'titular', 'operador', 'lote', 'valor', 'acciones'];
   dataTarjetasDebitos = new MatTableDataSource<NotaDebitoVentaTarjetaDebito>(this.notaDebitoVenta.tarjetasDebitos);
 
   sesion: Sesion;

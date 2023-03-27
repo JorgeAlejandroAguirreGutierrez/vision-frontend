@@ -589,7 +589,7 @@
                             [disabled]="habilitarTitularTarjetaCredito">
                     </mat-form-field>
                 </div>
-                <div class="col-5">
+                <div class="col-3">
                     <mat-form-field appearance="standard">
                         <mat-label>Nombre</mat-label>
                         <input matInput type="text" [(ngModel)]="tarjetaCredito.nombre"
@@ -687,30 +687,16 @@
                             <td mat-cell *matCellDef="let tarjetaCredito"> {{tarjetaCredito.nombre}} </td>
                             <td mat-footer-cell *matFooterCellDef></td>
                         </ng-container>
-                        <!-- Numero Columna -->
+                        <!-- Titular Columna -->
                         <ng-container matColumnDef="titular">
                             <th mat-header-cell *matHeaderCellDef mat-sort-header> Titular </th>
-                            <td mat-cell *matCellDef="let tarjetaCredito">
-                                <ng-container *ngIf="tarjetaCredito.titular">
-                                    SI
-                                </ng-container>
-                                <ng-container *ngIf="!tarjetaCredito.titular">
-                                    NO
-                                </ng-container>
-                            </td>
+                            <td mat-cell *matCellDef="let tarjetaCredito"> {{tarjetaCredito.titular}} </td>
                             <td mat-footer-cell *matFooterCellDef></td>
                         </ng-container>
                         <!-- Numero Columna -->
                         <ng-container matColumnDef="diferido">
                             <th mat-header-cell *matHeaderCellDef mat-sort-header> Diferido </th>
-                            <td mat-cell *matCellDef="let tarjetaCredito">
-                                <ng-container *ngIf="tarjetaCredito.diferido">
-                                    SI
-                                </ng-container>
-                                <ng-container *ngIf="!tarjetaCredito.diferido">
-                                    NO
-                                </ng-container>
-                            </td>
+                            <td mat-cell *matCellDef="let tarjetaCredito">{{tarjetaCredito.diferido}}</td>
                             <td mat-footer-cell *matFooterCellDef></td>
                         </ng-container>
                         <!-- Numero Columna -->
@@ -815,10 +801,13 @@
                     </mat-form-field>
                 </div>
                 <div class="col-1">
-                    <br>
-                    <mat-checkbox [(ngModel)]="tarjetaDebito.titular" (change)="asignarTitularTarjetaDebito()"
-                        class="form-control-sm" color="primary">
-                        Titular</mat-checkbox>
+                    <mat-form-field appearance="standard">
+                        <mat-label>Titular</mat-label>
+                        <mat-select class="form-control-sm" [(ngModel)]="tarjetaDebito.titular" (selectionChange)="asignarTitularTarjetaDebito()">
+                            <mat-option [value]="si">{{si}}</mat-option>
+                            <mat-option [value]="no">{{no}}</mat-option>
+                        </mat-select>
+                    </mat-form-field>
                 </div>
                 <div class="col-2">
                     <mat-form-field appearance="standard">
@@ -867,7 +856,7 @@
                             <td mat-cell *matCellDef="let i=index"> {{i+1}} </td>
                             <td mat-footer-cell *matFooterCellDef> Total </td>
                         </ng-container>
-                        <!-- Fecha Columna -->
+                        <!-- Franquicia Columna -->
                         <ng-container matColumnDef="franquicia">
                             <th mat-header-cell *matHeaderCellDef mat-sort-header>Franquicia</th>
                             <td mat-cell *matCellDef="let tarjetaDebito"> {{tarjetaDebito.franquiciaTarjeta.nombre}}
@@ -880,26 +869,31 @@
                             <td mat-cell *matCellDef="let tarjetaDebito"> {{tarjetaDebito.banco.nombre}} </td>
                             <td mat-footer-cell *matFooterCellDef></td>
                         </ng-container>
-                        <!-- Tipo Columna -->
+                        <!-- Cedula Columna -->
                         <ng-container matColumnDef="identificacion">
                             <th mat-header-cell *matHeaderCellDef mat-sort-header> Cédula </th>
                             <td mat-cell *matCellDef="let tarjetaDebito"> {{tarjetaDebito.identificacion}} </td>
                             <td mat-footer-cell *matFooterCellDef></td>
                         </ng-container>
-                        <!-- Numero Columna -->
+                        <!-- Propietario Columna -->
                         <ng-container matColumnDef="nombre">
                             <th mat-header-cell *matHeaderCellDef mat-sort-header> Propietario </th>
                             <td mat-cell *matCellDef="let tarjetaDebito"> {{tarjetaDebito.nombre}} </td>
                             <td mat-footer-cell *matFooterCellDef></td>
                         </ng-container>
-                        <!-- Numero Columna -->
+                        <ng-container matColumnDef="titular">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header> Titular </th>
+                            <td mat-cell *matCellDef="let tarjetaDebito"> {{tarjetaDebito.titular}} </td>
+                            <td mat-footer-cell *matFooterCellDef></td>
+                        </ng-container>
+                        <!-- Operador Columna -->
                         <ng-container matColumnDef="operador">
                             <th mat-header-cell *matHeaderCellDef mat-sort-header>Operador</th>
                             <td mat-cell *matCellDef="let tarjetaDebito"> {{tarjetaDebito.operadorTarjeta.nombre}}
                             </td>
                             <td mat-footer-cell *matFooterCellDef></td>
                         </ng-container>
-                        <!-- Numero Columna -->
+                        <!-- Lote Columna -->
                         <ng-container matColumnDef="lote">
                             <th mat-header-cell *matHeaderCellDef mat-sort-header>Lote</th>
                             <td mat-cell *matCellDef="let tarjetaDebito"> {{tarjetaDebito.lote}} </td>
