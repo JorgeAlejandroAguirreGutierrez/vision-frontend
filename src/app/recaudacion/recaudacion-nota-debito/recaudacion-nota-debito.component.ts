@@ -158,6 +158,8 @@ export class RecaudacionNotaDebitoComponent implements OnInit {
     this.notaDebitoVentaService.eventoRecaudacion.subscribe((data: NotaDebitoVenta) => {
       this.notaDebitoVenta = data;
       this.calcular();
+      this.defectoTarjetaCredito();
+      this.defectoTarjetaDebito();
     });
     
     this.filtroBancosCheques = this.seleccionBancoCheque.valueChanges
