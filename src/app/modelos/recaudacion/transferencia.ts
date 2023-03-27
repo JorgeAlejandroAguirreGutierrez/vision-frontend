@@ -5,7 +5,7 @@ import { valores } from "../../constantes";
 export class Transferencia {
     id: number;
     codigo: string;
-    fechaTransaccion: Date;
+    fecha: Date;
     tipoTransaccion: string;
     numeroTransaccion: string;
     valor: number;
@@ -14,7 +14,7 @@ export class Transferencia {
     constructor(){
         this.id = valores.cero;
         this.codigo = valores.vacio;
-        this.fechaTransaccion = new Date();
+        this.fecha = new Date();
         this.tipoTransaccion = valores.vacio;
         this.numeroTransaccion = valores.vacio;
         this.valor = valores.cero;
