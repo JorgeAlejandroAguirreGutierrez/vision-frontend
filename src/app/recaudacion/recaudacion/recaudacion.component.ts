@@ -679,8 +679,6 @@ export class RecaudacionComponent implements OnInit {
       res => {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
         this.factura = res.resultado as Factura;
-        //this.facturaService.enviarEventoEntrega(res.resultado.id);
-        //this.stepper.next();
       }, 
       err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     );
