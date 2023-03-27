@@ -135,8 +135,8 @@ export class RecaudacionNotaDebitoComponent implements OnInit {
   habilitarEditarTransferencia: boolean = false;
   habilitarEditarTarjetaCredito: boolean = false;
   habilitarEditarTarjetaDebito: boolean = false;
-  habilitarTitularTarjetaDebito: boolean = false;
-  habilitarTitularTarjetaCredito: boolean = false;
+  habilitarTitularTarjetaDebito: boolean = true;
+  habilitarTitularTarjetaCredito: boolean = true;
   
 
   ngOnInit() {
