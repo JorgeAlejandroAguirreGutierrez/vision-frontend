@@ -546,16 +546,18 @@ export class NotaDebitoVentaComponent implements OnInit {
     this.carga = true;
     if (event != null)
       event.preventDefault();
-    this.notaDebitoElectronicaService.enviar(this.notaDebitoVenta.id).subscribe(
-      res => {
+    this.notaDebitoElectronicaService.enviar(this.notaDebitoVenta.id).subscribe({
+      next: res => {
         let respuesta = res.resultado as String;
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
         this.consultar();
         this.nuevo(null);
       },
-      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje }),
-      () => this.carga = false
-    );
+      error: err => {
+        Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje });
+      },
+      complete: () => this.carga = false
+    });
   }
 
   filtro(event: Event) {
