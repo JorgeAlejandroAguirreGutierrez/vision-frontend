@@ -28,6 +28,8 @@ export class NotaCreditoVentaComponent implements OnInit {
 
   panelOpenState = false;
 
+  cargar = false;
+
   deshabilitarDevolucion = true;
   deshabilitarDescuento = true;
 
@@ -316,6 +318,7 @@ export class NotaCreditoVentaComponent implements OnInit {
   }
 
   crearNotaCreditoElectronica(event){
+    this.cargar = true;
     if (event != null)
       event.preventDefault();
     this.notaCreditoElectronicaService.enviar(this.notaCreditoVenta.id).subscribe(
@@ -324,8 +327,12 @@ export class NotaCreditoVentaComponent implements OnInit {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
         this.consultar();
         this.nuevo(null);
+        this.cargar = false;
       },
-      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+      err => {
+        Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+        this.cargar = false;
+      }
     );
   }
 

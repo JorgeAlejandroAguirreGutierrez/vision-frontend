@@ -39,6 +39,8 @@ export class FacturaComponent implements OnInit {
 
   @ViewChild('stepper') stepper: MatStepper;
 
+  cargar = false;
+
   isLinear = false;
   isEditable = true;
   panelOpenState = false;
@@ -618,16 +620,21 @@ export class FacturaComponent implements OnInit {
   }
 
   crearFacturaElectronica(event){
+    this.cargar = true;
     if (event != null)
       event.preventDefault();
     this.facturaElectronicaService.enviar(this.factura.id).subscribe(
       res => {
         let respuesta = res.resultado as String;
+        Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
         this.consultar();
         this.nuevo(null);
-        Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
+        this.cargar = true;
       },
-      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+      err => {
+        Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+        this.cargar = false;
+      }
     );
   }
 

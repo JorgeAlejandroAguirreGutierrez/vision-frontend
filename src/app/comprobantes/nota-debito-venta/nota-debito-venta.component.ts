@@ -40,7 +40,7 @@ export class NotaDebitoVentaComponent implements OnInit {
 
   @ViewChild('stepper') stepper: MatStepper;
 
-  carga = false;
+  cargar = false;
 
   isLinear = false;
   isEditable = true;
@@ -424,10 +424,10 @@ export class NotaDebitoVentaComponent implements OnInit {
     this.notaDebitoVenta.sesion=this.sesion;
     this.notaDebitoVentaService.crear(this.notaDebitoVenta).subscribe(
       res => {
+        Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
         this.notaDebitoVenta = res.resultado as NotaDebitoVenta;
         this.stepper.next();
         this.consultar();
-        Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
       },
       err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     );
@@ -543,7 +543,7 @@ export class NotaDebitoVentaComponent implements OnInit {
   }
 
   crearNotaDebitoElectronica(event){
-    this.carga = true;
+    this.cargar = true;
     if (event != null)
       event.preventDefault();
     this.notaDebitoElectronicaService.enviar(this.notaDebitoVenta.id).subscribe({
@@ -552,11 +552,11 @@ export class NotaDebitoVentaComponent implements OnInit {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
         this.consultar();
         this.nuevo(null);
-        this.carga = false;
+        this.cargar = false;
       },
       error: err => {
         Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje });
-        this.carga = false;
+        this.cargar = false;
       }
     });
   }
