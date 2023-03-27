@@ -236,7 +236,7 @@ export class RecaudacionComponent implements OnInit {
     );
   }
   consultarOperadoresTarjetasCreditos(){
-    let tipo= otras.credito;
+    let tipo = otras.credito;
     this.operadorTarjetaService.consultarPorTipo(tipo).subscribe(
       res => {
         this.operadoresTarjetasCreditos = res.resultado as OperadorTarjeta[]
@@ -245,7 +245,7 @@ export class RecaudacionComponent implements OnInit {
     );
   }
   consultarOperadoresTarjetasDebitos(){
-    let tipo= otras.debito;
+    let tipo = otras.debito;
     this.operadorTarjetaService.consultarPorTipo(tipo).subscribe(
       res => {
         this.operadoresTarjetasDebitos = res.resultado as OperadorTarjeta[]
@@ -718,22 +718,24 @@ export class RecaudacionComponent implements OnInit {
   }
 
   asignarTitularTarjetaCredito(){
-    if (this.tarjetaCredito.titular){
+    if (this.tarjetaCredito.titular == valores.si){
       this.tarjetaCredito.identificacion = this.factura.cliente.identificacion;
       this.tarjetaCredito.nombre = this.factura.cliente.razonSocial;
       this.habilitarTitularTarjetaCredito = true;
-    } else{
+    } 
+    if (this.tarjetaCredito.titular == valores.no) {
       this.tarjetaCredito.identificacion = valores.vacio;
       this.tarjetaCredito.nombre = valores.vacio;
       this.habilitarTitularTarjetaCredito=false;
     }
   }
   asignarTitularTarjetaDebito(){
-    if (this.tarjetaDebito.titular){
+    if (this.tarjetaDebito.titular == valores.si){
       this.tarjetaDebito.identificacion = this.factura.cliente.identificacion;
       this.tarjetaDebito.nombre = this.factura.cliente.razonSocial;
       this.habilitarTitularTarjetaDebito = true;
-    } else{
+    }
+    if (this.tarjetaCredito.titular == valores.no) {
       this.tarjetaDebito.identificacion = valores.vacio;
       this.tarjetaDebito.nombre = valores.vacio;
       this.habilitarEditarTarjetaDebito = false;
