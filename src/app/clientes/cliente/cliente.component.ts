@@ -84,14 +84,14 @@ export class ClienteComponent implements OnInit {
   verIconoEditarDependiente: boolean = false;
   deshabilitarDatoAdicional: boolean = false;
 
-  urlLogo: string = ""; 
-  nombreEmpresa: string = "";
-  provinciaCliente: string = "";
-  cantonCliente: string = "";
-  parroquiaCliente: string = "";
-  provinciaDependiente: string = "";
-  cantonDependiente: string = "";
-  parroquiaDependiente: string = "";
+  urlLogo: string = valores.vacio; 
+  nombreEmpresa: string = valores.vacio;
+  provinciaCliente: string = valores.vacio;
+  cantonCliente: string = valores.vacio;
+  parroquiaCliente: string = valores.vacio;
+  provinciaDependiente: string = valores.vacio;
+  cantonDependiente: string = valores.vacio;
+  parroquiaDependiente: string = valores.vacio;
   urlAvatar: string = "./assets/icons/avatar1.png";
 
   cliente: Cliente = new Cliente();
