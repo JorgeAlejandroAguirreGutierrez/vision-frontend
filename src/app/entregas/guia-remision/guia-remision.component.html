@@ -79,7 +79,7 @@
                             class="form-control-sm" [disabled]="true">
                     </mat-form-field>
                 </div>
-                <div class="col-4">
+                <div class="form-row col-4">
                     <ng-container *ngFor="let telefono of guiaRemision.factura.cliente.telefonos; let i=index ">
                         <div class="col-9">
                             <mat-form-field appearance="standard">
@@ -96,7 +96,7 @@
                         </div>
                     </ng-container>
                 </div>
-                <div class="col-4">
+                <div class="form-row col-4">
                     <ng-container *ngFor="let celular of guiaRemision.factura.cliente.celulares; let i=index ">
                         <div class="col-9">
                             <mat-form-field appearance="standard">
@@ -113,7 +113,7 @@
                         </div>
                     </ng-container>
                 </div>
-                <div class="col-4">
+                <div class="form-row col-4">
                     <ng-container *ngFor="let correo of guiaRemision.factura.cliente.correos; let i=index ">
                         <div class="col-9">
                             <mat-form-field appearance="standard">
@@ -186,47 +186,52 @@
                         <mat-radio-button [value]="nuevaDireccion">Nueva Dir.</mat-radio-button>
                     </mat-radio-group>
                 </div>
-                <div class="col-4">
-                    <mat-form-field appearance="standard">
-                        <mat-label>Identificacion Destinatario</mat-label>
-                        <input matInput type="text" class="form-control-sm"
-                            [(ngModel)]="guiaRemision.identificacionDestinatario" [disabled]="deshabilitarNuevaDireccion">
-                    </mat-form-field>
-                </div>
-                <div class="col-4">
-                    <mat-form-field appearance="standard">
-                        <mat-label>Razon Social Destinatario</mat-label>
-                        <input matInput type="text" class="form-control-sm"
-                            [(ngModel)]="guiaRemision.razonSocialDestinatario" [disabled]="deshabilitarNuevaDireccion">
-                    </mat-form-field>
-                </div>
-                <div class="col-4">
-                    <mat-form-field appearance="standard">
-                        <mat-label>Direccion Destinatario</mat-label>
-                        <input matInput type="text" class="form-control-sm"
-                            [(ngModel)]="guiaRemision.direccionDestinatario" [disabled]="deshabilitarNuevaDireccion">
-                    </mat-form-field>
-                </div>
-                <div class="col-4">
-                    <mat-form-field appearance="standard">
-                        <mat-label>Teléfono</mat-label>
-                        <b matPrefix>+593 &nbsp;</b>
-                        <input matInput type="tel" [(ngModel)]="guiaRemision.telefonoDestinatario" [disabled]="deshabilitarNuevaDireccion" class="form-control-sm">
-                    </mat-form-field>
-                </div>
-                <div class="col-4">
-                    <mat-form-field appearance="standard">
-                        <mat-label>Celular</mat-label>
-                        <b matPrefix>+593 &nbsp;</b>
-                        <input matInput type="tel" [(ngModel)]="guiaRemision.celularDestinatario" [disabled]="deshabilitarNuevaDireccion" class="form-control-sm">
-                    </mat-form-field>
-                </div>
-                <div class="col-4">
-                    <mat-form-field appearance="standard">
-                        <mat-label>Correo electrónico</mat-label>
-                        <input matInput type="text" [(ngModel)]="guiaRemision.correoDestinatario" [disabled]="deshabilitarNuevaDireccion" class="form-control-sm ">
-                    </mat-form-field>
-                </div>
+                <ng-container *ngIf="habilitarNuevaDireccion">
+                    <div class="col-4">
+                        <mat-form-field appearance="standard">
+                            <mat-label>Identificacion Destinatario</mat-label>
+                            <input matInput type="text" class="form-control-sm"
+                                [(ngModel)]="guiaRemision.identificacionDestinatario">
+                        </mat-form-field>
+                    </div>
+                    <div class="col-4">
+                        <mat-form-field appearance="standard">
+                            <mat-label>Razon Social Destinatario</mat-label>
+                            <input matInput type="text" class="form-control-sm"
+                                [(ngModel)]="guiaRemision.razonSocialDestinatario">
+                        </mat-form-field>
+                    </div>
+                    <div class="col-4">
+                        <mat-form-field appearance="standard">
+                            <mat-label>Direccion Destinatario</mat-label>
+                            <input matInput type="text" class="form-control-sm"
+                                [(ngModel)]="guiaRemision.direccionDestinatario">
+                        </mat-form-field>
+                    </div>
+                    <div class="col-4">
+                        <mat-form-field appearance="standard">
+                            <mat-label>Teléfono</mat-label>
+                            <b matPrefix>+593 &nbsp;</b>
+                            <input matInput type="tel" [(ngModel)]="guiaRemision.telefonoDestinatario"
+                                class="form-control-sm">
+                        </mat-form-field>
+                    </div>
+                    <div class="col-4">
+                        <mat-form-field appearance="standard">
+                            <mat-label>Celular</mat-label>
+                            <b matPrefix>+593 &nbsp;</b>
+                            <input matInput type="tel" [(ngModel)]="guiaRemision.celularDestinatario"
+                                class="form-control-sm">
+                        </mat-form-field>
+                    </div>
+                    <div class="col-4">
+                        <mat-form-field appearance="standard">
+                            <mat-label>Correo electrónico</mat-label>
+                            <input matInput type="text" [(ngModel)]="guiaRemision.correoDestinatario"
+                                class="form-control-sm ">
+                        </mat-form-field>
+                    </div>
+                </ng-container>
                 <div class="col-4">
                     <mat-form-field appearance="standard">
                         <mat-label>Usuario</mat-label>
@@ -352,8 +357,7 @@
                             <mat-form-field appearance="outline">
                                 <mat-label>Comentario</mat-label>
                                 <textarea matInput [(ngModel)]="guiaRemision.factura.comentario"
-                                    placeholder="Referente a factura.." class="form-control"
-                                    rows="3"></textarea>
+                                    placeholder="Referente a factura.." class="form-control" rows="3"></textarea>
                             </mat-form-field>
                         </div>
                     </div>
@@ -365,7 +369,8 @@
                                 </div>
                                 <div class="col-5">
                                     <mat-form-field appearance="standard">
-                                        <input matInput type="text" [(ngModel)]="guiaRemision.factura.subtotalSinDescuento"
+                                        <input matInput type="text"
+                                            [(ngModel)]="guiaRemision.factura.subtotalSinDescuento"
                                             class="form-control-sm" [disabled]="true">
                                     </mat-form-field>
                                 </div>
@@ -412,8 +417,9 @@
                                 </div>
                                 <div class="col-5">
                                     <mat-form-field appearance="standard">
-                                        <input matInput type="text " [(ngModel)]="guiaRemision.factura.totalConDescuento"
-                                            class="form-control-sm" [disabled]="true">
+                                        <input matInput type="text "
+                                            [(ngModel)]="guiaRemision.factura.totalConDescuento" class="form-control-sm"
+                                            [disabled]="true">
                                     </mat-form-field>
                                 </div>
                             </div>
