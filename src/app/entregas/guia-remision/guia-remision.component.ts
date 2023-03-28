@@ -41,7 +41,7 @@ export class GuiaRemisionComponent implements OnInit {
   clienteDireccion = valores.clienteDireccion;
   nuevaDireccion = valores.nuevaDireccion;
 
-  deshabilitarNuevaDireccion = true;
+  habilitarNuevaDireccion = false;
 
   seleccionCliente = new UntypedFormControl();
   filtroClientes: Observable<Cliente[]> = new Observable<Cliente[]>();
@@ -52,19 +52,19 @@ export class GuiaRemisionComponent implements OnInit {
   transportistas: Transportista[] = [];
 
   columnas: any[] = [
-    { nombreColumna: 'codigo', cabecera: 'Código', celda: (row: GuiaRemision) => `${row.codigo}`},
-    { nombreColumna: 'fecha', cabecera: 'Fecha', celda: (row: GuiaRemision) => `${row.fecha}`},
-    { nombreColumna: 'cliente', cabecera: 'Cliente', celda: (row: GuiaRemision) => `${row.factura.cliente.razonSocial}`},
-    { nombreColumna: 'factura', cabecera: 'Factura', celda: (row: GuiaRemision) => `${row.factura.secuencia}`},
-    { nombreColumna: 'direccion', cabecera: 'Direccion', celda: (row: GuiaRemision) => row.opcionGuia == valores.clienteDireccion ? `${row.factura.cliente.direccion}` : `${row.direccionDestinatario}`},
-    { nombreColumna: 'estado', cabecera: 'Estado', celda: (row: GuiaRemision) => `${row.estado}`}
+    { nombreColumna: 'codigo', cabecera: 'Código', celda: (row: GuiaRemision) => `${row.codigo}` },
+    { nombreColumna: 'fecha', cabecera: 'Fecha', celda: (row: GuiaRemision) => `${row.fecha}` },
+    { nombreColumna: 'cliente', cabecera: 'Cliente', celda: (row: GuiaRemision) => `${row.factura.cliente.razonSocial}` },
+    { nombreColumna: 'factura', cabecera: 'Factura', celda: (row: GuiaRemision) => `${row.factura.secuencia}` },
+    { nombreColumna: 'direccion', cabecera: 'Direccion', celda: (row: GuiaRemision) => row.opcionGuia == valores.clienteDireccion ? `${row.factura.cliente.direccion}` : `${row.direccionDestinatario}` },
+    { nombreColumna: 'estado', cabecera: 'Estado', celda: (row: GuiaRemision) => `${row.estado}` }
   ];
-  cabecera: string[]  = this.columnas.map(titulo => titulo.nombreColumna);
+  cabecera: string[] = this.columnas.map(titulo => titulo.nombreColumna);
   dataSource: MatTableDataSource<GuiaRemision>;
   clickedRows = new Set<GuiaRemision>();
   abrirPanelAdmin = false;
   guiasRemisiones: GuiaRemision[] = [];
-  
+
   @ViewChild("paginator") paginator: MatPaginator;
   @ViewChild("paginatorLinea") paginatorLinea: MatPaginator;
 
@@ -86,26 +86,26 @@ export class GuiaRemisionComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.sesion=validarSesion(this.sesionService, this.router);
+    this.sesion = validarSesion(this.sesionService, this.router);
     this.consultar();
     this.consultarClientes();
     this.consultarTransportistas();
     this.filtroClientes = this.seleccionCliente.valueChanges
       .pipe(
         startWith(valores.vacio),
-        map(value => typeof value === 'string' || value==null ? value : value.id),
+        map(value => typeof value === 'string' || value == null ? value : value.id),
         map(cliente => typeof cliente === 'string' ? this.filtroCliente(cliente) : this.clientes.slice())
       );
     this.filtroFacturas = this.seleccionFactura.valueChanges
       .pipe(
         startWith(valores.vacio),
-        map(value => typeof value === 'string' || value==null ? value : value.id),
+        map(value => typeof value === 'string' || value == null ? value : value.id),
         map(factura => typeof factura === 'string' ? this.filtroFactura(factura) : this.facturas.slice())
       );
   }
-  
+
   private filtroCliente(value: string): Cliente[] {
-    if(this.clientes.length > valores.cero) {
+    if (this.clientes.length > valores.cero) {
       const filterValue = value.toLowerCase();
       return this.clientes.filter(cliente => cliente.razonSocial.toLowerCase().includes(filterValue));
     }
@@ -116,7 +116,7 @@ export class GuiaRemisionComponent implements OnInit {
   }
 
   private filtroFactura(value: string): Factura[] {
-    if(this.facturas.length > valores.cero) {
+    if (this.facturas.length > valores.cero) {
       const filterValue = value.toLowerCase();
       return this.facturas.filter(factura => factura.secuencia.toLowerCase().includes(filterValue));
     }
@@ -126,8 +126,8 @@ export class GuiaRemisionComponent implements OnInit {
     return factura && factura.secuencia ? factura.secuencia : valores.vacio;
   }
 
-  nuevo(event){
-    if (event!=null)
+  nuevo(event) {
+    if (event != null)
       event.preventDefault();
     this.guiaRemision = new GuiaRemision();
     this.seleccionCliente.patchValue(valores.vacio);
@@ -147,7 +147,7 @@ export class GuiaRemisionComponent implements OnInit {
     );
   }
 
-  consultarClientes(){
+  consultarClientes() {
     this.clienteService.consultar().subscribe(
       res => {
         this.clientes = res.resultado as Cliente[]
@@ -155,7 +155,7 @@ export class GuiaRemisionComponent implements OnInit {
       err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
-  
+
   seleccionarCliente() {
     let clienteId = this.seleccionCliente.value.id;
     this.clienteService.obtener(clienteId).subscribe(
@@ -175,9 +175,9 @@ export class GuiaRemisionComponent implements OnInit {
 
   seleccionarFactura() {
     let facturaId = this.seleccionFactura.value.id;
-    this.guiaRemisionService.obtenerPorFactura(facturaId).subscribe(
+    this.facturaService.obtener(facturaId).subscribe(
       res => {
-        this.guiaRemision = res.resultado as GuiaRemision;
+        this.guiaRemision.factura = res.resultado as Factura;
         this.seleccionFactura.patchValue(this.guiaRemision.factura);
         this.dataSourceLinea = new MatTableDataSource(this.guiaRemision.factura.facturaLineas);
       },
@@ -185,7 +185,7 @@ export class GuiaRemisionComponent implements OnInit {
     );
   }
 
-  consultarTransportistas(){
+  consultarTransportistas() {
     this.transportistaService.consultar().subscribe(
       res => {
         this.transportistas = res.resultado as Transportista[]
@@ -195,7 +195,7 @@ export class GuiaRemisionComponent implements OnInit {
   }
 
   crear(event) {
-    if (event!=null)
+    if (event != null)
       event.preventDefault();
     this.guiaRemision.sesion = this.sesion;
     this.guiaRemisionService.crear(this.guiaRemision).subscribe(
@@ -208,14 +208,14 @@ export class GuiaRemisionComponent implements OnInit {
     );
   }
 
-  actualizar(event){
-    if (event!=null)
+  actualizar(event) {
+    if (event != null)
       event.preventDefault();
     this.guiaRemisionService.actualizar(this.guiaRemision).subscribe(
       res => {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
         this.consultar();
-        this.nuevo(null);        
+        this.nuevo(null);
       },
       err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     );
@@ -247,17 +247,23 @@ export class GuiaRemisionComponent implements OnInit {
     });
   }
 
-  seleccionarOpcionGuia(){
-    if(this.guiaRemision.opcionGuia == valores.clienteDireccion){
-      this.deshabilitarNuevaDireccion = true;
-    } 
-    if(this.guiaRemision.opcionGuia == valores.nuevaDireccion){
-      this.deshabilitarNuevaDireccion = false;
+  seleccionarOpcionGuia() {
+    if (this.guiaRemision.opcionGuia == valores.clienteDireccion) {
+      this.habilitarNuevaDireccion = true;
     }
+    if (this.guiaRemision.opcionGuia == valores.nuevaDireccion) {
+      this.habilitarNuevaDireccion = false;
+    }
+    this.guiaRemision.identificacionDestinatario = valores.vacio;
+    this.guiaRemision.razonSocialDestinatario = valores.vacio;
+    this.guiaRemision.direccionDestinatario = valores.vacio;
+    this.guiaRemision.telefonoDestinatario = valores.vacio;
+    this.guiaRemision.celularDestinatario = valores.vacio;
+    this.guiaRemision.correoDestinatario = valores.vacio;
   }
 
   seleccion(guiaRemision: any) {
-    if (!this.clickedRows.has(guiaRemision)){
+    if (!this.clickedRows.has(guiaRemision)) {
       this.clickedRows.clear();
       this.clickedRows.add(guiaRemision);
       this.guiaRemisionService.obtener(guiaRemision.id).subscribe({
@@ -276,7 +282,7 @@ export class GuiaRemisionComponent implements OnInit {
     }
   }
 
-  crearGuiaRemisionElectronica(event){
+  crearGuiaRemisionElectronica(event) {
     if (event != null)
       event.preventDefault();
     this.cargar = true;
