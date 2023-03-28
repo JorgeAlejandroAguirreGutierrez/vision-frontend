@@ -189,14 +189,14 @@
                 <div class="col-6">
                     <mat-form-field appearance="standard">
                         <mat-label>Motivo Traslado</mat-label>
-                        <input matInput type="text" class="form-control-sm"
+                        <input matInput type="text" oninput="this.value = this.value.toUpperCase()" class="form-control-sm"
                             [(ngModel)]="guiaRemision.motivoTraslado">
                     </mat-form-field>
                 </div>
                 <div class="col-6">
                     <mat-form-field appearance="standard">
                         <mat-label>Ruta</mat-label>
-                        <input matInput type="text" class="form-control-sm"
+                        <input matInput type="text" oninput="this.value = this.value.toUpperCase()" class="form-control-sm"
                             [(ngModel)]="guiaRemision.ruta">
                     </mat-form-field>
                 </div>
@@ -211,14 +211,14 @@
                     <div class="col-4">
                         <mat-form-field appearance="standard">
                             <mat-label>Razon Social Destinatario</mat-label>
-                            <input matInput type="text" class="form-control-sm"
+                            <input matInput type="text" oninput="this.value = this.value.toUpperCase()" class="form-control-sm"
                                 [(ngModel)]="guiaRemision.razonSocialDestinatario">
                         </mat-form-field>
                     </div>
                     <div class="col-4">
                         <mat-form-field appearance="standard">
                             <mat-label>Direccion Destinatario</mat-label>
-                            <input matInput type="text" class="form-control-sm"
+                            <input matInput type="text" oninput="this.value = this.value.toUpperCase()" class="form-control-sm"
                                 [(ngModel)]="guiaRemision.direccionDestinatario">
                         </mat-form-field>
                     </div>
