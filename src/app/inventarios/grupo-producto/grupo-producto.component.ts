@@ -449,7 +449,7 @@ consultarGrupos() {
       Swal.fire({ icon: error_swal, title: error, text: mensajes.error_falta_datos });
       return false;
     }
-    if (this.grupoProducto.categoriaProducto.id = 1){ //Si en Bien
+    if (this.grupoProducto.categoriaProducto.id == 1){ //Si en Bien
       if (this.controlGrupo.value == '' || this.controlSubgrupo.value == '' || this.controlSeccion.value == '') {
         Swal.fire({ icon: error_swal, title: error, text: mensajes.error_falta_datos });
         return false;

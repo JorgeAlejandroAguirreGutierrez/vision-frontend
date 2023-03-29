@@ -657,8 +657,12 @@ export class ClienteComponent implements OnInit {
   validarIdentificacion() {
     this.clienteService.validarIdentificacion(this.cliente.identificacion).subscribe({
       next: (res) => {
-        this.cliente.tipoIdentificacion = res.resultado.tipoIdentificacion as TipoIdentificacion;
-        this.cliente.tipoContribuyente = res.resultado.tipoContribuyente as TipoContribuyente;
+        this.cliente = res.resultado as Cliente;
+        if (this.cliente.ubicacion.id != 0){
+          this.llenarUbicacion();
+        }
+        //this.cliente.tipoIdentificacion = res.resultado.tipoIdentificacion as TipoIdentificacion;
+        //this.cliente.tipoContribuyente = res.resultado.tipoContribuyente as TipoContribuyente;
         this.validarDocumento();
         this.validarDinardap();
         this.inicializarOpciones();
@@ -685,8 +689,12 @@ export class ClienteComponent implements OnInit {
     } else {
       this.deshabilitarDinardap = false;
       if (this.cliente.id == 0) {
-        this.cliente.genero = this.generos[0];
-        this.cliente.estadoCivil = this.estadosCiviles[0];
+        if (this.cliente.genero.id == 0){
+          this.cliente.genero = this.generos[0];
+        }
+        if (this.cliente.estadoCivil.id == 0){
+          this.cliente.estadoCivil = this.estadosCiviles[0];
+        }
         this.cliente.origenIngreso = this.origenesIngresos[0];
         this.cliente.calificacionCliente = this.calificacionesClientes[0];
       }
@@ -730,10 +738,10 @@ export class ClienteComponent implements OnInit {
       Swal.fire({ icon: error_swal, title: error, text: mensajes.error_falta_datos });
       return false;
     }
-    if (this. correo.email == '' && this.cliente.correos.length == 0) {
+    /*if (this. correo.email == '' && this.cliente.correos.length == 0) {
       Swal.fire({ icon: error_swal, title: error, text: mensajes.error_falta_correo });
       return false;
-    }
+    }*/
     return true;
   }
 
