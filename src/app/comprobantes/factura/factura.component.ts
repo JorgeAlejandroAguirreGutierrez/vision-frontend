@@ -1,13 +1,15 @@
-import { Router } from '@angular/router';
-import { Component, HostListener, OnInit, ViewChild } from '@angular/core';
+import { Component, HostListener, OnInit, ViewChild, Type, ElementRef, Renderer2 } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { UntypedFormControl, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
-import { MatTableDataSource } from '@angular/material/table';
-import { MatPaginator } from '@angular/material/paginator';
-import { MatStepper } from '@angular/material/stepper';
+import { valores, mensajes, validarSesion, exito, exito_swal, error, error_swal } from '../../constantes';
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 import Swal from 'sweetalert2';
+
+import { Router } from '@angular/router';
+import { TabService } from '../../servicios/componente/tab/tab.service';
+import { FooterComponent } from "../../componentes/footer/footer.component";
+import { ProductoComponent } from '../../inventarios/producto/producto.component';
 import { Factura } from '../../modelos/comprobante/factura';
 import { ClienteService } from '../../servicios/cliente/cliente.service';
 import { Cliente } from '../../modelos/cliente/cliente';
@@ -21,14 +23,16 @@ import { Impuesto } from '../../modelos/inventario/impuesto';
 import { FacturaService } from '../../servicios/comprobante/factura.service';
 import { Bodega } from '../../modelos/inventario/bodega';
 import { BodegaService } from '../../servicios/inventario/bodega.service';
-import { valores, mensajes, validarSesion, exito, exito_swal, error, error_swal } from '../../constantes';
-import { MatSort } from '@angular/material/sort';
-import { TabService } from 'src/app/servicios/componente/tab/tab.service';
 import { FacturaElectronicaService } from 'src/app/servicios/comprobante/factura-eletronica.service';
 import { CategoriaProducto } from 'src/app/modelos/inventario/categoria-producto';
 import { CategoriaProductoService } from 'src/app/servicios/inventario/categoria-producto.service';
 import { KardexService } from 'src/app/servicios/inventario/kardex.service';
 import { Kardex } from 'src/app/modelos/inventario/kardex';
+
+import { MatStepper } from '@angular/material/stepper';
+import { MatTableDataSource } from '@angular/material/table';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSort } from '@angular/material/sort';
 
 @Component({
   selector: 'app-factura',
@@ -38,9 +42,11 @@ import { Kardex } from 'src/app/modelos/inventario/kardex';
 export class FacturaComponent implements OnInit {
 
   @ViewChild('stepper') stepper: MatStepper;
+  piePagina: Type<any> = FooterComponent; 
+
+  activo: string = valores.activo;
 
   cargar = false;
-
   isLinear = false;
   isEditable = true;
   panelOpenState = false;
@@ -71,9 +77,10 @@ export class FacturaComponent implements OnInit {
   
   @ViewChild("paginator") paginator: MatPaginator;
   @ViewChild("paginatorLinea") paginatorLinea: MatPaginator;
+  @ViewChild("inputFiltroProducto") inputFiltroProducto: ElementRef;
+  @ViewChild("inputFiltro") inputFiltro: ElementRef;
   
-
-  constructor(private clienteService: ClienteService, private sesionService: SesionService, 
+  constructor(private renderer: Renderer2, private clienteService: ClienteService, private sesionService: SesionService, 
     private impuestoService: ImpuestoService, private router: Router, private datepipe: DatePipe,
     private facturaService: FacturaService, private facturaElectronicaService: FacturaElectronicaService,
     private productoService: ProductoService, private bodegaService: BodegaService, private kardexService: KardexService,
@@ -275,38 +282,6 @@ export class FacturaComponent implements OnInit {
     );
   }
 
-  consultarBienes() {
-    this.productoService.consultarBien().subscribe(
-      res => {
-        this.productos = res.resultado as Producto[]
-      },
-      err => {
-        Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
-      } 
-    );
-  }
-
-  consultarServicios() {
-    this.productoService.consultarServicio().subscribe(
-      res => {
-        this.productos = res.resultado as Producto[]
-      },
-      err => {
-        Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
-      } 
-    );
-  }
-  consultarActivosFijos() {
-    this.productoService.consultarActivoFijo().subscribe(
-      res => {
-        this.productos = res.resultado as Producto[]
-      },
-      err => {
-        Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
-      }
-    );
-  }
-
   seleccionarRazonSocialCliente() {
     let clienteId=undefined;
     clienteId = this.seleccionRazonSocialCliente.value.id;
@@ -341,7 +316,9 @@ export class FacturaComponent implements OnInit {
 
   seleccionarProducto() {
     this.facturaLinea.producto=this.seleccionProducto.value;
-    if(this.facturaLinea.producto.id == valores.cero || this.facturaLinea.bodega.id == valores.cero || this.factura.cliente.id == valores.cero){
+    this.facturaLinea.impuesto = this.facturaLinea.producto.impuesto;
+    this.inicializarOpciones();
+    if(this.facturaLinea.producto.id == valores.cero || this.factura.cliente.id == valores.cero){
       return;
     }
     for(let precio of this.facturaLinea.producto.precios){
@@ -349,6 +326,7 @@ export class FacturaComponent implements OnInit {
         this.facturaLinea.precio = precio;
       }
     }
+
     this.kardexService.obtenerUltimoPorFecha(this.facturaLinea.bodega.id, this.facturaLinea.producto.id).subscribe(
       res => {
         if (res.resultado == null){
@@ -359,6 +337,10 @@ export class FacturaComponent implements OnInit {
       },
       err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     );
+  }
+
+  inicializarOpciones(){
+    this.facturaLinea.bodega = this.bodegas[0];
   }
 
   calcularLinea(){
@@ -546,15 +528,14 @@ export class FacturaComponent implements OnInit {
   }
 
   consultarProductos(){
-    if (this.categoriaProducto == valores.bien){
-      this.consultarBienes();
-    }
-    if (this.categoriaProducto == valores.servicio){
-      this.consultarServicios();
-    }
-    if (this.categoriaProducto == valores.activoFijo){
-      this.consultarActivosFijos();
-    }
+    this.productoService.consultarActivos().subscribe({
+      next: res => {
+        this.productos = res.resultado as Producto[];
+      },
+      error: err => {
+        Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+      } 
+    })
   }
 
   enviarEvento(){
@@ -593,6 +574,18 @@ export class FacturaComponent implements OnInit {
       this.clickedRows.clear();
       this.factura = new Factura();
     }
+  }
+
+  filtroProductoLinea(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.dataSourceLinea.filter = filterValue.trim().toUpperCase();
+    if (this.dataSourceLinea.paginator) {
+      this.dataSourceLinea.paginator.firstPage();
+    }
+  }
+  borrarFiltroProductoLinea() {
+    this.renderer.setProperty(this.inputFiltro.nativeElement, 'value', '');
+    this.dataSourceLinea.filter = '';
   }
 
   calcular(){
@@ -641,8 +634,8 @@ export class FacturaComponent implements OnInit {
   abrirTabProducto(event){
     if (event != null)
       event.preventDefault();
-    let indice_tab_activo
-    this.tabService.removeTab(indice_tab_activo);
+    this.tabService.abrirTab(this.piePagina, 'INVENTARIOS');
+    this.tabService.addNewTab(ProductoComponent, 'Producto');
   }
 
   filtroFactura(event: Event) {

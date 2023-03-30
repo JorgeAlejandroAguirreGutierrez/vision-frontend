@@ -14,7 +14,7 @@
     margin-top: 0px;
 }   
 
-.mat-card{
+.resultados{
     border: 2px solid #5b6582 !important;
     border-radius: 10px !important;
     padding: 0 8px !important;
@@ -27,13 +27,3 @@ textarea.mat-input-element{
     white-space: normal;
 }
 
-.modal{
-    display: block !important;
-}
-.modal-dialog{
-      overflow-y: initial !important
-}
-.modal-body{
-  height: 300px;
-  overflow-y: auto;
-}
