@@ -1,5 +1,6 @@
 import { Router } from '@angular/router';
 import { Component, HostListener, OnInit, ViewChild } from '@angular/core';
+import { DateAdapter } from '@angular/material/core';
 import { DatePipe } from '@angular/common';
 import { UntypedFormControl, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { MatTableDataSource } from '@angular/material/table';
@@ -40,6 +41,7 @@ export class FacturaComponent implements OnInit {
   @ViewChild('stepper') stepper: MatStepper;
 
   cargar = false;
+  hoy = new Date();
 
   isLinear = false;
   isEditable = true;
@@ -74,11 +76,11 @@ export class FacturaComponent implements OnInit {
   
 
   constructor(private clienteService: ClienteService, private sesionService: SesionService, 
-    private impuestoService: ImpuestoService, private router: Router, private datepipe: DatePipe,
+    private impuestoService: ImpuestoService, private router: Router, private datepipe: DatePipe, private dateAdapter: DateAdapter<Date>,
     private facturaService: FacturaService, private facturaElectronicaService: FacturaElectronicaService,
     private productoService: ProductoService, private bodegaService: BodegaService, private kardexService: KardexService,
     private categoriaProductoService: CategoriaProductoService, private tabService: TabService,
-    private _formBuilder: UntypedFormBuilder) { }
+    private _formBuilder: UntypedFormBuilder) { this.dateAdapter.setLocale('en-GB') }
 
   factura: Factura = new Factura();
 

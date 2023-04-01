@@ -30,7 +30,8 @@
                         </a>
                     </li>
                     <li class="nav-item" *ngIf="factura.id!=0">
-                        <a class="nav-link" title="Crear Factura Electronica" href="#" role="button" (click)="crearFacturaElectronica($event)">
+                        <a class="nav-link" title="Crear Factura Electronica" href="#" role="button"
+                            (click)="crearFacturaElectronica($event)">
                             <mat-icon>publish</mat-icon>
                         </a>
                     </li>
@@ -62,7 +63,8 @@
                                     <mat-autocomplete #identificacionCliente="matAutocomplete"
                                         [displayWith]="verIdentificacionCliente"
                                         (optionSelected)="seleccionarIdentificacionCliente()">
-                                        <mat-option *ngFor="let cliente of filtroIdentificacionClientes | async" [value]="cliente">
+                                        <mat-option *ngFor="let cliente of filtroIdentificacionClientes | async"
+                                            [value]="cliente">
                                             {{cliente.identificacion}}
                                         </mat-option>
                                     </mat-autocomplete>
@@ -133,8 +135,8 @@
                                     <div class="col-9">
                                         <mat-form-field appearance="standard">
                                             <mat-label>Correo electrónico</mat-label>
-                                            <input matInput type="text " [(ngModel)]="correo.email" class="form-control-sm "
-                                                [disabled]="true">
+                                            <input matInput type="text " [(ngModel)]="correo.email"
+                                                class="form-control-sm " [disabled]="true">
                                         </mat-form-field>
                                     </div>
                                     <div class="col-3 iconos">
@@ -150,14 +152,14 @@
                                 <mat-form-field appearance="standard">
                                     <mat-label>Estab.</mat-label>
                                     <input matInput type="text" class="form-control-sm"
-                                        [(ngModel)]="factura.sesion.usuario.estacion.establecimiento.codigo" disabled>
+                                        [(ngModel)]="sesion.usuario.estacion.establecimiento.codigo" disabled>
                                 </mat-form-field>
                             </div>
                             <div class="col-3">
                                 <mat-form-field appearance="standard">
                                     <mat-label>Punto V.</mat-label>
                                     <input matInput type="text" class="form-control-sm"
-                                        [(ngModel)]="factura.sesion.usuario.estacion.codigo" disabled>
+                                        [(ngModel)]="sesion.usuario.estacion.codigo" disabled>
                                 </mat-form-field>
                             </div>
                             <div class="col-6">
@@ -170,15 +172,16 @@
                             <div class="col-5">
                                 <mat-form-field appearance="standard">
                                     <mat-label>Fecha</mat-label>
-                                    <input matInput type="date" value="{{factura.fecha | date:'yyyy-MM-dd'}}"
-                                        class="form-control-sm" disabled>
+                                    <input matInput [matDatepicker]="picker" [(ngModel)]="factura.fecha" [max]="hoy" placeholder="Choose a date">
+                                    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                                    <mat-datepicker #picker></mat-datepicker>
                                 </mat-form-field>
                             </div>
                             <div class="col-7">
                                 <mat-form-field appearance="standard">
                                     <mat-label>Vendedor</mat-label>
                                     <input matInput type="text" class="form-control-sm"
-                                        [(ngModel)]="factura.sesion.usuario.nombre" disabled>
+                                        [(ngModel)]="sesion.usuario.nombre" disabled>
                                 </mat-form-field>
                             </div>
                             <div class="col-4">
@@ -234,14 +237,16 @@
                             <div class="col-3">
                                 <mat-form-field appearance="standard">
                                     <mat-label>Consig.</mat-label>
-                                    <input matInput type="text" [(ngModel)]="facturaLinea.producto.consignacion" [disabled]="true" class="form-control-sm">
+                                    <input matInput type="text" [(ngModel)]="facturaLinea.producto.consignacion"
+                                        [disabled]="true" class="form-control-sm">
                                 </mat-form-field>
                             </div>
                             <div class="col-6">
                                 <mat-form-field appearance="standard">
                                     <mat-label>Categoría</mat-label>
                                     <input matInput type="text" class="form-control-sm"
-                                        [(ngModel)]="facturaLinea.producto.categoriaProducto.descripcion" [disabled]="true">
+                                        [(ngModel)]="facturaLinea.producto.categoriaProducto.descripcion"
+                                        [disabled]="true">
                                 </mat-form-field>
                             </div>
                             <div class="col-6">
@@ -255,13 +260,15 @@
                             <div class="col-4">
                                 <mat-form-field appearance="standard">
                                     <mat-label>Costo Unit.</mat-label>
-                                    <input matInput type="text" class="form-control-sm" [(ngModel)]="kardex.costoUnitario" [disabled]="true">
+                                    <input matInput type="text" class="form-control-sm"
+                                        [(ngModel)]="kardex.costoUnitario" [disabled]="true">
                                 </mat-form-field>
                             </div>
                             <div class="col-4">
                                 <mat-form-field appearance="standard">
                                     <mat-label>Saldo B.</mat-label>
-                                    <input matInput type="text" class="form-control-sm" [(ngModel)]="kardex.saldo" [disabled]="true">
+                                    <input matInput type="text" class="form-control-sm" [(ngModel)]="kardex.saldo"
+                                        [disabled]="true">
                                 </mat-form-field>
                             </div>
                         </div>
@@ -299,13 +306,16 @@
                             <div class="col-2">
                                 <mat-form-field appearance="standard">
                                     <mat-label>Medida</mat-label>
-                                    <input matInput type="text" [(ngModel)]="facturaLinea.producto.medida.descripcion" class="form-control-sm" [disabled]="true">
+                                    <input matInput type="text" [(ngModel)]="facturaLinea.producto.medida.descripcion"
+                                        class="form-control-sm" [disabled]="true">
                                 </mat-form-field>
                             </div>
                             <div class="col-4">
                                 <mat-form-field appearance="standard">
                                     <mat-label>Bodega</mat-label>
-                                    <mat-select [(ngModel)]="facturaLinea.bodega" (selectionChange)="seleccionarBodega()" [compareWith]="compareFn" class="form-control-sm">
+                                    <mat-select [(ngModel)]="facturaLinea.bodega"
+                                        (selectionChange)="seleccionarBodega()" [compareWith]="compareFn"
+                                        class="form-control-sm">
                                         <mat-option *ngFor="let bodega of bodegas; let i=index" [value]="bodega">
                                             {{bodega.nombre}}
                                         </mat-option>
@@ -315,13 +325,16 @@
                             <div class="col-1">
                                 <mat-form-field appearance="standard">
                                     <mat-label>Cantidad</mat-label>
-                                    <input matInput type="text" [(ngModel)]="facturaLinea.cantidad" (change)="seleccionarCantidad()" class="form-control-sm">
+                                    <input matInput type="text" [(ngModel)]="facturaLinea.cantidad"
+                                        (change)="seleccionarCantidad()" class="form-control-sm">
                                 </mat-form-field>
                             </div>
                             <div class="col-2">
                                 <mat-form-field appearance="standard">
                                     <mat-label>Precio Unit.</mat-label>
-                                    <input matInput type="text" [(ngModel)]="facturaLinea.precio.precioVentaPublicoManual" [disabled]="true" class="form-control-sm">
+                                    <input matInput type="text"
+                                        [(ngModel)]="facturaLinea.precio.precioVentaPublicoManual" [disabled]="true"
+                                        class="form-control-sm">
                                 </mat-form-field>
                             </div>
                             <div class="col-1">
@@ -581,7 +594,8 @@
                             <i><u>GESTIONAR FACTURAS</u></i>
                         </mat-panel-title>
                         <mat-panel-description>
-                            {{abrirPanelAdminFactura ? 'Ocultar administrador de facturas' : 'Editar facturas existentes'}}
+                            {{abrirPanelAdminFactura ? 'Ocultar administrador de facturas' : 'Editar facturas
+                            existentes'}}
                             <mat-icon>group</mat-icon>
                         </mat-panel-description>
                     </mat-expansion-panel-header>
