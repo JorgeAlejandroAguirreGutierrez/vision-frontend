@@ -27,7 +27,7 @@
                 </a>
             </li>
             <li class="nav-item" *ngIf="guiaRemision.id!=0">
-                <a class="nav-link" title="Crear Nota Credito Electronica" href="#" role="button"
+                <a class="nav-link" title="Crear Guia Remision Electronica" href="#" role="button"
                     (click)="crearGuiaRemisionElectronica($event)">
                     <mat-icon>publish</mat-icon>
                 </a>
@@ -129,11 +129,34 @@
                         </div>
                     </ng-container>
                 </div>
+                <div class="col-4">
+                    <mat-form-field appearance="standard">
+                        <mat-label>Estab.</mat-label>
+                        <input matInput type="text" class="form-control-sm"
+                            [(ngModel)]="sesion.usuario.estacion.establecimiento.codigo" disabled>
+                    </mat-form-field>
+                </div>
+                <div class="col-4">
+                    <mat-form-field appearance="standard">
+                        <mat-label>Punto V.</mat-label>
+                        <input matInput type="text" class="form-control-sm" [(ngModel)]="sesion.usuario.estacion.codigo"
+                            disabled>
+                    </mat-form-field>
+                </div>
+                <div class="col-4">
+                    <mat-form-field appearance="standard">
+                        <mat-label>Usuario</mat-label>
+                        <input matInput type="text" class="form-control-sm" [(ngModel)]="sesion.usuario.nombre"
+                            [disabled]="true">
+                    </mat-form-field>
+                </div>
                 <div class="col-3">
                     <mat-form-field appearance="standard">
                         <mat-label>Fecha</mat-label>
-                        <input matInput type="date" value="{{guiaRemision.fecha | date:'yyyy-MM-dd'}}"
-                            class="form-control-sm" [disabled]="true">
+                        <input matInput [matDatepicker]="picker" [(ngModel)]="guiaRemision.fecha" [max]="hoy"
+                            placeholder="Choose a date">
+                        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                        <mat-datepicker #picker></mat-datepicker>
                     </mat-form-field>
                 </div>
                 <div class="col-3">
@@ -189,15 +212,15 @@
                 <div class="col-6">
                     <mat-form-field appearance="standard">
                         <mat-label>Motivo Traslado</mat-label>
-                        <input matInput type="text" oninput="this.value = this.value.toUpperCase()" class="form-control-sm"
-                            [(ngModel)]="guiaRemision.motivoTraslado">
+                        <input matInput type="text" oninput="this.value = this.value.toUpperCase()"
+                            class="form-control-sm" [(ngModel)]="guiaRemision.motivoTraslado">
                     </mat-form-field>
                 </div>
                 <div class="col-6">
                     <mat-form-field appearance="standard">
                         <mat-label>Ruta</mat-label>
-                        <input matInput type="text" oninput="this.value = this.value.toUpperCase()" class="form-control-sm"
-                            [(ngModel)]="guiaRemision.ruta">
+                        <input matInput type="text" oninput="this.value = this.value.toUpperCase()"
+                            class="form-control-sm" [(ngModel)]="guiaRemision.ruta">
                     </mat-form-field>
                 </div>
                 <ng-container *ngIf="habilitarNuevaDireccion">
@@ -211,15 +234,15 @@
                     <div class="col-4">
                         <mat-form-field appearance="standard">
                             <mat-label>Razon Social Destinatario</mat-label>
-                            <input matInput type="text" oninput="this.value = this.value.toUpperCase()" class="form-control-sm"
-                                [(ngModel)]="guiaRemision.razonSocialDestinatario">
+                            <input matInput type="text" oninput="this.value = this.value.toUpperCase()"
+                                class="form-control-sm" [(ngModel)]="guiaRemision.razonSocialDestinatario">
                         </mat-form-field>
                     </div>
                     <div class="col-4">
                         <mat-form-field appearance="standard">
                             <mat-label>Direccion Destinatario</mat-label>
-                            <input matInput type="text" oninput="this.value = this.value.toUpperCase()" class="form-control-sm"
-                                [(ngModel)]="guiaRemision.direccionDestinatario">
+                            <input matInput type="text" oninput="this.value = this.value.toUpperCase()"
+                                class="form-control-sm" [(ngModel)]="guiaRemision.direccionDestinatario">
                         </mat-form-field>
                     </div>
                     <div class="col-4">
