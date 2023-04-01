@@ -1,5 +1,6 @@
 import { Component, HostListener, OnInit, ViewChild, Type, ElementRef, Renderer2 } from '@angular/core';
 import { DatePipe } from '@angular/common';
+import { DateAdapter } from '@angular/material/core';
 import { UntypedFormControl, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { valores, mensajes, validarSesion, exito, exito_swal, error, error_swal } from '../../constantes';
 import { Observable } from 'rxjs';
@@ -47,6 +48,8 @@ export class FacturaComponent implements OnInit {
   activo: string = valores.activo;
 
   cargar = false;
+  hoy = new Date();
+
   isLinear = false;
   isEditable = true;
   panelOpenState = false;
@@ -81,11 +84,11 @@ export class FacturaComponent implements OnInit {
   @ViewChild("inputFiltro") inputFiltro: ElementRef;
   
   constructor(private renderer: Renderer2, private clienteService: ClienteService, private sesionService: SesionService, 
-    private impuestoService: ImpuestoService, private router: Router, private datepipe: DatePipe,
+    private impuestoService: ImpuestoService, private router: Router, private datepipe: DatePipe, private dateAdapter: DateAdapter<Date>,
     private facturaService: FacturaService, private facturaElectronicaService: FacturaElectronicaService,
     private productoService: ProductoService, private bodegaService: BodegaService, private kardexService: KardexService,
     private categoriaProductoService: CategoriaProductoService, private tabService: TabService,
-    private _formBuilder: UntypedFormBuilder) { }
+    private _formBuilder: UntypedFormBuilder) { this.dateAdapter.setLocale('en-GB') }
 
   factura: Factura = new Factura();
 

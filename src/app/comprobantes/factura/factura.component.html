@@ -159,14 +159,14 @@
                                 <mat-form-field appearance="standard">
                                     <mat-label>Estab.</mat-label>
                                     <input matInput type="text" class="form-control-sm"
-                                        [(ngModel)]="factura.sesion.usuario.estacion.establecimiento.codigo" disabled>
+                                        [(ngModel)]="sesion.usuario.estacion.establecimiento.codigo" disabled>
                                 </mat-form-field>
                             </div>
                             <div class="col-3">
                                 <mat-form-field appearance="standard">
                                     <mat-label>Punto V.</mat-label>
                                     <input matInput type="text" class="form-control-sm"
-                                        [(ngModel)]="factura.sesion.usuario.estacion.codigo" disabled>
+                                        [(ngModel)]="sesion.usuario.estacion.codigo" disabled>
                                 </mat-form-field>
                             </div>
                             <div class="col-6">
@@ -179,15 +179,16 @@
                             <div class="col-5">
                                 <mat-form-field appearance="standard">
                                     <mat-label>Fecha</mat-label>
-                                    <input matInput type="date" value="{{factura.fecha | date:'yyyy-MM-dd'}}"
-                                        class="form-control-sm" disabled>
+                                    <input matInput [matDatepicker]="picker" [(ngModel)]="factura.fecha" [max]="hoy" placeholder="Choose a date">
+                                    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                                    <mat-datepicker #picker></mat-datepicker>
                                 </mat-form-field>
                             </div>
                             <div class="col-7">
                                 <mat-form-field appearance="standard">
                                     <mat-label>Vendedor</mat-label>
                                     <input matInput type="text" class="form-control-sm"
-                                        [(ngModel)]="factura.sesion.usuario.nombre" disabled>
+                                        [(ngModel)]="sesion.usuario.nombre" disabled>
                                 </mat-form-field>
                             </div>
                             <div class="col-4">

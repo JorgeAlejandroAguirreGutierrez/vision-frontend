@@ -1,5 +1,6 @@
 import { Component, OnInit, ViewChild, HostListener } from '@angular/core';
 import { DatePipe } from '@angular/common';
+import { DateAdapter } from '@angular/material/core';
 import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
@@ -41,6 +42,7 @@ export class NotaDebitoVentaComponent implements OnInit {
   @ViewChild('stepper') stepper: MatStepper;
 
   cargar = false;
+  hoy = new Date();
 
   isLinear = false;
   isEditable = true;
@@ -100,9 +102,9 @@ export class NotaDebitoVentaComponent implements OnInit {
   noRecaudada = valores.noRecaudada;
   recaudada = valores.recaudada;
 
-  constructor(private clienteService: ClienteService, private sesionService: SesionService, private impuestoService: ImpuestoService, private bodegaService: BodegaService,
+  constructor(private clienteService: ClienteService, private sesionService: SesionService, private impuestoService: ImpuestoService, private bodegaService: BodegaService, private dateAdapter: DateAdapter<Date>,
     private router: Router, private notaDebitoVentaService: NotaDebitoVentaService, private facturaService: FacturaService, private productoService: ProductoService, private notaDebitoElectronicaService: NotaDebitoElectronicaService,
-    private categoriaProductoService: CategoriaProductoService, private kardexService: KardexService, private datepipe: DatePipe, private _formBuilder: UntypedFormBuilder) { }
+    private categoriaProductoService: CategoriaProductoService, private kardexService: KardexService, private datepipe: DatePipe, private _formBuilder: UntypedFormBuilder) { this.dateAdapter.setLocale('en-GB') }
 
   @HostListener('window:keypress', ['$event'])
   keyEvent($event: KeyboardEvent) {

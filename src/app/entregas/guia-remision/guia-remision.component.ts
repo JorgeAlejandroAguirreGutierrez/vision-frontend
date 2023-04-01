@@ -1,5 +1,6 @@
 import { Component, HostListener, OnInit, ViewChild } from '@angular/core';
 import { DatePipe } from '@angular/common';
+import { DateAdapter } from '@angular/material/core';
 import { Router } from '@angular/router';
 import { map, Observable, startWith } from 'rxjs';
 import Swal from 'sweetalert2';
@@ -30,7 +31,8 @@ export class GuiaRemisionComponent implements OnInit {
   panelOpenState = false;
 
   cargar = false;
-
+  hoy = new Date();
+  
   si = valores.si;
   no = valores.no;
   emitida = valores.emitida;
@@ -78,7 +80,7 @@ export class GuiaRemisionComponent implements OnInit {
   sesion: Sesion;
 
   constructor(private clienteService: ClienteService, private sesionService: SesionService, private guiaRemisionElectronicaService: GuiaRemisionElectronicaService, private datepipe: DatePipe,
-    private router: Router, private guiaRemisionService: GuiaRemisionService, private facturaService: FacturaService, private transportistaService: TransportistaService) { }
+    private router: Router, private guiaRemisionService: GuiaRemisionService, private facturaService: FacturaService, private transportistaService: TransportistaService, private dateAdapter: DateAdapter<Date>) { this.dateAdapter.setLocale('en-GB') }
 
   @HostListener('window:keypress', ['$event'])
   keyEvent($event: KeyboardEvent) {

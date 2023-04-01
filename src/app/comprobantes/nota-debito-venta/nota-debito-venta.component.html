@@ -135,31 +135,48 @@
                                 </div>
                             </ng-container>
                         </div>
-                        <div class="col-3">
+                        <div class="col-4">
                             <mat-form-field appearance="standard">
-                                <mat-label>Fecha</mat-label>
-                                <input matInput type="date" value="{{notaDebitoVenta.fecha | date:'yyyy-MM-dd'}}"
-                                    class="form-control-sm" [disabled]="true">
+                                <mat-label>Estab.</mat-label>
+                                <input matInput type="text" class="form-control-sm"
+                                    [(ngModel)]="sesion.usuario.estacion.establecimiento.codigo" disabled>
                             </mat-form-field>
                         </div>
-                        <div class="col-3">
+                        <div class="col-4">
+                            <mat-form-field appearance="standard">
+                                <mat-label>Punto V.</mat-label>
+                                <input matInput type="text" class="form-control-sm"
+                                    [(ngModel)]="sesion.usuario.estacion.codigo" disabled>
+                            </mat-form-field>
+                        </div>
+                        <div class="col-4">
+                            <mat-form-field appearance="standard">
+                                <mat-label>Usuario</mat-label>
+                                <input matInput type="text" class="form-control-sm" [(ngModel)]="sesion.usuario.nombre"
+                                    [disabled]="true">
+                            </mat-form-field>
+                        </div>
+                        <div class="col-2">
+                            <mat-form-field appearance="standard">
+                                <mat-label>Fecha</mat-label>
+                                <input matInput [matDatepicker]="picker" [(ngModel)]="notaDebitoVenta.fecha"
+                                    [max]="hoy" placeholder="Choose a date">
+                                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                                <mat-datepicker #picker></mat-datepicker>
+                            </mat-form-field>
+                        </div>
+                        <div class="col-2">
                             <mat-form-field appearance="standard">
                                 <mat-label>Secuencia</mat-label>
                                 <input matInput type="text" class="form-control-sm"
                                     [(ngModel)]="notaDebitoVenta.secuencia" [disabled]="true">
                             </mat-form-field>
                         </div>
-                        <div class="col-3">
-                            <mat-form-field appearance="standard">
-                                <mat-label>Usuario</mat-label>
-                                <input matInput type="text" class="form-control-sm"
-                                    [(ngModel)]="notaDebitoVenta.sesion.usuario.nombre" [disabled]="true">
-                            </mat-form-field>
-                        </div>
-                        <div class="col-3">
+                        <div class="col-2">
                             <mat-form-field appearance="standard">
                                 <mat-label>Estado</mat-label>
-                                <mat-select class="form-control-sm" [(ngModel)]="notaDebitoVenta.estado" [disabled]="true">
+                                <mat-select class="form-control-sm" [(ngModel)]="notaDebitoVenta.estado"
+                                    [disabled]="true">
                                     <mat-option [value]="emitida">{{emitida}}</mat-option>
                                     <mat-option [value]="anulada">{{anulada}}</mat-option>
                                     <mat-option [value]="noFacturada">{{noFacturada}}</mat-option>
@@ -169,7 +186,7 @@
                                 </mat-select>
                             </mat-form-field>
                         </div>
-                        <div class="col-12">
+                        <div class="col-6">
                             <mat-form-field appearance="standard">
                                 <mat-label>Factura</mat-label>
                                 <mat-autocomplete #factura="matAutocomplete" [displayWith]="verFactura"

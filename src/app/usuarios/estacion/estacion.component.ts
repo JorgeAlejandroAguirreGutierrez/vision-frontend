@@ -11,6 +11,8 @@ import { Establecimiento } from '../../modelos/usuario/establecimiento';
 import { EstablecimientoService } from '../../servicios/usuario/establecimiento.service';
 import { Estacion } from '../../modelos/usuario/estacion';
 import { EstacionService } from '../../servicios/usuario/estacion.service';
+import { Regimen } from '../../modelos/configuracion/regimen';
+import { RegimenService } from '../../servicios/configuracion/regimen.service';
 
 import { ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
@@ -33,17 +35,20 @@ export class EstacionComponent implements OnInit {
 
   sesion: Sesion = null;
   estacion: Estacion = new Estacion();
+
   estaciones: Estacion[];
   empresas: Empresa[];
   establecimientos: Establecimiento[]=[];
+  regimenes: Regimen[] = [];
 
   columnas: any[] = [
     { nombreColumna: 'codigo', cabecera: 'Código', celda: (row: Estacion) => `${row.codigo}` },
-    { nombreColumna: 'empresa', cabecera: 'Empresa', celda: (row: Estacion) => `${row.establecimiento.empresa.razonSocial}` },
+    { nombreColumna: 'empresa', cabecera: 'Empresa', celda: (row: Estacion) => `${row.establecimiento.empresa.nombreComercial}` },
     { nombreColumna: 'establecimiento', cabecera: 'Establecimiento', celda: (row: Estacion) => `${row.establecimiento.descripcion}` },
-    { nombreColumna: 'dispositivo', cabecera: 'Dispositivo', celda: (row: Estacion) => `${row.dispositivo}` },
     { nombreColumna: 'nombre', cabecera: 'Estación', celda: (row: Estacion) => `${row.descripcion}` },
     { nombreColumna: 'codigo_sri', cabecera: 'SRI', celda: (row: Estacion) => `${row.codigoSRI}` },
+    { nombreColumna: 'dispositivo', cabecera: 'Dispositivo', celda: (row: Estacion) => `${row.dispositivo}` },
+    { nombreColumna: 'ip', cabecera: 'IP', celda: (row: Estacion) => `${row.ip}` },
     { nombreColumna: 'estado', cabecera: 'Estado', celda: (row: Estacion) => `${row.estado}` }
   ];
   cabecera: string[] = this.columnas.map(titulo => titulo.nombreColumna);
@@ -62,11 +67,12 @@ export class EstacionComponent implements OnInit {
   }
 
   constructor(private sesionService: SesionService, private empresaService: EmpresaService, private establecimientoService: EstablecimientoService, 
-    private estacionService: EstacionService, private router: Router) { }
+    private estacionService: EstacionService, private router: Router, private regimenService: RegimenService) { }
 
   ngOnInit() {
     this.sesion=validarSesion(this.sesionService, this.router);
     this.consultarEmpresas();
+    this.consultarRegimenes();
     this.consultar();
   }
 
@@ -181,6 +187,17 @@ export class EstacionComponent implements OnInit {
         this.establecimientos = res.resultado as Establecimiento[];
       },
       error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+    });
+  }
+
+  consultarRegimenes(){
+    this.regimenService.consultarActivos().subscribe({
+      next: res => {
+        this.regimenes = res.resultado as Regimen[];
+      },
+      error: err => {
+        Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje });
+      }
     });
   }
 
