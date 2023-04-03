@@ -142,8 +142,8 @@
                                     <div class="col-9">
                                         <mat-form-field appearance="standard">
                                             <mat-label>Correo electrónico</mat-label>
-                                            <input matInput type="text " [(ngModel)]="correo.email"
-                                                class="form-control-sm " [disabled]="true">
+                                            <input matInput type="text" [(ngModel)]="correo.email"
+                                                class="form-control-sm" [disabled]="true">
                                         </mat-form-field>
                                     </div>
                                     <div class="col-3 iconos">
@@ -179,9 +179,9 @@
                             <div class="col-5">
                                 <mat-form-field appearance="standard">
                                     <mat-label>Fecha</mat-label>
-                                    <input matInput [matDatepicker]="picker" [(ngModel)]="factura.fecha" [max]="hoy" placeholder="Choose a date">
-                                    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-                                    <mat-datepicker #picker></mat-datepicker>
+                                    <input matInput [matDatepicker]="picker1" class="form-control-sm" [(ngModel)]="factura.fecha" [max]="hoy">
+                                    <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                                    <mat-datepicker #picker1></mat-datepicker>
                                 </mat-form-field>
                             </div>
                             <div class="col-7">
@@ -581,15 +581,10 @@
                                             <mat-label class="negrita">TOTAL :</mat-label>
                                         </div>
                                         <div class="col-5">
-                                            <form [formGroup]="firstFormGroup">
-                                                <mat-form-field appearance="standard">
-                                                    <input matInput type="text" formControlName="firstCtrl"
-                                                        [(ngModel)]="factura.totalConDescuento"
-                                                        class="form-control-sm resaltar" [disabled] required>
-                                                    <mat-error *ngIf="firstFormGroup.get('firstCtrl').errors">Sin valor
-                                                    </mat-error>
-                                                </mat-form-field>
-                                            </form>
+                                            <mat-form-field appearance="standard">
+                                                <input matInput type="text" [(ngModel)]="factura.totalConDescuento"
+                                                    class="form-control-sm" disabled>
+                                            </mat-form-field>
                                         </div>
                                     </div>
                                 </mat-card>

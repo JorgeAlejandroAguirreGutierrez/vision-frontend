@@ -199,6 +199,16 @@ export class GuiaRemisionComponent implements OnInit {
     );
   }
 
+  construir(){
+    if (this.guiaRemision.id != valores.cero) {
+      let fecha = new Date(this.guiaRemision.fecha);
+      this.guiaRemision.fecha = fecha;
+      this.seleccionCliente.patchValue(this.guiaRemision.factura.cliente);
+      this.seleccionFactura.patchValue(this.guiaRemision.factura);
+      this.dataSourceLinea = new MatTableDataSource<FacturaLinea>(this.guiaRemision.factura.facturaLineas);
+    }
+  }
+
   crear(event) {
     if (event != null)
       event.preventDefault();
@@ -274,9 +284,7 @@ export class GuiaRemisionComponent implements OnInit {
       this.guiaRemisionService.obtener(guiaRemision.id).subscribe({
         next: res => {
           this.guiaRemision = res.resultado as GuiaRemision;
-          this.seleccionCliente.patchValue(this.guiaRemision.factura.cliente);
-          this.seleccionFactura.patchValue(this.guiaRemision.factura);
-          this.dataSourceLinea = new MatTableDataSource<FacturaLinea>(this.guiaRemision.factura.facturaLineas);
+          this.construir();
           this.seleccionarOpcionGuia();
         },
         error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
