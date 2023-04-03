@@ -15,7 +15,8 @@ export class AppDateAdapter extends NativeDateAdapter {
     }
     return date.toDateString();
   }
-}export const APP_DATE_FORMATS: MatDateFormats = {
+}
+export const APP_DATE_FORMATS: MatDateFormats = {
   parse: {
     dateInput: { month: 'short', year: 'numeric', day: 'numeric' },
   },

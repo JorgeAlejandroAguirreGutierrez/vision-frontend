@@ -1,7 +1,8 @@
 import { Router } from '@angular/router';
 import { Component, HostListener, OnInit, ViewChild } from '@angular/core';
-import { DateAdapter } from '@angular/material/core';
 import { DatePipe } from '@angular/common';
+import { DateAdapter, MAT_DATE_FORMATS } from '@angular/material/core';
+import { AppDateAdapter, APP_DATE_FORMATS } from '../../modelos/format-date-picker';
 import { UntypedFormControl, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
@@ -23,7 +24,6 @@ import { FacturaService } from '../../servicios/comprobante/factura.service';
 import { Bodega } from '../../modelos/inventario/bodega';
 import { BodegaService } from '../../servicios/inventario/bodega.service';
 import { valores, mensajes, validarSesion, exito, exito_swal, error, error_swal } from '../../constantes';
-import { MatSort } from '@angular/material/sort';
 import { TabService } from 'src/app/servicios/componente/tab/tab.service';
 import { FacturaElectronicaService } from 'src/app/servicios/comprobante/factura-eletronica.service';
 import { CategoriaProducto } from 'src/app/modelos/inventario/categoria-producto';
@@ -34,7 +34,11 @@ import { Kardex } from 'src/app/modelos/inventario/kardex';
 @Component({
   selector: 'app-factura',
   templateUrl: './factura.component.html',
-  styleUrls: ['./factura.component.scss']
+  styleUrls: ['./factura.component.scss'],
+  providers: [
+    {provide: DateAdapter, useClass: AppDateAdapter},
+    {provide: MAT_DATE_FORMATS, useValue: APP_DATE_FORMATS}
+  ]
 })
 export class FacturaComponent implements OnInit {
 
@@ -60,7 +64,7 @@ export class FacturaComponent implements OnInit {
 
   columnas: any[] = [
     { nombreColumna: 'codigo', cabecera: 'Código', celda: (row: Factura) => `${row.codigo}`},
-    { nombreColumna: 'fecha', cabecera: 'Fecha', celda: (row: Factura) => `${this.datepipe.transform(row.fecha, "dd/MM/yyyy")}`},
+    { nombreColumna: 'fecha', cabecera: 'Fecha', celda: (row: Factura) => `${this.datepipe.transform(row.fecha, "dd-MM-yyyy")}`},
     { nombreColumna: 'cliente', cabecera: 'Cliente', celda: (row: Factura) => `${row.cliente.razonSocial}`},
     { nombreColumna: 'total', cabecera: 'Total', celda: (row: Factura) => `${row.totalConDescuento}`},
     { nombreColumna: 'estado', cabecera: 'Estado', celda: (row: Factura) => `${row.estado}`}
@@ -73,14 +77,13 @@ export class FacturaComponent implements OnInit {
   
   @ViewChild("paginator") paginator: MatPaginator;
   @ViewChild("paginatorLinea") paginatorLinea: MatPaginator;
-  
 
   constructor(private clienteService: ClienteService, private sesionService: SesionService, 
-    private impuestoService: ImpuestoService, private router: Router, private datepipe: DatePipe, private dateAdapter: DateAdapter<Date>,
+    private impuestoService: ImpuestoService, private router: Router, private datepipe: DatePipe,
     private facturaService: FacturaService, private facturaElectronicaService: FacturaElectronicaService,
     private productoService: ProductoService, private bodegaService: BodegaService, private kardexService: KardexService,
     private categoriaProductoService: CategoriaProductoService, private tabService: TabService,
-    private _formBuilder: UntypedFormBuilder) { this.dateAdapter.setLocale('en-GB') }
+    private _formBuilder: UntypedFormBuilder) { }
 
   factura: Factura = new Factura();
 
@@ -212,12 +215,14 @@ export class FacturaComponent implements OnInit {
     this.clickedRows.clear();
   }
 
-  construirFactura() {
+  construir() {
     if (this.factura.id != valores.cero) {
-        this.seleccionIdentificacionCliente.patchValue(this.factura.cliente);
-        this.seleccionRazonSocialCliente.patchValue(this.factura.cliente);
-        this.dataSourceLinea = new MatTableDataSource<FacturaLinea>(this.factura.facturaLineas);
-        this.dataSourceLinea.paginator = this.paginatorLinea;
+      let fecha = new Date(this.factura.fecha);
+      this.factura.fecha = fecha;
+      this.seleccionIdentificacionCliente.patchValue(this.factura.cliente);
+      this.seleccionRazonSocialCliente.patchValue(this.factura.cliente);
+      this.dataSourceLinea = new MatTableDataSource<FacturaLinea>(this.factura.facturaLineas);
+      this.dataSourceLinea.paginator = this.paginatorLinea;
     }
   }
 
@@ -589,8 +594,8 @@ export class FacturaComponent implements OnInit {
     if (!this.clickedRows.has(factura)){
       this.clickedRows.clear();
       this.clickedRows.add(factura);
-      Object.assign(this.factura, factura as Factura);
-      this.construirFactura();
+      this.factura = factura as Factura;
+      this.construir();
     } else {
       this.clickedRows.clear();
       this.factura = new Factura();

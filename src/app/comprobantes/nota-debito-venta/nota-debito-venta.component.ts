@@ -203,6 +203,8 @@ export class NotaDebitoVentaComponent implements OnInit {
 
   construir() {
     if (this.notaDebitoVenta.id != valores.cero) {
+      let fecha = new Date(this.notaDebitoVenta.fecha);
+      this.notaDebitoVenta.fecha = fecha;
       this.seleccionCliente.patchValue(this.notaDebitoVenta.factura.cliente);
       this.seleccionFactura.patchValue(this.notaDebitoVenta.factura);
       this.dataSourceLinea = new MatTableDataSource<NotaDebitoVentaLinea>(this.notaDebitoVenta.notaDebitoVentaLineas);
@@ -490,10 +492,7 @@ export class NotaDebitoVentaComponent implements OnInit {
       this.notaDebitoVentaService.obtener(notaDebitoVenta.id).subscribe({
         next: res => {
           this.notaDebitoVenta = res.resultado as NotaDebitoVenta;
-          this.seleccionCliente.patchValue(this.notaDebitoVenta.factura.cliente);
-          this.seleccionFactura.patchValue(this.notaDebitoVenta.factura);
-          this.dataSourceFacturaLinea = new MatTableDataSource<FacturaLinea>(this.notaDebitoVenta.factura.facturaLineas);
-          this.dataSourceLinea = new MatTableDataSource<NotaDebitoVentaLinea>(this.notaDebitoVenta.notaDebitoVentaLineas);
+          this.construir();
         },
         error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
       });

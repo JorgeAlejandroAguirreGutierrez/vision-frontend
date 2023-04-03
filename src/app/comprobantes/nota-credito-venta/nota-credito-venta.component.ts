@@ -57,7 +57,7 @@ export class NotaCreditoVentaComponent implements OnInit {
 
   columnas: any[] = [
     { nombreColumna: 'codigo', cabecera: 'Código', celda: (row: NotaCreditoVenta) => `${row.codigo}`},
-    { nombreColumna: 'fecha', cabecera: 'Fecha', celda: (row: NotaCreditoVenta) => `${this.datepipe.transform(row.fecha, "dd/MM/yyyy")}`},
+    { nombreColumna: 'fecha', cabecera: 'Fecha', celda: (row: NotaCreditoVenta) => `${this.datepipe.transform(row.fecha, "dd-MM-yyyy")}`},
     { nombreColumna: 'cliente', cabecera: 'Cliente', celda: (row: NotaCreditoVenta) => `${row.factura.cliente.razonSocial}`},
     { nombreColumna: 'factura', cabecera: 'Factura', celda: (row: NotaCreditoVenta) => `${row.factura.secuencia}`},
     { nombreColumna: 'total', cabecera: 'Total', celda: (row: NotaCreditoVenta) => `$${row.totalConDescuento}`},
@@ -140,8 +140,10 @@ export class NotaCreditoVentaComponent implements OnInit {
     this.clickedRows.clear();
   }
 
-  construirFactura() {
+  construir() {
     if (this.notaCreditoVenta.id != valores.cero) {
+      let fecha = new Date(this.notaCreditoVenta.fecha);
+      this.notaCreditoVenta.fecha = fecha;
       this.seleccionCliente.patchValue(this.notaCreditoVenta.factura.cliente);
       this.seleccionFactura.patchValue(this.notaCreditoVenta.factura);
       this.dataSourceLinea = new MatTableDataSource<NotaCreditoVentaLinea>(this.notaCreditoVenta.notaCreditoVentaLineas);
