@@ -1,6 +1,5 @@
 import { Component, HostListener, OnInit, ViewChild, Type, ElementRef, Renderer2 } from '@angular/core';
 import { Router } from '@angular/router';
-import { Component, HostListener, OnInit, ViewChild } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { DateAdapter, MAT_DATE_FORMATS } from '@angular/material/core';
 import { AppDateAdapter, APP_DATE_FORMATS } from '../../modelos/format-date-picker';
