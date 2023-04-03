@@ -74,14 +74,14 @@
                                 [disabled]="true">
                         </mat-form-field>
                     </div>
-                    <div class="col-10">
+                    <div class="col-8">
                         <mat-form-field appearance="standard">
                             <mat-label>Razón Social</mat-label>
                             <input matInput type="text" [(ngModel)]="empresa.razonSocial"
                                 oninput="this.value = this.value.toUpperCase()" class="form-control-sm">
                         </mat-form-field>
                     </div>
-                    <div class="col-2">
+                    <div class="col-1">
                         <mat-form-field appearance="standard">
                             <mat-label>Oblig.</mat-label>
                             <mat-select [(ngModel)]="empresa.obligadoContabilidad" class="form-control-sm">
@@ -90,21 +90,50 @@
                             </mat-select>
                         </mat-form-field>
                     </div>
-                    <div class="col-10">
+                    <div class="col-1">
+                        <mat-form-field appearance="standard">
+                            <mat-label>Especial</mat-label>
+                            <mat-select [(ngModel)]="empresa.especial" class="form-control-sm">
+                                <mat-option [value]="si">{{si}}</mat-option>
+                                <mat-option [value]="no">{{no}}</mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                    <div class="col-2">
+                        <mat-form-field appearance="standard">
+                            <mat-label># Resol. Especial</mat-label>
+                            <input matInput type="text" [(ngModel)]="empresa.resolucionEspecial"
+                                oninput="this.value = this.value.toUpperCase()" class="form-control-sm">
+                        </mat-form-field>
+                    </div>
+                    <div class="col-7">
                         <mat-form-field appearance="standard">
                             <mat-label>Dirección</mat-label>
                             <input matInput type="text" [(ngModel)]="empresa.direccion"
                                 oninput="this.value = this.value.toUpperCase()" class="form-control-sm">
                         </mat-form-field>
                     </div>
-                    <div class="col-2">
+                    <div class="col-1">
                         <mat-form-field appearance="standard">
                             <mat-label>Estado</mat-label>
-                            <mat-select [(ngModel)]="empresa.estado" [disabled]="true"
+                            <input matInput type="text" [(ngModel)]="empresa.estado" [disabled]="true"
                                 class="form-control-sm">
-                                <mat-option [value]="activo">{{activo}}</mat-option>
-                                <mat-option [value]="inactivo">{{inactivo}}</mat-option>
+                        </mat-form-field>
+                    </div>
+                    <div class="col-1">
+                        <mat-form-field appearance="standard">
+                            <mat-label>Ag. Retención</mat-label>
+                            <mat-select [(ngModel)]="empresa.agenteRetencion" class="form-control-sm">
+                                <mat-option [value]="si">{{si}}</mat-option>
+                                <mat-option [value]="no">{{no}}</mat-option>
                             </mat-select>
+                        </mat-form-field>
+                    </div>
+                    <div class="col-3">
+                        <mat-form-field appearance="standard">
+                            <mat-label># Resol. Agente</mat-label>
+                            <input matInput type="text" [(ngModel)]="empresa.resolucionAgente"
+                                oninput="this.value = this.value.toUpperCase()" class="form-control-sm">
                         </mat-form-field>
                     </div>
                 </div>

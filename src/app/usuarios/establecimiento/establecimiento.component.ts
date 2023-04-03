@@ -10,17 +10,19 @@ import { EstablecimientoService } from '../../servicios/usuario/establecimiento.
 import { Establecimiento } from '../../modelos/usuario/establecimiento';
 import { Ubicacion } from '../../modelos/configuracion/ubicacion';
 import { UbicacionService } from '../../servicios/configuracion/ubicacion.service';
+import { Regimen } from '../../modelos/configuracion/regimen';
+import { RegimenService } from '../../servicios/configuracion/regimen.service';
 import { Coordenada } from '../../modelos/configuracion/coordenada';
 
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { Sesion } from 'src/app/modelos/usuario/sesion';
-import { SesionService } from 'src/app/servicios/usuario/sesion.service';
+import { Sesion } from '../../modelos/usuario/sesion';
+import { SesionService } from '../../servicios/usuario/sesion.service';
 import { Router } from '@angular/router';
-import { TelefonoEstablecimiento } from 'src/app/modelos/usuario/telefono-establecimiento';
-import { CelularEstablecimiento } from 'src/app/modelos/usuario/celular-establecimiento';
-import { CorreoEstablecimiento } from 'src/app/modelos/usuario/correo-establecimiento';
+import { TelefonoEstablecimiento } from '../../modelos/usuario/telefono-establecimiento';
+import { CelularEstablecimiento } from '../../modelos/usuario/celular-establecimiento';
+import { CorreoEstablecimiento } from '../../modelos/usuario/correo-establecimiento';
 
 @Component({
   selector: 'app-establecimiento',
@@ -36,16 +38,15 @@ export class EstablecimientoComponent implements OnInit {
   sesion: Sesion=null;
   abrirPanelAdmin: boolean = true;
   abrirPanelNuevo: boolean = true;
+
   establecimiento: Establecimiento = new Establecimiento();
-
-  empresas: Empresa[]=[];
-
-  establecimientos: Establecimiento[] = [];
-
   telefono = new TelefonoEstablecimiento();
   celular = new CelularEstablecimiento();
   correo = new CorreoEstablecimiento();
 
+  empresas: Empresa[]=[];
+  establecimientos: Establecimiento[] = [];
+  regimenes: Regimen[] = [];
   provincias: Ubicacion[];
   cantones: Ubicacion[];
   parroquias: Ubicacion[];
@@ -81,13 +82,25 @@ export class EstablecimientoComponent implements OnInit {
   clickedRows = new Set<Establecimiento>();
   
   constructor(public dialog: MatDialog, private establecimientoService: EstablecimientoService, private empresaService: EmpresaService, 
-    private sesionService: SesionService, private router: Router, private ubicacionService: UbicacionService) { }
+    private sesionService: SesionService, private router: Router, private ubicacionService: UbicacionService, private regimenService: RegimenService) { }
 
   ngOnInit() {
     this.sesion=validarSesion(this.sesionService, this.router);
     this.consultarEmpresas();
     this.consultar();
+    this.consultarRegimenes();
     this.consultarProvincias();
+  }
+
+  consultarRegimenes(){
+    this.regimenService.consultarActivos().subscribe({
+      next: res => {
+        this.regimenes = res.resultado as Regimen[];
+      },
+      error: err => {
+        Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje });
+      }
+    });
   }
 
   consultarProvincias(){

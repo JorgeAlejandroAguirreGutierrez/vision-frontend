@@ -1,5 +1,5 @@
-import { Component, HostListener, OnInit } from '@angular/core';
-import { validarSesion, exito, exito_swal, error, error_swal, valores } from '../../constantes';
+import { Component, HostListener, OnInit, ElementRef, Renderer2 } from '@angular/core';
+import { validarSesion, mensajes, exito, exito_swal, error, error_swal, valores } from '../../constantes';
 import Swal from 'sweetalert2';
 
 import { Router } from '@angular/router';
@@ -34,6 +34,7 @@ export class BodegaComponent implements OnInit {
   columnas: any[] = [
     { nombreColumna: 'codigo', cabecera: 'Codigo', celda: (row: Bodega) => `${row.codigo}` },
     { nombreColumna: 'nombre', cabecera: 'Nombre', celda: (row: Bodega) => `${row.nombre}` },
+    { nombreColumna: 'abreviatura', cabecera: 'Abreviatura', celda: (row: Bodega) => `${row.abreviatura}` },
     { nombreColumna: 'estado', cabecera: 'Estado', celda: (row: Bodega) => `${row.estado}` }
   ];
   cabecera: string[] = this.columnas.map(titulo => titulo.nombreColumna);
@@ -42,8 +43,10 @@ export class BodegaComponent implements OnInit {
   
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
+  @ViewChild("inputFiltro") inputFiltro: ElementRef;
 
-  constructor(private bodegaService: BodegaService, private sesionService: SesionService,private router: Router) { }
+  constructor(private renderer: Renderer2, private bodegaService: BodegaService, 
+      private sesionService: SesionService,private router: Router) { }
 
   ngOnInit() {
     this.sesion = validarSesion(this.sesionService, this.router);
@@ -63,32 +66,37 @@ export class BodegaComponent implements OnInit {
       event.preventDefault();
     this.bodega = new Bodega();
     this.clickedRows.clear();
+    this.borrarFiltro();
   }
 
   crear(event) {
     if (event!=null)
       event.preventDefault();
-    this.bodegaService.crear(this.bodega).subscribe(
-      res => {
+    if (!this.validarFormulario())
+      return;  
+    this.bodegaService.crear(this.bodega).subscribe({
+      next: res => {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
         this.consultar();
         this.nuevo(null);
       },
-      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
-    );
+      error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+    });
   }
 
   actualizar(event) {
     if (event!=null)
       event.preventDefault();
-    this.bodegaService.actualizar(this.bodega).subscribe(
-      res => {
+    if (!this.validarFormulario())
+      return;
+    this.bodegaService.actualizar(this.bodega).subscribe({
+      next: res => {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
         this.consultar();
         this.nuevo(null);
       },
-      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
-    );
+      error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+    });
   }
 
   activar(event) {
@@ -118,15 +126,19 @@ export class BodegaComponent implements OnInit {
   }
   
   consultar() {
-    this.bodegaService.consultar().subscribe(
-      res => {
+    this.bodegaService.consultar().subscribe({
+      next: res => {
         this.bodegas = res.resultado as Bodega[]
-        this.dataSource = new MatTableDataSource(this.bodegas);
-        this.dataSource.paginator = this.paginator;
-        this.dataSource.sort = this.sort;
+        this.llenarTabla(this.bodegas);
       },
-      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
-    );
+      error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+    });
+  }
+
+  llenarTabla(bodegas: Bodega[]){
+    this.dataSource = new MatTableDataSource(bodegas);
+    this.dataSource.paginator = this.paginator;
+    this.dataSource.sort = this.sort;
   }
 
   seleccion(bodega: Bodega) {
@@ -135,8 +147,7 @@ export class BodegaComponent implements OnInit {
       this.clickedRows.add(bodega);
       this.bodega = { ... bodega};
     } else {
-      this.clickedRows.clear();
-      this.bodega = new Bodega();
+      this.nuevo(null);
     }
   }
 
@@ -147,5 +158,21 @@ export class BodegaComponent implements OnInit {
       this.dataSource.paginator.firstPage();
     }
   }
+  borrarFiltro() {
+    this.renderer.setProperty(this.inputFiltro.nativeElement, 'value', '');
+    this.dataSource.filter = '';
+  }
 
+  validarFormulario(): boolean {
+    //validar que los campos esten llenos antes de guardar
+    if (this.bodega.nombre == '') {
+      Swal.fire({ icon: error_swal, title: error, text: mensajes.error_falta_datos });
+      return false;
+    }
+    if (this.bodega.abreviatura == '') {
+      Swal.fire({ icon: error_swal, title: error, text: mensajes.error_falta_datos });
+      return false;
+    }
+    return true;
+  }
 }

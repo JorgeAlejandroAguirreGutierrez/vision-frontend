@@ -705,7 +705,7 @@ export class ClienteComponent implements OnInit {
     this.cliente.segmento = this.segmentos[0];
     this.cliente.grupoCliente = this.gruposClientes[0];
     this.cliente.formaPago = this.formasPagos[0];
-    this.cliente.etiqueta = valores.etiquetaTrabajo;
+    this.cliente.etiqueta = valores.etiquetaCasa;
   }
 
   cambiarFormaPago() {

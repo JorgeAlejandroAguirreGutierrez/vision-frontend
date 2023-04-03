@@ -133,6 +133,7 @@ export const urn =
      buscarMedidasEquivalentes: "/buscarMedidasEquivalentes",
      personalizado: "/personalizado",
      generar: "/generar",
+     regimen: "/regimen",
      pdf: "/pdf"
 }
 export const valores ={

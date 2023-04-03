@@ -1,3 +1,4 @@
+import { Regimen } from '../configuracion/regimen';
 import { Ubicacion } from '../configuracion/ubicacion';
 import { Empresa } from './empresa';
 import { TelefonoEstablecimiento } from './telefono-establecimiento';
@@ -14,8 +15,9 @@ export class Establecimiento {
     latitud: number;
     longitud: number;
     estado: string;
-    empresa: Empresa;
+    regimen: Regimen;
     ubicacion: Ubicacion;
+    empresa: Empresa;
     telefonos: TelefonoEstablecimiento[];
     celulares: CelularEstablecimiento[];
     correos: CorreoEstablecimiento[];
@@ -29,8 +31,9 @@ export class Establecimiento {
         this.latitud = valores.cero;
         this.latitud = valores.cero;
         this.estado = valores.activo;
-        this.empresa = new Empresa();
+        this.regimen = new Regimen();
         this.ubicacion = new Ubicacion();
+        this.empresa = new Empresa();
         this.telefonos=[];
         this.celulares=[];
         this.correos=[];
