@@ -36,7 +36,7 @@
                             </a>
                         </li>
                     </ng-container>
-                    <li class="nav-item" *ngIf="factura.id!=0">
+                    <li class="nav-item" *ngIf="factura.id!=0 && factura.estado == 'RECAUDADA'">
                         <a class="nav-link" title="Crear Factura Electronica" href="#" role="button"
                             (click)="crearFacturaElectronica($event)">
                             <mat-icon>publish</mat-icon>
