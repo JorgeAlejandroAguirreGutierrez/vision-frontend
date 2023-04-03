@@ -214,7 +214,7 @@
                         <!-- Fecha Columna -->
                         <ng-container matColumnDef="fecha">
                             <th mat-header-cell *matHeaderCellDef mat-sort-header> Fecha </th>
-                            <td mat-cell *matCellDef="let cheque"> {{cheque.fecha | date: 'dd/MM/yyyy'}} </td>
+                            <td mat-cell *matCellDef="let cheque"> {{cheque.fecha | date: 'dd-MM-yyyy'}} </td>
                             <td mat-footer-cell *matFooterCellDef></td>
                         </ng-container>
                         <!-- Tipo Columna -->
@@ -349,7 +349,7 @@
                         <!-- Fecha Columna -->
                         <ng-container matColumnDef="fecha">
                             <th mat-header-cell *matHeaderCellDef mat-sort-header> Fecha </th>
-                            <td mat-cell *matCellDef="let deposito"> {{deposito.fecha | date: 'dd/MM/yyyy'}} </td>
+                            <td mat-cell *matCellDef="let deposito"> {{deposito.fecha | date: 'dd-MM-yyyy'}} </td>
                             <td mat-footer-cell *matFooterCellDef></td>
                         </ng-container>
                         <!-- Tipo Columna -->
@@ -487,8 +487,7 @@
                         <!-- Fecha Columna -->
                         <ng-container matColumnDef="fecha">
                             <th mat-header-cell *matHeaderCellDef mat-sort-header> Fecha </th>
-                            <td mat-cell *matCellDef="let transferencia"> {{transferencia.fecha | date:
-                                'dd/MM/yyyy'}} </td>
+                            <td mat-cell *matCellDef="let transferencia"> {{transferencia.fecha | date: 'dd-MM-yyyy'}} </td>
                             <td mat-footer-cell *matFooterCellDef></td>
                         </ng-container>
                         <!-- Tipo Columna -->
