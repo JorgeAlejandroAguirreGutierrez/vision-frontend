@@ -87,7 +87,7 @@ export class FacturaComponent implements OnInit {
   @ViewChild("inputFiltro") inputFiltro: ElementRef;
   
   constructor(private renderer: Renderer2, private clienteService: ClienteService, private sesionService: SesionService, 
-    private impuestoService: ImpuestoService, private router: Router, private datepipe: DatePipe, private dateAdapter: DateAdapter<Date>,
+    private impuestoService: ImpuestoService, private router: Router, private datepipe: DatePipe,
     private facturaService: FacturaService, private facturaElectronicaService: FacturaElectronicaService,
     private productoService: ProductoService, private bodegaService: BodegaService, private kardexService: KardexService,
     private categoriaProductoService: CategoriaProductoService, private tabService: TabService,

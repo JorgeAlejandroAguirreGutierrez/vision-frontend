@@ -1,6 +1,6 @@
-import { Component, OnInit, Input, ViewChild, HostListener } from '@angular/core';
+import { Component, OnInit, ViewChild, HostListener } from '@angular/core';
 import { DatePipe } from '@angular/common';
-import { UntypedFormControl, UntypedFormBuilder } from '@angular/forms';
+import { UntypedFormControl } from '@angular/forms';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { Router } from '@angular/router';
@@ -31,6 +31,8 @@ export class FacturaCompraComponent implements OnInit {
 
   panelOpenState = false;
 
+  hoy = new Date();
+
   deshabilitarProveedor = false;
   
   seleccionProducto = new UntypedFormControl();
@@ -41,7 +43,7 @@ export class FacturaCompraComponent implements OnInit {
 
   columnas: any[] = [
     { nombreColumna: 'codigo', cabecera: 'Código', celda: (row: FacturaCompra) => `${row.codigo}`},
-    { nombreColumna: 'fecha', cabecera: 'Fecha', celda: (row: FacturaCompra) => `${row.fecha}`},
+    { nombreColumna: 'fecha', cabecera: 'Fecha', celda: (row: FacturaCompra) => `${this.datepipe.transform(row.fecha, "dd-MM-yyyy")}`},
     { nombreColumna: 'proveedor', cabecera: 'Proveedor', celda: (row: FacturaCompra) => `${row.proveedor.razonSocial}`},
     { nombreColumna: 'total', cabecera: 'Total', celda: (row: FacturaCompra) => `$${row.totalSinDescuento}`},
     { nombreColumna: 'estado', cabecera: 'Estado', celda: (row: FacturaCompra) => `${row.estado}`}
@@ -56,7 +58,7 @@ export class FacturaCompraComponent implements OnInit {
   @ViewChild("paginatorFacturaCompraLinea") paginatorFacturaCompraLinea: MatPaginator;
   
 
-  constructor(private proveedorService: ProveedorService, private sesionService: SesionService,
+  constructor(private proveedorService: ProveedorService, private sesionService: SesionService, private datepipe: DatePipe,
     private impuestoService: ImpuestoService, private router: Router, private facturaCompraService: FacturaCompraService,
     private productoService: ProductoService, private bodegaService: BodegaService) { }
 
@@ -146,11 +148,13 @@ export class FacturaCompraComponent implements OnInit {
     this.clickedRows.clear();
   }
 
-  construirFactura() {
+  construir() {
     if (this.facturaCompra.id != valores.cero) {
-        this.seleccionProveedor.patchValue(this.facturaCompra.proveedor);
-        this.dataSourceFacturaCompraLinea = new MatTableDataSource<FacturaCompraLinea>(this.facturaCompra.facturaCompraLineas);
-        this.dataSourceFacturaCompraLinea.paginator = this.paginatorFacturaCompraLinea;
+      let fecha = new Date(this.facturaCompra.fecha);
+      this.facturaCompra.fecha = fecha;
+      this.seleccionProveedor.patchValue(this.facturaCompra.proveedor);
+      this.dataSourceFacturaCompraLinea = new MatTableDataSource<FacturaCompraLinea>(this.facturaCompra.facturaCompraLineas);
+      this.dataSourceFacturaCompraLinea.paginator = this.paginatorFacturaCompraLinea;
     }
   }
 

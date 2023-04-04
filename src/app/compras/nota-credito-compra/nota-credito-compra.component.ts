@@ -3,7 +3,6 @@ import { DatePipe } from '@angular/common';
 import { UntypedFormControl } from '@angular/forms';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
-import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import Swal from 'sweetalert2';
@@ -27,6 +26,8 @@ import { FacturaCompraService } from 'src/app/servicios/compra/factura-compra.se
 export class NotaCreditoCompraComponent implements OnInit {
 
   panelOpenState = false;
+
+  hoy = new Date();
 
   deshabilitarDevolucion = true;
   deshabilitarDescuento = true;
@@ -53,7 +54,7 @@ export class NotaCreditoCompraComponent implements OnInit {
 
   columnas: any[] = [
     { nombreColumna: 'codigo', cabecera: 'Código', celda: (row: NotaCreditoCompra) => `${row.codigo}`},
-    { nombreColumna: 'fecha', cabecera: 'Fecha', celda: (row: NotaCreditoCompra) => `${row.fecha}`},
+    { nombreColumna: 'fecha', cabecera: 'Fecha', celda: (row: NotaCreditoCompra) => `${this.datepipe.transform(row.fecha, "dd-MM-yyyy")}`},
     { nombreColumna: 'proveedor', cabecera: 'Proveedor', celda: (row: NotaCreditoCompra) => `${row.facturaCompra.proveedor.razonSocial}`},
     { nombreColumna: 'total', cabecera: 'Total', celda: (row: NotaCreditoCompra) => `$${row.totalSinDescuento}`},
     { nombreColumna: 'estado', cabecera: 'Estado', celda: (row: NotaCreditoCompra) => `${row.estado}`}
@@ -74,9 +75,8 @@ export class NotaCreditoCompraComponent implements OnInit {
   dataSourceLinea = new MatTableDataSource<NotaCreditoCompraLinea>(this.notaCreditoCompra.notaCreditoCompraLineas);
   sesion: Sesion;
 
-  constructor(private proveedorService: ProveedorService, private sesionService: SesionService,
-    private router: Router, private notaCreditoCompraService: NotaCreditoCompraService, private facturaCompraService: FacturaCompraService,
-    private modalService: NgbModal) { }
+  constructor(private proveedorService: ProveedorService, private sesionService: SesionService, private datepipe: DatePipe,
+    private router: Router, private notaCreditoCompraService: NotaCreditoCompraService, private facturaCompraService: FacturaCompraService) { }
 
   @HostListener('window:keypress', ['$event'])
   keyEvent($event: KeyboardEvent) {
@@ -93,20 +93,20 @@ export class NotaCreditoCompraComponent implements OnInit {
     this.consultarFacturasCompras();
     this.filtroProveedores = this.seleccionProveedor.valueChanges
       .pipe(
-        startWith(''),
+        startWith(valores.vacio),
         map(value => typeof value === 'string' || value==null ? value : value.id),
         map(proveedor => typeof proveedor === 'string' ? this.filtroProveedor(proveedor) : this.proveedores.slice())
       );
     this.filtroFacturasCompras = this.seleccionFacturaCompra.valueChanges
       .pipe(
-        startWith(''),
+        startWith(valores.vacio),
         map(value => typeof value === 'string' || value==null ? value : value.id),
         map(facturaCompra => typeof facturaCompra === 'string' ? this.filtroFacturaCompra(facturaCompra) : this.facturasCompras.slice())
       );
   }
   
   private filtroProveedor(value: string): Proveedor[] {
-    if(this.proveedores.length > 0) {
+    if(this.proveedores.length > valores.cero) {
       const filterValue = value.toLowerCase();
       return this.proveedores.filter(proveedor => proveedor.razonSocial.toLowerCase().includes(filterValue));
     }
@@ -137,8 +137,10 @@ export class NotaCreditoCompraComponent implements OnInit {
     this.clickedRows.clear();
   }
 
-  construirFactura() {
+  construir() {
     if (this.notaCreditoCompra.id != valores.cero) {
+      let fecha = new Date(this.notaCreditoCompra.fecha);
+      this.notaCreditoCompra.fecha = fecha;
       this.seleccionProveedor.patchValue(this.notaCreditoCompra.facturaCompra.proveedor);
       this.seleccionFacturaCompra.patchValue(this.notaCreditoCompra.facturaCompra);
       this.dataSourceLinea = new MatTableDataSource<NotaCreditoCompraLinea>(this.notaCreditoCompra.notaCreditoCompraLineas);

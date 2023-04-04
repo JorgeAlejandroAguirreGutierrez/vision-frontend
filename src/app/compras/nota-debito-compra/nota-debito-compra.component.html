@@ -127,8 +127,9 @@
                 <div class="col-3">
                     <mat-form-field appearance="standard">
                         <mat-label>Fecha</mat-label>
-                        <input matInput type="date" value="{{notaDebitoCompra.fecha | date:'yyyy-MM-dd'}}"
-                            class="form-control-sm" [disabled]="true">
+                        <input matInput [matDatepicker]="picker1" class="form-control-sm" [(ngModel)]="notaDebitoCompra.fecha" [max]="hoy">
+                        <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                        <mat-datepicker #picker1></mat-datepicker>
                     </mat-form-field>
                 </div>
                 <div class="col-3">
