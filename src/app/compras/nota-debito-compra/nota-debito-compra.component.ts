@@ -401,12 +401,7 @@ export class NotaDebitoCompraComponent implements OnInit {
       this.notaDebitoCompraService.obtener(notaDebitoCompra.id).subscribe({
         next: res => {
           this.notaDebitoCompra = res.resultado as NotaDebitoCompra;
-          this.seleccionProveedor.patchValue(this.notaDebitoCompra.facturaCompra.proveedor);
-          this.seleccionFacturaCompra.patchValue(this.notaDebitoCompra.facturaCompra);
-          this.dataSourceFacturaCompraLinea = new MatTableDataSource<FacturaCompraLinea>(this.notaDebitoCompra.facturaCompra.facturaCompraLineas);
-          this.dataSourceFacturaCompraLinea.paginator = this.paginatorFacturaCompraLinea;
-          this.dataSourceLinea = new MatTableDataSource<NotaDebitoCompraLinea>(this.notaDebitoCompra.notaDebitoCompraLineas);
-          this.dataSourceLinea.paginator = this.paginatorLinea;
+          this.construir();
         },
         error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
       });
