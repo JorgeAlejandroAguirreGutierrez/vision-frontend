@@ -1,6 +1,7 @@
 import { Component, OnInit, ViewChild, HostListener } from '@angular/core';
 import { DatePipe } from '@angular/common';
-import { DateAdapter } from '@angular/material/core';
+import { DateAdapter, MAT_DATE_FORMATS } from '@angular/material/core';
+import { AppDateAdapter, APP_DATE_FORMATS } from '../../modelos/format-date-picker';
 import { UntypedFormControl } from '@angular/forms';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
@@ -23,7 +24,11 @@ import { NotaCreditoElectronicaService } from 'src/app/servicios/comprobante/not
 @Component({
   selector: 'app-nota-credito-venta',
   templateUrl: './nota-credito-venta.component.html',
-  styleUrls: ['./nota-credito-venta.component.scss']
+  styleUrls: ['./nota-credito-venta.component.scss'],
+  providers: [
+    {provide: DateAdapter, useClass: AppDateAdapter},
+    {provide: MAT_DATE_FORMATS, useValue: APP_DATE_FORMATS}
+  ]
 })
 export class NotaCreditoVentaComponent implements OnInit {
 

@@ -1,5 +1,7 @@
 import { Component, OnInit, ViewChild, HostListener } from '@angular/core';
 import { DatePipe } from '@angular/common';
+import { DateAdapter, MAT_DATE_FORMATS } from '@angular/material/core';
+import { AppDateAdapter, APP_DATE_FORMATS } from '../../modelos/format-date-picker';
 import { UntypedFormControl } from '@angular/forms';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
@@ -25,7 +27,11 @@ import { BodegaService } from 'src/app/servicios/inventario/bodega.service';
 @Component({
   selector: 'app-factura-compra',
   templateUrl: './factura-compra.component.html',
-  styleUrls: ['./factura-compra.component.scss']
+  styleUrls: ['./factura-compra.component.scss'],
+  providers: [
+    {provide: DateAdapter, useClass: AppDateAdapter},
+    {provide: MAT_DATE_FORMATS, useValue: APP_DATE_FORMATS}
+  ]
 })
 export class FacturaCompraComponent implements OnInit {
 
