@@ -38,6 +38,8 @@ export class NotaDebitoCompraComponent implements OnInit {
 
   panelOpenState = false;
 
+  hoy = new Date();
+
   deshabilitarDevolucion = true;
   deshabilitarDescuento = true;
   
@@ -65,7 +67,7 @@ export class NotaDebitoCompraComponent implements OnInit {
 
   columnas: any[] = [
     { nombreColumna: 'codigo', cabecera: 'Código', celda: (row: NotaDebitoCompra) => `${row.codigo}`},
-    { nombreColumna: 'fecha', cabecera: 'Fecha', celda: (row: NotaDebitoCompra) => `${row.fecha}`},
+    { nombreColumna: 'fecha', cabecera: 'Fecha', celda: (row: NotaDebitoCompra) => `${this.datepipe.transform(row.fecha, "dd-MM-yyyy")}`},
     { nombreColumna: 'proveedor', cabecera: 'Proveedor', celda: (row: NotaDebitoCompra) => `${row.facturaCompra.proveedor.razonSocial}`},
     { nombreColumna: 'total', cabecera: 'Total', celda: (row: NotaDebitoCompra) => `$${row.totalSinDescuento}`},
     { nombreColumna: 'estado', cabecera: 'Estado', celda: (row: NotaDebitoCompra) => `${row.estado}`}
@@ -91,7 +93,7 @@ export class NotaDebitoCompraComponent implements OnInit {
   dataSourceFacturaCompraLinea = new MatTableDataSource<FacturaCompraLinea>(this.notaDebitoCompra.facturaCompra.facturaCompraLineas);
   sesion: Sesion;
 
-  constructor(private proveedorService: ProveedorService, private sesionService: SesionService, private kardexService: KardexService, private impuestoService: ImpuestoService, private productoService: ProductoService,
+  constructor(private proveedorService: ProveedorService, private sesionService: SesionService, private kardexService: KardexService, private impuestoService: ImpuestoService, private productoService: ProductoService, private datepipe: DatePipe,
     private router: Router, private notaDebitoCompraService: NotaDebitoCompraService, private facturaCompraService: FacturaCompraService, private bodegaService: BodegaService, private categoriaProductoService: CategoriaProductoService) { }
 
   @HostListener('window:keypress', ['$event'])
@@ -176,6 +178,8 @@ export class NotaDebitoCompraComponent implements OnInit {
 
   construir() {
     if (this.notaDebitoCompra.id != valores.cero) {
+      let fecha = new Date(this.notaDebitoCompra.fecha);
+      this.notaDebitoCompra.fecha = fecha;
       this.seleccionProveedor.patchValue(this.notaDebitoCompra.facturaCompra.proveedor);
       this.seleccionFacturaCompra.patchValue(this.notaDebitoCompra.facturaCompra);
       this.dataSourceLinea = new MatTableDataSource<NotaDebitoCompraLinea>(this.notaDebitoCompra.notaDebitoCompraLineas);
