@@ -29,7 +29,6 @@ import { CategoriaProducto } from 'src/app/modelos/inventario/categoria-producto
 import { CategoriaProductoService } from 'src/app/servicios/inventario/categoria-producto.service';
 import { KardexService } from 'src/app/servicios/inventario/kardex.service';
 import { Kardex } from 'src/app/modelos/inventario/kardex';
-
 import { MatStepper } from '@angular/material/stepper';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
@@ -577,8 +576,13 @@ export class FacturaComponent implements OnInit {
     if (!this.clickedRows.has(factura)){
       this.clickedRows.clear();
       this.clickedRows.add(factura);
-      this.factura = factura as Factura;
-      this.construir();
+      this.facturaService.obtener(factura.id).subscribe({
+        next: res => {
+          this.factura = res.resultado as Factura;
+          this.construir();
+        },
+        error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+      });
     } else {
       this.clickedRows.clear();
       this.factura = new Factura();

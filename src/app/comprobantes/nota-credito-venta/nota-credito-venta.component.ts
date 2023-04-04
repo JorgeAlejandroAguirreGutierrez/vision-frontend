@@ -292,9 +292,7 @@ export class NotaCreditoVentaComponent implements OnInit {
       this.notaCreditoVentaService.obtener(notaCreditoCompra.id).subscribe({
         next: res => {
           this.notaCreditoVenta = res.resultado as NotaCreditoVenta;
-          this.seleccionCliente.patchValue(this.notaCreditoVenta.factura.cliente);
-          this.seleccionFactura.patchValue(this.notaCreditoVenta.factura);
-          this.dataSourceLinea = new MatTableDataSource<NotaCreditoVentaLinea>(this.notaCreditoVenta.notaCreditoVentaLineas);
+          this.construir();
         },
         error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
       });
