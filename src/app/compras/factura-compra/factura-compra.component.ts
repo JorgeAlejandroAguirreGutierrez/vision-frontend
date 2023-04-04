@@ -473,8 +473,7 @@ export class FacturaCompraComponent implements OnInit {
       this.facturaCompraService.obtener(facturaCompra.id).subscribe({
         next: res => {
           this.facturaCompra = res.resultado as FacturaCompra;
-          this.seleccionProveedor.patchValue(this.facturaCompra.proveedor);
-          this.dataSourceFacturaCompraLinea = new MatTableDataSource<FacturaCompraLinea>(this.facturaCompra.facturaCompraLineas);
+          this.construir();
         },
         error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
       });
