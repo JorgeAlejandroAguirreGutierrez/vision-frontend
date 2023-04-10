@@ -12,7 +12,7 @@ import { NotaDebitoVentaCredito } from '../recaudacion/nota-debito-venta-credito
 export class NotaDebitoVenta {
     id: number;
     codigo: string;
-    secuencia: string;
+    secuencial: string;
     fecha: Date;
     estado: string;
     subtotalSinDescuento: number;
@@ -48,7 +48,7 @@ export class NotaDebitoVenta {
     constructor() {
         this.id = valores.cero;
         this.codigo = valores.vacio;
-        this.secuencia = valores.vacio;
+        this.secuencial = valores.vacio;
         this.fecha = new Date();
         this.estado = valores.noFacturada;
         this.subtotalSinDescuento = valores.cero;

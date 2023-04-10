@@ -12,10 +12,11 @@ import { Credito } from '../recaudacion/credito';
 export class Factura {
   id: number;
   codigo: string;
+  serie: string;
+  secuencial: string;
   codigoNumerico: String;
-  claveAcceso: String;
-  secuencia: string;
   fecha: Date;
+  claveAcceso: String;
   estado: string;
 
   subtotalSinDescuento: number;
@@ -64,11 +65,13 @@ export class Factura {
   
   constructor() {
     this.id = valores.cero;
+    this.serie = valores.vacio;
+    this.secuencial = valores.vacio;
     this.codigoNumerico = valores.vacio;
     this.claveAcceso = valores.vacio;
-    this.secuencia = valores.vacio;
     this.fecha = new Date();
     this.estado = valores.noFacturada;
+
     this.cliente = new Cliente();
     this.facturaLineas = [];
     this.comentario = valores.vacio;

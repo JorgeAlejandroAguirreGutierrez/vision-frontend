@@ -5,7 +5,6 @@ import { Router } from '@angular/router';
 import Swal from 'sweetalert2';
 import { valores, mensajes, otras, validarSesion, exito, exito_swal, error, error_swal } from '../../constantes';
 
-import { environment } from '../../../environments/environment';
 import { Sesion } from '../../modelos/usuario/sesion';
 import { SesionService } from '../../servicios/usuario/sesion.service';
 import { Cliente } from '../../modelos/cliente/cliente';
@@ -485,7 +484,7 @@ export class ClienteComponent implements OnInit {
       this.clickedRows.clear();
       this.clickedRows.add(cliente);
       //this.cliente = { ... cliente};
-      this.obtenerCliente(cliente.id)
+      this.obtenerCliente(cliente.id);
     } else {
       this.nuevo(null);
     }
@@ -668,8 +667,9 @@ export class ClienteComponent implements OnInit {
         this.inicializarOpciones();
       },
       error: (err) => {
-        this.cliente.tipoIdentificacion = null;
-        this.cliente.tipoContribuyente = new TipoContribuyente();
+        this.nuevo(null);
+        //this.cliente.tipoIdentificacion = null;
+        //this.cliente.tipoContribuyente = new TipoContribuyente();
         Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje });
       }
     });

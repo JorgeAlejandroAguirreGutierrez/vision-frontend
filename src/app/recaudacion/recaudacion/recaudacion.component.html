@@ -2,13 +2,70 @@
     <nav class="navbar-light nav-fijo">
         <ul class="navbar-nav">
             <li class="nav-item" *ngIf="factura.id != 0">
-                <a class="nav-link" title="Guardar" href="#" role="button" (click)="actualizar($event)">
+                <a class="nav-link" title="Guardar" href="#" role="button" (click)="recaudar($event)">
                     <mat-icon>save</mat-icon>
                 </a>
             </li>
             <li class="nav-item" *ngIf="factura.id != 0 && factura.estado == 'RECAUDADA'">
                 <a class="nav-link" title="Crear Factura Electronica" href="#" role="button" (click)="crearFacturaElectronica($event)">
-                    <mat-icon>publish</mat-icon>
+                    <mat-icon>point_of_sale</mat-icon>
+                </a>
+            </li>
+            <ng-container *ngIf="factura.id!=0">
+                <li class="nav-item" *ngIf="!verPanelCheques">
+                    <a class="nav-link" title="ver Cheques" role="button" (click)="verPanelCheques = true">
+                        <mat-icon>payments</mat-icon>
+                    </a>
+                </li>
+                <li class="nav-item" *ngIf="verPanelCheques">
+                    <a class="nav-link" title="Ocultar Cheques" role="button" (click)="verPanelCheques = false">
+                        <mat-icon>subtitles_off</mat-icon>
+                    </a>
+                </li>
+                <li class="nav-item" *ngIf="!verPanelDepositos">
+                    <a class="nav-link" title="ver Depósitos" role="button" (click)="verPanelDepositos = true">
+                        <mat-icon>receipt_long</mat-icon>
+                    </a>
+                </li>
+                <li class="nav-item" *ngIf="verPanelDepositos">
+                    <a class="nav-link" title="Ocultar Depósitos" role="button" (click)="verPanelDepositos = false">
+                        <mat-icon>signal_cellular_no_sim</mat-icon>
+                    </a>
+                </li>
+                <li class="nav-item" *ngIf="!verPanelTransferencias">
+                    <a class="nav-link" title="ver Transferencias" role="button" (click)="verPanelTransferencias = true">
+                        <mat-icon>move_up</mat-icon>
+                    </a>
+                </li>
+                <li class="nav-item" *ngIf="verPanelTransferencias">
+                    <a class="nav-link" title="Ocultar Transferencias" role="button" (click)="verPanelTransferencias = false">
+                        <mat-icon>move_down</mat-icon>
+                    </a>
+                </li>
+                <li class="nav-item" *ngIf="!verPanelTarjetasCredito">
+                    <a class="nav-link" title="ver T. Crédito" role="button" (click)="verPanelTarjetasCredito = true">
+                        <mat-icon>add_card</mat-icon>
+                    </a>
+                </li>
+                <li class="nav-item" *ngIf="verPanelTarjetasCredito">
+                    <a class="nav-link" title="Ocultar T. Crédito" role="button" (click)="verPanelTarjetasCredito = false">
+                        <mat-icon>credit_card_off</mat-icon>
+                    </a>
+                </li>
+                <li class="nav-item" *ngIf="!verPanelTarjetasDebito">
+                    <a class="nav-link" title="ver T. Débito" role="button" (click)="verPanelTarjetasDebito = true">
+                        <mat-icon>local_atm</mat-icon>
+                    </a>
+                </li>
+                <li class="nav-item" *ngIf="verPanelTarjetasDebito">
+                    <a class="nav-link" title="Ocultar T. Débito" role="button" (click)="verPanelTarjetasDebito = false">
+                        <mat-icon>money_off_csred</mat-icon>
+                    </a>
+                </li>
+            </ng-container>
+            <li class="nav-item">
+                <a class="nav-link" title="Facturación" role="button" (click)="stepperPrevio(stepper)">
+                    <mat-icon>undo</mat-icon>
                 </a>
             </li>
         </ul>
@@ -19,13 +76,14 @@
     <mat-divider></mat-divider>
     <!-- SECCIÓN EFECTIVO Y CRÉDITO -->
     <mat-accordion class="headers-align">
-        <mat-expansion-panel (opened)="panelRecaudacion = true" (closed)="panelRecaudacion = false" [expanded]="true">
+        <mat-expansion-panel (opened)="abrirPanelRecaudacion = true" (closed)="abrirPanelRecaudacion = false" 
+            [expanded]="abrirPanelRecaudacion">
             <mat-expansion-panel-header>
                 <mat-panel-title>
                     <i><u>RECAUDACIÓN</u></i>
                 </mat-panel-title>
                 <mat-panel-description>
-                    {{panelRecaudacion ? 'Ocultar sección' : 'Proceso de recaudación'}}
+                    {{abrirPanelRecaudacion ? 'Ocultar sección' : 'Proceso de recaudación'}}
                     <mat-icon>account_circle</mat-icon>
                 </mat-panel-description>
             </mat-expansion-panel-header>
@@ -126,13 +184,14 @@
     </mat-accordion>
     <!-- Sección CHEQUES -->
     <mat-accordion class="headers-align">
-        <mat-expansion-panel (opened)="panelCheques = true" (closed)="panelCheques = false" [expanded]="false">
+        <mat-expansion-panel (opened)="abrirPanelCheques = true" (closed)="abrirPanelCheques = false" 
+            [expanded]="abrirPanelCheques" *ngIf="verPanelCheques">
             <mat-expansion-panel-header>
                 <mat-panel-title>
                     <i><u>CHEQUES</u></i>
                 </mat-panel-title>
                 <mat-panel-description>
-                    {{panelCheques ? 'Ocultar cheques' : 'Recaudación con cheque'}}
+                    {{abrirPanelCheques ? 'Ocultar cheques' : 'Recaudación con cheque'}}
                     <div class="derecha">Total en cheques: {{factura.totalCheques | currency}}</div>
                 </mat-panel-description>
             </mat-expansion-panel-header>
@@ -170,7 +229,7 @@
                                 {{banco.nombre}}
                             </mat-option>
                         </mat-autocomplete>
-                        <input matInput type="text" class="form-control-sm" [formControl]="seleccionBancoCheque"
+                        <input matInput type="text" class="form-control-sm" [formControl]="controlBancoCheque"
                             [matAutocomplete]="bancoCheque">
                     </mat-form-field>
                 </div>
@@ -196,7 +255,7 @@
             <mat-divider></mat-divider>
             <div class="form-row">
                 <div class="mat-elevation-z8 col-12">
-                    <table mat-table [dataSource]="dataCheques" matSort>
+                    <table mat-table [dataSource]="dataSourceCheques" matSort>
                         <!-- Posicion Columna -->
                         <ng-container matColumnDef="id">
                             <th mat-header-cell *matHeaderCellDef mat-sort-header> No. </th>
@@ -258,13 +317,14 @@
     </mat-accordion>
     <!-- Sección DEPOSITOS -->
     <mat-accordion class="headers-align">
-        <mat-expansion-panel (opened)="panelDepositos = true" (closed)="panelDepositos = false" [expanded]="false">
+        <mat-expansion-panel (opened)="abrirPanelDepositos = true" (closed)="abrirPanelDepositos = false" 
+            [expanded]="abrirPanelDepositos" *ngIf="verPanelDepositos">
             <mat-expansion-panel-header>
                 <mat-panel-title>
                     <i><u>DEPÓSITOS</u></i>
                 </mat-panel-title>
                 <mat-panel-description>
-                    {{panelDepositos ? 'Ocultar depósitos' : 'Recaudación con depósito'}}
+                    {{abrirPanelDepositos ? 'Ocultar depósitos' : 'Recaudación con depósito'}}
                     <div class="derecha">Total en depósitos: {{factura.totalDepositos | currency}}</div>
                     <!--mat-icon>account_circle</mat-icon-->
                 </mat-panel-description>
@@ -298,7 +358,7 @@
                                     {{banco.nombre}}
                                 </mat-option>
                             </mat-autocomplete>
-                            <input matInput type="text" class="form-control-sm" [formControl]="seleccionBancoDeposito"
+                            <input matInput type="text" class="form-control-sm" [formControl]="controlBancoDeposito"
                                 [matAutocomplete]="bancoDeposito">
                         </mat-form-field>
                     </div>
@@ -331,7 +391,7 @@
                 <mat-divider></mat-divider>
                 <div class="form-row">
                     <div class="mat-elevation-z8 col-12">
-                        <table mat-table [dataSource]="dataDepositos" matSort>
+                        <table mat-table [dataSource]="dataSourceDepositos" matSort>
                             <!-- Posicion Columna -->
                             <ng-container matColumnDef="id">
                                 <th mat-header-cell *matHeaderCellDef mat-sort-header> No. </th>
@@ -396,14 +456,14 @@
 
     <!-- Sección TRANSFERENCIAS -->
     <mat-accordion class="headers-align">
-        <mat-expansion-panel (opened)="panelTransferencias = true" (closed)="panelTransferencias = false"
-            [expanded]="false">
+        <mat-expansion-panel (opened)="abrirPanelTransferencias = true" (closed)="abrirPanelTransferencias = false"
+            [expanded]="abrirPanelTransferencias" *ngIf="verPanelTransferencias">
             <mat-expansion-panel-header>
                 <mat-panel-title>
                     <i><u>TRANSFERENCIAS</u></i>
                 </mat-panel-title>
                 <mat-panel-description>
-                    {{panelTransferencias ? 'Ocultar transferencias' : 'Recaudación con transferencia'}}
+                    {{abrirPanelTransferencias ? 'Ocultar transferencias' : 'Recaudación con transferencia'}}
                     <div class="derecha">Total en transferencias: {{factura.totalTransferencias | currency}}</div>
                 </mat-panel-description>
             </mat-expansion-panel-header>
@@ -443,8 +503,8 @@
                                     {{banco.nombre}}
                                 </mat-option>
                             </mat-autocomplete>
-                            <input matInput type="text" class="form-control-sm"
-                                [formControl]="seleccionBancoTransferencia" [matAutocomplete]="bancoTransferencia">
+                            <input matInput type="text" class="form-control-sm" [formControl]="controlBancoTransferencia" 
+                            [matAutocomplete]="bancoTransferencia">
                         </mat-form-field>
                     </div>
                     <div class="col-2">
@@ -469,7 +529,7 @@
                 <mat-divider></mat-divider>
                 <div class="form-row">
                     <div class="mat-elevation-z8 col-12">
-                        <table mat-table [dataSource]="dataTransferencias" matSort>
+                        <table mat-table [dataSource]="dataSourceTransferencias" matSort>
                             <!-- Posicion Columna -->
                             <ng-container matColumnDef="id">
                                 <th mat-header-cell *matHeaderCellDef mat-sort-header> No. </th>
@@ -537,14 +597,14 @@
 
     <!-- Sección TARJETA DE CRÉDITO -->
     <mat-accordion class="headers-align">
-        <mat-expansion-panel (opened)="panelTarjetasCredito = true" (closed)="panelTarjetasCredito = false"
-            [expanded]="false">
+        <mat-expansion-panel (opened)="abrirPanelTarjetasCredito = true" (closed)="abrirPanelTarjetasCredito = false"
+            [expanded]="abrirPanelTarjetasCredito" *ngIf="verPanelTarjetasCredito">
             <mat-expansion-panel-header>
                 <mat-panel-title>
                     <i><u>TARJETAS DE CRÉDITO</u></i>
                 </mat-panel-title>
                 <mat-panel-description>
-                    {{panelTarjetasCredito ? 'Ocultar pagos con tarjeta de crédito' : 'Recaudación con tarjeta de crédito'}}
+                    {{abrirPanelTarjetasCredito ? 'Ocultar pagos con tarjeta de crédito' : 'Recaudación con tarjeta de crédito'}}
                     <div class="derecha">Total tarjetas de crédito: {{factura.totalTarjetasCreditos | currency}}</div>
                 </mat-panel-description>
             </mat-expansion-panel-header>
@@ -569,8 +629,8 @@
                                     {{banco.nombre}}
                                 </mat-option>
                             </mat-autocomplete>
-                            <input matInput type="text" class="form-control-sm"
-                                [formControl]="seleccionBancoTarjetaCredito" [matAutocomplete]="bancoTarjetaCredito">
+                            <input matInput type="text" class="form-control-sm" [formControl]="controlBancoTarjetaCredito" 
+                            [matAutocomplete]="bancoTarjetaCredito">
                         </mat-form-field>
                     </div>
                     <div class="col-2">
@@ -647,7 +707,7 @@
                 <mat-divider></mat-divider>
                 <div class="form-row">
                     <div class="mat-elevation-z8 col-12">
-                        <table mat-table [dataSource]="dataTarjetasCreditos" matSort>
+                        <table mat-table [dataSource]="dataSourceTarjetasCreditos" matSort>
                             <!-- Posicion Columna -->
                             <ng-container matColumnDef="id">
                                 <th mat-header-cell *matHeaderCellDef mat-sort-header>No.</th>
@@ -739,14 +799,14 @@
 
     <!-- Sección TARJETA DE DEBITO -->
     <mat-accordion class="headers-align">
-        <mat-expansion-panel (opened)="panelTarjetasDebito = true" (closed)="panelTarjetasDebito = false"
-            [expanded]="false">
+        <mat-expansion-panel (opened)="abrirPanelTarjetasDebito = true" (closed)="abrirPanelTarjetasDebito = false"
+            [expanded]="abrirPanelTarjetasDebito" *ngIf="verPanelTarjetasDebito">
             <mat-expansion-panel-header>
                 <mat-panel-title>
                     <i><u>TARJETAS DE DÉBITO</u></i>
                 </mat-panel-title>
                 <mat-panel-description>
-                    {{panelTarjetasDebito ? 'Ocultar pagos con tarjeta de débito' : 'Recaudación con tarjeta de débito'}}
+                    {{abrirPanelTarjetasDebito ? 'Ocultar pagos con tarjeta de débito' : 'Recaudación con tarjeta de débito'}}
                     <div class="derecha">Total tarjetas de débito: {{factura.totalTarjetasDebitos | currency}}</div>
                 </mat-panel-description>
             </mat-expansion-panel-header>
@@ -771,8 +831,8 @@
                                     {{banco.nombre}}
                                 </mat-option>
                             </mat-autocomplete>
-                            <input matInput type="text" class="form-control-sm"
-                                [formControl]="seleccionBancoTarjetaDebito" [matAutocomplete]="bancoTarjetaDebito">
+                            <input matInput type="text" class="form-control-sm" [formControl]="controlBancoTarjetaDebito" 
+                            [matAutocomplete]="bancoTarjetaDebito">
                         </mat-form-field>
                     </div>
                     <div class="col-3">
@@ -840,7 +900,7 @@
                 <mat-divider></mat-divider>
                 <div class="form-row">
                     <div class="mat-elevation-z8 col-12">
-                        <table mat-table [dataSource]="dataTarjetasDebitos" matSort>
+                        <table mat-table [dataSource]="dataSourceTarjetasDebitos" matSort>
                             <!-- Posicion Columna -->
                             <ng-container matColumnDef="id">
                                 <th mat-header-cell *matHeaderCellDef mat-sort-header>No.</th>

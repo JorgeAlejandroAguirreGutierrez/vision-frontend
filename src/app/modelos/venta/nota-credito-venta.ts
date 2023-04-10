@@ -6,7 +6,7 @@ import { Factura } from './factura';
 export class NotaCreditoVenta {
     id: number;
     codigo: string;
-    secuencia: string;
+    secuencial: string;
     operacion: string;
     fecha: Date;
     estado: string;
@@ -26,7 +26,7 @@ export class NotaCreditoVenta {
     constructor() {
         this.id = valores.cero;
         this.codigo = valores.vacio;
-        this.secuencia = valores.vacio;
+        this.secuencial = valores.vacio;
         this.operacion = valores.vacio;
         this.fecha = new Date();
         this.estado = valores.noFacturada;

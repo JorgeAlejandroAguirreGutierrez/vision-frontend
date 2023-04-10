@@ -1,12 +1,12 @@
 import { Sesion } from '../usuario/sesion';
 import { valores } from "../../constantes";
-import { TipoComprobante } from '../comprobante/tipo-comprobante';
+import { TipoComprobante } from '../venta/tipo-comprobante';
 import { FacturaCompra } from './factura-compra';
 import { NotaDebitoCompraLinea } from './nota-debito-compra-linea';
 export class NotaDebitoCompra {
     id: number;
     codigo: string;
-    secuencia: string;
+    secuencial: string;
     fecha: Date;
     estado: string;
     valorDescuentoTotal: number;
@@ -26,7 +26,7 @@ export class NotaDebitoCompra {
     constructor() {
         this.id = valores.cero;
         this.codigo = valores.vacio;
-        this.secuencia = valores.vacio;
+        this.secuencial = valores.vacio;
         this.fecha = new Date();
         this.estado = valores.noFacturada;
         this.valorDescuentoTotal = valores.cero;

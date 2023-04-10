@@ -2,11 +2,11 @@ import { Proveedor } from './proveedor';
 import { FacturaCompraLinea } from './factura-compra-linea';
 import { Sesion } from '../usuario/sesion';
 import { valores } from "../../constantes";
-import { TipoComprobante } from '../comprobante/tipo-comprobante';
+import { TipoComprobante } from '../venta/tipo-comprobante';
 export class FacturaCompra {
     id: number;
     codigo: string;
-    secuencia: string;
+    secuencial: string;
     fecha: Date;
     estado: string;
     valorDescuentoTotal: number;
@@ -26,7 +26,7 @@ export class FacturaCompra {
     constructor() {
         this.id = valores.cero;
         this.codigo = valores.vacio;
-        this.secuencia = valores.vacio;
+        this.secuencial = valores.vacio;
         this.fecha = new Date();
         this.estado = valores.noFacturada;
         this.valorDescuentoTotal = valores.cero;

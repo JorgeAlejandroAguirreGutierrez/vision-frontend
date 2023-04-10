@@ -12,13 +12,13 @@ import { startWith, map } from 'rxjs/operators';
 import { SesionService } from '../../servicios/usuario/sesion.service';
 import { Sesion } from '../../modelos/usuario/sesion';
 import { valores, mensajes, validarSesion, otras, tab_activo, exito, exito_swal, error, error_swal } from '../../constantes';
-import { NotaDebitoVenta } from 'src/app/modelos/comprobante/nota-debito-venta';
+import { NotaDebitoVenta } from 'src/app/modelos/venta/nota-debito-venta';
 import { ClienteService } from 'src/app/servicios/cliente/cliente.service';
-import { Factura } from 'src/app/modelos/comprobante/factura';
+import { Factura } from 'src/app/modelos/venta/factura';
 import { Cliente } from 'src/app/modelos/cliente/cliente';
-import { NotaDebitoVentaLinea } from 'src/app/modelos/comprobante/nota-debito-venta-linea';
-import { FacturaService } from 'src/app/servicios/comprobante/factura.service';
-import { NotaDebitoVentaService } from 'src/app/servicios/comprobante/nota-debito-venta.service';
+import { NotaDebitoVentaLinea } from 'src/app/modelos/venta/nota-debito-venta-linea';
+import { FacturaService } from 'src/app/servicios/venta/factura.service';
+import { NotaDebitoVentaService } from 'src/app/servicios/venta/nota-debito-venta.service';
 import { Producto } from 'src/app/modelos/inventario/producto';
 import { Kardex } from 'src/app/modelos/inventario/kardex';
 import { Impuesto } from 'src/app/modelos/inventario/impuesto';
@@ -29,8 +29,8 @@ import { ProductoService } from 'src/app/servicios/inventario/producto.service';
 import { CategoriaProducto } from 'src/app/modelos/inventario/categoria-producto';
 import { CategoriaProductoService } from 'src/app/servicios/inventario/categoria-producto.service';
 import { KardexService } from 'src/app/servicios/inventario/kardex.service';
-import { FacturaLinea } from 'src/app/modelos/comprobante/factura-linea';
-import { NotaDebitoElectronicaService } from 'src/app/servicios/comprobante/nota-debito-eletronica.service';
+import { FacturaLinea } from 'src/app/modelos/venta/factura-linea';
+import { NotaDebitoElectronicaService } from 'src/app/servicios/venta/nota-debito-eletronica.service';
 import { MatStepper } from '@angular/material/stepper';
 
 @Component({
@@ -73,7 +73,7 @@ export class NotaDebitoVentaComponent implements OnInit {
     { nombreColumna: 'codigo', cabecera: 'Código', celda: (row: NotaDebitoVenta) => `${row.codigo}`},
     { nombreColumna: 'fecha', cabecera: 'Fecha', celda: (row: NotaDebitoVenta) => `${this.datepipe.transform(row.fecha, "dd/MM/yyyy")}`},
     { nombreColumna: 'cliente', cabecera: 'Cliente', celda: (row: NotaDebitoVenta) => `${row.factura.cliente.razonSocial}`},
-    { nombreColumna: 'factura', cabecera: 'Factura', celda: (row: NotaDebitoVenta) => `${row.factura.secuencia}`},
+    { nombreColumna: 'factura', cabecera: 'Factura', celda: (row: NotaDebitoVenta) => `${row.factura.secuencial}`},
     { nombreColumna: 'total', cabecera: 'Total', celda: (row: NotaDebitoVenta) => `$${row.totalConDescuento}`},
     { nombreColumna: 'estado', cabecera: 'Estado', celda: (row: NotaDebitoVenta) => `${row.estado}`}
   ];
@@ -176,12 +176,12 @@ export class NotaDebitoVentaComponent implements OnInit {
   private filtroFactura(value: string): Factura[] {
     if(this.facturas.length > valores.cero) {
       const filterValue = value.toLowerCase();
-      return this.facturas.filter(factura => factura.secuencia.toLowerCase().includes(filterValue));
+      return this.facturas.filter(factura => factura.secuencial.toLowerCase().includes(filterValue));
     }
     return [];
   }
   verFactura(factura: Factura): string {
-    return factura && factura.secuencia ? factura.secuencia : valores.vacio;
+    return factura && factura.secuencial ? factura.secuencial : valores.vacio;
   }
 
   private filtroProducto(value: string): Producto[] {

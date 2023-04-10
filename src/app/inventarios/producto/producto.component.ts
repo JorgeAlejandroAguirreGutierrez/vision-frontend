@@ -1,4 +1,4 @@
-import { Component, OnInit, Inject, ElementRef, Renderer2 } from '@angular/core';
+import { Component, OnInit, Inject, ViewChild, ElementRef, Renderer2 } from '@angular/core';
 import { UntypedFormArray } from '@angular/forms';
 import { BehaviorSubject } from 'rxjs';
 import Swal from 'sweetalert2';
@@ -24,7 +24,7 @@ import { Router } from '@angular/router';
 import { Proveedor } from '../../modelos/compra/proveedor';
 import { ProveedorService } from '../../servicios/compra/proveedor.service';
 import { Bodega } from '../../modelos/inventario/bodega';
-import { ViewChild } from '@angular/core';
+
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
@@ -283,7 +283,7 @@ export class ProductoComponent implements OnInit {
   }
 
   calcularPrecios() {
-    if (this.producto.kardexs[0].cantidad < valores.cero) {
+    if (this.producto.kardexs[0].saldo < valores.cero) {
       Swal.fire(error, mensajes.error_cantidad, error_swal);
       return;
     }
@@ -291,10 +291,10 @@ export class ProductoComponent implements OnInit {
       Swal.fire(error, mensajes.error_costo_unitario, error_swal);
       return;
     }
-    this.producto.kardexs[0].costoTotal = Number((this.producto.kardexs[0].cantidad * this.producto.kardexs[0].costoUnitario).toFixed(2));
-    this.producto.kardexs[0].entrada = this.producto.kardexs[0].cantidad;
+    this.producto.kardexs[0].costoTotal = Number((this.producto.kardexs[0].saldo * this.producto.kardexs[0].costoUnitario).toFixed(2));
+    this.producto.kardexs[0].entrada = this.producto.kardexs[0].saldo;
     this.producto.kardexs[0].debe = this.producto.kardexs[0].costoTotal;
-    this.producto.kardexs[0].saldo = this.producto.kardexs[0].cantidad;
+    this.producto.kardexs[0].saldo = this.producto.kardexs[0].saldo;
     this.producto.precios = [];
     for (let i = 0; i < this.segmentos.length; i++) {
       let precio = new Precio();

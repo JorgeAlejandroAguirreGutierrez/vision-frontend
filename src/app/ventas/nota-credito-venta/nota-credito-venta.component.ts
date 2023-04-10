@@ -11,15 +11,15 @@ import Swal from 'sweetalert2';
 import { startWith, map } from 'rxjs/operators';
 import { SesionService } from '../../servicios/usuario/sesion.service';
 import { Sesion } from '../../modelos/usuario/sesion';
-import { valores, validarSesion, otras, tab_activo, exito, exito_swal, error, error_swal } from '../../constantes';
+import { valores, validarSesion, exito, exito_swal, error, error_swal } from '../../constantes';
 import { ClienteService } from 'src/app/servicios/cliente/cliente.service';
 import { Cliente } from 'src/app/modelos/cliente/cliente';
-import { NotaCreditoVentaLinea } from 'src/app/modelos/comprobante/nota-credito-venta-linea';
-import { NotaCreditoVenta } from 'src/app/modelos/comprobante/nota-credito-venta';
-import { NotaCreditoVentaService } from 'src/app/servicios/comprobante/nota-credito-venta.service';
-import { Factura } from 'src/app/modelos/comprobante/factura';
-import { FacturaService } from 'src/app/servicios/comprobante/factura.service';
-import { NotaCreditoElectronicaService } from 'src/app/servicios/comprobante/nota-credito-eletronica.service';
+import { NotaCreditoVentaLinea } from 'src/app/modelos/venta/nota-credito-venta-linea';
+import { NotaCreditoVenta } from 'src/app/modelos/venta/nota-credito-venta';
+import { NotaCreditoVentaService } from 'src/app/servicios/venta/nota-credito-venta.service';
+import { Factura } from 'src/app/modelos/venta/factura';
+import { FacturaService } from 'src/app/servicios/venta/factura.service';
+import { NotaCreditoElectronicaService } from 'src/app/servicios/venta/nota-credito-eletronica.service';
 
 @Component({
   selector: 'app-nota-credito-venta',
@@ -64,7 +64,7 @@ export class NotaCreditoVentaComponent implements OnInit {
     { nombreColumna: 'codigo', cabecera: 'Código', celda: (row: NotaCreditoVenta) => `${row.codigo}`},
     { nombreColumna: 'fecha', cabecera: 'Fecha', celda: (row: NotaCreditoVenta) => `${this.datepipe.transform(row.fecha, "dd-MM-yyyy")}`},
     { nombreColumna: 'cliente', cabecera: 'Cliente', celda: (row: NotaCreditoVenta) => `${row.factura.cliente.razonSocial}`},
-    { nombreColumna: 'factura', cabecera: 'Factura', celda: (row: NotaCreditoVenta) => `${row.factura.secuencia}`},
+    { nombreColumna: 'factura', cabecera: 'Factura', celda: (row: NotaCreditoVenta) => `${row.factura.secuencial}`},
     { nombreColumna: 'total', cabecera: 'Total', celda: (row: NotaCreditoVenta) => `$${row.totalConDescuento}`},
     { nombreColumna: 'estado', cabecera: 'Estado', celda: (row: NotaCreditoVenta) => `${row.estado}`}
   ];
@@ -127,12 +127,12 @@ export class NotaCreditoVentaComponent implements OnInit {
   private filtroFactura(value: string): Factura[] {
     if(this.facturas.length > valores.cero) {
       const filterValue = value.toLowerCase();
-      return this.facturas.filter(factura => factura.secuencia.toLowerCase().includes(filterValue));
+      return this.facturas.filter(factura => factura.secuencial.toLowerCase().includes(filterValue));
     }
     return [];
   }
   verFactura(factura: Factura): string {
-    return factura && factura.secuencia ? factura.secuencia : valores.vacio;
+    return factura && factura.secuencial ? factura.secuencial : valores.vacio;
   }
 
   nuevo(event){

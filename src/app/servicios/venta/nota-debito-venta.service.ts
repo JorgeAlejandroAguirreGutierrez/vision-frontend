@@ -6,8 +6,8 @@ import { Observable, throwError } from 'rxjs';
 import { Router } from '@angular/router';
 import { urn, options } from '../../constantes';
 import { environment } from '../../../environments/environment';
-import { NotaDebitoVenta } from 'src/app/modelos/comprobante/nota-debito-venta';
-import { NotaDebitoVentaLinea } from 'src/app/modelos/comprobante/nota-debito-venta-linea';
+import { NotaDebitoVenta } from 'src/app/modelos/venta/nota-debito-venta';
+import { NotaDebitoVentaLinea } from 'src/app/modelos/venta/nota-debito-venta-linea';
 
 @Injectable({
   providedIn: 'root'
