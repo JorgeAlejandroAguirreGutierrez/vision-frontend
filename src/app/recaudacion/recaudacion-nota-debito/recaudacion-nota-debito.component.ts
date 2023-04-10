@@ -13,7 +13,7 @@ import { NotaDebitoVentaDeposito } from '../../modelos/recaudacion/nota-debito-v
 import { NotaDebitoVentaTarjetaCredito } from '../../modelos/recaudacion/nota-debito-venta-tarjeta-credito';
 import { NotaDebitoVentaTarjetaDebito } from '../../modelos/recaudacion/nota-debito-venta-tarjeta-debito';
 import { NotaDebitoVentaTransferencia } from 'src/app/modelos/recaudacion/nota-debito-venta-transferencia';
-import { NotaDebitoVentaService } from '../../servicios/comprobante/nota-debito-venta.service';
+import { NotaDebitoVentaService } from '../../servicios/venta/nota-debito-venta.service';
 import { Banco } from '../../modelos/recaudacion/banco';
 import { startWith, map } from 'rxjs/operators';
 import { ClienteService } from '../../servicios/cliente/cliente.service';
@@ -33,8 +33,8 @@ import { Parametro } from '../../modelos/configuracion/parametro';
 import { ParametroService } from '../../servicios/configuracion/parametro.service';
 import { valores, mensajes, otras, validarSesion, exito, exito_swal, error, error_swal } from '../../constantes';
 import { MatStepper } from '@angular/material/stepper';
-import { NotaDebitoElectronicaService } from 'src/app/servicios/comprobante/nota-debito-eletronica.service';
-import { NotaDebitoVenta } from 'src/app/modelos/comprobante/nota-debito-venta';
+import { NotaDebitoElectronicaService } from 'src/app/servicios/venta/nota-debito-eletronica.service';
+import { NotaDebitoVenta } from 'src/app/modelos/venta/nota-debito-venta';
 
 @Component({
   selector: 'app-recaudacion-nota-debito',

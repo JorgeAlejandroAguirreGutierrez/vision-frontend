@@ -18,9 +18,9 @@ import { NotaCreditoCompraComponent } from '../../../compras/nota-credito-compra
 import { FacturaCompraComponent } from 'src/app/compras/factura-compra/factura-compra.component';
 import { NotaDebitoCompraComponent } from 'src/app/compras/nota-debito-compra/nota-debito-compra.component';
 //VENTAS
-import { FacturaComponent } from "../../../comprobantes/factura/factura.component";
-import { NotaCreditoVentaComponent } from '../../../comprobantes/nota-credito-venta/nota-credito-venta.component';
-import { NotaDebitoVentaComponent } from 'src/app/comprobantes/nota-debito-venta/nota-debito-venta.component';
+import { FacturaComponent } from "../../../ventas/factura/factura.component";
+import { NotaCreditoVentaComponent } from '../../../ventas/nota-credito-venta/nota-credito-venta.component';
+import { NotaDebitoVentaComponent } from 'src/app/ventas/nota-debito-venta/nota-debito-venta.component';
 //INVENTARIOS
 import { GrupoProductoComponent } from '../../../inventarios/grupo-producto/grupo-producto.component';
 import { ProductoComponent } from "../../../inventarios/producto/producto.component";

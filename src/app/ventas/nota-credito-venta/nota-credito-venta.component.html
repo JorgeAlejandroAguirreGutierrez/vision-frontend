@@ -29,7 +29,7 @@
             <li class="nav-item" *ngIf="notaCreditoVenta.id!=0">
                 <a class="nav-link" title="Crear Nota Credito Electronica" href="#" role="button"
                     (click)="crearNotaCreditoElectronica($event)">
-                    <mat-icon>publish</mat-icon>
+                    <mat-icon>point_of_sale</mat-icon>
                 </a>
             </li>
         </ul>
@@ -160,8 +160,8 @@
                 </div>
                 <div class="col-2">
                     <mat-form-field appearance="standard">
-                        <mat-label>Secuencia</mat-label>
-                        <input matInput type="text" class="form-control-sm" [(ngModel)]="notaCreditoVenta.secuencia"
+                        <mat-label>Secuencial</mat-label>
+                        <input matInput type="text" class="form-control-sm" [(ngModel)]="notaCreditoVenta.secuencial"
                             [disabled]="true">
                     </mat-form-field>
                 </div>
@@ -184,10 +184,10 @@
                         <mat-autocomplete #factura="matAutocomplete" [displayWith]="verFactura"
                             (optionSelected)="seleccionarFactura()">
                             <mat-option *ngFor="let factura of filtroFacturas | async" [value]="factura">
-                                {{factura.secuencia}}
+                                {{factura.secuencial}}
                             </mat-option>
                         </mat-autocomplete>
-                        <input matInput type="text" class="form-control-sm" placeholder="Secuencia Factura"
+                        <input matInput type="text" class="form-control-sm" placeholder="Secuencial Factura"
                             [formControl]="seleccionFactura" [matAutocomplete]="factura">
                     </mat-form-field>
                 </div>

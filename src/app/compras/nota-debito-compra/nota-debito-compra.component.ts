@@ -144,12 +144,12 @@ export class NotaDebitoCompraComponent implements OnInit {
   private filtroFacturaCompra(value: string): FacturaCompra[] {
     if(this.facturasCompras.length > valores.cero) {
       const filterValue = value.toLowerCase();
-      return this.facturasCompras.filter(facturaCompra => facturaCompra.secuencia.toLowerCase().includes(filterValue));
+      return this.facturasCompras.filter(facturaCompra => facturaCompra.secuencial.toLowerCase().includes(filterValue));
     }
     return [];
   }
   verFacturaCompra(facturaCompra: FacturaCompra): string {
-    return facturaCompra && facturaCompra.secuencia ? facturaCompra.secuencia : valores.vacio;
+    return facturaCompra && facturaCompra.secuencial ? facturaCompra.secuencial : valores.vacio;
   }
 
   private filtroProducto(value: string): Producto[] {

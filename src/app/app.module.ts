@@ -37,13 +37,13 @@ import { EstablecimientoService } from './servicios/usuario/establecimiento.serv
 import { EstacionService } from './servicios/usuario/estacion.service';
 import { UsuarioService } from './servicios/usuario/usuario.service';
 import { ClienteService } from './servicios/cliente/cliente.service';
-import { FacturaService } from './servicios/comprobante/factura.service';
+import { FacturaService } from './servicios/venta/factura.service';
 import { GrupoProductoService } from './servicios/inventario/grupo-producto.service';
 import { FacturaCompraService } from './servicios/compra/factura-compra.service';
 import { NotaCreditoCompraService } from './servicios/compra/nota-credito-compra.service';
-import { NotaCreditoVentaService } from './servicios/comprobante/nota-credito-venta.service';
+import { NotaCreditoVentaService } from './servicios/venta/nota-credito-venta.service';
 import { NotaDebitoCompraService } from './servicios/compra/nota-debito-compra.service';
-import { NotaDebitoVentaService } from './servicios/comprobante/nota-debito-venta.service';
+import { NotaDebitoVentaService } from './servicios/venta/nota-debito-venta.service';
 
 // Importar las Rutas
 import { AppRoutingModule } from './app-routing.module';

@@ -133,8 +133,8 @@
                 </div>
                 <div class="col-3">
                     <mat-form-field appearance="standard">
-                        <mat-label>Secuencia</mat-label>
-                        <input matInput type="text" class="form-control-sm" [(ngModel)]="notaCreditoCompra.secuencia"
+                        <mat-label>Secuencial</mat-label>
+                        <input matInput type="text" class="form-control-sm" [(ngModel)]="notaCreditoCompra.secuencial"
                             [disabled]="true">
                     </mat-form-field>
                 </div>
@@ -165,10 +165,10 @@
                             (optionSelected)="seleccionarFacturaCompra()">
                             <mat-option *ngFor="let facturaCompra of filtroFacturasCompras | async"
                                 [value]="facturaCompra">
-                                {{facturaCompra.secuencia}}
+                                {{facturaCompra.secuencial}}
                             </mat-option>
                         </mat-autocomplete>
-                        <input matInput type="text" class="form-control-sm" placeholder="Secuencia Factura de Compra"
+                        <input matInput type="text" class="form-control-sm" placeholder="Secuencial Factura de Compra"
                             [formControl]="seleccionFacturaCompra" [matAutocomplete]="facturaCompra">
                     </mat-form-field>
                 </div>

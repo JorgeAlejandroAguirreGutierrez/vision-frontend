@@ -10,8 +10,9 @@ export class FacturaLinea {
   posicion: number;
   comentario: string;
   entregado: string;
-  consignacion: number;
+  consignacion: string;
   cantidad: number;
+  precioUnitario: number;
   subsidio: number;
   sinSubsidio: number;
   valorDescuentoLinea: number;
@@ -43,6 +44,7 @@ export class FacturaLinea {
     this.entregado = valores.no;
     this.comentario = valores.vacio;
     this.cantidad = valores.cero;
+    this.precioUnitario = valores.cero;
     this.subsidio = valores.cero;
     this.sinSubsidio = valores.cero;
     this.valorDescuentoLinea = valores.cero;

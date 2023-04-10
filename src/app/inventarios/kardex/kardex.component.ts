@@ -47,14 +47,15 @@ export class KardexComponent implements OnInit {
   columnas: any[] = [
     { nombreColumna: 'fecha', cabecera: 'Fecha', celda: (row: Kardex) => `${this.datepipe.transform(row.fecha, 'dd/MM/yyyy') } ` },
     { nombreColumna: 'documento', cabecera: 'Documento', celda: (row: Kardex) => `${row.documento}` },
-    { nombreColumna: 'secuencia', cabecera: 'Secuencia', celda: (row: Kardex) => `${row.secuencia}` },
+    { nombreColumna: 'secuencial', cabecera: 'Secuencial', celda: (row: Kardex) => `${row.secuencial}` },
     { nombreColumna: 'operacion', cabecera: 'Operacion', celda: (row: Kardex) => `${row.operacion}` },
     { nombreColumna: 'entrada', cabecera: 'Entrada', celda: (row: Kardex) => `${row.entrada}` },
     { nombreColumna: 'salida', cabecera: 'Salida', celda: (row: Kardex) => `${row.salida}` },
-    { nombreColumna: 'cantidad', cabecera: 'Cantidad', celda: (row: Kardex) => `${row.cantidad}` },
+    { nombreColumna: 'saldo', cabecera: 'Saldo', celda: (row: Kardex) => `${row.saldo}` },
     { nombreColumna: 'debe', cabecera: 'Debe', celda: (row: Kardex) => `${row.debe}` },
     { nombreColumna: 'haber', cabecera: 'Haber', celda: (row: Kardex) => `${row.haber}` },
-    { nombreColumna: 'costo_unitario', cabecera: 'Costo Unit.', celda: (row: Kardex) => `${row.costoUnitario}` }
+    { nombreColumna: 'promedio', cabecera: 'Costo Prom.', celda: (row: Kardex) => `${row.costoUnitario}` },
+    { nombreColumna: 'total', cabecera: 'Total', celda: (row: Kardex) => `${row.costoTotal}` }
   ];
   cabecera: string[] = this.columnas.map(titulo => titulo.nombreColumna);
   dataSource: MatTableDataSource<Kardex>;

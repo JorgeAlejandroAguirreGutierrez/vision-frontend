@@ -1,11 +1,11 @@
 import { Transportista } from './transportista';
-import { Factura } from '../comprobante/factura';
+import { Factura } from '../venta/factura';
 import { valores } from "../../constantes";
 import { Sesion } from '../usuario/sesion';
 export class GuiaRemision {
     id: number;
     codigo: string;
-    secuencia: string;
+    secuencial: string;
     fecha: Date;
     fechaInicioTransporte: Date;
     fechaFinTransporte: Date;
@@ -26,6 +26,7 @@ export class GuiaRemision {
     constructor(){
         this.id = valores.cero;
         this.codigo = valores.vacio;
+        this.secuencial = valores.vacio;
         this.fecha = new Date();
         this.fechaInicioTransporte = new Date();
         this.fechaFinTransporte = new Date();

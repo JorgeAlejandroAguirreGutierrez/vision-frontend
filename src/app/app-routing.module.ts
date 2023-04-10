@@ -50,9 +50,9 @@ import { RecaudacionNotaDebitoComponent } from './recaudacion/recaudacion-nota-d
 import { BancoComponent } from './recaudacion/banco/banco.component';
 
 // Módulo de Ventas
-import { FacturaComponent } from './comprobantes/factura/factura.component';
-import { NotaCreditoVentaComponent } from './comprobantes/nota-credito-venta/nota-credito-venta.component';
-import { NotaDebitoVentaComponent } from './comprobantes/nota-debito-venta/nota-debito-venta.component';
+import { FacturaComponent } from './ventas/factura/factura.component';
+import { NotaCreditoVentaComponent } from './ventas/nota-credito-venta/nota-credito-venta.component';
+import { NotaDebitoVentaComponent } from './ventas/nota-debito-venta/nota-debito-venta.component';
 
 //Módulo de Entregas
 import { GuiaRemisionComponent } from './entregas/guia-remision/guia-remision.component';

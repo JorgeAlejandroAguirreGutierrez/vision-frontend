@@ -160,8 +160,8 @@
                 </div>
                 <div class="col-3">
                     <mat-form-field appearance="standard">
-                        <mat-label>Secuencia</mat-label>
-                        <input matInput type="text" class="form-control-sm" [(ngModel)]="guiaRemision.secuencia"
+                        <mat-label>Secuencial</mat-label>
+                        <input matInput type="text" class="form-control-sm" [(ngModel)]="guiaRemision.secuencial"
                             [disabled]="true">
                     </mat-form-field>
                 </div>
@@ -294,10 +294,10 @@
                         <mat-autocomplete #factura="matAutocomplete" [displayWith]="verFactura"
                             (optionSelected)="seleccionarFactura()">
                             <mat-option *ngFor="let factura of filtroFacturas | async" [value]="factura">
-                                {{factura.secuencia}}
+                                {{factura.secuencial}}
                             </mat-option>
                         </mat-autocomplete>
-                        <input matInput type="text" class="form-control-sm" placeholder="Secuencia Factura"
+                        <input matInput type="text" class="form-control-sm" placeholder="Secuencial Factura"
                             [formControl]="seleccionFactura" [matAutocomplete]="factura">
                     </mat-form-field>
                 </div>

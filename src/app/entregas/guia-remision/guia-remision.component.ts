@@ -10,13 +10,13 @@ import { Transportista } from '../../modelos/entrega/transportista';
 import { GuiaRemision } from '../../modelos/entrega/guia-remision';
 import { GuiaRemisionService } from '../../servicios/entrega/guia-remision.service';
 import { Sesion } from '../../modelos/usuario/sesion';
-import { FacturaService } from '../../servicios/comprobante/factura.service';
+import { FacturaService } from '../../servicios/venta/factura.service';
 import { valores, mensajes, otras, tabs, validarSesion, tab_activo, exito, exito_swal, error, error_swal } from '../../constantes';
 import { MatTableDataSource } from '@angular/material/table';
-import { FacturaLinea } from '../../modelos/comprobante/factura-linea';
+import { FacturaLinea } from '../../modelos/venta/factura-linea';
 import { UntypedFormControl } from '@angular/forms';
 import { Cliente } from 'src/app/modelos/cliente/cliente';
-import { Factura } from 'src/app/modelos/comprobante/factura';
+import { Factura } from 'src/app/modelos/venta/factura';
 import { ClienteService } from 'src/app/servicios/cliente/cliente.service';
 import { MatPaginator } from '@angular/material/paginator';
 import { GuiaRemisionElectronicaService } from 'src/app/servicios/entrega/guia-remision-eletronica.service';
@@ -58,7 +58,7 @@ export class GuiaRemisionComponent implements OnInit {
     { nombreColumna: 'codigo', cabecera: 'Código', celda: (row: GuiaRemision) => `${row.codigo}` },
     { nombreColumna: 'fecha', cabecera: 'Fecha', celda: (row: GuiaRemision) => `${this.datepipe.transform(row.fecha, "dd/MM/yyyy")}` },
     { nombreColumna: 'cliente', cabecera: 'Cliente', celda: (row: GuiaRemision) => `${row.factura.cliente.razonSocial}` },
-    { nombreColumna: 'factura', cabecera: 'Factura', celda: (row: GuiaRemision) => `${row.factura.secuencia}` },
+    { nombreColumna: 'factura', cabecera: 'Factura', celda: (row: GuiaRemision) => `${row.factura.secuencial}` },
     { nombreColumna: 'direccion', cabecera: 'Direccion', celda: (row: GuiaRemision) => row.opcionGuia == valores.clienteDireccion ? `${row.factura.cliente.direccion}` : `${row.direccionDestinatario}` },
     { nombreColumna: 'transportista', cabecera: 'Transportista', celda: (row: GuiaRemision) => `${row.transportista.nombre}` },
     { nombreColumna: 'placa', cabecera: 'Placa', celda: (row: GuiaRemision) => `${row.transportista.vehiculoTransporte.placa}` },
@@ -123,12 +123,12 @@ export class GuiaRemisionComponent implements OnInit {
   private filtroFactura(value: string): Factura[] {
     if (this.facturas.length > valores.cero) {
       const filterValue = value.toLowerCase();
-      return this.facturas.filter(factura => factura.secuencia.toLowerCase().includes(filterValue));
+      return this.facturas.filter(factura => factura.secuencial.toLowerCase().includes(filterValue));
     }
     return [];
   }
   verFactura(factura: Factura): string {
-    return factura && factura.secuencia ? factura.secuencia : valores.vacio;
+    return factura && factura.secuencial ? factura.secuencial : valores.vacio;
   }
 
   nuevo(event) {

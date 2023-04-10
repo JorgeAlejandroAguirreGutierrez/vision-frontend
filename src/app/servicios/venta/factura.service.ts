@@ -1,5 +1,5 @@
 import { EventEmitter, Injectable, Output } from '@angular/core';
-import { Factura } from '../../modelos/comprobante/factura';
+import { Factura } from '../../modelos/venta/factura';
 import { Respuesta } from '../../respuesta';
 import { HttpClient } from '@angular/common/http';
 import { map, catchError } from 'rxjs/operators';
@@ -7,7 +7,7 @@ import { Observable, throwError } from 'rxjs';
 import { Router } from '@angular/router';
 import { urn, options } from '../../constantes';
 import { environment } from '../../../environments/environment';
-import { FacturaLinea } from '../../modelos/comprobante/factura-linea';
+import { FacturaLinea } from '../../modelos/venta/factura-linea';
 
 @Injectable({
   providedIn: 'root'
