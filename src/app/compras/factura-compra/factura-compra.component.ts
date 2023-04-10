@@ -1,6 +1,8 @@
-import { Component, OnInit, Input, ViewChild, HostListener } from '@angular/core';
+import { Component, OnInit, ViewChild, HostListener } from '@angular/core';
 import { DatePipe } from '@angular/common';
-import { UntypedFormControl, UntypedFormBuilder } from '@angular/forms';
+import { DateAdapter, MAT_DATE_FORMATS } from '@angular/material/core';
+import { AppDateAdapter, APP_DATE_FORMATS } from '../../modelos/format-date-picker';
+import { UntypedFormControl } from '@angular/forms';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { Router } from '@angular/router';
@@ -25,11 +27,17 @@ import { BodegaService } from 'src/app/servicios/inventario/bodega.service';
 @Component({
   selector: 'app-factura-compra',
   templateUrl: './factura-compra.component.html',
-  styleUrls: ['./factura-compra.component.scss']
+  styleUrls: ['./factura-compra.component.scss'],
+  providers: [
+    {provide: DateAdapter, useClass: AppDateAdapter},
+    {provide: MAT_DATE_FORMATS, useValue: APP_DATE_FORMATS}
+  ]
 })
 export class FacturaCompraComponent implements OnInit {
 
   panelOpenState = false;
+
+  hoy = new Date();
 
   deshabilitarProveedor = false;
   
@@ -41,7 +49,7 @@ export class FacturaCompraComponent implements OnInit {
 
   columnas: any[] = [
     { nombreColumna: 'codigo', cabecera: 'Código', celda: (row: FacturaCompra) => `${row.codigo}`},
-    { nombreColumna: 'fecha', cabecera: 'Fecha', celda: (row: FacturaCompra) => `${row.fecha}`},
+    { nombreColumna: 'fecha', cabecera: 'Fecha', celda: (row: FacturaCompra) => `${this.datepipe.transform(row.fecha, "dd-MM-yyyy")}`},
     { nombreColumna: 'proveedor', cabecera: 'Proveedor', celda: (row: FacturaCompra) => `${row.proveedor.razonSocial}`},
     { nombreColumna: 'total', cabecera: 'Total', celda: (row: FacturaCompra) => `$${row.totalSinDescuento}`},
     { nombreColumna: 'estado', cabecera: 'Estado', celda: (row: FacturaCompra) => `${row.estado}`}
@@ -56,7 +64,7 @@ export class FacturaCompraComponent implements OnInit {
   @ViewChild("paginatorFacturaCompraLinea") paginatorFacturaCompraLinea: MatPaginator;
   
 
-  constructor(private proveedorService: ProveedorService, private sesionService: SesionService,
+  constructor(private proveedorService: ProveedorService, private sesionService: SesionService, private datepipe: DatePipe,
     private impuestoService: ImpuestoService, private router: Router, private facturaCompraService: FacturaCompraService,
     private productoService: ProductoService, private bodegaService: BodegaService) { }
 
@@ -146,11 +154,13 @@ export class FacturaCompraComponent implements OnInit {
     this.clickedRows.clear();
   }
 
-  construirFactura() {
+  construir() {
     if (this.facturaCompra.id != valores.cero) {
-        this.seleccionProveedor.patchValue(this.facturaCompra.proveedor);
-        this.dataSourceFacturaCompraLinea = new MatTableDataSource<FacturaCompraLinea>(this.facturaCompra.facturaCompraLineas);
-        this.dataSourceFacturaCompraLinea.paginator = this.paginatorFacturaCompraLinea;
+      let fecha = new Date(this.facturaCompra.fecha);
+      this.facturaCompra.fecha = fecha;
+      this.seleccionProveedor.patchValue(this.facturaCompra.proveedor);
+      this.dataSourceFacturaCompraLinea = new MatTableDataSource<FacturaCompraLinea>(this.facturaCompra.facturaCompraLineas);
+      this.dataSourceFacturaCompraLinea.paginator = this.paginatorFacturaCompraLinea;
     }
   }
 
@@ -463,8 +473,7 @@ export class FacturaCompraComponent implements OnInit {
       this.facturaCompraService.obtener(facturaCompra.id).subscribe({
         next: res => {
           this.facturaCompra = res.resultado as FacturaCompra;
-          this.seleccionProveedor.patchValue(this.facturaCompra.proveedor);
-          this.dataSourceFacturaCompraLinea = new MatTableDataSource<FacturaCompraLinea>(this.facturaCompra.facturaCompraLineas);
+          this.construir();
         },
         error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
       });

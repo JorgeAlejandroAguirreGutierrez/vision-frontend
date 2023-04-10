@@ -1,5 +1,7 @@
 import { Component, OnInit, ViewChild, HostListener } from '@angular/core';
 import { DatePipe } from '@angular/common';
+import { DateAdapter, MAT_DATE_FORMATS } from '@angular/material/core';
+import { AppDateAdapter, APP_DATE_FORMATS } from '../../modelos/format-date-picker';
 import { UntypedFormControl } from '@angular/forms';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
@@ -32,11 +34,17 @@ import { FacturaCompraLinea } from 'src/app/modelos/compra/factura-compra-linea'
 @Component({
   selector: 'app-nota-debito-compra',
   templateUrl: './nota-debito-compra.component.html',
-  styleUrls: ['./nota-debito-compra.component.scss']
+  styleUrls: ['./nota-debito-compra.component.scss'],
+  providers: [
+    {provide: DateAdapter, useClass: AppDateAdapter},
+    {provide: MAT_DATE_FORMATS, useValue: APP_DATE_FORMATS}
+  ]
 })
 export class NotaDebitoCompraComponent implements OnInit {
 
   panelOpenState = false;
+
+  hoy = new Date();
 
   deshabilitarDevolucion = true;
   deshabilitarDescuento = true;
@@ -65,7 +73,7 @@ export class NotaDebitoCompraComponent implements OnInit {
 
   columnas: any[] = [
     { nombreColumna: 'codigo', cabecera: 'Código', celda: (row: NotaDebitoCompra) => `${row.codigo}`},
-    { nombreColumna: 'fecha', cabecera: 'Fecha', celda: (row: NotaDebitoCompra) => `${row.fecha}`},
+    { nombreColumna: 'fecha', cabecera: 'Fecha', celda: (row: NotaDebitoCompra) => `${this.datepipe.transform(row.fecha, "dd-MM-yyyy")}`},
     { nombreColumna: 'proveedor', cabecera: 'Proveedor', celda: (row: NotaDebitoCompra) => `${row.facturaCompra.proveedor.razonSocial}`},
     { nombreColumna: 'total', cabecera: 'Total', celda: (row: NotaDebitoCompra) => `$${row.totalSinDescuento}`},
     { nombreColumna: 'estado', cabecera: 'Estado', celda: (row: NotaDebitoCompra) => `${row.estado}`}
@@ -91,7 +99,7 @@ export class NotaDebitoCompraComponent implements OnInit {
   dataSourceFacturaCompraLinea = new MatTableDataSource<FacturaCompraLinea>(this.notaDebitoCompra.facturaCompra.facturaCompraLineas);
   sesion: Sesion;
 
-  constructor(private proveedorService: ProveedorService, private sesionService: SesionService, private kardexService: KardexService, private impuestoService: ImpuestoService, private productoService: ProductoService,
+  constructor(private proveedorService: ProveedorService, private sesionService: SesionService, private kardexService: KardexService, private impuestoService: ImpuestoService, private productoService: ProductoService, private datepipe: DatePipe,
     private router: Router, private notaDebitoCompraService: NotaDebitoCompraService, private facturaCompraService: FacturaCompraService, private bodegaService: BodegaService, private categoriaProductoService: CategoriaProductoService) { }
 
   @HostListener('window:keypress', ['$event'])
@@ -176,6 +184,8 @@ export class NotaDebitoCompraComponent implements OnInit {
 
   construir() {
     if (this.notaDebitoCompra.id != valores.cero) {
+      let fecha = new Date(this.notaDebitoCompra.fecha);
+      this.notaDebitoCompra.fecha = fecha;
       this.seleccionProveedor.patchValue(this.notaDebitoCompra.facturaCompra.proveedor);
       this.seleccionFacturaCompra.patchValue(this.notaDebitoCompra.facturaCompra);
       this.dataSourceLinea = new MatTableDataSource<NotaDebitoCompraLinea>(this.notaDebitoCompra.notaDebitoCompraLineas);
@@ -391,12 +401,7 @@ export class NotaDebitoCompraComponent implements OnInit {
       this.notaDebitoCompraService.obtener(notaDebitoCompra.id).subscribe({
         next: res => {
           this.notaDebitoCompra = res.resultado as NotaDebitoCompra;
-          this.seleccionProveedor.patchValue(this.notaDebitoCompra.facturaCompra.proveedor);
-          this.seleccionFacturaCompra.patchValue(this.notaDebitoCompra.facturaCompra);
-          this.dataSourceFacturaCompraLinea = new MatTableDataSource<FacturaCompraLinea>(this.notaDebitoCompra.facturaCompra.facturaCompraLineas);
-          this.dataSourceFacturaCompraLinea.paginator = this.paginatorFacturaCompraLinea;
-          this.dataSourceLinea = new MatTableDataSource<NotaDebitoCompraLinea>(this.notaDebitoCompra.notaDebitoCompraLineas);
-          this.dataSourceLinea.paginator = this.paginatorLinea;
+          this.construir();
         },
         error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
       });
