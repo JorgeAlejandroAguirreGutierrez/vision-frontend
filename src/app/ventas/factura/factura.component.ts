@@ -133,11 +133,12 @@ export class FacturaComponent implements OnInit {
   piePagina: Type<any> = FooterComponent;
 
   @ViewChild('stepper') stepper: MatStepper;
-  @ViewChild(MatPaginator) paginator: MatPaginator;
-  @ViewChild(MatSort) sort: MatSort;
+  @ViewChild("paginator") paginator: MatPaginator;
   @ViewChild("paginatorLinea") paginatorLinea: MatPaginator;
   @ViewChild("inputFiltro") inputFiltro: ElementRef;
   @ViewChild("inputFiltroLinea") inputFiltroLinea: ElementRef;
+  @ViewChild(MatSort) sort: MatSort;
+  
 
   @HostListener('window:keypress', ['$event'])
     keyEvent($event: KeyboardEvent) {
