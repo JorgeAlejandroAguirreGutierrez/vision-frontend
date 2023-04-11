@@ -183,16 +183,14 @@ export class NotaDebitoCompraComponent implements OnInit {
   }
 
   construir() {
-    if (this.notaDebitoCompra.id != valores.cero) {
-      let fecha = new Date(this.notaDebitoCompra.fecha);
-      this.notaDebitoCompra.fecha = fecha;
-      this.seleccionProveedor.patchValue(this.notaDebitoCompra.facturaCompra.proveedor);
-      this.seleccionFacturaCompra.patchValue(this.notaDebitoCompra.facturaCompra);
-      this.dataSourceLinea = new MatTableDataSource<NotaDebitoCompraLinea>(this.notaDebitoCompra.notaDebitoCompraLineas);
-      this.dataSourceLinea.paginator = this.paginatorLinea;
-      this.dataSourceFacturaCompraLinea = new MatTableDataSource<FacturaCompraLinea>(this.notaDebitoCompra.facturaCompra.facturaCompraLineas);
-      this.dataSourceFacturaCompraLinea.paginator = this.paginatorFacturaCompraLinea;
-    }
+    let fecha = new Date(this.notaDebitoCompra.fecha);
+    this.notaDebitoCompra.fecha = fecha;
+    this.seleccionProveedor.patchValue(this.notaDebitoCompra.facturaCompra.proveedor);
+    this.seleccionFacturaCompra.patchValue(this.notaDebitoCompra.facturaCompra);
+    this.dataSourceLinea = new MatTableDataSource<NotaDebitoCompraLinea>(this.notaDebitoCompra.notaDebitoCompraLineas);
+    this.dataSourceLinea.paginator = this.paginatorLinea;
+    this.dataSourceFacturaCompraLinea = new MatTableDataSource<FacturaCompraLinea>(this.notaDebitoCompra.facturaCompra.facturaCompraLineas);
+    this.dataSourceFacturaCompraLinea.paginator = this.paginatorFacturaCompraLinea;
   }
 
   consultar() {
@@ -317,9 +315,7 @@ export class NotaDebitoCompraComponent implements OnInit {
     this.notaDebitoCompraService.obtenerPorFacturaCompra(facturaCompraId).subscribe(
       res => {
         this.notaDebitoCompra = res.resultado as NotaDebitoCompra;
-        this.seleccionFacturaCompra.patchValue(this.notaDebitoCompra.facturaCompra);
-        this.dataSourceFacturaCompraLinea = new MatTableDataSource(this.notaDebitoCompra.facturaCompra.facturaCompraLineas);
-        this.dataSourceFacturaCompraLinea.paginator = this.paginatorFacturaCompraLinea;
+        this.construir();
       },
       err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     );
@@ -415,8 +411,7 @@ export class NotaDebitoCompraComponent implements OnInit {
     this.notaDebitoCompraService.calcular(this.notaDebitoCompra).subscribe(
       res => {
         this.notaDebitoCompra = res.resultado as NotaDebitoCompra;
-        this.dataSourceLinea = new MatTableDataSource<NotaDebitoCompraLinea>(this.notaDebitoCompra.notaDebitoCompraLineas);
-        this.dataSourceLinea.paginator = this.paginatorLinea;
+        this.construir();
       },
       err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     );
@@ -435,7 +430,6 @@ export class NotaDebitoCompraComponent implements OnInit {
     this.notaDebitoCompraService.calcularLinea(this.notaDebitoCompraLinea).subscribe(
       res => {
         this.notaDebitoCompraLinea = res.resultado as NotaDebitoCompraLinea;
-        console.log(this.notaDebitoCompraLinea);
       },
       err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     );
@@ -499,11 +493,10 @@ export class NotaDebitoCompraComponent implements OnInit {
     this.notaDebitoCompra.notaDebitoCompraLineas.push(this.notaDebitoCompraLinea);
     this.notaDebitoCompraService.calcular(this.notaDebitoCompra).subscribe(
       res => {
-        this.notaDebitoCompra = res.resultado as NotaDebitoCompra;
-        this.dataSourceLinea = new MatTableDataSource<NotaDebitoCompraLinea>(this.notaDebitoCompra.notaDebitoCompraLineas);
-        this.dataSourceLinea.paginator = this.paginatorLinea;
-        this.limpiarNotaDebitoCompraLinea();
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
+        this.notaDebitoCompra = res.resultado as NotaDebitoCompra;
+        this.construir();
+        this.limpiarNotaDebitoCompraLinea();
       },
       err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     );

@@ -350,13 +350,11 @@ export class FacturaComponent implements OnInit {
   }
 
   construir() {
-    if (this.factura.id != valores.cero) {
-      let fecha = new Date(this.factura.fecha);
-      this.factura.fecha = fecha;
-      this.controlIdentificacionCliente.patchValue(this.factura.cliente);
-      this.controlRazonSocialCliente.patchValue(this.factura.cliente);
-      this.llenarTablaFacturaLinea(this.factura.facturaLineas);
-    }
+    let fecha = new Date(this.factura.fecha);
+    this.factura.fecha = fecha;
+    this.controlIdentificacionCliente.patchValue(this.factura.cliente);
+    this.controlRazonSocialCliente.patchValue(this.factura.cliente);
+    this.llenarTablaFacturaLinea(this.factura.facturaLineas);
   }
 
   filtroFactura(event: Event) {
@@ -415,7 +413,7 @@ export class FacturaComponent implements OnInit {
     this.facturaService.calcular(this.factura).subscribe({
       next: res => {
         this.factura = res.resultado as Factura;
-        this.llenarTablaFacturaLinea(this.factura.facturaLineas);
+        this.construir();
         this.nuevoFacturaLinea();
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
       },

@@ -144,15 +144,13 @@ export class NotaCreditoCompraComponent implements OnInit {
   }
 
   construir() {
-    if (this.notaCreditoCompra.id != valores.cero) {
-      let fecha = new Date(this.notaCreditoCompra.fecha);
-      this.notaCreditoCompra.fecha = fecha;
-      this.seleccionProveedor.patchValue(this.notaCreditoCompra.facturaCompra.proveedor);
-      this.seleccionFacturaCompra.patchValue(this.notaCreditoCompra.facturaCompra);
-      this.dataSourceLinea = new MatTableDataSource<NotaCreditoCompraLinea>(this.notaCreditoCompra.notaCreditoCompraLineas);
-      this.dataSourceLinea.paginator = this.paginatorLinea;
-      this.seleccionarOperacion();
-    }
+    let fecha = new Date(this.notaCreditoCompra.fecha);
+    this.notaCreditoCompra.fecha = fecha;
+    this.seleccionProveedor.patchValue(this.notaCreditoCompra.facturaCompra.proveedor);
+    this.seleccionFacturaCompra.patchValue(this.notaCreditoCompra.facturaCompra);
+    this.dataSourceLinea = new MatTableDataSource<NotaCreditoCompraLinea>(this.notaCreditoCompra.notaCreditoCompraLineas);
+    this.dataSourceLinea.paginator = this.paginatorLinea;
+    this.seleccionarOperacion();
   }
 
   consultar() {
@@ -206,8 +204,7 @@ export class NotaCreditoCompraComponent implements OnInit {
     this.notaCreditoCompraService.obtenerPorFacturaCompra(facturaCompraId).subscribe(
       res => {
         this.notaCreditoCompra = res.resultado as NotaCreditoCompra;
-        this.seleccionFacturaCompra.patchValue(this.notaCreditoCompra.facturaCompra);
-        this.dataSourceLinea = new MatTableDataSource(this.notaCreditoCompra.notaCreditoCompraLineas);
+        this.construir();
       },
       err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     );
@@ -319,8 +316,7 @@ export class NotaCreditoCompraComponent implements OnInit {
     this.notaCreditoCompraService.calcular(this.notaCreditoCompra).subscribe(
       res => {
         this.notaCreditoCompra = res.resultado as NotaCreditoCompra;
-        this.dataSourceLinea = new MatTableDataSource<NotaCreditoCompraLinea>(this.notaCreditoCompra.notaCreditoCompraLineas);
-        this.dataSourceLinea.paginator = this.paginatorLinea;
+        this.construir();
       },
       err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     );

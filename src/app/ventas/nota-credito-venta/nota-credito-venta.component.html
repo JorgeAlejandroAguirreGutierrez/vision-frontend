@@ -182,7 +182,7 @@
                     <mat-form-field appearance="standard">
                         <mat-label>Factura</mat-label>
                         <mat-autocomplete #factura="matAutocomplete" [displayWith]="verFactura"
-                            (optionSelected)="seleccionarFactura()">
+                            (optionSelected)="obtenerPorFactura()">
                             <mat-option *ngFor="let factura of filtroFacturas | async" [value]="factura">
                                 {{factura.secuencial}}
                             </mat-option>

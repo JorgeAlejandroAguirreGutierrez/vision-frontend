@@ -146,14 +146,12 @@ export class NotaCreditoVentaComponent implements OnInit {
   }
 
   construir() {
-    if (this.notaCreditoVenta.id != valores.cero) {
-      let fecha = new Date(this.notaCreditoVenta.fecha);
-      this.notaCreditoVenta.fecha = fecha;
-      this.seleccionCliente.patchValue(this.notaCreditoVenta.factura.cliente);
-      this.seleccionFactura.patchValue(this.notaCreditoVenta.factura);
-      this.dataSourceLinea = new MatTableDataSource<NotaCreditoVentaLinea>(this.notaCreditoVenta.notaCreditoVentaLineas);
-      this.dataSourceLinea.paginator = this.paginatorLinea;
-    }
+    let fecha = new Date(this.notaCreditoVenta.fecha);
+    this.notaCreditoVenta.fecha = fecha;
+    this.seleccionCliente.patchValue(this.notaCreditoVenta.factura.cliente);
+    this.seleccionFactura.patchValue(this.notaCreditoVenta.factura);
+    this.dataSourceLinea = new MatTableDataSource<NotaCreditoVentaLinea>(this.notaCreditoVenta.notaCreditoVentaLineas);
+    this.dataSourceLinea.paginator = this.paginatorLinea;
   }
 
   consultar() {
@@ -193,13 +191,12 @@ export class NotaCreditoVentaComponent implements OnInit {
     );
   }
 
-  seleccionarFactura() {
+  obtenerPorFactura() {
     let facturaId = this.seleccionFactura.value.id;
     this.notaCreditoVentaService.obtenerPorFactura(facturaId).subscribe(
       res => {
         this.notaCreditoVenta = res.resultado as NotaCreditoVenta;
-        this.seleccionFactura.patchValue(this.notaCreditoVenta.factura);
-        this.dataSourceLinea = new MatTableDataSource(this.notaCreditoVenta.notaCreditoVentaLineas);
+        this.construir();
       },
       err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     );
@@ -311,8 +308,7 @@ export class NotaCreditoVentaComponent implements OnInit {
     this.notaCreditoVentaService.calcular(this.notaCreditoVenta).subscribe(
       res => {
         this.notaCreditoVenta = res.resultado as NotaCreditoVenta;
-        this.dataSourceLinea = new MatTableDataSource<NotaCreditoVentaLinea>(this.notaCreditoVenta.notaCreditoVentaLineas);
-        this.dataSourceLinea.paginator = this.paginatorLinea;
+        this.construir();
       },
       err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     );
@@ -332,7 +328,6 @@ export class NotaCreditoVentaComponent implements OnInit {
     this.notaCreditoElectronicaService.enviar(this.notaCreditoVenta.id).subscribe(
       res => {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
-        this.notaCreditoVenta = res.resultado as NotaCreditoVenta;
         this.consultar();
         this.nuevo(null);
         this.cargar = false;
