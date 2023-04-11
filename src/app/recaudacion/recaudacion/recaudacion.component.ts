@@ -316,21 +316,11 @@ export class RecaudacionComponent implements OnInit {
   }
   
   recargar() {
-    if (this.factura.cheques.length > valores.cero) {
-      this.dataSourceCheques = new MatTableDataSource<Cheque>(this.factura.cheques);
-    }
-    if (this.factura.depositos.length > valores.cero) {
-      this.dataSourceDepositos = new MatTableDataSource<Deposito>(this.factura.depositos);
-    }
-    if (this.factura.transferencias.length > valores.cero) {
-      this.dataSourceTransferencias = new MatTableDataSource<Transferencia>(this.factura.transferencias);
-    }
-    if (this.factura.tarjetasCreditos.length > valores.cero) {
-      this.dataSourceTarjetasCreditos = new MatTableDataSource<TarjetaCredito>(this.factura.tarjetasCreditos);
-    }
-    if (this.factura.tarjetasDebitos.length > valores.cero) {
-      this.dataSourceTarjetasDebitos = new MatTableDataSource<TarjetaDebito>(this.factura.tarjetasDebitos);
-    }
+    this.dataSourceCheques = new MatTableDataSource<Cheque>(this.factura.cheques);
+    this.dataSourceDepositos = new MatTableDataSource<Deposito>(this.factura.depositos);
+    this.dataSourceTransferencias = new MatTableDataSource<Transferencia>(this.factura.transferencias);
+    this.dataSourceTarjetasCreditos = new MatTableDataSource<TarjetaCredito>(this.factura.tarjetasCreditos);
+    this.dataSourceTarjetasDebitos = new MatTableDataSource<TarjetaDebito>(this.factura.tarjetasDebitos);
     this.calcularRecaudacion();
   }
 
