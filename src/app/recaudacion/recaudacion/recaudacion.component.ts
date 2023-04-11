@@ -64,11 +64,13 @@ export class RecaudacionComponent implements OnInit {
 
   cargar: boolean = false;
   abrirPanelRecaudacion: boolean = true;
+  
   abrirPanelCheques: boolean = true;
   abrirPanelDepositos: boolean = true;
   abrirPanelTransferencias: boolean = true;
   abrirPanelTarjetasCredito: boolean = true;
   abrirPanelTarjetasDebito: boolean = true;
+  
   verPanelCheques: boolean = false;
   verPanelDepositos: boolean = false;
   verPanelTransferencias: boolean = false;
@@ -316,6 +318,26 @@ export class RecaudacionComponent implements OnInit {
   }
   
   recargar() {
+    this.verPanelCheques = false;
+    this.verPanelDepositos = false;
+    this.verPanelTransferencias = false;
+    this.verPanelTarjetasCredito = false;
+    this.verPanelTarjetasDebito = false;
+    if(this.factura.cheques.length > valores.cero){
+      this.verPanelCheques = true;
+    }
+    if(this.factura.depositos.length > valores.cero){
+      this.verPanelDepositos = true;
+    }
+    if(this.factura.transferencias.length > valores.cero){
+      this.verPanelTransferencias = true;
+    }
+    if(this.factura.tarjetasCreditos.length > valores.cero){
+      this.verPanelTarjetasCredito = true;
+    }
+    if(this.factura.tarjetasDebitos.length > valores.cero){
+      this.verPanelTarjetasDebito = true;
+    }
     this.dataSourceCheques = new MatTableDataSource<Cheque>(this.factura.cheques);
     this.dataSourceDepositos = new MatTableDataSource<Deposito>(this.factura.depositos);
     this.dataSourceTransferencias = new MatTableDataSource<Transferencia>(this.factura.transferencias);

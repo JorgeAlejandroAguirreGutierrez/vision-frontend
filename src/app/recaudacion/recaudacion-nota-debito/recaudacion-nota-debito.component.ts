@@ -197,26 +197,11 @@ export class RecaudacionNotaDebitoComponent implements OnInit {
   }
 
   recargar(){
-    if(this.notaDebitoVenta.cheques.length > valores.cero){
-      this.habilitarSeccionPago(otras.formasPagos[0]);
-      this.dataCheques = new MatTableDataSource<NotaDebitoVentaCheque>(this.notaDebitoVenta.cheques);
-    }
-    if(this.notaDebitoVenta.depositos.length > valores.cero){
-      this.habilitarSeccionPago(otras.formasPagos[1]);
-      this.dataDepositos = new MatTableDataSource<NotaDebitoVentaDeposito>(this.notaDebitoVenta.depositos);
-    }
-    if(this.notaDebitoVenta.transferencias.length > valores.cero){
-      this.habilitarSeccionPago(otras.formasPagos[2]);
-      this.dataTransferencias = new MatTableDataSource<NotaDebitoVentaTransferencia>(this.notaDebitoVenta.transferencias);
-    }
-    if(this.notaDebitoVenta.tarjetasCreditos.length > valores.cero){
-      this.habilitarSeccionPago(otras.formasPagos[3]);
-      this.dataTarjetasCreditos = new MatTableDataSource<NotaDebitoVentaTarjetaCredito>(this.notaDebitoVenta.tarjetasCreditos);
-    }
-    if(this.notaDebitoVenta.tarjetasDebitos.length > valores.cero){
-      this.habilitarSeccionPago(otras.formasPagos[4]);
-      this.dataTarjetasDebitos = new MatTableDataSource<NotaDebitoVentaTarjetaDebito>(this.notaDebitoVenta.tarjetasDebitos);
-    }
+    this.dataCheques = new MatTableDataSource<NotaDebitoVentaCheque>(this.notaDebitoVenta.cheques);
+    this.dataDepositos = new MatTableDataSource<NotaDebitoVentaDeposito>(this.notaDebitoVenta.depositos);
+    this.dataTransferencias = new MatTableDataSource<NotaDebitoVentaTransferencia>(this.notaDebitoVenta.transferencias);
+    this.dataTarjetasCreditos = new MatTableDataSource<NotaDebitoVentaTarjetaCredito>(this.notaDebitoVenta.tarjetasCreditos);
+    this.dataTarjetasDebitos = new MatTableDataSource<NotaDebitoVentaTarjetaDebito>(this.notaDebitoVenta.tarjetasDebitos);
     this.calcular();
   }
 
