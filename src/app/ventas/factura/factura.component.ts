@@ -35,7 +35,6 @@ import { KardexService } from '../../servicios/inventario/kardex.service';
 
 import { MatStepper } from '@angular/material/stepper';
 import { MatPaginator } from '@angular/material/paginator';
-import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 
 @Component({
@@ -137,7 +136,6 @@ export class FacturaComponent implements OnInit {
   @ViewChild("paginatorLinea") paginatorLinea: MatPaginator;
   @ViewChild("inputFiltro") inputFiltro: ElementRef;
   @ViewChild("inputFiltroLinea") inputFiltroLinea: ElementRef;
-  @ViewChild(MatSort) sort: MatSort;
   
 
   @HostListener('window:keypress', ['$event'])
@@ -327,7 +325,6 @@ export class FacturaComponent implements OnInit {
       this.datepipe.transform(data.fecha, "dd-MM-yyyy").includes(filter) || data.serie.includes(filter) || data.secuencial.includes(filter) || 
       data.cliente.razonSocial.includes(filter) || data.estado.includes(filter);
     this.dataSourceFactura.paginator = this.paginator;
-    this.dataSourceFactura.sort = this.sort;
   }
 
   seleccion(factura: any) {
@@ -444,8 +441,7 @@ export class FacturaComponent implements OnInit {
     this.dataSourceLinea.filterPredicate = (data: FacturaLinea, filter: string): boolean =>
       data.producto.nombre.includes(filter) || data.producto.medida.abreviatura.includes(filter) || String(data.cantidad).includes(filter) || 
       String(data.impuesto.porcentaje).includes(filter) || data.entregado.includes(filter);
-    this.dataSourceLinea.paginator = this.paginator;
-    this.dataSourceLinea.sort = this.sort;
+    this.dataSourceLinea.paginator = this.paginatorLinea;
   }
 
   seleccionFacturaLinea(facturaLinea: FacturaLinea, i:number) {
