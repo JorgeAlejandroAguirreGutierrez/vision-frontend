@@ -22,7 +22,7 @@ import { TablaGrupoClienteCuentaContableComponent } from './clientes/grupo-clien
 import { OrigenIngresoComponent } from './clientes/origen-ingreso/origen-ingreso.component';
 import { CalificacionClienteComponent } from './clientes/calificacion-cliente/calificacion-cliente.component';
 import { EstadoCivilComponent } from './configuraciones/estado-civil/estado-civil.component';
-import { GeneroComponent } from './configuraciones/genero/genero.component';
+import { RegimenComponent } from './configuraciones/regimen/regimen.component';
 import { PlazoCreditoComponent } from './clientes/plazo-credito/plazo-credito.component';
 import { ImpuestoComponent } from './configuraciones/impuesto/impuesto.component';
 import { FormaPagoComponent } from './clientes/forma-pago/forma-pago.component';
@@ -109,7 +109,7 @@ const routes: Routes = [
   { path: 'cliente/plazocredito', component: PlazoCreditoComponent },
   { path: 'cliente/impuesto', component: ImpuestoComponent },
   { path: 'cliente/grupocliente', component: GrupoClienteComponent },
-  { path: 'cliente/genero', component: GeneroComponent },
+  { path: 'cliente/regimen', component: RegimenComponent },
   { path: 'cliente/estadocivil', component: EstadoCivilComponent },
   { path: 'cliente/calificacioncliente', component: CalificacionClienteComponent },
   { path: 'cliente/origeningreso', component: OrigenIngresoComponent },
@@ -167,7 +167,7 @@ export const RoutingComponents = [
   OrigenIngresoComponent,
   CalificacionClienteComponent,
   EstadoCivilComponent,
-  GeneroComponent,
+  RegimenComponent,
   FormaPagoComponent,
   TipoPagoComponent,
   // Inventarios

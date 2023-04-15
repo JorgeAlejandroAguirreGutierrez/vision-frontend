@@ -1,47 +1,52 @@
 import { Component, OnInit, HostListener, ViewChild } from '@angular/core';
-import { valores, validarSesion, tab_activo, exito, exito_swal, error, error_swal } from '../../constantes';
+import { valores, validarSesion, exito, exito_swal, error, error_swal } from '../../constantes';
 import Swal from 'sweetalert2';
+
 import { Router } from '@angular/router';
 import { Sesion } from '../../modelos/usuario/sesion';
 import { SesionService } from '../../servicios/usuario/sesion.service';
-import { GeneroService } from '../../servicios/configuracion/genero.service';
-import { Genero } from '../../modelos/configuracion/genero';
+import { RegimenService } from '../../servicios/configuracion/regimen.service';
+import { Regimen } from '../../modelos/configuracion/regimen';
+
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 
 
 @Component({
-  selector: 'app-genero',
-  templateUrl: './genero.component.html',
-  styleUrls: ['./genero.component.scss']
+  selector: 'app-regimen',
+  templateUrl: './regimen.component.html',
+  styleUrls: ['./regimen.component.scss']
 })
-export class GeneroComponent implements OnInit {
+export class RegimenComponent implements OnInit {
 
   activo: string = valores.activo;
   inactivo: string = valores.inactivo;
+  si: string = valores.si;
+  no: string = valores.no;
   
   abrirPanelNuevo = true;
   abrirPanelAdmin = true;
 
   sesion: Sesion=null;
-  genero= new Genero();
-  generos: Genero[];
+  regimen= new Regimen();
+  regimenes: Regimen[];
 
   columnas: any[] = [
-    { nombreColumna: 'codigo', cabecera: 'Código', celda: (row: Genero) => `${row.codigo}` },
-    { nombreColumna: 'descripcion', cabecera: 'Descripcion', celda: (row: Genero) => `${row.descripcion}` },
-    { nombreColumna: 'abreviatura', cabecera: 'Abreviatura', celda: (row: Genero) => `${row.abreviatura}` },
-    { nombreColumna: 'estado', cabecera: 'Estado', celda: (row: Genero) => `${row.estado}` }
+    { nombreColumna: 'codigo', cabecera: 'Código', celda: (row: Regimen) => `${row.codigo}` },
+    { nombreColumna: 'descripcion', cabecera: 'Descripcion', celda: (row: Regimen) => `${row.descripcion}` },
+    { nombreColumna: 'abreviatura', cabecera: 'Abreviatura', celda: (row: Regimen) => `${row.abreviatura}` },
+    { nombreColumna: 'visible', cabecera: 'Visible', celda: (row: Regimen) => `${row.visible}` },
+    { nombreColumna: 'estado', cabecera: 'Estado', celda: (row: Regimen) => `${row.estado}` }
   ];
   cabecera: string[] = this.columnas.map(titulo => titulo.nombreColumna);
-  dataSource: MatTableDataSource<Genero>;
-  clickedRows = new Set<Genero>();
+  dataSource: MatTableDataSource<Regimen>;
+  clickedRows = new Set<Regimen>();
   
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
-  constructor(private generoService: GeneroService,
+  constructor(private regimenService: RegimenService,
     private sesionService: SesionService,private router: Router) { }
 
   ngOnInit() {
@@ -60,42 +65,42 @@ export class GeneroComponent implements OnInit {
   nuevo(event) {
     if (event!=null)
       event.preventDefault();
-    this.genero = new Genero();
+    this.regimen = new Regimen();
     this.clickedRows.clear();
   }
 
   crear(event) {
     if (event!=null)
       event.preventDefault();
-    this.generoService.crear(this.genero).subscribe(
-      res => {
+    this.regimenService.crear(this.regimen).subscribe({
+      next: res => {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
-        this.genero=res.resultado as Genero;
+        this.regimen=res.resultado as Regimen;
         this.consultar();
         this.nuevo(null);
       },
-      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
-    );
+      error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+    });
   }
 
   actualizar(event) {
     if (event!=null)
       event.preventDefault();
-    this.generoService.actualizar(this.genero).subscribe(
-      res => {
+    this.regimenService.actualizar(this.regimen).subscribe({
+      next: res => {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
-        this.genero=res.resultado as Genero;
+        this.regimen=res.resultado as Regimen;
         this.consultar();
         this.nuevo(null);
       },
-      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
-    );
+      error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+    });
   }
 
   activar(event) {
     if (event != null)
       event.preventDefault();
-    this.generoService.activar(this.genero).subscribe({
+    this.regimenService.activar(this.regimen).subscribe({
       next: res => {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
         this.consultar();
@@ -108,7 +113,7 @@ export class GeneroComponent implements OnInit {
   inactivar(event) {
     if (event != null)
       event.preventDefault();
-    this.generoService.inactivar(this.genero).subscribe({
+    this.regimenService.inactivar(this.regimen).subscribe({
       next: res => {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
         this.consultar();
@@ -119,25 +124,25 @@ export class GeneroComponent implements OnInit {
   }
   
   consultar() {
-    this.generoService.consultar().subscribe(
-      res => {
-        this.generos = res.resultado as Genero[]
-        this.dataSource = new MatTableDataSource(this.generos);
+    this.regimenService.consultar().subscribe({
+      next: res => {
+        this.regimenes = res.resultado as Regimen[]
+        this.dataSource = new MatTableDataSource(this.regimenes);
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
       },
-      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
-    );
+      error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+    });
   }
 
-  seleccion(genero: Genero) {
-    if (!this.clickedRows.has(genero)){
+  seleccion(regimen: Regimen) {
+    if (!this.clickedRows.has(regimen)){
       this.clickedRows.clear();
-      this.clickedRows.add(genero);
-      this.genero = { ... genero};
+      this.clickedRows.add(regimen);
+      this.regimen = { ... regimen};
     } else {
       this.clickedRows.clear();
-      this.genero = new Genero();
+      this.regimen = new Regimen();
     }
   }
 

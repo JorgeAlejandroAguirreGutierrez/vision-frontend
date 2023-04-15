@@ -43,7 +43,7 @@ import { UbicacionComponent } from '../../../configuraciones/ubicacion/ubicacion
 import { EstadoCivilComponent } from '../../../configuraciones/estado-civil/estado-civil.component';
 import { ImpuestoComponent } from '../../../configuraciones/impuesto/impuesto.component';
 import { TipoPagoComponent } from '../../../configuraciones/tipo-pago/tipo-pago.component';
-import { GeneroComponent } from '../../../configuraciones/genero/genero.component';
+import { RegimenComponent } from '../../../configuraciones/regimen/regimen.component';
 import { ImportarComponent } from '../../../configuraciones/importar/importar.component';
 import { ExportarComponent } from '../../../configuraciones/exportar/exportar.component';
 import { TipoRetencionComponent } from '../../../configuraciones/tipo-retencion/tipo-retencion.component';
@@ -162,7 +162,7 @@ export class SidebarItemsService {
       this.llenarOpciones(ImpuestoComponent, tabs.tab_impuesto, items.item_impuesto, icos.ico_impuesto);
       this.llenarOpciones(TipoPagoComponent, tabs.tab_tipo_pago, items.item_tipo_pago, icos.ico_tipo_pago);
       this.llenarOpciones(TipoRetencionComponent, tabs.tab_tipo_retencion, items.item_tipo_retencion, icos.ico_tipo_retencion);
-      this.llenarOpciones(GeneroComponent, tabs.tab_genero, items.item_genero, icos.ico_genero);
+      this.llenarOpciones(RegimenComponent, tabs.tab_regimen, items.item_regimen, icos.ico_regimen);
       this.llenarOpciones(ImportarComponent, tabs.tab_importacion, items.item_importacion, icos.ico_importacion);
       this.llenarOpciones(ExportarComponent, tabs.tab_exportacion, items.item_exportacion, icos.ico_exportacion);
     }
