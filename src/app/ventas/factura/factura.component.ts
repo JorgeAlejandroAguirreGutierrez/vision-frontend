@@ -35,7 +35,6 @@ import { KardexService } from '../../servicios/inventario/kardex.service';
 
 import { MatStepper } from '@angular/material/stepper';
 import { MatPaginator } from '@angular/material/paginator';
-import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 
 @Component({
@@ -133,11 +132,11 @@ export class FacturaComponent implements OnInit {
   piePagina: Type<any> = FooterComponent;
 
   @ViewChild('stepper') stepper: MatStepper;
-  @ViewChild(MatPaginator) paginator: MatPaginator;
-  @ViewChild(MatSort) sort: MatSort;
+  @ViewChild("paginator") paginator: MatPaginator;
   @ViewChild("paginatorLinea") paginatorLinea: MatPaginator;
   @ViewChild("inputFiltro") inputFiltro: ElementRef;
   @ViewChild("inputFiltroLinea") inputFiltroLinea: ElementRef;
+  
 
   @HostListener('window:keypress', ['$event'])
     keyEvent($event: KeyboardEvent) {
@@ -326,7 +325,6 @@ export class FacturaComponent implements OnInit {
       this.datepipe.transform(data.fecha, "dd-MM-yyyy").includes(filter) || data.serie.includes(filter) || data.secuencial.includes(filter) || 
       data.cliente.razonSocial.includes(filter) || data.estado.includes(filter);
     this.dataSourceFactura.paginator = this.paginator;
-    this.dataSourceFactura.sort = this.sort;
   }
 
   seleccion(factura: any) {
@@ -350,13 +348,11 @@ export class FacturaComponent implements OnInit {
   }
 
   construir() {
-    if (this.factura.id != valores.cero) {
-      let fecha = new Date(this.factura.fecha);
-      this.factura.fecha = fecha;
-      this.controlIdentificacionCliente.patchValue(this.factura.cliente);
-      this.controlRazonSocialCliente.patchValue(this.factura.cliente);
-      this.llenarTablaFacturaLinea(this.factura.facturaLineas);
-    }
+    let fecha = new Date(this.factura.fecha);
+    this.factura.fecha = fecha;
+    this.controlIdentificacionCliente.patchValue(this.factura.cliente);
+    this.controlRazonSocialCliente.patchValue(this.factura.cliente);
+    this.llenarTablaFacturaLinea(this.factura.facturaLineas);
   }
 
   filtroFactura(event: Event) {
@@ -415,7 +411,7 @@ export class FacturaComponent implements OnInit {
     this.facturaService.calcular(this.factura).subscribe({
       next: res => {
         this.factura = res.resultado as Factura;
-        this.llenarTablaFacturaLinea(this.factura.facturaLineas);
+        this.construir();
         this.nuevoFacturaLinea();
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
       },
@@ -445,8 +441,7 @@ export class FacturaComponent implements OnInit {
     this.dataSourceLinea.filterPredicate = (data: FacturaLinea, filter: string): boolean =>
       data.producto.nombre.includes(filter) || data.producto.medida.abreviatura.includes(filter) || String(data.cantidad).includes(filter) || 
       String(data.impuesto.porcentaje).includes(filter) || data.entregado.includes(filter);
-    this.dataSourceLinea.paginator = this.paginator;
-    this.dataSourceLinea.sort = this.sort;
+    this.dataSourceLinea.paginator = this.paginatorLinea;
   }
 
   seleccionFacturaLinea(facturaLinea: FacturaLinea, i:number) {
@@ -579,6 +574,7 @@ export class FacturaComponent implements OnInit {
   }
 
   enviarEventoRecaudacion() {
+    this.construir();
     this.consultar();
     this.facturaService.enviarEventoRecaudacion(this.factura);
   }

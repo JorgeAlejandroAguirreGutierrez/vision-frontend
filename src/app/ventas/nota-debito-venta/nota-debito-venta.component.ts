@@ -1,6 +1,7 @@
 import { Component, OnInit, ViewChild, HostListener } from '@angular/core';
 import { DatePipe } from '@angular/common';
-import { DateAdapter } from '@angular/material/core';
+import { DateAdapter, MAT_DATE_FORMATS } from '@angular/material/core';
+import { AppDateAdapter, APP_DATE_FORMATS } from '../../modelos/format-date-picker';
 import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
@@ -35,7 +36,11 @@ import { MatStepper } from '@angular/material/stepper';
 @Component({
   selector: 'app-nota-debito-venta',
   templateUrl: './nota-debito-venta.component.html',
-  styleUrls: ['./nota-debito-venta.component.scss']
+  styleUrls: ['./nota-debito-venta.component.scss'],
+  providers: [
+    {provide: DateAdapter, useClass: AppDateAdapter},
+    {provide: MAT_DATE_FORMATS, useValue: APP_DATE_FORMATS}
+  ]
 })
 export class NotaDebitoVentaComponent implements OnInit {
 
@@ -202,14 +207,14 @@ export class NotaDebitoVentaComponent implements OnInit {
   }
 
   construir() {
-    if (this.notaDebitoVenta.id != valores.cero) {
-      let fecha = new Date(this.notaDebitoVenta.fecha);
-      this.notaDebitoVenta.fecha = fecha;
-      this.seleccionCliente.patchValue(this.notaDebitoVenta.factura.cliente);
-      this.seleccionFactura.patchValue(this.notaDebitoVenta.factura);
-      this.dataSourceLinea = new MatTableDataSource<NotaDebitoVentaLinea>(this.notaDebitoVenta.notaDebitoVentaLineas);
-      this.dataSourceLinea.paginator = this.paginatorLinea;
-    }
+    let fecha = new Date(this.notaDebitoVenta.fecha);
+    this.notaDebitoVenta.fecha = fecha;
+    this.seleccionCliente.patchValue(this.notaDebitoVenta.factura.cliente);
+    this.seleccionFactura.patchValue(this.notaDebitoVenta.factura);
+    this.dataSourceLinea = new MatTableDataSource<NotaDebitoVentaLinea>(this.notaDebitoVenta.notaDebitoVentaLineas);
+    this.dataSourceLinea.paginator = this.paginatorLinea;
+    this.dataSourceFacturaLinea = new MatTableDataSource<FacturaLinea>(this.notaDebitoVenta.factura.facturaLineas);
+    this.dataSourceFacturaLinea.paginator = this.paginatorFacturaLinea;
   }
 
   consultar() {
@@ -347,9 +352,7 @@ export class NotaDebitoVentaComponent implements OnInit {
     this.notaDebitoVentaService.obtenerPorFactura(facturaId).subscribe(
       res => {
         this.notaDebitoVenta = res.resultado as NotaDebitoVenta;
-        this.seleccionFactura.patchValue(this.notaDebitoVenta.factura);
-        this.dataSourceLinea = new MatTableDataSource(this.notaDebitoVenta.notaDebitoVentaLineas);
-        this.dataSourceFacturaLinea = new MatTableDataSource(this.notaDebitoVenta.factura.facturaLineas);
+        this.construir();
       },
       err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     );
@@ -372,7 +375,7 @@ export class NotaDebitoVentaComponent implements OnInit {
     this.notaDebitoVentaService.calcular(this.notaDebitoVenta).subscribe(
       res => {
         this.notaDebitoVenta = res.resultado as NotaDebitoVenta;
-        this.dataSourceLinea = new MatTableDataSource<NotaDebitoVentaLinea>(this.notaDebitoVenta.notaDebitoVentaLineas);
+        this.construir();
         this.limpiarNotaDebitoVentaLinea();
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
       },
@@ -431,8 +434,9 @@ export class NotaDebitoVentaComponent implements OnInit {
       res => {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
         this.notaDebitoVenta = res.resultado as NotaDebitoVenta;
-        this.stepper.next();
+        this.construir();
         this.consultar();
+        this.stepper.next();
       },
       err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     );
@@ -443,11 +447,11 @@ export class NotaDebitoVentaComponent implements OnInit {
       event.preventDefault();
     this.notaDebitoVentaService.actualizar(this.notaDebitoVenta).subscribe(
       res => {
+        Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });   
         this.notaDebitoVenta = res.resultado as NotaDebitoVenta;
-        this.stepper.next();
-        console.log(this.stepper);
+        this.construir();
         this.consultar();
-        Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });        
+        this.stepper.next();
       },
       err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     );
@@ -506,8 +510,7 @@ export class NotaDebitoVentaComponent implements OnInit {
     this.notaDebitoVentaService.calcular(this.notaDebitoVenta).subscribe(
       res => {
         this.notaDebitoVenta = res.resultado as NotaDebitoVenta;
-        this.dataSourceLinea = new MatTableDataSource<NotaDebitoVentaLinea>(this.notaDebitoVenta.notaDebitoVentaLineas);
-        this.dataSourceLinea.paginator = this.paginatorLinea;
+        this.construir();
       },
       err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     );
@@ -526,7 +529,6 @@ export class NotaDebitoVentaComponent implements OnInit {
     this.notaDebitoVentaService.calcularLinea(this.notaDebitoVentaLinea).subscribe(
       res => {
         this.notaDebitoVentaLinea = res.resultado as NotaDebitoVentaLinea;
-        console.log(this.notaDebitoVentaLinea);
       },
       err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     );
@@ -551,7 +553,6 @@ export class NotaDebitoVentaComponent implements OnInit {
     this.notaDebitoElectronicaService.enviar(this.notaDebitoVenta.id).subscribe({
       next: res => {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
-        this.notaDebitoVenta = res.resultado as NotaDebitoVenta;
         this.consultar();
         this.nuevo(null);
         this.cargar = false;

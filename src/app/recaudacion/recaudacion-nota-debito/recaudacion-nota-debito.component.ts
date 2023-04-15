@@ -50,15 +50,6 @@ export class RecaudacionNotaDebitoComponent implements OnInit {
 
   @Input('stepper') stepper: MatStepper;
 
-  cargar = false;
-
-  panelRecaudacion = false;
-  panelCheques = false;
-  panelDepositos = false;
-  panelTransferencias = false;
-  panelTarjetasCredito = false;
-  panelTarjetasDebito = false;
-
   si = valores.si;
   no = valores.no;
   emitida = valores.emitida;
@@ -67,6 +58,30 @@ export class RecaudacionNotaDebitoComponent implements OnInit {
   facturada = valores.facturada;
   noRecaudada = valores.noRecaudada;
   recaudada = valores.recaudada;
+  indiceEditar: number = -1;
+
+  cargar: boolean = false;
+  abrirPanelRecaudacion: boolean = true;
+  
+  abrirPanelCheques: boolean = true;
+  abrirPanelDepositos: boolean = true;
+  abrirPanelTransferencias: boolean = true;
+  abrirPanelTarjetasCredito: boolean = true;
+  abrirPanelTarjetasDebito: boolean = true;
+  
+  verPanelCheques: boolean = false;
+  verPanelDepositos: boolean = false;
+  verPanelTransferencias: boolean = false;
+  verPanelTarjetasCredito: boolean = false;
+  verPanelTarjetasDebito: boolean = false;
+
+  habilitarEditarCheque: boolean = false;
+  habilitarEditarDeposito: boolean = false;
+  habilitarEditarTransferencia: boolean = false;
+  habilitarEditarTarjetaCredito: boolean = false;
+  habilitarEditarTarjetaDebito: boolean = false;
+  habilitarTitularTarjetaDebito: boolean = true;
+  habilitarTitularTarjetaCredito: boolean = true;
 
   constructor(private notaDebitoVentaService: NotaDebitoVentaService, private notaDebitoElectronicaService: NotaDebitoElectronicaService, 
     private clienteService: ClienteService, private bancoService: BancoService, private sesionService: SesionService,
@@ -130,15 +145,6 @@ export class RecaudacionNotaDebitoComponent implements OnInit {
   dataTarjetasDebitos = new MatTableDataSource<NotaDebitoVentaTarjetaDebito>(this.notaDebitoVenta.tarjetasDebitos);
 
   sesion: Sesion;
-
-  indiceEditar: number = -1;
-  habilitarEditarCheque: boolean = false;
-  habilitarEditarDeposito: boolean = false;
-  habilitarEditarTransferencia: boolean = false;
-  habilitarEditarTarjetaCredito: boolean = false;
-  habilitarEditarTarjetaDebito: boolean = false;
-  habilitarTitularTarjetaDebito: boolean = true;
-  habilitarTitularTarjetaCredito: boolean = true;
   
   ngOnInit() {
     this.sesion=validarSesion(this.sesionService, this.router);
@@ -197,26 +203,31 @@ export class RecaudacionNotaDebitoComponent implements OnInit {
   }
 
   recargar(){
+    this.verPanelCheques = false;
+    this.verPanelDepositos = false;
+    this.verPanelTransferencias = false;
+    this.verPanelTarjetasCredito = false;
+    this.verPanelTarjetasDebito = false;
     if(this.notaDebitoVenta.cheques.length > valores.cero){
-      this.habilitarSeccionPago(otras.formasPagos[0]);
-      this.dataCheques = new MatTableDataSource<NotaDebitoVentaCheque>(this.notaDebitoVenta.cheques);
+      this.verPanelCheques = true;
     }
     if(this.notaDebitoVenta.depositos.length > valores.cero){
-      this.habilitarSeccionPago(otras.formasPagos[1]);
-      this.dataDepositos = new MatTableDataSource<NotaDebitoVentaDeposito>(this.notaDebitoVenta.depositos);
+      this.verPanelDepositos = true;
     }
     if(this.notaDebitoVenta.transferencias.length > valores.cero){
-      this.habilitarSeccionPago(otras.formasPagos[2]);
-      this.dataTransferencias = new MatTableDataSource<NotaDebitoVentaTransferencia>(this.notaDebitoVenta.transferencias);
+      this.verPanelTransferencias = true;
     }
     if(this.notaDebitoVenta.tarjetasCreditos.length > valores.cero){
-      this.habilitarSeccionPago(otras.formasPagos[3]);
-      this.dataTarjetasCreditos = new MatTableDataSource<NotaDebitoVentaTarjetaCredito>(this.notaDebitoVenta.tarjetasCreditos);
+      this.verPanelTarjetasCredito = true;
     }
     if(this.notaDebitoVenta.tarjetasDebitos.length > valores.cero){
-      this.habilitarSeccionPago(otras.formasPagos[4]);
-      this.dataTarjetasDebitos = new MatTableDataSource<NotaDebitoVentaTarjetaDebito>(this.notaDebitoVenta.tarjetasDebitos);
+      this.verPanelTarjetasDebito = true;
     }
+    this.dataCheques = new MatTableDataSource<NotaDebitoVentaCheque>(this.notaDebitoVenta.cheques);
+    this.dataDepositos = new MatTableDataSource<NotaDebitoVentaDeposito>(this.notaDebitoVenta.depositos);
+    this.dataTransferencias = new MatTableDataSource<NotaDebitoVentaTransferencia>(this.notaDebitoVenta.transferencias);
+    this.dataTarjetasCreditos = new MatTableDataSource<NotaDebitoVentaTarjetaCredito>(this.notaDebitoVenta.tarjetasCreditos);
+    this.dataTarjetasDebitos = new MatTableDataSource<NotaDebitoVentaTarjetaDebito>(this.notaDebitoVenta.tarjetasDebitos);
     this.calcular();
   }
 
@@ -691,7 +702,7 @@ export class RecaudacionNotaDebitoComponent implements OnInit {
     );
   }
 
-  actualizar(event){
+  recaudar(event){
     if (event!=null)
       event.preventDefault();
     this.notaDebitoVentaService.actualizar(this.notaDebitoVenta).subscribe(
@@ -701,6 +712,15 @@ export class RecaudacionNotaDebitoComponent implements OnInit {
       }, 
       err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     );
+  }
+
+  //STEEPER
+  stepperPrevio(stepper: MatStepper){
+    stepper.previous();
+  }
+
+  stepperSiguiente(stepper: MatStepper){
+      stepper.next();
   }
 
   pad(numero:string, size:number): string {
