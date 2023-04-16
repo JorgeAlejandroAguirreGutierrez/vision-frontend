@@ -9,6 +9,7 @@ export class Estacion {
     descripcion: string;
     dispositivo: string;
     ip: string;
+    puntoVenta: string;
     estado: string;
     regimen: Regimen;
     establecimiento: Establecimiento;
@@ -20,6 +21,7 @@ export class Estacion {
         this.descripcion = valores.vacio;
         this.dispositivo = valores.vacio;
         this.ip = valores.vacio;
+        this.puntoVenta = valores.no;
         this.estado = valores.activo;
         this.regimen = new Regimen();
         this.establecimiento = new Establecimiento();

@@ -42,7 +42,7 @@ import { PerfilComponent } from '../../../usuarios/perfil/perfil.component';
 import { UbicacionComponent } from '../../../configuraciones/ubicacion/ubicacion.component';
 import { EstadoCivilComponent } from '../../../configuraciones/estado-civil/estado-civil.component';
 import { ImpuestoComponent } from '../../../configuraciones/impuesto/impuesto.component';
-import { TipoPagoComponent } from '../../../configuraciones/tipo-pago/tipo-pago.component';
+import { SecuencialComponent } from '../../../configuraciones/secuencial/secuencial.component';
 import { RegimenComponent } from '../../../configuraciones/regimen/regimen.component';
 import { ImportarComponent } from '../../../configuraciones/importar/importar.component';
 import { ExportarComponent } from '../../../configuraciones/exportar/exportar.component';
@@ -160,7 +160,7 @@ export class SidebarItemsService {
       this.llenarOpciones(UbicacionComponent, tabs.tab_ubicacion, items.item_ubicacion, icos.ico_ubicacion);
       this.llenarOpciones(EstadoCivilComponent, tabs.tab_estado_civil, items.item_estado_civil, icos.ico_estado_civil);
       this.llenarOpciones(ImpuestoComponent, tabs.tab_impuesto, items.item_impuesto, icos.ico_impuesto);
-      this.llenarOpciones(TipoPagoComponent, tabs.tab_tipo_pago, items.item_tipo_pago, icos.ico_tipo_pago);
+      this.llenarOpciones(SecuencialComponent, tabs.tab_secuencial, items.item_secuencial, icos.ico_secuencial);
       this.llenarOpciones(TipoRetencionComponent, tabs.tab_tipo_retencion, items.item_tipo_retencion, icos.ico_tipo_retencion);
       this.llenarOpciones(RegimenComponent, tabs.tab_regimen, items.item_regimen, icos.ico_regimen);
       this.llenarOpciones(ImportarComponent, tabs.tab_importacion, items.item_importacion, icos.ico_importacion);

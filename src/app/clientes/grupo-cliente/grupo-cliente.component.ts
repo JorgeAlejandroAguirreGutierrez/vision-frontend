@@ -1,9 +1,9 @@
 import { Component, OnInit, HostListener, ElementRef, Inject, Renderer2 } from '@angular/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { valores, mensajes, validarSesion, exito, exito_swal, error, error_swal } from '../../constantes';
+import { Router } from '@angular/router';
 import Swal from 'sweetalert2';
 
-import { Router } from '@angular/router';
 import { Sesion } from '../../modelos/usuario/sesion';
 import { SesionService } from '../../servicios/usuario/sesion.service';
 import { GrupoCliente } from '../../modelos/cliente/grupo-cliente';
@@ -14,10 +14,6 @@ import { ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-
-//export interface DialogData {
-//  cuentaContable: CuentaContable;
-//}
 
 @Component({
   selector: 'app-grupo-cliente',
@@ -51,20 +47,20 @@ export class GrupoClienteComponent implements OnInit {
   @ViewChild(MatSort) sort: MatSort;
   @ViewChild("inputFiltro") inputFiltro: ElementRef;
 
-  constructor(public dialog: MatDialog, private renderer: Renderer2, private grupoClienteService: GrupoClienteService,
-    private sesionService: SesionService,private router: Router) { }
-
-  ngOnInit() {
-    this.sesion=validarSesion(this.sesionService, this.router);
-    this.consultar();
-  }
-  
   @HostListener('window:keypress', ['$event'])
   keyEvent($event: KeyboardEvent) {
     if (($event.shiftKey || $event.metaKey) && $event.key == 'G') //SHIFT + G
       this.crear(null);
     if (($event.shiftKey || $event.metaKey) && $event.key == 'N') //ASHIFT + N
       this.nuevo(null);      
+  }
+
+  constructor(public dialog: MatDialog, private renderer: Renderer2, private grupoClienteService: GrupoClienteService,
+    private sesionService: SesionService,private router: Router) { }
+
+  ngOnInit() {
+    this.sesion=validarSesion(this.sesionService, this.router);
+    this.consultar();
   }
 
   nuevo(event) {
@@ -142,16 +138,9 @@ export class GrupoClienteComponent implements OnInit {
   }
 
   llenarTabla(grupoClientes: GrupoCliente[]) {
-    this.ordenarAsc(grupoClientes, 'id');
     this.dataSource = new MatTableDataSource(grupoClientes);
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
-  }
-
-  ordenarAsc(arrayJson: any, pKey: any) {
-    arrayJson.sort(function (a: any, b: any) {
-      return a[pKey] > b[pKey];
-    });
   }
 
   seleccion(grupoCliente: GrupoCliente) {

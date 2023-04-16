@@ -18,7 +18,7 @@ export class TipoComprobanteService {
     return this.http.post(environment.host + urn.ruta + urn.tipoComprobante, tipoComprobante, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
-        return throwError(err);
+        return throwError(()=>err);
       })
     );
   }
@@ -27,7 +27,7 @@ export class TipoComprobanteService {
     return this.http.get<Respuesta>(environment.host + urn.ruta + urn.tipoComprobante + urn.slash + tipoComprobanteId, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
-        return throwError(err);
+        return throwError(()=>err);
       })
     );
   }
@@ -36,15 +36,32 @@ export class TipoComprobanteService {
     return this.http.get(environment.host + urn.ruta + urn.tipoComprobante, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
-        return throwError(err);
+        return throwError(()=>err);
       }));
+  }
+
+  consultarActivos(): Observable<Respuesta> {
+    return this.http.get(environment.host + urn.ruta + urn.tipoComprobante + urn.consultarActivos, options).pipe(
+      map(response => response as Respuesta),
+      catchError(err => {
+        return throwError(()=>err);
+      }));
+  }
+
+  consultarPorElectronica(): Observable<Respuesta> {
+    return this.http.get<Respuesta>(environment.host + urn.ruta + urn.tipoComprobante + urn.consultarElectronica, options).pipe(
+      map(response => response as Respuesta),
+      catchError(err => {
+        return throwError(()=>err);
+      })
+    );
   }
 
   actualizar(tipoComprobante: TipoComprobante): Observable<Respuesta> {
     return this.http.put(environment.host + urn.ruta + urn.tipoComprobante, tipoComprobante, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
-        return throwError(err);
+        return throwError(()=>err);
       })
     );
   }

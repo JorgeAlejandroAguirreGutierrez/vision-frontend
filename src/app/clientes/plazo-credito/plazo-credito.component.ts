@@ -1,8 +1,8 @@
 import { Component, OnInit, HostListener, ElementRef, Renderer2 } from '@angular/core';
 import { valores, mensajes, validarSesion, exito, exito_swal, error, error_swal } from '../../constantes';
+import { Router } from '@angular/router';
 import Swal from 'sweetalert2';
 
-import { Router } from '@angular/router';
 import { Sesion } from '../../modelos/usuario/sesion';
 import { SesionService } from '../../servicios/usuario/sesion.service';
 import { PlazoCreditoService } from '../../servicios/cliente/plazo-credito.service';
@@ -45,20 +45,20 @@ export class PlazoCreditoComponent implements OnInit {
   @ViewChild(MatSort) sort: MatSort;
   @ViewChild("inputFiltro") inputFiltro: ElementRef;
 
+  @HostListener('window:keypress', ['$event'])
+  keyEvent($event: KeyboardEvent) {
+    if (($event.shiftKey || $event.metaKey) && $event.key == 'G') //SHIFT + G
+      this.crear(null);
+    if (($event.shiftKey || $event.metaKey) && $event.key == 'N') //SHIFT + N
+      this.nuevo(null);
+  }
+
   constructor(private renderer: Renderer2, private plazoCreditoService: PlazoCreditoService,
         private sesionService: SesionService,private router: Router) { }
 
   ngOnInit() {
     this.sesion=validarSesion(this.sesionService, this.router);
     this.consultar();
-  }
-  
-  @HostListener('window:keypress', ['$event'])
-  keyEvent($event: KeyboardEvent) {
-    if (($event.shiftKey || $event.metaKey) && $event.key == 'G') //SHIFT + G
-      this.crear(null);
-    if (($event.shiftKey || $event.metaKey) && $event.key == 'N') //ASHIFT + N
-      this.nuevo(null);
   }
 
   nuevo(event) {
@@ -136,16 +136,9 @@ export class PlazoCreditoComponent implements OnInit {
   }
 
   llenarTabla(plazosCreditos: PlazoCredito[]) {
-    this.ordenarAsc(plazosCreditos, 'id');
     this.dataSource = new MatTableDataSource(plazosCreditos);
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
-  }
-
-  ordenarAsc(arrayJson: any, pKey: any) {
-    arrayJson.sort(function (a: any, b: any) {
-      return a[pKey] > b[pKey];
-    });
   }
 
   seleccion(plazoCredito: PlazoCredito) {

@@ -420,10 +420,8 @@ export class FacturaComponent implements OnInit {
   }
 
   actualizarFacturaLinea() {
-
     this.factura.facturaLineas[this.indiceLinea] = this.facturaLinea;
-    console.log(this.factura.facturaLineas);
-
+    //console.log(this.factura.facturaLineas);
     this.llenarTablaFacturaLinea(this.factura.facturaLineas);
     this.calcularTotales();
     this.nuevoFacturaLinea();
@@ -445,7 +443,7 @@ export class FacturaComponent implements OnInit {
   }
 
   seleccionFacturaLinea(facturaLinea: FacturaLinea, i:number) {
-    console.log(i);
+    //console.log(i);
     if (!this.clickedRowsLinea.has(facturaLinea)) {
       this.clickedRowsLinea.clear();
       this.clickedRowsLinea.add(facturaLinea);

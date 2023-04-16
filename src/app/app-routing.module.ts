@@ -26,7 +26,7 @@ import { RegimenComponent } from './configuraciones/regimen/regimen.component';
 import { PlazoCreditoComponent } from './clientes/plazo-credito/plazo-credito.component';
 import { ImpuestoComponent } from './configuraciones/impuesto/impuesto.component';
 import { FormaPagoComponent } from './clientes/forma-pago/forma-pago.component';
-import { TipoPagoComponent } from './configuraciones/tipo-pago/tipo-pago.component';
+import { SecuencialComponent } from './configuraciones/secuencial/secuencial.component';
 
 //Módulo de Inventarios
 import { BodegaComponent } from './inventarios/bodega/bodega.component';
@@ -114,7 +114,7 @@ const routes: Routes = [
   { path: 'cliente/calificacioncliente', component: CalificacionClienteComponent },
   { path: 'cliente/origeningreso', component: OrigenIngresoComponent },
   { path: 'cliente/formapago', component: FormaPagoComponent },
-  { path: 'cliente/tipopago', component: TipoPagoComponent },
+  { path: 'cliente/secuencial', component: SecuencialComponent },
   // Rutas para el Modulo de inventarios
   { path: 'producto', component: ProductoComponent },
   { path: 'inventario/medida', component: MedidaComponent },
@@ -166,10 +166,7 @@ export const RoutingComponents = [
   ImpuestoComponent,
   OrigenIngresoComponent,
   CalificacionClienteComponent,
-  EstadoCivilComponent,
-  RegimenComponent,
   FormaPagoComponent,
-  TipoPagoComponent,
   // Inventarios
   ProductoComponent,
   DialogoGrupoProductoComponent,
@@ -224,6 +221,9 @@ export const RoutingComponents = [
   // configuración
   TipoRetencionComponent,
   UbicacionComponent,
+  EstadoCivilComponent,
+  RegimenComponent,
+  SecuencialComponent,
   //otros
   DashboardComponent,
   TablesComponent,

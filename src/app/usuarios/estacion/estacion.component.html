@@ -44,7 +44,7 @@
             </mat-expansion-panel-header>
             <hr>
             <div class="form-group form-row">
-                <div class="col-4">
+                <div class="col-3">
                     <mat-form-field appearance="standard">
                         <mat-label>Empresa</mat-label>
                         <mat-select [(ngModel)]="estacion.establecimiento.empresa" [compareWith]="compareFn" (selectionChange)="consultarEstablecimientos()" class="form-control-sm">
@@ -73,8 +73,18 @@
                 </div>
                 <div class="col-1">
                     <mat-form-field appearance="standard">
+                        <mat-label>Pto. Venta</mat-label>
+                        <mat-select [(ngModel)]="estacion.puntoVenta" class="form-control-sm">
+                            <mat-option [value]="si">{{si}}</mat-option>
+                            <mat-option [value]="no">{{no}}</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+                <div class="col-1">
+                    <mat-form-field appearance="standard">
                         <mat-label># Pto venta</mat-label>
-                        <input matInput type="text" [(ngModel)]="estacion.codigoSRI"
+                        <input matInput type="text" [(ngModel)]="estacion.codigoSRI" 
+                            [disabled]="estacion.puntoVenta==no? true : false"
                             oninput="this.value = this.value.toUpperCase()" class="form-control-sm">
                     </mat-form-field>
                 </div>
