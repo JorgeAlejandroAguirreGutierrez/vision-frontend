@@ -261,7 +261,7 @@ export class FacturaComponent implements OnInit {
         this.factura = res.resultado as Factura;
         this.consultar();
         this.nuevo(null);
-        this.cargar = true;
+        this.cargar = false;
       },
       error: err => {
         Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
