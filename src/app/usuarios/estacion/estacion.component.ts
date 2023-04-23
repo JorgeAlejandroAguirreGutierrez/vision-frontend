@@ -1,5 +1,5 @@
 import { Component, OnInit, HostListener } from '@angular/core';
-import { valores, validarSesion, exito, exito_swal, error, error_swal } from '../../constantes';
+import { valores, dispositivos, validarSesion, exito, exito_swal, error, error_swal } from '../../constantes';
 import Swal from 'sweetalert2';
 
 import { Router } from '@angular/router';
@@ -42,6 +42,7 @@ export class EstacionComponent implements OnInit {
   empresas: Empresa[];
   establecimientos: Establecimiento[]=[];
   regimenes: Regimen[] = [];
+  dispositivos: any[] = dispositivos;
 
   columnas: any[] = [
     { nombreColumna: 'codigo', cabecera: 'Código', celda: (row: Estacion) => `${row.codigo}` },

@@ -167,7 +167,7 @@ export class SidebarItemsService {
       this.llenarOpciones(ExportarComponent, tabs.tab_exportacion, items.item_exportacion, icos.ico_exportacion);
     }
     
-    if (tabNombre == modulos.modulo_estadisticas) {
+    if (tabNombre == modulos.modulo_indicadores) {
       this.llenarOpciones(DashboardComponent, tabs.tab_indicadores, items.item_indicadores, icos.ico_indicadores);
     }
 

@@ -12,6 +12,7 @@ import { AppDateAdapter, APP_DATE_FORMATS } from '../../modelos/format-date-pick
 import { Router } from '@angular/router';
 import { TabService } from '../../servicios/componente/tab/tab.service';
 import { FooterComponent } from "../../componentes/footer/footer.component";
+import { ClienteComponent } from '../../clientes/cliente/cliente.component';
 import { ProductoComponent } from '../../inventarios/producto/producto.component';
 
 import { Sesion } from '../../modelos/usuario/sesion';
@@ -543,6 +544,13 @@ export class FacturaComponent implements OnInit {
 
   compareFn(a: any, b: any) {
     return a && b && a.id == b.id;
+  }
+
+  abrirTabCliente(event) {
+    if (event != null)
+      event.preventDefault();
+    this.tabService.abrirTab(this.piePagina, 'CLIENTES');
+    this.tabService.addNewTab(ClienteComponent, 'Cliente');
   }
 
   abrirTabProducto(event) {

@@ -63,8 +63,10 @@ export class PerfilComponent implements OnInit {
   dataSourcePermiso: MatTableDataSource<Permiso>;
   clickedRowsPermiso = new Set<Permiso>();
 
-  @ViewChild(MatPaginator) paginator: MatPaginator;
-  @ViewChild(MatSort) sort: MatSort;
+  @ViewChild('MatPaginator1') paginator1: MatPaginator;
+  @ViewChild('MatPaginator2') paginator2: MatPaginator;
+  @ViewChild('MatSort1') sort1: MatSort;
+  @ViewChild('MatSort2') sort2: MatSort;
 
   constructor(private parametroService: ParametroService, private perfilService: PerfilService,
               private permisoService: PermisoService, private sesionService: SesionService, private router: Router) { }
@@ -72,6 +74,7 @@ export class PerfilComponent implements OnInit {
   ngOnInit() {
     this.sesion = validarSesion(this.sesionService, this.router);
     this.consultar();
+    //this.consultarPermisos();
     this.consultarModulos();
     this.consultarOperaciones();
   }
@@ -91,6 +94,7 @@ export class PerfilComponent implements OnInit {
     this.permisos = [];
     this.clickedRows.clear();
     this.clickedRowsPermiso.clear();
+    this.dataSourcePermiso = new MatTableDataSource<Permiso>([]);
   }
 
   crear(event) {
@@ -149,12 +153,16 @@ export class PerfilComponent implements OnInit {
     this.perfilService.consultar().subscribe({
       next: res => {
         this.perfiles = res.resultado as Perfil[];
-        this.dataSource = new MatTableDataSource(this.perfiles);
-        this.dataSource.paginator = this.paginator;
-        this.dataSource.sort = this.sort;
+        this.llenarTabla(this.perfiles);
       },
       error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     });
+  }
+
+  llenarTabla(perfiles: Perfil[]){
+    this.dataSource = new MatTableDataSource(perfiles);
+    this.dataSource.paginator = this.paginator1;
+    this.dataSource.sort = this.sort1;
   }
 
   seleccion(perfil: Perfil) {
@@ -169,10 +177,20 @@ export class PerfilComponent implements OnInit {
     }
   }
 
+  consultarPermisos() {
+    this.permisoService.consultar().subscribe({
+      next: res => {
+        this.permisos = res.resultado as Permiso[];
+        this.llenarTablaPermisos(this.permisos);
+      },
+      error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+    });
+  }
+
   llenarTablaPermisos(permisos: Permiso[]){
     this.dataSourcePermiso = new MatTableDataSource(permisos);
-    this.dataSourcePermiso.paginator = this.paginator;
-    this.dataSourcePermiso.sort = this.sort;
+    this.dataSourcePermiso.paginator = this.paginator2;
+    this.dataSourcePermiso.sort = this.sort2;
   }
 
   activarPermiso(permiso: Permiso){
@@ -203,6 +221,14 @@ export class PerfilComponent implements OnInit {
     this.dataSource.filter = filterValue.trim().toUpperCase();
     if (this.dataSource.paginator) {
       this.dataSource.paginator.firstPage();
+    }
+  }
+
+  filtroPermiso(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.dataSourcePermiso.filter = filterValue.trim().toUpperCase();
+    if (this.dataSourcePermiso.paginator) {
+      this.dataSourcePermiso.paginator.firstPage();
     }
   }
 

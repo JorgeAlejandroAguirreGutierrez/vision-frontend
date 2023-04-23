@@ -388,7 +388,7 @@ export class RecaudacionNotaDebitoComponent implements OnInit {
     return banco_tarjeta_debito && banco_tarjeta_debito.nombre ? banco_tarjeta_debito.nombre : valores.vacio;
   }
 
-  habilitarSeccionPago(formaPago: string){
+/*  habilitarSeccionPago(formaPago: string){
     if (formaPago == otras.formasPagos[0]){
       this.habilitarCheques = !this.habilitarCheques;
     }
@@ -407,7 +407,7 @@ export class RecaudacionNotaDebitoComponent implements OnInit {
       this.defectoTarjetaDebito();
     }
     this.calcular();
-  }
+  }*/
 
   agregarCheque() {
     if (this.notaDebitoVenta.totalRecaudacion + Number(this.cheque.valor)<=this.notaDebitoVenta.totalConDescuento && this.seleccionBancoCheque.value!=null && this.cheque.tipo!=null) {

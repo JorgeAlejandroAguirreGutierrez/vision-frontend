@@ -72,9 +72,9 @@ export class EstablecimientoComponent implements OnInit {
   columnas: any[] = [
     { nombreColumna: 'codigo', cabecera: 'Código', celda: (row: Establecimiento) => `${row.codigo}`},
     { nombreColumna: 'codigoSRI', cabecera: 'Código SRI', celda: (row: Establecimiento) => `${row.codigoSRI}`},
-    { nombreColumna: 'nombre', cabecera: 'Nombre', celda: (row: Establecimiento) => `${row.descripcion}`},
+    { nombreColumna: 'establecimiento', cabecera: 'Establecimiento', celda: (row: Establecimiento) => `${row.descripcion}`},
     { nombreColumna: 'direccion', cabecera: 'Dirección', celda: (row: Establecimiento) => `${row.direccion}`},
-    { nombreColumna: 'empresa', cabecera: 'Empresa', celda: (row: Establecimiento) => `${row.empresa.razonSocial}`},
+    { nombreColumna: 'empresa', cabecera: 'Empresa', celda: (row: Establecimiento) => `${row.empresa.nombreComercial}`},
     { nombreColumna: 'estado', cabecera: 'Estado', celda: (row: Establecimiento) => `${row.estado}`}
   ];
   cabecera: string[]  = this.columnas.map(titulo => titulo.nombreColumna);

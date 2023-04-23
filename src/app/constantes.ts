@@ -194,6 +194,8 @@ export const valores = {
     conjunta: "CONJUNTA"
 }
 
+export const dispositivos = ["PC ESCRITORIO", "PC PORTATIL", "TABLETA", "TELÉFONO", "CAJA REGISTRADORA", "OTRO"]
+
 export const preguntas = ["¿CUAL ES EL NOMBRE DE TU MASCOTA?", "¿CUAL ES EL APELLIDO DE TU ABUELA MATERNA?", "¿CUAL ES EL NOMBRE DE TU EQUIPO PREFERIDO?", "¿CUAL ES TU MARCA DE VEHICULO PREFERIDO?"]
 
 export const mensajes = {
@@ -286,7 +288,6 @@ export const otras = {
     periodo: "PERIODO",
     tipo_transaccion: "TIPO TRANSACCION",
     operacionInicialKardex: 'INVENTARIO INICIAL',
-    formasPagos: ["CHEQUES", "DEPOSITOS", "TRANSFERENCIAS", "TARJETA DE CREDITO", "TARJETA DE DEBITO", "COMPENSACIONES", "RETENCION VENTAS"],
     pregunta_eliminar_cheque: "Realmente quiere eliminar el cheque?",
     pregunta_eliminar_deposito: "Realmente quiere eliminar el deposito?",
     pregunta_eliminar_transferencia: "Realmente quiere eliminar la transferencia?",
@@ -328,7 +329,7 @@ export const modulos = {
 
     modulo_accesos: "ACCESOS",
     modulo_configuracion: "CONFIGURACION",
-    modulo_estadisticas: "ESTADISTICAS",
+    modulo_indicadores: "INDICADORES",
     modulo_control: "CONTROL",
     modulo_auditoria: "AUDITORIA",
     modulo_tutoriales: "TUTORIALES"

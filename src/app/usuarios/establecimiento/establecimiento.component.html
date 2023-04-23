@@ -1,10 +1,5 @@
 <nav class="navbar-light nav-fijo">
     <ul class="navbar-nav">
-        <li class="nav-item">
-            <a class="nav-link" title="Nuevo" role="button" (click)="nuevo($event)">
-                <mat-icon>note_add</mat-icon>
-            </a>
-        </li>
         <li class="nav-item" *ngIf="establecimiento.id==0">
             <a class="nav-link" title="Guardar" role="button" (click)="crear($event)">
                 <mat-icon>save</mat-icon>
@@ -15,16 +10,23 @@
                 <mat-icon>update</mat-icon>
             </a>
         </li>
-        <li class="nav-item" *ngIf="establecimiento.id!=0">
-            <a class="nav-link" title="Activar" role="button" (click)="activar($event)">
-                <mat-icon>check</mat-icon>
+        <li class="nav-item">
+            <a class="nav-link" title="Nuevo" role="button" (click)="nuevo($event)">
+                <mat-icon>file_copy</mat-icon>
             </a>
         </li>
-        <li class="nav-item" *ngIf="establecimiento.id!=0">
-            <a class="nav-link" title="Inactivar" role="button" (click)="inactivar($event)">
-                <mat-icon>delete</mat-icon>
-            </a>
-        </li>
+        <ng-container *ngIf="establecimiento.id!=0">
+            <li class="nav-item" *ngIf="establecimiento.estado!=activo">
+                <a class="nav-link" title="Activar" role="button" (click)="activar($event)">
+                    <mat-icon>assignment_turned_in</mat-icon>
+                </a>
+            </li>
+            <li class="nav-item" *ngIf="establecimiento.estado==activo">
+                <a class="nav-link" title="Inactivar" role="button" (click)="inactivar($event)">
+                    <mat-icon>delete_forever</mat-icon>
+                </a>
+            </li>
+        </ng-container>
     </ul>
 </nav>
 <div class="contenedor">
@@ -35,13 +37,24 @@
             </div>
             <div class="card-body">
                 <div class="form-group form-row">
-                    <div class="col-12">
+                    <div class="col-7">
                         <mat-form-field appearance="standard">
                             <mat-label>Razón Social de la Empresa</mat-label>
                             <mat-select [(ngModel)]="establecimiento.empresa" [compareWith]="compareFn"
                                 class="form-control-sm">
                                 <mat-option *ngFor="let empresa of empresas" [value]="empresa">
                                     {{empresa.razonSocial}}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                    <div class="col-5">
+                        <mat-form-field appearance="standard">
+                            <mat-label>Nombre comercial de la empresa</mat-label>
+                            <mat-select [(ngModel)]="establecimiento.empresa" [compareWith]="compareFn"
+                                class="form-control-sm">
+                                <mat-option *ngFor="let empresa of empresas" [value]="empresa">
+                                    {{empresa.nombreComercial}}
                                 </mat-option>
                             </mat-select>
                         </mat-form-field>
