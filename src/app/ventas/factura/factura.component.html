@@ -20,8 +20,13 @@
                         </a>
                     </li>
                     <li class="nav-item">
+                        <a class="nav-link" title="Cliente" role="button" (click)="abrirTabCliente($event)">
+                            <mat-icon>person_add</mat-icon>
+                        </a>
+                    </li>  
+                    <li class="nav-item">
                         <a class="nav-link" title="Producto" role="button" (click)="abrirTabProducto($event)">
-                            <mat-icon>library_add</mat-icon>
+                            <mat-icon>shopping_basket</mat-icon>
                         </a>
                     </li>   
                     <ng-container *ngIf="factura.id!=0">
@@ -417,7 +422,7 @@
                                 </button>
                             </mat-form-field>
                             <div class="mat-elevation-z8">
-                                <table mat-table [dataSource]="dataSourceLinea" matSort>
+                                <table mat-table [dataSource]="dataSourceLinea" matSort #matSortLinea="matSort">
                                     <!-- Columnas Dinamicas -->
                                     <ng-container *ngFor="let columna of columnasLinea"
                                         [matColumnDef]="columna.nombreColumna">
@@ -588,7 +593,7 @@
                         </button>
                     </mat-form-field>
                     <div class="mat-elevation-z8">
-                        <table mat-table [dataSource]="dataSourceFactura" matSort>
+                        <table mat-table [dataSource]="dataSourceFactura" matSort #matSort="matSort">
                             <!-- Columnas Dinamicas -->
                             <ng-container *ngFor="let columna of columnasFactura" [matColumnDef]="columna.nombreColumna">
                                 <th mat-header-cell *matHeaderCellDef mat-sort-header> {{ columna.cabecera }} </th>
@@ -603,7 +608,7 @@
                                     "{{inputFiltro.value}}"</td>
                             </tr>
                         </table>
-                        <mat-paginator #paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
+                        <mat-paginator #paginator="matPaginator" [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
                     </div>
                     <div class="azul" *ngIf="!clickedRowsFactura.size">
                         Seleccione una fila para editar

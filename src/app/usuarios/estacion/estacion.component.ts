@@ -1,5 +1,5 @@
 import { Component, OnInit, HostListener } from '@angular/core';
-import { valores, validarSesion, exito, exito_swal, error, error_swal } from '../../constantes';
+import { valores, dispositivos, validarSesion, exito, exito_swal, error, error_swal } from '../../constantes';
 import Swal from 'sweetalert2';
 
 import { Router } from '@angular/router';
@@ -29,6 +29,8 @@ export class EstacionComponent implements OnInit {
 
   activo: string = valores.activo;
   inactivo: string = valores.inactivo;
+  si: string = valores.si;
+  no: string = valores.no;
 
   abrirPanelNuevo: boolean = true;
   abrirPanelAdmin: boolean = true;
@@ -40,12 +42,14 @@ export class EstacionComponent implements OnInit {
   empresas: Empresa[];
   establecimientos: Establecimiento[]=[];
   regimenes: Regimen[] = [];
+  dispositivos: any[] = dispositivos;
 
   columnas: any[] = [
     { nombreColumna: 'codigo', cabecera: 'Código', celda: (row: Estacion) => `${row.codigo}` },
     { nombreColumna: 'empresa', cabecera: 'Empresa', celda: (row: Estacion) => `${row.establecimiento.empresa.nombreComercial}` },
     { nombreColumna: 'establecimiento', cabecera: 'Establecimiento', celda: (row: Estacion) => `${row.establecimiento.descripcion}` },
     { nombreColumna: 'nombre', cabecera: 'Estación', celda: (row: Estacion) => `${row.descripcion}` },
+    { nombreColumna: 'punto_venta', cabecera: 'P. Venta', celda: (row: Estacion) => `${row.puntoVenta}` },
     { nombreColumna: 'codigo_sri', cabecera: 'SRI', celda: (row: Estacion) => `${row.codigoSRI}` },
     { nombreColumna: 'dispositivo', cabecera: 'Dispositivo', celda: (row: Estacion) => `${row.dispositivo}` },
     { nombreColumna: 'ip', cabecera: 'IP', celda: (row: Estacion) => `${row.ip}` },
@@ -85,7 +89,7 @@ export class EstacionComponent implements OnInit {
 
   crear(event) {
     if (event != null)
-      event.preventDefault();
+      event.preventDefault();  
     this.estacionService.crear(this.estacion).subscribe({
       next: res => {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });

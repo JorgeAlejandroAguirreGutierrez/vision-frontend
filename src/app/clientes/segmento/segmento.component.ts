@@ -1,9 +1,9 @@
 import { Component, OnInit, HostListener, ElementRef, Renderer2 } from '@angular/core';
-//import { BehaviorSubject } from 'rxjs';
 import { valores, mensajes, validarSesion, exito, exito_swal, error, error_swal } from '../../constantes';
+import { Router } from '@angular/router';
 import Swal from 'sweetalert2';
 
-import { Router } from '@angular/router';
+
 import { Sesion } from '../../modelos/usuario/sesion';
 import { SesionService } from '../../servicios/usuario/sesion.service';
 import { Segmento } from '../../modelos/cliente/segmento';
@@ -50,20 +50,20 @@ export class SegmentoComponent implements OnInit {
   @ViewChild(MatSort) sort: MatSort;
   @ViewChild("inputFiltro") inputFiltro: ElementRef;
 
-  constructor(private renderer: Renderer2, private segmentoService: SegmentoService,
-    private sesionService: SesionService, private router: Router) { }
-
-  ngOnInit() {
-    this.sesion = validarSesion(this.sesionService, this.router);
-    this.consultar();
-  }
-
   @HostListener('window:keypress', ['$event'])
   keyEvent($event: KeyboardEvent) {
     if (($event.shiftKey || $event.metaKey) && $event.key == 'G') //SHIFT + G
       this.crear(null);
     if (($event.shiftKey || $event.metaKey) && $event.key == 'N') //ASHIFT + N
       this.nuevo(null);
+  }
+
+  constructor(private renderer: Renderer2, private segmentoService: SegmentoService,
+    private sesionService: SesionService, private router: Router) { }
+
+  ngOnInit() {
+    this.sesion = validarSesion(this.sesionService, this.router);
+    this.consultar();
   }
 
   nuevo(event) {
@@ -141,17 +141,10 @@ export class SegmentoComponent implements OnInit {
   }
 
   llenarTabla(segmentos: Segmento[]) {
-    this.ordenarAsc(segmentos, 'id');
     this.dataSource = new MatTableDataSource(segmentos);
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
     //this.dataSource$.next(this.dataSource); //Solo si quiero que se vea en la tablas los cambios
-  }
-
-  ordenarAsc(arrayJson: any, pKey: any) {
-    arrayJson.sort(function (a: any, b: any) {
-      return a[pKey] > b[pKey];
-    });
   }
 
   seleccion(segmento: Segmento) {

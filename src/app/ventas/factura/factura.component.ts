@@ -12,6 +12,7 @@ import { AppDateAdapter, APP_DATE_FORMATS } from '../../modelos/format-date-pick
 import { Router } from '@angular/router';
 import { TabService } from '../../servicios/componente/tab/tab.service';
 import { FooterComponent } from "../../componentes/footer/footer.component";
+import { ClienteComponent } from '../../clientes/cliente/cliente.component';
 import { ProductoComponent } from '../../inventarios/producto/producto.component';
 
 import { Sesion } from '../../modelos/usuario/sesion';
@@ -35,6 +36,7 @@ import { KardexService } from '../../servicios/inventario/kardex.service';
 
 import { MatStepper } from '@angular/material/stepper';
 import { MatPaginator } from '@angular/material/paginator';
+import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 
 @Component({
@@ -132,12 +134,13 @@ export class FacturaComponent implements OnInit {
   piePagina: Type<any> = FooterComponent;
 
   @ViewChild('stepper') stepper: MatStepper;
-  @ViewChild("paginator") paginator: MatPaginator;
-  @ViewChild("paginatorLinea") paginatorLinea: MatPaginator;
-  @ViewChild("inputFiltro") inputFiltro: ElementRef;
-  @ViewChild("inputFiltroLinea") inputFiltroLinea: ElementRef;
+  @ViewChild('paginator') paginator: MatPaginator;
+  @ViewChild('paginatorLinea') paginatorLinea: MatPaginator;
+  @ViewChild('matSort') sort: MatSort;
+  @ViewChild('matSortLinea') sortLinea: MatSort;
+  @ViewChild('inputFiltro') inputFiltro: ElementRef;
+  @ViewChild('inputFiltroLinea') inputFiltroLinea: ElementRef;
   
-
   @HostListener('window:keypress', ['$event'])
     keyEvent($event: KeyboardEvent) {
       if (($event.shiftKey || $event.metaKey) && $event.key == "G") //SHIFT + G
@@ -325,6 +328,7 @@ export class FacturaComponent implements OnInit {
       this.datepipe.transform(data.fecha, "dd-MM-yyyy").includes(filter) || data.serie.includes(filter) || data.secuencial.includes(filter) || 
       data.cliente.razonSocial.includes(filter) || data.estado.includes(filter);
     this.dataSourceFactura.paginator = this.paginator;
+    this.dataSourceFactura.sort = this.sort;
   }
 
   seleccion(factura: any) {
@@ -420,10 +424,8 @@ export class FacturaComponent implements OnInit {
   }
 
   actualizarFacturaLinea() {
-
     this.factura.facturaLineas[this.indiceLinea] = this.facturaLinea;
-    console.log(this.factura.facturaLineas);
-
+    //console.log(this.factura.facturaLineas);
     this.llenarTablaFacturaLinea(this.factura.facturaLineas);
     this.calcularTotales();
     this.nuevoFacturaLinea();
@@ -442,10 +444,11 @@ export class FacturaComponent implements OnInit {
       data.producto.nombre.includes(filter) || data.producto.medida.abreviatura.includes(filter) || String(data.cantidad).includes(filter) || 
       String(data.impuesto.porcentaje).includes(filter) || data.entregado.includes(filter);
     this.dataSourceLinea.paginator = this.paginatorLinea;
+    this.dataSourceLinea.sort = this.sortLinea;
   }
 
   seleccionFacturaLinea(facturaLinea: FacturaLinea, i:number) {
-    console.log(i);
+    //console.log(i);
     if (!this.clickedRowsLinea.has(facturaLinea)) {
       this.clickedRowsLinea.clear();
       this.clickedRowsLinea.add(facturaLinea);
@@ -545,6 +548,13 @@ export class FacturaComponent implements OnInit {
 
   compareFn(a: any, b: any) {
     return a && b && a.id == b.id;
+  }
+
+  abrirTabCliente(event) {
+    if (event != null)
+      event.preventDefault();
+    this.tabService.abrirTab(this.piePagina, 'CLIENTES');
+    this.tabService.addNewTab(ClienteComponent, 'Cliente');
   }
 
   abrirTabProducto(event) {

@@ -33,8 +33,17 @@ export class EstacionService {
     );
   }
 
-  consultarEstablecimiento(establecimientoId: number): Observable<Respuesta> {
+  consultarPorEstablecimiento(establecimientoId: number): Observable<Respuesta> {
     return this.http.get<Respuesta>(environment.host + urn.ruta + urn.estacion + urn.establecimiento + urn.slash + establecimientoId, options).pipe(
+      map(response => response as Respuesta),
+      catchError(err => {
+        return throwError(()=>err);
+      })
+    );
+  }
+
+  consultarPorEstablecimientoPuntoVenta(establecimientoId: number): Observable<Respuesta> {
+    return this.http.get<Respuesta>(environment.host + urn.ruta + urn.estacion + urn.establecimientoPuntoVenta + urn.slash + establecimientoId, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);

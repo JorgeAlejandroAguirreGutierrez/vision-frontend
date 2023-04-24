@@ -127,7 +127,7 @@ export class MenuComponent implements OnInit {
       if (elemento.modulo==modulos.modulo_configuracion){
         this.permiso_configuraciones = true;
       }
-      if (elemento.modulo==modulos.modulo_estadisticas){
+      if (elemento.modulo==modulos.modulo_indicadores){
         this.permiso_estadisticas = true;
       }
       if (elemento.modulo==modulos.modulo_control){

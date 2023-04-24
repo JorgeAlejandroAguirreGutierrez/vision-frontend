@@ -38,12 +38,13 @@ import { EmpresaComponent } from '../../../usuarios/empresa/empresa.component';
 import { EstablecimientoComponent } from '../../../usuarios/establecimiento/establecimiento.component';
 import { EstacionComponent } from '../../../usuarios/estacion/estacion.component';
 import { PerfilComponent } from '../../../usuarios/perfil/perfil.component';
+import { PermisoComponent } from '../../../usuarios/permiso/permiso.component';
 //CONFIGURACIONES
 import { UbicacionComponent } from '../../../configuraciones/ubicacion/ubicacion.component';
 import { EstadoCivilComponent } from '../../../configuraciones/estado-civil/estado-civil.component';
 import { ImpuestoComponent } from '../../../configuraciones/impuesto/impuesto.component';
-import { TipoPagoComponent } from '../../../configuraciones/tipo-pago/tipo-pago.component';
-import { GeneroComponent } from '../../../configuraciones/genero/genero.component';
+import { SecuencialComponent } from '../../../configuraciones/secuencial/secuencial.component';
+import { RegimenComponent } from '../../../configuraciones/regimen/regimen.component';
 import { ImportarComponent } from '../../../configuraciones/importar/importar.component';
 import { ExportarComponent } from '../../../configuraciones/exportar/exportar.component';
 import { TipoRetencionComponent } from '../../../configuraciones/tipo-retencion/tipo-retencion.component';
@@ -64,8 +65,9 @@ export class SidebarItemsService {
   constructor() { }
 
   llenarOpciones(Componente: Type<any>, tabTitulo: string, itemNombre: string, icoItem: string) {
+    // VALIDAR SI TIENE PERMISO PARA VER LA OPCIÓN EN EL SIDEBAR
     this.permisoOpciones.forEach(elemento => {
-      if (elemento.operacion == itemNombre.toUpperCase() && elemento.habilitado==valores.si && elemento.estado==valores.activo){ //opciones sidebar
+      if (elemento.menuOpcion.opcion == itemNombre.toUpperCase() && elemento.menuOpcion.menu==valores.si && elemento.estado==valores.activo){
         this.opciones.push(new SidebarItem(Componente, tabTitulo, itemNombre, icoItem));
       }
     });
@@ -154,20 +156,21 @@ export class SidebarItemsService {
       this.llenarOpciones(EstablecimientoComponent, tabs.tab_establecimiento, items.item_establecimiento, icos.ico_establecimiento);
       this.llenarOpciones(EstacionComponent, tabs.tab_estacion, items.item_estacion, icos.ico_estacion);
       this.llenarOpciones(PerfilComponent, tabs.tab_perfil, items.item_perfil, icos.ico_perfil);
+      this.llenarOpciones(PermisoComponent, tabs.tab_permiso, items.item_permiso, icos.ico_permiso);
     }
 
     if (tabNombre == modulos.modulo_configuracion) {
       this.llenarOpciones(UbicacionComponent, tabs.tab_ubicacion, items.item_ubicacion, icos.ico_ubicacion);
       this.llenarOpciones(EstadoCivilComponent, tabs.tab_estado_civil, items.item_estado_civil, icos.ico_estado_civil);
       this.llenarOpciones(ImpuestoComponent, tabs.tab_impuesto, items.item_impuesto, icos.ico_impuesto);
-      this.llenarOpciones(TipoPagoComponent, tabs.tab_tipo_pago, items.item_tipo_pago, icos.ico_tipo_pago);
+      this.llenarOpciones(SecuencialComponent, tabs.tab_secuencial, items.item_secuencial, icos.ico_secuencial);
       this.llenarOpciones(TipoRetencionComponent, tabs.tab_tipo_retencion, items.item_tipo_retencion, icos.ico_tipo_retencion);
-      this.llenarOpciones(GeneroComponent, tabs.tab_genero, items.item_genero, icos.ico_genero);
+      this.llenarOpciones(RegimenComponent, tabs.tab_regimen, items.item_regimen, icos.ico_regimen);
       this.llenarOpciones(ImportarComponent, tabs.tab_importacion, items.item_importacion, icos.ico_importacion);
       this.llenarOpciones(ExportarComponent, tabs.tab_exportacion, items.item_exportacion, icos.ico_exportacion);
     }
     
-    if (tabNombre == modulos.modulo_estadisticas) {
+    if (tabNombre == modulos.modulo_indicadores) {
       this.llenarOpciones(DashboardComponent, tabs.tab_indicadores, items.item_indicadores, icos.ico_indicadores);
     }
 

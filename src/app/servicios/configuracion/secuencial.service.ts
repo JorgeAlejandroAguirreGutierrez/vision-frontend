@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { TipoPago } from '../../modelos/configuracion/tipo-pago';
+import { Secuencial } from '../../modelos/configuracion/secuencial';
 import { Respuesta } from '../../respuesta';
 import { urn, options } from '../../constantes';
 import {HttpClient} from '@angular/common/http';
@@ -11,12 +11,12 @@ import { Router } from '@angular/router';
 @Injectable({
   providedIn: 'root'
 })
-export class TipoPagoService {
+export class SecuencialService {
 
   constructor(private http: HttpClient, private router: Router) { }
 
-  crear(tipoPago: TipoPago): Observable<Respuesta> {
-    return this.http.post(environment.host + urn.ruta + urn.tipoPago, tipoPago, options).pipe(
+  crear(secuencial: Secuencial): Observable<Respuesta> {
+    return this.http.post(environment.host + urn.ruta + urn.secuencial, secuencial, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);
@@ -24,8 +24,8 @@ export class TipoPagoService {
     );
   }
 
-  obtener(tipoPagoId: number): Observable<Respuesta> {
-    return this.http.get<Respuesta>(environment.host + urn.ruta + urn.tipoPago + urn.slash + tipoPagoId, options).pipe(
+  obtener(secuencialId: number): Observable<Respuesta> {
+    return this.http.get<Respuesta>(environment.host + urn.ruta + urn.secuencial + urn.slash + secuencialId, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);
@@ -34,7 +34,7 @@ export class TipoPagoService {
   }
 
   consultar(): Observable<Respuesta> {
-    return this.http.get(environment.host + urn.ruta + urn.tipoPago, options).pipe(
+    return this.http.get(environment.host + urn.ruta + urn.secuencial, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);
@@ -42,15 +42,15 @@ export class TipoPagoService {
   }
 
   consultarActivos(): Observable<Respuesta> {
-    return this.http.get(environment.host + urn.ruta + urn.tipoPago + urn.consultarActivos, options).pipe(
+    return this.http.get(environment.host + urn.ruta + urn.secuencial + urn.consultarActivos, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);
       }));
   }
 
-  buscar(tipoPago: TipoPago): Observable<Respuesta> {
-    return this.http.post(environment.host + urn.ruta + urn.tipoPago + urn.buscar, tipoPago, options).pipe(
+  buscar(secuencial: Secuencial): Observable<Respuesta> {
+    return this.http.post(environment.host + urn.ruta + urn.secuencial + urn.buscar, secuencial, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);
@@ -58,8 +58,8 @@ export class TipoPagoService {
     );
   }
 
-  actualizar(tipoPago: TipoPago): Observable<Respuesta> {
-    return this.http.put(environment.host + urn.ruta + urn.tipoPago, tipoPago, options).pipe(
+  actualizar(secuencial: Secuencial): Observable<Respuesta> {
+    return this.http.put(environment.host + urn.ruta + urn.secuencial, secuencial, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);
@@ -67,8 +67,8 @@ export class TipoPagoService {
     );
   }
 
-  activar(tipoPago: TipoPago): Observable<Respuesta> {
-    return this.http.patch(environment.host + urn.ruta + urn.tipoPago + urn.activar, tipoPago, options).pipe(
+  activar(secuencial: Secuencial): Observable<Respuesta> {
+    return this.http.patch(environment.host + urn.ruta + urn.secuencial + urn.activar, secuencial, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);
@@ -76,8 +76,8 @@ export class TipoPagoService {
     );
   }
 
-  inactivar(tipoPago: TipoPago): Observable<Respuesta> {
-    return this.http.patch(environment.host + urn.ruta + urn.tipoPago + urn.inactivar, tipoPago, options).pipe(
+  inactivar(secuencial: Secuencial): Observable<Respuesta> {
+    return this.http.patch(environment.host + urn.ruta + urn.secuencial + urn.inactivar, secuencial, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);

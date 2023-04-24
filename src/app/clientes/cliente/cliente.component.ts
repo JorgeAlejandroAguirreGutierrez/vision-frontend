@@ -169,8 +169,10 @@ export class ClienteComponent implements OnInit {
   dataSourceDependiente: MatTableDataSource<Dependiente>;
   clickedRowsDependiente = new Set<Dependiente>();
 
-  @ViewChild(MatPaginator) paginator: MatPaginator;
-  @ViewChild(MatSort) sort: MatSort;
+  @ViewChild('MatPaginator1') paginator1: MatPaginator;
+  @ViewChild('MatPaginator2') paginator2: MatPaginator;
+  @ViewChild('MatSort1') sort1: MatSort;
+  @ViewChild('MatSort2') sort2: MatSort;
   @ViewChild("inputFiltro") inputFiltro: ElementRef;
   @ViewChild("inputFiltroDependiente") inputFiltroDependiente: ElementRef;
 
@@ -475,8 +477,8 @@ export class ClienteComponent implements OnInit {
       data.codigo.includes(filter) || data.identificacion.includes(filter) || data.razonSocial.includes(filter) ||
       data.direccion.includes(filter) || data.obligadoContabilidad.includes(filter) || data.especial.includes(filter) ||
       data.estado.includes(filter);
-    this.dataSourceCliente.paginator = this.paginator;
-    this.dataSourceCliente.sort = this.sort;
+    this.dataSourceCliente.paginator = this.paginator1;
+    this.dataSourceCliente.sort = this.sort1;
   }
 
   seleccion(cliente: any) {
@@ -648,8 +650,8 @@ export class ClienteComponent implements OnInit {
     this.dataSourceDependiente.filterPredicate = (data: Dependiente, filter: string): boolean =>
       data.razonSocial.includes(filter) || data.direccion.includes(filter) || data.ubicacion.provincia.includes(filter) || 
       data.ubicacion.canton.includes(filter) || data.ubicacion.parroquia.includes(filter);
-    this.dataSourceDependiente.paginator = this.paginator;
-    this.dataSourceDependiente.sort = this.sort;
+    this.dataSourceDependiente.paginator = this.paginator2;
+    this.dataSourceDependiente.sort = this.sort2;
   }
 
   //VALIDACIONES DE CAMPOS

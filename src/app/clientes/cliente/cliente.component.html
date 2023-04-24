@@ -558,7 +558,7 @@
                 </div>
             </div>
 
-            <div *ngIf="cliente.dependientes.length > 0">
+            <div>
                 <mat-divider></mat-divider>
                 <mat-form-field appearance="standard">
                     <mat-label>Buscar dependientes</mat-label>
@@ -570,7 +570,7 @@
                     </button>
                 </mat-form-field>
                 <div class="mat-elevation-z8">
-                    <table mat-table [dataSource]="dataSourceDependiente" matSort>
+                    <table mat-table [dataSource]="dataSourceDependiente" matSort #MatSort2="matSort">
                         <!-- Columnas Dinamicas -->
                         <ng-container *ngFor="let columna of columnasDependiente"
                             [matColumnDef]="columna.nombreColumna">
@@ -599,7 +599,7 @@
                             </td>
                         </tr>
                     </table>
-                    <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
+                    <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" #MatPaginator2="matPaginator"></mat-paginator>
                 </div>
                 <div class="azul" *ngIf="!clickedRowsDependiente.size">
                     Seleccione una fila para editar
@@ -873,7 +873,7 @@
                 </button>
             </mat-form-field>
             <div class="mat-elevation-z8">
-                <table mat-table [dataSource]="dataSourceCliente" matSort>
+                <table mat-table [dataSource]="dataSourceCliente" matSort #MatSort1="matSort">
                     <!-- Columnas Dinamicas -->
                     <ng-container *ngFor="let columna of columnasCliente" [matColumnDef]="columna.nombreColumna">
                         <th mat-header-cell *matHeaderCellDef mat-sort-header> {{ columna.cabecera }} </th>
@@ -890,7 +890,7 @@
                         </td>
                     </tr>
                 </table>
-                <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
+                <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" #MatPaginator1="matPaginator"></mat-paginator>
             </div>
             <div class="azul" *ngIf="!clickedRows.size">
                 Seleccione una fila para editar

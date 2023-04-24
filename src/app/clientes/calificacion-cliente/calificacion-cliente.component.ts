@@ -1,14 +1,13 @@
-import { Component, OnInit, HostListener, ElementRef, Renderer2 } from '@angular/core';
+import { Component, OnInit, ViewChild, HostListener, ElementRef, Renderer2 } from '@angular/core';
 import { valores, mensajes, validarSesion, exito, exito_swal, error, error_swal } from '../../constantes';
+import { Router } from '@angular/router';
 import Swal from 'sweetalert2';
 
-import { Router } from '@angular/router';
 import { Sesion } from '../../modelos/usuario/sesion';
 import { SesionService } from '../../servicios/usuario/sesion.service';
 import { CalificacionCliente } from '../../modelos/cliente/calificacion-cliente';
 import { CalificacionClienteService } from '../../servicios/cliente/calificacion-cliente.service';
 
-import { ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
@@ -45,14 +44,6 @@ export class CalificacionClienteComponent implements OnInit {
   @ViewChild(MatSort) sort: MatSort;
   @ViewChild("inputFiltro") inputFiltro: ElementRef;
 
-  constructor(private renderer: Renderer2, private calificacionClienteService: CalificacionClienteService,
-        private sesionService: SesionService,private router: Router) { }
-
-  ngOnInit() {
-    this.sesion=validarSesion(this.sesionService, this.router);
-    this.consultar();
-  }
-  
   @HostListener('window:keypress', ['$event'])
   keyEvent($event: KeyboardEvent) {
     if (($event.shiftKey || $event.metaKey) && $event.key == 'G') //SHIFT + G
@@ -61,6 +52,14 @@ export class CalificacionClienteComponent implements OnInit {
       this.nuevo(null);
   }
 
+  constructor(private renderer: Renderer2, private calificacionClienteService: CalificacionClienteService,
+        private sesionService: SesionService,private router: Router) { }
+
+  ngOnInit() {
+    this.sesion=validarSesion(this.sesionService, this.router);
+    this.consultar();
+  }
+  
   nuevo(event) {
     if (event != null)
       event.preventDefault();
@@ -136,16 +135,9 @@ export class CalificacionClienteComponent implements OnInit {
   }
 
   llenarTabla(calificacionesClientes: CalificacionCliente[]) {
-    this.ordenarAsc(calificacionesClientes, 'id');
     this.dataSource = new MatTableDataSource(calificacionesClientes);
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
-  }
-
-  ordenarAsc(arrayJson: any, pKey: any) {
-    arrayJson.sort(function (a: any, b: any) {
-      return a[pKey] > b[pKey];
-    });
   }
 
   seleccion(calificacionCliente: CalificacionCliente) {
@@ -172,11 +164,11 @@ export class CalificacionClienteComponent implements OnInit {
 
   validarFormulario(): boolean {
     //validar que los campos esten llenos antes de guardar
-    if (this.calificacionCliente.descripcion == '') {
+    if (this.calificacionCliente.descripcion == valores.vacio) {
       Swal.fire({ icon: error_swal, title: error, text: mensajes.error_falta_datos });
       return false;
     }
-    if (this.calificacionCliente.abreviatura == '') {
+    if (this.calificacionCliente.abreviatura == valores.vacio) {
       Swal.fire({ icon: error_swal, title: error, text: mensajes.error_falta_datos });
       return false;
     }
