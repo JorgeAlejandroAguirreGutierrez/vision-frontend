@@ -36,6 +36,7 @@ import { KardexService } from '../../servicios/inventario/kardex.service';
 
 import { MatStepper } from '@angular/material/stepper';
 import { MatPaginator } from '@angular/material/paginator';
+import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 
 @Component({
@@ -133,12 +134,13 @@ export class FacturaComponent implements OnInit {
   piePagina: Type<any> = FooterComponent;
 
   @ViewChild('stepper') stepper: MatStepper;
-  @ViewChild("paginator") paginator: MatPaginator;
-  @ViewChild("paginatorLinea") paginatorLinea: MatPaginator;
-  @ViewChild("inputFiltro") inputFiltro: ElementRef;
-  @ViewChild("inputFiltroLinea") inputFiltroLinea: ElementRef;
+  @ViewChild('paginator') paginator: MatPaginator;
+  @ViewChild('paginatorLinea') paginatorLinea: MatPaginator;
+  @ViewChild('matSort') sort: MatSort;
+  @ViewChild('matSortLinea') sortLinea: MatSort;
+  @ViewChild('inputFiltro') inputFiltro: ElementRef;
+  @ViewChild('inputFiltroLinea') inputFiltroLinea: ElementRef;
   
-
   @HostListener('window:keypress', ['$event'])
     keyEvent($event: KeyboardEvent) {
       if (($event.shiftKey || $event.metaKey) && $event.key == "G") //SHIFT + G
@@ -326,6 +328,7 @@ export class FacturaComponent implements OnInit {
       this.datepipe.transform(data.fecha, "dd-MM-yyyy").includes(filter) || data.serie.includes(filter) || data.secuencial.includes(filter) || 
       data.cliente.razonSocial.includes(filter) || data.estado.includes(filter);
     this.dataSourceFactura.paginator = this.paginator;
+    this.dataSourceFactura.sort = this.sort;
   }
 
   seleccion(factura: any) {
@@ -441,6 +444,7 @@ export class FacturaComponent implements OnInit {
       data.producto.nombre.includes(filter) || data.producto.medida.abreviatura.includes(filter) || String(data.cantidad).includes(filter) || 
       String(data.impuesto.porcentaje).includes(filter) || data.entregado.includes(filter);
     this.dataSourceLinea.paginator = this.paginatorLinea;
+    this.dataSourceLinea.sort = this.sortLinea;
   }
 
   seleccionFacturaLinea(facturaLinea: FacturaLinea, i:number) {

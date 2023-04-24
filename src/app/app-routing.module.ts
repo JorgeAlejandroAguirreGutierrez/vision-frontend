@@ -79,6 +79,7 @@ import { EmpresaComponent } from './usuarios/empresa/empresa.component';
 import { EstablecimientoComponent, DialogoMapaEstablecimientoComponent } from './usuarios/establecimiento/establecimiento.component';
 import { EstacionComponent } from './usuarios/estacion/estacion.component';
 import { PerfilComponent } from './usuarios/perfil/perfil.component';
+import { PermisoComponent } from './usuarios/permiso/permiso.component';
 
 //Módulo de Configuraciones
 import { UbicacionComponent } from './configuraciones/ubicacion/ubicacion.component';
@@ -98,7 +99,6 @@ const routes: Routes = [
   { path: 'main', component: MainComponent },
   { path: 'menu', component: MenuComponent },
   // Rutas del Modulo de configuración
-  {path: 'cliente/ubicacion', component: UbicacionComponent},
   {path: 'cliente/empresa', component: EmpresaComponent},
   // Rutas para el modulo de usuarios
   { path: 'usuario', component: UsuarioComponent },
@@ -106,15 +106,10 @@ const routes: Routes = [
   { path: 'usuario/estacion', component: EstacionComponent },
   // Rutas para el modulo de clientes
   { path: 'cliente', component: ClienteComponent },
-  { path: 'cliente/plazocredito', component: PlazoCreditoComponent },
-  { path: 'cliente/impuesto', component: ImpuestoComponent },
   { path: 'cliente/grupocliente', component: GrupoClienteComponent },
-  { path: 'cliente/regimen', component: RegimenComponent },
-  { path: 'cliente/estadocivil', component: EstadoCivilComponent },
   { path: 'cliente/calificacioncliente', component: CalificacionClienteComponent },
   { path: 'cliente/origeningreso', component: OrigenIngresoComponent },
   { path: 'cliente/formapago', component: FormaPagoComponent },
-  { path: 'cliente/secuencial', component: SecuencialComponent },
   // Rutas para el Modulo de inventarios
   { path: 'producto', component: ProductoComponent },
   { path: 'inventario/medida', component: MedidaComponent },
@@ -127,7 +122,7 @@ const routes: Routes = [
   { path: 'recaudacion', component: RecaudacionComponent },
   // Rutas para el modulo de compras
   { path: 'proveedor', component: ProveedorComponent },
-  // Rutas para el módulo de comprobantes
+  // Rutas para el módulo de ventas
   { path: 'factura', component: FacturaComponent },
   // Estos no se usa, borrar al final
   { path: 'dashboard', component: DashboardComponent },
@@ -218,6 +213,7 @@ export const RoutingComponents = [
   DialogoMapaEstablecimientoComponent,
   EstacionComponent,
   PerfilComponent,
+  PermisoComponent,
   // configuración
   TipoRetencionComponent,
   UbicacionComponent,

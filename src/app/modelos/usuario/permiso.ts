@@ -1,5 +1,7 @@
-import { Perfil } from './perfil';
 import { valores } from "../../constantes";
+import { Perfil } from './perfil';
+import { MenuOpcion } from '../configuracion/menu-opcion'
+
 export class Permiso {
   id: number;
   codigo: string;
@@ -7,7 +9,8 @@ export class Permiso {
   operacion: string;
   habilitado: string;
   estado: string;
-  perfil: Perfil;
+  //perfil: Perfil;
+  menuOpcion: MenuOpcion;
 
   constructor(){
     this.id=valores.cero;
@@ -15,6 +18,7 @@ export class Permiso {
     this.modulo=valores.vacio;
     this.operacion=valores.vacio;
     this.habilitado=valores.si;
-    this.perfil=new Perfil();
+    //this.perfil=new Perfil();
+    this.menuOpcion = new MenuOpcion();
   }
 }

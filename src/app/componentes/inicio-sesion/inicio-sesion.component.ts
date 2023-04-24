@@ -61,7 +61,7 @@ export class InicioSesionComponent implements OnInit {
     private empresaService: EmpresaService, private router: Router, public dialog: MatDialog) { }
 
   ngOnInit() {
-    this.obtenerParametro();
+    this.obtenerLogo();
     this.consultarEmpresas();
     this.obtenerEstacion();
   }
@@ -154,7 +154,7 @@ export class InicioSesionComponent implements OnInit {
     });
   }
 
-  obtenerParametro() {
+  obtenerLogo() {
     let tipo = "LOGO";
     this.parametroService.obtenerPorTipo(tipo).subscribe({
       next: res => {

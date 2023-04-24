@@ -38,6 +38,7 @@ import { EmpresaComponent } from '../../../usuarios/empresa/empresa.component';
 import { EstablecimientoComponent } from '../../../usuarios/establecimiento/establecimiento.component';
 import { EstacionComponent } from '../../../usuarios/estacion/estacion.component';
 import { PerfilComponent } from '../../../usuarios/perfil/perfil.component';
+import { PermisoComponent } from '../../../usuarios/permiso/permiso.component';
 //CONFIGURACIONES
 import { UbicacionComponent } from '../../../configuraciones/ubicacion/ubicacion.component';
 import { EstadoCivilComponent } from '../../../configuraciones/estado-civil/estado-civil.component';
@@ -64,8 +65,9 @@ export class SidebarItemsService {
   constructor() { }
 
   llenarOpciones(Componente: Type<any>, tabTitulo: string, itemNombre: string, icoItem: string) {
+    // VALIDAR SI TIENE PERMISO PARA VER LA OPCIÓN EN EL SIDEBAR
     this.permisoOpciones.forEach(elemento => {
-      if (elemento.operacion == itemNombre.toUpperCase() && elemento.habilitado==valores.si && elemento.estado==valores.activo){ //opciones sidebar
+      if (elemento.menuOpcion.opcion == itemNombre.toUpperCase() && elemento.menuOpcion.menu==valores.si && elemento.estado==valores.activo){
         this.opciones.push(new SidebarItem(Componente, tabTitulo, itemNombre, icoItem));
       }
     });
@@ -154,6 +156,7 @@ export class SidebarItemsService {
       this.llenarOpciones(EstablecimientoComponent, tabs.tab_establecimiento, items.item_establecimiento, icos.ico_establecimiento);
       this.llenarOpciones(EstacionComponent, tabs.tab_estacion, items.item_estacion, icos.ico_estacion);
       this.llenarOpciones(PerfilComponent, tabs.tab_perfil, items.item_perfil, icos.ico_perfil);
+      this.llenarOpciones(PermisoComponent, tabs.tab_permiso, items.item_permiso, icos.ico_permiso);
     }
 
     if (tabNombre == modulos.modulo_configuracion) {

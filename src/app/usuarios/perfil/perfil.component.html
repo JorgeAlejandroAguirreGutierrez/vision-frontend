@@ -44,7 +44,7 @@
             </mat-expansion-panel-header>
             <hr>
             <div class="form-group form-row">
-                <div class="col-3">
+                <div class="col-2">
                     <mat-form-field appearance="standard">
                         <mat-label>Código</mat-label>
                         <input matInput type="text" [(ngModel)]="perfil.codigo" class="form-control-sm"
@@ -58,7 +58,7 @@
                             oninput="this.value = this.value.toUpperCase()" class="form-control-sm">
                     </mat-form-field>
                 </div>
-                <div class="col-1">
+                <div class="col-2">
                     <mat-form-field appearance="standard">
                         <mat-label>Abreviatura</mat-label>
                         <input matInput type="text" [(ngModel)]="perfil.abreviatura" oninput="this.value = this.value.toUpperCase()"
@@ -83,44 +83,6 @@
                         </mat-select>
                     </mat-form-field>
                 </div>
-                <div class="col-6">
-                    <mat-form-field appearance="standard">
-                        <mat-label>Modulo</mat-label>
-                        <mat-select [(ngModel)]="permiso.modulo" [compareWith]="compareFn" class="form-control-sm">
-                            <mat-option *ngFor="let modulo of modulos" [value]="modulo.nombre">
-                                {{modulo.nombre}}
-                            </mat-option>
-                        </mat-select>
-                    </mat-form-field>
-                </div>
-                <div class="col-5">
-                    <mat-form-field appearance="standard">
-                        <mat-label>Operacion</mat-label>
-                        <mat-select [(ngModel)]="permiso.operacion" [compareWith]="compareFn" class="form-control-sm">
-                            <mat-option *ngFor="let operacion of operaciones" [value]="operacion.nombre">
-                                {{operacion.nombre}}
-                            </mat-option>
-                        </mat-select>
-                    </mat-form-field>
-                </div>
-                <div class="col-1 iconos">
-                    <button mat-icon-button>
-                        <mat-icon (click)="agregarPermiso()">add</mat-icon>
-                    </button>
-                </div>
-                <!--ng-container *ngFor="let permiso of perfil.permisos; let i=index ">
-                    <div class="col-11">
-                        <mat-form-field appearance="standard">
-                            <mat-label>Permisos</mat-label>
-                            <input matInput type="text" value="{{permiso.modulo}} + {{permiso.operacion}}" class="form-control-sm" [disabled]="true">
-                        </mat-form-field>
-                    </div>
-                    <div class="col-1 iconos">
-                        <button mat-icon-button>
-                            <mat-icon class="iconos-peque" (click)="eliminarPermiso(i)">close</mat-icon>
-                        </button>
-                    </div>
-                </ng-container-->
             </div>
         </mat-expansion-panel>
     </mat-accordion>
@@ -132,14 +94,18 @@
                     <i><u>GESTIONAR PERFILES</u></i>
                 </mat-panel-title>
                 <mat-panel-description>
-                    {{abrirPanelAdmin ? 'Ocultar administrador de perfiles' : 'Editar perfil existente'}}
+                    {{abrirPanelAdmin ? 'Ocultar administrador de perfiles' : 'Administrar perfil existente'}}
                     <mat-icon>playlist_add_check</mat-icon>
                 </mat-panel-description>
             </mat-expansion-panel-header>
             <hr>
             <mat-form-field appearance="standard">
                 <mat-label>Buscar perfil</mat-label>
-                <input matInput (keyup)="filtro($event)" #input>
+                <input matInput oninput="this.value = this.value.toUpperCase()" (keyup)="filtro($event)" #inputFiltro>
+                <button mat-button *ngIf="inputFiltro.value" matSuffix mat-icon-button
+                    (click)="borrarFiltro()">
+                    <mat-icon>close</mat-icon>
+                </button>
             </mat-form-field>
             <div class="mat-elevation-z8">
                 <table mat-table [dataSource]="dataSource" matSort #MatSort1="matSort">
@@ -153,7 +119,9 @@
                         *matRowDef="let row; columns: cabecera;"></tr>
                     <!-- Row shown when there is no matching data. -->
                     <tr class="mat-row" *matNoDataRow>
-                        <td class="mat-cell" colspan="6">No hay datos que coincidan con la estacion</td>
+                        <td class="mat-cell" colspan="6">No hay datos que coincidan con el perfil: 
+                            "{{inputFiltro.value}}" 
+                        </td>
                     </tr>
                 </table>
                 <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" #MatPaginator1="matPaginator"></mat-paginator>
@@ -165,61 +133,5 @@
                 Id: {{clickedRow.id}} seleccionado
             </div>
         </mat-expansion-panel>
-    </mat-accordion>
-    <mat-accordion class="headers-align">
-        <mat-expansion-panel (opened)="abrirPanelPermiso = true" (closed)="abrirPanelPermiso = false"
-            [expanded]="true">
-            <mat-expansion-panel-header>
-                <mat-panel-title>
-                    <i><u>GESTIONAR PERMISOS</u></i>
-                </mat-panel-title>
-                <mat-panel-description>
-                    {{abrirPanelPermiso ? 'Ocultar administrador de perfiles' : 'Editar perfil existente'}}
-                    <mat-icon>playlist_add_check</mat-icon>
-                </mat-panel-description>
-            </mat-expansion-panel-header>   
-            <hr>
-            <div class="col-12" >
-                <mat-form-field appearance="standard">
-                    <mat-label>Buscar permiso</mat-label>
-                    <input matInput (keyup)="filtroPermiso($event)" #inputFiltro>
-                </mat-form-field>
-                <div class="mat-elevation-z8">
-                    <table mat-table [dataSource]="dataSourcePermiso" matSort #MatSort2="matSort">
-                        <!-- Columnas Dinamicas -->
-                        <ng-container *ngFor="let columna of columnasPermiso" [matColumnDef]="columna.nombreColumna">
-                            <th mat-header-cell *matHeaderCellDef mat-sort-header> {{ columna.cabecera }} </th>
-                            <td mat-cell *matCellDef="let row"> 
-                                <ng-container *ngIf="columna.nombreColumna!='acciones'">
-                                    {{ columna.celda(row) }}
-                                </ng-container>
-                                <ng-container *ngIf="columna.nombreColumna=='acciones'">
-                                    <button mat-icon-button color="warn" (click)="inactivarPermiso(row)">
-                                        <i class="fa fa-times mat-icon"></i>
-                                    </button>
-                                    <button mat-icon-button color="primary" (click)="activarPermiso(row)">
-                                        <i class="fa fa-check mat-icon"></i>
-                                    </button>
-                                </ng-container>
-                            </td>
-                        </ng-container>
-                        <tr mat-header-row *matHeaderRowDef="cabeceraPermiso"></tr>
-                        <tr mat-row [class.selected-row]="clickedRowsPermiso.has(row)"
-                            *matRowDef="let row; columns: cabeceraPermiso;"></tr>
-                        <!-- Row shown when there is no matching data. -->
-                        <tr class="mat-row" *matNoDataRow>
-                            <td class="mat-cell" colspan="6">No hay datos que coincidan con el permiso</td>
-                        </tr>
-                    </table>
-                    <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" #MatPaginator2="matPaginator"></mat-paginator>
-                </div>
-                <div class="azul" *ngIf="!clickedRowsPermiso.size">
-                    Seleccione una fila para editar
-                </div>
-                <div class="azul" *ngFor="let clickedRow of clickedRowsPermiso">
-                    Id: {{clickedRow.id}} seleccionado
-                </div>
-            </div>
-        </mat-expansion-panel> 
     </mat-accordion>
 </div>
