@@ -18,5 +18,4 @@ export class Secuencial {
         this.tipoComprobante = new TipoComprobante();
         this.estacion = new Estacion();
     }
-
 }
