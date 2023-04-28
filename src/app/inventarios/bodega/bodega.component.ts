@@ -45,14 +45,6 @@ export class BodegaComponent implements OnInit {
   @ViewChild(MatSort) sort: MatSort;
   @ViewChild("inputFiltro") inputFiltro: ElementRef;
 
-  constructor(private renderer: Renderer2, private bodegaService: BodegaService, 
-      private sesionService: SesionService,private router: Router) { }
-
-  ngOnInit() {
-    this.sesion = validarSesion(this.sesionService, this.router);
-    this.consultar();
-  }
-  
   @HostListener('window:keypress', ['$event'])
   keyEvent($event: KeyboardEvent) {
     if (($event.shiftKey || $event.metaKey) && $event.key == 'G') //SHIFT + G
@@ -61,6 +53,14 @@ export class BodegaComponent implements OnInit {
       this.nuevo(null);
   }
 
+  constructor(private renderer: Renderer2, private bodegaService: BodegaService, 
+      private sesionService: SesionService,private router: Router) { }
+
+  ngOnInit() {
+    this.sesion = validarSesion(this.sesionService, this.router);
+    this.consultar();
+  }
+  
   nuevo(event) {
     if (event!=null)
       event.preventDefault();

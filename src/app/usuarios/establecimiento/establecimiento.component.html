@@ -180,7 +180,7 @@
                                 <mat-icon (click)="agregarTelefono()">add</mat-icon>
                             </button>
                         </div>
-                        <ng-container *ngFor="let telefono of establecimiento.telefonos; let i=index ">
+                        <ng-container *ngFor="let telefono of establecimiento.telefonosEstablecimiento; let i=index ">
                             <div class="col-9">
                                 <mat-form-field appearance="standard">
                                     <mat-label>Teléfono</mat-label>
@@ -212,7 +212,7 @@
                                 <mat-icon (click)="agregarCelular()">add</mat-icon>
                             </button>
                         </div>
-                        <ng-container *ngFor="let celular of establecimiento.celulares; let i=index ">
+                        <ng-container *ngFor="let celular of establecimiento.celularesEstablecimiento; let i=index ">
                             <div class="col-9">
                                 <mat-form-field appearance="standard">
                                     <mat-label>Celular</mat-label>
@@ -241,7 +241,7 @@
                                 <mat-icon (click)="agregarCorreo()">add</mat-icon>
                             </button>
                         </div>
-                        <ng-container *ngFor="let correo of establecimiento.correos; let i=index ">
+                        <ng-container *ngFor="let correo of establecimiento.correosEstablecimiento; let i=index ">
                             <div class="col-9">
                                 <mat-form-field appearance="standard">
                                     <mat-label>Correo electrónico</mat-label>

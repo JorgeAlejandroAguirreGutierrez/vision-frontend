@@ -197,6 +197,8 @@ export const valores = {
     conjunta: "CONJUNTA"
 }
 
+export const tipoMedidas = ["PESO", "VOLUMEN", "UNIDAD"]
+
 export const dispositivos = ["PC ESCRITORIO", "PC PORTATIL", "TABLETA", "TELÉFONO", "CAJA REGISTRADORA", "OTRO"]
 
 export const preguntas = ["¿CUAL ES EL NOMBRE DE TU MASCOTA?", "¿CUAL ES EL APELLIDO DE TU ABUELA MATERNA?", "¿CUAL ES EL NOMBRE DE TU EQUIPO PREFERIDO?", "¿CUAL ES TU MARCA DE VEHICULO PREFERIDO?"]

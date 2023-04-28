@@ -17,7 +17,7 @@ export class MenuOpcion {
         this.modulo = valores.vacio;
         this.opcion = valores.vacio;
         this.operacion = valores.vacio;
-        this.menu = valores.no;
+        this.menu = valores.si;
         this.tabla = valores.vacio;
         this.abreviatura = valores.vacio;
         this.estado = valores.activo;

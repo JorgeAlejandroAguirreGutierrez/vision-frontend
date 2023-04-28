@@ -18,9 +18,9 @@ export class Establecimiento {
     regimen: Regimen;
     ubicacion: Ubicacion;
     empresa: Empresa;
-    telefonos: TelefonoEstablecimiento[];
-    celulares: CelularEstablecimiento[];
-    correos: CorreoEstablecimiento[];
+    telefonosEstablecimiento: TelefonoEstablecimiento[];
+    celularesEstablecimiento: CelularEstablecimiento[];
+    correosEstablecimiento: CorreoEstablecimiento[];
 
     constructor(){
         this.id = valores.cero;
@@ -34,8 +34,8 @@ export class Establecimiento {
         this.regimen = new Regimen();
         this.ubicacion = new Ubicacion();
         this.empresa = new Empresa();
-        this.telefonos=[];
-        this.celulares=[];
-        this.correos=[];
+        this.telefonosEstablecimiento=[];
+        this.celularesEstablecimiento=[];
+        this.correosEstablecimiento=[];
     }
 }

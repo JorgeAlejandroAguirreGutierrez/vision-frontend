@@ -1,4 +1,4 @@
-import { Component, OnInit, HostListener } from '@angular/core';
+import { Component, OnInit, HostListener, ElementRef, Renderer2 } from '@angular/core';
 import { valores, validarSesion, exito, exito_swal, error, error_swal } from '../../constantes';
 import Swal from 'sweetalert2';
 
@@ -27,6 +27,8 @@ export class PermisoComponent implements OnInit {
 
   activo: string = valores.activo;
   inactivo: string = valores.inactivo;
+  si: string = valores.si;
+  no: string = valores.no;
 
   abrirPanelNuevo: boolean = true;
   abrirPanelAdmin: boolean = true;
@@ -53,8 +55,9 @@ export class PermisoComponent implements OnInit {
   dataSource: MatTableDataSource<Permiso>;
   clickedRows = new Set<Permiso>();
 
-  @ViewChild('MatPaginator2') paginator2: MatPaginator;
-  @ViewChild('MatSort2') sort2: MatSort;
+  @ViewChild('MatPaginator') paginator: MatPaginator;
+  @ViewChild('MatSort') sort: MatSort;
+  @ViewChild("inputFiltro") inputFiltro: ElementRef;
 
   @HostListener('window:keypress', ['$event'])
   keyEvent($event: KeyboardEvent) {
@@ -64,15 +67,23 @@ export class PermisoComponent implements OnInit {
       this.nuevo(null);
   }
 
-  constructor(private menuOpcionService: MenuOpcionService, private perfilService: PerfilService,
+  constructor(private renderer: Renderer2, private menuOpcionService: MenuOpcionService, private perfilService: PerfilService,
               private permisoService: PermisoService, private sesionService: SesionService, private router: Router) { }
 
   ngOnInit() {
     this.sesion = validarSesion(this.sesionService, this.router);
-    this.consultar();
+    this.consultarPerfiles();
     this.consultarModulos();
   }
 
+  consultarPerfiles() {
+    this.perfilService.consultar().subscribe({
+      next: res => {
+        this.perfiles = res.resultado as Perfil[];
+      },
+      error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+    });
+  }
   consultarModulos() {
     this.menuOpcionService.consultarModulos().subscribe({
       next: res => {
@@ -81,7 +92,6 @@ export class PermisoComponent implements OnInit {
       error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     });
   }
-
   consultarOpciones(modulo: String) {
     this.menuOpcionService.consultarPorModulo(modulo).subscribe({
       next: res => {
@@ -96,8 +106,13 @@ export class PermisoComponent implements OnInit {
       event.preventDefault();
     this.perfil = new Perfil();
     this.permisos = [];
-    this.clickedRows.clear();
     this.dataSource = new MatTableDataSource<Permiso>([]);
+    this.nuevoPermiso();
+  }
+
+  nuevoPermiso(){
+    this.permiso = new Permiso();
+    this.clickedRows.clear();
   }
 
   crear(event) {
@@ -106,7 +121,7 @@ export class PermisoComponent implements OnInit {
     this.perfilService.crear(this.perfil).subscribe({
       next: res => {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
-        this.consultar();
+        this.consultar(this.perfil);
         this.nuevo(null);
       },
       error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
@@ -116,94 +131,59 @@ export class PermisoComponent implements OnInit {
   actualizar(event) {
     if (event != null)
       event.preventDefault();
+    console.log(this.perfil);  
     this.perfilService.actualizar(this.perfil).subscribe({
       next: res => {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
-        this.consultar();
+        this.consultar(this.perfil);
         this.nuevo(null);
       },
       error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     });
   }
 
-  activar(event) {
-    if (event != null)
-      event.preventDefault();
-    this.perfilService.activar(this.perfil).subscribe({
-      next: res => {
-        Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
-        this.consultar();
-        this.nuevo(null);
-      },
-      error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
-    });
-  }
-
-  inactivar(event) {
-    if (event != null)
-      event.preventDefault();
-    this.perfilService.inactivar(this.perfil).subscribe({
-      next: res => {
-        Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
-        this.consultar();
-        this.nuevo(null);
-      },
-      error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
-    });
-  }
-
-  consultar() {
-    this.perfilService.consultar().subscribe({
-      next: res => {
-        this.perfiles = res.resultado as Perfil[];
-      },
-      error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
-    });
-  }
-
-
-  seleccion(permiso: Permiso) {
-    if (!this.clickedRows.has(permiso)){
-      this.clickedRows.clear();
-      this.clickedRows.add(permiso);
-      this.permiso = { ... permiso};
-    } else {
-      this.nuevo(null);
-    }
-  }
-
-  consultarPermisos(perfil: Perfil) {
+  consultar(perfil: Perfil) {
       this.permisos = perfil.permisos as Permiso[];
       this.llenarTabla(this.permisos);
   }
 
   llenarTabla(permisos: Permiso[]){
     this.dataSource = new MatTableDataSource(permisos);
-    this.dataSource.paginator = this.paginator2;
-    this.dataSource.sort = this.sort2;
+    this.dataSource.paginator = this.paginator;
+    this.dataSource.sort = this.sort;
   }
 
-  activarPermiso(permiso: Permiso){
-    this.permisoService.activar(permiso).subscribe({
+  seleccion(permiso: Permiso) {
+    if (!this.clickedRows.has(permiso)){
+      this.clickedRows.clear();
+      this.clickedRows.add(permiso);
+      this.permiso = { ...permiso};
+      this.consultarOpciones(this.permiso.menuOpcion.modulo);
+    } else {
+      this.nuevoPermiso();
+    }
+  }
+
+  activar(event){
+    if (event != null)
+      event.preventDefault();
+    this.permisoService.activar(this.permiso).subscribe({
       next: res => {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
-        permiso.habilitado = valores.si;
       },
       error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     });
   }
 
-  inactivarPermiso(permiso: Permiso){
-    this.permisoService.inactivar(permiso).subscribe({
+  inactivar(event){
+    if (event != null)
+      event.preventDefault();
+    this.permisoService.inactivar(this.permiso).subscribe({
       next: res => {
-        Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
-        permiso.habilitado = valores.no;
-        permiso.estado = valores.inactivo;        
+        Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });  
       },
       error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     });
-
-
   }
 
   filtro(event: Event) {
@@ -213,20 +193,16 @@ export class PermisoComponent implements OnInit {
       this.dataSource.paginator.firstPage();
     }
   }
-
-  filtroPermiso(event: Event) {
-    const filterValue = (event.target as HTMLInputElement).value;
-    this.dataSource.filter = filterValue.trim().toUpperCase();
-    if (this.dataSource.paginator) {
-      this.dataSource.paginator.firstPage();
-    }
+  borrarFiltro() {
+    this.renderer.setProperty(this.inputFiltro.nativeElement, 'value', '');
+    this.dataSource.filter = '';
   }
 
-
-
   agregarPermiso(){
-    this.perfil.permisos.push({ ... this.permiso});
-    this.permiso= new Permiso();
+    //this.permiso.perfil.id = this.perfil.id
+    this.perfil.permisos.push({ ...this.permiso});
+    this.consultar(this.perfil);
+    this.nuevoPermiso();
   }
 
   eliminarPermiso(i: number) {

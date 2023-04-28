@@ -42,7 +42,7 @@ export class EstacionComponent implements OnInit {
   empresas: Empresa[];
   establecimientos: Establecimiento[]=[];
   regimenes: Regimen[] = [];
-  dispositivos: any[] = dispositivos;
+  dispositivos: string[] = dispositivos;
 
   columnas: any[] = [
     { nombreColumna: 'codigo', cabecera: 'Código', celda: (row: Estacion) => `${row.codigo}` },
