@@ -1,7 +1,7 @@
-import { Component, HostListener, OnInit, Type } from '@angular/core';
+import { Component, HostListener, OnInit, ElementRef, Renderer2 } from '@angular/core';
 import { Router } from '@angular/router';
 import Swal from 'sweetalert2';
-import { validarSesion, tab_activo, exito, exito_swal, error, error_swal, valores } from '../../constantes';
+import { validarSesion, tipoMedidas, mensajes, exito, exito_swal, error, error_swal, valores } from '../../constantes';
 import { ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
@@ -21,8 +21,9 @@ export class MedidaComponent implements OnInit {
   abrirPanelNuevo = true;
   abrirPanelAdmin = true;
 
-  activo = valores.activo;
-  inactivo = valores.inactivo;
+  activo: string = valores.activo;
+  inactivo: string = valores.inactivo;
+  tipoMedidas: string[] = tipoMedidas; 
 
   sesion: Sesion=null;
   medida = new Medida();
@@ -41,21 +42,22 @@ export class MedidaComponent implements OnInit {
   
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
+  @ViewChild("inputFiltro") inputFiltro: ElementRef;
 
-  constructor(private medidaService: MedidaService,
-    private sesionService: SesionService,private router: Router) { }
-
-  ngOnInit() {
-    this.sesion=validarSesion(this.sesionService, this.router);
-    this.consultar();
-  }
-  
   @HostListener('window:keypress', ['$event'])
   keyEvent($event: KeyboardEvent) {
     if (($event.shiftKey || $event.metaKey) && $event.key == 'G') //SHIFT + G
       this.crear(null);
     if (($event.shiftKey || $event.metaKey) && $event.key == 'N') //ASHIFT + N
       this.nuevo(null);
+  }
+
+  constructor(private renderer: Renderer2, private medidaService: MedidaService,
+    private sesionService: SesionService,private router: Router) { }
+
+  ngOnInit() {
+    this.sesion=validarSesion(this.sesionService, this.router);
+    this.consultar();
   }
 
   nuevo(event) {
@@ -68,27 +70,31 @@ export class MedidaComponent implements OnInit {
   crear(event) {
     if (event!=null)
       event.preventDefault();
-    this.medidaService.crear(this.medida).subscribe(
-      res => {
+    if (!this.validarFormulario())
+      return;
+    this.medidaService.crear(this.medida).subscribe({
+      next: res => {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
         this.consultar();
         this.nuevo(null);
       },
-      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
-    );
+      error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+    });
   }
 
   actualizar(event) {
     if (event!=null)
       event.preventDefault();
-    this.medidaService.actualizar(this.medida).subscribe(
-      res => {
+    if (!this.validarFormulario())
+      return;
+    this.medidaService.actualizar(this.medida).subscribe({
+      next: res => {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
         this.consultar();
         this.nuevo(null);
       },
-      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
-    );
+      error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+    });
   }
 
   activar(event) {
@@ -118,15 +124,19 @@ export class MedidaComponent implements OnInit {
   }
   
   consultar() {
-    this.medidaService.consultar().subscribe(
-      res => {
+    this.medidaService.consultar().subscribe({
+      next: res => {
         this.medidas = res.resultado as Medida[]
-        this.dataSource = new MatTableDataSource(this.medidas);
-        this.dataSource.paginator = this.paginator;
-        this.dataSource.sort = this.sort;
+        this.llenarTabla(this.medidas);
       },
-      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
-    );
+      error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+    });
+  }
+
+  llenarTabla(medida: Medida[]) {
+    this.dataSource = new MatTableDataSource(medida);
+    this.dataSource.paginator = this.paginator;
+    this.dataSource.sort = this.sort;
   }
 
   seleccion(medida: Medida) {
@@ -135,8 +145,7 @@ export class MedidaComponent implements OnInit {
       this.clickedRows.add(medida);
       this.medida = { ... medida};
     } else {
-      this.clickedRows.clear();
-      this.medida = new Medida();
+      this.nuevo(null);
     }
   }
 
@@ -146,5 +155,26 @@ export class MedidaComponent implements OnInit {
     if (this.dataSource.paginator) {
       this.dataSource.paginator.firstPage();
     }
+  }
+  borrarFiltro() {
+    this.renderer.setProperty(this.inputFiltro.nativeElement, 'value', '');
+    this.dataSource.filter = '';
+  }
+
+  validarFormulario(): boolean {
+    //validar que los campos esten llenos antes de guardar
+    if (this.medida.tipo == valores.vacio) {
+      Swal.fire({ icon: error_swal, title: error, text: mensajes.error_falta_datos });
+      return false;
+    }
+    if (this.medida.descripcion == valores.vacio) {
+      Swal.fire({ icon: error_swal, title: error, text: mensajes.error_falta_datos });
+      return false;
+    }
+    if (this.medida.abreviatura == valores.vacio) {
+      Swal.fire({ icon: error_swal, title: error, text: mensajes.error_falta_datos });
+      return false;
+    }
+    return true;
   }
 }

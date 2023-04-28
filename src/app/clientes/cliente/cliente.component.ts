@@ -393,6 +393,7 @@ export class ClienteComponent implements OnInit {
     this.cliente.estacion = this.sesion.usuario.estacion;
     this.agregarTelefonoCorreo();
     this.validarDependiente();
+    console.log(this.cliente);
     this.clienteService.crear(this.cliente).subscribe({
       next: res => {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
@@ -417,6 +418,7 @@ export class ClienteComponent implements OnInit {
       event.preventDefault();
     this.agregarTelefonoCorreo();
     this.validarDependiente();
+    console.log(this.cliente);
     this.clienteService.actualizar(this.cliente).subscribe({
       next: res => {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });

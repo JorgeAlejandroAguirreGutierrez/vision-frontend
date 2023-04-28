@@ -152,13 +152,13 @@ export class EstablecimientoComponent implements OnInit {
     if (event!=null)
       event.preventDefault();
     if(this.telefono.numero != valores.vacio){
-      this.establecimiento.telefonos.push(this.telefono);
+      this.establecimiento.telefonosEstablecimiento.push(this.telefono);
     }
     if(this.celular.numero != valores.vacio){
-      this.establecimiento.celulares.push(this.celular);
+      this.establecimiento.celularesEstablecimiento.push(this.celular);
     }
     if(this.correo.email != valores.vacio){
-      this.establecimiento.correos.push(this.correo);
+      this.establecimiento.correosEstablecimiento.push(this.correo);
     }
     this.establecimientoService.crear(this.establecimiento).subscribe(
       res => {
@@ -174,13 +174,13 @@ export class EstablecimientoComponent implements OnInit {
     if (event!=null)
       event.preventDefault();
     if(this.telefono.numero != valores.vacio){
-      this.establecimiento.telefonos.push(this.telefono);
+      this.establecimiento.telefonosEstablecimiento.push(this.telefono);
     }
     if(this.celular.numero != valores.vacio){
-      this.establecimiento.celulares.push(this.celular);
+      this.establecimiento.celularesEstablecimiento.push(this.celular);
     }
     if(this.correo.email != valores.vacio){
-      this.establecimiento.correos.push(this.correo);
+      this.establecimiento.correosEstablecimiento.push(this.correo);
     }
     this.establecimientoService.actualizar(this.establecimiento).subscribe(
       res => {
@@ -253,7 +253,7 @@ export class EstablecimientoComponent implements OnInit {
     if (this.telefono.numero.length != 11 || digito != "0") {
       Swal.fire({ icon: error_swal, title: error, text: mensajes.error_telefono_invalido });
     } else {
-      this.establecimiento.telefonos.push({ ... this.telefono});
+      this.establecimiento.telefonosEstablecimiento.push({ ... this.telefono});
       this.telefono = new TelefonoEstablecimiento();
     }
   }
@@ -266,7 +266,7 @@ export class EstablecimientoComponent implements OnInit {
   }
 
   eliminarTelefono(i: number) {
-    this.establecimiento.telefonos.splice(i, 1);
+    this.establecimiento.telefonosEstablecimiento.splice(i, 1);
   }
 
   agregarCelular() {
@@ -275,7 +275,7 @@ export class EstablecimientoComponent implements OnInit {
       this.celular.numero = valores.vacio;
       Swal.fire({ icon: error_swal, title: error, text: mensajes.error_celular_invalido });
     } else{
-      this.establecimiento.celulares.push({ ... this.celular});
+      this.establecimiento.celularesEstablecimiento.push({ ... this.celular});
       this.celular = new CelularEstablecimiento();
     }
   }
@@ -289,7 +289,7 @@ export class EstablecimientoComponent implements OnInit {
   }
 
   eliminarCelular(i: number) {
-    this.establecimiento.celulares.splice(i, 1);
+    this.establecimiento.celularesEstablecimiento.splice(i, 1);
   }
 
   agregarCorreo() {
@@ -297,7 +297,7 @@ export class EstablecimientoComponent implements OnInit {
     if (!arroba) {
       Swal.fire({ icon: error_swal, title: error, text: mensajes.error_correo_invalido });
     } else{
-      this.establecimiento.correos.push({ ... this.correo});
+      this.establecimiento.correosEstablecimiento.push({ ... this.correo});
       this.correo = new CorreoEstablecimiento();
     }
   }
@@ -310,7 +310,7 @@ export class EstablecimientoComponent implements OnInit {
   }
 
   eliminarCorreo(i: number) {
-    this.establecimiento.correos.splice(i, 1);
+    this.establecimiento.correosEstablecimiento.splice(i, 1);
   }
 
   seleccion(establecimiento: Establecimiento) {

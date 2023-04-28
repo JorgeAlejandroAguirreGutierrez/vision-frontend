@@ -253,7 +253,6 @@ consultarGrupos() {
   }
 
   llenarGrupoProducto() {
-    this.validarCategoria();
     if (this.grupoProducto.categoriaProducto.id == 1){
       this.controlGrupo.setValue(this.grupoProducto.grupo);
       this.controlSubgrupo.setValue(this.grupoProducto.subgrupo);
@@ -265,6 +264,7 @@ consultarGrupos() {
       this.controlSubgrupo.setValue(this.grupoProducto.subgrupo);
       this.controlSeccion.setValue(this.grupoProducto.seccion);
     }
+    this.validarCategoria();
   }
 
   validarCategoria() {

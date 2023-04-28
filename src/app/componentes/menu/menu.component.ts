@@ -1,8 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Type } from '@angular/core';
-import { validarSesion, modulos } from '../../constantes';
+import { validarSesion, modulos, valores } from '../../constantes';
 
-import { environment } from '../../../environments/environment';
 import { Router } from '@angular/router';
 import { TabService } from "../../servicios/componente/tab/tab.service";
 import { FooterComponent } from "../footer/footer.component";
@@ -75,68 +74,68 @@ export class MenuComponent implements OnInit {
     this.obtenerPermiso();
   }
 
-  obtenerPermiso(){
+  obtenerPermiso(){ //Si quiero que aparezcan solo los módulos que tienen opciones
     this.sesion.usuario.perfil.permisos.forEach(elemento => {
       // FINANCIERO
-      if (elemento.modulo==modulos.modulo_clientes){
+      if (elemento.menuOpcion.modulo == modulos.modulo_clientes){ //  && elemento.menuOpcion.menu == valores.si
         this.permiso_clientes = true;
       }
-      if (elemento.modulo==modulos.modulo_compras){
+      if (elemento.menuOpcion.modulo == modulos.modulo_compras){
         this.permiso_compras = true;
       }
-      if (elemento.modulo==modulos.modulo_ventas){
+      if (elemento.menuOpcion.modulo == modulos.modulo_ventas){
         this.permiso_ventas = true;
       }
-      if (elemento.modulo==modulos.modulo_inventarios){
+      if (elemento.menuOpcion.modulo == modulos.modulo_inventarios){
         this.permiso_inventarios = true;
       }
-      if (elemento.modulo==modulos.modulo_caja_bancos){
+      if (elemento.menuOpcion.modulo == modulos.modulo_caja_bancos){
         this.permiso_caja_bancos = true;
       }
-      if (elemento.modulo==modulos.modulo_cuentas_cobrar){
+      if (elemento.menuOpcion.modulo == modulos.modulo_cuentas_cobrar){
         this.permiso_cuentasxcobrar = true;
       }
-      if (elemento.modulo==modulos.modulo_cuentas_pagar){
+      if (elemento.menuOpcion.modulo == modulos.modulo_cuentas_pagar){
         this.permiso_cuentasxpagar = true;
       }
-      if (elemento.modulo==modulos.modulo_activos_fijos){
+      if (elemento.menuOpcion.modulo == modulos.modulo_activos_fijos){
         this.permiso_activos_fijos = true;
       }
-      if (elemento.modulo==modulos.modulo_produccion){
+      if (elemento.menuOpcion.modulo == modulos.modulo_produccion){
         this.permiso_produccion = true;
       }
-      if (elemento.modulo==modulos.modulo_contabilidad){
+      if (elemento.menuOpcion.modulo == modulos.modulo_contabilidad){
         this.permiso_contabilidad = true;
       }
-      if (elemento.modulo==modulos.modulo_talento_humano){
+      if (elemento.menuOpcion.modulo == modulos.modulo_talento_humano){
         this.permiso_talento_humano = true;
       }
-      if (elemento.modulo==modulos.modulo_financiero){
+      if (elemento.menuOpcion.modulo == modulos.modulo_financiero){
         this.permiso_financiero = true;
       }
-      if (elemento.modulo==modulos.modulo_importacion){
+      if (elemento.menuOpcion.modulo == modulos.modulo_importacion){
         this.permiso_importacion = true;
       }
-      if (elemento.modulo==modulos.modulo_reportes){
+      if (elemento.menuOpcion.modulo == modulos.modulo_reportes){
         this.permiso_reportes = true;
       }
       // ADMINISTRACIÓN
-      if (elemento.modulo==modulos.modulo_accesos){
+      if (elemento.menuOpcion.modulo == modulos.modulo_accesos){
         this.permiso_accesos = true;
       }
-      if (elemento.modulo==modulos.modulo_configuracion){
+      if (elemento.menuOpcion.modulo == modulos.modulo_configuracion){
         this.permiso_configuraciones = true;
       }
-      if (elemento.modulo==modulos.modulo_indicadores){
+      if (elemento.menuOpcion.modulo == modulos.modulo_indicadores){
         this.permiso_estadisticas = true;
       }
-      if (elemento.modulo==modulos.modulo_control){
+      if (elemento.menuOpcion.modulo == modulos.modulo_control){
         this.permiso_control = true;
       }
-      if (elemento.modulo==modulos.modulo_auditoria){
+      if (elemento.menuOpcion.modulo == modulos.modulo_auditoria){
         this.permiso_auditorias = true;
       }
-      if (elemento.modulo==modulos.modulo_tutoriales){
+      if (elemento.menuOpcion.modulo == modulos.modulo_tutoriales){
         this.permiso_tutoriales = true;
       }
     });
