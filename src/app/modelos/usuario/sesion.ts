@@ -10,7 +10,6 @@ export class Sesion {
     fechaCierre: Date;
     estado: string;
     usuario: Usuario;
-    empresa: Empresa;
 
     constructor() { 
         this.id = valores.cero;
@@ -19,7 +18,6 @@ export class Sesion {
         this.fechaApertura = new Date();
         this.fechaCierre = new Date();
         this.estado = valores.activo;
-        this.usuario = new Usuario(); 
-        this.empresa = new Empresa();
+        this.usuario = new Usuario();
     }
 }

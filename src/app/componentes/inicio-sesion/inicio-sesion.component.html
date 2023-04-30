@@ -51,8 +51,8 @@
                             <div class="col-6 centrar">
                                 <mat-form-field appearance="standard">
                                     <mat-label>Empresa</mat-label>
-                                    <mat-select [(ngModel)]="sesion.empresa.id" class="form-control-sm">
-                                        <mat-option *ngFor="let empresa of empresas" [value]="empresa.id">
+                                    <mat-select [(ngModel)]="sesion.usuario.estacion.establecimiento.empresa" [compareWith]="compareFn" class="form-control-sm">
+                                        <mat-option *ngFor="let empresa of empresas" [value]="empresa">
                                             {{empresa.nombreComercial}}
                                         </mat-option>
                                     </mat-select>

@@ -36,7 +36,7 @@ export class NavbarComponent implements OnInit {
   }
 
   obtenerEmpresa() {
-    this.empresaService.obtener(this.sesion.empresa.id).subscribe(
+    this.empresaService.obtener(this.sesion.usuario.estacion.establecimiento.empresa.id).subscribe(
       res => {
         this.empresa = res.resultado as Empresa;
       }
