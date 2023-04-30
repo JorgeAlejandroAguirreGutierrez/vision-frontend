@@ -120,7 +120,7 @@
                         </div>
                     </ng-container>
                 </div>
-                <div class="col-3">
+                <div class="col-2">
                     <mat-form-field appearance="standard">
                         <mat-label>Fecha</mat-label>
                         <input matInput [matDatepicker]="picker1" class="form-control-sm" [(ngModel)]="facturaCompra.fecha" [max]="hoy">
@@ -128,21 +128,35 @@
                         <mat-datepicker #picker1></mat-datepicker>
                     </mat-form-field>
                 </div>
-                <div class="col-3">
+                <div class="col-2">
+                    <mat-form-field appearance="standard">
+                        <mat-label>Estab.</mat-label>
+                        <input matInput type="text" class="form-control-sm"
+                            [(ngModel)]="sesion.usuario.estacion.establecimiento.codigoSRI" disabled>
+                    </mat-form-field>
+                </div>
+                <div class="col-2">
+                    <mat-form-field appearance="standard">
+                        <mat-label>Punto V.</mat-label>
+                        <input matInput type="text" class="form-control-sm"
+                            [(ngModel)]="sesion.usuario.estacion.codigoSRI" disabled>
+                    </mat-form-field>
+                </div>
+                <div class="col-2">
                     <mat-form-field appearance="standard">
                         <mat-label>Secuencial</mat-label>
                         <input matInput type="text" class="form-control-sm" [(ngModel)]="facturaCompra.secuencial"
                             [disabled]="true">
                     </mat-form-field>
                 </div>
-                <div class="col-3">
+                <div class="col-2">
                     <mat-form-field appearance="standard">
                         <mat-label>Usuario</mat-label>
                         <input matInput type="text" class="form-control-sm"
-                            [(ngModel)]="facturaCompra.sesion.usuario.nombre" [disabled]="true">
+                            [(ngModel)]="sesion.usuario.nombre" [disabled]="true">
                     </mat-form-field>
                 </div>
-                <div class="col-3">
+                <div class="col-2">
                     <mat-form-field appearance="standard">
                         <mat-label>Estado</mat-label>
                         <mat-select class="form-control-sm" [(ngModel)]="facturaCompra.estado" [disabled]="true">
