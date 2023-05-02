@@ -77,6 +77,7 @@ export class FacturaComponent implements OnInit {
   abrirPanelFacturaLinea: boolean = false;
   abrirPanelAdminFactura: boolean = false;
   verIconoEditarLinea: boolean = false;
+  esBien: boolean = true;
 
   hoy = new Date();
 
@@ -503,7 +504,8 @@ export class FacturaComponent implements OnInit {
   seleccionarProducto() {
     this.facturaLinea.producto = this.controlProducto.value;
     this.facturaLinea.impuesto = this.facturaLinea.producto.impuesto;
-    this.inicializarOpciones();
+    if (this.facturaLinea.producto.categoriaProducto.id == 1){
+      this.esBien = true } else { this.esBien = false };
     if (this.facturaLinea.producto.id == valores.cero || this.factura.cliente.id == valores.cero) {
       return;
     }
@@ -514,7 +516,13 @@ export class FacturaComponent implements OnInit {
         this.calcularFacturaLinea();
       }
     }
-    this.obtenerUltimoKardex();
+    this.inicializarOpciones(); // Error si no tiene bodega
+    if (this.esBien){
+      //this.inicializarOpciones();
+      this.obtenerUltimoKardex();
+    } else {
+
+    }
   }
 
   seleccionarBodega() {

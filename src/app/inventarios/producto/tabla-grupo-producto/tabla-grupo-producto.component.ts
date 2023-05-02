@@ -1,6 +1,6 @@
 import { Component, OnInit, Output, EventEmitter, ElementRef, Renderer2 } from '@angular/core';
 import Swal from 'sweetalert2';
-import { valores, validarSesion, exito, exito_swal, error, error_swal } from '../../../constantes';
+import { validarSesion, error, error_swal } from '../../../constantes';
 import { Router } from '@angular/router';
 import { ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';

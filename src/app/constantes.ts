@@ -211,6 +211,8 @@ export const mensajes = {
     exito_crear_factura: "SE CREO LA FACTURA",
     exito_actualizar_factura: "SE ACTUALIZO LA FACTURA",
     exito_kardex_inicializado: "KARDEX INICIALIZADO CON EXITO",
+    // Mensajes de Advertencia
+    advertencia_precio_venta_publico_manual: "EL PVP MANUAL ES MENOR QUE EL PVP CALCULADO",
     // Mensajes de Error
     error_usuario: "INGRESE UN USUARIO",
     error_estacion_permiso: "NO TIENE PERMISOS PARA INGRESAR DESDE ESTE DISPOSITIVO",
@@ -268,7 +270,6 @@ export const mensajes = {
     mensaje_kardex_inicial: "INICIALIZAR KARDEX CON SALDO 0",
     error_medida_kardex: "ERROR MEDIDA KARDEX",
     error_falta_datos: "DATOS INCOMPLETOS, FAVOR INGRESE TODOS LOS DATOS",
-    error_precio_venta_publico_manual: "EL PRECIO DE VENTA AL PUBLICO MANUAL DEBE SER MAYOR",
     error_falta_correo: "DEBE AGREGAR POR LO MENOS UN CORREO ELECTRÓNICO PARA LA FACTURACIÓN",
     error_falta_imagen: "DEBE SELECCIONAR UNA IMAGEN",
     error_ruc: "DEBE INGRESAR UN RUC"
@@ -596,7 +597,7 @@ export const error = "Error";
 export const exito_swal = 'success';
 export const error_swal = 'error';
 export const warning_swal = 'warning';
-export const warning = "WARNING";
+export const warning = "ADVERTENCIA";
 export const si_seguro = "SI, ESTOY SEGURO";
 export const error_formulario = "FORMULARIO INCOMPLETO"
 

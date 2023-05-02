@@ -76,7 +76,7 @@
                             <input matInput type="text" [(ngModel)]="producto.categoriaProducto.descripcion" [disabled]="true" class="form-control-sm">
                         </mat-form-field>
                     </div>
-                    <ng-container *ngIf="producto.categoriaProducto.id==1">
+                    <ng-container *ngIf="esBien">
                         <div class="col-9">
                             <mat-form-field appearance="standard">
                                 <mat-label>Nombre Producto</mat-label>
@@ -84,7 +84,7 @@
                             </mat-form-field>
                         </div>
                     </ng-container>
-                    <ng-container *ngIf="producto.categoriaProducto.id!=1">
+                    <ng-container *ngIf="!esBien">
                         <div class="col-7">
                             <mat-form-field appearance="standard">
                                 <mat-label>Nombre Servicio / Activo Fijo</mat-label>
@@ -93,13 +93,6 @@
                                 <button mat-button matSuffix mat-icon-button>
                                     <mat-icon>close</mat-icon>
                                 </button>
-                            </mat-form-field>
-                        </div>
-                        <div class="col-1">
-                            <mat-form-field appearance="standard">
-                                <mat-label>Costo Uni.</mat-label>
-                                <input matInput type="text" [(ngModel)]="costoServicioAF"
-                                    class="form-control-sm">
                             </mat-form-field>
                         </div>
                     </ng-container>
@@ -112,7 +105,14 @@
                             </mat-select>
                         </mat-form-field>
                     </div>
-                    <ng-container *ngIf="producto.categoriaProducto.id!=1">    
+                    <ng-container *ngIf="!esBien">
+                        <div class="col-1">
+                            <mat-form-field appearance="standard">
+                                <mat-label>PVP</mat-label>
+                                <input matInput type="text" [(ngModel)]="pvpServicioAF"
+                                    class="form-control-sm">
+                            </mat-form-field>
+                        </div> 
                         <div class="col-1 iconos">
                             <button mat-icon-button mat-button [disabled]="producto.categoriaProducto.id==0"
                                 (click)="calcularPreciosServicios()">
@@ -180,7 +180,7 @@
                 </mat-panel-description>
             </mat-expansion-panel-header>
             <hr>
-            <div class="form-group form-row" *ngIf="producto.categoriaProducto.id==1">
+            <div class="form-group form-row" *ngIf="esBien">
                 <div class="col-8">
                     <div class="centrar-titulo fondo">
                         <mat-label>INICIAR KARDEX</mat-label>
@@ -191,7 +191,8 @@
                             <div class="col-4">
                                 <mat-form-field appearance="standard">
                                     <mat-label>Medida</mat-label>
-                                    <mat-select [(ngModel)]="producto.medida" [compareWith]="compareFn" class="form-control-sm">
+                                    <mat-select [(ngModel)]="producto.medida" [compareWith]="compareFn" 
+                                        [disabled]="deshabilitarIniciarKardex" class="form-control-sm">
                                         <mat-option *ngFor="let medida of medidas" [value]="medida" >
                                             {{medida.descripcion}}</mat-option>
                                     </mat-select>
@@ -200,24 +201,27 @@
                             <div class="col-2" >
                                 <mat-form-field appearance="standard">
                                     <mat-label>Cant.</mat-label>
-                                    <input matInput type="text" [(ngModel)]="producto.kardexs[0].saldo" class="form-control-sm">
+                                    <input matInput type="text" [(ngModel)]="saldoInicialKardex" class="form-control-sm"
+                                        (change)="calcularCostoTotalKardex()" [disabled]="deshabilitarIniciarKardex">
                                 </mat-form-field>
                             </div>
                             <div class="col-2">
                                 <mat-form-field appearance="standard">
                                     <mat-label>Costo Unit.</mat-label>
-                                    <input matInput type="text" [(ngModel)]="producto.kardexs[0].costoUnitario" class="form-control-sm">
+                                    <input matInput type="text" [(ngModel)]="costoUnitarioKardex" class="form-control-sm"
+                                        (change)="calcularCostoTotalKardex()" [disabled]="deshabilitarIniciarKardex" >
                                 </mat-form-field>
                             </div>
                             <div class="col-2">
                                 <mat-form-field appearance="standard">
                                     <mat-label>Costo Total.</mat-label>
-                                    <input matInput type="text" [(ngModel)]="producto.kardexs[0].costoTotal" class="form-control-sm" [disabled]="true">
+                                    <input matInput type="text" [(ngModel)]="costoTotalKardex" class="form-control-sm" [disabled]="true">
                                 </mat-form-field>
                             </div>
                             <div class="col-2 iconos">
-                                <button mat-icon-button mat-button>
-                                    <mat-icon (click)="calcularPrecios()">add</mat-icon>
+                                <button mat-icon-button mat-button (click)="calcularPreciosBienes()" 
+                                    [disabled]="deshabilitarIniciarKardex">
+                                    <mat-icon>add</mat-icon>
                                 </button>
                             </div>
                         </div>
@@ -233,7 +237,8 @@
                             <div class="col-8">
                                 <mat-form-field appearance="standard">
                                     <mat-label>Bodega</mat-label>
-                                    <mat-select [(ngModel)]="producto.kardexs[0].bodega" [compareWith]="compareFn" class="form-control-sm">
+                                    <mat-select [(ngModel)]="producto.kardexs[0].bodega" [compareWith]="compareFn" 
+                                    [disabled]="deshabilitarIniciarKardex" class="form-control-sm">
                                         <mat-option *ngFor="let bodega of bodegas" [value]="bodega" >
                                             {{bodega.nombre}}</mat-option>
                                     </mat-select>
@@ -256,58 +261,42 @@
                     </mat-expansion-panel-header>
                     <mat-divider></mat-divider>
                     <div class="form-group form-row">
-                        <div class="col-12">
+                        <div class="col-12 mat-elevation-z8 centrar">
                             <div class="centrar-titulo azul">
                                 <mat-label>PRECIO SUGERIDO Y PRECIO DE VENTA</mat-label>
                             </div>
-                            <table mat-table [dataSource]="dataSourcePrecios" class="mat-elevation-z8 centrar">
-                                <!-- Segmento Column -->
-                                <ng-container matColumnDef="segmento">
-                                    <th mat-header-cell *matHeaderCellDef>SEGMENTO</th>
-                                    <td mat-cell *matCellDef="let precio"> {{precio.segmento.descripcion}} </td>
-                                </ng-container>
-
-                                <!-- Costo Column -->
-                                <ng-container matColumnDef="costo">
-                                    <th mat-header-cell *matHeaderCellDef>COSTO</th>
-                                    <td mat-cell *matCellDef="let precio"> {{precio.costo}} </td>
-                                </ng-container>
-
-                                <!-- Ganancia Column -->
-                                <ng-container matColumnDef="margenGanancia">
-                                    <th mat-header-cell *matHeaderCellDef>MG%</th>
-                                    <td mat-cell *matCellDef="let precio"> {{precio.margenGanancia}} </td>
-                                </ng-container>
-                                <!-- PVP Column -->
-                                <ng-container matColumnDef="precioSinIva">
-                                    <th mat-header-cell *matHeaderCellDef>PRECIO</th>
-                                    <td mat-cell *matCellDef="let precio"> {{precio.precioSinIva}} </td>
-                                </ng-container>
-                                <!-- PVP Column -->
-                                <ng-container matColumnDef="precioVentaPublico">
-                                    <th mat-header-cell *matHeaderCellDef>PVP</th>
-                                    <td mat-cell *matCellDef="let precio"> {{precio.precioVentaPublico}} </td>
-                                </ng-container>
-                                <ng-container matColumnDef="precioVentaPublicoManual">
-                                    <th mat-header-cell *matHeaderCellDef>PVP MAN</th>
-                                    <td mat-cell *matCellDef="let precio">
-                                        <mat-form-field floatLabel="never">
-                                            <input matInput [(ngModel)]="precio.precioVentaPublicoManual" (change)="actualizarPrecioVentaPublicoManual()">
-                                        </mat-form-field>
+                            <table mat-table [dataSource]="dataSourcePrecios"  matSort #MatSort2="matSort">
+                                <!-- Columnas Dinamicas -->
+                                <ng-container *ngFor="let columna of columnasPrecios"
+                                    [matColumnDef]="columna.nombreColumna">
+                                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="centrarCabecera"> {{ columna.cabecera }} </th>
+                                    <td mat-cell *matCellDef="let row; let i=index">
+                                        <ng-container *ngIf="columna.nombreColumna!='margenGanancia' && columna.nombreColumna!='precioVentaPublicoManual'">
+                                            {{ columna.celda(row) }}
+                                        </ng-container>
+                                        <ng-container *ngIf="columna.nombreColumna=='margenGanancia'">
+                                            <mat-form-field floatLabel="never">
+                                                <input matInput [(ngModel)]="row.margenGanancia" 
+                                                (change)="actualizarmMargenGanancia(i, row.margenGanancia)">
+                                            </mat-form-field>
+                                        </ng-container>
+                                        <ng-container *ngIf="columna.nombreColumna=='precioVentaPublicoManual'">
+                                            <mat-form-field floatLabel="never">
+                                                <input matInput [(ngModel)]="row.precioVentaPublicoManual" 
+                                                (change)="actualizarPVPManual(i, row.precioVentaPublicoManual)">
+                                            </mat-form-field>
+                                        </ng-container>
                                     </td>
                                 </ng-container>
-                                <ng-container matColumnDef="utilidad">
-                                    <th mat-header-cell *matHeaderCellDef>UTIL</th>
-                                    <td mat-cell *matCellDef="let precio">{{precio.utilidad}}</td>
-                                </ng-container>
-                                <ng-container matColumnDef="utilidadPorcentaje">
-                                    <th mat-header-cell *matHeaderCellDef> UTIL % </th>
-                                    <td mat-cell *matCellDef="let precio">{{precio.utilidadPorcentaje}}</td>
-                                </ng-container>
-
                                 <tr mat-header-row *matHeaderRowDef="cabeceraPrecios"></tr>
-                                <tr mat-row *matRowDef="let row; columns: cabeceraPrecios;"></tr>
+                                <tr mat-row *matRowDef="let row; columns: cabeceraPrecios;"
+                                    [class.selected-row]="clickedRowsPrecios.has(row)"></tr>
+                                <!-- Row shown when there is no matching data. -->
+                                <tr class="mat-row" *matNoDataRow>
+                                    <td class="mat-cell" colspan="5">No hay precios agregados</td>
+                                </tr>
                             </table>
+                            <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" #MatPaginator2="matPaginator"></mat-paginator>
                         </div>
                     </div>
                 </mat-expansion-panel>
@@ -335,7 +324,7 @@
                 </button>
             </mat-form-field>
             <div class="mat-elevation-z8">
-                <table mat-table [dataSource]="dataSource" matSort>
+                <table mat-table [dataSource]="dataSource" matSort #MatSort1="matSort">
                     <!-- Columnas Dinamicas -->
                     <ng-container *ngFor="let columna of columnas" [matColumnDef]="columna.nombreColumna">
                         <th mat-header-cell *matHeaderCellDef mat-sort-header> {{ columna.cabecera }} </th>
@@ -348,11 +337,12 @@
 
                     <!-- Row shown when there is no matching data. -->
                     <tr class="mat-row" *matNoDataRow>
-                        <td class="mat-cell" colspan="6">No hay datos que coincidan con el producto "{{inputFiltro.value}}"
+                        <td class="mat-cell" colspan="6">No hay datos que coincidan con el producto: 
+                            "{{inputFiltro.value}}"
                         </td>
                     </tr>
                 </table>
-                <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
+                <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" #MatPaginator1="matPaginator"></mat-paginator>
             </div>
             <div class="azul" *ngIf="!clickedRows.size">
                 Seleccione una fila para editar
