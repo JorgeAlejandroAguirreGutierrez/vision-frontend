@@ -6,9 +6,8 @@ export class Precio {
     codigo: string;
     costo: number;
     margenGanancia: number;
-    precioVentaPublico: number;
-    precioVentaPublicoIva: number;
     precioSinIva: number;
+    precioVentaPublico: number;
     precioVentaPublicoManual: number;
     utilidad: number;
     utilidadPorcentaje: number;
@@ -21,9 +20,8 @@ export class Precio {
         this.codigo = valores.vacio;
         this.costo = valores.cero;
         this.margenGanancia = valores.cero;
-        this.precioVentaPublico = valores.cero;
-        this.precioVentaPublicoIva = valores.cero;
         this.precioSinIva=valores.cero;
+        this.precioVentaPublico = valores.cero;
         this.precioVentaPublicoManual = valores.cero;
         this.utilidad = valores.cero;
         this.utilidadPorcentaje = valores.cero;

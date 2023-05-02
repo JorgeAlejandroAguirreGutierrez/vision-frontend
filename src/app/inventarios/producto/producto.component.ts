@@ -42,7 +42,7 @@ export class ProductoComponent implements OnInit {
   inactivo: string = valores.inactivo;
   si: string = valores.si;
   no: string = valores.no;
-  costoServicioAF: number = valores.cero;
+  pvpServicioAF: number = valores.cero;
 
   sesion: Sesion = null;
 
@@ -51,6 +51,12 @@ export class ProductoComponent implements OnInit {
   abrirPanelAdmin: boolean = true;
   abrirPanelKardex: boolean = true;
   abrirPanelNuevoPrecio: boolean = false;
+  deshabilitarIniciarKardex: boolean = false;
+  esBien: boolean = true;
+
+  saldoInicialKardex: number = valores.cero;
+  costoUnitarioKardex: number = valores.cero;
+  costoTotalKardex: number = valores.cero;
 
   producto: Producto = new Producto();
 
@@ -62,9 +68,22 @@ export class ProductoComponent implements OnInit {
   bodegas: Bodega[] = [];
   proveedores: Proveedor[] = [];
 
-  cabeceraPrecios: string[] = ['segmento', 'costo', 'margenGanancia', 'precioSinIva', 'precioVentaPublico', 'precioVentaPublicoManual', 'utilidad', 'utilidadPorcentaje'];
+  //cabeceraPrecios: string[] = ['segmento', 'costo', 'margenGanancia', 'precioSinIva', 'precioVentaPublico', 'precioVentaPublicoManual', 'utilidad', 'utilidadPorcentaje'];
 
-  dataSourcePrecios: BehaviorSubject<Precio[]> = new BehaviorSubject<Precio[]>([]);
+  columnasPrecios: any[] = [
+    { nombreColumna: 'segmento', cabecera: 'Segmento', celda: (row: Precio) => `${row.segmento.descripcion}` },
+    { nombreColumna: 'costo', cabecera: 'Costo', celda: (row: Precio) => `${row.costo}` },
+    { nombreColumna: 'margenGanancia', cabecera: 'MG %', celda: (row: Precio) => `${row.margenGanancia}` },
+    { nombreColumna: 'precioSinIva', cabecera: 'Precio', celda: (row: Precio) => `${row.precioSinIva}` },
+    { nombreColumna: 'precioVentaPublico', cabecera: 'PVP', celda: (row: Precio) => `${row.precioVentaPublico}` },
+    { nombreColumna: 'precioVentaPublicoManual', cabecera: 'PVP Manual', celda: (row: Precio) => `${row.precioVentaPublicoManual}` },
+    { nombreColumna: 'utilidad', cabecera: 'Utilidad', celda: (row: Precio) => `${row.utilidad}` },
+    { nombreColumna: 'utilidadPorcentaje', cabecera: 'Util. %', celda: (row: Precio) => `${row.utilidadPorcentaje} %` }
+  ];
+  cabeceraPrecios: string[] = this.columnasPrecios.map(titulo => titulo.nombreColumna);
+  dataSourcePrecios: MatTableDataSource<Precio>;
+  clickedRowsPrecios = new Set<Precio>();
+  //$dataSourcePrecios: BehaviorSubject<MatTableDataSource<Precio>> = new BehaviorSubject<MatTableDataSource<Precio>>(null);
 
   columnas: any[] = [
     { nombreColumna: 'codigo', cabecera: 'Código', celda: (row: Producto) => `${row.codigo}` },
@@ -79,19 +98,17 @@ export class ProductoComponent implements OnInit {
   dataSource: MatTableDataSource<Producto>;
   clickedRows = new Set<Producto>();
   
-  cabeceraPrecioSugerido: string[] = ['medida', 'segmento', 'costo', 'margenGanancia', 'precioSinIva', 'precioVentaPublico'];
-  cabeceraPrecioVenta: string[] = ['precioVentaPublicoManual', 'utilidad', 'utilidadPorcentaje'];
-
   controls: UntypedFormArray[] = [];
 
-  @ViewChild(MatPaginator) paginator: MatPaginator;
-  @ViewChild(MatSort) sort: MatSort;
+  @ViewChild('MatPaginator1') paginator1: MatPaginator;
+  @ViewChild('MatPaginator2') paginator2: MatPaginator;
+  @ViewChild('MatSort1') sort1: MatSort;
+  @ViewChild('MatSort2') sort2: MatSort;
   @ViewChild("inputFiltro") inputFiltro: ElementRef;
 
   constructor(private renderer: Renderer2, public dialog: MatDialog, private sesionService: SesionService, private productoService: ProductoService,  private proveedorService: ProveedorService,
     private tipoGastoService: TipoGastoService, private impuestoService: ImpuestoService, private router: Router,
-    private segmentoService: SegmentoService, private categoriaProductoService: CategoriaProductoService, private bodegaService: BodegaService, 
-    private medidaService: MedidaService) { }
+    private segmentoService: SegmentoService, private bodegaService: BodegaService, private medidaService: MedidaService) { }
 
   ngOnInit() {
     this.sesion=validarSesion(this.sesionService, this.router);
@@ -157,18 +174,19 @@ export class ProductoComponent implements OnInit {
     if (event != null)
       event.preventDefault();
     this.producto = new Producto();
-    this.costoServicioAF = valores.cero;
-    this.dataSourcePrecios = new BehaviorSubject<Precio[]>([]);
+    this.pvpServicioAF = valores.cero;
+    this.saldoInicialKardex = valores.cero;
+    this.costoUnitarioKardex = valores.cero;
+    this.costoTotalKardex = valores.cero;
+    this.dataSourcePrecios = new MatTableDataSource<Precio>;
     this.clickedRows.clear();
+    this.esBien = true;
+    this.deshabilitarIniciarKardex = false;
   }
 
   crear(event: any) {
     if (event != null)
       event.preventDefault();
-    if (this.producto.grupoProducto.id == valores.cero) {
-      Swal.fire(error, mensajes.error_grupo_producto, error_swal);
-      return;
-    }
     if (!this.validarFormulario())
       return;
     this.productoService.crear(this.producto).subscribe({
@@ -188,6 +206,7 @@ export class ProductoComponent implements OnInit {
       event.preventDefault();
     if (!this.validarFormulario())
       return;
+    console.log(this.producto);  
     this.productoService.actualizar(this.producto).subscribe({
       next: (res) => {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
@@ -239,9 +258,9 @@ export class ProductoComponent implements OnInit {
     this.dataSource.filterPredicate = (data: Producto, filter: string): boolean =>
       data.codigo.includes(filter) || data.nombre.includes(filter) || data.tipoGasto.descripcion.includes(filter) ||
       data.categoriaProducto.descripcion.includes(filter) || data.estado.includes(filter);
-    this.dataSource.paginator = this.paginator;
+    this.dataSource.paginator = this.paginator1;
     this.dataSource.paginator.firstPage();
-    this.dataSource.sort = this.sort;
+    this.dataSource.sort = this.sort1;
   }
 
   filtro(event: Event) {
@@ -260,85 +279,106 @@ export class ProductoComponent implements OnInit {
     if (!this.clickedRows.has(producto)) {
       this.clickedRows.clear();
       this.clickedRows.add(producto);
-      this.producto = { ... producto};
-      this.cargar();
+      this.producto = { ...producto};
+      this.validarCategoriaProducto(this.producto);
+      this.llenarPrecios(this.producto.precios);
+      if (this.esBien){
+        this.llenarKardex();
+      }
     } else {
       this.nuevo(null);
     }
   }
 
-  ordenarAsc(arrayJson: any, pKey: any) {
-    arrayJson.sort(function (a: any, b: any) {
-      return a[pKey] > b[pKey];
-    });
+  llenarPrecios(precios: Precio[]){
+    this.dataSourcePrecios = new MatTableDataSource(precios);
+    this.dataSourcePrecios.paginator = this.paginator2;
+    this.dataSourcePrecios.sort = this.sort2;
   }
 
-  cargar(){
-    this.dataSourcePrecios = new BehaviorSubject<Precio[]>(this.producto.precios);
+  llenarKardex(){
+    this.deshabilitarIniciarKardex = true;
+    this.saldoInicialKardex = this.producto.kardexs[0].saldo;
+    this.costoUnitarioKardex = this.producto.kardexs[0].costoUnitario;
+    this.costoTotalKardex = this.producto.kardexs[0].costoTotal;
+  }
+
+  inicializarKardex(){
+    if (!this.validarKardex())
+      return;
+    this.producto.kardexs[0].operacion = otras.operacionInicialKardex;
+    this.producto.kardexs[0].entrada = this.saldoInicialKardex;
+    this.producto.kardexs[0].saldo = this.saldoInicialKardex;
+    this.producto.kardexs[0].debe = this.costoUnitarioKardex;
+    this.producto.kardexs[0].costoUnitario = this.costoUnitarioKardex;
+    this.producto.kardexs[0].costoTotal = this.costoTotalKardex;
   }
   
-  pad(numero:string, size:number): string {
-    while (numero.length < size) numero = "0" + numero;
-    return numero;
+  calcularCostoTotalKardex(){
+    this.costoTotalKardex = Number((this.saldoInicialKardex * this.costoUnitarioKardex).toFixed(2));
   }
 
-  calcularPrecios() {
-    if (this.producto.kardexs[0].saldo < valores.cero) {
-      Swal.fire(error, mensajes.error_cantidad, error_swal);
-      return;
-    }
-    if (this.producto.kardexs[0].costoUnitario < valores.cero) {
-      Swal.fire(error, mensajes.error_costo_unitario, error_swal);
-      return;
-    }
-    this.producto.kardexs[0].costoTotal = Number((this.producto.kardexs[0].saldo * this.producto.kardexs[0].costoUnitario).toFixed(2));
-    this.producto.kardexs[0].entrada = this.producto.kardexs[0].saldo;
-    this.producto.kardexs[0].debe = this.producto.kardexs[0].costoTotal;
-    this.producto.kardexs[0].saldo = this.producto.kardexs[0].saldo;
+  calcularPreciosBienes() {
+    this.inicializarKardex();
     this.producto.precios = [];
     for (let i = 0; i < this.segmentos.length; i++) {
       let precio = new Precio();
-      precio.costo = this.producto.kardexs[0].costoUnitario;
+      precio.costo = this.costoUnitarioKardex;
       precio.margenGanancia = this.segmentos[i].margenGanancia;
       precio.precioSinIva = Number((precio.costo / (1 - precio.margenGanancia / 100)).toFixed(4));
-      precio.precioVentaPublico = Number((precio.precioSinIva + (precio.precioSinIva * this.producto.impuesto.porcentaje / 100)).toFixed(4));
+      precio.precioVentaPublico = Number((precio.precioSinIva + (precio.precioSinIva * this.producto.impuesto.porcentaje / 100)).toFixed(2));
       precio.precioVentaPublicoManual = precio.precioVentaPublico;
       precio.utilidad = Number((precio.precioSinIva - precio.costo).toFixed(4));
-      precio.utilidadPorcentaje = Number(((precio.utilidad / precio.precioSinIva) * 100).toFixed(2));
+      if (precio.precioSinIva != valores.cero){
+        precio.utilidadPorcentaje = Number(((precio.utilidad / precio.precioSinIva) * 100).toFixed(2));
+      } else {
+        precio.utilidadPorcentaje = valores.cero;
+      }
       precio.segmento = this.segmentos[i];
       this.producto.precios.push(precio);
     }
-    this.dataSourcePrecios = new BehaviorSubject<Precio[]>(this.producto.precios);
+    this.llenarPrecios(this.producto.precios);
     this.abrirPanelNuevoPrecio = true;
     Swal.fire({ icon: exito_swal, title: exito, text: mensajes.exito_kardex_inicializado });
   }
 
   calcularPreciosServicios(){
-    this.producto.medida.id = 1;
+    this.producto.medida.id = 1; //UNIDAD
     this.producto.precios = [];
     for (let i = 0; i < this.segmentos.length; i++) {
       let precio = new Precio();
-      precio.costo = this.costoServicioAF;
-      precio.margenGanancia = this.segmentos[i].margenGanancia;
-      precio.precioSinIva = Number((precio.costo / (1 - precio.margenGanancia / 100)).toFixed(4));
-      precio.precioVentaPublico = Number((precio.precioSinIva + (precio.precioSinIva * this.producto.impuesto.porcentaje / 100)).toFixed(4));
+      precio.precioVentaPublico = Number(Number(this.pvpServicioAF).toFixed(2));
       precio.precioVentaPublicoManual = precio.precioVentaPublico;
+      precio.precioSinIva = Number((precio.precioVentaPublico*100/(100+this.producto.impuesto.porcentaje)).toFixed(4));
+      precio.margenGanancia = this.segmentos[i].margenGanancia;
+      precio.costo = Number((precio.precioSinIva*100/(100+precio.margenGanancia)).toFixed(4));
       precio.utilidad = Number((precio.precioSinIva - precio.costo).toFixed(4));
       precio.utilidadPorcentaje = Number(((precio.utilidad / precio.precioSinIva) * 100).toFixed(2));
       precio.segmento = this.segmentos[i];
       this.producto.precios.push(precio);
     }
-    this.dataSourcePrecios = new BehaviorSubject<Precio[]>(this.producto.precios);
+    this.llenarPrecios(this.producto.precios);
     this.abrirPanelNuevoPrecio = true;
     Swal.fire({ icon: exito_swal, title: exito, text: mensajes.exito_kardex_inicializado });
   }
 
-  actualizarPrecioVentaPublicoManual(){
-    for (let i = 0; i < this.producto.precios.length; i++) {
-      if(this.producto.precios[i].precioVentaPublicoManual < this.producto.precios[i].precioVentaPublico){
-        Swal.fire(error, mensajes.error_precio_venta_publico_manual, error_swal);
-      }
+  actualizarmMargenGanancia(i: number, margenGanancia: number){
+    this.producto.precios[i].margenGanancia = margenGanancia;
+    this.producto.precios[i].precioSinIva = Number((this.producto.precios[0].costo / (1 - margenGanancia / 100)).toFixed(4));
+    this.producto.precios[i].precioVentaPublico = Number((this.producto.precios[i].precioSinIva + (this.producto.precios[i].precioSinIva * this.producto.impuesto.porcentaje / 100)).toFixed(2));
+    this.producto.precios[i].precioVentaPublicoManual = this.producto.precios[i].precioVentaPublico;
+    this.producto.precios[i].utilidad = Number((this.producto.precios[i].precioSinIva - this.producto.precios[i].costo).toFixed(4));
+     this.producto.precios[i].utilidadPorcentaje = Number(((this.producto.precios[i].utilidad / this.producto.precios[i].precioSinIva) * 100).toFixed(2));
+  }
+
+  actualizarPVPManual(i: number, pvpManual: number){
+    if(this.producto.precios[i].precioVentaPublicoManual < this.producto.precios[i].precioVentaPublico){
+      Swal.fire(warning, mensajes.advertencia_precio_venta_publico_manual, warning_swal);
     }
+    let precioSinIVA: number = pvpManual * 100 / (100 + this.producto.impuesto.porcentaje);
+    this.producto.precios[i].precioVentaPublicoManual = pvpManual;
+    this.producto.precios[i].utilidad = Number((precioSinIVA - this.producto.precios[i].costo).toFixed(4));
+    this.producto.precios[i].utilidadPorcentaje = Number(((this.producto.precios[i].utilidad / precioSinIVA) * 100).toFixed(2));
   }
 
   compareFn(a: any, b: any) {
@@ -352,6 +392,26 @@ export class ProductoComponent implements OnInit {
   }
 
   // VALIDACIONES DE CAMPOS
+  validarCategoriaProducto(producto: Producto){
+    if (producto.categoriaProducto.id == 1){ // BIEN
+      this.esBien = true;
+    } else { 
+      this.esBien = false;
+    }
+  }
+
+  validarKardex(): boolean {
+    if (this.producto.kardexs[0].saldo < valores.cero) {
+      Swal.fire(error, mensajes.error_cantidad, error_swal);
+      return false;
+    }
+    if (this.producto.kardexs[0].costoUnitario < valores.cero) {
+      Swal.fire(error, mensajes.error_costo_unitario, error_swal);
+      return false;
+    }
+    return true;
+  }
+
   validarFormulario(): boolean {
     if (this.producto.grupoProducto.id == valores.cero) {
       Swal.fire(error, mensajes.error_grupo_producto, error_swal);
@@ -385,10 +445,6 @@ export class ProductoComponent implements OnInit {
       Swal.fire(error, mensajes.error_precio, error_swal);
       return;
     }
-    if (this.producto.kardexs.length == valores.cero) {
-      Swal.fire(error, mensajes.error_kardex, error_swal);
-      return;
-    }
     return true;
   }
 
@@ -403,7 +459,8 @@ export class ProductoComponent implements OnInit {
         Object.assign(this.producto.grupoProducto, result as GrupoProducto);
         this.producto.precios = [];
         this.producto.categoriaProducto = this.producto.grupoProducto.categoriaProducto;
-        if (this.producto.grupoProducto.categoriaProducto.id == 1){ // BIEN
+        this.validarCategoriaProducto(this.producto);
+        if (this.esBien){ 
           this.producto.nombre = this.producto.grupoProducto.linea + valores.espacio +
           this.producto.grupoProducto.sublinea + valores.espacio + this.producto.grupoProducto.presentacion;
           this.producto.kardexs[0].bodega = this.bodegas[0];
