@@ -1,6 +1,5 @@
 import { valores } from "../../constantes";
 import { Usuario } from './usuario';
-import { Empresa } from './empresa';
 
 export class Sesion {
     id:number;
