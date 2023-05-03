@@ -8,6 +8,7 @@ import { Bodega } from '../inventario/bodega';
 export class NotaCreditoCompra {
     id: number;
     codigo: string;
+    serie: string;
     secuencial: string;
     operacion: string;
     fecha: Date;
