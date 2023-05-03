@@ -45,7 +45,7 @@ export class PermisoComponent implements OnInit {
   menuOpciones: MenuOpcion[] = [];
 
   columnas: any[] = [
-    { nombreColumna: 'codigo', cabecera: 'Código', celda: (row: Permiso) => `${row.codigo}` },
+    //{ nombreColumna: 'perfil', cabecera: 'Perfil', celda: (row: Permiso) => `${row.perfil.descripcion}` },
     { nombreColumna: 'modulo', cabecera: 'Módulo', celda: (row: Permiso) => `${row.menuOpcion.modulo}` },
     { nombreColumna: 'operacion', cabecera: 'Opción', celda: (row: Permiso) => `${row.menuOpcion.opcion}` },
     { nombreColumna: 'menu', cabecera: 'Menu', celda: (row: Permiso) => `${row.menuOpcion.menu}` },
@@ -144,6 +144,7 @@ export class PermisoComponent implements OnInit {
 
   consultar(perfil: Perfil) {
       this.permisos = perfil.permisos as Permiso[];
+      console.log(this.permisos);
       this.llenarTabla(this.permisos);
   }
 

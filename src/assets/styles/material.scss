@@ -44,6 +44,10 @@ Forms
     z-index: 9999!important; 
 }
 
+.cdk-overlay-connected-position-bounding-box {
+    z-index: 9999!important; 
+}
+
 .mat-form-field-wrapper{
     padding-bottom: 0.8em !important; // Para que se separen las filas, em se calcula en función del tamaño de letra
 }
