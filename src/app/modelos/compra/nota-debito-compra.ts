@@ -6,6 +6,7 @@ import { NotaDebitoCompraLinea } from './nota-debito-compra-linea';
 export class NotaDebitoCompra {
     id: number;
     codigo: string;
+    serie: string;
     secuencial: string;
     fecha: Date;
     estado: string;

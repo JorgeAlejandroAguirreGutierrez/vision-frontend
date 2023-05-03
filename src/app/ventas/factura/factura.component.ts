@@ -243,7 +243,6 @@ export class FacturaComponent implements OnInit {
     if (event != null)
       event.preventDefault();
     this.factura.sesion = this.sesion;
-    this.factura.serie = this.sesion.usuario.estacion.establecimiento.codigoSRI + this.sesion.usuario.estacion.codigoSRI
     this.facturaService.crear(this.factura).subscribe({
       next: res => {
         this.factura = res.resultado as Factura;

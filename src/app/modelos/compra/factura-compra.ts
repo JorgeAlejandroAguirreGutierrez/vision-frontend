@@ -6,6 +6,7 @@ import { TipoComprobante } from '../venta/tipo-comprobante';
 export class FacturaCompra {
     id: number;
     codigo: string;
+    serie: string;
     secuencial: string;
     fecha: Date;
     estado: string;
