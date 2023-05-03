@@ -12,6 +12,7 @@ import { NotaDebitoVentaCredito } from '../recaudacion/nota-debito-venta-credito
 export class NotaDebitoVenta {
     id: number;
     codigo: string;
+    serie: string;
     secuencial: string;
     fecha: Date;
     estado: string;

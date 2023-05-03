@@ -6,6 +6,7 @@ import { Factura } from './factura';
 export class NotaCreditoVenta {
     id: number;
     codigo: string;
+    serie: string;
     secuencial: string;
     operacion: string;
     fecha: Date;
