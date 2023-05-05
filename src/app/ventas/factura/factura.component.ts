@@ -109,7 +109,7 @@ export class FacturaComponent implements OnInit {
     { nombreColumna: 'serie', cabecera: 'Serie', celda: (row: Factura) => `${row.serie}` },
     { nombreColumna: 'secuencial', cabecera: 'Secuencial', celda: (row: Factura) => `${row.secuencial}` },
     { nombreColumna: 'cliente', cabecera: 'Cliente', celda: (row: Factura) => `${row.cliente.razonSocial}` },
-    { nombreColumna: 'total', cabecera: 'Total', celda: (row: Factura) => `${row.totalConDescuento}` },
+    { nombreColumna: 'total', cabecera: 'Total', celda: (row: Factura) => `$${row.totalConDescuento}` },
     { nombreColumna: 'estado', cabecera: 'Estado', celda: (row: Factura) => `${row.estado}` }
   ];
   cabeceraFactura: string[] = this.columnasFactura.map(titulo => titulo.nombreColumna);

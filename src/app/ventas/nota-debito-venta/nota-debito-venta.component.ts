@@ -432,6 +432,7 @@ export class NotaDebitoVentaComponent implements OnInit {
     if (event!=null)
       event.preventDefault();
     this.notaDebitoVenta.sesion=this.sesion;
+    console.log(this.notaDebitoVenta);
     this.notaDebitoVentaService.crear(this.notaDebitoVenta).subscribe(
       res => {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
