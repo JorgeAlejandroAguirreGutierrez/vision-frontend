@@ -1,5 +1,5 @@
 import { Component, OnInit, HostListener, ViewChild, ElementRef, Renderer2 } from '@angular/core';
-import { validarSesion, exito, exito_swal, error, error_swal, valores } from '../../constantes';
+import { validarSesion, mensajes, exito, exito_swal, error, error_swal, valores } from '../../constantes';
 import { Router } from '@angular/router';
 import { UntypedFormControl } from '@angular/forms';
 import { startWith, map } from 'rxjs/operators';
@@ -97,6 +97,9 @@ export class CuentaPropiaComponent implements OnInit {
   crear(event) {
     if (event!=null)
       event.preventDefault();
+    if (!this.validarFormulario())
+      return;
+    console.log(this.cuentaPropia);  
     this.cuentaPropiaService.crear(this.cuentaPropia).subscribe({
       next: res => {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
@@ -109,6 +112,8 @@ export class CuentaPropiaComponent implements OnInit {
   actualizar(event) {
     if (event!=null)
       event.preventDefault();
+    if (!this.validarFormulario())
+      return;  
     this.cuentaPropiaService.actualizar(this.cuentaPropia).subscribe({
       next: res => {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
@@ -163,7 +168,7 @@ export class CuentaPropiaComponent implements OnInit {
       this.clickedRows.clear();
       this.clickedRows.add(cuentaPropia);
       this.cuentaPropia = {...cuentaPropia};
-      this.controlBanco.setValue(this.cuentaPropia.banco.abreviatura);
+      this.controlBanco.setValue(this.cuentaPropia.banco);
     } else {
       this.nuevo(null);
     }
@@ -201,5 +206,28 @@ export class CuentaPropiaComponent implements OnInit {
     verBanco(banco: Banco): string {
       return banco && banco.abreviatura ? banco.abreviatura : valores.vacio;
     }
+    seleccionarBanco(){
+      this.cuentaPropia.banco = this.controlBanco.value;
+    }
 
+    //VALIDACIONES
+    validarFormulario(): boolean {
+      if (this.controlBanco.value == null || this.controlBanco.value == valores.vacio) {
+        Swal.fire({ icon: error_swal, title: error, text: mensajes.error_falta_datos });
+        return false;
+      }
+      if (this.cuentaPropia.tipoCuenta == valores.vacio) {
+        Swal.fire({ icon: error_swal, title: error, text: mensajes.error_falta_datos });
+        return false;
+      }
+      if (this.cuentaPropia.nombre == valores.vacio) {
+        Swal.fire({ icon: error_swal, title: error, text: mensajes.error_falta_datos });
+        return false;
+      }
+      if (this.cuentaPropia.numero == valores.vacio) {
+        Swal.fire({ icon: error_swal, title: error, text: mensajes.error_falta_datos });
+        return false;
+      }
+      return true;
+    }
 }
