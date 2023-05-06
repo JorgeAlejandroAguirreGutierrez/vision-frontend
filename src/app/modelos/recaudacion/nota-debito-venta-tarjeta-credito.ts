@@ -1,6 +1,6 @@
 import { OperadorTarjeta } from './operador-tarjeta';
 import { FranquiciaTarjeta } from './franquicia-tarjeta';
-import { Banco } from './banco';
+import { Banco } from '../caja-banco/banco';
 import { valores } from "../../constantes";
 
 export class NotaDebitoVentaTarjetaCredito {

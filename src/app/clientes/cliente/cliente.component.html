@@ -67,7 +67,7 @@
                 <div class="col-2">
                     <mat-form-field appearance="standard">
                         <mat-label>Identificación</mat-label>
-                        <input matInput type="text" [(ngModel)]="cliente.identificacion" [disabled]="deshabilitarCliente"
+                        <input matInput type="text" [(ngModel)]="cliente.identificacion" [disabled]="cliente.id!=0"
                             oninput="this.value = this.value.toUpperCase()" class="form-control-sm"
                             (change)="validarIdentificacion()">
                     </mat-form-field>

@@ -162,6 +162,7 @@ export const valores = {
      */
     cero: 0,
     uno: 1,
+    menosUno: -1,
     vacio: "",
     espacio: " ",
     activo: "ACTIVO",
@@ -179,6 +180,8 @@ export const valores = {
     noFacturada: "NO FACTURADA",
     si: "SI",
     no: "NO",
+    ahorros: "AHORROS",
+    corriente: "CORRIENTE",
     modulo: "MODULO",
     operacion: "OPERACION",
     bien: "B",
@@ -213,6 +216,7 @@ export const mensajes = {
     exito_kardex_inicializado: "KARDEX INICIALIZADO CON EXITO",
     // Mensajes de Advertencia
     advertencia_precio_venta_publico_manual: "EL PVP MANUAL ES MENOR QUE EL PVP CALCULADO",
+    mensaje_kardex_inicial: "INICIALIZAR KARDEX CON SALDO 0",
     // Mensajes de Error
     error_usuario: "INGRESE UN USUARIO",
     error_estacion_permiso: "NO TIENE PERMISOS PARA INGRESAR DESDE ESTE DISPOSITIVO",
@@ -267,12 +271,12 @@ export const mensajes = {
     error_razon_social: "ERROR EN RAZON SOCIAL",
     error_direccion: "ERROR EN DIRECCIÓN",
     error_ubicacion: "ERROR EN PROVINCIA, CANTON O PARROQUIA",
-    mensaje_kardex_inicial: "INICIALIZAR KARDEX CON SALDO 0",
     error_medida_kardex: "ERROR MEDIDA KARDEX",
     error_falta_datos: "DATOS INCOMPLETOS, FAVOR INGRESE TODOS LOS DATOS",
     error_falta_correo: "DEBE AGREGAR POR LO MENOS UN CORREO ELECTRÓNICO PARA LA FACTURACIÓN",
     error_falta_imagen: "DEBE SELECCIONAR UNA IMAGEN",
-    error_ruc: "DEBE INGRESAR UN RUC"
+    error_ruc: "DEBE INGRESAR UN RUC",
+    error_permiso_existe: "EL PERMISO YA SE ENCUENTRA AGREGADO"
 }
 
 export const otras = {
@@ -384,6 +388,9 @@ export const tabs = {
     tab_equivalencia_medida: "Equivalencia Medida",
 
     // Caja Bancos
+    tab_cuenta_propia: "Cuenta Propia",
+    tab_banco: "Banco",
+
     // Cuentas x Cobrar
     // Cuentas x Pagar
     // Activos Fijos
@@ -468,6 +475,10 @@ export const items = {
     item_bodega: "Bodegas",
     item_medida: "Medidas",
     item_equivalencia_medida: "Equivalencia de Medidas",
+
+    //CAJA BANCOS
+    item_cuenta_propia: "Cuentas Propias",
+    item_banco: "Bancos",
 
     //CONTABILIDAD
     item_cuenta_contable: "Cuentas Contables",
@@ -559,6 +570,10 @@ export const icos = {
     ico_medida: 'fa fa-medium',
     ico_equivalencia_medida: 'fa fa-exchange',
 
+    // Caja Bancos
+    ico_cuenta_propia: 'fa fa-list-alt',
+    ico_banco: 'fa fa-university',
+
     // Contabilidad
     ico_cuenta_contable: 'fa fa-sort-amount-asc',
     ico_movimiento_contable: 'fa fa-retweet',
@@ -575,7 +590,7 @@ export const icos = {
     // Configuración
     ico_ubicacion: 'fa fa-globe',
     ico_estado_civil: 'fa fa-venus-mars',
-    ico_impuesto: 'fa fa-university',
+    ico_impuesto: 'fa fa-money',
     ico_secuencial: 'fa fa-caret-square-o-right',
     ico_tipo_retencion: 'fa fa-retweet',
     ico_regimen: 'fa fa-fax',

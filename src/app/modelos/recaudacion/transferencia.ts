@@ -1,5 +1,5 @@
-import { CuentaPropia } from './cuenta-propia';
-import { Banco } from './banco';
+import { CuentaPropia } from '../caja-banco/cuenta-propia';
+import { Banco } from '../caja-banco/banco';
 import { valores } from "../../constantes";
 
 export class Transferencia {

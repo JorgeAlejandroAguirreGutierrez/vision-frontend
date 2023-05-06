@@ -44,15 +44,18 @@ import { TablaComboComponent } from './inventarios/promocion/tabla-combo/tabla-c
 import { TablaComponenteComponent } from './inventarios/promocion/tabla-componente/tabla-componente.component';
 import { TipoRetencionComponent } from './configuraciones/tipo-retencion/tipo-retencion.component';
 
-//Módulo de Recaudaciones
-import { RecaudacionComponent } from './recaudacion/recaudacion/recaudacion.component';
-import { RecaudacionNotaDebitoComponent } from './recaudacion/recaudacion-nota-debito/recaudacion-nota-debito.component';
-import { BancoComponent } from './recaudacion/banco/banco.component';
+//Modulo Caja Bancos
+import { CuentaPropiaComponent } from './caja-bancos/cuenta-propia/cuenta-propia.component';
+import { BancoComponent } from './caja-bancos/banco/banco.component';
 
 // Módulo de Ventas
 import { FacturaComponent } from './ventas/factura/factura.component';
 import { NotaCreditoVentaComponent } from './ventas/nota-credito-venta/nota-credito-venta.component';
 import { NotaDebitoVentaComponent } from './ventas/nota-debito-venta/nota-debito-venta.component';
+
+//Módulo de Recaudaciones
+import { RecaudacionComponent } from './recaudacion/recaudacion/recaudacion.component';
+import { RecaudacionNotaDebitoComponent } from './recaudacion/recaudacion-nota-debito/recaudacion-nota-debito.component';
 
 //Módulo de Entregas
 import { GuiaRemisionComponent } from './entregas/guia-remision/guia-remision.component';
@@ -187,6 +190,8 @@ export const RoutingComponents = [
   // Recaudación
   RecaudacionComponent,
   RecaudacionNotaDebitoComponent,
+  //Caja Bancos
+  CuentaPropiaComponent,
   BancoComponent,
   //Ventas
   FacturaComponent,

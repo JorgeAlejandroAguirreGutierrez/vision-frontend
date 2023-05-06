@@ -5,7 +5,7 @@ import {HttpClient} from '@angular/common/http';
 import { map, catchError } from 'rxjs/operators';
 import { BehaviorSubject, Observable, throwError } from 'rxjs';
 import { environment } from '../../../environments/environment';
-import { Banco } from '../../modelos/recaudacion/banco';
+import { Banco } from '../../modelos/caja-banco/banco';
 
 @Injectable({
   providedIn: 'root'
@@ -34,6 +34,14 @@ export class BancoService {
 
   consultar(): Observable<Respuesta> {
     return this.http.get(environment.host + urn.ruta + urn.banco, options).pipe(
+      map(response => response as Respuesta),
+      catchError(err => {
+        return throwError(()=>err);
+      }));
+  }
+
+  consultarActivos(): Observable<Respuesta> {
+    return this.http.get(environment.host + urn.ruta + urn.banco + urn.consultarActivos, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);

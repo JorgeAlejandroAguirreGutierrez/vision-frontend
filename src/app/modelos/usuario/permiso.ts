@@ -7,13 +7,13 @@ export class Permiso {
   codigo: string;
   estado: string;
   menuOpcion: MenuOpcion;
-  //perfil: Perfil;
+  perfil: Perfil;
 
   constructor(){
     this.id=valores.cero;
     this.codigo=valores.vacio;
     this.estado = valores.activo;
     this.menuOpcion = new MenuOpcion();
-    //this.perfil=new Perfil();
+    this.perfil=new Perfil();
   }
 }

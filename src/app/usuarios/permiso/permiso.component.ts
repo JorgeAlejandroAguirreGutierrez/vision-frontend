@@ -1,5 +1,5 @@
 import { Component, OnInit, HostListener, ElementRef, Renderer2 } from '@angular/core';
-import { valores, validarSesion, exito, exito_swal, error, error_swal } from '../../constantes';
+import { valores, validarSesion, mensajes, exito, exito_swal, error, error_swal } from '../../constantes';
 import Swal from 'sweetalert2';
 
 import { Router } from '@angular/router';
@@ -30,9 +30,12 @@ export class PermisoComponent implements OnInit {
   si: string = valores.si;
   no: string = valores.no;
 
+  indexPermiso: number = valores.menosUno;
+
   abrirPanelNuevo: boolean = true;
   abrirPanelAdmin: boolean = true;
   abrirPanelPermiso: boolean = false;
+  deshabilitarPermisos: boolean = true;
 
   sesion: Sesion = null;
   modulo: String;
@@ -40,16 +43,17 @@ export class PermisoComponent implements OnInit {
   permiso: Permiso = new Permiso();
 
   perfiles: Perfil[];
-  permisos: Permiso[];
   modulos: String[] = [];
   menuOpciones: MenuOpcion[] = [];
 
   columnas: any[] = [
-    { nombreColumna: 'codigo', cabecera: 'Código', celda: (row: Permiso) => `${row.codigo}` },
+    //{ nombreColumna: 'perfil', cabecera: 'Perfil', celda: (row: Permiso) => `${row.perfil.descripcion}` },
     { nombreColumna: 'modulo', cabecera: 'Módulo', celda: (row: Permiso) => `${row.menuOpcion.modulo}` },
-    { nombreColumna: 'operacion', cabecera: 'Opción', celda: (row: Permiso) => `${row.menuOpcion.opcion}` },
+    { nombreColumna: 'opcion', cabecera: 'Opción', celda: (row: Permiso) => `${row.menuOpcion.opcion}` },
+    { nombreColumna: 'operacion', cabecera: 'Operación', celda: (row: Permiso) => `${row.menuOpcion.operacion}` },
     { nombreColumna: 'menu', cabecera: 'Menu', celda: (row: Permiso) => `${row.menuOpcion.menu}` },
     { nombreColumna: 'estado', cabecera: 'Estado', celda: (row: Permiso) => `${row.estado}` },
+    { nombreColumna: 'acciones', cabecera: 'Acciones' }
   ];
   cabecera: string[] = this.columnas.map(titulo => titulo.nombreColumna);
   dataSource: MatTableDataSource<Permiso>;
@@ -61,8 +65,8 @@ export class PermisoComponent implements OnInit {
 
   @HostListener('window:keypress', ['$event'])
   keyEvent($event: KeyboardEvent) {
-    if (($event.shiftKey || $event.metaKey) && $event.key == 'G') //SHIFT + G
-      this.crear(null);
+    if (($event.shiftKey || $event.metaKey) && $event.key == 'A') //SHIFT + A
+      this.actualizar(null);
     if (($event.shiftKey || $event.metaKey) && $event.key == 'N') //ASHIFT + N
       this.nuevo(null);
   }
@@ -105,33 +109,21 @@ export class PermisoComponent implements OnInit {
     if (event != null)
       event.preventDefault();
     this.perfil = new Perfil();
-    this.permisos = [];
     this.dataSource = new MatTableDataSource<Permiso>([]);
+    this.deshabilitarPermisos = true;
     this.nuevoPermiso();
   }
 
   nuevoPermiso(){
     this.permiso = new Permiso();
     this.clickedRows.clear();
-  }
-
-  crear(event) {
-    if (event != null)
-      event.preventDefault();
-    this.perfilService.crear(this.perfil).subscribe({
-      next: res => {
-        Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
-        this.consultar(this.perfil);
-        this.nuevo(null);
-      },
-      error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
-    });
+    this.indexPermiso = valores.menosUno;
   }
 
   actualizar(event) {
     if (event != null)
       event.preventDefault();
-    console.log(this.perfil);  
+    //console.log(this.perfil);  
     this.perfilService.actualizar(this.perfil).subscribe({
       next: res => {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
@@ -143,8 +135,10 @@ export class PermisoComponent implements OnInit {
   }
 
   consultar(perfil: Perfil) {
-      this.permisos = perfil.permisos as Permiso[];
-      this.llenarTabla(this.permisos);
+      //console.log(this.permisos);
+      this.deshabilitarPermisos = false;
+      this.llenarTabla(perfil.permisos);
+      this.nuevoPermiso();
   }
 
   llenarTabla(permisos: Permiso[]){
@@ -153,11 +147,12 @@ export class PermisoComponent implements OnInit {
     this.dataSource.sort = this.sort;
   }
 
-  seleccion(permiso: Permiso) {
+  seleccion(permiso: Permiso, i: number) {
     if (!this.clickedRows.has(permiso)){
       this.clickedRows.clear();
       this.clickedRows.add(permiso);
       this.permiso = { ...permiso};
+      this.indexPermiso = i;
       this.consultarOpciones(this.permiso.menuOpcion.modulo);
     } else {
       this.nuevoPermiso();
@@ -198,19 +193,37 @@ export class PermisoComponent implements OnInit {
     this.dataSource.filter = '';
   }
 
-  agregarPermiso(){
-    //this.permiso.perfil.id = this.perfil.id
+agregarPermiso(){
+    if (this.existePermiso()) return;
     this.perfil.permisos.push({ ...this.permiso});
+    this.consultar(this.perfil);
+    this.nuevoPermiso();
+  }
+
+  actualizarPermiso(){
+    if (this.existePermiso()) return;
+    this.perfil.permisos[this.indexPermiso] = this.permiso;
     this.consultar(this.perfil);
     this.nuevoPermiso();
   }
 
   eliminarPermiso(i: number) {
     this.perfil.permisos.splice(i, 1);
+    this.consultar(this.perfil);
   }
 
   compareFn(a: any, b: any) {
     return a && b && a.id == b.id;
   }
 
+  //VERIFICACIONES
+  existePermiso(): boolean{
+    for (let i = 0; i < this.perfil.permisos.length; i++) {
+      if (this.perfil.permisos[i].menuOpcion.opcion == this.permiso.menuOpcion.opcion){
+        Swal.fire({ icon: error_swal, title: error, text: mensajes.error_permiso_existe })
+        return true;
+      } 
+    };
+    return false
+  }
 }

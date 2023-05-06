@@ -14,13 +14,13 @@ import { NotaDebitoVentaTarjetaCredito } from '../../modelos/recaudacion/nota-de
 import { NotaDebitoVentaTarjetaDebito } from '../../modelos/recaudacion/nota-debito-venta-tarjeta-debito';
 import { NotaDebitoVentaTransferencia } from 'src/app/modelos/recaudacion/nota-debito-venta-transferencia';
 import { NotaDebitoVentaService } from '../../servicios/venta/nota-debito-venta.service';
-import { Banco } from '../../modelos/recaudacion/banco';
+import { Banco } from '../../modelos/caja-banco/banco';
 import { startWith, map } from 'rxjs/operators';
 import { ClienteService } from '../../servicios/cliente/cliente.service';
-import { BancoService } from '../../servicios/recaudacion/banco.service';
+import { BancoService } from '../../servicios/caja-banco/banco.service';
 import { FormaPagoService } from '../../servicios/cliente/forma-pago.service';
 import { FormaPago } from '../../modelos/cliente/forma-pago';
-import { CuentaPropia } from '../../modelos/recaudacion/cuenta-propia';
+import { CuentaPropia } from '../../modelos/caja-banco/cuenta-propia';
 import { CuentaPropiaService } from '../../servicios/contabilidad/cuenta-propia.service';
 import { FranquiciaTarjeta } from '../../modelos/recaudacion/franquicia-tarjeta';
 import { FranquiciaTarjetaService } from '../../servicios/recaudacion/franquicia-tarjeta.service';
@@ -342,7 +342,7 @@ export class RecaudacionNotaDebitoComponent implements OnInit {
     return [];
   }
   verBancoCheque(banco: Banco): string {
-    return banco && banco.nombre ? banco.nombre : valores.vacio;
+    return banco && banco.abreviatura ? banco.abreviatura : valores.vacio;
   }
 
   private filtroBancoDeposito(value: string): Banco[] {
@@ -353,7 +353,7 @@ export class RecaudacionNotaDebitoComponent implements OnInit {
     return [];
   }
   verBancoDeposito(bancoDeposito: Banco): string {
-    return bancoDeposito && bancoDeposito.nombre ? bancoDeposito.nombre : valores.vacio;
+    return bancoDeposito && bancoDeposito.abreviatura ? bancoDeposito.abreviatura : valores.vacio;
   }
   private filtroBancoTransferencia(value: string): Banco[] {
     if(this.bancosTransferencias.length > 0) {
@@ -363,7 +363,7 @@ export class RecaudacionNotaDebitoComponent implements OnInit {
     return [];
   }
   verBancoTransferencia(bancoTransferencia: Banco): string {
-    return bancoTransferencia && bancoTransferencia.nombre ? bancoTransferencia.nombre : '';
+    return bancoTransferencia && bancoTransferencia.abreviatura ? bancoTransferencia.abreviatura : '';
   }
 
   private filtroBancoTarjetaCredito(value: string): Banco[] {
@@ -374,7 +374,7 @@ export class RecaudacionNotaDebitoComponent implements OnInit {
     return [];
   }
   verBancoTarjetaCredito(bancoTarjetaCredito: Banco): string {
-    return bancoTarjetaCredito && bancoTarjetaCredito.nombre ? bancoTarjetaCredito.nombre : '';
+    return bancoTarjetaCredito && bancoTarjetaCredito.abreviatura ? bancoTarjetaCredito.abreviatura : '';
   }
 
   private filtroBancoTarjetaDebito(value: string): Banco[] {
@@ -385,7 +385,7 @@ export class RecaudacionNotaDebitoComponent implements OnInit {
     return [];
   }
   verBancoTarjetaDebito(banco_tarjeta_debito: Banco): string {
-    return banco_tarjeta_debito && banco_tarjeta_debito.nombre ? banco_tarjeta_debito.nombre : valores.vacio;
+    return banco_tarjeta_debito && banco_tarjeta_debito.abreviatura ? banco_tarjeta_debito.abreviatura : valores.vacio;
   }
 
 /*  habilitarSeccionPago(formaPago: string){
