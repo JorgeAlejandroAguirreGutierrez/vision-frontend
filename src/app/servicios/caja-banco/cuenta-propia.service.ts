@@ -1,51 +1,59 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Router } from '@angular/router';
-import { map, catchError } from 'rxjs/operators';
-import { BehaviorSubject, of, Observable, throwError } from 'rxjs';
-import { CuentaPropia } from '../../modelos/caja-banco/cuenta-propia';
-import { environment } from '../../../environments/environment';
-import { urn, options } from '../../constantes';
 import { Respuesta } from '../../respuesta';
+import { urn, options } from '../../constantes';
+import { HttpClient } from '@angular/common/http';
+import { map, catchError } from 'rxjs/operators';
+import { Observable, throwError } from 'rxjs';
+import { environment } from '../../../environments/environment';
+import { CuentaPropia } from '../../modelos/caja-banco/cuenta-propia';
 
 @Injectable({
   providedIn: 'root'
 })
 export class CuentaPropiaService {
 
-  constructor(private http: HttpClient, private router: Router) { }
+  constructor(private http: HttpClient) { }
 
   crear(cuentaPropia: CuentaPropia): Observable<Respuesta> {
     return this.http.post(environment.host + urn.ruta + urn.cuentaPropia, cuentaPropia, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
-        return throwError(err);
-      })
-    );
-  }
-
-  consultar(): Observable<Respuesta> {
-    return this.http.get<Respuesta>(environment.host + urn.ruta + urn.cuentaPropia, options).pipe(
-      map(response => response as Respuesta),
-      catchError(err => {
-        return throwError(err);
+        return throwError(()=>err);
       })
     );
   }
 
   obtener(cuentaPropiaId: number): Observable<Respuesta> {
-    return this.http.get(environment.host + urn.ruta + urn.cuentaPropia + urn.slash + cuentaPropiaId, options).pipe(
+    return this.http.get<Respuesta>(environment.host + urn.ruta + urn.cuentaPropia + urn.slash + cuentaPropiaId, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
-        return throwError(err);
+        return throwError(()=>err);
+      })
+    );
+  }
+
+  consultar(): Observable<Respuesta> {
+    return this.http.get(environment.host + urn.ruta + urn.cuentaPropia, options).pipe(
+      map(response => response as Respuesta),
+      catchError(err => {
+        return throwError(()=>err);
       }));
+  }
+
+  buscar(cuentaPropia: CuentaPropia): Observable<Respuesta> {
+    return this.http.post(environment.host + urn.ruta + urn.cuentaPropia + urn.buscar, cuentaPropia, options).pipe(
+      map(response => response as Respuesta),
+      catchError(err => {
+        return throwError(()=>err);
+      })
+    );
   }
 
   actualizar(cuentaPropia: CuentaPropia): Observable<Respuesta> {
     return this.http.put(environment.host + urn.ruta + urn.cuentaPropia, cuentaPropia, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
-        return throwError(err);
+        return throwError(()=>err);
       })
     );
   }

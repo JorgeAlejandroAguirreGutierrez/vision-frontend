@@ -1,14 +1,15 @@
 import { Component, OnInit, HostListener, ViewChild, ElementRef, Renderer2 } from '@angular/core';
-import { TabService } from '../../servicios/componente/tab/tab.service';
-import Swal from 'sweetalert2';
 import { validarSesion, exito, exito_swal, error, error_swal, valores } from '../../constantes';
-import { Banco } from '../../modelos/recaudacion/banco';
-import { BancoService } from '../../servicios/recaudacion/banco.service';
-import { Sesion } from 'src/app/modelos/usuario/sesion';
 import { Router } from '@angular/router';
-import { SesionService } from 'src/app/servicios/usuario/sesion.service';
-import { MatTableDataSource } from '@angular/material/table';
 import { BehaviorSubject } from 'rxjs';
+import Swal from 'sweetalert2';
+
+import { Sesion } from 'src/app/modelos/usuario/sesion';
+import { SesionService } from 'src/app/servicios/usuario/sesion.service';
+import { Banco } from '../../modelos/caja-banco/banco';
+import { BancoService } from '../../servicios/caja-banco/banco.service';
+
+import { MatTableDataSource } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
 
@@ -21,21 +22,23 @@ export class BancoComponent implements OnInit {
 
   activo = valores.activo;
   inactivo = valores.inactivo;
-  banco = new Banco();
-  bancos: Banco[] = [];
-  sesion: Sesion=null;
-  @ViewChild(MatPaginator) paginator: MatPaginator;
-  @ViewChild(MatSort) sort: MatSort;
-  @ViewChild("inputFiltro") inputFiltro: ElementRef;
+
   edicion: boolean = true;
   abrirPanelNuevo : boolean= true;
-  abrirPanelAdmin : boolean = false;
+  abrirPanelAdmin : boolean = true;
+
+  sesion: Sesion=null;
+  banco: Banco = new Banco();
+
+  bancos: Banco[] = [];
+
 
   columnas: any[] = [
     { nombreColumna: 'codigo', cabecera: 'Codigo', celda: (row: Banco) => `${row.codigo}` },
-    { nombreColumna: 'tipo', cabecera: 'Tipo', celda: (row: Banco) => `${row.tipo}` },
-    { nombreColumna: 'nombre', cabecera: 'Descripción', celda: (row: Banco) => `${row.nombre}` },
-    { nombreColumna: 'abreviatura', cabecera: 'Abreviatura', celda: (row: Banco) => `${row.abreviatura}` },
+    { nombreColumna: 'ruc', cabecera: 'Ruc', celda: (row: Banco) => `${row.ruc}` },
+    { nombreColumna: 'abreviatura', cabecera: 'Nombre Corto', celda: (row: Banco) => `${row.abreviatura}` },
+    { nombreColumna: 'subsistema', cabecera: 'Subsistema', celda: (row: Banco) => `${row.subsistema}` },
+    { nombreColumna: 'calificacion', cabecera: 'Calificación', celda: (row: Banco) => `${row.calificacion}` },
     { nombreColumna: 'estado', cabecera: 'Estado', celda: (row: Banco) => `${row.estado}` }
   ];
 
@@ -44,7 +47,20 @@ export class BancoComponent implements OnInit {
   observable: BehaviorSubject<MatTableDataSource<Banco>> = new BehaviorSubject<MatTableDataSource<Banco>>(null);
   clickedRows = new Set<Banco>();
 
-  constructor(private renderer: Renderer2, private sesionService: SesionService, private router: Router, private tabService: TabService,private bancoService: BancoService) { }
+  @ViewChild(MatPaginator) paginator: MatPaginator;
+  @ViewChild(MatSort) sort: MatSort;
+  @ViewChild("inputFiltro") inputFiltro: ElementRef;
+
+  @HostListener('window:keypress', ['$event'])
+  keyEvent($event: KeyboardEvent) {
+    if (($event.shiftKey || $event.metaKey) && $event.key == 'G') //SHIFT + G
+      this.crear(null);
+    if (($event.shiftKey || $event.metaKey) && $event.key == 'N') //ASHIFT + N
+      this.nuevo(null);
+  }
+
+  constructor(private renderer: Renderer2, private sesionService: SesionService, private router: Router, 
+    private bancoService: BancoService) { }
 
   ngOnInit() {
     this.sesion=validarSesion(this.sesionService, this.router);
@@ -56,6 +72,8 @@ export class BancoComponent implements OnInit {
       event.preventDefault();
     this.banco = new Banco();
     this.clickedRows.clear();
+    this.edicion = true;
+    this.borrarFiltro();
   }
 
   crear(event) {
@@ -123,17 +141,10 @@ export class BancoComponent implements OnInit {
   }
 
   llenarTablaCalificacionCliente(bancos: Banco[]) {
-    this.ordenarAsc(bancos, 'codigo');
     this.dataSource = new MatTableDataSource(bancos);
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
     this.observable.next(this.dataSource);
-  }
-
-  ordenarAsc(arrayJson: any, pKey: any) {
-    arrayJson.sort(function (a: any, b: any) {
-      return a[pKey] > b[pKey];
-    });
   }
 
   seleccion(banco: Banco) {
@@ -143,15 +154,8 @@ export class BancoComponent implements OnInit {
       this.banco = banco;
       this.edicion = false;
     } else {
-      this.limpiar();
+      this.nuevo(null);
     }
-  }
-
-  limpiar() {
-    this.banco = new Banco();
-    this.edicion = true;
-    this.clickedRows.clear();
-    this.borrarFiltro();
   }
 
   filtro(event: Event) {
@@ -161,18 +165,9 @@ export class BancoComponent implements OnInit {
       this.dataSource.paginator.firstPage();
     }
   }
-
   borrarFiltro() {
     this.renderer.setProperty(this.inputFiltro.nativeElement, 'value', '');
     this.dataSource.filter = '';
-  }
-
-  @HostListener('window:keypress', ['$event'])
-  keyEvent($event: KeyboardEvent) {
-    if (($event.shiftKey || $event.metaKey) && $event.keyCode == 71) //SHIFT + G
-      this.crear(null);
-    if (($event.shiftKey || $event.metaKey) && $event.keyCode == 78) //ASHIFT + N
-      this.nuevo(null);
   }
 
 }

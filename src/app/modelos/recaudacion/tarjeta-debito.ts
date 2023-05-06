@@ -1,5 +1,5 @@
 import { OperadorTarjeta } from './operador-tarjeta';
-import { Banco } from './banco';
+import { Banco } from '../caja-banco/banco';
 import { FranquiciaTarjeta } from './franquicia-tarjeta';
 import { valores } from "../../constantes";
 

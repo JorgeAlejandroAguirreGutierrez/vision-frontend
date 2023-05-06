@@ -53,6 +53,9 @@ import { DashboardComponent } from '../../../componentes/pages/dashboard/dashboa
 //CONTABILIDAD
 import { MovimientoContableComponent } from '../../../contabilidad/movimiento-contable/movimiento-contable.component';
 import { CuentaContableComponent } from '../../../contabilidad/cuenta-contable/cuenta-contable.component';
+//CAJA BANCOS
+import { CuentaPropiaComponent } from '../../../caja-bancos/cuenta-propia/cuenta-propia.component';
+import { BancoComponent } from '../../../caja-bancos/banco/banco.component';
 
 @Injectable({
   providedIn: 'root'
@@ -65,7 +68,7 @@ export class SidebarItemsService {
   constructor() { }
 
   llenarOpciones(Componente: Type<any>, tabTitulo: string, itemNombre: string, icoItem: string) {
-    // VALIDAR SI TIENE PERMISO PARA VER LA OPCIÓN EN EL SIDEBAR
+    // VALIDAR SI TIENE PERMISO PARA VER LAS OPCIONES EN EL SIDEBAR
     this.permisoOpciones.forEach(elemento => {
       if (elemento.menuOpcion.opcion == itemNombre.toUpperCase() && elemento.menuOpcion.menu==valores.si && elemento.estado==valores.activo){
         this.opciones.push(new SidebarItem(Componente, tabTitulo, itemNombre, icoItem));
@@ -113,7 +116,8 @@ export class SidebarItemsService {
     }
 
     if (tabNombre == modulos.modulo_caja_bancos) {
-
+      this.llenarOpciones(CuentaPropiaComponent,tabs.tab_cuenta_propia, items.item_cuenta_propia, icos.ico_cuenta_propia);
+      this.llenarOpciones(BancoComponent,tabs.tab_banco, items.item_banco, icos.ico_banco);
     }
 
     if (tabNombre == modulos.modulo_cuentas_cobrar) {

@@ -1,4 +1,4 @@
-import { Banco } from './banco';
+import { Banco } from '../caja-banco/banco';
 import { valores } from "../../constantes";
 
 export class NotaDebitoVentaTransferencia {

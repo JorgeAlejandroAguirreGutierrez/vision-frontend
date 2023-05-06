@@ -233,7 +233,7 @@
                         <mat-label>Banco</mat-label>
                         <mat-autocomplete #bancoCheque="matAutocomplete" [displayWith]="verBancoCheque">
                             <mat-option *ngFor="let banco of filtroBancosCheques | async" [value]="banco">
-                                {{banco.nombre}}
+                                {{banco.abreviatura}}
                             </mat-option>
                         </mat-autocomplete>
                         <input matInput type="text" class="form-control-sm" [formControl]="seleccionBancoCheque"
@@ -362,7 +362,7 @@
                         <mat-label>Banco</mat-label>
                         <mat-autocomplete #bancoDeposito="matAutocomplete" [displayWith]="verBancoDeposito">
                             <mat-option *ngFor="let banco of filtroBancosDepositos | async" [value]="banco">
-                                {{banco.nombre}}
+                                {{banco.abreviatura}}
                             </mat-option>
                         </mat-autocomplete>
                         <input matInput type="text" class="form-control-sm" [formControl]="seleccionBancoDeposito"
@@ -507,7 +507,7 @@
                         <mat-label>Banco</mat-label>
                         <mat-autocomplete #bancoTransferencia="matAutocomplete" [displayWith]="verBancoTransferencia">
                             <mat-option *ngFor="let banco of filtroBancosTransferencias | async" [value]="banco">
-                                {{banco.nombre}}
+                                {{banco.abreviatura}}
                             </mat-option>
                         </mat-autocomplete>
                         <input matInput type="text" class="form-control-sm" [formControl]="seleccionBancoTransferencia"
@@ -636,7 +636,7 @@
                         <mat-label>Banco</mat-label>
                         <mat-autocomplete #bancoTarjetaCredito="matAutocomplete" [displayWith]="verBancoTarjetaCredito">
                             <mat-option *ngFor="let banco of filtroBancosTarjetasCreditos | async" [value]="banco">
-                                {{banco.nombre}}
+                                {{banco.abreviatura}}
                             </mat-option>
                         </mat-autocomplete>
                         <input matInput type="text" class="form-control-sm" [formControl]="seleccionBancoTarjetaCredito"
@@ -840,7 +840,7 @@
                         <mat-label>Banco</mat-label>
                         <mat-autocomplete #bancoTarjetaDebito="matAutocomplete" [displayWith]="verBancoTarjetaDebito">
                             <mat-option *ngFor="let banco of filtroBancosTarjetasDebitos | async" [value]="banco">
-                                {{banco.nombre}}
+                                {{banco.abreviatura}}
                             </mat-option>
                         </mat-autocomplete>
                         <input matInput type="text" class="form-control-sm" [formControl]="seleccionBancoTarjetaDebito"

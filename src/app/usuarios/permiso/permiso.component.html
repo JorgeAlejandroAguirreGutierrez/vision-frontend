@@ -2,14 +2,9 @@
     <ul class="navbar-nav">
         <li class="nav-item" *ngIf="perfil.id!=0">
             <a class="nav-link" title="Guardar" role="button" (click)="actualizar($event)">
-                <mat-icon>save</mat-icon>
-            </a>
-        </li>
-        <!--li class="nav-item" *ngIf="permiso.id!=0">
-            <a class="nav-link" title="Actualizar" role="button" (click)="actualizar($event)">
                 <mat-icon>update</mat-icon>
             </a>
-        </li-->
+        </li>
         <li class="nav-item">
             <a class="nav-link" title="Nuevo" role="button" (click)="nuevo($event)">
                 <mat-icon>file_copy</mat-icon>
@@ -92,13 +87,6 @@
             </mat-expansion-panel-header>
             <hr>
             <div class="form-group form-row">
-                <div class="col-2">
-                    <mat-form-field appearance="standard">
-                        <mat-label>Código</mat-label>
-                        <input matInput type="text" [(ngModel)]="permiso.codigo" class="form-control-sm"
-                            [disabled]="true">
-                    </mat-form-field>
-                </div>
                 <div class="col-4">
                     <mat-form-field appearance="standard">
                         <mat-label>Modulo</mat-label>
@@ -120,6 +108,13 @@
                         </mat-select>
                     </mat-form-field>
                 </div>
+                <div class="col-2">
+                    <mat-form-field appearance="standard">
+                        <mat-label>Operación</mat-label>
+                        <input matInput type="text" [(ngModel)]="permiso.menuOpcion.operacion" class="form-control-sm"
+                            [disabled]="true">
+                    </mat-form-field>
+                </div>
                 <div class="col-1">
                     <mat-form-field appearance="standard">
                         <mat-label>Agre. Menu</mat-label>
@@ -129,24 +124,16 @@
                         </mat-select>
                     </mat-form-field>
                 </div>
-                <div class="col-1 iconos">
-                    <button mat-icon-button>
-                        <mat-icon (click)="agregarPermiso()">add</mat-icon>
+                <div class="col-1 iconos centrar" *ngIf="indexPermiso==-1">
+                    <button mat-icon-button (click)="agregarPermiso()" [disabled]="deshabilitarPermisos">
+                        <mat-icon>add</mat-icon>
                     </button>
                 </div>
-                <!--ng-container *ngFor="let permiso of perfil.permisos; let i=index ">
-                    <div class="col-11">
-                        <mat-form-field appearance="standard">
-                            <mat-label>Permisos</mat-label>
-                            <input matInput type="text" value="{{permiso.modulo}} + {{permiso.operacion}}" class="form-control-sm" [disabled]="true">
-                        </mat-form-field>
-                    </div>
-                    <div class="col-1 iconos">
-                        <button mat-icon-button>
-                            <mat-icon class="iconos-peque" (click)="eliminarPermiso(i)">close</mat-icon>
-                        </button>
-                    </div>
-                </ng-container-->
+                <div class="col-1 iconos centrar" *ngIf="indexPermiso!=-1">
+                    <button mat-icon-button (click)="actualizarPermiso()" [disabled]="!deshabilitarPermisos">
+                        <mat-icon>update</mat-icon>
+                    </button>
+                </div>
             </div>
         </mat-expansion-panel>
     </mat-accordion>
@@ -157,7 +144,7 @@
                     <i><u>GESTIONAR PERMISOS</u></i>
                 </mat-panel-title>
                 <mat-panel-description>
-                    {{abrirPanelPermiso ? 'Ocultar administrador de perfiles' : 'Editar perfil existente'}}
+                    {{abrirPanelPermiso ? 'Ocultar administrador de permisos' : 'Administrar permiso existente'}}
                     <mat-icon>playlist_add_check</mat-icon>
                 </mat-panel-description>
             </mat-expansion-panel-header>
@@ -176,11 +163,20 @@
                         <!-- Columnas Dinamicas -->
                         <ng-container *ngFor="let columna of columnas" [matColumnDef]="columna.nombreColumna">
                             <th mat-header-cell *matHeaderCellDef mat-sort-header> {{ columna.cabecera }} </th>
-                            <td mat-cell *matCellDef="let row"> {{ columna.celda(row) }} </td>
+                            <td mat-cell *matCellDef="let row; let i=index">
+                                <ng-container *ngIf="columna.nombreColumna!='acciones'">
+                                    {{ columna.celda(row) }}
+                                </ng-container>
+                                <ng-container *ngIf="columna.nombreColumna=='acciones'">
+                                    <button mat-icon-button color="warn" (click)="eliminarPermiso(i)">
+                                        <i class="fa fa-times mat-icon"></i>
+                                    </button>
+                                </ng-container>
+                            </td>
                         </ng-container>
                         <tr mat-header-row *matHeaderRowDef="cabecera"></tr>
-                        <tr mat-row (click)="seleccion(row)" [class.selected-row]="clickedRows.has(row)"
-                            *matRowDef="let row; columns: cabecera;"></tr>
+                        <tr mat-row *matRowDef="let row; let i=index; columns: cabecera" 
+                        (click)="seleccion(row, i)" [class.selected-row]="clickedRows.has(row)"></tr>
                         <!-- Row shown when there is no matching data. -->
                         <tr class="mat-row" *matNoDataRow>
                             <td class="mat-cell" colspan="6">No hay datos que coincidan con el permiso: 

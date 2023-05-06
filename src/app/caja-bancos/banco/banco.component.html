@@ -22,16 +22,18 @@
                 <mat-icon>file_copy</mat-icon>
             </a>
         </li>
-        <li class="nav-item" *ngIf="banco.id!=0">
-            <a class="nav-link" title="Activar" role="button" (click)="activar($event)">
-                <mat-icon>check</mat-icon>
-            </a>
-        </li>
-        <li class="nav-item" *ngIf="banco.id!=0">
-            <a class="nav-link" title="Inactivar" role="button" (click)="inactivar($event)">
-                <mat-icon>delete</mat-icon>
-            </a>
-        </li>
+        <ng-container *ngIf="banco.id!=0">
+            <li class="nav-item" *ngIf="banco.estado!=activo">
+                <a class="nav-link" title="Activar" role="button" (click)="activar($event)">
+                    <mat-icon>assignment_turned_in</mat-icon>
+                </a>
+            </li>
+            <li class="nav-item" *ngIf="banco.estado==activo">
+                <a class="nav-link" title="Inactivar" role="button" (click)="inactivar($event)">
+                    <mat-icon>delete_forever</mat-icon>
+                </a>
+            </li>
+        </ng-container>
     </ul>
 </nav>
 
@@ -50,32 +52,48 @@
             </mat-expansion-panel-header>
             <hr>
             <div class="form-group form-row">
-                <div class="col-3">
+                <div class="col-2">
                     <mat-form-field appearance="standard">
                         <mat-label>Codigo</mat-label>
                         <input matInput type="text" [(ngModel)]="banco.codigo" class="form-control-sm"
                             [disabled]="true">
                     </mat-form-field>
                 </div>
+                <div class="col-2">
+                    <mat-form-field appearance="standard">
+                        <mat-label>RUC</mat-label>
+                        <input matInput type="text" [(ngModel)]="banco.ruc"
+                            [disabled]="!edicion" oninput="this.value = this.value.toUpperCase()"
+                            class="form-control-sm">
+                    </mat-form-field>
+                </div>
+                <div class="col-8">
+                    <mat-form-field appearance="standard">
+                        <mat-label>Razón Social</mat-label>
+                        <input matInput type="text" [(ngModel)]="banco.razonSocial"
+                            [disabled]="!edicion" oninput="this.value = this.value.toUpperCase()"
+                            class="form-control-sm">
+                    </mat-form-field>
+                </div>
                 <div class="col-3">
                     <mat-form-field appearance="standard">
-                        <mat-label>Tipo</mat-label>
-                        <input matInput type="text" [(ngModel)]="banco.tipo"
+                        <mat-label>Subsistema</mat-label>
+                        <input matInput type="text" [(ngModel)]="banco.subsistema"
                             [disabled]="!edicion" oninput="this.value = this.value.toUpperCase()"
                             class="form-control-sm">
                     </mat-form-field>
                 </div>
                 <div class="col-2">
                     <mat-form-field appearance="standard">
-                        <mat-label>Nombre</mat-label>
-                        <input matInput type="text" [(ngModel)]="banco.nombre"
+                        <mat-label>Calificación</mat-label>
+                        <input matInput type="text" [(ngModel)]="banco.calificacion"
                             [disabled]="!edicion" oninput="this.value = this.value.toUpperCase()"
                             class="form-control-sm">
                     </mat-form-field>
                 </div>
-                <div class="col-2">
+                <div class="col-5">
                     <mat-form-field appearance="standard">
-                        <mat-label>Abreviatura</mat-label>
+                        <mat-label>Nombre corto</mat-label>
                         <input matInput type="text" [(ngModel)]="banco.abreviatura"
                             [disabled]="!edicion" oninput="this.value = this.value.toUpperCase()"
                             class="form-control-sm">
