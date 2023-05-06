@@ -123,6 +123,7 @@ export class NotaDebitoVentaComponent implements OnInit {
 
   ngOnInit() {
     this.sesion=validarSesion(this.sesionService, this.router);
+    console.log(this.notaDebitoVenta);
     this.consultar();
     this.consultarClientes();
     this.consultarImpuestos();
@@ -432,6 +433,7 @@ export class NotaDebitoVentaComponent implements OnInit {
     if (event!=null)
       event.preventDefault();
     this.notaDebitoVenta.sesion=this.sesion;
+    console.log(this.notaDebitoVenta);
     this.notaDebitoVentaService.crear(this.notaDebitoVenta).subscribe(
       res => {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });

@@ -109,7 +109,7 @@ export class FacturaComponent implements OnInit {
     { nombreColumna: 'serie', cabecera: 'Serie', celda: (row: Factura) => `${row.serie}` },
     { nombreColumna: 'secuencial', cabecera: 'Secuencial', celda: (row: Factura) => `${row.secuencial}` },
     { nombreColumna: 'cliente', cabecera: 'Cliente', celda: (row: Factura) => `${row.cliente.razonSocial}` },
-    { nombreColumna: 'total', cabecera: 'Total', celda: (row: Factura) => `${row.totalConDescuento}` },
+    { nombreColumna: 'total', cabecera: 'Total', celda: (row: Factura) => `$${row.totalConDescuento}` },
     { nombreColumna: 'estado', cabecera: 'Estado', celda: (row: Factura) => `${row.estado}` }
   ];
   cabeceraFactura: string[] = this.columnasFactura.map(titulo => titulo.nombreColumna);
@@ -243,6 +243,7 @@ export class FacturaComponent implements OnInit {
     if (event != null)
       event.preventDefault();
     this.factura.sesion = this.sesion;
+    console.log(this.factura);
     this.facturaService.crear(this.factura).subscribe({
       next: res => {
         this.factura = res.resultado as Factura;
@@ -276,6 +277,7 @@ export class FacturaComponent implements OnInit {
   actualizar(event) {
     if (event != null)
       event.preventDefault();
+    console.log(this.factura);
     this.facturaService.actualizar(this.factura).subscribe({
       next: res => {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
