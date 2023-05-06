@@ -104,6 +104,7 @@ export class CuentaPropiaComponent implements OnInit {
       next: res => {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
         this.consultar();
+        this.nuevo(null);
       },
       error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     });
@@ -118,6 +119,7 @@ export class CuentaPropiaComponent implements OnInit {
       next: res => {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
         this.consultar();
+        this.nuevo(null);
       },
       error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     });
@@ -130,6 +132,7 @@ export class CuentaPropiaComponent implements OnInit {
       next: res => {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
         this.consultar();
+        this.nuevo(null);
       },
       error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     });
@@ -142,6 +145,7 @@ export class CuentaPropiaComponent implements OnInit {
       next: res => {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
         this.consultar();
+        this.nuevo(null);
       },
       error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     });
