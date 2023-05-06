@@ -128,7 +128,7 @@ export class PermisoComponent implements OnInit {
       next: res => {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
         this.consultar(this.perfil);
-        this.nuevo(null);
+        this.nuevoPermiso();
       },
       error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     });
@@ -162,23 +162,29 @@ export class PermisoComponent implements OnInit {
   activar(event){
     if (event != null)
       event.preventDefault();
-    this.permisoService.activar(this.permiso).subscribe({
+   /* this.permisoService.activar(this.permiso).subscribe({
       next: res => {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
       },
       error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
-    });
+    });*/
+    this.permiso.estado = valores.activo;
+    this.perfil.permisos[this.indexPermiso] = this.permiso;
+    this.actualizar(null);
   }
 
   inactivar(event){
     if (event != null)
       event.preventDefault();
-    this.permisoService.inactivar(this.permiso).subscribe({
+    /*this.permisoService.inactivar(this.permiso).subscribe({
       next: res => {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });  
       },
       error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
-    });
+    });*/
+    this.permiso.estado = valores.inactivo;
+    this.perfil.permisos[this.indexPermiso] = this.permiso;
+    this.actualizar(null);
   }
 
   filtro(event: Event) {
@@ -193,7 +199,7 @@ export class PermisoComponent implements OnInit {
     this.dataSource.filter = '';
   }
 
-agregarPermiso(){
+  agregarPermiso(){
     if (this.existePermiso()) return;
     this.perfil.permisos.push({ ...this.permiso});
     this.consultar(this.perfil);
