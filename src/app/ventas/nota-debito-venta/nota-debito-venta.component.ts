@@ -123,6 +123,7 @@ export class NotaDebitoVentaComponent implements OnInit {
 
   ngOnInit() {
     this.sesion=validarSesion(this.sesionService, this.router);
+    console.log(this.notaDebitoVenta);
     this.consultar();
     this.consultarClientes();
     this.consultarImpuestos();
