@@ -440,7 +440,7 @@ export class ProveedorComponent implements OnInit {
   }
 
   validarDocumento() {
-    if (this.proveedor.tipoIdentificacion.descripcion == otras.tipoIdentificacion) {
+    if (this.proveedor.tipoIdentificacion.descripcion == otras.tipoIdentificacionCedula) {
       this.deshabilitarObligado = true;
     } else {
       this.deshabilitarObligado = false;

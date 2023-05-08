@@ -21,7 +21,7 @@ import { BancoService } from '../../servicios/caja-banco/banco.service';
 import { FormaPagoService } from '../../servicios/cliente/forma-pago.service';
 import { FormaPago } from '../../modelos/cliente/forma-pago';
 import { CuentaPropia } from '../../modelos/caja-banco/cuenta-propia';
-import { CuentaPropiaService } from '../../servicios/contabilidad/cuenta-propia.service';
+import { CuentaPropiaService } from '../../servicios/caja-banco/cuenta-propia.service';
 import { FranquiciaTarjeta } from '../../modelos/recaudacion/franquicia-tarjeta';
 import { FranquiciaTarjetaService } from '../../servicios/recaudacion/franquicia-tarjeta.service';
 import { AppDateAdapter, APP_DATE_FORMATS } from '../../modelos/format-date-picker';

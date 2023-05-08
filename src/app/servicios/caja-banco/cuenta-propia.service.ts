@@ -32,6 +32,14 @@ export class CuentaPropiaService {
     );
   }
 
+  consultarActivos(): Observable<Respuesta> {
+    return this.http.get(environment.host + urn.ruta + urn.cuentaPropia + urn.consultarActivos, options).pipe(
+      map(response => response as Respuesta),
+      catchError(err => {
+        return throwError(()=>err);
+      }));
+  }
+
   consultar(): Observable<Respuesta> {
     return this.http.get(environment.host + urn.ruta + urn.cuentaPropia, options).pipe(
       map(response => response as Respuesta),
@@ -75,4 +83,22 @@ export class CuentaPropiaService {
       })
     );
   }
+
+  consultarBancos(): Observable<Respuesta> {
+    return this.http.get(environment.host + urn.ruta + urn.cuentaPropia + urn.consultarBancos, options).pipe(
+      map(response => response as Respuesta),
+      catchError(err => {
+        return throwError(()=>err);
+      }));
+  }
+
+  consultarPorBanco(banco: String): Observable<Respuesta> {
+    return this.http.get<Respuesta>(environment.host + urn.ruta + urn.cuentaPropia + urn.consultarPorBanco + urn.slash + banco, options).pipe(
+      map(response => response as Respuesta),
+      catchError(err => {
+        return throwError(()=>err);
+      })
+    );
+  }  
+
 }

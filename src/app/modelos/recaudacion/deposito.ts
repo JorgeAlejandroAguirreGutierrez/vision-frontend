@@ -1,6 +1,6 @@
 import { CuentaPropia } from '../caja-banco/cuenta-propia';
-import { Banco } from '../caja-banco/banco';
 import { valores } from "../../constantes";
+
 export class Deposito {
     id:number;
     codigo: string;
@@ -8,7 +8,6 @@ export class Deposito {
     comprobante: string;
     valor: number;
     cuentaPropia: CuentaPropia;
-    banco: Banco;
 
     constructor(){
         this.id=valores.cero;
@@ -17,7 +16,6 @@ export class Deposito {
         this.comprobante=valores.vacio;
         this.valor=valores.cero;
         this.cuentaPropia=new CuentaPropia();
-        this.banco=new Banco();
     }
 
 }
