@@ -27,7 +27,8 @@ export const urn =
     personalizado: "/personalizado",
     generar: "/generar",
     pdf: "/pdf",
-
+    enviarPDFYXML: "/enviarPDFYXML",
+    obtenerPDF: "/obtenerPDF",
     // Cliente
     calificacionCliente: "/calificacionCliente",
     cliente: "/cliente",
@@ -128,7 +129,7 @@ export const urn =
     //Ventas
     factura: "/factura",
     facturar: "/facturar",
-    facturaEletronica: "/facturaEletronica",
+    facturaElectronica: "/facturaElectronica",
     facturaFisica: "/facturaFisica",
     facturaLinea: "/facturaLinea",
     calcular: "/calcular",

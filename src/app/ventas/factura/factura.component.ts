@@ -256,15 +256,37 @@ export class FacturaComponent implements OnInit {
   }
 
   crearFacturaElectronica(event) {
-    this.cargar = true;
     if (event != null)
       event.preventDefault();
+    this.cargar = true;
     this.facturaElectronicaService.enviar(this.factura.id).subscribe({
       next: res => {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
         this.factura = res.resultado as Factura;
         this.consultar();
         this.nuevo(null);
+        this.cargar = false;
+      },
+      error: err => {
+        Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+        this.cargar = false;
+      }
+    });
+  }
+
+  obtenerPDF(event){
+    if (event != null)
+      event.preventDefault();
+    this.facturaElectronicaService.obtenerPDF(this.factura.id);
+  }
+  
+  enviarPDFYXML(event){
+    if (event != null)
+      event.preventDefault();
+    this.cargar = true;
+    this.facturaElectronicaService.enviarPDFYXML(this.factura.id).subscribe({
+      next: res => {
+        Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
         this.cargar = false;
       },
       error: err => {
