@@ -64,6 +64,8 @@ export class RecaudacionComponent implements OnInit {
   recaudada: string = valores.recaudada;
   chequeALaVista: string = valores.chequeALaVista;
   chequePosfechado: string = valores.chequePosfechado;
+  transferenciaDirecta: string = valores.transferenciaDirecta;
+  transferenciaViaBCE: string = valores.transferenciaViaBCE;
 
   indiceCheque: number = valores.menosUno;
   indiceDeposito: number = valores.menosUno;
@@ -127,7 +129,7 @@ export class RecaudacionComponent implements OnInit {
 
   // Variables para Tablas de formas de pago
   columnasCheques: any[] = [
-    { nombreColumna: 'fecha', cabecera: 'Fecha', pie: 'Total' ,celda: (row: Cheque) => `${row.fecha } `  }, //.toLocaleDateString()
+    { nombreColumna: 'fecha', cabecera: 'Fecha', pie: 'Total :' ,celda: (row: Cheque) => `${new DatePipe('en-US').transform(row.fecha, 'dd-MM-yyyy')}`}, //.toLocaleDateString()
     { nombreColumna: 'tipo', cabecera: 'Tipo', celda: (row: Cheque) => `${row.tipo}` },
     { nombreColumna: 'banco', cabecera: 'Banco', celda: (row: Cheque) => `${row.banco.abreviatura}` },
     { nombreColumna: 'numero', cabecera: 'Número', celda: (row: Cheque) => `${row.numero}` },
@@ -139,7 +141,7 @@ export class RecaudacionComponent implements OnInit {
   clickedRowsCheques = new Set<Cheque>();
 
   columnasDepositos: any[] = [
-    { nombreColumna: 'fecha', cabecera: 'Fecha', pie: 'Total' ,celda: (row: Deposito) => `${row.fecha } `  }, //.toLocaleDateString()
+    { nombreColumna: 'fecha', cabecera: 'Fecha', pie: 'Total :' ,celda: (row: Deposito) => `${new DatePipe('en-US').transform(row.fecha, 'dd-MM-yyyy')}`},
     { nombreColumna: 'banco', cabecera: 'Banco', celda: (row: Deposito) => `${row.cuentaPropia.banco.abreviatura}` },
     { nombreColumna: 'cuenta', cabecera: 'Cuenta', celda: (row: Deposito) => `${row.cuentaPropia.numero}` },
     { nombreColumna: 'tipo', cabecera: 'Tipo Cta', celda: (row: Deposito) => `${row.cuentaPropia.tipoCuenta}` },
@@ -151,10 +153,19 @@ export class RecaudacionComponent implements OnInit {
   dataSourceDepositos: MatTableDataSource<Deposito>;
   clickedRowsDepositos = new Set<Deposito>();
 
+  columnasTransferencias: any[] = [
+    { nombreColumna: 'fecha', cabecera: 'Fecha', pie: 'Total :' ,celda: (row: Transferencia) => `${new DatePipe('en-US').transform(row.fecha, 'dd-MM-yyyy')}`},
+    { nombreColumna: 'tipo', cabecera: 'Tipo Transf.', celda: (row: Transferencia) => `${row.tipo}` },
+    { nombreColumna: 'banco', cabecera: 'Banco', celda: (row: Transferencia) => `${row.cuentaPropia.banco.abreviatura}` },
+    { nombreColumna: 'cuenta', cabecera: 'Cuenta', celda: (row: Transferencia) => `${row.cuentaPropia.numero}` },
+    { nombreColumna: 'comprobante', cabecera: 'Comprobante', celda: (row: Transferencia) => `${row.comprobante}` },
+    { nombreColumna: 'valor', cabecera: 'Valor', celda: (row: Transferencia) => `${row.valor}` },
+    { nombreColumna: 'acciones', cabecera: 'Acciones'}
+  ];
+  cabeceraTransferencias: string[] = this.columnasDepositos.map(titulo => titulo.nombreColumna);
+  dataSourceTransferencias: MatTableDataSource<Transferencia>;
+  clickedRowsTransferencias = new Set<Transferencia>();
 
-  habilitarTransferencias: boolean = false;
-  columnasTransferencias: string[] = ['id', 'fecha', 'tipoTransaccion', 'numeroTransaccion', 'banco', 'valor', 'acciones'];;
-  dataSourceTransferencias = new MatTableDataSource<Transferencia>(this.factura.transferencias);
 
   habilitarTarjetasCreditos: boolean = false;
   columnasTarjetasCredito: string[] = ['id', 'franquicia', 'banco', 'identificacion', 'nombre', 'titular', 'diferido', 'operador', 'lote', 'valor', 'acciones'];
@@ -216,13 +227,11 @@ export class RecaudacionComponent implements OnInit {
       error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     });
   }
-  consultarPorBanco(banco: String) {
-    console.log(banco);
+  consultarPorBanco(banco: string) {
     this.cuentaPropiaService.consultarPorBanco(banco).subscribe({
       next: res => {
         this.cuentasPropias = res.resultado as CuentaPropia[];
-        //this.deposito.cuentaPropia = this.cuentasPropias[0];
-        console.log(this.cuentasPropias);
+        this.deposito.cuentaPropia = this.cuentasPropias[0];
       },
       error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     });
@@ -345,7 +354,7 @@ export class RecaudacionComponent implements OnInit {
     });
   }
 
-  calcularRecaudacion() {
+  calcularRecaudacion1() {
     this.facturaService.calcularRecaudacion(this.factura).subscribe({
       next: res => {
         this.factura = res.resultado as Factura;
@@ -358,6 +367,20 @@ export class RecaudacionComponent implements OnInit {
       error: err => Swal.fire(error, err.error.mensaje, error_swal)
     });
   }
+
+  calcularRecaudacion() {
+    this.factura.totalCheques = this.calcularTotalCheques();
+    this.factura.totalDepositos = this.calcularTotalDepositos();
+    this.factura.totalTransferencias = this.calcularTotalTransferencias();
+    this.factura.totalTarjetasCreditos = this.calcularTotalTC();
+    this.factura.totalTarjetasDebitos = this.calcularTotalTD();
+    this.factura.totalRecaudacion = Number(this.factura.efectivo) + this.factura.totalCheques + this.factura.totalDepositos +
+      this.factura.totalTransferencias + this.factura.totalTarjetasCreditos + this.factura.totalTarjetasDebitos;
+    this.factura.porPagar = Number((this.factura.totalConDescuento - this.factura.totalRecaudacion).toFixed(2));
+    if (this.factura.totalRecaudacion > this.factura.totalConDescuento){
+      this.factura.cambio = Number((this.factura.totalRecaudacion - this.factura.totalConDescuento).toFixed(2));
+    }
+  }
   
   recargar() {
     this.verPanelCheques = false;
@@ -367,24 +390,25 @@ export class RecaudacionComponent implements OnInit {
     this.verPanelTarjetasDebito = false;
     if(this.factura.cheques.length > valores.cero){
       this.verPanelCheques = true;
+      this.llenarCheques(this.factura.cheques);
     }
     if(this.factura.depositos.length > valores.cero){
       this.verPanelDepositos = true;
+      this.llenarDepositos(this.factura.depositos);
     }
     if(this.factura.transferencias.length > valores.cero){
       this.verPanelTransferencias = true;
+      this.dataSourceTransferencias = new MatTableDataSource(this.factura.transferencias);
     }
     if(this.factura.tarjetasCreditos.length > valores.cero){
       this.verPanelTarjetasCredito = true;
+      this.dataSourceTarjetasCreditos = new MatTableDataSource(this.factura.tarjetasCreditos);
     }
     if(this.factura.tarjetasDebitos.length > valores.cero){
       this.verPanelTarjetasDebito = true;
+      this.dataSourceTarjetasDebitos = new MatTableDataSource(this.factura.tarjetasDebitos);
     }
-    this.dataSourceCheques = new MatTableDataSource<Cheque>(this.factura.cheques);
-    this.dataSourceDepositos = new MatTableDataSource<Deposito>(this.factura.depositos);
-    this.dataSourceTransferencias = new MatTableDataSource<Transferencia>(this.factura.transferencias);
-    this.dataSourceTarjetasCreditos = new MatTableDataSource<TarjetaCredito>(this.factura.tarjetasCreditos);
-    this.dataSourceTarjetasDebitos = new MatTableDataSource<TarjetaDebito>(this.factura.tarjetasDebitos);
+
     this.calcularRecaudacion();
   }
 
@@ -425,6 +449,7 @@ export class RecaudacionComponent implements OnInit {
       this.clickedRowsCheques.clear();
       this.clickedRowsCheques.add(cheque);
       this.cheque = { ...cheque};
+      this.cheque.fecha = new Date(cheque.fecha);
       this.controlBancoCheque.setValue(this.cheque.banco);
       this.indiceCheque = i;
     } else {
@@ -449,7 +474,7 @@ export class RecaudacionComponent implements OnInit {
     }
   }
 
-  totalCheques() {
+  calcularTotalCheques() {
     return this.factura.cheques.map(t => Number(t.valor)).reduce((acc, value) => acc + value, 0);
   }
 
@@ -458,6 +483,65 @@ export class RecaudacionComponent implements OnInit {
   }
 
   // DEPOSITOS
+  nuevoTransferencia(){
+    this.transferencia = new Transferencia();
+    this.clickedRowsTransferencias.clear();
+    this.indiceTransferencia = valores.menosUno;
+  }
+
+  agregarTransferencia() {
+    if (!this.validarTransferencia())
+      return;  
+    this.factura.transferencias.push(this.transferencia);
+    this.llenarTransferencia(this.factura.transferencias);
+    this.calcularRecaudacion();
+    this.nuevoTransferencia();
+  }
+
+  llenarTransferencia(transferencias: Transferencia[]){
+    this.dataSourceTransferencias = new MatTableDataSource(transferencias);
+    this.dataSourceTransferencias.sort = this.sortTransferencias;
+    this.dataSourceTransferencias.paginator = this.paginatorTransferencias;
+  }
+
+  seleccionTransferencia(transferencia: Transferencia, i: number) {
+    if (!this.clickedRowsTransferencias.has(transferencia)){
+      this.clickedRowsTransferencias.clear();
+      this.clickedRowsTransferencias.add(transferencia);
+      this.deposito = { ...transferencia};
+      this.deposito.fecha = new Date(transferencia.fecha);
+      this.indiceTransferencia = i;
+    } else {
+      this.nuevoTransferencia();
+    }
+  }
+
+  actualizarTransferencia() {
+    if (!this.validarTransferencia())
+      return;  
+    this.factura.transferencias[this.indiceTransferencia] = this.transferencia;
+    this.llenarTransferencia(this.factura.transferencias);
+    this.calcularRecaudacion();
+    this.nuevoTransferencia();
+  }
+
+  eliminarTransferencia(i: number) {
+    if (confirm(otras.pregunta_eliminar_transferencia)) {
+      this.factura.transferencias.splice(i, 1);
+      this.llenarTransferencia(this.factura.transferencias);
+      this.calcularRecaudacion();
+    }
+  }
+
+  calcularTotalTransferencias() {
+    return this.factura.transferencias.map(t => Number(t.valor)).reduce((acc, value) => acc + value, 0);
+  }
+
+  rellenarNumeroTransferencia() {
+    this.transferencia.comprobante = this.pad(this.transferencia.comprobante, 13);
+  }
+
+  // TRANSFERENCIAS
   nuevoDeposito(){
     this.deposito = new Deposito();
     this.clickedRowsCheques.clear();
@@ -470,7 +554,7 @@ export class RecaudacionComponent implements OnInit {
     this.factura.depositos.push(this.deposito);
     this.llenarDepositos(this.factura.depositos);
     this.calcularRecaudacion();
-    this.nuevoCheque();
+    this.nuevoDeposito();
   }
 
   llenarDepositos(depositos: Deposito[]){
@@ -484,6 +568,7 @@ export class RecaudacionComponent implements OnInit {
       this.clickedRowsDepositos.clear();
       this.clickedRowsDepositos.add(deposito);
       this.deposito = { ...deposito};
+      this.deposito.fecha = new Date(deposito.fecha);
       this.indiceDeposito = i;
     } else {
       this.nuevoDeposito();
@@ -496,78 +581,23 @@ export class RecaudacionComponent implements OnInit {
     this.factura.depositos[this.indiceDeposito] = this.deposito;
     this.llenarDepositos(this.factura.depositos);
     this.calcularRecaudacion();
-    this.nuevoCheque();
+    this.nuevoDeposito();
   }
 
   eliminarDeposito(i: number) {
     if (confirm(otras.pregunta_eliminar_deposito)) {
       this.factura.depositos.splice(i, 1);
-      this.dataSourceDepositos = new MatTableDataSource<Deposito>(this.factura.depositos);
       this.llenarDepositos(this.factura.depositos);
       this.calcularRecaudacion();
-      this.nuevoCheque();
     }
   }
 
-  totalDepositos() {
+  calcularTotalDepositos() {
     return this.factura.depositos.map(t => Number(t.valor)).reduce((acc, value) => acc + value, 0);
   }
 
   rellenarNumeroDeposito() {
     this.deposito.comprobante = this.pad(this.deposito.comprobante, 13);
-  }
-
-  // TRANSFERENCIAS
-  agregarTransferencia() {
-    if (this.factura.totalRecaudacion + Number(this.transferencia.valor) <= this.factura.totalConDescuento) {
-      this.transferencia.banco = this.controlBancoTransferencia.value;
-      this.factura.transferencias.push(this.transferencia);
-      this.transferencia = new Transferencia();
-      this.controlBancoTransferencia.patchValue(valores.vacio);
-      this.dataSourceTransferencias = new MatTableDataSource<Transferencia>(this.factura.transferencias);
-      this.dataSourceTransferencias.sort = this.sortTransferencias;
-      this.dataSourceTransferencias.paginator = this.paginatorTransferencias;
-    } else {
-      Swal.fire(error, mensajes.error_agregar_recaudacion, error_swal);
-    }
-    this.defectoTransferencia();
-    this.calcularRecaudacion();
-  }
-
-  editarTransferencia(i: number) {
-    this.indiceTransferencia = i;
-    this.transferencia = { ... this.factura.transferencias[this.indiceTransferencia] };
-    this.controlBancoTransferencia.setValue(this.transferencia.banco);
-  }
-  confirmarEditarTransferencia() {
-    this.factura.transferencias[this.indiceTransferencia] = this.transferencia;
-    this.transferencia = new Transferencia();
-    this.controlBancoTransferencia.setValue(valores.vacio);
-    this.dataSourceTransferencias = new MatTableDataSource<Transferencia>(this.factura.transferencias);
-    this.dataSourceTransferencias.sort = this.sortTransferencias;
-    this.dataSourceTransferencias.paginator = this.paginatorTransferencias;
-    this.calcularRecaudacion();
-  }
-
-  eliminarTransferencia(i: number) {
-    if (confirm(otras.pregunta_eliminar_transferencia)) {
-      this.factura.transferencias.splice(i, 1);
-      this.dataSourceTransferencias = new MatTableDataSource<Transferencia>(this.factura.transferencias);
-      this.dataSourceTransferencias.sort = this.sortTransferencias;
-      this.dataSourceTransferencias.paginator = this.paginatorTransferencias;
-      this.calcularRecaudacion();
-    }
-  }
-
-  totalTransferencias() {
-    return this.factura.transferencias.map(t => Number(t.valor)).reduce((acc, value) => acc + value, 0);
-  }
-
-  rellenarNumeroTransferencia() {
-    this.transferencia.numeroTransaccion = this.pad(this.transferencia.numeroTransaccion, 13);
-  }
-
-  defectoTransferencia() {
   }
 
   // TARJETAS DE CREDITO
@@ -612,7 +642,7 @@ export class RecaudacionComponent implements OnInit {
     }
   }
 
-  totalTarjetasCreditos() {
+  calcularTotalTC() {
     return this.factura.tarjetasCreditos.map(t => Number(t.valor)).reduce((acc, value) => acc + value, 0);
   }
 
@@ -689,7 +719,7 @@ export class RecaudacionComponent implements OnInit {
     }
   }
 
-  totalTarjetasDebitos() {
+  calcularTotalTD() {
     return this.factura.tarjetasDebitos.map(t => Number(t.valor)).reduce((acc, value) => acc + value, 0);
   }
 
@@ -823,10 +853,10 @@ export class RecaudacionComponent implements OnInit {
 
   //VALIDACIONES
   validarCheque(): boolean{
-    if (this.factura.totalRecaudacion + Number(this.cheque.valor) > this.factura.totalConDescuento) {
+    /*if (this.factura.totalRecaudacion + Number(this.cheque.valor) > this.factura.totalConDescuento) {
       Swal.fire(error, mensajes.error_agregar_recaudacion, error_swal);
       return false;
-    } 
+    } */
     if (this.controlBancoCheque.value == null || this.controlBancoCheque.value == valores.vacio) {
       Swal.fire(error, mensajes.error_agregar_recaudacion, error_swal);
       return false;

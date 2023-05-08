@@ -296,7 +296,8 @@
                                     <td class="mat-cell" colspan="5">No hay precios agregados</td>
                                 </tr>
                             </table>
-                            <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" #MatPaginator2="matPaginator"></mat-paginator>
+                            <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" showFirstLastButtons
+                                #MatPaginator2="matPaginator"></mat-paginator>
                         </div>
                     </div>
                 </mat-expansion-panel>
@@ -342,7 +343,8 @@
                         </td>
                     </tr>
                 </table>
-                <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" #MatPaginator1="matPaginator"></mat-paginator>
+                <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" showFirstLastButtons
+                    #MatPaginator1="matPaginator"></mat-paginator>
             </div>
             <div class="azul" *ngIf="!clickedRows.size">
                 Seleccione una fila para editar

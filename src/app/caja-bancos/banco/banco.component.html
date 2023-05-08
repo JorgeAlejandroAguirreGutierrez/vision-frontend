@@ -120,16 +120,14 @@
                     <i><u>GESTIONAR BANCOS</u></i>
                 </mat-panel-title>
                 <mat-panel-description>
-                    {{abrirPanelAdmin ? 'Ocultar administrador de bancos' : 'Editar
-                    bancos existentes'}}
+                    {{abrirPanelAdmin ? 'Ocultar administrador de bancos' : 'Editar bancos existentes'}}
                     <mat-icon>playlist_add_check</mat-icon>
                 </mat-panel-description>
             </mat-expansion-panel-header>
             <hr>
             <mat-form-field appearance="standard">
                 <mat-label>Buscar bancos</mat-label>
-                <input matInput (keyup)="filtro($event)" placeholder="Ej. MU"
-                    #inputFiltro>
+                <input matInput (keyup)="filtro($event)" placeholder="PICHINCHA" #inputFiltro>
                 <button mat-button *ngIf="inputFiltro.value" matSuffix mat-icon-button
                     (click)="borrarFiltro()">
                     <mat-icon>close</mat-icon>
@@ -153,7 +151,7 @@
                         </td>
                     </tr>
                 </table>
-                <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
+                <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" showFirstLastButtons></mat-paginator>
             </div>
             <div class="azul" *ngIf="!clickedRows.size">
                 Seleccione una fila para editar

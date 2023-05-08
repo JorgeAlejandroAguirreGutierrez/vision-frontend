@@ -186,6 +186,8 @@ export const valores = {
     corriente: "CORRIENTE",
     chequeALaVista: "A LA VISTA",
     chequePosfechado: "POSFECHADO",
+    transferenciaDirecta: "DIRECTA",
+    transferenciaViaBCE: "VIA BCE",
     modulo: "MODULO",
     operacion: "OPERACION",
     bien: "B",

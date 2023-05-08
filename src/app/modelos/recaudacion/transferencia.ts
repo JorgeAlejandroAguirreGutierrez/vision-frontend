@@ -6,19 +6,19 @@ export class Transferencia {
     id: number;
     codigo: string;
     fecha: Date;
-    tipoTransaccion: string;
-    numeroTransaccion: string;
+    tipo: string;
+    comprobante: string;
     valor: number;
-    banco: Banco;
+    cuentaPropia: CuentaPropia;
 
     constructor(){
         this.id = valores.cero;
         this.codigo = valores.vacio;
         this.fecha = new Date();
-        this.tipoTransaccion = valores.vacio;
-        this.numeroTransaccion = valores.vacio;
+        this.tipo = valores.transferenciaDirecta;
+        this.comprobante = valores.vacio;
         this.valor = valores.cero;
-        this.banco = new Banco();
+        this.cuentaPropia=new CuentaPropia();
     }
 
 }

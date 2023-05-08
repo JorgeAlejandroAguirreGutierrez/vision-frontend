@@ -15,6 +15,9 @@ import { GoogleMapsModule } from '@angular/google-maps';
 import { AppComponent } from './app.component';
 import { ModeloService } from './servicios/administracion/modelo.service';
 
+//Spinner
+import { NgxSpinnerModule } from 'ngx-spinner';
+
 // Componentes generales para las pestañas
 import { TabContentComponent } from "./componentes/tab/tab-content.component";
 import { ContentContainerDirective } from "./componentes/tab/content-container.directive";
@@ -68,6 +71,7 @@ import { TipoRetencionService } from './servicios/configuracion/tipo-retencion.s
         FlexLayoutModule,
         MaterialModule,
         GoogleMapsModule,
+        NgxSpinnerModule,
         AppRoutingModule
     ],
     providers: [PlazoCreditoService, ImpuestoService, RetencionService, ModeloService,
@@ -78,7 +82,7 @@ import { TipoRetencionService } from './servicios/configuracion/tipo-retencion.s
         {
             provide: LocationStrategy,
             useClass: PathLocationStrategy
-        }],
+        }],   
     bootstrap: [AppComponent]
 })
 export class AppModule {

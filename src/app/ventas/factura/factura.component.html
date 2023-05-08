@@ -77,21 +77,22 @@
                             <div class="col-3">
                                 <mat-form-field appearance="standard">
                                     <mat-label>Identificación</mat-label>
+                                    <input matInput type="text" class="form-control-sm" placeholder="Cédula/RUC"
+                                        [formControl]="controlIdentificacionCliente" [matAutocomplete]="identificacionCliente">
                                     <mat-autocomplete #identificacionCliente="matAutocomplete" [displayWith]="verIdentificacionCliente"
                                         (optionSelected)="seleccionarIdentificacionCliente()" (opened)="consultarClientes()">
                                         <mat-option *ngFor="let cliente of filtroIdentificacionClientes | async"
-                                            [value]="cliente">
-                                            {{cliente.identificacion}}
+                                            [value]="cliente">{{cliente.identificacion}}
                                         </mat-option>
                                     </mat-autocomplete>
-                                    <input matInput type="text" class="form-control-sm" placeholder="Cédula/RUC"
-                                        [formControl]="controlIdentificacionCliente"
-                                        [matAutocomplete]="identificacionCliente">
                                 </mat-form-field>
                             </div>
                             <div class="col-9">
                                 <mat-form-field appearance="standard">
                                     <mat-label>Razón Social</mat-label>
+                                    <input type="text" class="form-control-sm" placeholder="Clientes" matInput
+                                        [formControl]="controlRazonSocialCliente" [matAutocomplete]="razonSocialCliente"
+                                        oninput="this.value = this.value.toUpperCase()">
                                     <mat-autocomplete #razonSocialCliente="matAutocomplete"
                                         [displayWith]="verRazonSocialCliente"
                                         (optionSelected)="seleccionarRazonSocialCliente()" (opened)="consultarClientes()">
@@ -100,9 +101,7 @@
                                             {{cliente.razonSocial}}
                                         </mat-option>
                                     </mat-autocomplete>
-                                    <input type="text" class="form-control-sm" placeholder="Clientes" matInput
-                                        [formControl]="controlRazonSocialCliente"
-                                        [matAutocomplete]="razonSocialCliente">
+
                                 </mat-form-field>
                             </div>
                             <div class="col-12">
@@ -253,7 +252,8 @@
                                         <mat-form-field appearance="standard">
                                             <mat-label>Producto</mat-label>
                                             <input matInput type="text" class="form-control-sm" placeholder="Producto"
-                                                [formControl]="controlProducto" [matAutocomplete]="producto">
+                                                [formControl]="controlProducto" [matAutocomplete]="producto"
+                                                oninput="this.value = this.value.toUpperCase()">
                                             <mat-autocomplete #producto="matAutocomplete" [displayWith]="verProducto"
                                                 (optionSelected)="seleccionarProducto()" (opened)="consultarProductos()">
                                                 <mat-option *ngFor="let producto of filtroProductos | async" [value]="producto">
@@ -446,7 +446,8 @@
                                         </td>
                                     </tr>
                                 </table>
-                                <mat-paginator #paginatorLinea [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
+                                <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" showFirstLastButtons 
+                                    #paginatorLinea></mat-paginator>
                             </div>
                             <div class="azul" *ngIf="!clickedRowsLinea.size">
                                 Seleccione una fila para editar
@@ -454,7 +455,6 @@
                             <div class="azul" *ngFor="let clickedRowLinea of clickedRowsLinea">
                                 Código: {{clickedRowLinea.cantidad}} seleccionado
                             </div>
-                  
                         </div>
                         <mat-divider></mat-divider>
                         <div class="form-group form-row">
@@ -607,7 +607,8 @@
                                     "{{inputFiltro.value}}"</td>
                             </tr>
                         </table>
-                        <mat-paginator #paginator="matPaginator" [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
+                        <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" showFirstLastButtons
+                            #paginator="matPaginator"></mat-paginator>
                     </div>
                     <div class="azul" *ngIf="!clickedRowsFactura.size">
                         Seleccione una fila para editar
@@ -624,4 +625,8 @@
             <app-recaudacion [stepper]="stepper"></app-recaudacion>
         </mat-step>
     </mat-stepper>
+    <!--button type="button" class="btn btn-sm btn-primary" (click)="showSpinner()">Show Spinner</button-->
+    <ngx-spinner size="medium" type="ball-scale-multiple" [fullScreen] = "true">
+        <p style="font-size: 20px; color: white">Cargando...</p>
+    </ngx-spinner>
 </div>

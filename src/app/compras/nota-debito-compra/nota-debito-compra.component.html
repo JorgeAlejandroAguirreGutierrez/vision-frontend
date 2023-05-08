@@ -250,8 +250,8 @@
                         <tr mat-row *matRowDef="let row; columns: columnasLinea;"></tr>
                     </table>
                     <ng-container>
-                        <mat-paginator #paginatorFacturaCompraLinea [pageSizeOptions]="[5, 10, 25, 100]">
-                        </mat-paginator>
+                        <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" showFirstLastButtons
+                            #paginatorFacturaCompraLinea></mat-paginator>
                     </ng-container>
                 </div>
                 <mat-divider></mat-divider>

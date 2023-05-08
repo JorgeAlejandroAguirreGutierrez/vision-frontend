@@ -3,6 +3,7 @@ import { UntypedFormControl, UntypedFormBuilder, UntypedFormGroup, Validators } 
 import { valores, mensajes, validarSesion, exito, exito_swal, error, error_swal } from '../../constantes';
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
+import { NgxSpinnerService } from 'ngx-spinner';
 import Swal from 'sweetalert2';
 
 import { DatePipe } from '@angular/common';
@@ -50,6 +51,8 @@ import { MatTableDataSource } from '@angular/material/table';
 })
 
 export class FacturaComponent implements OnInit {
+
+  typeSelected: string;
 
   activo: string = valores.activo;
   inactivo: string = valores.inactivo;
@@ -157,7 +160,7 @@ export class FacturaComponent implements OnInit {
     private facturaService: FacturaService, private facturaElectronicaService: FacturaElectronicaService,
     private productoService: ProductoService, private bodegaService: BodegaService, private kardexService: KardexService,
     private categoriaProductoService: CategoriaProductoService, private tabService: TabService,
-    private _formBuilder: UntypedFormBuilder) { }
+    private _formBuilder: UntypedFormBuilder, private spinnerService: NgxSpinnerService) { this.typeSelected = 'ball-fussion';}
 
 
   ngOnInit() {
@@ -412,6 +415,7 @@ export class FacturaComponent implements OnInit {
   crearFacturaLinea() {
     if (!this.validarFormularioLinea())
       return;
+    this.spinnerService.show();  
     this.factura.sesion = this.sesion;
     this.factura.facturaLineas.push(this.facturaLinea);
     this.facturaService.calcular(this.factura).subscribe({
@@ -419,7 +423,8 @@ export class FacturaComponent implements OnInit {
         this.factura = res.resultado as Factura;
         this.construir();
         this.nuevoFacturaLinea();
-        Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
+        this.spinnerService.hide();
+        //Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
       },
       error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     });
@@ -670,4 +675,11 @@ export class FacturaComponent implements OnInit {
     return true;
   }
 
+  public showSpinner(): void {
+    this.spinnerService.show();
+
+    setTimeout(() => {
+      this.spinnerService.hide();
+    }, 5000); // 5 seconds
+  }
 }

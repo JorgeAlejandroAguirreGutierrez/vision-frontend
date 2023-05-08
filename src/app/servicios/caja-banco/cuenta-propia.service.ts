@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Respuesta } from '../../respuesta';
 import { urn, options } from '../../constantes';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { map, catchError } from 'rxjs/operators';
 import { Observable, throwError } from 'rxjs';
 import { environment } from '../../../environments/environment';
@@ -92,13 +92,14 @@ export class CuentaPropiaService {
       }));
   }
 
-  consultarPorBanco(banco: String): Observable<Respuesta> {
-    return this.http.get<Respuesta>(environment.host + urn.ruta + urn.cuentaPropia + urn.consultarPorBanco + urn.slash + banco, options).pipe(
+  consultarPorBanco(banco: string): Observable<Respuesta> {
+    let params = new HttpParams().set("banco", banco)
+    return this.http.get<Respuesta>(environment.host + urn.ruta + urn.cuentaPropia + urn.consultarPorBanco, {params: params, headers: options.headers}).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);
       })
     );
-  }  
+  } 
 
 }
