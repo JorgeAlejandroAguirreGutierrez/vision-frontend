@@ -336,19 +336,6 @@
                         </mat-select>
                     </mat-form-field>
                 </div>
-                <div class="col-3">
-                    <mat-form-field appearance="standard">
-                        <mat-label>Banco</mat-label>
-                        <input matInput type="text" class="form-control-sm" [formControl]="controlBancoDeposito"
-                            [matAutocomplete]="bancoDeposito">
-                        <mat-autocomplete #bancoDeposito="matAutocomplete" [displayWith]="verBancoDeposito">
-                            <mat-option *ngFor="let banco of filtroBancosDepositos | async" [value]="banco">
-                                {{banco.razonSocial}}
-                            </mat-option>
-                        </mat-autocomplete>
-
-                    </mat-form-field>
-                </div>
                 <div class="col-2">
                     <mat-form-field appearance="standard">
                         <mat-label>Cuenta</mat-label>
@@ -361,12 +348,19 @@
                 </div>
                 <div class="col-2">
                     <mat-form-field appearance="standard">
+                        <mat-label>Tipo Cta.</mat-label>
+                        <input matInput type="text" [(ngModel)]="deposito.cuentaPropia.tipoCuenta" 
+                            class="form-control-sm" disabled>
+                    </mat-form-field>
+                </div>
+                <div class="col-2">
+                    <mat-form-field appearance="standard">
                         <mat-label>No. Comprobante</mat-label>
                         <input matInput type="text" class="form-control-sm" [(ngModel)]="deposito.comprobante"
                             (blur)="rellenarNumeroDeposito()">
                     </mat-form-field>
                 </div>
-                <div class="col-2">
+                <div class="col-1">
                     <mat-form-field appearance="standard">
                         <mat-label>Valor</mat-label>
                         <input matInput type="text" class="form-control-sm" [(ngModel)]="deposito.valor">
@@ -379,7 +373,7 @@
                         </button>
                     </ng-container>
                     <ng-container *ngIf="indiceDeposito!=menosUno">
-                        <button mat-icon-button mat-button (click)="confirmarEditarDeposito()">
+                        <button mat-icon-button mat-button (click)="actualizarDeposito()">
                             <mat-icon>create</mat-icon>
                         </button>
                     </ng-container>

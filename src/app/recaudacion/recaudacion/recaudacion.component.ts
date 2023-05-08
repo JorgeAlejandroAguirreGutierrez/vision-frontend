@@ -112,8 +112,6 @@ export class RecaudacionComponent implements OnInit {
   filtroBancos: Observable<Banco[]> = new Observable<Banco[]>();
 
   bancosDepositos: Banco[] = [];
-  controlBancoDeposito = new UntypedFormControl();
-  filtroBancosDepositos: Observable<Banco[]> = new Observable<Banco[]>();
 
   bancosTransferencias: Banco[] = [];
   controlBancoTransferencia = new UntypedFormControl();
@@ -185,7 +183,6 @@ export class RecaudacionComponent implements OnInit {
 
   ngOnInit() {
     this.sesion = validarSesion(this.sesionService, this.router);
-    //this.consultarCuentasPropias();
     this.consultarBancos();
     this.consultarBancosPropios();
     this.consultarFranquiciasTarjetas();
@@ -211,14 +208,6 @@ export class RecaudacionComponent implements OnInit {
 
   }
 
-  consultarCuentasPropias() {
-    this.cuentaPropiaService.consultar().subscribe({
-      next: res => {
-        this.cuentasPropias = res.resultado as CuentaPropia[]
-      },
-      error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
-    });
-  }
   consultarBancosPropios() {
     this.cuentaPropiaService.consultarBancos().subscribe({
       next: res => {
@@ -228,9 +217,11 @@ export class RecaudacionComponent implements OnInit {
     });
   }
   consultarPorBanco(banco: String) {
+    console.log(banco);
     this.cuentaPropiaService.consultarPorBanco(banco).subscribe({
       next: res => {
-        this.cuentasPropias = res.resultado as CuentaPropia[]
+        this.cuentasPropias = res.resultado as CuentaPropia[];
+        //this.deposito.cuentaPropia = this.cuentasPropias[0];
         console.log(this.cuentasPropias);
       },
       error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
@@ -468,25 +459,18 @@ export class RecaudacionComponent implements OnInit {
 
   // DEPOSITOS
   nuevoDeposito(){
-    this.cheque = new Cheque();
-    this.controlBancoCheque.patchValue(valores.vacio);
+    this.deposito = new Deposito();
     this.clickedRowsCheques.clear();
     this.indiceCheque = valores.menosUno;
   }
 
   agregarDeposito() {
-    if (!this.validarCheque())
+    if (!this.validarDeposito())
       return;  
-      //this.deposito.banco = this.controlBancoDeposito.value;
     this.factura.depositos.push(this.deposito);
     this.llenarDepositos(this.factura.depositos);
     this.calcularRecaudacion();
     this.nuevoCheque();
-
-    this.deposito = new Deposito();
-    this.controlBancoDeposito.patchValue(valores.vacio);
-
-    this.calcularRecaudacion();
   }
 
   llenarDepositos(depositos: Deposito[]){
@@ -500,35 +484,28 @@ export class RecaudacionComponent implements OnInit {
       this.clickedRowsDepositos.clear();
       this.clickedRowsDepositos.add(deposito);
       this.deposito = { ...deposito};
-      this.controlBancoDeposito.setValue(this.deposito.cuentaPropia.banco);
       this.indiceDeposito = i;
     } else {
       this.nuevoDeposito();
     }
   }
 
-  editarDeposito(i: number) {
-    this.indiceDeposito = i;
-    this.deposito = { ... this.factura.depositos[this.indiceDeposito] };
-    //this.controlBancoDeposito.setValue(this.deposito.banco);
-  }
-  confirmarEditarDeposito() {
+  actualizarDeposito() {
+    if (!this.validarDeposito())
+      return;  
     this.factura.depositos[this.indiceDeposito] = this.deposito;
-    this.deposito = new Deposito();
-    this.controlBancoDeposito.setValue(valores.vacio);
-    this.dataSourceDepositos = new MatTableDataSource<Deposito>(this.factura.depositos);
-    this.dataSourceDepositos.sort = this.sortDepositos;
-    this.dataSourceDepositos.paginator = this.paginatorDepositos;
+    this.llenarDepositos(this.factura.depositos);
     this.calcularRecaudacion();
+    this.nuevoCheque();
   }
 
   eliminarDeposito(i: number) {
     if (confirm(otras.pregunta_eliminar_deposito)) {
       this.factura.depositos.splice(i, 1);
       this.dataSourceDepositos = new MatTableDataSource<Deposito>(this.factura.depositos);
-      this.dataSourceDepositos.sort = this.sortDepositos;
-      this.dataSourceDepositos.paginator = this.paginatorDepositos;
+      this.llenarDepositos(this.factura.depositos);
       this.calcularRecaudacion();
+      this.nuevoCheque();
     }
   }
 
@@ -769,12 +746,7 @@ export class RecaudacionComponent implements OnInit {
         map(value => typeof value === 'string' || value == null ? value : value.id),
         map(banco => typeof banco === 'string' ? this.filtroBanco(banco) : this.bancos.slice())
       );
-    this.filtroBancosDepositos = this.controlBancoDeposito.valueChanges
-      .pipe(
-        startWith(valores.vacio),
-        map(value => typeof value === 'string' || value == null ? value : value.id),
-        map(bancoDeposito => typeof bancoDeposito === 'string' ? this.filtroBancoDeposito(bancoDeposito) : this.bancosDepositos.slice())
-      );
+
     this.filtroBancosTransferencias = this.controlBancoTransferencia.valueChanges
       .pipe(
         startWith(valores.vacio),
@@ -870,11 +842,7 @@ export class RecaudacionComponent implements OnInit {
       Swal.fire(error, mensajes.error_agregar_recaudacion, error_swal);
       return false;
     } 
-    if (this.controlBancoDeposito.value == null || this.controlBancoDeposito.value == valores.vacio) {
-      Swal.fire(error, mensajes.error_agregar_recaudacion, error_swal);
-      return false;
-    }
-    if (this.deposito.fecha == null || this.deposito.comprobante == null || this.deposito.valor == valores.cero) {
+    if (this.deposito.fecha == null || this.deposito.comprobante == null || this.deposito.valor <= valores.cero) {
       Swal.fire(error, mensajes.error_agregar_recaudacion, error_swal);
       return false;
     }
