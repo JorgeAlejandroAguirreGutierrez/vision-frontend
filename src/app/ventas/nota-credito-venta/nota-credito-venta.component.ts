@@ -184,6 +184,8 @@ export class NotaCreditoVentaComponent implements OnInit {
         this.seleccionCliente.patchValue(this.notaCreditoVenta.factura.cliente);
         this.facturaService.consultarPorCliente(this.notaCreditoVenta.factura.cliente.id).subscribe(
           res => {
+            this.seleccionFactura = new UntypedFormControl();
+            this.filtroFacturas = new Observable<Factura[]>();
             this.facturas = res.resultado as Factura[]
           },
           err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
