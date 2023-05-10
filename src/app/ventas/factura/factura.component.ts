@@ -120,12 +120,14 @@ export class FacturaComponent implements OnInit {
     { nombreColumna: 'nombre', cabecera: 'Producto', celda: (row: FacturaLinea) => `${row.producto.nombre}` },
     { nombreColumna: 'medida', cabecera: 'Medida', celda: (row: FacturaLinea) => `${row.producto.medida.abreviatura}` },
     { nombreColumna: 'cantidad', cabecera: 'Cant.', celda: (row: FacturaLinea) => `${row.cantidad}` },
-    { nombreColumna: 'valor', cabecera: 'Precio', celda: (row: FacturaLinea) => `${row.precioUnitario}` },
-    { nombreColumna: 'impuesto', cabecera: 'IVA', celda: (row: FacturaLinea) => `${row.impuesto.porcentaje} %` },
+    { nombreColumna: 'valor', cabecera: 'P. Unit', celda: (row: FacturaLinea) => `${row.precioUnitario}` },
+    //{ nombreColumna: 'impuesto', cabecera: 'IVA %', celda: (row: FacturaLinea) => `${row.impuesto.porcentaje} %` },
     { nombreColumna: 'descuento', cabecera: 'Desc. $', celda: (row: FacturaLinea) => `${row.valorDescuentoLinea}` },
     { nombreColumna: 'descuentoPorcentaje', cabecera: 'Desc. %', celda: (row: FacturaLinea) => `${row.porcentajeDescuentoLinea} %` },
-    { nombreColumna: 'total', cabecera: 'Subtotal', celda: (row: FacturaLinea) => `${row.totalConDescuentoLinea}` },
-    { nombreColumna: 'entregado', cabecera: 'Entregado', celda: (row: FacturaLinea) => `${row.entregado}` },
+    { nombreColumna: 'subtotal', cabecera: 'Subtotal', celda: (row: FacturaLinea) => `${row.subtotalConDescuentoLinea}` },
+    { nombreColumna: 'iva', cabecera: 'IVA', celda: (row: FacturaLinea) => `${row.ivaConDescuentoLinea}` },
+    { nombreColumna: 'total', cabecera: 'Total', celda: (row: FacturaLinea) => `${row.totalConDescuentoLinea}` },
+    { nombreColumna: 'entregado', cabecera: 'Entreg.', celda: (row: FacturaLinea) => `${row.entregado}` },
     { nombreColumna: 'acciones', cabecera: 'Acciones' }
   ];
   cabeceraLinea: string[] = this.columnasLinea.map(titulo => titulo.nombreColumna);
@@ -450,7 +452,7 @@ export class FacturaComponent implements OnInit {
     this.dataSourceLinea = new MatTableDataSource(facturaLineas);
     this.dataSourceLinea.filterPredicate = (data: FacturaLinea, filter: string): boolean =>
       data.producto.nombre.includes(filter) || data.producto.medida.abreviatura.includes(filter) || String(data.cantidad).includes(filter) || 
-      String(data.impuesto.porcentaje).includes(filter) || data.entregado.includes(filter);
+      String(data.precioUnitario).includes(filter) || String(data.totalConDescuentoLinea).includes(filter) || data.entregado.includes(filter);
     this.dataSourceLinea.paginator = this.paginatorLinea;
     this.dataSourceLinea.sort = this.sortLinea;
   }
