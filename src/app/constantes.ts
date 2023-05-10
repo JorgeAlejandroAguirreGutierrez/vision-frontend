@@ -272,6 +272,8 @@ export const mensajes = {
     error_bodega_cantidad: "LA CANTIDAD SUPERA A LA EXISTENTE",
     error_eliminar_bodega: "NO PUEDE ELIMINAR UNA BODEGA CON SALDO",
     error_agregar_recaudacion: "VALOR SUPERA EL MONTO DE COBRO DE LA FACTURA",
+    error_recaudacion_dato: "DATO INVÁLIDO",
+    error_recaudacion_valor: "VALOR INVÁLIDO",
     error_agregar_dependiente: "ERROR AL AGREGAR EL DEPENDIENTE",
     error_identificacion: "INGRESE UNA IDENTIFICACIÓN",
     error_razon_social: "ERROR EN RAZON SOCIAL",

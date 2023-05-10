@@ -54,9 +54,6 @@
                     </li>
                 </ul>
             </nav>
-            <div *ngIf="cargar">
-                <mat-progress-bar mode="indeterminate"></mat-progress-bar>
-            </div>
             <ng-template matStepLabel>Facturación</ng-template>
             <mat-divider></mat-divider>
             <mat-accordion class="headers-align">
@@ -571,7 +568,8 @@
                 </mat-expansion-panel>
             </mat-accordion>
             <mat-accordion class="headers-align">
-                <mat-expansion-panel (opened)="abrirPanelAdminFactura = true" (closed)="abrirPanelAdminFactura = false">
+                <mat-expansion-panel (opened)="abrirPanelAdminFactura = true" (closed)="abrirPanelAdminFactura = false"
+                    [expanded]="abrirPanelAdminFactura">
                     <mat-expansion-panel-header>
                         <mat-panel-title>
                             <i><u>GESTIONAR FACTURAS</u></i>
@@ -626,7 +624,7 @@
         </mat-step>
     </mat-stepper>
     <!--button type="button" class="btn btn-sm btn-primary" (click)="showSpinner()">Show Spinner</button-->
-    <ngx-spinner size="medium" type="ball-scale-multiple" [fullScreen] = "true">
+    <ngx-spinner size="medium" type="line-spin-fade-rotating" [fullScreen] = "true" [zIndex]="1000">
         <p style="font-size: 20px; color: white">Cargando...</p>
     </ngx-spinner>
 </div>

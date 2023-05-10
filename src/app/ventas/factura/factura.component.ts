@@ -52,8 +52,6 @@ import { MatTableDataSource } from '@angular/material/table';
 
 export class FacturaComponent implements OnInit {
 
-  typeSelected: string;
-
   activo: string = valores.activo;
   inactivo: string = valores.inactivo;
   si: string = valores.si;
@@ -73,12 +71,11 @@ export class FacturaComponent implements OnInit {
   precioVentaPublicoManual: number = valores.cero;
   indiceLinea: number;
 
-  cargar: boolean = false;
   steeperLinear: boolean = false;
   steeperEditable: boolean = true;
   abrirPanelFacturaCliente: boolean = true;
   abrirPanelFacturaLinea: boolean = false;
-  abrirPanelAdminFactura: boolean = false;
+  abrirPanelAdminFactura: boolean = true;
   verIconoEditarLinea: boolean = false;
   esBien: boolean = true;
 
@@ -160,7 +157,7 @@ export class FacturaComponent implements OnInit {
     private facturaService: FacturaService, private facturaElectronicaService: FacturaElectronicaService,
     private productoService: ProductoService, private bodegaService: BodegaService, private kardexService: KardexService,
     private categoriaProductoService: CategoriaProductoService, private tabService: TabService,
-    private _formBuilder: UntypedFormBuilder, private spinnerService: NgxSpinnerService) { this.typeSelected = 'ball-fussion';}
+    private _formBuilder: UntypedFormBuilder, private spinnerService: NgxSpinnerService) { }
 
 
   ngOnInit() {
@@ -235,7 +232,6 @@ export class FacturaComponent implements OnInit {
       event.preventDefault();
     this.factura = new Factura();
     this.clickedRowsFactura.clear();
-    this.cargar = false;
     this.controlIdentificacionCliente.patchValue(valores.vacio);
     this.controlRazonSocialCliente.patchValue(valores.vacio);
     this.dataSourceLinea = new MatTableDataSource<FacturaLinea>([]);
@@ -245,34 +241,36 @@ export class FacturaComponent implements OnInit {
   crear(event) {
     if (event != null)
       event.preventDefault();
+    this.spinnerService.show();    
     this.factura.sesion = this.sesion;
-    console.log(this.factura);
+    //console.log(this.factura);
     this.facturaService.crear(this.factura).subscribe({
       next: res => {
         this.factura = res.resultado as Factura;
         this.consultar();
+        this.spinnerService.hide();  
         this.stepper.next();
-        Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
+        //Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
       },
       error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     });
   }
 
   crearFacturaElectronica(event) {
-    this.cargar = true;
     if (event != null)
       event.preventDefault();
+    this.spinnerService.show();    
     this.facturaElectronicaService.enviar(this.factura.id).subscribe({
       next: res => {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
         this.factura = res.resultado as Factura;
         this.consultar();
         this.nuevo(null);
-        this.cargar = false;
+        this.spinnerService.hide();  
       },
       error: err => {
         Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
-        this.cargar = false;
+        this.spinnerService.hide();  
       }
     });
   }
@@ -280,12 +278,15 @@ export class FacturaComponent implements OnInit {
   actualizar(event) {
     if (event != null)
       event.preventDefault();
-    console.log(this.factura);
+    this.spinnerService.show();    
+    //console.log(this.factura);
     this.facturaService.actualizar(this.factura).subscribe({
       next: res => {
-        Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
+        this.factura = res.resultado as Factura;
         this.consultar();
+        this.spinnerService.hide();  
         this.stepper.next();
+        //Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
       },
       error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     });

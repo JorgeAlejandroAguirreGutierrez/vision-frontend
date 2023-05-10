@@ -6,6 +6,7 @@ import { DateAdapter, MAT_DATE_FORMATS } from '@angular/material/core';
 import { AppDateAdapter, APP_DATE_FORMATS } from '../../modelos/format-date-picker';
 import { Router } from '@angular/router';
 import { startWith, map } from 'rxjs/operators';
+import { NgxSpinnerService } from 'ngx-spinner';
 import { Observable } from 'rxjs';
 import Swal from 'sweetalert2';
 
@@ -88,8 +89,8 @@ export class RecaudacionComponent implements OnInit {
   verPanelTarjetasCredito: boolean = false;
   verPanelTarjetasDebito: boolean = false;
 
-  deshabilitarTitularTarjetaCredito: boolean = false;
-  deshabilitarTitularTarjetaDebito: boolean = false;
+  deshabilitarTitularTarjetaCredito: boolean = true;
+  deshabilitarTitularTarjetaDebito: boolean = true;
 
   sesion: Sesion;
   factura: Factura = new Factura();
@@ -103,33 +104,23 @@ export class RecaudacionComponent implements OnInit {
   tiposTransacciones: Parametro[];
   formasPagos: FormaPago[] = [];
   cuentasPropias: CuentaPropia[] = [];
+  cuentasPropiasDeposito: CuentaPropia[] = [];
+  cuentasPropiasTransferencia: CuentaPropia[] = [];
   bancosPropios: String[] = [];
-  franquiciasTarjetasCreditos: FranquiciaTarjeta[];
-  franquiciasTarjetasDebitos: FranquiciaTarjeta[];
-  operadoresTarjetasCreditos: OperadorTarjeta[] = [];
-  operadoresTarjetasDebitos: OperadorTarjeta[] = [];
+  franquiciasTarjetas: FranquiciaTarjeta[];
+  operadoresTarjetas: OperadorTarjeta[] = [];
 
   bancos: Banco[] = [];
+  filtroBancosCheque: Observable<Banco[]> = new Observable<Banco[]>();
   controlBancoCheque = new UntypedFormControl();
-  filtroBancos: Observable<Banco[]> = new Observable<Banco[]>();
-
-  bancosDepositos: Banco[] = [];
-
-  bancosTransferencias: Banco[] = [];
-  controlBancoTransferencia = new UntypedFormControl();
-  filtroBancosTransferencias: Observable<Banco[]> = new Observable<Banco[]>();
-
-  bancosTarjetasCreditos: Banco[] = [];
+  filtroBancosTarjetaCredito: Observable<Banco[]> = new Observable<Banco[]>();
   controlBancoTarjetaCredito = new UntypedFormControl();
-  filtroBancosTarjetasCreditos: Observable<Banco[]> = new Observable<Banco[]>();
-
-  bancosTarjetasDebitos: Banco[] = [];
+  filtroBancosTarjetaDebito: Observable<Banco[]> = new Observable<Banco[]>();
   controlBancoTarjetaDebito = new UntypedFormControl();
-  filtroBancosTarjetasDebitos: Observable<Banco[]> = new Observable<Banco[]>();
 
-  // Variables para Tablas de formas de pago
+  // Tablas de formas de pago
   columnasCheques: any[] = [
-    { nombreColumna: 'fecha', cabecera: 'Fecha', pie: 'Total :' ,celda: (row: Cheque) => `${new DatePipe('en-US').transform(row.fecha, 'dd-MM-yyyy')}`}, //.toLocaleDateString()
+    { nombreColumna: 'fecha', cabecera: 'Fecha', pie: 'Total :' ,celda: (row: Cheque) => `${this.datePipe.transform(row.fecha, 'dd-MM-yyyy')}`}, //.toLocaleDateString()
     { nombreColumna: 'tipo', cabecera: 'Tipo', celda: (row: Cheque) => `${row.tipo}` },
     { nombreColumna: 'banco', cabecera: 'Banco', celda: (row: Cheque) => `${row.banco.abreviatura}` },
     { nombreColumna: 'numero', cabecera: 'Número', celda: (row: Cheque) => `${row.numero}` },
@@ -141,7 +132,7 @@ export class RecaudacionComponent implements OnInit {
   clickedRowsCheques = new Set<Cheque>();
 
   columnasDepositos: any[] = [
-    { nombreColumna: 'fecha', cabecera: 'Fecha', pie: 'Total :' ,celda: (row: Deposito) => `${new DatePipe('en-US').transform(row.fecha, 'dd-MM-yyyy')}`},
+    { nombreColumna: 'fecha', cabecera: 'Fecha', pie: 'Total :' ,celda: (row: Deposito) => `${this.datePipe.transform(row.fecha, 'dd-MM-yyyy')}`},
     { nombreColumna: 'banco', cabecera: 'Banco', celda: (row: Deposito) => `${row.cuentaPropia.banco.abreviatura}` },
     { nombreColumna: 'cuenta', cabecera: 'Cuenta', celda: (row: Deposito) => `${row.cuentaPropia.numero}` },
     { nombreColumna: 'tipo', cabecera: 'Tipo Cta', celda: (row: Deposito) => `${row.cuentaPropia.tipoCuenta}` },
@@ -154,7 +145,7 @@ export class RecaudacionComponent implements OnInit {
   clickedRowsDepositos = new Set<Deposito>();
 
   columnasTransferencias: any[] = [
-    { nombreColumna: 'fecha', cabecera: 'Fecha', pie: 'Total :' ,celda: (row: Transferencia) => `${new DatePipe('en-US').transform(row.fecha, 'dd-MM-yyyy')}`},
+    { nombreColumna: 'fecha', cabecera: 'Fecha', pie: 'Total :' ,celda: (row: Transferencia) => `${this.datePipe.transform(row.fecha, 'dd-MM-yyyy')}`},
     { nombreColumna: 'tipo', cabecera: 'Tipo Transf.', celda: (row: Transferencia) => `${row.tipo}` },
     { nombreColumna: 'banco', cabecera: 'Banco', celda: (row: Transferencia) => `${row.cuentaPropia.banco.abreviatura}` },
     { nombreColumna: 'cuenta', cabecera: 'Cuenta', celda: (row: Transferencia) => `${row.cuentaPropia.numero}` },
@@ -166,20 +157,40 @@ export class RecaudacionComponent implements OnInit {
   dataSourceTransferencias: MatTableDataSource<Transferencia>;
   clickedRowsTransferencias = new Set<Transferencia>();
 
+  columnasTarjetasCredito: any[] = [
+    { nombreColumna: 'fecha', cabecera: 'Fecha', pie: 'Total :' ,celda: (row: TarjetaCredito) => `${new DatePipe('en-US').transform(row.fecha, 'dd-MM-yyyy')}`},
+    { nombreColumna: 'franquicia', cabecera: 'Franquicia', celda: (row: TarjetaCredito) => `${row.franquiciaTarjeta.nombre}` },
+    { nombreColumna: 'banco', cabecera: 'Banco', celda: (row: TarjetaCredito) => `${row.banco.abreviatura}` },
+    { nombreColumna: 'identificacion', cabecera: 'Identificación', celda: (row: TarjetaCredito) => `${row.identificacion}` },
+    { nombreColumna: 'titular', cabecera: 'Titular', celda: (row: TarjetaCredito) => `${row.titular}` },
+    { nombreColumna: 'diferido', cabecera: 'Diferido', celda: (row: TarjetaCredito) => `${row.diferido}` },
+    { nombreColumna: 'valor', cabecera: 'Valor', celda: (row: TarjetaCredito) => `${row.valor}` },
+    { nombreColumna: 'acciones', cabecera: 'Acciones'}
+  ];
+  cabeceraTarjetasCredito: string[] = this.columnasTarjetasCredito.map(titulo => titulo.nombreColumna);
+  dataSourceTarjetasCredito: MatTableDataSource<TarjetaCredito>;
+  clickedRowsTarjetasCredito = new Set<TarjetaCredito>();
 
-  habilitarTarjetasCreditos: boolean = false;
-  columnasTarjetasCredito: string[] = ['id', 'franquicia', 'banco', 'identificacion', 'nombre', 'titular', 'diferido', 'operador', 'lote', 'valor', 'acciones'];
-  dataSourceTarjetasCreditos = new MatTableDataSource<TarjetaCredito>(this.factura.tarjetasCreditos);
-
-  habilitarTarjetasDebitos: boolean = false;
-  columnasTarjetasDebito: string[] = ['id', 'franquicia', 'banco', 'identificacion', 'nombre', 'titular', 'operador', 'lote', 'valor', 'acciones'];
-  dataSourceTarjetasDebitos = new MatTableDataSource<TarjetaDebito>(this.factura.tarjetasDebitos);
+  columnasTarjetasDebito: any[] = [
+    { nombreColumna: 'fecha', cabecera: 'Fecha', pie: 'Total :' ,celda: (row: TarjetaDebito) => `${new DatePipe('en-US').transform(row.fecha, 'dd-MM-yyyy')}`},
+    { nombreColumna: 'franquicia', cabecera: 'Franquicia', celda: (row: TarjetaDebito) => `${row.franquiciaTarjeta.nombre}` },
+    { nombreColumna: 'banco', cabecera: 'Banco', celda: (row: TarjetaDebito) => `${row.banco.abreviatura}` },
+    { nombreColumna: 'identificacion', cabecera: 'Identificación', celda: (row: TarjetaDebito) => `${row.identificacion}` },
+    { nombreColumna: 'nombre', cabecera: 'Nombre', celda: (row: TarjetaDebito) => `${row.nombre}` },
+    { nombreColumna: 'titular', cabecera: 'Titular', celda: (row: TarjetaDebito) => `${row.titular}` },
+    { nombreColumna: 'valor', cabecera: 'Valor', celda: (row: TarjetaDebito) => `${row.valor}` },
+    { nombreColumna: 'acciones', cabecera: 'Acciones'}
+  ];
+  cabeceraTarjetasDebito: string[] = this.columnasTarjetasDebito.map(titulo => titulo.nombreColumna);
+  dataSourceTarjetasDebito: MatTableDataSource<TarjetaDebito>;
+  clickedRowsTarjetasDebito = new Set<TarjetaDebito>();
 
   @ViewChild('MatSortCheques') sortCheques: MatSort;
   @ViewChild('MatSortDepositos') sortDepositos: MatSort;
   @ViewChild('MatSortTransferencias') sortTransferencias: MatSort;
   @ViewChild('MatSortTarjetasCredito') sortTarjetasCredito: MatSort;
   @ViewChild('MatSortTarjetasDebito') sortTarjetasDebito: MatSort;
+
   @ViewChild('MatPaginatorCheques') paginatorCheques: MatPaginator;
   @ViewChild('MatPaginatorDepositos') paginatorDepositos: MatPaginator;
   @ViewChild('MatPaginatorTransferencias') paginatorTransferencias: MatPaginator;
@@ -190,87 +201,24 @@ export class RecaudacionComponent implements OnInit {
     private clienteService: ClienteService, private bancoService: BancoService, private sesionService: SesionService,
     private cuentaPropiaService: CuentaPropiaService, private operadorTarjetaService: OperadorTarjetaService, private datePipe: DatePipe,
     private franquiciaTarjetaService: FranquiciaTarjetaService, private formaPagoService: FormaPagoService,
-    private parametroService: ParametroService, private router: Router) { }
+    private parametroService: ParametroService, private router: Router, private spinnerService: NgxSpinnerService) { }
 
   ngOnInit() {
     this.sesion = validarSesion(this.sesionService, this.router);
+    this.consultarPeriodicidades();
     this.consultarBancos();
     this.consultarBancosPropios();
     this.consultarFranquiciasTarjetas();
-    this.consultarOperadoresTarjetasCreditos();
-    this.consultarOperadoresTarjetasDebitos();
-    this.consultarPeriodicidades();
-    this.consultarTiposTransacciones();
-    this.consultarBancosDepositos();
-    this.consultarBancosTransferencias();
-    this.consultarBancosTarjetasCreditos();
-    this.consultarBancosTarjetasDebitos();
-    this.defectoTarjetaCredito();
-    this.defectoTarjetaDebito();
+    this.consultarOperadoresTarjetas();
     this.inicializarFiltros();
 
     this.facturaService.eventoRecaudacion.subscribe((data: Factura) => {
       this.factura = data;
-      this.calcularRecaudacion();
-      this.recargar();
-      this.defectoTarjetaCredito();
-      this.defectoTarjetaDebito();
+      this.llenarTablasFormasPago();
+      this.nuevo();
     });
-
   }
 
-  consultarBancosPropios() {
-    this.cuentaPropiaService.consultarBancos().subscribe({
-      next: res => {
-        this.bancosPropios = res.resultado as String[]
-      },
-      error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
-    });
-  }
-  consultarPorBanco(banco: string) {
-    this.cuentaPropiaService.consultarPorBanco(banco).subscribe({
-      next: res => {
-        this.cuentasPropias = res.resultado as CuentaPropia[];
-        this.deposito.cuentaPropia = this.cuentasPropias[0];
-      },
-      error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
-    });
-  }
-  consultarBancos() { // Solo se requiere Bancos y Bancos Propios
-    this.bancoService.consultar().subscribe({
-      next: res => {
-        this.bancos = res.resultado as Banco[]
-      },
-      error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
-    });
-  }
-  consultarFranquiciasTarjetas() {
-    this.franquiciaTarjetaService.consultar().subscribe(
-      res => {
-        this.franquiciasTarjetasCreditos = res.resultado as FranquiciaTarjeta[]
-        this.franquiciasTarjetasDebitos = res.resultado as FranquiciaTarjeta[]
-      },
-      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
-    );
-  }
-  consultarOperadoresTarjetasCreditos() {
-    let tipo = otras.credito;
-    this.operadorTarjetaService.consultarPorTipo(tipo).subscribe(
-      res => {
-        this.operadoresTarjetasCreditos = res.resultado as OperadorTarjeta[]
-      },
-      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
-    );
-  }
-  consultarOperadoresTarjetasDebitos() {
-    let tipo = otras.debito;
-    this.operadorTarjetaService.consultarPorTipo(tipo).subscribe(
-      res => {
-        this.operadoresTarjetasDebitos = res.resultado as OperadorTarjeta[]
-      },
-      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
-    );
-  }
   consultarPeriodicidades() {
     let tipo = otras.periodicidad;
     this.parametroService.consultarPorTipo(tipo).subscribe(
@@ -280,81 +228,85 @@ export class RecaudacionComponent implements OnInit {
       err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     );
   }
-  consultarTiposTransacciones() {
-    let tipo = otras.tipo_transaccion;
-    this.parametroService.consultarPorTipo(tipo).subscribe(
-      res => {
-        this.tiposTransacciones = res.resultado as Parametro[]
+  consultarBancos() { // Solo se requiere Bancos y Bancos Propios
+    this.bancoService.consultar().subscribe({
+      next: res => {
+        this.bancos = res.resultado as Banco[]
       },
-      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
-    );
+      error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+    });
+  }
+  consultarBancosPropios() {
+    this.cuentaPropiaService.consultarBancos().subscribe({
+      next: res => {
+        this.bancosPropios = res.resultado as String[]
+      },
+      error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+    });
+  }
+  consultarFranquiciasTarjetas() {
+    this.franquiciaTarjetaService.consultar().subscribe({
+      next: res => {
+        this.franquiciasTarjetas = res.resultado as FranquiciaTarjeta[]
+      },
+      error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+    });
+  }
+  consultarOperadoresTarjetas() {
+    let tipo = otras.credito;
+    this.operadorTarjetaService.consultarPorTipo(tipo).subscribe({
+      next: res => {
+        this.operadoresTarjetas = res.resultado as OperadorTarjeta[]
+      },
+      error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+    });
   }
 
-  consultarBancosDepositos() {
-    this.bancoService.consultar().subscribe(
-      res => {
-        this.bancosDepositos = res.resultado as Banco[]
-      },
-      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
-    );
-  }
-  consultarBancosTransferencias() {
-    this.bancoService.consultar().subscribe(
-      res => {
-        this.bancosTransferencias = res.resultado as Banco[]
-      },
-      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
-    );
-  }
-  consultarBancosTarjetasCreditos() {
-    this.bancoService.consultar().subscribe(
-      res => {
-        this.bancosTarjetasCreditos = res.resultado as Banco[]
-      },
-      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
-    );
-  }
-  consultarBancosTarjetasDebitos() {
-    this.bancoService.consultar().subscribe(
-      res => {
-        this.bancosTarjetasDebitos = res.resultado as Banco[]
-      },
-      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
-    );
+  nuevo(){
+    this.nuevoCheque();
+    this.nuevoDeposito();
+    this.nuevoTransferencia();
+    this.nuevoTarjetaCredito();
+    this.nuevoTarjetaDebito();
   }
 
-  recaudar(event) {
+  crearRecaudacion(event) {
     if (event != null)
       event.preventDefault();
-    console.log(this.factura);
+    this.spinnerService.show();  
+      //console.log(this.factura);
     this.facturaService.actualizar(this.factura).subscribe({
       next: res => {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
         this.factura = res.resultado as Factura;
-        this.stepperPrevio(this.stepper);
+        this.spinnerService.hide();  
       },
-      error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+      error: err => {
+        Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+        this.spinnerService.hide();
+      }
     });
   }
 
   crearFacturaElectronica(event) {
     if (event != null)
       event.preventDefault();
-    this.cargar = true;
+    this.spinnerService.show();  
     this.facturaElectronicaService.enviar(this.factura.id).subscribe({
       next: res => {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
         this.factura = res.resultado as Factura;
-        this.cargar = false;
+        this.stepperPrevio(this.stepper);
+        this.spinnerService.hide();  
       },
       error: err => {
         Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
-        this.cargar = false;
+        this.spinnerService.hide();  
       }
     });
   }
 
-  calcularRecaudacion1() {
+/*  calcularRecaudacion() {
     this.facturaService.calcularRecaudacion(this.factura).subscribe({
       next: res => {
         this.factura = res.resultado as Factura;
@@ -366,7 +318,7 @@ export class RecaudacionComponent implements OnInit {
       }, 
       error: err => Swal.fire(error, err.error.mensaje, error_swal)
     });
-  }
+  }*/
 
   calcularRecaudacion() {
     this.factura.totalCheques = this.calcularTotalCheques();
@@ -376,13 +328,16 @@ export class RecaudacionComponent implements OnInit {
     this.factura.totalTarjetasDebitos = this.calcularTotalTD();
     this.factura.totalRecaudacion = Number(this.factura.efectivo) + this.factura.totalCheques + this.factura.totalDepositos +
       this.factura.totalTransferencias + this.factura.totalTarjetasCreditos + this.factura.totalTarjetasDebitos;
-    this.factura.porPagar = Number((this.factura.totalConDescuento - this.factura.totalRecaudacion).toFixed(2));
     if (this.factura.totalRecaudacion > this.factura.totalConDescuento){
       this.factura.cambio = Number((this.factura.totalRecaudacion - this.factura.totalConDescuento).toFixed(2));
+      this.factura.porPagar = valores.cero;
+    } else {
+      this.factura.porPagar = Number((this.factura.totalConDescuento - this.factura.totalRecaudacion).toFixed(2));
     }
+    this.factura.credito.saldo = this.factura.porPagar;
   }
   
-  recargar() {
+  llenarTablasFormasPago() {
     this.verPanelCheques = false;
     this.verPanelDepositos = false;
     this.verPanelTransferencias = false;
@@ -398,20 +353,42 @@ export class RecaudacionComponent implements OnInit {
     }
     if(this.factura.transferencias.length > valores.cero){
       this.verPanelTransferencias = true;
-      this.dataSourceTransferencias = new MatTableDataSource(this.factura.transferencias);
+      this.llenarTransferencias(this.factura.transferencias);
     }
     if(this.factura.tarjetasCreditos.length > valores.cero){
       this.verPanelTarjetasCredito = true;
-      this.dataSourceTarjetasCreditos = new MatTableDataSource(this.factura.tarjetasCreditos);
+      this.llenarTarjetasCredito(this.factura.tarjetasCreditos);
     }
     if(this.factura.tarjetasDebitos.length > valores.cero){
       this.verPanelTarjetasDebito = true;
-      this.dataSourceTarjetasDebitos = new MatTableDataSource(this.factura.tarjetasDebitos);
+      this.llenarTarjetasDebito(this.factura.tarjetasDebitos);
     }
-
     this.calcularRecaudacion();
   }
 
+  consultarPorBanco(banco: string, formaPago: string) {
+    this.cuentaPropiaService.consultarPorBanco(banco).subscribe({
+      next: res => {
+        this.cuentasPropias = res.resultado as CuentaPropia[];
+        this.inicializarCuentasPropias(this.cuentasPropias, formaPago);
+      },
+      error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+    });
+  }
+
+  inicializarCuentasPropias(cuentasPropias: CuentaPropia[], formaPago: string){
+    if (formaPago == 'DEPOSITO'){
+      this.cuentasPropiasDeposito = cuentasPropias;
+      this.deposito.cuentaPropia = cuentasPropias[0]}
+    if (formaPago == 'TRANSFERENCIA'){
+      this.cuentasPropiasTransferencia = cuentasPropias;
+      this.transferencia.cuentaPropia = cuentasPropias[0]}
+  }
+
+  pad(numero: string, size: number): string {
+    while (numero.length < size) numero = "0" + numero;
+    return numero;
+  }
 
   //EFECTIVO
   seleccionarEfectivo() {
@@ -431,7 +408,7 @@ export class RecaudacionComponent implements OnInit {
   agregarCheque() {
     if (!this.validarCheque())
       return;  
-    this.cheque.banco = this.controlBancoCheque.value;
+    this.cheque.banco = this.controlBancoCheque.value as Banco;
     this.factura.cheques.push(this.cheque);
     this.llenarCheques(this.factura.cheques);
     this.calcularRecaudacion();
@@ -471,6 +448,7 @@ export class RecaudacionComponent implements OnInit {
       this.factura.cheques.splice(i, 1);
       this.llenarCheques(this.factura.cheques);
       this.calcularRecaudacion();
+      this.nuevoCheque();
     }
   }
 
@@ -483,69 +461,10 @@ export class RecaudacionComponent implements OnInit {
   }
 
   // DEPOSITOS
-  nuevoTransferencia(){
-    this.transferencia = new Transferencia();
-    this.clickedRowsTransferencias.clear();
-    this.indiceTransferencia = valores.menosUno;
-  }
-
-  agregarTransferencia() {
-    if (!this.validarTransferencia())
-      return;  
-    this.factura.transferencias.push(this.transferencia);
-    this.llenarTransferencia(this.factura.transferencias);
-    this.calcularRecaudacion();
-    this.nuevoTransferencia();
-  }
-
-  llenarTransferencia(transferencias: Transferencia[]){
-    this.dataSourceTransferencias = new MatTableDataSource(transferencias);
-    this.dataSourceTransferencias.sort = this.sortTransferencias;
-    this.dataSourceTransferencias.paginator = this.paginatorTransferencias;
-  }
-
-  seleccionTransferencia(transferencia: Transferencia, i: number) {
-    if (!this.clickedRowsTransferencias.has(transferencia)){
-      this.clickedRowsTransferencias.clear();
-      this.clickedRowsTransferencias.add(transferencia);
-      this.deposito = { ...transferencia};
-      this.deposito.fecha = new Date(transferencia.fecha);
-      this.indiceTransferencia = i;
-    } else {
-      this.nuevoTransferencia();
-    }
-  }
-
-  actualizarTransferencia() {
-    if (!this.validarTransferencia())
-      return;  
-    this.factura.transferencias[this.indiceTransferencia] = this.transferencia;
-    this.llenarTransferencia(this.factura.transferencias);
-    this.calcularRecaudacion();
-    this.nuevoTransferencia();
-  }
-
-  eliminarTransferencia(i: number) {
-    if (confirm(otras.pregunta_eliminar_transferencia)) {
-      this.factura.transferencias.splice(i, 1);
-      this.llenarTransferencia(this.factura.transferencias);
-      this.calcularRecaudacion();
-    }
-  }
-
-  calcularTotalTransferencias() {
-    return this.factura.transferencias.map(t => Number(t.valor)).reduce((acc, value) => acc + value, 0);
-  }
-
-  rellenarNumeroTransferencia() {
-    this.transferencia.comprobante = this.pad(this.transferencia.comprobante, 13);
-  }
-
-  // TRANSFERENCIAS
   nuevoDeposito(){
     this.deposito = new Deposito();
-    this.clickedRowsCheques.clear();
-    this.indiceCheque = valores.menosUno;
+    this.clickedRowsDepositos.clear();
+    this.indiceDeposito = valores.menosUno;
   }
 
   agregarDeposito() {
@@ -589,6 +508,7 @@ export class RecaudacionComponent implements OnInit {
       this.factura.depositos.splice(i, 1);
       this.llenarDepositos(this.factura.depositos);
       this.calcularRecaudacion();
+      this.nuevoDeposito();
     }
   }
 
@@ -600,45 +520,120 @@ export class RecaudacionComponent implements OnInit {
     this.deposito.comprobante = this.pad(this.deposito.comprobante, 13);
   }
 
-  // TARJETAS DE CREDITO
-  agregarTarjetaCredito() {
-    if (this.factura.totalRecaudacion + Number(this.tarjetaCredito.valor) <= this.factura.totalConDescuento) {
-      this.tarjetaCredito.banco = this.controlBancoTarjetaCredito.value;
-      this.factura.tarjetasCreditos.push(this.tarjetaCredito);
-      this.tarjetaCredito = new TarjetaCredito();
-      this.controlBancoTarjetaCredito.patchValue(valores.vacio);
-      this.dataSourceTarjetasCreditos = new MatTableDataSource<TarjetaCredito>(this.factura.tarjetasCreditos);
-      this.dataSourceTarjetasCreditos.sort = this.sortTarjetasCredito;
-      this.dataSourceTarjetasCreditos.paginator = this.paginatorTarjetasCredito;
-    } else {
-      Swal.fire(error, mensajes.error_agregar_recaudacion, error_swal);
-    }
-    this.defectoTarjetaCredito();
-    this.calcularRecaudacion();
-  }
-  editarTarjetaCredito(i: number) {
-    this.indiceTarjetaCredito = i;
-    this.tarjetaCredito = { ... this.factura.tarjetasCreditos[this.indiceTarjetaCredito] };
-    this.controlBancoTarjetaCredito.setValue(this.tarjetaCredito.banco);
+  // TRANSFERENCIAS
+  nuevoTransferencia(){
+    this.transferencia = new Transferencia();
+    this.clickedRowsTransferencias.clear();
+    this.indiceTransferencia = valores.menosUno;
   }
 
-  confirmarEditarTarjetaCredito() {
-    this.factura.tarjetasCreditos[this.indiceTarjetaCredito] = this.tarjetaCredito;
-    this.tarjetaCredito = new TarjetaCredito();
-    this.controlBancoTarjetaCredito.setValue(valores.vacio);
-    this.dataSourceTarjetasCreditos = new MatTableDataSource<TarjetaCredito>(this.factura.tarjetasCreditos);
-    this.dataSourceTarjetasCreditos.sort = this.sortTarjetasCredito;
-    this.dataSourceTarjetasCreditos.paginator = this.paginatorTarjetasCredito;
+  agregarTransferencia() {
+    if (!this.validarTransferencia())
+      return;  
+    this.factura.transferencias.push(this.transferencia);
+    this.llenarTransferencias(this.factura.transferencias);
     this.calcularRecaudacion();
+    this.nuevoTransferencia();
+  }
+
+  llenarTransferencias(transferencias: Transferencia[]){
+    this.dataSourceTransferencias = new MatTableDataSource(transferencias);
+    this.dataSourceTransferencias.sort = this.sortTransferencias;
+    this.dataSourceTransferencias.paginator = this.paginatorTransferencias;
+  }
+
+  seleccionTransferencia(transferencia: Transferencia, i: number) {
+    if (!this.clickedRowsTransferencias.has(transferencia)){
+      this.clickedRowsTransferencias.clear();
+      this.clickedRowsTransferencias.add(transferencia);
+      this.transferencia = { ...transferencia};
+      this.transferencia.fecha = new Date(transferencia.fecha);
+      this.indiceTransferencia = i;
+    } else {
+      this.nuevoTransferencia();
+    }
+  }
+
+  actualizarTransferencia() {
+    if (!this.validarTransferencia())
+      return;  
+    this.factura.transferencias[this.indiceTransferencia] = this.transferencia;
+    this.llenarTransferencias(this.factura.transferencias);
+    this.calcularRecaudacion();
+    this.nuevoTransferencia();
+  }
+
+  eliminarTransferencia(i: number) {
+    if (confirm(otras.pregunta_eliminar_transferencia)) {
+      this.factura.transferencias.splice(i, 1);
+      this.llenarTransferencias(this.factura.transferencias);
+      this.calcularRecaudacion();
+      this.nuevoTransferencia();
+    }
+  }
+
+  calcularTotalTransferencias() {
+    return this.factura.transferencias.map(t => Number(t.valor)).reduce((acc, value) => acc + value, 0);
+  }
+
+  rellenarNumeroTransferencia() {
+    this.transferencia.comprobante = this.pad(this.transferencia.comprobante, 13);
+  }
+
+  // TARJETAS DE CREDITO
+  nuevoTarjetaCredito(){
+    this.tarjetaCredito = new TarjetaCredito();
+    this.controlBancoTarjetaCredito.patchValue(valores.vacio);
+    this.clickedRowsTarjetasCredito.clear();
+    this.tarjetaCredito.identificacion = this.factura.cliente.identificacion;
+    this.tarjetaCredito.nombre = this.factura.cliente.razonSocial;
+    this.indiceTarjetaCredito = valores.menosUno;
+  }
+
+  agregarTarjetaCredito() {
+    if (!this.validarTarjetaCredito())
+      return; 
+    this.tarjetaCredito.banco = this.controlBancoTarjetaCredito.value;
+    this.factura.tarjetasCreditos.push(this.tarjetaCredito);
+    this.llenarTarjetasCredito(this.factura.tarjetasCreditos);
+    this.calcularRecaudacion();
+    this.nuevoTarjetaCredito();
+  }
+
+  llenarTarjetasCredito(tarjetasCredito: TarjetaCredito[]){
+    this.dataSourceTarjetasCredito = new MatTableDataSource(tarjetasCredito);
+    this.dataSourceTarjetasCredito.sort = this.sortTarjetasCredito;
+    this.dataSourceTarjetasCredito.paginator = this.paginatorTarjetasCredito;
+  }
+
+  seleccionTarjetaCredito(tarjetaCredito: TarjetaCredito, i: number) {
+    if (!this.clickedRowsTarjetasCredito.has(tarjetaCredito)){
+      this.clickedRowsTarjetasCredito.clear();
+      this.clickedRowsTarjetasCredito.add(tarjetaCredito);
+      this.tarjetaCredito = { ...tarjetaCredito};
+      this.tarjetaCredito.fecha = new Date(tarjetaCredito.fecha);
+      this.controlBancoTarjetaCredito.setValue(this.tarjetaCredito.banco);
+      this.indiceTarjetaCredito = i;
+    } else {
+      this.nuevoTarjetaCredito();
+    }
+  }
+
+  actualizarTarjetaCredito() {
+    if (!this.validarTarjetaCredito())
+      return; 
+    this.factura.tarjetasCreditos[this.indiceTarjetaCredito] = this.tarjetaCredito;
+    this.llenarTarjetasCredito(this.factura.tarjetasCreditos);
+    this.calcularRecaudacion();
+    this.nuevoTarjetaCredito();
   }
 
   eliminarTarjetaCredito(i: number) {
     if (confirm(otras.pregunta_eliminar_tarjeta_credito)) {
       this.factura.tarjetasCreditos.splice(i, 1);
-      this.dataSourceTarjetasCreditos = new MatTableDataSource<TarjetaCredito>(this.factura.tarjetasCreditos);
-      this.dataSourceTarjetasCreditos.sort = this.sortTarjetasCredito;
-      this.dataSourceTarjetasCreditos.paginator = this.paginatorTarjetasCredito;
+      this.llenarTarjetasCredito(this.factura.tarjetasCreditos);
       this.calcularRecaudacion();
+      this.nuevoTarjetaCredito();
     }
   }
 
@@ -646,76 +641,72 @@ export class RecaudacionComponent implements OnInit {
     return this.factura.tarjetasCreditos.map(t => Number(t.valor)).reduce((acc, value) => acc + value, 0);
   }
 
-  validarIdentificacionTarjetaCredito() {
-    this.clienteService.validarIdentificacion(this.tarjetaCredito.identificacion).subscribe(
-      res => {
-        if (res.resultado != null) {
-          Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
-        } else {
-          this.tarjetaCredito.identificacion = valores.vacio;
-          Swal.fire({ icon: error_swal, title: exito, text: res.mensaje });
-        }
-      },
-      err => Swal.fire(error, err.error.mensaje, error_swal)
-    );
-  }
-
-  asignarTitularTarjetaCredito() {
+  cambiarTitularTarjetaCredito() {
     if (this.tarjetaCredito.titular == valores.si) {
       this.tarjetaCredito.identificacion = this.factura.cliente.identificacion;
       this.tarjetaCredito.nombre = this.factura.cliente.razonSocial;
-    }
-    if (this.tarjetaCredito.titular == valores.no) {
+      this.deshabilitarTitularTarjetaCredito = true;
+      } else {
       this.tarjetaCredito.identificacion = valores.vacio;
       this.tarjetaCredito.nombre = valores.vacio;
+      this.deshabilitarTitularTarjetaCredito = false;
     }
-  }
-
-  defectoTarjetaCredito() {
-    this.tarjetaCredito = new TarjetaCredito();
-    this.tarjetaCredito.identificacion = this.factura.cliente.identificacion;
-    this.tarjetaCredito.nombre = this.factura.cliente.razonSocial;
   }
 
   // TARJETAS DE DEBITO
-  agregarTarjetaDebito() {
-    if (this.factura.totalRecaudacion + Number(this.tarjetaDebito.valor) <= this.factura.totalConDescuento) {
-      this.tarjetaDebito.banco = this.controlBancoTarjetaDebito.value;
-      this.factura.tarjetasDebitos.push(this.tarjetaDebito);
-      this.tarjetaDebito = new TarjetaDebito();
-      this.controlBancoTarjetaDebito.setValue(valores.vacio);
-      this.dataSourceTarjetasDebitos = new MatTableDataSource<TarjetaDebito>(this.factura.tarjetasDebitos);
-      this.dataSourceTarjetasDebitos.sort = this.sortTarjetasDebito;
-      this.dataSourceTarjetasDebitos.paginator = this.paginatorTarjetasDebito;
-    } else {
-      Swal.fire(error, mensajes.error_agregar_recaudacion, error_swal);
-    }
-    this.defectoTarjetaDebito();
-    this.calcularRecaudacion();
-  }
-
-  editarTarjetaDebito(i: number) {
-    this.indiceTarjetaDebito = i;
-    this.tarjetaDebito = { ... this.factura.tarjetasDebitos[this.indiceTarjetaDebito] };
-  }
-
-  confirmarEditarTarjetaDebito() {
-    this.factura.tarjetasDebitos[this.indiceTarjetaDebito] = this.tarjetaDebito;
+  nuevoTarjetaDebito(){
     this.tarjetaDebito = new TarjetaDebito();
-    this.controlBancoTarjetaDebito.setValue(valores.vacio);
-    this.dataSourceTarjetasDebitos = new MatTableDataSource<TarjetaDebito>(this.factura.tarjetasDebitos);
-    this.dataSourceTarjetasDebitos.sort = this.sortTarjetasDebito;
-    this.dataSourceTarjetasDebitos.paginator = this.paginatorTarjetasDebito;
+    this.controlBancoTarjetaDebito.patchValue(valores.vacio);
+    this.clickedRowsTarjetasDebito.clear();
+    this.tarjetaDebito.identificacion = this.factura.cliente.identificacion;
+    this.tarjetaDebito.nombre = this.factura.cliente.razonSocial;
+    this.indiceTarjetaDebito = valores.menosUno;
+  }
+
+  agregarTarjetaDebito() {
+    if (!this.validarTarjetaDebito())
+      return; 
+    this.tarjetaDebito.banco = this.controlBancoTarjetaDebito.value;
+    this.factura.tarjetasDebitos.push(this.tarjetaDebito);
+    this.llenarTarjetasDebito(this.factura.tarjetasDebitos);
     this.calcularRecaudacion();
+    this.nuevoTarjetaDebito();
+  }
+
+  llenarTarjetasDebito(tarjetasDebito: TarjetaDebito[]){
+    this.dataSourceTarjetasDebito = new MatTableDataSource(tarjetasDebito);
+    this.dataSourceTarjetasDebito.sort = this.sortTarjetasDebito;
+    this.dataSourceTarjetasDebito.paginator = this.paginatorTarjetasDebito;
+  }
+
+  seleccionTarjetaDebito(tarjetaDebito: TarjetaDebito, i: number) {
+    if (!this.clickedRowsTarjetasDebito.has(tarjetaDebito)){
+      this.clickedRowsTarjetasDebito.clear();
+      this.clickedRowsTarjetasDebito.add(tarjetaDebito);
+      this.tarjetaDebito = { ...tarjetaDebito};
+      this.tarjetaDebito.fecha = new Date(tarjetaDebito.fecha);
+      this.controlBancoTarjetaDebito.setValue(this.tarjetaDebito.banco);
+      this.indiceTarjetaDebito = i;
+    } else {
+      this.nuevoTarjetaDebito();
+    }
+  }
+
+  actualizarTarjetaDebito() {
+    if (!this.validarTarjetaDebito())
+      return; 
+    this.factura.tarjetasDebitos[this.indiceTarjetaDebito] = this.tarjetaDebito;
+    this.llenarTarjetasDebito(this.factura.tarjetasDebitos);
+    this.calcularRecaudacion();
+    this.nuevoTarjetaDebito();
   }
 
   eliminarTarjetaDebito(i: number) {
     if (confirm(otras.pregunta_eliminar_tarjeta_debito)) {
       this.factura.tarjetasDebitos.splice(i, 1);
-      this.dataSourceTarjetasDebitos = new MatTableDataSource<TarjetaDebito>(this.factura.tarjetasDebitos);
-      this.dataSourceTarjetasDebitos.sort = this.sortTarjetasDebito;
-      this.dataSourceTarjetasDebitos.paginator = this.paginatorTarjetasDebito;
+      this.llenarTarjetasDebito(this.factura.tarjetasDebitos);
       this.calcularRecaudacion();
+      this.nuevoTarjetaDebito();
     }
   }
 
@@ -723,77 +714,37 @@ export class RecaudacionComponent implements OnInit {
     return this.factura.tarjetasDebitos.map(t => Number(t.valor)).reduce((acc, value) => acc + value, 0);
   }
 
-  validarIdentificacionTarjetaDebito() {
-    this.clienteService.validarIdentificacion(this.tarjetaDebito.identificacion).subscribe(
-      res => {
-        if (res.resultado != null) {
-          Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
-        } else {
-          this.tarjetaDebito.identificacion = '';
-          Swal.fire({ icon: error_swal, title: error, text: res.mensaje });
-        }
-      },
-      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
-    );
-  }
-
-  asignarTitularTarjetaDebito() {
+  cambiarTitularTarjetaDebito() {
     if (this.tarjetaDebito.titular == valores.si) {
       this.tarjetaDebito.identificacion = this.factura.cliente.identificacion;
       this.tarjetaDebito.nombre = this.factura.cliente.razonSocial;
-    }
-    if (this.tarjetaCredito.titular == valores.no) {
+      this.deshabilitarTitularTarjetaDebito = true;
+      } else {
       this.tarjetaDebito.identificacion = valores.vacio;
       this.tarjetaDebito.nombre = valores.vacio;
+      this.deshabilitarTitularTarjetaDebito = false;
     }
-  }
-
-  defectoTarjetaDebito() {
-    this.tarjetaDebito = new TarjetaDebito();
-    this.tarjetaDebito.identificacion = this.factura.cliente.identificacion;
-    this.tarjetaDebito.nombre = this.factura.cliente.razonSocial;
-  }
-
-  pad(numero: string, size: number): string {
-    while (numero.length < size) numero = "0" + numero;
-    return numero;
-  }
-
-  //STEEPER
-  stepperPrevio(stepper: MatStepper){
-    stepper.previous();
-  }
-
-  stepperSiguiente(stepper: MatStepper){
-      stepper.next();
   }
 
   //FILTROS AUTOCOMPLETE
   inicializarFiltros() {
-    this.filtroBancos = this.controlBancoCheque.valueChanges
+    this.filtroBancosCheque = this.controlBancoCheque.valueChanges
       .pipe(
         startWith(valores.vacio),
         map(value => typeof value === 'string' || value == null ? value : value.id),
         map(banco => typeof banco === 'string' ? this.filtroBanco(banco) : this.bancos.slice())
       );
-
-    this.filtroBancosTransferencias = this.controlBancoTransferencia.valueChanges
+      this.filtroBancosTarjetaCredito = this.controlBancoTarjetaCredito.valueChanges
       .pipe(
         startWith(valores.vacio),
         map(value => typeof value === 'string' || value == null ? value : value.id),
-        map(bancoTransferencia => typeof bancoTransferencia === 'string' ? this.filtroBancoTransferencia(bancoTransferencia) : this.bancosTransferencias.slice())
+        map(banco => typeof banco === 'string' ? this.filtroBanco(banco) : this.bancos.slice())
       );
-    this.filtroBancosTarjetasCreditos = this.controlBancoTarjetaCredito.valueChanges
+      this.filtroBancosTarjetaDebito = this.controlBancoTarjetaDebito.valueChanges
       .pipe(
         startWith(valores.vacio),
         map(value => typeof value === 'string' || value == null ? value : value.id),
-        map(bancoTarjetaCredito => typeof bancoTarjetaCredito === 'string' ? this.filtroBancoTarjetaCredito(bancoTarjetaCredito) : this.bancosTarjetasCreditos.slice())
-      );
-    this.filtroBancosTarjetasDebitos = this.controlBancoTarjetaDebito.valueChanges
-      .pipe(
-        startWith(valores.vacio),
-        map(value => typeof value === 'string' || value == null ? value : value.id),
-        map(bancoTarjetaDebito => typeof bancoTarjetaDebito === 'string' ? this.filtroBancoTarjetaDebito(bancoTarjetaDebito) : this.bancosTarjetasDebitos.slice())
+        map(banco => typeof banco === 'string' ? this.filtroBanco(banco) : this.bancos.slice())
       );
   }
 
@@ -808,47 +759,13 @@ export class RecaudacionComponent implements OnInit {
     return banco && banco.abreviatura ? banco.abreviatura : valores.vacio;
   }
 
-  private filtroBancoDeposito(value: string): Banco[] {
-    if (this.bancosDepositos.length > valores.cero) {
-      const filterValue = value.toLowerCase();
-      return this.bancosDepositos.filter(bancoDeposito => bancoDeposito.abreviatura.toLowerCase().includes(filterValue));
-    }
-    return [];
+  //STEEPER
+  stepperPrevio(stepper: MatStepper){
+      stepper.previous();
   }
-  verBancoDeposito(bancoDeposito: Banco): string {
-    return bancoDeposito && bancoDeposito.abreviatura ? bancoDeposito.abreviatura : valores.vacio;
-  }
-  private filtroBancoTransferencia(value: string): Banco[] {
-    if (this.bancosTransferencias.length > valores.cero) {
-      const filterValue = value.toLowerCase();
-      return this.bancosTransferencias.filter(bancoTransferencia => bancoTransferencia.abreviatura.toLowerCase().includes(filterValue));
-    }
-    return [];
-  }
-  verBancoTransferencia(bancoTransferencia: Banco): string {
-    return bancoTransferencia && bancoTransferencia.abreviatura ? bancoTransferencia.abreviatura : valores.vacio;
-  }
-
-  private filtroBancoTarjetaCredito(value: string): Banco[] {
-    if (this.bancosTarjetasCreditos.length > valores.cero) {
-      const filterValue = value.toLowerCase();
-      return this.bancosTarjetasCreditos.filter(bancoTarjetaCredito => bancoTarjetaCredito.abreviatura.toLowerCase().includes(filterValue));
-    }
-    return [];
-  }
-  verBancoTarjetaCredito(bancoTarjetaCredito: Banco): string {
-    return bancoTarjetaCredito && bancoTarjetaCredito.abreviatura ? bancoTarjetaCredito.abreviatura : valores.vacio;
-  }
-
-  private filtroBancoTarjetaDebito(value: string): Banco[] {
-    if (this.bancosTarjetasDebitos.length > valores.cero) {
-      const filterValue = value.toLowerCase();
-      return this.bancosTarjetasDebitos.filter(banco_tarjeta_debito => banco_tarjeta_debito.abreviatura.toLowerCase().includes(filterValue));
-    }
-    return [];
-  }
-  verBancoTarjetaDebito(banco_tarjeta_debito: Banco): string {
-    return banco_tarjeta_debito && banco_tarjeta_debito.abreviatura ? banco_tarjeta_debito.abreviatura : valores.vacio;
+  
+  stepperSiguiente(stepper: MatStepper){
+      stepper.next();
   }
 
   //VALIDACIONES
@@ -857,41 +774,130 @@ export class RecaudacionComponent implements OnInit {
       Swal.fire(error, mensajes.error_agregar_recaudacion, error_swal);
       return false;
     } */
-    if (this.controlBancoCheque.value == null || this.controlBancoCheque.value == valores.vacio) {
-      Swal.fire(error, mensajes.error_agregar_recaudacion, error_swal);
+    if (this.cheque.fecha == null || this.cheque.tipo == null) {
+      Swal.fire(error, mensajes.error_recaudacion_dato, error_swal);
       return false;
     }
-    if (this.cheque.fecha == null || this.cheque.tipo == null || this.cheque.valor == valores.cero) {
-      Swal.fire(error, mensajes.error_agregar_recaudacion, error_swal);
+    let banco: Banco = this.controlBancoCheque.value as Banco;
+    if (this.controlBancoCheque.value == null || this.controlBancoCheque.value == valores.vacio || banco.id == undefined) {
+      Swal.fire(error, mensajes.error_recaudacion_dato, error_swal);
+      return false;
+    }
+    if (this.cheque.numero == null || this.cheque.numero == '0000000000000') {
+      Swal.fire(error, mensajes.error_recaudacion_dato, error_swal);
+      return false;
+    }
+    if (this.cheque.valor == null || this.cheque.valor <= valores.cero) {
+      Swal.fire(error, mensajes.error_recaudacion_valor, error_swal);
       return false;
     }
     return true;
   }
   validarDeposito(): boolean{
-    if (this.factura.totalRecaudacion + Number(this.deposito.valor) > this.factura.totalConDescuento) {
+    if (this.deposito.fecha == null || this.deposito.cuentaPropia.banco.abreviatura == valores.vacio) {
+      Swal.fire(error, mensajes.error_recaudacion_dato, error_swal);
+      return false;
+    }
+    if (this.deposito.comprobante == null || this.deposito.comprobante == valores.vacio || 
+      this.deposito.comprobante == '0000000000000') {
+      Swal.fire(error, mensajes.error_recaudacion_dato, error_swal);
+      return false;
+    }
+    if (this.deposito.valor == null || this.deposito.valor <= valores.cero) {
+      Swal.fire(error, mensajes.error_recaudacion_valor, error_swal);
+      return false;
+    }  
+    return true;
+  }
+
+  validarTransferencia(): boolean{
+    if (this.transferencia.fecha == null || this.transferencia.cuentaPropia.banco.abreviatura == valores.vacio) {
+      Swal.fire(error, mensajes.error_recaudacion_dato, error_swal);
+      return false;
+    }
+    if (this.transferencia.comprobante == null || this.transferencia.comprobante == valores.vacio || 
+      this.transferencia.comprobante == '0000000000000') {
+      Swal.fire(error, mensajes.error_recaudacion_dato, error_swal);
+      return false;
+    }
+    if (this.transferencia.valor == null || this.transferencia.valor <= valores.cero) {
+      Swal.fire(error, mensajes.error_recaudacion_valor, error_swal);
+      return false;
+    }  
+    return true;
+  }
+
+  validarTarjetaCredito(): boolean{
+    if (this.factura.totalRecaudacion + Number(this.tarjetaCredito.valor) > this.factura.totalConDescuento) {
       Swal.fire(error, mensajes.error_agregar_recaudacion, error_swal);
       return false;
-    } 
-    if (this.deposito.fecha == null || this.deposito.comprobante == null || this.deposito.valor <= valores.cero) {
-      Swal.fire(error, mensajes.error_agregar_recaudacion, error_swal);
+    }
+    let banco: Banco = this.controlBancoTarjetaCredito.value as Banco;
+    if (this.controlBancoTarjetaCredito.value == null || this.controlBancoTarjetaCredito.value == valores.vacio ||
+        banco.id == undefined) {
+      Swal.fire(error, mensajes.error_recaudacion_dato, error_swal);
+      return false;
+    }
+    if (this.tarjetaCredito.fecha == null || this.tarjetaCredito.franquiciaTarjeta == null) {
+      Swal.fire(error, mensajes.error_recaudacion_dato, error_swal);
+      return false;
+    }
+    if (this.tarjetaCredito.identificacion == null || this.tarjetaCredito.nombre == null) {
+      Swal.fire(error, mensajes.error_recaudacion_dato, error_swal);
+      return false;
+    }
+    if (this.tarjetaCredito.operadorTarjeta == null || this.tarjetaCredito.lote == null) {
+      Swal.fire(error, mensajes.error_recaudacion_dato, error_swal);
+      return false;
+    }
+    if (this.tarjetaCredito.valor == null || this.tarjetaCredito.valor <= valores.cero) {
+      Swal.fire(error, mensajes.error_recaudacion_valor, error_swal);
       return false;
     }
     return true;
   }
 
-  validarTransferencia(): boolean{
-    if (this.factura.totalRecaudacion + Number(this.cheque.valor) > this.factura.totalConDescuento) {
-      Swal.fire(error, mensajes.error_agregar_recaudacion, error_swal);
-      return false;
-    } 
-    if (this.controlBancoCheque.value == null || this.controlBancoCheque.value == valores.vacio) {
+  validarTarjetaDebito(): boolean{
+    if (this.factura.totalRecaudacion + Number(this.tarjetaDebito.valor) > this.factura.totalConDescuento) {
       Swal.fire(error, mensajes.error_agregar_recaudacion, error_swal);
       return false;
     }
-    if (this.cheque.fecha == null || this.cheque.tipo == null || this.cheque.valor == valores.cero) {
-      Swal.fire(error, mensajes.error_agregar_recaudacion, error_swal);
+    let banco: Banco = this.controlBancoTarjetaDebito.value as Banco;
+    if (this.controlBancoTarjetaDebito.value == null || this.controlBancoTarjetaDebito.value == valores.vacio
+      || banco == undefined) {
+      Swal.fire(error, mensajes.error_recaudacion_dato, error_swal);
+      return false;
+    }
+    if (this.tarjetaDebito.fecha == null || this.tarjetaDebito.franquiciaTarjeta == null) {
+      Swal.fire(error, mensajes.error_recaudacion_dato, error_swal);
+      return false;
+    }
+    if (this.tarjetaDebito.identificacion == null || this.tarjetaDebito.nombre == null) {
+      Swal.fire(error, mensajes.error_recaudacion_dato, error_swal);
+      return false;
+    }
+    if (this.tarjetaDebito.operadorTarjeta == null || this.tarjetaDebito.lote == null) {
+      Swal.fire(error, mensajes.error_recaudacion_dato, error_swal);
+      return false;
+    }
+    if (this.tarjetaDebito.valor == null || this.tarjetaDebito.valor <= valores.cero) {
+      Swal.fire(error, mensajes.error_recaudacion_valor, error_swal);
       return false;
     }
     return true;
+  }
+
+  validarIdentificacion(identificacion: string) {
+    this.clienteService.validarIdentificacion(identificacion).subscribe({
+      next: res => {
+        if (res.resultado != null) {
+          //Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
+        } else {
+          this.tarjetaCredito.identificacion = valores.vacio;
+          Swal.fire({ icon: error_swal, title: exito, text: res.mensaje });
+        }
+      },
+      error: err => Swal.fire(error, err.error.mensaje, error_swal)
+    });
   }
 }
