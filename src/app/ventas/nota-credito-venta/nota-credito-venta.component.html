@@ -178,7 +178,14 @@
                         </mat-select>
                     </mat-form-field>
                 </div>
-                <div class="col-4">
+                <div class="col-1">
+                    <mat-form-field appearance="standard">
+                        <mat-label>Serie</mat-label>
+                        <input matInput type="text" class="form-control-sm" [(ngModel)]="notaCreditoVenta.factura.serie"
+                            [disabled]="true">
+                    </mat-form-field>
+                </div>
+                <div class="col-3">
                     <mat-form-field appearance="standard">
                         <mat-label>Factura</mat-label>
                         <mat-autocomplete #factura="matAutocomplete" [displayWith]="verFactura"
