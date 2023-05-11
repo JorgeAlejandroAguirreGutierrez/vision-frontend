@@ -6,10 +6,11 @@ import { valores } from "../../constantes";
 export class TarjetaCredito {
   id: number;
   codigo: string;
+  fecha: Date;
   titular: string;
-  diferido: string;
   identificacion: string;
   nombre: string;
+  diferido: string;
   lote: string;
   valor: number;
   banco: Banco;
@@ -19,15 +20,15 @@ export class TarjetaCredito {
   constructor(){
     this.id = valores.cero;
     this.codigo = valores.vacio;
+    this.fecha = new Date();
     this.titular = valores.si;
-    this.diferido = valores.si;
     this.identificacion = valores.vacio;
     this.nombre = valores.vacio;
-    
+    this.diferido = valores.no;    
     this.lote = valores.vacio;
     this.valor = valores.cero;
+    this.banco = new Banco;
     this.operadorTarjeta = new OperadorTarjeta();
     this.franquiciaTarjeta = new FranquiciaTarjeta();
-    this.banco = new Banco;
   }
 }

@@ -282,8 +282,8 @@
                                 <tr mat-row *matRowDef="let row; columns: columnasFacturaLinea;"></tr>
                             </table>
                             <ng-container>
-                                <mat-paginator #paginatorFacturaLinea [pageSizeOptions]="[5, 10, 25, 100]">
-                                </mat-paginator>
+                                <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" showFirstLastButtons 
+                                    #paginatorFacturaLinea></mat-paginator>
                             </ng-container>
                         </div>
                     </div>

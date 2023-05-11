@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Respuesta } from '../../respuesta';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { map, catchError } from 'rxjs/operators';
-import { Observable, throwError, BehaviorSubject, lastValueFrom } from 'rxjs';
+import { Observable, throwError, lastValueFrom } from 'rxjs';
 import { urn, options } from '../../constantes';
 import { environment } from '../../../environments/environment';
 import { GrupoProducto } from '../../modelos/inventario/grupo-producto';
@@ -62,7 +62,7 @@ export class GrupoProductoService {
   consultarSubgrupos(grupo: string): Observable<Respuesta> {
     let params = new HttpParams().set("grupo", grupo)
     return this.http.get<Respuesta>(environment.host + urn.ruta + urn.grupoProducto + urn.consultarSubgrupos, {params: params, headers: options.headers}).pipe(
-      map(response => response as Respuesta),
+      map(response => response as Respuesta), 
       catchError(err => {
         return throwError(()=>err);
       })

@@ -81,6 +81,14 @@ export class GrupoProductoComponent implements OnInit {
   @ViewChild(MatSort) sort: MatSort;
   @ViewChild("inputFiltro") inputFiltro: ElementRef;
 
+  @HostListener('window:keypress', ['$event'])
+  keyEvent($event: KeyboardEvent) {
+    if (($event.shiftKey || $event.metaKey) && $event.key == 'G') //SHIFT + G
+      this.crear(null);
+    if (($event.shiftKey || $event.metaKey) && $event.key == 'N') //ASHIFT + N
+      this.nuevo(null);
+  }
+
   constructor(private renderer: Renderer2, public dialog: MatDialog, private grupoProductoService: GrupoProductoService, private categoriaProductoService: CategoriaProductoService,
     private sesionService: SesionService, private router: Router) { }
 
@@ -90,14 +98,6 @@ export class GrupoProductoComponent implements OnInit {
     this.consultarGrupos();
     this.consultarCategoriasProductos();
     this.filtrosAutocomplete();
-  }
-
-  @HostListener('window:keypress', ['$event'])
-  keyEvent($event: KeyboardEvent) {
-    if (($event.shiftKey || $event.metaKey) && $event.key == 'G') //SHIFT + G
-      this.crear(null);
-    if (($event.shiftKey || $event.metaKey) && $event.key == 'N') //ASHIFT + N
-      this.nuevo(null);
   }
 
   filtrosAutocomplete() {

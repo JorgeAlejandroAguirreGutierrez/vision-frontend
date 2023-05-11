@@ -3,6 +3,7 @@ import { UntypedFormControl, UntypedFormBuilder, UntypedFormGroup, Validators } 
 import { valores, mensajes, validarSesion, exito, exito_swal, error, error_swal } from '../../constantes';
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
+import { NgxSpinnerService } from 'ngx-spinner';
 import Swal from 'sweetalert2';
 
 import { DatePipe } from '@angular/common';
@@ -70,12 +71,11 @@ export class FacturaComponent implements OnInit {
   precioVentaPublicoManual: number = valores.cero;
   indiceLinea: number;
 
-  cargar: boolean = false;
   steeperLinear: boolean = false;
   steeperEditable: boolean = true;
   abrirPanelFacturaCliente: boolean = true;
   abrirPanelFacturaLinea: boolean = false;
-  abrirPanelAdminFactura: boolean = false;
+  abrirPanelAdminFactura: boolean = true;
   verIconoEditarLinea: boolean = false;
   esBien: boolean = true;
 
@@ -120,12 +120,14 @@ export class FacturaComponent implements OnInit {
     { nombreColumna: 'nombre', cabecera: 'Producto', celda: (row: FacturaLinea) => `${row.producto.nombre}` },
     { nombreColumna: 'medida', cabecera: 'Medida', celda: (row: FacturaLinea) => `${row.producto.medida.abreviatura}` },
     { nombreColumna: 'cantidad', cabecera: 'Cant.', celda: (row: FacturaLinea) => `${row.cantidad}` },
-    { nombreColumna: 'valor', cabecera: 'Precio', celda: (row: FacturaLinea) => `${row.precioUnitario}` },
-    { nombreColumna: 'impuesto', cabecera: 'IVA', celda: (row: FacturaLinea) => `${row.impuesto.porcentaje} %` },
+    { nombreColumna: 'valor', cabecera: 'P. Unit', celda: (row: FacturaLinea) => `${row.precioUnitario}` },
+    //{ nombreColumna: 'impuesto', cabecera: 'IVA %', celda: (row: FacturaLinea) => `${row.impuesto.porcentaje} %` },
     { nombreColumna: 'descuento', cabecera: 'Desc. $', celda: (row: FacturaLinea) => `${row.valorDescuentoLinea}` },
     { nombreColumna: 'descuentoPorcentaje', cabecera: 'Desc. %', celda: (row: FacturaLinea) => `${row.porcentajeDescuentoLinea} %` },
-    { nombreColumna: 'total', cabecera: 'Subtotal', celda: (row: FacturaLinea) => `${row.totalConDescuentoLinea}` },
-    { nombreColumna: 'entregado', cabecera: 'Entregado', celda: (row: FacturaLinea) => `${row.entregado}` },
+    { nombreColumna: 'subtotal', cabecera: 'Subtotal', celda: (row: FacturaLinea) => `${row.subtotalConDescuentoLinea}` },
+    { nombreColumna: 'iva', cabecera: 'IVA', celda: (row: FacturaLinea) => `${row.ivaConDescuentoLinea}` },
+    { nombreColumna: 'total', cabecera: 'Total', celda: (row: FacturaLinea) => `${row.totalConDescuentoLinea}` },
+    { nombreColumna: 'entregado', cabecera: 'Entreg.', celda: (row: FacturaLinea) => `${row.entregado}` },
     { nombreColumna: 'acciones', cabecera: 'Acciones' }
   ];
   cabeceraLinea: string[] = this.columnasLinea.map(titulo => titulo.nombreColumna);
@@ -157,7 +159,7 @@ export class FacturaComponent implements OnInit {
     private facturaService: FacturaService, private facturaElectronicaService: FacturaElectronicaService,
     private productoService: ProductoService, private bodegaService: BodegaService, private kardexService: KardexService,
     private categoriaProductoService: CategoriaProductoService, private tabService: TabService,
-    private _formBuilder: UntypedFormBuilder) { }
+    private _formBuilder: UntypedFormBuilder, private spinnerService: NgxSpinnerService) { }
 
 
   ngOnInit() {
@@ -232,7 +234,6 @@ export class FacturaComponent implements OnInit {
       event.preventDefault();
     this.factura = new Factura();
     this.clickedRowsFactura.clear();
-    this.cargar = false;
     this.controlIdentificacionCliente.patchValue(valores.vacio);
     this.controlRazonSocialCliente.patchValue(valores.vacio);
     this.dataSourceLinea = new MatTableDataSource<FacturaLinea>([]);
@@ -242,14 +243,16 @@ export class FacturaComponent implements OnInit {
   crear(event) {
     if (event != null)
       event.preventDefault();
+    this.spinnerService.show();    
     this.factura.sesion = this.sesion;
-    console.log(this.factura);
+    //console.log(this.factura);
     this.facturaService.crear(this.factura).subscribe({
       next: res => {
         this.factura = res.resultado as Factura;
         this.consultar();
+        this.spinnerService.hide();  
         this.stepper.next();
-        Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
+        //Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
       },
       error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     });
@@ -258,18 +261,18 @@ export class FacturaComponent implements OnInit {
   crearFacturaElectronica(event) {
     if (event != null)
       event.preventDefault();
-    this.cargar = true;
+    this.spinnerService.show();
     this.facturaElectronicaService.enviar(this.factura.id).subscribe({
       next: res => {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
         this.factura = res.resultado as Factura;
         this.consultar();
         this.nuevo(null);
-        this.cargar = false;
+        this.spinnerService.hide();  
       },
       error: err => {
         Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
-        this.cargar = false;
+        this.spinnerService.hide();  
       }
     });
   }
@@ -299,12 +302,15 @@ export class FacturaComponent implements OnInit {
   actualizar(event) {
     if (event != null)
       event.preventDefault();
-    console.log(this.factura);
+    this.spinnerService.show();    
+    //console.log(this.factura);
     this.facturaService.actualizar(this.factura).subscribe({
       next: res => {
-        Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
+        this.factura = res.resultado as Factura;
         this.consultar();
+        this.spinnerService.hide();  
         this.stepper.next();
+        //Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
       },
       error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     });
@@ -434,6 +440,7 @@ export class FacturaComponent implements OnInit {
   crearFacturaLinea() {
     if (!this.validarFormularioLinea())
       return;
+    this.spinnerService.show();  
     this.factura.sesion = this.sesion;
     this.factura.facturaLineas.push(this.facturaLinea);
     this.facturaService.calcular(this.factura).subscribe({
@@ -441,7 +448,8 @@ export class FacturaComponent implements OnInit {
         this.factura = res.resultado as Factura;
         this.construir();
         this.nuevoFacturaLinea();
-        Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
+        this.spinnerService.hide();
+        //Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
       },
       error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     });
@@ -466,7 +474,7 @@ export class FacturaComponent implements OnInit {
     this.dataSourceLinea = new MatTableDataSource(facturaLineas);
     this.dataSourceLinea.filterPredicate = (data: FacturaLinea, filter: string): boolean =>
       data.producto.nombre.includes(filter) || data.producto.medida.abreviatura.includes(filter) || String(data.cantidad).includes(filter) || 
-      String(data.impuesto.porcentaje).includes(filter) || data.entregado.includes(filter);
+      String(data.precioUnitario).includes(filter) || String(data.totalConDescuentoLinea).includes(filter) || data.entregado.includes(filter);
     this.dataSourceLinea.paginator = this.paginatorLinea;
     this.dataSourceLinea.sort = this.sortLinea;
   }
@@ -692,4 +700,11 @@ export class FacturaComponent implements OnInit {
     return true;
   }
 
+  public showSpinner(): void {
+    this.spinnerService.show();
+
+    setTimeout(() => {
+      this.spinnerService.hide();
+    }, 5000); // 5 seconds
+  }
 }

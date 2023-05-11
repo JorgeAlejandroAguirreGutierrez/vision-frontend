@@ -91,7 +91,6 @@ export class ClienteComponent implements OnInit {
   provinciaDependiente: string = valores.vacio;
   cantonDependiente: string = valores.vacio;
   parroquiaDependiente: string = valores.vacio;
-  urlAvatar: string = "./assets/icons/avatar1.png";
 
   cliente: Cliente = new Cliente();
   telefono: Telefono = new Telefono();
@@ -389,10 +388,11 @@ export class ClienteComponent implements OnInit {
     if (event != null)
       event.preventDefault();
     if (!this.validarFormularioCliente())
-      return;    
+      return;   
     this.cliente.estacion = this.sesion.usuario.estacion;
     this.agregarTelefonoCorreo();
     this.validarDependiente();
+    console.log(this.cliente);
     this.clienteService.crear(this.cliente).subscribe({
       next: res => {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
@@ -665,6 +665,7 @@ export class ClienteComponent implements OnInit {
         }
         //this.cliente.tipoIdentificacion = res.resultado.tipoIdentificacion as TipoIdentificacion;
         //this.cliente.tipoContribuyente = res.resultado.tipoContribuyente as TipoContribuyente;
+        this.cliente.obligadoContabilidad = this.cliente.tipoContribuyente.obligadoContabilidad;
         this.validarDocumento();
         this.validarDinardap();
         this.inicializarOpciones();
@@ -679,7 +680,7 @@ export class ClienteComponent implements OnInit {
   }
 
   validarDocumento(){
-    if (this.cliente.tipoIdentificacion.descripcion == otras.tipoIdentificacion){
+    if (this.cliente.tipoIdentificacion.descripcion == otras.tipoIdentificacionCedula){
       this.deshabilitarObligado = true;
     } else {
       this.deshabilitarObligado = false;  
@@ -733,10 +734,10 @@ export class ClienteComponent implements OnInit {
       Swal.fire({ icon: error_swal, title: error, text: mensajes.error_falta_datos });
       return false;
     }
-    if (this.cliente.referencia == '') {
+    /*if (this.cliente.referencia == '') {
       Swal.fire({ icon: error_swal, title: error, text: mensajes.error_falta_datos });
       return false;
-    }
+    }*/
     if (this.provinciaCliente == '' || this.cantonCliente == '' || this.parroquiaCliente == '') {
       Swal.fire({ icon: error_swal, title: error, text: mensajes.error_falta_datos });
       return false;

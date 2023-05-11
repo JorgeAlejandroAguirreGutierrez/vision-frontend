@@ -10,8 +10,8 @@ export class Cheque {
   banco: Banco;
 
   constructor(){
-    this.numero=valores.vacio;
-    this.tipo=valores.vacio;
+    this.numero = valores.vacio;
+    this.tipo = valores.chequeALaVista;
     this.fecha = new Date();
     this.fechaEfectivizacion = new Date();
     this.valor = valores.cero;
