@@ -27,7 +27,8 @@ export const urn =
     personalizado: "/personalizado",
     generar: "/generar",
     pdf: "/pdf",
-
+    enviarPDFYXML: "/enviarPDFYXML",
+    obtenerPDF: "/obtenerPDF",
     // Cliente
     calificacionCliente: "/calificacionCliente",
     cliente: "/cliente",
@@ -128,7 +129,7 @@ export const urn =
     //Ventas
     factura: "/factura",
     facturar: "/facturar",
-    facturaEletronica: "/facturaEletronica",
+    facturaElectronica: "/facturaElectronica",
     facturaFisica: "/facturaFisica",
     facturaLinea: "/facturaLinea",
     calcular: "/calcular",
@@ -632,7 +633,9 @@ export const credencialUsuario = "admin";
 export const credencialPassword = "admin";
 export const credencial = credencialUsuario + ":" + credencialPassword;
 export const headers = new HttpHeaders({ "Content-Type": "application/json", "Authorization": "Basic " + btoa(credencial) });
+export const headersPDF = new HttpHeaders({ "Content-Type": "application/pdf", "responseType": "blob", "Authorization": "Basic " + btoa(credencial) });
 export const options = { headers: headers };
+export const optionsPDF = { headers: headersPDF };
 export const headersCargarArchivo = new HttpHeaders({ "Authorization": "Basic " + btoa(credencial) });
 export const optionsCargarArchivo = { headers: headersCargarArchivo };
 export const optionsGenerarArchivo = { headers: headers, responseType: "blob" as "json" };

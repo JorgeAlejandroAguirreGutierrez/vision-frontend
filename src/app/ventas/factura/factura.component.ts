@@ -261,7 +261,7 @@ export class FacturaComponent implements OnInit {
   crearFacturaElectronica(event) {
     if (event != null)
       event.preventDefault();
-    this.spinnerService.show();    
+    this.spinnerService.show();
     this.facturaElectronicaService.enviar(this.factura.id).subscribe({
       next: res => {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
@@ -273,6 +273,28 @@ export class FacturaComponent implements OnInit {
       error: err => {
         Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
         this.spinnerService.hide();  
+      }
+    });
+  }
+
+  obtenerPDF(event){
+    if (event != null)
+      event.preventDefault();
+    this.facturaElectronicaService.obtenerPDF(this.factura.id);
+  }
+  
+  enviarPDFYXML(event){
+    if (event != null)
+      event.preventDefault();
+    this.cargar = true;
+    this.facturaElectronicaService.enviarPDFYXML(this.factura.id).subscribe({
+      next: res => {
+        Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
+        this.cargar = false;
+      },
+      error: err => {
+        Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+        this.cargar = false;
       }
     });
   }

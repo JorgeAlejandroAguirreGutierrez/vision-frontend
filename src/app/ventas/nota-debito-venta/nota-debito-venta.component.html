@@ -29,7 +29,7 @@
                             <mat-icon>delete</mat-icon>
                         </a>
                     </li>
-                    <li class="nav-item" *ngIf="notaDebitoVenta.id!=0 && notaDebitoVenta.estado == 'RECAUDADA'">
+                    <li class="nav-item" *ngIf="notaDebitoVenta.id!=0 && notaDebitoVenta.estado == 'RECAUDADA' && notaDebitoVenta.factura.estado == 'FACTURADA'">
                         <a class="nav-link" title="Crear Nota Debito Electronica" href="#" role="button"
                             (click)="crearNotaDebitoElectronica($event)">
                             <mat-icon>point_of_sale</mat-icon>
@@ -186,7 +186,14 @@
                                 </mat-select>
                             </mat-form-field>
                         </div>
-                        <div class="col-6">
+                        <div class="col-1">
+                            <mat-form-field appearance="standard">
+                                <mat-label>Serie</mat-label>
+                                <input matInput type="text" class="form-control-sm" [(ngModel)]="notaDebitoVenta.factura.serie"
+                                    [disabled]="true">
+                            </mat-form-field>
+                        </div>
+                        <div class="col-5">
                             <mat-form-field appearance="standard">
                                 <mat-label>Factura</mat-label>
                                 <mat-autocomplete #factura="matAutocomplete" [displayWith]="verFactura"
