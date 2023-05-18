@@ -1,5 +1,5 @@
 <div class="contenedor">
-    <mat-stepper (selectionChange)="enviarEventoRecaudacion()" [linear]="steeperLinear" #stepper>
+    <mat-stepper (selectionChange)="cambiarStepper($event)" [linear]="steeperLinear" #stepper>
         <!-- Paso Facturación -->
         <mat-step [stepControl]="facturacionSteeperFormGroup" [editable]="steeperEditable">
             <nav class="navbar-light nav-fijo">
@@ -15,7 +15,7 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" title="Nuevo" role="button" (click)="nuevo($event)">
+                        <a class="nav-link" title="Nuevo" role="button" (click)="nuevo()">
                             <mat-icon>file_copy</mat-icon>
                         </a>
                     </li>
@@ -637,9 +637,10 @@
             </mat-accordion>
         </mat-step>
         <!-- Paso Recaudación -->
-        <mat-step [stepControl]="recaudacionSteeperFormGroup" [editable]="steeperEditable">
+        <mat-step [stepControl]="recaudacionSteeperFormGroup" [editable]="steeperEditable" (selectionChange)="cambiarStepper($event)">
             <ng-template matStepLabel>Recaudación</ng-template>
-            <app-recaudacion [stepper]="stepper"></app-recaudacion>
+            <app-recaudacion [stepper]="stepper" [factura]="factura" (facturaConRecaudacion)="actualizarRecaudacion($event)"
+                (llamarNuevo)="nuevo()"></app-recaudacion>
         </mat-step>
     </mat-stepper>
     <!--button type="button" class="btn btn-sm btn-primary" (click)="showSpinner()">Show Spinner</button-->

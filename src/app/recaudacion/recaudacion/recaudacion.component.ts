@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, ViewChild } from '@angular/core';
+import { Component, OnInit, OnChanges, Input, Output, EventEmitter, ViewChild } from '@angular/core';
 import { valores, mensajes, otras, validarSesion, exito, exito_swal, error, error_swal } from '../../constantes';
 import { DatePipe } from '@angular/common';
 import { UntypedFormControl } from '@angular/forms';
@@ -49,9 +49,12 @@ import { MatTableDataSource } from '@angular/material/table';
   ]
 })
 
-export class RecaudacionComponent implements OnInit {
+export class RecaudacionComponent implements OnInit, OnChanges {
 
   @Input('stepper') stepper: MatStepper;
+  @Input('factura') factura: Factura;
+  @Output() facturaConRecaudacion = new EventEmitter<Factura>();
+  @Output() llamarNuevo = new EventEmitter();
 
   menosUno: number = valores.menosUno;
 
@@ -93,7 +96,7 @@ export class RecaudacionComponent implements OnInit {
   deshabilitarTitularTarjetaDebito: boolean = true;
 
   sesion: Sesion;
-  factura: Factura = new Factura();
+
   cheque: Cheque = new Cheque();
   deposito: Deposito = new Deposito();
   transferencia: Transferencia = new Transferencia();
@@ -212,23 +215,29 @@ export class RecaudacionComponent implements OnInit {
     this.consultarOperadoresTarjetas();
     this.inicializarFiltros();
 
-    this.facturaService.eventoRecaudacion.subscribe((data: Factura) => {
+    /*this.facturaService.eventoRecaudacion.subscribe((data: Factura) => {
       this.factura = data;
       this.llenarTablasFormasPago();
       this.nuevo();
-    });
+    });*/
+  }
+
+  ngOnChanges() {
+    //console.log('Código ejecutado despues de recibir datos del componente padre');
+    this.llenarTablasFormasPago();
+    this.nuevo();
   }
 
   consultarPeriodicidades() {
     let tipo = otras.periodicidad;
-    this.parametroService.consultarPorTipo(tipo).subscribe(
-      res => {
+    this.parametroService.consultarPorTipo(tipo).subscribe({
+      next: res => {
         this.periodicidades = res.resultado as Parametro[]
       },
-      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
-    );
+      error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+    });
   }
-  consultarBancos() { // Solo se requiere Bancos y Bancos Propios
+  consultarBancos() {
     this.bancoService.consultar().subscribe({
       next: res => {
         this.bancos = res.resultado as Banco[]
@@ -295,8 +304,9 @@ export class RecaudacionComponent implements OnInit {
     this.facturaElectronicaService.enviar(this.factura.id).subscribe({
       next: res => {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
-        this.factura = res.resultado as Factura;
-        this.stepperPrevio(this.stepper);
+        //this.factura = res.resultado as Factura;
+        this.llamarNuevo.emit();
+        this.stepper.previous();
         this.spinnerService.hide();  
       },
       error: err => {
@@ -761,7 +771,8 @@ export class RecaudacionComponent implements OnInit {
 
   //STEEPER
   stepperPrevio(stepper: MatStepper){
-      stepper.previous();
+    this.facturaConRecaudacion.emit(this.factura);
+    stepper.previous();
   }
   
   stepperSiguiente(stepper: MatStepper){

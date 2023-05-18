@@ -4,7 +4,6 @@ import { Respuesta } from '../../respuesta';
 import { HttpClient } from '@angular/common/http';
 import { map, catchError } from 'rxjs/operators';
 import { Observable, throwError } from 'rxjs';
-import { Router } from '@angular/router';
 import { urn, options } from '../../constantes';
 import { environment } from '../../../environments/environment';
 import { FacturaLinea } from '../../modelos/venta/factura-linea';
@@ -14,7 +13,7 @@ import { FacturaLinea } from '../../modelos/venta/factura-linea';
 })
 export class FacturaService {
 
-  constructor(private http: HttpClient, private router: Router) { }
+  constructor(private http: HttpClient) { }
 
   @Output() eventoRecaudacion = new EventEmitter<Factura>();
 

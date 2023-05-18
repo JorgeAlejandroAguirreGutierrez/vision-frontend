@@ -15,6 +15,7 @@ import { TabService } from '../../servicios/componente/tab/tab.service';
 import { FooterComponent } from "../../componentes/footer/footer.component";
 import { ClienteComponent } from '../../clientes/cliente/cliente.component';
 import { ProductoComponent } from '../../inventarios/producto/producto.component';
+import { RecaudacionComponent } from '../../recaudacion/recaudacion/recaudacion.component';
 
 import { Sesion } from '../../modelos/usuario/sesion';
 import { SesionService } from '../../servicios/usuario/sesion.service';
@@ -39,6 +40,7 @@ import { MatStepper } from '@angular/material/stepper';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
+
 
 @Component({
   selector: 'app-factura',
@@ -136,6 +138,7 @@ export class FacturaComponent implements OnInit {
 
   piePagina: Type<any> = FooterComponent;
 
+  @ViewChild(RecaudacionComponent) recaudacionComponent: RecaudacionComponent;
   @ViewChild('stepper') stepper: MatStepper;
   @ViewChild('paginator') paginator: MatPaginator;
   @ViewChild('paginatorLinea') paginatorLinea: MatPaginator;
@@ -149,7 +152,7 @@ export class FacturaComponent implements OnInit {
       if (($event.shiftKey || $event.metaKey) && $event.key == "G") //SHIFT + G
         this.crear(null);
       if (($event.shiftKey || $event.metaKey) && $event.key == "N") //ASHIFT + N
-        this.nuevo(null);
+        this.nuevo();
       if (($event.shiftKey || $event.metaKey) && $event.key == "A") // SHIFT + A
         this.crearFacturaLinea();
     }
@@ -229,9 +232,7 @@ export class FacturaComponent implements OnInit {
     });
   }
 
-  nuevo(event) {
-    if (event != null)
-      event.preventDefault();
+  nuevo() {
     this.factura = new Factura();
     this.clickedRowsFactura.clear();
     this.controlIdentificacionCliente.patchValue(valores.vacio);
@@ -267,7 +268,7 @@ export class FacturaComponent implements OnInit {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
         this.factura = res.resultado as Factura;
         this.consultar();
-        this.nuevo(null);
+        this.nuevo();
         this.spinnerService.hide();  
       },
       error: err => {
@@ -314,6 +315,13 @@ export class FacturaComponent implements OnInit {
       },
       error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     });
+  }
+
+  actualizarRecaudacion(event: Factura){
+    if (event){
+      this.factura = event;
+      //console.log(this.factura);
+    }
   }
 
   activar(event) {
@@ -367,7 +375,7 @@ export class FacturaComponent implements OnInit {
       this.clickedRowsFactura.add(factura);
       this.obtenerFactura(factura.id)
     } else {
-      this.nuevo(null);
+      this.nuevo();
     }
   }
 
@@ -622,10 +630,22 @@ export class FacturaComponent implements OnInit {
     });
   }
 
-  enviarEventoRecaudacion() {
+  /*enviarEventoRecaudacion() {
     this.construir();
     this.consultar();
     this.facturaService.enviarEventoRecaudacion(this.factura);
+  }*/
+
+  cambiarStepper(event){
+    //console.log(event);
+    //this.consultar();
+    if (event.selectedIndex == 0 && event.previouslySelectedIndex == 1){
+      //this.construir();
+      this.recaudacionComponent.facturaConRecaudacion.emit(this.factura);
+    }
+    if (event.selectedIndex == 1 && event.previouslySelectedIndex == 0){
+      //this.facturaService.enviarEventoRecaudacion(this.factura);
+    }
   }
 
   stepperSiguiente(stepper: MatStepper){
