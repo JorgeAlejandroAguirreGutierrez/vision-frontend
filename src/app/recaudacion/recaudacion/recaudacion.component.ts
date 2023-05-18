@@ -316,15 +316,31 @@ export class RecaudacionComponent implements OnInit, OnChanges {
     });
   }
 
+  obtenerPDF(event){
+    if (event != null)
+      event.preventDefault();
+    this.facturaElectronicaService.obtenerPDF(this.factura.id);
+  }
+  
+  enviarPDFYXML(event){
+    if (event != null)
+      event.preventDefault();
+    this.spinnerService.show();
+    this.facturaElectronicaService.enviarPDFYXML(this.factura.id).subscribe({
+      next: res => {
+        Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
+        this.spinnerService.hide();  
+      },
+      error: err => {
+        Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+        this.spinnerService.hide();  
+      }
+    });
+  }
 /*  calcularRecaudacion() {
     this.facturaService.calcularRecaudacion(this.factura).subscribe({
       next: res => {
         this.factura = res.resultado as Factura;
-        this.cheque.valor = this.factura.porPagar;
-        this.deposito.valor = this.factura.porPagar;
-        this.transferencia.valor = this.factura.porPagar;
-        this.tarjetaCredito.valor = this.factura.porPagar;
-        this.tarjetaDebito.valor = this.factura.porPagar;
       }, 
       error: err => Swal.fire(error, err.error.mensaje, error_swal)
     });
