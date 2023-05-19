@@ -1,6 +1,7 @@
 import { Component, HostListener, OnInit, ViewChild, Type, ElementRef, Renderer2 } from '@angular/core';
 import { UntypedFormControl, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { valores, mensajes, validarSesion, exito, exito_swal, error, error_swal } from '../../constantes';
+import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 import { NgxSpinnerService } from 'ngx-spinner';
@@ -10,7 +11,6 @@ import { DatePipe } from '@angular/common';
 import { DateAdapter, MAT_DATE_FORMATS } from '@angular/material/core';
 import { AppDateAdapter, APP_DATE_FORMATS } from '../../modelos/format-date-picker';
 
-import { Router } from '@angular/router';
 import { TabService } from '../../servicios/componente/tab/tab.service';
 import { FooterComponent } from "../../componentes/footer/footer.component";
 import { ClienteComponent } from '../../clientes/cliente/cliente.component';
