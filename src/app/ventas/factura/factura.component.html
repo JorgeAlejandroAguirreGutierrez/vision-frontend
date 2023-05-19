@@ -1,5 +1,5 @@
 <div class="contenedor">
-    <mat-stepper (selectionChange)="enviarEventoRecaudacion()" [linear]="steeperLinear" #stepper>
+    <mat-stepper (selectionChange)="cambiarStepper($event)" [linear]="steeperLinear" #stepper>
         <!-- Paso Facturación -->
         <mat-step [stepControl]="facturacionSteeperFormGroup" [editable]="steeperEditable">
             <nav class="navbar-light nav-fijo">
@@ -15,7 +15,7 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" title="Nuevo" role="button" (click)="nuevo($event)">
+                        <a class="nav-link" title="Nuevo" role="button" (click)="nuevo()">
                             <mat-icon>file_copy</mat-icon>
                         </a>
                     </li>
@@ -40,25 +40,25 @@
                                 <mat-icon>delete_forever</mat-icon>
                             </a>
                         </li>
+                        <li class="nav-item" *ngIf="factura.estado == 'RECAUDADA'">
+                            <a class="nav-link" title="Crear Factura Electronica" href="#" role="button"
+                                (click)="crearFacturaElectronica($event)">
+                                <mat-icon>point_of_sale</mat-icon>
+                            </a>
+                        </li>
+                        <li class="nav-item" *ngIf="(factura.estado == 'RECAUDADA' || factura.estado == 'FACTURADA')">
+                            <a class="nav-link" title="Obtener PDF" href="#" role="button"
+                                (click)="obtenerPDF($event)">
+                                <mat-icon>picture_as_pdf</mat-icon>
+                            </a>
+                        </li>
+                        <li class="nav-item" *ngIf="(factura.estado == 'RECAUDADA' || factura.estado == 'FACTURADA')">
+                            <a class="nav-link" title="Enviar PDF Y XML" href="#" role="button"
+                                (click)="enviarPDFYXML($event)">
+                                <mat-icon>forward_to_inbox</mat-icon>
+                            </a>
+                        </li>
                     </ng-container>
-                    <li class="nav-item" *ngIf="factura.id!=0 && factura.estado == 'RECAUDADA'">
-                        <a class="nav-link" title="Crear Factura Electronica" href="#" role="button"
-                            (click)="crearFacturaElectronica($event)">
-                            <mat-icon>point_of_sale</mat-icon>
-                        </a>
-                    </li>
-                    <li class="nav-item" *ngIf="factura.id!=0 && (factura.estado == 'RECAUDADA' || factura.estado == 'FACTURADA')">
-                        <a class="nav-link" title="Obtener PDF" href="#" role="button"
-                            (click)="obtenerPDF($event)">
-                            <mat-icon>file_copy</mat-icon>
-                        </a>
-                    </li>
-                    <li class="nav-item" *ngIf="factura.id!=0 && (factura.estado == 'RECAUDADA' || factura.estado == 'FACTURADA')">
-                        <a class="nav-link" title="Enviar PDF Y XML" href="#" role="button"
-                            (click)="enviarPDFYXML($event)">
-                            <mat-icon>file_copy</mat-icon>
-                        </a>
-                    </li>
                     <li class="nav-item">
                         <a class="nav-link" title="Recaudación" role="button" (click)="stepperSiguiente(stepper)">
                             <mat-icon>redo</mat-icon>
@@ -82,8 +82,8 @@
                     </mat-expansion-panel-header>
                     <mat-divider></mat-divider>
                     <div class="form-group form-row">
-                        <div class="form-row col-8">
-                            <div class="col-3">
+                        <div class="form-row col-9">
+                            <div class="col-2">
                                 <mat-form-field appearance="standard">
                                     <mat-label>Identificación</mat-label>
                                     <input matInput type="text" class="form-control-sm" placeholder="Cédula/RUC"
@@ -96,7 +96,7 @@
                                     </mat-autocomplete>
                                 </mat-form-field>
                             </div>
-                            <div class="col-9">
+                            <div class="col-10">
                                 <mat-form-field appearance="standard">
                                     <mat-label>Razón Social</mat-label>
                                     <input type="text" class="form-control-sm" placeholder="Clientes" matInput
@@ -113,65 +113,67 @@
 
                                 </mat-form-field>
                             </div>
-                            <div class="col-12">
+                            <div class="col-2">
+                                <mat-form-field appearance="standard">
+                                    <mat-label>Fecha</mat-label>
+                                    <input matInput [matDatepicker]="picker1" class="form-control-sm" [(ngModel)]="factura.fecha" [max]="hoy">
+                                    <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                                    <mat-datepicker #picker1></mat-datepicker>
+                                </mat-form-field>
+                            </div>
+                            <div class="col-10">
                                 <mat-form-field appearance="standard">
                                     <mat-label>Dirección</mat-label>
                                     <input matInput type="text" [(ngModel)]="factura.cliente.direccion"
                                         class="form-control-sm" [disabled]="true">
                                 </mat-form-field>
                             </div>
-                            <div class="form-row col-4">
-                                <ng-container *ngFor="let telefono of factura.cliente.telefonos; let i=index ">
-                                    <div class="col-9">
-                                        <mat-form-field appearance="standard">
-                                            <mat-label>Teléfono</mat-label>
-                                            <b matPrefix>+593 &nbsp;</b>
-                                            <input matInput type="tel" [value]="telefono.numero" class="form-control-sm"
-                                                [disabled]="true">
-                                        </mat-form-field>
-                                    </div>
-                                    <div class="col-3 iconos">
-                                        <button mat-icon-button [disabled]="true">
-                                            <mat-icon class="iconos-peque">close</mat-icon>
-                                        </button>
-                                    </div>
-                                </ng-container>
-                            </div>
-                            <div class="form-row col-4">
-                                <ng-container *ngFor="let celular of factura.cliente.celulares; let i=index ">
-                                    <div class="col-9">
-                                        <mat-form-field appearance="standard">
-                                            <mat-label>Celular</mat-label>
-                                            <b matPrefix>+593 &nbsp;</b>
-                                            <input matInput type="tel" [value]="celular.numero" class="form-control-sm"
-                                                [disabled]="true">
-                                        </mat-form-field>
-                                    </div>
-                                    <div class="col-3 iconos">
-                                        <button mat-icon-button [disabled]="true">
-                                            <mat-icon class="iconos-peque">close</mat-icon>
-                                        </button>
-                                    </div>
-                                </ng-container>
-                            </div>
-                            <div class="form-row col-4">
-                                <ng-container *ngFor="let correo of factura.cliente.correos; let i=index ">
-                                    <div class="col-9">
-                                        <mat-form-field appearance="standard">
-                                            <mat-label>Correo electrónico</mat-label>
-                                            <input matInput type="text" [(ngModel)]="correo.email"
-                                                class="form-control-sm" [disabled]="true">
-                                        </mat-form-field>
-                                    </div>
-                                    <div class="col-3 iconos">
-                                        <button mat-icon-button [disabled]="true">
-                                            <mat-icon class="iconos-peque">close</mat-icon>
-                                        </button>
-                                    </div>
-                                </ng-container>
+                            <section class="form-row col-12">
+                                <div class="form-row col-4">
+                                    <ng-container *ngFor="let telefono of factura.cliente.telefonos; let i=index ">
+                                        <div class="col-12">
+                                            <mat-form-field appearance="standard">
+                                                <mat-label>Teléfono</mat-label>
+                                                <b matPrefix>+593 &nbsp;</b>
+                                                <input matInput type="tel" [value]="telefono.numero" class="form-control-sm"
+                                                    [disabled]="true">
+                                            </mat-form-field>
+                                        </div>
+                                    </ng-container>
+                                </div>
+                                <div class="form-row col-4">
+                                    <ng-container *ngFor="let celular of factura.cliente.celulares; let i=index ">
+                                        <div class="col-12">
+                                            <mat-form-field appearance="standard">
+                                                <mat-label>Celular</mat-label>
+                                                <b matPrefix>+593 &nbsp;</b>
+                                                <input matInput type="tel" [value]="celular.numero" class="form-control-sm"
+                                                    [disabled]="true">
+                                            </mat-form-field>
+                                        </div>
+                                    </ng-container>
+                                </div>
+                                <div class="form-row col-4">
+                                    <ng-container *ngFor="let correo of factura.cliente.correos; let i=index ">
+                                        <div class="col-12">
+                                            <mat-form-field appearance="standard">
+                                                <mat-label>Correo electrónico</mat-label>
+                                                <input matInput type="text" [(ngModel)]="correo.email"
+                                                    class="form-control-sm" [disabled]="true">
+                                            </mat-form-field>
+                                        </div>
+                                    </ng-container>
+                                </div>
+                            </section>
+                            <div class="col-12">
+                                <mat-form-field appearance="standard">
+                                    <mat-label>Clave de Acceso - Factura Electrónica</mat-label>
+                                    <input matInput type="text" class="form-control-sm"
+                                        [(ngModel)]="factura.claveAcceso" disabled>
+                                </mat-form-field>
                             </div>
                         </div>
-                        <div class="form-row col-4 linea-vertical">
+                        <div class="form-row col-3 linea-vertical ml-1">
                             <div class="col-3">
                                 <mat-form-field appearance="standard">
                                     <mat-label>Estab.</mat-label>
@@ -195,34 +197,26 @@
                             </div>
                             <div class="col-5">
                                 <mat-form-field appearance="standard">
-                                    <mat-label>Fecha</mat-label>
-                                    <input matInput [matDatepicker]="picker1" class="form-control-sm" [(ngModel)]="factura.fecha" [max]="hoy">
-                                    <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
-                                    <mat-datepicker #picker1></mat-datepicker>
+                                    <mat-label>Saldo Prep.</mat-label>
+                                    <input matInput type="text" class="form-control-sm"
+                                        [(ngModel)]="factura.cliente.montoFinanciamiento" disabled>
                                 </mat-form-field>
                             </div>
                             <div class="col-7">
-                                <mat-form-field appearance="standard">
-                                    <mat-label>Vendedor</mat-label>
-                                    <input matInput type="text" class="form-control-sm"
-                                        [(ngModel)]="sesion.usuario.nombre" disabled>
-                                </mat-form-field>
-                            </div>
-                            <div class="col-4">
                                 <mat-form-field appearance="standard">
                                     <mat-label>Forma de pago</mat-label>
                                     <input matInput type="text" class="form-control-sm resaltar"
                                         [(ngModel)]="factura.cliente.formaPago.abreviatura" disabled>
                                 </mat-form-field>
                             </div>
-                            <div class="col-3">
+                            <div class="col-5">
                                 <mat-form-field appearance="standard">
-                                    <mat-label>Saldo Prep.</mat-label>
+                                    <mat-label>Vendedor</mat-label>
                                     <input matInput type="text" class="form-control-sm"
-                                        [(ngModel)]="factura.cliente.montoFinanciamiento" disabled>
+                                        [(ngModel)]="sesion.usuario.apodo" disabled>
                                 </mat-form-field>
                             </div>
-                            <div class="col-5">
+                            <div class="col-7">
                                 <mat-form-field appearance="standard">
                                     <mat-label>Estado</mat-label>
                                     <mat-select class="form-control-sm" [(ngModel)]="factura.estado" [disabled]="true">
@@ -235,13 +229,7 @@
                                     </mat-select>
                                 </mat-form-field>
                             </div>
-                            <div class="col-12">
-                                <mat-form-field appearance="standard">
-                                    <mat-label>Clave de Acceso</mat-label>
-                                    <input matInput type="text" class="form-control-sm"
-                                        [(ngModel)]="factura.claveAcceso" disabled>
-                                </mat-form-field>
-                            </div>
+
                         </div>
                     </div>
                 </mat-expansion-panel>
@@ -261,7 +249,6 @@
                             <div class="centrar-titulo fondo">
                                 <mat-label>PRODUCTO</mat-label>
                             </div>
-                            <mat-divider></mat-divider>
                             <mat-card class="mat-elevation-z8">
                                 <div class="form-row">
                                     <div class="col-8">
@@ -390,7 +377,6 @@
                             <div class="centrar-titulo fondo">
                                 <mat-label>INFORMACIÓN</mat-label>
                             </div>
-                            <mat-divider></mat-divider>
                             <mat-card class="mat-elevation-z8">
                                 <div class="form-row">
                                     <div class="col-3">
@@ -598,7 +584,7 @@
                             <mat-icon>group</mat-icon>
                         </mat-panel-description>
                     </mat-expansion-panel-header>
-                    <hr>
+                    <mat-divider></mat-divider>
                     <mat-form-field appearance="standard">
                         <mat-label>Buscar factura</mat-label>
                         <input matInput oninput="this.value = this.value.toUpperCase()" (keyup)="filtroFactura($event)" 
@@ -637,9 +623,10 @@
             </mat-accordion>
         </mat-step>
         <!-- Paso Recaudación -->
-        <mat-step [stepControl]="recaudacionSteeperFormGroup" [editable]="steeperEditable">
+        <mat-step [stepControl]="recaudacionSteeperFormGroup" [editable]="steeperEditable" (selectionChange)="cambiarStepper($event)">
             <ng-template matStepLabel>Recaudación</ng-template>
-            <app-recaudacion [stepper]="stepper"></app-recaudacion>
+            <app-recaudacion [stepper]="stepper" [factura]="factura" (facturaConRecaudacion)="actualizarRecaudacion($event)"
+                (llamarNuevo)="nuevo()"></app-recaudacion>
         </mat-step>
     </mat-stepper>
     <!--button type="button" class="btn btn-sm btn-primary" (click)="showSpinner()">Show Spinner</button-->
