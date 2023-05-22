@@ -1,11 +1,6 @@
 <div class="contenedor">
     <nav class="navbar-light nav-fijo">
         <ul class="navbar-nav">
-            <li class="nav-item">
-                <a class="nav-link" title="Nuevo" role="button" (click)="nuevo($event)">
-                    <mat-icon>file_copy</mat-icon>
-                </a>
-            </li>
             <li class="nav-item" *ngIf="facturaCompra.id==0">
                 <a class="nav-link" title="Guardar" role="button" (click)="crear($event)">
                     <mat-icon>save</mat-icon>
@@ -16,22 +11,29 @@
                     <mat-icon>update</mat-icon>
                 </a>
             </li>
-            <li class="nav-item" *ngIf="facturaCompra.id!=0">
-                <a class="nav-link" title="Activar" role="button" (click)="activar($event)">
-                    <mat-icon>check</mat-icon>
+            <li class="nav-item">
+                <a class="nav-link" title="Nuevo" role="button" (click)="nuevo()">
+                    <mat-icon>file_copy</mat-icon>
                 </a>
             </li>
-            <li class="nav-item" *ngIf="facturaCompra.id!=0">
-                <a class="nav-link" title="Inactivar" role="button" (click)="inactivar($event)">
-                    <mat-icon>delete</mat-icon>
-                </a>
-            </li>
+            <ng-container *ngIf="facturaCompra.id!=0">
+                <li class="nav-item" *ngIf="facturaCompra.estado!=activo">
+                    <a class="nav-link" title="Activar" role="button" (click)="activar($event)">
+                        <mat-icon>assignment_turned_in</mat-icon>
+                    </a>
+                </li>
+                <li class="nav-item" *ngIf="facturaCompra.estado==activo">
+                    <a class="nav-link" title="Inactivar" role="button" (click)="inactivar($event)">
+                        <mat-icon>delete_forever</mat-icon>
+                    </a>
+                </li>
+            </ng-container>
         </ul>
     </nav>
     <ng-template matStepLabel>Factura de Compra</ng-template>
     <mat-divider></mat-divider>
     <mat-accordion class="headers-align">
-        <mat-expansion-panel (opened)="abrirPanelFacturaCompra = true" (closed)="abrirPanelFacturaCompra = false" 
+        <mat-expansion-panel (opened)="abrirPanelFacturaCompra = true" (closed)="abrirPanelFacturaCompra = false"
             [expanded]="abrirPanelFacturaCompra">
             <mat-expansion-panel-header>
                 <mat-panel-title>
@@ -48,27 +50,35 @@
                     <div class="col-3">
                         <mat-form-field appearance="standard">
                             <mat-label>Ruc</mat-label>
-                            <input matInput type="text" [(ngModel)]="facturaCompra.proveedor.identificacion"
-                                class="form-control-sm" [disabled]="true">
+                            <input matInput type="text" class="form-control-sm" placeholder="Cédula/RUC"
+                                [formControl]="controlIdentificacionProveedor" [matAutocomplete]="identificacionProveedor">
+                            <mat-autocomplete #identificacionProveedor="matAutocomplete" [displayWith]="verIdentificacionProveedor"
+                                (optionSelected)="seleccionarIdentificacionProveedor()" (opened)="consultarProveedores()">
+                                <mat-option *ngFor="let proveedor of filtroIdentificacionProveedores | async"
+                                    [value]="proveedor">{{proveedor.identificacion}}
+                                </mat-option>
+                            </mat-autocomplete>
                         </mat-form-field>
                     </div>
                     <div class="col-9">
                         <mat-form-field appearance="standard">
                             <mat-label>Proveedor</mat-label>
+                            <input matInput type="text" class="form-control-sm" placeholder="Razon Social"
+                                [formControl]="controlProveedor" [matAutocomplete]="proveedor"
+                                oninput="this.value = this.value.toUpperCase()">
                             <mat-autocomplete #proveedor="matAutocomplete" [displayWith]="verProveedor"
                                 (optionSelected)="seleccionarProveedor()">
                                 <mat-option *ngFor="let proveedor of filtroProveedores | async" [value]="proveedor">
                                     {{proveedor.razonSocial}}
                                 </mat-option>
                             </mat-autocomplete>
-                            <input matInput type="text" class="form-control-sm" placeholder="Razon Social"
-                                [formControl]="seleccionProveedor" [matAutocomplete]="proveedor">
                         </mat-form-field>
                     </div>
                     <div class="col-3">
                         <mat-form-field appearance="standard">
                             <mat-label>Fecha</mat-label>
-                            <input matInput [matDatepicker]="picker1" class="form-control-sm" [(ngModel)]="facturaCompra.fecha" [max]="hoy">
+                            <input matInput [matDatepicker]="picker1" class="form-control-sm"
+                                [(ngModel)]="facturaCompra.fecha" [max]="hoy">
                             <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
                             <mat-datepicker #picker1></mat-datepicker>
                         </mat-form-field>
@@ -82,7 +92,8 @@
                     </div>
                     <section class="form-row col-12">
                         <div class="form-row col-4">
-                            <ng-container *ngFor="let telefono of facturaCompra.proveedor.telefonosProveedor; let i=index ">
+                            <ng-container
+                                *ngFor="let telefono of facturaCompra.proveedor.telefonosProveedor; let i=index ">
                                 <div class="col-12">
                                     <mat-form-field appearance="standard">
                                         <mat-label>Teléfono</mat-label>
@@ -94,7 +105,8 @@
                             </ng-container>
                         </div>
                         <div class="form-row col-4">
-                            <ng-container *ngFor="let celular of facturaCompra.proveedor.celularesProveedor; let i=index ">
+                            <ng-container
+                                *ngFor="let celular of facturaCompra.proveedor.celularesProveedor; let i=index ">
                                 <div class="col-12">
                                     <mat-form-field appearance="standard">
                                         <mat-label>Celular</mat-label>
@@ -143,28 +155,24 @@
                     <div class="col-5">
                         <mat-form-field appearance="standard">
                             <mat-label>Usuario</mat-label>
-                            <input matInput type="text" class="form-control-sm"
-                                [(ngModel)]="sesion.usuario.apodo" [disabled]="true">
+                            <input matInput type="text" class="form-control-sm" [(ngModel)]="sesion.usuario.apodo"
+                                [disabled]="true">
                         </mat-form-field>
                     </div>
                     <div class="col-7">
                         <mat-form-field appearance="standard">
                             <mat-label>Estado</mat-label>
                             <mat-select class="form-control-sm" [(ngModel)]="facturaCompra.estado" [disabled]="true">
-                                <mat-option [value]="emitida">{{emitida}}</mat-option>
-                                <mat-option [value]="anulada">{{anulada}}</mat-option>
-                                <mat-option [value]="noFacturada">{{noFacturada}}</mat-option>
-                                <mat-option [value]="facturada">{{facturada}}</mat-option>
-                                <mat-option [value]="noRecaudada">{{noRecaudada}}</mat-option>
-                                <mat-option [value]="recaudada">{{recaudada}}</mat-option>
+                                <mat-option [value]="activo">{{activo}}</mat-option>
+                                <mat-option [value]="inactivo">{{inactivo}}</mat-option>
                             </mat-select>
                         </mat-form-field>
                     </div>
-                </div>    
+                </div>
             </div>
         </mat-expansion-panel>
-        <mat-expansion-panel (opened)="abrirPanelFacturaCompraLinea = true" (closed)="abrirPanelFacturaCompraLinea = false"
-            [expanded]="abrirPanelFacturaCompraLinea">
+        <mat-expansion-panel (opened)="abrirPanelFacturaCompraLinea = true"
+            (closed)="abrirPanelFacturaCompraLinea = false" [expanded]="abrirPanelFacturaCompraLinea">
             <mat-expansion-panel-header>
                 <mat-panel-title>
                     <i><u>DETALLE FACTURA DE COMPRA</u></i>
@@ -176,201 +184,246 @@
             </mat-expansion-panel-header>
             <mat-divider></mat-divider>
             <div class="form-group form-row">
-                <div class="col-2">
-                    <mat-form-field appearance="standard">
-                        <mat-label>Código</mat-label>
-                        <input matInput type="text" [(ngModel)]="facturaCompraLinea.producto.codigo"
-                            class="form-control-sm" [disabled]="true">
-                    </mat-form-field>
-                </div>
-                <div class="col-4">
-                    <mat-form-field appearance="standard">
-                        <mat-label>Producto</mat-label>
-                        <mat-autocomplete #producto="matAutocomplete" [displayWith]="verProducto"
-                            (optionSelected)="seleccionarProducto()">
-                            <mat-option *ngFor="let producto of filtroProductos | async" [value]="producto">
-                                {{producto.nombre}}
-                            </mat-option>
-                        </mat-autocomplete>
-                        <input matInput type="text" class="form-control-sm" placeholder="Producto"
-                            [formControl]="seleccionProducto" [matAutocomplete]="producto"
-                            [disabled]="deshabilitarProveedor">
-                    </mat-form-field>
-                </div>
-                <div class="col-2">
-                    <mat-form-field appearance="standard">
-                        <mat-label>Bodega</mat-label>
-                        <mat-select [(ngModel)]="facturaCompraLinea.bodega" [compareWith]="compareFn"
-                            (selectionChange)="seleccionarBodega()" class="form-control-sm">
-                            <mat-option *ngFor="let bodega of bodegas" [value]="bodega">
-                                {{bodega.nombre}}</mat-option>
-                        </mat-select>
-                    </mat-form-field>
-                </div>
-                <div class="col-2">
-                    <mat-form-field appearance="standard">
-                        <mat-label>Categoría</mat-label>
-                        <input matInput type="text"
-                            [(ngModel)]="facturaCompraLinea.producto.categoriaProducto.abreviatura"
-                            class="form-control-sm" [disabled]="true">
-                    </mat-form-field>
-                </div>
-                <div class="col-2">
-                    <mat-form-field appearance="standard">
-                        <mat-label>Medida</mat-label>
-                        <input matInput type="text" [(ngModel)]="facturaCompraLinea.producto.medida.descripcion"
-                            class="form-control-sm" [disabled]="true">
-                    </mat-form-field>
-                </div>
-                <div class="col-2">
-                    <mat-form-field appearance="standard">
-                        <mat-label>Cantidad</mat-label>
-                        <input matInput type="text" [(ngModel)]="facturaCompraLinea.cantidad"
-                            (change)="seleccionarCantidad()" class="form-control-sm">
-                    </mat-form-field>
-                </div>
-                <div class="col-2">
-                    <mat-form-field appearance="standard">
-                        <mat-label>Costo Unit.</mat-label>
-                        <input matInput type="text" [(ngModel)]="facturaCompraLinea.costoUnitario"
-                            (change)="seleccionarCostoUnitario()" class="form-control-sm">
-                    </mat-form-field>
-                </div>
-                <div class="col-2">
-                    <mat-form-field appearance="standard">
-                        <mat-label>Desc. $</mat-label>
-                        <input matInput type="text" step="0.01" [(ngModel)]="facturaCompraLinea.valorDescuentoLinea"
-                            (change)="seleccionarValorDescuentoLinea()" class="form-control-sm">
-                    </mat-form-field>
-                </div>
-                <div class="col-2">
-                    <mat-form-field appearance="standard">
-                        <mat-label>Desc. %</mat-label>
-                        <input matInput type="text" min="0" max="100" step="0.01"
-                            [(ngModel)]="facturaCompraLinea.porcentajeDescuentoLinea"
-                            (change)="seleccionarPorcentajeDescuentoLinea()" class="form-control-sm">
-                    </mat-form-field>
-                </div>
-                <div class="col-1">
-                    <mat-form-field appearance="standard">
-                        <mat-label>IVA</mat-label>
-                        <mat-select [(ngModel)]="facturaCompraLinea.impuesto" (selectionChange)="seleccionarImpuesto()" [compareWith]="compareFn" class="form-control-sm">
-                            <mat-option *ngFor="let impuesto of impuestos" [value]="impuesto">
-                                {{impuesto.porcentaje}}
-                            </mat-option>
-                        </mat-select>
-                    </mat-form-field>
-                </div>
-                <div class="col-2">
-                    <mat-form-field appearance="standard">
-                        <mat-label>Total</mat-label>
-                        <input matInput type="text" [(ngModel)]="facturaCompraLinea.totalSinDescuentoLinea"
-                            class="form-control-sm" [disabled]="true">
-                    </mat-form-field>
-                </div>
-                <div class="col-1 iconos">
-                    <button mat-icon-button mat-button (click)="agregarFacturaCompraLinea(null)">
-                        <mat-icon>add_shopping_cart</mat-icon>
-                    </button>
-                </div>
-                <div class="mat-elevation-z8 col-12">
-                    <table mat-table [dataSource]="dataSourceFacturaCompraLinea" matSort>
-                        <!-- Nombre Columna -->
-                        <ng-container matColumnDef="codigo">
-                            <th mat-header-cell *matHeaderCellDef mat-sort-header> Codigo </th>
-                            <td mat-cell *matCellDef="let facturaCompraLinea"> {{facturaCompraLinea.producto.codigo}}
-                            </td>
-                        </ng-container>
-                        <ng-container matColumnDef="nombre">
-                            <th mat-header-cell *matHeaderCellDef mat-sort-header> Producto </th>
-                            <td mat-cell *matCellDef="let facturaCompraLinea"> {{facturaCompraLinea.producto.nombre}}
-                            </td>
-                        </ng-container>
-                        <!-- Descripcion Columna -->
-                        <ng-container matColumnDef="medida">
-                            <th mat-header-cell *matHeaderCellDef mat-sort-header> Med </th>
-                            <td mat-cell *matCellDef="let facturaCompraLinea">
-                                {{facturaCompraLinea.producto.medida.abreviatura}} </td>
-                        </ng-container>
-                        <!-- Cantidad Columna -->
-                        <ng-container matColumnDef="cantidad">
-                            <th mat-header-cell *matHeaderCellDef mat-sort-header>Cant </th>
-                            <td mat-cell *matCellDef="let facturaCompraLinea">
-                                {{facturaCompraLinea.cantidad}} </td>
-                        </ng-container>
-                        <!-- Valor Columna -->
-                        <ng-container matColumnDef="costoUnitario">
-                            <th mat-header-cell *matHeaderCellDef mat-sort-header>Costo Unit </th>
-                            <td mat-cell *matCellDef="let facturaCompraLinea">
-                                ${{facturaCompraLinea.costoUnitario }} </td>
-                        </ng-container>
-                        <!-- Descuento Columna -->
-                        <ng-container matColumnDef="valorDescuento">
-                            <th mat-header-cell *matHeaderCellDef mat-sort-header> Desc. </th>
-                            <td mat-cell *matCellDef="let facturaCompraLinea">
-                                ${{facturaCompraLinea.valorDescuentoLinea}} </td>
-                        </ng-container>
-                        <!-- Descuento% Columna -->
-                        <ng-container matColumnDef="porcentajeDescuento">
-                            <th mat-header-cell *matHeaderCellDef mat-sort-header> Desc% </th>
-                            <td mat-cell *matCellDef="let facturaCompraLinea">
-                                {{facturaCompraLinea.porcentajeDescuentoLinea}}% </td>
-                        </ng-container>
-                        <!-- Impuesto Columna -->
-                        <ng-container matColumnDef="impuesto">
-                            <th mat-header-cell *matHeaderCellDef mat-sort-header> IVA </th>
-                            <td mat-cell *matCellDef="let facturaCompraLinea">
-                                {{facturaCompraLinea.producto.impuesto.porcentaje}}% </td>
-                        </ng-container>
-                        <ng-container matColumnDef="bodega">
-                            <th mat-header-cell *matHeaderCellDef mat-sort-header> BOD </th>
-                            <td mat-cell *matCellDef="let facturaCompraLinea">
-                                {{facturaCompraLinea.bodega.nombre}} </td>
-                        </ng-container>
-                        <!-- Total Columna -->
-                        <ng-container matColumnDef="total">
-                            <th mat-header-cell *matHeaderCellDef mat-sort-header> Subtotal </th>
-                            <td mat-cell *matCellDef="let facturaCompraLinea">
-                                ${{facturaCompraLinea.totalSinDescuentoLinea}} </td>
-                        </ng-container>
-                        <!-- Entregado Columna -->
-                        <ng-container matColumnDef="acciones">
-                            <th mat-header-cell *matHeaderCellDef mat-sort-header> Acciones </th>
-                            <td mat-cell *matCellDef="let i=index">
-                                <button mat-icon-button color="primary" focusable="false"
-                                    (click)="eliminarFacturaCompraLinea(i)">
-                                    <i class="fa fa-times mat-icon"></i>
+                <div class="col-9">
+                    <div class="centrar-titulo fondo">
+                        <mat-label>PRODUCTO</mat-label>
+                    </div>
+                    <mat-card class="mat-elevation-z8">
+                        <div class="form-row">
+                            <div class="col-8">
+                                <mat-form-field appearance="standard">
+                                    <mat-label>Producto</mat-label>
+                                    <input matInput type="text" class="form-control-sm" placeholder="Producto"
+                                        [formControl]="controlProducto" [matAutocomplete]="producto"
+                                        oninput="this.value = this.value.toUpperCase()">
+                                    <mat-autocomplete #producto="matAutocomplete" [displayWith]="verProducto"
+                                        (optionSelected)="seleccionarProducto()" (opened)="consultarProductos()">
+                                        <mat-option *ngFor="let producto of filtroProductos | async" [value]="producto">
+                                            {{producto.nombre}}
+                                        </mat-option>
+                                    </mat-autocomplete>
+                                </mat-form-field>
+                            </div>
+                            <div class="col-2">
+                                <mat-form-field appearance="standard">
+                                    <mat-label>Medida</mat-label>
+                                    <input matInput type="text"
+                                        [(ngModel)]="facturaCompraLinea.producto.medida.descripcion"
+                                        class="form-control-sm" [disabled]="true">
+                                </mat-form-field>
+                            </div>
+                            <div class="col-2">
+                                <mat-form-field appearance="standard">
+                                    <mat-label>Bodega</mat-label>
+                                    <mat-select [(ngModel)]="facturaCompraLinea.bodega" [compareWith]="compareFn"
+                                        (selectionChange)="calcularFacturaCompraLinea()" class="form-control-sm">
+                                        <mat-option *ngFor="let bodega of bodegas" [value]="bodega">
+                                            {{bodega.abreviatura}}</mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+                            <div class="col-2">
+                                <mat-form-field appearance="standard">
+                                    <mat-label>Cantidad</mat-label>
+                                    <input matInput type="text" appFormatoDecimal [(ngModel)]="facturaCompraLinea.cantidad"
+                                        (change)="calcularFacturaCompraLinea()" class="form-control-sm">
+                                </mat-form-field>
+                            </div>
+                            <div class="col-2">
+                                <mat-form-field appearance="standard">
+                                    <mat-label>Costo Unit.</mat-label>
+                                    <input matInput type="text" appFormatoDecimal [(ngModel)]="facturaCompraLinea.costoUnitario"
+                                        (change)="calcularFacturaCompraLinea()" class="form-control-sm">
+                                </mat-form-field>
+                            </div>
+                            <div class="col-1">
+                                <mat-form-field appearance="standard">
+                                    <mat-label>IVA</mat-label>
+                                    <mat-select [(ngModel)]="facturaCompraLinea.impuesto"
+                                        (selectionChange)="calcularFacturaCompraLinea()" [compareWith]="compareFn"
+                                        class="form-control-sm">
+                                        <mat-option *ngFor="let impuesto of impuestos" [value]="impuesto">
+                                            {{impuesto.porcentaje}}
+                                        </mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+                            <div class="col-2">
+                                <mat-form-field appearance="standard">
+                                    <mat-label>Desc. $</mat-label>
+                                    <input matInput type="text" appFormatoDecimal step="0.01"
+                                        [(ngModel)]="facturaCompraLinea.valorDescuentoLinea"
+                                        (change)="calcularFacturaCompraLinea()" class="form-control-sm">
+                                </mat-form-field>
+                            </div>
+                            <div class="col-2">
+                                <mat-form-field appearance="standard">
+                                    <mat-label>Desc. %</mat-label>
+                                    <input matInput type="text" appFormatoDecimal min="0" max="100" step="0.01"
+                                        [(ngModel)]="facturaCompraLinea.porcentajeDescuentoLinea"
+                                        (change)="calcularFacturaCompraLinea()" class="form-control-sm">
+                                </mat-form-field>
+                            </div>
+                            <div class="col-2">
+                                <mat-form-field appearance="standard">
+                                    <mat-label>Total</mat-label>
+                                    <input matInput type="text" [(ngModel)]="facturaCompraLinea.totalLinea"
+                                        class="form-control-sm" [disabled]="true">
+                                </mat-form-field>
+                            </div>
+                            <div class="col-1 iconos centrar">
+                                <button mat-icon-button mat-button *ngIf="!verIconoEditarLinea"
+                                    (click)="crearFacturaCompraLinea()">
+                                    <mat-icon>add_shopping_cart</mat-icon>
                                 </button>
-                            </td>
-                        </ng-container>
-                        <tr mat-header-row *matHeaderRowDef="columnasFacturaCompraLinea"></tr>
-                        <tr mat-row *matRowDef="let row; columns: columnasFacturaCompraLinea;"></tr>
-                    </table>
-                    <ng-container>
-                        <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" showFirstLastButtons 
-                            #paginatorFacturaCompraLinea></mat-paginator>
-                    </ng-container>
+                                <button mat-icon-button *ngIf="verIconoEditarLinea"
+                                    (click)="actualizarFacturaCompraLinea()">
+                                <mat-icon>update</mat-icon>
+                            </button>
+                            </div>
+                        </div>
+                    </mat-card>
+                </div>
+                <div class="col-3">
+                    <div class="centrar-titulo fondo">
+                        <mat-label>INFORMACIÓN</mat-label>
+                    </div>
+                    <mat-card class="mat-elevation-z8">
+                        <div class="form-row">
+                            <div class="col-3">
+                                <mat-form-field appearance="standard">
+                                    <mat-label>Consig.</mat-label>
+                                    <input matInput type="text" [(ngModel)]="facturaCompraLinea.producto.consignacion"
+                                        [disabled]="true" class="form-control-sm">
+                                </mat-form-field>
+                            </div>
+                            <div class="col-9">
+                                <mat-form-field appearance="standard">
+                                    <mat-label>Código</mat-label>
+                                    <input matInput type="text" [(ngModel)]="facturaCompraLinea.producto.codigo"
+                                        class="form-control-sm" [disabled]="true">
+                                </mat-form-field>
+                            </div>
+                            <div class="col-6">
+                                <mat-form-field appearance="standard">
+                                    <mat-label>Categoría</mat-label>
+                                    <input matInput type="text"
+                                        [(ngModel)]="facturaCompraLinea.producto.categoriaProducto.descripcion"
+                                        class="form-control-sm" [disabled]="true">
+                                </mat-form-field>
+                            </div>
+                            <div class="col-6">
+                                <mat-form-field appearance="standard">
+                                    <mat-label>Tipo de Gasto</mat-label>
+                                    <input matInput type="text" class="form-control-sm"
+                                        [(ngModel)]="facturaCompraLinea.producto.tipoGasto.descripcion"
+                                        [disabled]="true">
+                                </mat-form-field>
+                            </div>
+                        </div>
+                    </mat-card>
+                </div>
+                <mat-divider></mat-divider>
+                <div class="col-12">
+                    <mat-form-field appearance="standard">
+                        <mat-label>Buscar producto</mat-label>
+                        <input matInput oninput="this.value = this.value.toUpperCase()"
+                            (keyup)="filtroFacturaCompraLinea($event)" #inputFiltroLinea>
+                        <button mat-button *ngIf="inputFiltroLinea.value" matSuffix mat-icon-button
+                            (click)="borrarFiltroFacturaCompraLinea()">
+                            <mat-icon>close</mat-icon>
+                        </button>
+                    </mat-form-field>
+                    <div class="mat-elevation-z8">
+                        <table mat-table [dataSource]="dataSourceLinea" matSort #matSortLinea="matSort">
+                            <!-- Columnas Dinamicas -->
+                            <ng-container *ngFor="let columna of columnasLinea" [matColumnDef]="columna.nombreColumna">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header> {{ columna.cabecera }} </th>
+                                <td mat-cell *matCellDef="let row; let i=index">
+                                    <ng-container *ngIf="columna.nombreColumna!='acciones'">
+                                        {{ columna.celda(row) }}
+                                    </ng-container>
+                                    <ng-container *ngIf="columna.nombreColumna=='acciones'">
+                                        <button mat-icon-button color="warn" (click)="eliminarFacturaCompraLinea(i)">
+                                            <i class="fa fa-times mat-icon"></i>
+                                        </button>
+                                    </ng-container>
+                                </td>
+                            </ng-container>
+                            <tr mat-header-row *matHeaderRowDef="cabeceraLinea"></tr>
+                            <tr mat-row *matRowDef="let row; let i=index; columns: cabeceraLinea"
+                                (click)="seleccionFacturaCompraLinea(row, i)"
+                                [class.selected-row]="clickedRowsLinea.has(row)"></tr>
+                            <!-- Row shown when there is no matching data. -->
+                            <tr class="mat-row" *matNoDataRow>
+                                <td class="mat-cell" colspan="10">No hay productos agregados o filtrados
+                                </td>
+                            </tr>
+                        </table>
+                        <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" showFirstLastButtons
+                            #paginatorLinea></mat-paginator>
+                    </div>
+                    <div class="azul" *ngIf="!clickedRowsLinea.size">
+                        Seleccione una fila para editar
+                    </div>
+                    <div class="azul" *ngFor="let clickedRowLinea of clickedRowsLinea">
+                        Código: {{clickedRowLinea.cantidad}} seleccionado
+                    </div>
                 </div>
                 <mat-divider></mat-divider>
                 <div class="form-group form-row">
                     <div class="form-row col-3 pl-3 pr-3">
                         <div class="col-12"></div>
-                        <div class="col-6">
-                            <mat-form-field appearance="standard">
-                                <mat-label>Desc $</mat-label>
-                                <input matInput type="text" min="0" max="100" step="0.01"
-                                    [(ngModel)]="facturaCompra.valorDescuentoTotal"
-                                    (change)="seleccionarValorDescuentoTotal()" class="form-control-sm">
-                            </mat-form-field>
+                        <div class="col-12">
+                            <div class="centrar-titulo fondo">
+                                <mat-label>DESCUENTO AL TOTAL</mat-label>
+                            </div>
+                            <mat-card class="mat-elevation-z8">
+                                <div class="form-row">
+                                    <div class="col-6">
+                                        <mat-form-field appearance="standard">
+                                            <mat-label>Desc $</mat-label>
+                                            <input matInput type="text" appFormatoDecimal
+                                                [(ngModel)]="facturaCompra.valorDescuentoTotal"
+                                                (change)="calcularTotales()" class="form-control-sm">
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col-6">
+                                        <mat-form-field appearance="standard">
+                                            <mat-label>Desc %</mat-label>
+                                            <input matInput type="text" appFormatoDecimal min="0" max="100" step="0.01"
+                                                [(ngModel)]="facturaCompra.porcentajeDescuentoTotal"
+                                                (change)="calcularTotales()" class="form-control-sm">
+                                        </mat-form-field>
+                                    </div>
+                                </div>
+                            </mat-card>
                         </div>
-                        <div class="col-6">
-                            <mat-form-field appearance="standard">
-                                <mat-label>Desc %</mat-label>
-                                <input matInput type="text" min="0" max="100" step="0.01"
-                                    [(ngModel)]="facturaCompra.porcentajeDescuentoTotal"
-                                    (change)="seleccionarPorcentajeDescuentoTotal()" class="form-control-sm">
-                            </mat-form-field>
-                        </div>
+                        <div class="col-12">
+                            <div class="centrar-titulo fondo">
+                                <mat-label>VALOR DISTRIBUIBLE</mat-label>
+                            </div>
+                            <mat-card class="mat-elevation-z8">
+                                <div class="form-row">
+                                    <div class="col-6">
+                                        <mat-form-field appearance="standard">
+                                            <mat-label>Grabado</mat-label>
+                                            <input matInput type="text" appFormatoDecimal
+                                                [(ngModel)]="facturaCompra.valorDistribuidoTotal"
+                                                class="form-control-sm">
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col-6">
+                                        <mat-form-field appearance="standard">
+                                            <mat-label>No Grabado</mat-label>
+                                            <input matInput type="text" appFormatoDecimal
+                                                [(ngModel)]="facturaCompra.valorDistribuidoTotal"
+                                                class="form-control-sm">
+                                        </mat-form-field>
+                                    </div>
+                                </div>
+                            </mat-card>
+                        </div>     
                     </div>
                     <div class="col-5 linea-vertical">
                         <br>
@@ -383,7 +436,7 @@
                         </div>
                     </div>
                     <div class="col-4">
-                        <mat-card>
+                        <mat-card class="resultados">
                             <div class="form-group form-row">
                                 <div class="col-7 negrita centrar-vertical-izq">
                                     <mat-label>Subtotal :</mat-label>
@@ -409,7 +462,7 @@
                                 <div class="col-5">
                                     <mat-form-field appearance="standard">
                                         <input matInput type="text "
-                                            [(ngModel)]="facturaCompra.subtotalBase12SinDescuento"
+                                            [(ngModel)]="facturaCompra.subtotalGrabadoConDescuento"
                                             class="form-control-sm " [disabled]="true">
                                     </mat-form-field>
                                 </div>
@@ -419,7 +472,7 @@
                                 <div class="col-5">
                                     <mat-form-field appearance="standard">
                                         <input matInput type="text "
-                                            [(ngModel)]="facturaCompra.subtotalBase0SinDescuento"
+                                            [(ngModel)]="facturaCompra.subtotalNoGrabadoConDescuento"
                                             class="form-control-sm " [disabled]="true">
                                     </mat-form-field>
                                 </div>
@@ -428,7 +481,7 @@
                                 </div>
                                 <div class="col-5">
                                     <mat-form-field appearance="standard">
-                                        <input matInput type="text " [(ngModel)]="facturaCompra.ivaSinDescuento"
+                                        <input matInput type="text " [(ngModel)]="facturaCompra.importeIvaTotal"
                                             class="form-control-sm " [disabled]="true">
                                     </mat-form-field>
                                 </div>
@@ -437,7 +490,7 @@
                                 </div>
                                 <div class="col-5">
                                     <mat-form-field appearance="standard">
-                                        <input matInput type="text " [(ngModel)]="facturaCompra.totalSinDescuento"
+                                        <input matInput type="text " [(ngModel)]="facturaCompra.valorTotal"
                                             class="form-control-sm" [disabled]="true">
                                     </mat-form-field>
                                 </div>
@@ -449,50 +502,54 @@
         </mat-expansion-panel>
     </mat-accordion>
     <mat-accordion class="headers-align">
-        <mat-expansion-panel (opened)="abrirPanelAdminFacturaCompra = true" (closed)="abrirPanelAdminFacturaCompra = false"
-            [expanded]="abrirPanelAdminFacturaCompra">
+        <mat-expansion-panel (opened)="abrirPanelAdminFacturaCompra = true"
+            (closed)="abrirPanelAdminFacturaCompra = false" [expanded]="abrirPanelAdminFacturaCompra">
             <mat-expansion-panel-header>
                 <mat-panel-title>
                     <i><u>GESTIONAR FACTURAS DE COMPRAS</u></i>
                 </mat-panel-title>
                 <mat-panel-description>
-                    {{abrirPanelAdmin ? 'Ocultar administrador de facturas de compras' : 'Editar facturas de compras
-                    existentes'}}
+                    {{abrirPanelAdminFacturaCompra ? 'Ocultar administrador de facturas de compras' : 'Editar facturas de compras existentes'}}
                     <mat-icon>group</mat-icon>
                 </mat-panel-description>
             </mat-expansion-panel-header>
             <mat-divider></mat-divider>
             <mat-form-field appearance="standard">
                 <mat-label>Buscar factura de compra</mat-label>
-                <input matInput (keyup)="filtro($event)" placeholder="Ej. 001" #input>
+                <input matInput oninput="this.value = this.value.toUpperCase()" (keyup)="filtroFacturaCompra($event)" 
+                    placeholder="Ej. BA" #inputFiltro>
+                <button mat-button *ngIf="inputFiltro.value" matSuffix mat-icon-button
+                    (click)="borrarFiltroFacturaCompra()">
+                    <mat-icon>close</mat-icon>
+                </button>
             </mat-form-field>
             <div class="mat-elevation-z8">
-                <table mat-table [dataSource]="dataSourceFacturaCompra" matSort>
+                <table mat-table [dataSource]="dataSourceFacturaCompra" matSort #matSort="matSort">
                     <!-- Columnas Dinamicas -->
-                    <ng-container *ngFor="let columna of columnas" [matColumnDef]="columna.nombreColumna">
+                    <ng-container *ngFor="let columna of columnasFacturaCompra" [matColumnDef]="columna.nombreColumna">
                         <th mat-header-cell *matHeaderCellDef mat-sort-header> {{ columna.cabecera }} </th>
                         <td mat-cell *matCellDef="let row"> {{ columna.celda(row) }} </td>
-
                     </ng-container>
-
-                    <tr mat-header-row *matHeaderRowDef="cabecera"></tr>
-                    <tr mat-row (click)="seleccion(row)" [class.selected-row]="clickedRows.has(row)"
-                        *matRowDef="let row; columns: cabecera;"></tr>
-
+                    <tr mat-header-row *matHeaderRowDef="cabeceraFacturaCompra"></tr>
+                    <tr mat-row (click)="seleccion(row)" [class.selected-row]="clickedRowsFacturaCompra.has(row)"
+                        *matRowDef="let row; columns: cabeceraFacturaCompra;"></tr>
                     <tr class="mat-row" *matNoDataRow>
-                        <td class="mat-cell" colspan="6">No hay datos que coincidan con el grupo
-                            "{{input.value}}"</td>
+                        <td class="mat-cell" colspan="6">No hay datos que coincidan con la factura
+                            "{{inputFiltro.value}}"</td>
                     </tr>
                 </table>
-                <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" showFirstLastButtons 
+                <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" showFirstLastButtons
                     #paginatorFacturaCompra></mat-paginator>
             </div>
-            <div class="azul" *ngIf="!clickedRows.size">
+            <div class="azul" *ngIf="!clickedRowsFacturaCompra.size">
                 Seleccione una fila para editar
             </div>
-            <div class="azul" *ngFor="let clickedRow of clickedRows">
+            <div class="azul" *ngFor="let clickedRow of clickedRowsFacturaCompra">
                 Id: {{clickedRow.id}} seleccionado
             </div>
         </mat-expansion-panel>
     </mat-accordion>
+    <ngx-spinner size="medium" type="line-spin-fade-rotating" [fullScreen] = "true" [zIndex]="1000">
+        <p style="font-size: 20px; color: white">Cargando...</p>
+    </ngx-spinner>
 </div>

@@ -22,6 +22,7 @@ import { NgxSpinnerModule } from 'ngx-spinner';
 import { TabContentComponent } from "./componentes/tab/tab-content.component";
 import { ContentContainerDirective } from "./componentes/tab/content-container.directive";
 import { TabService } from "./servicios/componente/tab/tab.service";
+import { FormatoDecimalDirective } from "./componentes/tab/FormatoDecimal.directive";
 
 //Tienda - Estructura: Cabecera y Menu
 import { LocationStrategy, PathLocationStrategy } from '@angular/common';
@@ -58,6 +59,7 @@ import { TipoRetencionService } from './servicios/configuracion/tipo-retencion.s
         AppComponent,
         TabContentComponent,
         ContentContainerDirective,
+        FormatoDecimalDirective,
         RoutingComponents
     ],
     imports: [

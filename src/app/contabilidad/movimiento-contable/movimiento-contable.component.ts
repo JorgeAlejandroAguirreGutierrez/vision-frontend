@@ -25,7 +25,7 @@ import { AfectacionContable } from 'src/app/modelos/contabilidad/afectacion-cont
 export class MovimientoContableComponent implements OnInit {
 
   abrirPanelNuevo = true;
-  abrirPanelAdmin = false;
+  abrirPanelAdmin = true;
   edicion: boolean = true;
 
   sesion: Sesion = null;
