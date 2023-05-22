@@ -78,11 +78,12 @@ export class FacturaCompraComponent implements OnInit {
 
   columnasFacturaCompra: any[] = [
     { nombreColumna: 'codigo', cabecera: 'Código', celda: (row: FacturaCompra) => `${row.codigo}`},
-    { nombreColumna: 'serie', cabecera: 'Serie', celda: (row: FacturaCompra) => `${row.serie}`},
-    { nombreColumna: 'secuencial', cabecera: 'Secuencial', celda: (row: FacturaCompra) => `${row.secuencial}`},
     { nombreColumna: 'fecha', cabecera: 'Fecha', celda: (row: FacturaCompra) => `${this.datepipe.transform(row.fecha, "dd-MM-yyyy")}`},
+    { nombreColumna: 'factura', cabecera: 'Factura', celda: (row: FacturaCompra) => `${row.numeroFactura}`},
     { nombreColumna: 'proveedor', cabecera: 'Proveedor', celda: (row: FacturaCompra) => `${row.proveedor.razonSocial}`},
-    { nombreColumna: 'total', cabecera: 'Total', celda: (row: FacturaCompra) => `$${row.valorTotal}`},
+    { nombreColumna: 'subtotal', cabecera: 'Subtotal', celda: (row: FacturaCompra) => `$ ${row.subtotalSinDescuento}`},
+    { nombreColumna: 'descuento', cabecera: 'Descuento', celda: (row: FacturaCompra) => `$ ${row.valorTotal}`},
+    { nombreColumna: 'total', cabecera: 'Total', celda: (row: FacturaCompra) => `$ ${row.valorTotal}`},
     { nombreColumna: 'estado', cabecera: 'Estado', celda: (row: FacturaCompra) => `${row.estado}`}
   ];
   cabeceraFacturaCompra: string[]  = this.columnasFacturaCompra.map(titulo => titulo.nombreColumna);
@@ -186,38 +187,42 @@ export class FacturaCompraComponent implements OnInit {
   crear(event) {
     if (event!=null)
       event.preventDefault();
+    if (!this.validarFormulario())
+      return;
     this.spinnerService.show();   
     this.facturaCompra.sesion=this.sesion;
-    this.facturaCompraService.crear(this.facturaCompra).subscribe(
-      res => {
+    this.facturaCompraService.crear(this.facturaCompra).subscribe({
+      next: res => {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
         this.consultar();
         this.nuevo();
         this.spinnerService.hide();  
       },
-      err => {
+      error: err => {
         Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
         this.spinnerService.hide();
       }  
-    );
+    });
   }
 
   actualizar(event){
     if (event!=null)
       event.preventDefault();
-    this.spinnerService.show();     
-    this.facturaCompraService.actualizar(this.facturaCompra).subscribe(
-      res => {
+    if (!this.validarFormulario())
+      return;  
+    this.spinnerService.show();
+    this.facturaCompraService.actualizar(this.facturaCompra).subscribe({
+      next: res => {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
         this.consultar();
         this.nuevo();
         this.spinnerService.hide();
       },
-      err => {
+      error: err => {
         Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
         this.spinnerService.hide();
       }
-    );
+    });
   }
 
   activar(event) {
@@ -259,7 +264,7 @@ export class FacturaCompraComponent implements OnInit {
   llenarTablaFacturaCompra(facturasCompras: FacturaCompra[]) {
     this.dataSourceFacturaCompra = new MatTableDataSource(facturasCompras);
     this.dataSourceFacturaCompra.filterPredicate = (data: FacturaCompra, filter: string): boolean =>
-      this.datepipe.transform(data.fecha, "dd-MM-yyyy").includes(filter) || data.serie.includes(filter) || data.secuencial.includes(filter) || 
+      this.datepipe.transform(data.fecha, "dd-MM-yyyy").includes(filter) || data.numeroFactura.includes(filter) || 
       data.proveedor.razonSocial.includes(filter) || data.estado.includes(filter);
       this.dataSourceFacturaCompra.paginator = this.paginatorFacturaCompra;
     this.dataSourceFacturaCompra.sort = this.sort;
@@ -472,6 +477,15 @@ export class FacturaCompraComponent implements OnInit {
     return a && b && a.id == b.id;
   }
 
+  formateaValor (valor) {
+    valor.target.value = parseFloat(valor.target.value).toFixed(2);
+  }
+
+  formateaNumero (valor) {
+    // si no es un número devuelve el valor, o lo convierte a número con 2 decimales
+    return isNaN (valor) ? valor : parseFloat (valor).toFixed (2);
+  }
+
   //FILTROS AUTOCOMPLETE
   inicializarFiltros() {
     this.filtroProductos = this.controlProducto.valueChanges
@@ -528,6 +542,26 @@ export class FacturaCompraComponent implements OnInit {
   }
 
   //VALIDACIONES
+  validarFormulario(): boolean {
+    if (this.facturaCompra.proveedor.id == valores.cero){
+      Swal.fire({ icon: error_swal, title: error, text: mensajes.error_falta_datos });
+      return false;
+    }
+    if (this.facturaCompra.numeroFactura == valores.vacio || this.facturaCompra.numeroFactura == null){
+      Swal.fire({ icon: error_swal, title: error, text: mensajes.error_falta_datos });
+      return false;
+    }
+    if (this.facturaCompra.numeroFactura == null){
+      Swal.fire({ icon: error_swal, title: error, text: mensajes.error_falta_datos });
+      return false;
+    }
+    if (this.facturaCompra.valorTotal <= valores.cero){
+      Swal.fire({ icon: error_swal, title: error, text: mensajes.error_falta_datos });
+      return false;
+    }
+    return true;
+  }  
+
   validarFormularioLinea(): boolean {
     if (this.facturaCompraLinea.cantidad <= valores.cero){
       return false;
@@ -536,12 +570,15 @@ export class FacturaCompraComponent implements OnInit {
       return false;
     }
     if (this.facturaCompraLinea.impuesto.id == valores.cero){
+      Swal.fire({ icon: error_swal, title: error, text: mensajes.error_falta_datos });
       return false;
     }
     if (this.facturaCompraLinea.producto.id == valores.cero){
+      Swal.fire({ icon: error_swal, title: error, text: mensajes.error_falta_datos });
       return false;
     }
     if (this.facturaCompraLinea.bodega.id == valores.cero){
+      Swal.fire({ icon: error_swal, title: error, text: mensajes.error_falta_datos });
       return false;
     }
     //if (this.facturaCompraLinea.totalSinDescuentoLinea <= valores.cero){

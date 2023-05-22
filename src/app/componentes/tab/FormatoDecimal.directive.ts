@@ -12,4 +12,10 @@ export class FormatoDecimalDirective {
     const replacedValue = initalValue.replace(',', '.');
     this.el.nativeElement.value = replacedValue;
   }
+
+ /* @HostListener('input', ['$event']) onInputBlur(event) {
+    const initalValue = this.el.nativeElement.value;
+    const replacedValue = parseFloat(initalValue).toFixed(2);
+    this.el.nativeElement.value = replacedValue;
+  }*/
 }

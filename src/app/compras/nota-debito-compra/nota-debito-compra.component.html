@@ -166,7 +166,7 @@
                             (optionSelected)="seleccionarFacturaCompra()">
                             <mat-option *ngFor="let facturaCompra of filtroFacturasCompras | async"
                                 [value]="facturaCompra">
-                                {{facturaCompra.secuencial}}
+                                {{facturaCompra.numeroFactura}}
                             </mat-option>
                         </mat-autocomplete>
                         <input matInput type="text" class="form-control-sm" placeholder="Secuencial Factura de Compra"

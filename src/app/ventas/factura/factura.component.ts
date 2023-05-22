@@ -585,6 +585,15 @@ export class FacturaComponent implements OnInit {
     return a && b && a.id == b.id;
   }
 
+  formateaValor (valor) {
+    valor.target.value = parseFloat(valor.target.value).toFixed(2);
+  }
+
+  formateaNumero (valor) {
+    // si no es un número devuelve el valor, o lo convierte a número con 2 decimales
+    return isNaN (valor) ? valor : parseFloat (valor).toFixed (2);
+  }
+
   abrirTabCliente(event) {
     if (event != null)
       event.preventDefault();
