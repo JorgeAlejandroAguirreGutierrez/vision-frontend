@@ -4,7 +4,7 @@
         <mat-step [stepControl]="facturacionSteeperFormGroup" [editable]="steeperEditable">
             <nav class="navbar-light nav-fijo">
                 <ul class="navbar-nav">
-                    <li class="nav-item" *ngIf="factura.id==0">
+                    <li class="nav-item" *ngIf="factura.id == 0">
                         <a class="nav-link" title="Guardar" role="button" (click)="crear($event)">
                             <mat-icon>save</mat-icon>
                         </a>
@@ -110,7 +110,6 @@
                                             {{cliente.razonSocial}}
                                         </mat-option>
                                     </mat-autocomplete>
-
                                 </mat-form-field>
                             </div>
                             <div class="col-12">
