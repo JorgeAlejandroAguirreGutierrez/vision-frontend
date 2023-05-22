@@ -10,10 +10,13 @@ export class NotaDebitoVentaLinea {
     entregado: string;
     consignacion: string;
     cantidad: number;
+    precioUnitario: number;
     valorDescuentoLinea: number;
     porcentajeDescuentoLinea: number;
     ivaSinDescuentoLinea: number;
-    totalSinDescuentoLinea: number;
+    ivaConDescuentoLinea: number;
+    subtotalSinDescuentoLinea: number;
+    subtotalConDescuentoLinea: number;
     totalConDescuentoLinea: number;
     //IMPUESTO SELECCIONADO
     impuesto: Impuesto;
@@ -32,7 +35,9 @@ export class NotaDebitoVentaLinea {
     this.valorDescuentoLinea = valores.cero;
     this.porcentajeDescuentoLinea = valores.cero;
     this.ivaSinDescuentoLinea = valores.cero;
-    this.totalSinDescuentoLinea = valores.cero;
+    this.ivaConDescuentoLinea = valores.cero;
+    this.subtotalSinDescuentoLinea = valores.cero;
+    this.subtotalConDescuentoLinea = valores.cero;
     this.totalConDescuentoLinea = valores.cero;
     this.precio = new Precio();
     this.producto = new Producto();
