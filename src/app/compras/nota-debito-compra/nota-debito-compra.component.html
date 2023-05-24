@@ -166,7 +166,7 @@
                             (optionSelected)="seleccionarFacturaCompra()">
                             <mat-option *ngFor="let facturaCompra of filtroFacturasCompras | async"
                                 [value]="facturaCompra">
-                                {{facturaCompra.secuencial}}
+                                {{facturaCompra.numeroFactura}}
                             </mat-option>
                         </mat-autocomplete>
                         <input matInput type="text" class="form-control-sm" placeholder="Secuencial Factura de Compra"
@@ -296,7 +296,7 @@
                                 <div class="col-5">
                                     <mat-form-field appearance="standard">
                                         <input matInput type="text "
-                                            [(ngModel)]="notaDebitoCompra.facturaCompra.subtotalBase12SinDescuento"
+                                            [(ngModel)]="notaDebitoCompra.facturaCompra.subtotalGrabadoConDescuento"
                                             class="form-control-sm" [disabled]="true">
                                     </mat-form-field>
                                 </div>
@@ -306,7 +306,7 @@
                                 <div class="col-5">
                                     <mat-form-field appearance="standard">
                                         <input matInput type="text "
-                                            [(ngModel)]="notaDebitoCompra.facturaCompra.subtotalBase0SinDescuento"
+                                            [(ngModel)]="notaDebitoCompra.facturaCompra.subtotalNoGrabadoConDescuento"
                                             class="form-control-sm " [disabled]="true">
                                     </mat-form-field>
                                 </div>
@@ -316,7 +316,7 @@
                                 <div class="col-5">
                                     <mat-form-field appearance="standard">
                                         <input matInput type="text "
-                                            [(ngModel)]="notaDebitoCompra.facturaCompra.ivaSinDescuento"
+                                            [(ngModel)]="notaDebitoCompra.facturaCompra.importeIvaTotal"
                                             class="form-control-sm " [disabled]="true">
                                     </mat-form-field>
                                 </div>
@@ -326,7 +326,7 @@
                                 <div class="col-5">
                                     <mat-form-field appearance="standard">
                                         <input matInput type="text "
-                                            [(ngModel)]="notaDebitoCompra.facturaCompra.totalSinDescuento"
+                                            [(ngModel)]="notaDebitoCompra.facturaCompra.valorTotal"
                                             class="form-control-sm" [disabled]="true">
                                     </mat-form-field>
                                 </div>

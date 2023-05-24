@@ -200,22 +200,23 @@
                             </div>
                             <div class="col-2" >
                                 <mat-form-field appearance="standard">
-                                    <mat-label>Cant.</mat-label>
-                                    <input matInput type="text" [(ngModel)]="saldoInicialKardex" class="form-control-sm"
+                                    <mat-label>Cantidad</mat-label>
+                                    <input matInput type="text" appFormatoDecimal [(ngModel)]="saldoInicialKardex" class="form-control-sm"
                                         (change)="calcularCostoTotalKardex()" [disabled]="deshabilitarIniciarKardex">
                                 </mat-form-field>
                             </div>
                             <div class="col-2">
                                 <mat-form-field appearance="standard">
-                                    <mat-label>Costo Unit.</mat-label>
-                                    <input matInput type="text" [(ngModel)]="costoUnitarioKardex" class="form-control-sm"
+                                    <mat-label>Costo Unitario</mat-label>
+                                    <input matInput type="text" appFormatoDecimal [(ngModel)]="costoUnitarioKardex" class="form-control-sm"
                                         (change)="calcularCostoTotalKardex()" [disabled]="deshabilitarIniciarKardex" >
                                 </mat-form-field>
                             </div>
                             <div class="col-2">
                                 <mat-form-field appearance="standard">
-                                    <mat-label>Costo Total.</mat-label>
-                                    <input matInput type="text" [(ngModel)]="costoTotalKardex" class="form-control-sm" [disabled]="true">
+                                    <mat-label>Costo Total</mat-label>
+                                    <input matInput type="text" appFormatoDecimal [(ngModel)]="costoTotalKardex" 
+                                    class="form-control-sm" [disabled]="true">
                                 </mat-form-field>
                             </div>
                             <div class="col-2 iconos">

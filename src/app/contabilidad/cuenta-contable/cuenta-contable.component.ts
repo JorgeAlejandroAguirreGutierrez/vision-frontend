@@ -26,7 +26,7 @@ export class CuentaContableComponent implements OnInit {
   inactivo: string = valores.inactivo;
 
   abrirPanelNuevo: boolean = true;
-  abrirPanelAdmin: boolean = false;
+  abrirPanelAdmin: boolean = true;
   edicion: boolean = true;
 
   sesion: Sesion = null;

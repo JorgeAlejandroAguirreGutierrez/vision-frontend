@@ -295,14 +295,14 @@
                                     <div class="col-1">
                                         <mat-form-field appearance="standard">
                                             <mat-label>Cantidad</mat-label>
-                                            <input matInput type="text" [(ngModel)]="facturaLinea.cantidad"
+                                            <input matInput type="text" appFormatoDecimal [(ngModel)]="facturaLinea.cantidad"
                                                 (change)="calcularFacturaLinea()" class="form-control-sm">
                                         </mat-form-field>
                                     </div>
                                     <div class="col-1">
                                         <mat-form-field appearance="standard">
                                             <mat-label>Precio Unit.</mat-label>
-                                            <input matInput type="text" class="form-control-sm"
+                                            <input matInput type="text" appFormatoDecimal class="form-control-sm"
                                                 [(ngModel)]="facturaLinea.precioUnitario" [disabled]="true">
                                         </mat-form-field>
                                     </div>
@@ -320,7 +320,7 @@
                                     <div class="col-2">
                                         <mat-form-field appearance="standard">
                                             <mat-label>PVP</mat-label>
-                                            <input matInput type="text" step="0.01"
+                                            <input matInput type="text" appFormatoDecimal step="0.01"
                                                 [(ngModel)]="precioVentaPublicoManual"
                                                 (change)="calcularFacturaLinea()" class="form-control-sm">
                                         </mat-form-field>
@@ -328,7 +328,7 @@
                                     <div class="col-1">
                                         <mat-form-field appearance="standard">
                                             <mat-label>Desc. $</mat-label>
-                                            <input matInput type="text" step="0.01"
+                                            <input matInput type="text" appFormatoDecimal step="0.01"
                                                 [(ngModel)]="facturaLinea.valorDescuentoLinea"
                                                 (change)="calcularFacturaLinea()" class="form-control-sm">
                                         </mat-form-field>
@@ -336,7 +336,7 @@
                                     <div class="col-1">
                                         <mat-form-field appearance="standard">
                                             <mat-label>Desc. %</mat-label>
-                                            <input matInput type="text" min="0" max="100" step="0.01"
+                                            <input matInput type="text" appFormatoDecimal min="0" max="100" step="0.01"
                                                 [(ngModel)]="facturaLinea.porcentajeDescuentoLinea"
                                                 (change)="calcularFacturaLinea()"
                                                 class="form-control-sm">
@@ -345,7 +345,7 @@
                                     <div class="col-2">
                                         <mat-form-field appearance="standard">
                                             <mat-label>Subtotal</mat-label>
-                                            <input matInput type="text"
+                                            <input matInput type="text" appFormatoDecimal
                                                 [(ngModel)]="facturaLinea.totalConDescuentoLinea"
                                                 class="form-control-sm" disabled>
                                         </mat-form-field>
@@ -461,38 +461,56 @@
                         <div class="form-group form-row">
                             <div class="form-row col-3 pl-3 pr-3">
                                 <div class="col-12"></div>
-                                <div class="col-6">
-                                    <mat-form-field appearance="standard">
-                                        <mat-label>Desc. Sub $</mat-label>
-                                        <input matInput type="text" min="0" max="100" step="0.01"
-                                            [(ngModel)]="factura.valorDescuentoSubtotal"
-                                            (change)="calcularTotales()" class="form-control-sm">
-                                    </mat-form-field>
+                                <div class="col-12">
+                                    <div class="centrar-titulo fondo">
+                                        <mat-label>DESCUENTO AL SUBTOTAL</mat-label>
+                                    </div>
+                                    <mat-card class="mat-elevation-z8">
+                                        <div class="form-row">
+                                            <div class="col-6">
+                                                <mat-form-field appearance="standard">
+                                                    <mat-label>Valor</mat-label>
+                                                    <input matInput type="text" appFormatoDecimal step="0.01"
+                                                        [(ngModel)]="factura.valorDescuentoSubtotal"
+                                                        (change)="calcularTotales()" class="form-control-sm">
+                                                </mat-form-field>
+                                            </div>
+                                            <div class="col-6">
+                                                <mat-form-field appearance="standard">
+                                                    <mat-label>Porcentaje</mat-label>
+                                                    <input matInput type="text" appFormatoDecimal min="0" max="100" step="0.01"
+                                                        [(ngModel)]="factura.porcentajeDescuentoSubtotal"
+                                                        (change)="calcularTotales()" class="form-control-sm">
+                                                </mat-form-field>
+                                            </div>
+                                        </div>
+                                    </mat-card>
                                 </div>
-                                <div class="col-6">
-                                    <mat-form-field appearance="standard">
-                                        <mat-label>Desc. Sub %</mat-label>
-                                        <input matInput type="text" min="0" max="100" step="0.01"
-                                            [(ngModel)]="factura.porcentajeDescuentoSubtotal"
-                                            (change)="calcularTotales()" class="form-control-sm">
-                                    </mat-form-field>
-                                </div>
-                                <div class="col-6">
-                                    <mat-form-field appearance="standard">
-                                        <mat-label>Desc. Total $</mat-label>
-                                        <input matInput type="text" min="0" [(ngModel)]="factura.valorDescuentoTotal"
-                                            (change)="calcularTotales()" class="form-control-sm">
-                                    </mat-form-field>
-                                </div>
-                                <div class="col-6">
-                                    <mat-form-field appearance="standard">
-                                        <mat-label>Desc. Total %</mat-label>
-                                        <input matInput type="text" min="0" max="100" step="0.01"
-                                            [(ngModel)]="factura.porcentajeDescuentoTotal"
-                                            (change)="calcularTotales()" class="form-control-sm">
-                                    </mat-form-field>
-                                </div>
-
+                                <div class="col-12">
+                                    <div class="centrar-titulo fondo">
+                                        <mat-label>DESCUENTO AL TOTAL</mat-label>
+                                    </div>
+                                    <mat-card class="mat-elevation-z8">
+                                        <div class="form-row">      
+                                            <div class="col-6">
+                                                <mat-form-field appearance="standard">
+                                                    <mat-label>Valor</mat-label>
+                                                    <input matInput type="text" appFormatoDecimal min="0" step="0.01" 
+                                                        [(ngModel)]="factura.valorDescuentoTotal"
+                                                        (change)="calcularTotales()" class="form-control-sm">
+                                                </mat-form-field>
+                                            </div>
+                                            <div class="col-6">
+                                                <mat-form-field appearance="standard">
+                                                    <mat-label>Porcentaje</mat-label>
+                                                    <input matInput type="text" appFormatoDecimal min="0" max="100" step="0.01"
+                                                        [(ngModel)]="factura.porcentajeDescuentoTotal"
+                                                        (change)="calcularTotales()" class="form-control-sm">
+                                                </mat-form-field>
+                                            </div>
+                                        </div>
+                                    </mat-card>
+                                </div>    
                             </div>
                             <div class="col-5 linea-vertical">
                                 <br>
@@ -513,7 +531,7 @@
                                         </div>
                                         <div class="col-5">
                                             <mat-form-field appearance="standard">
-                                                <input matInput type="text" [(ngModel)]="factura.subtotalSinDescuento"
+                                                <input matInput type="text" [value]="formateaNumero(factura.subtotalSinDescuento)"
                                                     class="form-control-sm" disabled>
                                             </mat-form-field>
                                         </div>
@@ -522,7 +540,7 @@
                                         </div>
                                         <div class="col-5">
                                             <mat-form-field appearance="standard">
-                                                <input matInput type="text" [(ngModel)]="factura.descuentoTotal"
+                                                <input matInput type="text" [value]="formateaNumero(factura.descuentoTotal)"
                                                     class="form-control-sm" disabled>
                                             </mat-form-field>
                                         </div>
@@ -532,7 +550,7 @@
                                         <div class="col-5">
                                             <mat-form-field appearance="standard">
                                                 <input matInput type="text "
-                                                    [(ngModel)]="factura.subtotalBase12ConDescuento"
+                                                    [value]="formateaNumero(factura.subtotalBase12ConDescuento)"
                                                     class="form-control-sm " disabled>
                                             </mat-form-field>
                                         </div>
@@ -542,7 +560,7 @@
                                         <div class="col-5">
                                             <mat-form-field appearance="standard">
                                                 <input matInput type="text "
-                                                    [(ngModel)]="factura.subtotalBase0ConDescuento"
+                                                    [value]="formateaNumero(factura.subtotalBase0ConDescuento)"
                                                     class="form-control-sm " disabled>
                                             </mat-form-field>
                                         </div>
@@ -551,7 +569,7 @@
                                         </div>
                                         <div class="col-5">
                                             <mat-form-field appearance="standard">
-                                                <input matInput type="text " [(ngModel)]="factura.ivaConDescuento"
+                                                <input matInput type="text " [value]="formateaNumero(factura.ivaConDescuento)"
                                                     class="form-control-sm " disabled>
                                             </mat-form-field>
                                         </div>
@@ -560,7 +578,7 @@
                                         </div>
                                         <div class="col-5">
                                             <mat-form-field appearance="standard">
-                                                <input matInput type="text" [(ngModel)]="factura.totalConDescuento"
+                                                <input matInput type="text" [value]="formateaNumero(factura.totalConDescuento)"
                                                     class="form-control-sm" disabled>
                                             </mat-form-field>
                                         </div>

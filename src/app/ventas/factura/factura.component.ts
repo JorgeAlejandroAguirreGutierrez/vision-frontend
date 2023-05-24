@@ -31,8 +31,6 @@ import { Impuesto } from '../../modelos/inventario/impuesto';
 import { ImpuestoService } from '../../servicios/inventario/impuesto.service';
 import { Bodega } from '../../modelos/inventario/bodega';
 import { BodegaService } from '../../servicios/inventario/bodega.service';
-import { CategoriaProducto } from '../../modelos/inventario/categoria-producto';
-import { CategoriaProductoService } from '../../servicios/inventario/categoria-producto.service';
 import { Kardex } from '../../modelos/inventario/kardex';
 import { KardexService } from '../../servicios/inventario/kardex.service';
 
@@ -85,15 +83,14 @@ export class FacturaComponent implements OnInit {
 
   sesion: Sesion;
   factura: Factura = new Factura();
-  kardex: Kardex = new Kardex();
   facturaLinea: FacturaLinea = new FacturaLinea();
+  kardex: Kardex = new Kardex();
 
   clientes: Cliente[] = [];
   productos: Producto[] = [];
   facturas: Factura[];
   bodegas: Bodega[] = [];
   impuestos: Impuesto[];
-  categoriasProductos: CategoriaProducto[] = [];
 
   facturacionSteeperFormGroup: UntypedFormGroup;
   recaudacionSteeperFormGroup: UntypedFormGroup;
@@ -160,15 +157,12 @@ export class FacturaComponent implements OnInit {
     private impuestoService: ImpuestoService, private router: Router, private datepipe: DatePipe, private dateAdapter: DateAdapter<Date>,
     private facturaService: FacturaService, private facturaElectronicaService: FacturaElectronicaService,
     private productoService: ProductoService, private bodegaService: BodegaService, private kardexService: KardexService,
-    private categoriaProductoService: CategoriaProductoService, private tabService: TabService,
-    private _formBuilder: UntypedFormBuilder, private spinnerService: NgxSpinnerService) { }
-
+    private tabService: TabService, private _formBuilder: UntypedFormBuilder, private spinnerService: NgxSpinnerService) { }
 
   ngOnInit() {
     this.sesion = validarSesion(this.sesionService, this.router);
     this.consultar();
     this.consultarClientes();
-    this.consultarCategoriasProductos();
     this.consultarProductos();
     this.consultarImpuestos();
     this.consultarBodegas();
@@ -186,18 +180,6 @@ export class FacturaComponent implements OnInit {
       }
     });
   }
-
-  consultarCategoriasProductos() {
-    this.categoriaProductoService.consultar().subscribe({
-      next: res => {
-        this.categoriasProductos = res.resultado as CategoriaProducto[]
-      },
-      error: err => {
-        Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
-      }
-    });
-  }
-
   consultarProductos() {
     this.productoService.consultarActivos().subscribe({
       next: res => {
@@ -208,7 +190,6 @@ export class FacturaComponent implements OnInit {
       }
     })
   }
-
   consultarImpuestos() {
     this.impuestoService.consultar().subscribe({
       next: res => {
@@ -219,7 +200,6 @@ export class FacturaComponent implements OnInit {
       }
     });
   }
-
   consultarBodegas() {
     this.bodegaService.consultar().subscribe({
       next: res => {
@@ -233,10 +213,10 @@ export class FacturaComponent implements OnInit {
 
   nuevo() {
     this.factura = new Factura();
-    this.clickedRowsFactura.clear();
     this.controlIdentificacionCliente.patchValue(valores.vacio);
     this.controlRazonSocialCliente.patchValue(valores.vacio);
     this.dataSourceLinea = new MatTableDataSource<FacturaLinea>([]);
+    this.clickedRowsFactura.clear();
     this.nuevoFacturaLinea();
   }
 
@@ -252,7 +232,10 @@ export class FacturaComponent implements OnInit {
         this.spinnerService.hide();  
         this.stepper.next();
       },
-      error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+      error: err => {
+        Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+        this.spinnerService.hide();
+      }  
     });
   }
 
@@ -310,7 +293,10 @@ export class FacturaComponent implements OnInit {
         this.stepper.next();
         //Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
       },
-      error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+      error: err => {
+        Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+        this.spinnerService.hide();
+      }  
     });
   }
 
@@ -407,8 +393,7 @@ export class FacturaComponent implements OnInit {
   }
 
   seleccionarRazonSocialCliente() {
-    let clienteId = undefined;
-    clienteId = this.controlRazonSocialCliente.value.id;
+    let clienteId = this.controlRazonSocialCliente.value.id;
     this.clienteService.obtener(clienteId).subscribe({
       next: res => {
         Object.assign(this.factura.cliente, res.resultado as Cliente);
@@ -420,8 +405,8 @@ export class FacturaComponent implements OnInit {
   }
 
   seleccionarIdentificacionCliente() {
-    let clienteId = undefined;
-    clienteId = this.controlIdentificacionCliente.value.id;
+    //let clienteId = undefined;
+    let clienteId = this.controlIdentificacionCliente.value.id;
     this.clienteService.obtener(clienteId).subscribe({
       next: res => {
         Object.assign(this.factura.cliente, res.resultado as Cliente);
@@ -432,7 +417,7 @@ export class FacturaComponent implements OnInit {
     });
   }
 
-  //CRUD FACTURURA LINEA
+  //CRUD FACTURA LINEA
   nuevoFacturaLinea() {
     this.facturaLinea = new FacturaLinea();
     this.kardex = new Kardex();
@@ -455,7 +440,10 @@ export class FacturaComponent implements OnInit {
         this.nuevoFacturaLinea();
         this.spinnerService.hide();
       },
-      error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+      error: err => {
+        Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+        this.spinnerService.hide();
+      }  
     });
   }
 
@@ -588,6 +576,15 @@ export class FacturaComponent implements OnInit {
     return a && b && a.id == b.id;
   }
 
+  formateaValor (valor) {
+    valor.target.value = parseFloat(valor.target.value).toFixed(2);
+  }
+
+  formateaNumero (valor) {
+    // si no es un número devuelve el valor, o lo convierte a número con 2 decimales
+    return isNaN (valor) ? valor : parseFloat (valor).toFixed (2);
+  }
+
   abrirTabCliente(event) {
     if (event != null)
       event.preventDefault();
@@ -686,6 +683,7 @@ export class FacturaComponent implements OnInit {
   verIdentificacionCliente(cliente: Cliente): string {
     return cliente && cliente.identificacion ? cliente.identificacion : valores.vacio;
   }
+
   private filtroRazonSocialCliente(value: string): Cliente[] {
     if (this.clientes.length > 0) {
       const filterValue = value.toUpperCase();
