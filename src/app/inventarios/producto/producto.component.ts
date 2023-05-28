@@ -299,19 +299,20 @@ export class ProductoComponent implements OnInit {
   llenarKardex(){
     this.deshabilitarIniciarKardex = true;
     this.saldoInicialKardex = this.producto.kardexs[0].saldo;
-    this.costoUnitarioKardex = this.producto.kardexs[0].costoUnitario;
+    this.costoUnitarioKardex = this.producto.kardexs[0].costoPromedio;
     this.costoTotalKardex = this.producto.kardexs[0].costoTotal;
   }
 
   inicializarKardex(){
     if (!this.validarKardex())
       return;
-    this.producto.kardexs[0].operacion = otras.operacionInicialKardex;
+    this.producto.kardexs[0].tipoOperacion.id = 1;
     this.producto.kardexs[0].entrada = this.saldoInicialKardex;
     this.producto.kardexs[0].saldo = this.saldoInicialKardex;
     this.producto.kardexs[0].debe = this.costoUnitarioKardex;
-    this.producto.kardexs[0].costoUnitario = this.costoUnitarioKardex;
+    this.producto.kardexs[0].costoPromedio = this.costoUnitarioKardex;
     this.producto.kardexs[0].costoTotal = this.costoTotalKardex;
+    this.producto.kardexs[0].tipoComprobante.id = 1;
   }
   
   calcularCostoTotalKardex(){
@@ -405,7 +406,7 @@ export class ProductoComponent implements OnInit {
       Swal.fire(error, mensajes.error_cantidad, error_swal);
       return false;
     }
-    if (this.producto.kardexs[0].costoUnitario < valores.cero) {
+    if (this.producto.kardexs[0].costoPromedio < valores.cero) {
       Swal.fire(error, mensajes.error_costo_unitario, error_swal);
       return false;
     }

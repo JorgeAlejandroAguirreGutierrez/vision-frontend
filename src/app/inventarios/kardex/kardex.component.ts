@@ -1,4 +1,5 @@
 import { Component, OnInit, ViewChild, ElementRef, Renderer2 } from '@angular/core';
+import { valores, mensajes, validarSesion, exito, exito_swal, error, error_swal } from '../../constantes';
 import { DatePipe } from '@angular/common';
 import { BehaviorSubject } from 'rxjs';
 import { UntypedFormControl } from '@angular/forms';
@@ -6,7 +7,6 @@ import { Observable } from 'rxjs';
 import { startWith, map } from 'rxjs/operators';
 import Swal from 'sweetalert2';
 import * as constantes from '../../constantes';
-import { valores, mensajes, validarSesion, exito, exito_swal, error, error_swal } from '../../constantes';
 
 import * as util from '../../util';
 import { Producto } from '../../modelos/inventario/producto';
@@ -30,6 +30,7 @@ export class KardexComponent implements OnInit {
 
   sesion: Sesion = null;
   abrirPanelAdmin: boolean = true;
+  productoSeleccionado: boolean = false;
 
   producto: Producto = new Producto();
   kardex: Kardex = new Kardex();
@@ -37,7 +38,7 @@ export class KardexComponent implements OnInit {
 
   //Variables para los autocomplete
   productos: Producto[]=[];
-  seleccionProducto = new UntypedFormControl();
+  controlProducto = new UntypedFormControl();
   filtroProductos: Observable<Producto[]> = new Observable<Producto[]>();
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
@@ -46,15 +47,15 @@ export class KardexComponent implements OnInit {
 
   columnas: any[] = [
     { nombreColumna: 'fecha', cabecera: 'Fecha', celda: (row: Kardex) => `${this.datepipe.transform(row.fecha, 'dd/MM/yyyy') } ` },
-    { nombreColumna: 'documento', cabecera: 'Documento', celda: (row: Kardex) => `${row.documento}` },
-    { nombreColumna: 'secuencial', cabecera: 'Secuencial', celda: (row: Kardex) => `${row.secuencial}` },
-    { nombreColumna: 'operacion', cabecera: 'Operacion', celda: (row: Kardex) => `${row.operacion}` },
+    { nombreColumna: 'comprobante', cabecera: 'Comprobante', celda: (row: Kardex) => `${row.tipoComprobante.abreviatura}` },
+    { nombreColumna: 'referencia', cabecera: 'Referencia', celda: (row: Kardex) => `${row.referencia}` },
+    { nombreColumna: 'operacion', cabecera: 'Operacion', celda: (row: Kardex) => `${row.tipoOperacion.abreviatura}` },
     { nombreColumna: 'entrada', cabecera: 'Entrada', celda: (row: Kardex) => `${row.entrada}` },
     { nombreColumna: 'salida', cabecera: 'Salida', celda: (row: Kardex) => `${row.salida}` },
     { nombreColumna: 'saldo', cabecera: 'Saldo', celda: (row: Kardex) => `${row.saldo}` },
     { nombreColumna: 'debe', cabecera: 'Debe', celda: (row: Kardex) => `${row.debe}` },
     { nombreColumna: 'haber', cabecera: 'Haber', celda: (row: Kardex) => `${row.haber}` },
-    { nombreColumna: 'promedio', cabecera: 'Costo Prom.', celda: (row: Kardex) => `${row.costoUnitario}` },
+    { nombreColumna: 'promedio', cabecera: 'Costo Prom.', celda: (row: Kardex) => `${row.costoPromedio}` },
     { nombreColumna: 'total', cabecera: 'Total', celda: (row: Kardex) => `${row.costoTotal}` }
   ];
   cabecera: string[] = this.columnas.map(titulo => titulo.nombreColumna);
@@ -67,7 +68,7 @@ export class KardexComponent implements OnInit {
   ngOnInit() {
     this.sesion = util.validarSesion(this.sesionService, this.router);
     this.consultarProductos();
-    this.filtroProductos = this.seleccionProducto.valueChanges
+    this.filtroProductos = this.controlProducto.valueChanges
       .pipe(
         startWith(''),
         map(value => typeof value === 'string' || value==null ? value : value.id),
@@ -80,6 +81,9 @@ export class KardexComponent implements OnInit {
       event.preventDefault();
     this.producto = new Producto();
     this.kardex = new Kardex();
+    this.controlProducto.patchValue('');
+    this.productoSeleccionado = false;
+    this.dataSource = new MatTableDataSource();
     this.clickedRows.clear();
   };
 
@@ -96,6 +100,18 @@ export class KardexComponent implements OnInit {
         this.nuevo(null);
       },
       error: err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
+    });
+  }
+
+  seleccionarProducto(){
+    let productoId = this.controlProducto.value.id;
+    this.productoService.obtener(productoId).subscribe({
+      next: res => {
+        this.producto = res.resultado as Producto;
+        this.llenarTablaKardex(this.producto.kardexs);
+        this.productoSeleccionado = true;
+      },
+      error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     });
   }
 
@@ -150,16 +166,5 @@ export class KardexComponent implements OnInit {
   
   verProducto(producto: Producto): string {
     return producto && producto.nombre ? producto.nombre : '';
-  }
-
-  seleccionarProducto(){
-    let productoId = this.seleccionProducto.value.id;
-    this.productoService.obtener(productoId).subscribe(
-      res => {
-        this.producto = res.resultado as Producto;
-        this.llenarTablaKardex(this.producto.kardexs);
-      },
-      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
-    );
   }
 }

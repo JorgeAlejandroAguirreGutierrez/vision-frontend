@@ -2,7 +2,7 @@ import { Proveedor } from './proveedor';
 import { FacturaCompraLinea } from './factura-compra-linea';
 import { Sesion } from '../usuario/sesion';
 import { valores } from "../../constantes";
-import { TipoComprobante } from '../venta/tipo-comprobante';
+import { TipoComprobante } from '../configuracion/tipo-comprobante';
 
 export class FacturaCompra {
     id: number;

@@ -32,8 +32,8 @@ export class KardexService {
     );
   }
 
-  obtenerUltimoPorFecha(productoId: number, bodegaId: number): Observable<Respuesta> {
-    return this.http.get<Respuesta>(environment.host + urn.ruta + urn.kardex + urn.obtenerUltimoPorFecha + urn.slash + productoId + urn.slash + bodegaId, options).pipe(
+  obtenerUltimoPorBodega(productoId: number, bodegaId: number): Observable<Respuesta> {
+    return this.http.get<Respuesta>(environment.host + urn.ruta + urn.kardex + urn.obtenerUltimoPorBodega + urn.slash + productoId + urn.slash + bodegaId, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);

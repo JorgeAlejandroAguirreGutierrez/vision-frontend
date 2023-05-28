@@ -294,7 +294,7 @@ export class NotaDebitoVentaComponent implements OnInit {
         this.notaDebitoVentaLinea.precio = precio;
       }
     }
-    this.kardexService.obtenerUltimoPorFecha(this.notaDebitoVentaLinea.bodega.id, this.notaDebitoVentaLinea.producto.id).subscribe(
+    this.kardexService.obtenerUltimoPorBodega(this.notaDebitoVentaLinea.bodega.id, this.notaDebitoVentaLinea.producto.id).subscribe(
       res => {
         if (res.resultado == null){
           Swal.fire({ icon: error_swal, title: error, text: mensajes.error_kardex_vacio });
@@ -400,7 +400,7 @@ export class NotaDebitoVentaComponent implements OnInit {
         this.notaDebitoVentaLinea.precio = precio;
       }
     }
-    this.kardexService.obtenerUltimoPorFecha(this.notaDebitoVentaLinea.bodega.id, this.notaDebitoVentaLinea.producto.id).subscribe(
+    this.kardexService.obtenerUltimoPorBodega(this.notaDebitoVentaLinea.bodega.id, this.notaDebitoVentaLinea.producto.id).subscribe(
       res => {
         if (res.resultado == null){
           Swal.fire({ icon: error_swal, title: error, text: mensajes.error_kardex_vacio });

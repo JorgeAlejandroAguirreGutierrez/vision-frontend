@@ -57,7 +57,7 @@ export class FacturaService {
     return this.http.get(environment.host + urn.ruta + urn.factura+ urn.slash + facturaId, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
-        return throwError(err);
+        return throwError(()=>err);
       }));
   }
 
@@ -65,7 +65,16 @@ export class FacturaService {
     return this.http.put(environment.host + urn.ruta + urn.factura, factura, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
-        return throwError(err);
+        return throwError(()=>err);
+      })
+    );
+  }
+
+  recaudar(factura: Factura): Observable<Respuesta> {
+    return this.http.patch(environment.host + urn.ruta + urn.factura + urn.recaudar, factura, options).pipe(
+      map(response => response as Respuesta),
+      catchError(err => {
+        return throwError(()=>err);
       })
     );
   }

@@ -284,7 +284,7 @@ export class RecaudacionComponent implements OnInit, OnChanges {
       event.preventDefault();
     this.spinnerService.show();  
       //console.log(this.factura);
-    this.facturaService.actualizar(this.factura).subscribe({
+    this.facturaService.recaudar(this.factura).subscribe({
       next: res => {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
         this.factura = res.resultado as Factura;

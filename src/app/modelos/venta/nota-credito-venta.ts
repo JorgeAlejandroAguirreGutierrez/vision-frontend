@@ -1,6 +1,6 @@
 import { Sesion } from '../usuario/sesion';
 import { valores } from "../../constantes";
-import { TipoComprobante } from './tipo-comprobante';
+import { TipoComprobante } from '../configuracion/tipo-comprobante';
 import { NotaCreditoVentaLinea } from './nota-credito-venta-linea';
 import { Factura } from './factura';
 export class NotaCreditoVenta {

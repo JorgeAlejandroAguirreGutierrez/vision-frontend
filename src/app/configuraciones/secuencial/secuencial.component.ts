@@ -5,8 +5,8 @@ import Swal from 'sweetalert2';
 
 import { Sesion } from '../../modelos/usuario/sesion';
 import { SesionService } from '../../servicios/usuario/sesion.service';
-import { TipoComprobante } from '../../modelos/venta/tipo-comprobante';
-import { TipoComprobanteService } from '../../servicios/venta/tipo-comprobante.service';
+import { TipoComprobante } from '../../modelos/configuracion/tipo-comprobante';
+import { TipoComprobanteService } from '../../servicios/configuracion/tipo-comprobante.service';
 import { Empresa } from '../../modelos/usuario/empresa';
 import { EmpresaService } from '../../servicios/usuario/empresa.service';
 import { Establecimiento } from '../../modelos/usuario/establecimiento';

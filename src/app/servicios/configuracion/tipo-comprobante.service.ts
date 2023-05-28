@@ -5,7 +5,7 @@ import {HttpClient} from '@angular/common/http';
 import { map, catchError } from 'rxjs/operators';
 import { Observable, throwError } from 'rxjs';
 import { environment } from '../../../environments/environment';
-import { TipoComprobante } from '../../modelos/venta/tipo-comprobante';
+import { TipoComprobante } from '../../modelos/configuracion/tipo-comprobante';
 
 @Injectable({
   providedIn: 'root'

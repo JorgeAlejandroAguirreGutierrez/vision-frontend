@@ -277,13 +277,13 @@
                                         </ng-container>
                                         <ng-container *ngIf="columna.nombreColumna=='margenGanancia'">
                                             <mat-form-field floatLabel="never">
-                                                <input matInput [(ngModel)]="row.margenGanancia" 
+                                                <input matInput type="text" appFormatoDecimal [(ngModel)]="row.margenGanancia" 
                                                 (change)="actualizarmMargenGanancia(i, row.margenGanancia)">
                                             </mat-form-field>
                                         </ng-container>
                                         <ng-container *ngIf="columna.nombreColumna=='precioVentaPublicoManual'">
                                             <mat-form-field floatLabel="never">
-                                                <input matInput [(ngModel)]="row.precioVentaPublicoManual" 
+                                                <input matInput type="text" appFormatoDecimal [(ngModel)]="row.precioVentaPublicoManual" 
                                                 (change)="actualizarPVPManual(i, row.precioVentaPublicoManual)">
                                             </mat-form-field>
                                         </ng-container>

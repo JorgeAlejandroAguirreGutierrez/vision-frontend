@@ -1,7 +1,7 @@
 import { Proveedor } from './proveedor';
 import { Sesion } from '../usuario/sesion';
 import { valores } from "../../constantes";
-import { TipoComprobante } from '../venta/tipo-comprobante';
+import { TipoComprobante } from '../configuracion/tipo-comprobante';
 import { NotaCreditoCompraLinea } from './nota-credito-compra-linea';
 import { FacturaCompra } from './factura-compra';
 import { Bodega } from '../inventario/bodega';
