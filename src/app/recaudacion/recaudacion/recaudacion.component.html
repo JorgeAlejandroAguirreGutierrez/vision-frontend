@@ -6,12 +6,6 @@
                     <mat-icon>save</mat-icon>
                 </a>
             </li>
-            <li class="nav-item" *ngIf="factura.id != 0 && factura.estado == 'RECAUDADA'">
-                <a class="nav-link" title="Crear Factura Electronica" href="#" role="button"
-                    (click)="crearFacturaElectronica($event)">
-                    <mat-icon>point_of_sale</mat-icon>
-                </a>
-            </li>
             <ng-container *ngIf="factura.id!=0">
                 <li class="nav-item" *ngIf="!verPanelCheques">
                     <a class="nav-link" title="ver Cheques" role="button" (click)="verPanelCheques = true">
@@ -136,7 +130,7 @@
                             <div class="col-6">
                                 <mat-form-field appearance="standard">
                                     <mat-label>Efectivo</mat-label>
-                                    <input matInput type="text" [(ngModel)]="factura.efectivo"
+                                    <input matInput type="text" appFormatoDecimal [(ngModel)]="factura.efectivo"
                                         (change)="seleccionarEfectivo()" class="form-control-sm">
                                 </mat-form-field>
                             </div>
@@ -286,7 +280,8 @@
                 <div class="col-1">
                     <mat-form-field appearance="standard">
                         <mat-label>Valor</mat-label>
-                        <input matInput type="text" class="form-control-sm" [(ngModel)]="cheque.valor">
+                        <input matInput type="text" appFormatoDecimal [(ngModel)]="cheque.valor"
+                            class="form-control-sm">
                     </mat-form-field>
                 </div>
                 <div class="col-1 iconos centrar">
@@ -401,7 +396,8 @@
                 <div class="col-1">
                     <mat-form-field appearance="standard">
                         <mat-label>Valor</mat-label>
-                        <input matInput type="text" class="form-control-sm" [(ngModel)]="deposito.valor">
+                        <input matInput type="text" appFormatoDecimal [(ngModel)]="deposito.valor"
+                            class="form-control-sm">
                     </mat-form-field>
                 </div>
                 <div class="col-1 iconos centrar">
@@ -520,7 +516,8 @@
                 <div class="col-1">
                     <mat-form-field appearance="standard">
                         <mat-label>Valor</mat-label>
-                        <input matInput type="text" class="form-control-sm" [(ngModel)]="transferencia.valor">
+                        <input matInput type="text" appFormatoDecimal [(ngModel)]="transferencia.valor"
+                            class="form-control-sm">
                     </mat-form-field>
                 </div>
                 <div class="col-1 iconos centrar">
@@ -676,7 +673,8 @@
                 <div class="col-2">
                     <mat-form-field appearance="standard">
                         <mat-label>Valor</mat-label>
-                        <input matInput type="text" class="form-control-sm" [(ngModel)]="tarjetaCredito.valor">
+                        <input matInput type="text" appFormatoDecimal [(ngModel)]="tarjetaCredito.valor"
+                            class="form-control-sm">
                     </mat-form-field>
                 </div>
                 <div class="col-1 iconos centrar">
@@ -823,7 +821,8 @@
                 <div class="col-2">
                     <mat-form-field appearance="standard">
                         <mat-label>Valor</mat-label>
-                        <input matInput type="text" class="form-control-sm" [(ngModel)]="tarjetaDebito.valor">
+                        <input matInput type="text" appFormatoDecimal [(ngModel)]="tarjetaDebito.valor"
+                            class="form-control-sm">
                     </mat-form-field>
                 </div>
                 <div class="col-1 iconos centrar">

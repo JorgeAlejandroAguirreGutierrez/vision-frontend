@@ -1,6 +1,6 @@
 import { Sesion } from '../usuario/sesion';
 import { valores } from "../../constantes";
-import { TipoComprobante } from './tipo-comprobante';
+import { TipoComprobante } from '../configuracion/tipo-comprobante';
 import { NotaDebitoVentaLinea } from './nota-debito-venta-linea';
 import { Factura } from './factura';
 import { NotaDebitoVentaCheque } from '../recaudacion/nota-debito-venta-cheque';

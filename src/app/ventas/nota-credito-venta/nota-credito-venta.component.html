@@ -52,163 +52,111 @@
             </mat-expansion-panel-header>
             <mat-divider></mat-divider>
             <div class="form-group form-row">
-                <div class="col-8">
-                    <mat-form-field appearance="standard">
-                        <mat-label>Cliente</mat-label>
-                        <mat-autocomplete #cliente="matAutocomplete" [displayWith]="verCliente"
-                            (optionSelected)="seleccionarCliente()">
-                            <mat-option *ngFor="let cliente of filtroClientes | async" [value]="cliente">
-                                {{cliente.razonSocial}}
-                            </mat-option>
-                        </mat-autocomplete>
-                        <input matInput type="text" class="form-control-sm" placeholder="Razon Social"
-                            [formControl]="seleccionCliente" [matAutocomplete]="cliente">
-                    </mat-form-field>
+                <div class="form-row col-9">
+                    <div class="col-3">
+                        <mat-form-field appearance="standard">
+                            <mat-label>Ruc</mat-label>
+                            <input matInput type="text" [(ngModel)]="notaCreditoVenta.factura.cliente.identificacion"
+                                class="form-control-sm" [disabled]="true">
+                        </mat-form-field>
+                    </div>
+                    <div class="col-9">
+                        <mat-form-field appearance="standard">
+                            <mat-label>Cliente</mat-label>
+                            <mat-autocomplete #cliente="matAutocomplete" [displayWith]="verCliente"
+                                (optionSelected)="seleccionarCliente()">
+                                <mat-option *ngFor="let cliente of filtroClientes | async" [value]="cliente">
+                                    {{cliente.razonSocial}}
+                                </mat-option>
+                            </mat-autocomplete>
+                            <input matInput type="text" class="form-control-sm" placeholder="Razon Social"
+                                [formControl]="seleccionCliente" [matAutocomplete]="cliente">
+                        </mat-form-field>
+                    </div>
+                    <div class="col-3">
+                        <mat-form-field appearance="standard">
+                            <mat-label>Fecha</mat-label>
+                            <input matInput [matDatepicker]="picker" [(ngModel)]="notaCreditoVenta.fecha" [max]="hoy">
+                            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                            <mat-datepicker #picker></mat-datepicker>
+                        </mat-form-field>
+                    </div>
+                    <div class="col-9">
+                        <mat-form-field appearance="standard">
+                            <mat-label>Direccion</mat-label>
+                            <input matInput type="text" [(ngModel)]="notaCreditoVenta.factura.cliente.direccion"
+                                class="form-control-sm" [disabled]="true">
+                        </mat-form-field>
+                    </div>
+                    <div class="col-2">
+                        <mat-form-field appearance="standard">
+                            <mat-label>Serie</mat-label>
+                            <input matInput type="text" class="form-control-sm" [(ngModel)]="notaCreditoVenta.factura.serie"
+                                [disabled]="true">
+                        </mat-form-field>
+                    </div>
+                    <div class="col-3">
+                        <mat-form-field appearance="standard">
+                            <mat-label>Factura</mat-label>
+                            <mat-autocomplete #factura="matAutocomplete" [displayWith]="verFactura"
+                                (optionSelected)="obtenerPorFactura()">
+                                <mat-option *ngFor="let factura of filtroFacturas | async" [value]="factura">
+                                    {{factura.secuencial}}
+                                </mat-option>
+                            </mat-autocomplete>
+                            <input matInput type="text" class="form-control-sm" placeholder="Secuencial Factura"
+                                [formControl]="seleccionFactura" [matAutocomplete]="factura">
+                        </mat-form-field>
+                    </div>
+                    <div class="col-3">
+                        <mat-form-field appearance="standard">
+                            <mat-label>Operacion</mat-label>
+                            <mat-select class="form-control-sm" [(ngModel)]="notaCreditoVenta.operacion"
+                                (selectionChange)="seleccionarOperacion()">
+                                <mat-option [value]="devolucion">{{devolucion}}</mat-option>
+                                <mat-option [value]="descuento">{{descuento}}</mat-option>
+                                <mat-option [value]="conjunta">{{conjunta}}</mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
                 </div>
-                <div class="col-4">
-                    <mat-form-field appearance="standard">
-                        <mat-label>Ruc</mat-label>
-                        <input matInput type="text" [(ngModel)]="notaCreditoVenta.factura.cliente.identificacion"
-                            class="form-control-sm" [disabled]="true">
-                    </mat-form-field>
-                </div>
-                <div class="col-12">
-                    <mat-form-field appearance="standard">
-                        <mat-label>Direccion</mat-label>
-                        <input matInput type="text" [(ngModel)]="notaCreditoVenta.factura.cliente.direccion"
-                            class="form-control-sm" [disabled]="true">
-                    </mat-form-field>
-                </div>
-                <div class="form-row col-4">
-                    <ng-container *ngFor="let telefono of notaCreditoVenta.factura.cliente.telefonos; let i=index ">
-                        <div class="col-9">
-                            <mat-form-field appearance="standard">
-                                <mat-label>Teléfono</mat-label>
-                                <b matPrefix>+593 &nbsp;</b>
-                                <input matInput type="tel" [value]="telefono.numero" class="form-control-sm"
-                                    [disabled]="true">
-                            </mat-form-field>
-                        </div>
-                        <div class="col-3 iconos">
-                            <button mat-icon-button [disabled]="true">
-                                <mat-icon class="iconos-peque">close</mat-icon>
-                            </button>
-                        </div>
-                    </ng-container>
-                </div>
-                <div class="form-row col-4">
-                    <ng-container *ngFor="let celular of notaCreditoVenta.factura.cliente.celulares; let i=index ">
-                        <div class="col-9">
-                            <mat-form-field appearance="standard">
-                                <mat-label>Celular</mat-label>
-                                <b matPrefix>+593 &nbsp;</b>
-                                <input matInput type="tel" [value]="celular.numero" class="form-control-sm"
-                                    [disabled]="true">
-                            </mat-form-field>
-                        </div>
-                        <div class="col-3 iconos">
-                            <button mat-icon-button [disabled]="true">
-                                <mat-icon class="iconos-peque">close</mat-icon>
-                            </button>
-                        </div>
-                    </ng-container>
-                </div>
-                <div class="form-row col-4">
-                    <ng-container *ngFor="let correo of notaCreditoVenta.factura.cliente.correos; let i=index ">
-                        <div class="col-9">
-                            <mat-form-field appearance="standard">
-                                <mat-label>Correo electrónico</mat-label>
-                                <input matInput type="text " [(ngModel)]="correo.email" class="form-control-sm "
-                                    [disabled]="true">
-                            </mat-form-field>
-                        </div>
-                        <div class="col-3 iconos">
-                            <button mat-icon-button [disabled]="true">
-                                <mat-icon class="iconos-peque">close</mat-icon>
-                            </button>
-                        </div>
-                    </ng-container>
-                </div>
-                <div class="col-4">
-                    <mat-form-field appearance="standard">
-                        <mat-label>Estab.</mat-label>
-                        <input matInput type="text" class="form-control-sm"
-                            [(ngModel)]="sesion.usuario.estacion.establecimiento.codigo" disabled>
-                    </mat-form-field>
-                </div>
-                <div class="col-4">
-                    <mat-form-field appearance="standard">
-                        <mat-label>Punto V.</mat-label>
-                        <input matInput type="text" class="form-control-sm" [(ngModel)]="sesion.usuario.estacion.codigo"
-                            disabled>
-                    </mat-form-field>
-                </div>
-                <div class="col-4">
-                    <mat-form-field appearance="standard">
-                        <mat-label>Usuario</mat-label>
-                        <input matInput type="text" class="form-control-sm" [(ngModel)]="sesion.usuario.nombre"
-                            [disabled]="true">
-                    </mat-form-field>
-                </div>
-                <div class="col-2">
-                    <mat-form-field appearance="standard">
-                        <mat-label>Fecha</mat-label>
-                        <input matInput [matDatepicker]="picker" [(ngModel)]="notaCreditoVenta.fecha" [max]="hoy">
-                        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-                        <mat-datepicker #picker></mat-datepicker>
-                    </mat-form-field>
-                </div>
-                <div class="col-2">
-                    <mat-form-field appearance="standard">
-                        <mat-label>Secuencial</mat-label>
-                        <input matInput type="text" class="form-control-sm" [(ngModel)]="notaCreditoVenta.secuencial"
-                            [disabled]="true">
-                    </mat-form-field>
-                </div>
-                <div class="col-2">
-                    <mat-form-field appearance="standard">
-                        <mat-label>Estado</mat-label>
-                        <mat-select class="form-control-sm" [(ngModel)]="notaCreditoVenta.estado" [disabled]="true">
-                            <mat-option [value]="emitida">{{emitida}}</mat-option>
-                            <mat-option [value]="anulada">{{anulada}}</mat-option>
-                            <mat-option [value]="noFacturada">{{noFacturada}}</mat-option>
-                            <mat-option [value]="facturada">{{facturada}}</mat-option>
-                            <mat-option [value]="noRecaudada">{{noRecaudada}}</mat-option>
-                            <mat-option [value]="recaudada">{{recaudada}}</mat-option>
-                        </mat-select>
-                    </mat-form-field>
-                </div>
-                <div class="col-1">
-                    <mat-form-field appearance="standard">
-                        <mat-label>Serie</mat-label>
-                        <input matInput type="text" class="form-control-sm" [(ngModel)]="notaCreditoVenta.factura.serie"
-                            [disabled]="true">
-                    </mat-form-field>
-                </div>
-                <div class="col-3">
-                    <mat-form-field appearance="standard">
-                        <mat-label>Factura</mat-label>
-                        <mat-autocomplete #factura="matAutocomplete" [displayWith]="verFactura"
-                            (optionSelected)="obtenerPorFactura()">
-                            <mat-option *ngFor="let factura of filtroFacturas | async" [value]="factura">
-                                {{factura.secuencial}}
-                            </mat-option>
-                        </mat-autocomplete>
-                        <input matInput type="text" class="form-control-sm" placeholder="Secuencial Factura"
-                            [formControl]="seleccionFactura" [matAutocomplete]="factura">
-                    </mat-form-field>
-                </div>
-                <div class="col-2">
-                    <mat-form-field appearance="standard">
-                        <mat-label>Operacion</mat-label>
-                        <mat-select class="form-control-sm" [(ngModel)]="notaCreditoVenta.operacion"
-                            (selectionChange)="seleccionarOperacion()">
-                            <mat-option [value]="devolucion">{{devolucion}}</mat-option>
-                            <mat-option [value]="descuento">{{descuento}}</mat-option>
-                            <mat-option [value]="conjunta">{{conjunta}}</mat-option>
-                        </mat-select>
-                    </mat-form-field>
-                </div>
+                <div class="form-row col-3 linea-vertical ml-1">
+                    <div class="col-3">
+                        <mat-form-field appearance="standard">
+                            <mat-label>Estab.</mat-label>
+                            <input matInput type="text" class="form-control-sm"
+                                [(ngModel)]="sesion.usuario.estacion.establecimiento.codigoSRI" disabled>
+                        </mat-form-field>
+                    </div>
+                    <div class="col-3">
+                        <mat-form-field appearance="standard">
+                            <mat-label>Punto V.</mat-label>
+                            <input matInput type="text" class="form-control-sm" [(ngModel)]="sesion.usuario.estacion.codigoSRI"
+                                disabled>
+                        </mat-form-field>
+                    </div>
+                    <div class="col-6">
+                        <mat-form-field appearance="standard">
+                            <mat-label>Secuencial</mat-label>
+                            <input matInput type="text" class="form-control-sm" [(ngModel)]="notaCreditoVenta.secuencial"
+                                [disabled]="true">
+                        </mat-form-field>
+                    </div>
+                    <div class="col-6">
+                        <mat-form-field appearance="standard">
+                            <mat-label>Usuario</mat-label>
+                            <input matInput type="text" class="form-control-sm" [(ngModel)]="sesion.usuario.nombre"
+                                [disabled]="true">
+                        </mat-form-field>
+                    </div>
+                    <div class="col-6">
+                        <mat-form-field appearance="standard">
+                            <mat-label>Estado</mat-label>
+                            <input matInput type="text" class="form-control-sm" [(ngModel)]="notaCreditoVenta.estado"
+                                [disabled]="true">
+                        </mat-form-field>
+                    </div>
+                </div>   
             </div>
         </mat-expansion-panel>
         <mat-expansion-panel (opened)="panelOpenState = true" (closed)="panelOpenState = false">
@@ -223,93 +171,47 @@
             </mat-expansion-panel-header>
             <mat-divider></mat-divider>
             <div class="form-group form-row">
-                <div class="mat-elevation-z8 col-12">
-                    <table mat-table [dataSource]="dataSourceLinea" matSort>
-                        <!-- Nombre Columna -->
-                        <ng-container matColumnDef="codigo">
-                            <th mat-header-cell *matHeaderCellDef mat-sort-header> Codigo </th>
-                            <td mat-cell *matCellDef="let notaCreditoVentaLinea">
-                                {{notaCreditoVentaLinea.producto.codigo}}
+                <div class="col-12 mat-elevation-z8 centrar">
+                    <table mat-table [dataSource]="dataSourceLinea"  matSort #MatSort2="matSort">
+                        <!-- Columnas Dinamicas -->
+                        <ng-container *ngFor="let columna of columnasLinea"
+                            [matColumnDef]="columna.nombreColumna">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header class="centrarCabecera"> {{ columna.cabecera }} </th>
+                            <td mat-cell *matCellDef="let row; let i=index">
+                                <ng-container *ngIf="columna.nombreColumna!='devolucion' && columna.nombreColumna!='descuento' && 
+                                    columna.nombreColumna!='porcdescuento'">
+                                    {{ columna.celda(row) }}
+                                </ng-container>
+                                <ng-container *ngIf="columna.nombreColumna=='devolucion'">
+                                    <mat-form-field floatLabel="never">
+                                        <input matInput [(ngModel)]="row.devolucion" [disabled]="deshabilitarDevolucion"
+                                        (change)="seleccionarDevolucion(i, row.devolucion)">
+                                    </mat-form-field>
+                                </ng-container>
+                                <ng-container *ngIf="columna.nombreColumna=='descuento'">
+                                    <mat-form-field floatLabel="never">
+                                        <input matInput [(ngModel)]="row.valorDescuentoLinea" [disabled]="deshabilitarDescuento"
+                                        (change)="seleccionarValorDescuentoLinea(i, row.valorDescuentoLinea)">
+                                    </mat-form-field>
+                                </ng-container>
+                                <ng-container *ngIf="columna.nombreColumna=='porcdescuento'">
+                                    <mat-form-field floatLabel="never">
+                                        <input matInput [(ngModel)]="row.porcentajeDescuentoLinea" [disabled]="deshabilitarDescuento"
+                                        (change)="seleccionarPorcentajeDescuentoLinea(i, row.valorDescuentoLinea)">
+                                    </mat-form-field>
+                                </ng-container>
                             </td>
                         </ng-container>
-                        <ng-container matColumnDef="nombre">
-                            <th mat-header-cell *matHeaderCellDef mat-sort-header> Producto </th>
-                            <td mat-cell *matCellDef="let notaCreditoVentaLinea">
-                                {{notaCreditoVentaLinea.producto.nombre}}
-                            </td>
-                        </ng-container>
-                        <!-- Descripcion Columna -->
-                        <ng-container matColumnDef="medida">
-                            <th mat-header-cell *matHeaderCellDef mat-sort-header> Med </th>
-                            <td mat-cell *matCellDef="let notaCreditoVentaLinea">
-                                {{notaCreditoVentaLinea.producto.medida.abreviatura}} </td>
-                        </ng-container>
-                        <!-- Cantidad Columna -->
-                        <ng-container matColumnDef="cantidad">
-                            <th mat-header-cell *matHeaderCellDef mat-sort-header>Cant </th>
-                            <td mat-cell *matCellDef="let notaCreditoVentaLinea">
-                                {{notaCreditoVentaLinea.cantidad}} </td>
-                        </ng-container>
-                        <ng-container matColumnDef="devolucion">
-                            <th mat-header-cell *matHeaderCellDef mat-sort-header>Dev </th>
-                            <td mat-cell *matCellDef="let notaCreditoVentaLinea">
-                                <mat-form-field floatLabel="never">
-                                    <input matInput [(ngModel)]="notaCreditoVentaLinea.devolucion"
-                                        (change)="seleccionarDevolucion()" [disabled]="deshabilitarDevolucion">
-                                </mat-form-field>
-                            </td>
-                        </ng-container>
-                        <!-- Valor Columna -->
-                        <ng-container matColumnDef="costoUnitario">
-                            <th mat-header-cell *matHeaderCellDef mat-sort-header>Costo Unit </th>
-                            <td mat-cell *matCellDef="let notaCreditoVentaLinea">
-                                ${{notaCreditoVentaLinea.costoUnitario }} </td>
-                        </ng-container>
-                        <!-- Descuento Columna -->
-                        <ng-container matColumnDef="valorDescuento">
-                            <th mat-header-cell *matHeaderCellDef mat-sort-header> Desc. </th>
-                            <td mat-cell *matCellDef="let notaCreditoVentaLinea">
-                                <mat-form-field floatLabel="never">
-                                    <input matInput [(ngModel)]="notaCreditoVentaLinea.valorDescuentoLinea"
-                                        (change)="seleccionarValorDescuentoLinea()" [disabled]="deshabilitarDescuento">
-                                </mat-form-field>
-                            </td>
-                        </ng-container>
-                        <!-- Descuento% Columna -->
-                        <ng-container matColumnDef="porcentajeDescuento">
-                            <th mat-header-cell *matHeaderCellDef mat-sort-header> Desc% </th>
-                            <td mat-cell *matCellDef="let notaCreditoVentaLinea">
-                                <mat-form-field floatLabel="never">
-                                    <input matInput [(ngModel)]="notaCreditoVentaLinea.porcentajeDescuentoLinea"
-                                        (change)="seleccionarPorcentajeDescuentoLinea()"
-                                        [disabled]="deshabilitarDescuento">
-                                </mat-form-field>
-                            </td>
-                        </ng-container>
-                        <!-- Impuesto Columna -->
-                        <ng-container matColumnDef="impuesto">
-                            <th mat-header-cell *matHeaderCellDef mat-sort-header> IVA </th>
-                            <td mat-cell *matCellDef="let notaCreditoVentaLinea">
-                                {{notaCreditoVentaLinea.producto.impuesto.porcentaje}}% </td>
-                        </ng-container>
-                        <ng-container matColumnDef="bodega">
-                            <th mat-header-cell *matHeaderCellDef mat-sort-header> BOD </th>
-                            <td mat-cell *matCellDef="let notaCreditoVentaLinea">
-                                {{notaCreditoVentaLinea.bodega.nombre}} </td>
-                        </ng-container>
-                        <!-- Total Columna -->
-                        <ng-container matColumnDef="total">
-                            <th mat-header-cell *matHeaderCellDef mat-sort-header> Subtotal </th>
-                            <td mat-cell *matCellDef="let notaCreditoVentaLinea">
-                                ${{notaCreditoVentaLinea.totalSinDescuentoLinea}} </td>
-                        </ng-container>
-                        <tr mat-header-row *matHeaderRowDef="columnasLinea"></tr>
-                        <tr mat-row *matRowDef="let row; columns: columnasLinea;"></tr>
+                        <tr mat-header-row *matHeaderRowDef="cabeceraLinea"></tr>
+                        <tr mat-row *matRowDef="let row; columns: cabeceraLinea;"
+                            [class.selected-row]="clickedRowsLinea.has(row)"></tr>
+                        <!-- Row shown when there is no matching data. -->
+                        <tr class="mat-row" *matNoDataRow>
+                            <td class="mat-cell" colspan="5">No hay precios agregados</td>
+                        </tr>
                     </table>
-                    <ng-container>
-                        <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" showFirstLastButtons
-                            #paginatorLinea></mat-paginator>
-                    </ng-container>
+                    <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" showFirstLastButtons
+                        #MatPaginator2="matPaginator"></mat-paginator>
                 </div>
                 <mat-divider></mat-divider>
                 <div class="form-group form-row">
@@ -397,15 +299,18 @@
                     <i><u>GESTIONAR NOTAS CREDITO</u></i>
                 </mat-panel-title>
                 <mat-panel-description>
-                    {{abrirPanelAdmin ? 'Ocultar administrador de nota credito' : 'Editar nota credito
-                    existentes'}}
+                    {{abrirPanelAdmin ? 'Ocultar administrador de nota credito' : 'Editar nota credito existentes'}}
                     <mat-icon>group</mat-icon>
                 </mat-panel-description>
             </mat-expansion-panel-header>
             <mat-divider></mat-divider>
             <mat-form-field appearance="standard">
                 <mat-label>Buscar nota credito</mat-label>
-                <input matInput (keyup)="filtro($event)" placeholder="Ej. 001" #input>
+                <input matInput (keyup)="filtroNotaCreditoVenta($event)" placeholder="Ej. 001" #inputFiltro>
+                <button mat-button *ngIf="inputFiltro.value" matSuffix mat-icon-button
+                    (click)="borrarFiltroNotaCreditoVenta()">
+                    <mat-icon>close</mat-icon>
+                </button>
             </mat-form-field>
             <div class="mat-elevation-z8">
                 <table mat-table [dataSource]="dataSource" matSort>
@@ -422,7 +327,7 @@
 
                     <tr class="mat-row" *matNoDataRow>
                         <td class="mat-cell" colspan="6">No hay datos que coincidan con el grupo
-                            "{{input.value}}"</td>
+                            "{{inputFiltro.value}}"</td>
                     </tr>
                 </table>
                 <mat-paginator #paginator [pageSizeOptions]="[5, 10, 25, 100]" showFirstLastButtons></mat-paginator>

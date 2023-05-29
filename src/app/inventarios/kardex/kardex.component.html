@@ -1,3 +1,17 @@
+<nav class="navbar-light nav-fijo">
+    <ul class="navbar-nav">
+        <li class="nav-item" *ngIf="productoSeleccionado">
+            <a class="nav-link" title="Actualizar" role="button" (click)="seleccionarProducto()">
+                <mat-icon>update</mat-icon>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" title="Nuevo" role="button" (click)="nuevo($event)">
+                <mat-icon>file_copy</mat-icon>
+            </a>
+        </li>
+    </ul>
+</nav>
 <div class="contenedor">
     <div class="form-group form-row">
         <div class="card col-12">
@@ -9,12 +23,14 @@
                     <div class="col-12">
                         <mat-form-field appearance="standard">
                             <mat-label>Producto</mat-label>
-                            <mat-autocomplete #producto="matAutocomplete" [displayWith]="verProducto" (optionSelected)="seleccionarProducto()">
+                            <input matInput type="text" [formControl]="controlProducto" [matAutocomplete]="producto"
+                                class="form-control-sm">
+                            <mat-autocomplete #producto="matAutocomplete" [displayWith]="verProducto" 
+                                (optionSelected)="seleccionarProducto()">
                                 <mat-option *ngFor="let producto of filtroProductos | async" [value]="producto">
                                     {{producto.nombre}}
                                 </mat-option>
                             </mat-autocomplete>
-                            <input matInput type="text" class="form-control-sm" [formControl]="seleccionProducto" [matAutocomplete]="producto">
                         </mat-form-field>
                     </div>
                 </div>

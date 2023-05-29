@@ -177,11 +177,13 @@ export class FacturaCompraComponent implements OnInit {
 
   nuevo(){
     this.facturaCompra = new FacturaCompra();
+    this.controlIdentificacionProveedor.patchValue(valores.vacio);
     this.controlProveedor.patchValue(valores.vacio);
     this.controlProducto.patchValue(valores.vacio);
     this.dataSourceLinea = new MatTableDataSource<FacturaCompraLinea>([]);
     this.clickedRowsFacturaCompra.clear();
     this.nuevoFacturaCompraLinea();
+    this.abrirPanelFacturaCompra = true;
   }
 
   crear(event) {
@@ -210,6 +212,7 @@ export class FacturaCompraComponent implements OnInit {
       event.preventDefault();
     if (!this.validarFormulario())
       return;  
+    console.log(this.facturaCompra);  
     this.spinnerService.show();
     this.facturaCompraService.actualizar(this.facturaCompra).subscribe({
       next: res => {
@@ -457,7 +460,7 @@ export class FacturaCompraComponent implements OnInit {
   }
 
   obtenerUltimoKardex(){
-    this.kardexService.obtenerUltimoPorFecha(this.facturaCompraLinea.bodega.id, this.facturaCompraLinea.producto.id).subscribe({
+    this.kardexService.obtenerUltimoPorBodega(this.facturaCompraLinea.bodega.id, this.facturaCompraLinea.producto.id).subscribe({
       next: res => {
         if (res.resultado == null) {
           Swal.fire({ icon: error_swal, title: error, text: mensajes.error_kardex_vacio });

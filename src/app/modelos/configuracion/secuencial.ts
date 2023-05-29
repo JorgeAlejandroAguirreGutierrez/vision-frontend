@@ -1,6 +1,6 @@
 import { valores } from "../../constantes";
 import { Estacion } from "../usuario/estacion";
-import { TipoComprobante } from "../venta/tipo-comprobante";
+import { TipoComprobante } from "./tipo-comprobante";
 
 export class Secuencial {
     id: number;

@@ -283,6 +283,10 @@ export class FacturaComponent implements OnInit {
   actualizar(event) {
     if (event != null)
       event.preventDefault();
+    if (this.factura.estado == this.recaudada){
+      Swal.fire({ icon: error_swal, title: error, text: mensajes.error_factura_recaudada });
+      return;
+    }  
     this.spinnerService.show();    
     //console.log(this.factura);
     this.facturaService.actualizar(this.factura).subscribe({
@@ -303,6 +307,8 @@ export class FacturaComponent implements OnInit {
   actualizarRecaudacion(event: Factura){
     if (event){
       this.factura = event;
+      this.llenarFecha();
+      this.factura.estado = event.estado;
       //console.log(this.factura);
     }
   }
@@ -372,11 +378,15 @@ export class FacturaComponent implements OnInit {
     });
   }
 
-  construir() {
+  llenarFecha() {
     let fecha = new Date(this.factura.fecha);
     this.factura.fecha = fecha;
+  }
+
+  construir() {
     this.controlIdentificacionCliente.patchValue(this.factura.cliente);
     this.controlRazonSocialCliente.patchValue(this.factura.cliente);
+    this.llenarFecha();
     this.llenarTablaFacturaLinea(this.factura.facturaLineas);
   }
 
@@ -556,7 +566,7 @@ export class FacturaComponent implements OnInit {
   }
 
   obtenerUltimoKardex(){
-    this.kardexService.obtenerUltimoPorFecha(this.facturaLinea.bodega.id, this.facturaLinea.producto.id).subscribe({
+    this.kardexService.obtenerUltimoPorBodega(this.facturaLinea.bodega.id, this.facturaLinea.producto.id).subscribe({
       next: res => {
         if (res.resultado == null) {
           Swal.fire({ icon: error_swal, title: error, text: mensajes.error_kardex_vacio });

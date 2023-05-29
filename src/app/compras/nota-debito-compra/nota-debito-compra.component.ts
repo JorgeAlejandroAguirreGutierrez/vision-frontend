@@ -441,14 +441,14 @@ export class NotaDebitoCompraComponent implements OnInit {
     if(this.notaDebitoCompraLinea.producto.id == valores.cero || this.notaDebitoCompraLinea.bodega.id == valores.cero || this.notaDebitoCompra.facturaCompra.proveedor.id == valores.cero){
       return;
     }
-    this.kardexService.obtenerUltimoPorFecha(this.notaDebitoCompraLinea.bodega.id, this.notaDebitoCompraLinea.producto.id).subscribe(
+    this.kardexService.obtenerUltimoPorBodega(this.notaDebitoCompraLinea.bodega.id, this.notaDebitoCompraLinea.producto.id).subscribe(
       res => {
         if (res.resultado == null){
           Swal.fire({ icon: error_swal, title: error, text: mensajes.error_kardex_vacio });
           return;
         }
         this.kardex = res.resultado as Kardex;
-        this.notaDebitoCompraLinea.costoUnitario = this.kardex.costoUnitario;
+        this.notaDebitoCompraLinea.costoUnitario = this.kardex.costoPromedio;
       },
       err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     );
@@ -460,14 +460,14 @@ export class NotaDebitoCompraComponent implements OnInit {
     if(this.notaDebitoCompraLinea.producto.id == valores.cero || this.notaDebitoCompraLinea.bodega.id == valores.cero || this.notaDebitoCompra.facturaCompra.proveedor.id == valores.cero){
       return;
     }
-    this.kardexService.obtenerUltimoPorFecha(this.notaDebitoCompraLinea.bodega.id, this.notaDebitoCompraLinea.producto.id).subscribe(
+    this.kardexService.obtenerUltimoPorBodega(this.notaDebitoCompraLinea.bodega.id, this.notaDebitoCompraLinea.producto.id).subscribe(
       res => {
         if (res.resultado == null){
           Swal.fire({ icon: error_swal, title: error, text: mensajes.error_kardex_vacio });
           return;
         }
         this.kardex = res.resultado as Kardex;
-        this.notaDebitoCompraLinea.costoUnitario = this.kardex.costoUnitario;
+        this.notaDebitoCompraLinea.costoUnitario = this.kardex.costoPromedio;
       },
       err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     );
