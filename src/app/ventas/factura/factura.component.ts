@@ -120,7 +120,6 @@ export class FacturaComponent implements OnInit {
     { nombreColumna: 'medida', cabecera: 'Medida', celda: (row: FacturaLinea) => `${row.producto.medida.abreviatura}` },
     { nombreColumna: 'cantidad', cabecera: 'Cant.', celda: (row: FacturaLinea) => `${row.cantidad}` },
     { nombreColumna: 'valor', cabecera: 'P. Unit', celda: (row: FacturaLinea) => `${row.precioUnitario}` },
-    //{ nombreColumna: 'impuesto', cabecera: 'IVA %', celda: (row: FacturaLinea) => `${row.impuesto.porcentaje} %` },
     { nombreColumna: 'descuento', cabecera: 'Desc. $', celda: (row: FacturaLinea) => `${row.valorDescuentoLinea}` },
     { nombreColumna: 'descuentoPorcentaje', cabecera: 'Desc. %', celda: (row: FacturaLinea) => `${row.porcentajeDescuentoLinea} %` },
     { nombreColumna: 'subtotal', cabecera: 'Subtotal', celda: (row: FacturaLinea) => `${row.subtotalConDescuentoLinea}` },
@@ -226,14 +225,12 @@ export class FacturaComponent implements OnInit {
       event.preventDefault();
     this.spinnerService.show();    
     this.factura.sesion = this.sesion;
-    //console.log(this.factura);
     this.facturaService.crear(this.factura).subscribe({
       next: res => {
         this.factura = res.resultado as Factura;
         this.consultar();
         this.spinnerService.hide();  
         this.stepper.next();
-        //Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
       },
       error: err => {
         Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
@@ -452,7 +449,6 @@ export class FacturaComponent implements OnInit {
         this.construir();
         this.nuevoFacturaLinea();
         this.spinnerService.hide();
-        //Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
       },
       error: err => {
         Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
@@ -463,7 +459,6 @@ export class FacturaComponent implements OnInit {
 
   actualizarFacturaLinea() {
     this.factura.facturaLineas[this.indiceLinea] = this.facturaLinea;
-    //console.log(this.factura.facturaLineas);
     this.llenarTablaFacturaLinea(this.factura.facturaLineas);
     this.calcularTotales();
     this.nuevoFacturaLinea();
@@ -486,7 +481,6 @@ export class FacturaComponent implements OnInit {
   }
 
   seleccionFacturaLinea(facturaLinea: FacturaLinea, i:number) {
-    //console.log(i);
     if (!this.clickedRowsLinea.has(facturaLinea)) {
       this.clickedRowsLinea.clear();
       this.clickedRowsLinea.add(facturaLinea);
@@ -555,10 +549,7 @@ export class FacturaComponent implements OnInit {
     }
     this.inicializarOpciones(); // Error si no tiene bodega
     if (this.esBien){
-      //this.inicializarOpciones();
       this.obtenerUltimoKardex();
-    } else {
-
     }
   }
 
