@@ -445,7 +445,7 @@ export class FacturaCompraComponent implements OnInit {
   }
 
   seleccionarProducto() {
-    this.facturaCompraLinea.producto=this.controlProducto.value;
+    this.facturaCompraLinea.producto = this.controlProducto.value;
     this.facturaCompraLinea.impuesto = this.facturaCompraLinea.producto.impuesto;
     if (this.facturaCompraLinea.producto.categoriaProducto.id == 1){
       this.esBien = true } else { this.esBien = false };
@@ -467,6 +467,7 @@ export class FacturaCompraComponent implements OnInit {
           return;
         }
         this.kardex = res.resultado as Kardex;
+        this.facturaCompraLinea.costoUnitario = this.kardex.costoPromedio;
       },
       error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     });
