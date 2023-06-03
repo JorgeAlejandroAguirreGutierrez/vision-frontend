@@ -192,7 +192,7 @@ export class FacturaCompraComponent implements OnInit {
     if (!this.validarFormulario())
       return;
     this.spinnerService.show();   
-    this.facturaCompra.sesion=this.sesion;
+    this.facturaCompra.sesion = this.sesion;
     this.facturaCompraService.crear(this.facturaCompra).subscribe({
       next: res => {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
