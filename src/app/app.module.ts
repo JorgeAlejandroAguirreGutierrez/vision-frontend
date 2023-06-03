@@ -19,10 +19,10 @@ import { ModeloService } from './servicios/administracion/modelo.service';
 import { NgxSpinnerModule } from 'ngx-spinner';
 
 // Componentes generales para las pestañas
-import { TabContentComponent } from "./componentes/tab/tab-content.component";
-import { ContentContainerDirective } from "./componentes/tab/content-container.directive";
-import { TabService } from "./servicios/componente/tab/tab.service";
-import { FormatoDecimalDirective } from "./componentes/tab/FormatoDecimal.directive";
+import { TabContentComponent } from "./componentes/comun/tab/tab-content.component";
+import { ContentContainerDirective } from "./componentes/comun/tab/content-container.directive";
+import { TabService } from "./servicios/comun/tab/tab.service";
+import { FormatoDecimalDirective } from "./componentes/comun/tab/FormatoDecimal.directive";
 
 //Tienda - Estructura: Cabecera y Menu
 import { LocationStrategy, PathLocationStrategy } from '@angular/common';

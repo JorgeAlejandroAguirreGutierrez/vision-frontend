@@ -1,4 +1,5 @@
 import { valores } from "../../constantes";
+import { Empresa } from "./empresa";
 import { Usuario } from './usuario';
 
 export class Sesion {
@@ -9,6 +10,7 @@ export class Sesion {
     fechaCierre: Date;
     estado: string;
     usuario: Usuario;
+    empresa: Empresa;
 
     constructor() { 
         this.id = valores.cero;
@@ -18,5 +20,6 @@ export class Sesion {
         this.fechaCierre = new Date();
         this.estado = valores.activo;
         this.usuario = new Usuario();
+        this.empresa = new Empresa();
     }
 }

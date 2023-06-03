@@ -54,10 +54,10 @@ import { SlideToggleComponent } from './slide-toggle/slide-toggle.component';
     ToolbarComponent,
     ProgressSnipperComponent,
     ProgressComponent,
-    DialogComponent,
-    DialogOverviewExampleDialogComponent,
+    //DialogComponent,
+    //DialogOverviewExampleDialogComponent,
     TooltipComponent,
-    SnackbarComponent,
+    //SnackbarComponent,
     SliderComponent,
     SlideToggleComponent
   ]

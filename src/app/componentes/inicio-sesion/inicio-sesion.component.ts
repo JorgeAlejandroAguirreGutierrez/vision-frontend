@@ -87,10 +87,10 @@ export class InicioSesionComponent implements OnInit {
         this.usuario = this.sesion.usuario;
         this.multiEmpresa=this.sesion.usuario.perfil.multiempresa == valores.si? true: false;
         if (this.multiEmpresa){
-          this.sesion.usuario.estacion.establecimiento.empresa.id = 1; //Iniciar combo empresa
+          this.sesion.empresa.id = 1; //Iniciar combo empresa
         } else {
           // Obtener la empresa de estacion no de usuario, sirve para MVP 1
-          this.sesion.usuario.estacion.establecimiento.empresa = this.usuario.estacion.establecimiento.empresa; // Cambiar cuando se impl usuario-estación
+          this.sesion.empresa = this.usuario.estacion.establecimiento.empresa; // Cambiar cuando se impl usuario-estación
         }
         if (this.sesion.usuario.cambiarContrasena == valores.si) {
           this.cambiarContrasena = true;

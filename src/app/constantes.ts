@@ -1,4 +1,4 @@
-import { TabService } from './servicios/componente/tab/tab.service';
+import { TabService } from './servicios/comun/tab/tab.service';
 import { HttpHeaders } from '@angular/common/http';
 import { SesionService } from './servicios/usuario/sesion.service';
 import { Router } from '@angular/router';
