@@ -2,96 +2,96 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
 // Componentes comunes para todas las paginas
-import { HeaderComponent } from './componentes/header/header.component';
-import { FooterComponent } from './componentes/footer/footer.component';
-import { NavbarComponent } from './componentes/navbar/navbar.component';
-import { SidebarComponent } from './componentes/sidebar/sidebar.component';
-import { ImportarComponent } from './configuraciones/importar/importar.component';
-import { ExportarComponent } from './configuraciones/exportar/exportar.component';
+import { HeaderComponent } from './componentes/comun/header/header.component';
+import { FooterComponent } from './componentes/comun/footer/footer.component';
+import { NavbarComponent } from './componentes/comun/navbar/navbar.component';
+import { SidebarComponent } from './componentes/comun/sidebar/sidebar.component';
+import { ImportarComponent } from './componentes/configuracion/importar/importar.component';
+import { ExportarComponent } from './componentes/configuracion/exportar/exportar.component';
 
 // Componentes de Inicio
 import { InicioSesionComponent, CambioCredencialesComponent } from './componentes/inicio-sesion/inicio-sesion.component';
-import { MainComponent } from './componentes/main/main.component';
-import { MenuComponent } from './componentes/menu/menu.component';
+import { MainComponent } from './componentes/comun/main/main.component';
+import { MenuComponent } from './componentes/comun/menu/menu.component';
 
 // Molulo de Clientes
-import { ClienteComponent, DialogoMapaComponent } from './clientes/cliente/cliente.component';
-import { SegmentoComponent } from './clientes/segmento/segmento.component';
-import { GrupoClienteComponent, DialogoGrupoClienteCuentaContableComponent } from './clientes/grupo-cliente/grupo-cliente.component';
-import { TablaGrupoClienteCuentaContableComponent } from './clientes/grupo-cliente/tabla-grupo-cliente-cuenta-contable/tabla-grupo-cliente-cuenta-contable.component';
-import { OrigenIngresoComponent } from './clientes/origen-ingreso/origen-ingreso.component';
-import { CalificacionClienteComponent } from './clientes/calificacion-cliente/calificacion-cliente.component';
-import { EstadoCivilComponent } from './configuraciones/estado-civil/estado-civil.component';
-import { RegimenComponent } from './configuraciones/regimen/regimen.component';
-import { PlazoCreditoComponent } from './clientes/plazo-credito/plazo-credito.component';
-import { ImpuestoComponent } from './configuraciones/impuesto/impuesto.component';
-import { FormaPagoComponent } from './clientes/forma-pago/forma-pago.component';
-import { SecuencialComponent } from './configuraciones/secuencial/secuencial.component';
+import { ClienteComponent, DialogoMapaComponent } from './componentes/cliente/cliente/cliente.component';
+import { SegmentoComponent } from './componentes/cliente/segmento/segmento.component';
+import { GrupoClienteComponent, DialogoGrupoClienteCuentaContableComponent } from './componentes/cliente/grupo-cliente/grupo-cliente.component';
+import { TablaGrupoClienteCuentaContableComponent } from './componentes/cliente/grupo-cliente/tabla-grupo-cliente-cuenta-contable/tabla-grupo-cliente-cuenta-contable.component';
+import { OrigenIngresoComponent } from './componentes/cliente/origen-ingreso/origen-ingreso.component';
+import { CalificacionClienteComponent } from './componentes/cliente/calificacion-cliente/calificacion-cliente.component';
+import { EstadoCivilComponent } from './componentes/configuracion/estado-civil/estado-civil.component';
+import { RegimenComponent } from './componentes/configuracion/regimen/regimen.component';
+import { PlazoCreditoComponent } from './componentes/cliente/plazo-credito/plazo-credito.component';
+import { ImpuestoComponent } from './componentes/configuracion/impuesto/impuesto.component';
+import { FormaPagoComponent } from './componentes/cliente/forma-pago/forma-pago.component';
+import { SecuencialComponent } from './componentes/configuracion/secuencial/secuencial.component';
 
 //Módulo de Inventarios
-import { BodegaComponent } from './inventarios/bodega/bodega.component';
-import { MedidaComponent } from './inventarios/medida/medida.component';
-import { GrupoProductoComponent, DialogoGrupoProductoCuentaContableComponent } from './inventarios/grupo-producto/grupo-producto.component';
-import { TablaGrupoProductoCuentaContableComponent } from './inventarios/grupo-producto/tabla-grupo-producto-cuenta-contable/tabla-grupo-producto-cuenta-contable.component';
-import { TablaGrupoProductoComponent } from './inventarios/producto/tabla-grupo-producto/tabla-grupo-producto.component';
-import { KardexComponent } from './inventarios/kardex/kardex.component';
+import { BodegaComponent } from './componentes/inventario/bodega/bodega.component';
+import { MedidaComponent } from './componentes/inventario/medida/medida.component';
+import { GrupoProductoComponent, DialogoGrupoProductoCuentaContableComponent } from './componentes/inventario/grupo-producto/grupo-producto.component';
+import { TablaGrupoProductoCuentaContableComponent } from './componentes/inventario/grupo-producto/tabla-grupo-producto-cuenta-contable/tabla-grupo-producto-cuenta-contable.component';
+import { TablaGrupoProductoComponent } from './componentes/inventario/producto/tabla-grupo-producto/tabla-grupo-producto.component';
+import { KardexComponent } from './componentes/inventario/kardex/kardex.component';
 import { FiltroSerie } from './pipes/filtro-serie';
-import { ProductoComponent, DialogoGrupoProductoComponent } from './inventarios/producto/producto.component';
-import { PromocionComponent, DialogComponente } from './inventarios/promocion/promocion.component';
-import { TablaPromoIndComponent } from './inventarios/promocion/tabla-promo-ind/tabla-promo-ind.component';
-import { TablaPromoGrupComponent } from './inventarios/promocion/tabla-promo-grup/tabla-promo-grup.component';
-import { TablaComboComponent } from './inventarios/promocion/tabla-combo/tabla-combo.component';
-import { TablaComponenteComponent } from './inventarios/promocion/tabla-componente/tabla-componente.component';
-import { TipoRetencionComponent } from './configuraciones/tipo-retencion/tipo-retencion.component';
+import { ProductoComponent, DialogoGrupoProductoComponent } from './componentes/inventario/producto/producto.component';
+import { PromocionComponent, DialogComponente } from './componentes/inventario/promocion/promocion.component';
+import { TablaPromoIndComponent } from './componentes/inventario/promocion/tabla-promo-ind/tabla-promo-ind.component';
+import { TablaPromoGrupComponent } from './componentes/inventario/promocion/tabla-promo-grup/tabla-promo-grup.component';
+import { TablaComboComponent } from './componentes/inventario/promocion/tabla-combo/tabla-combo.component';
+import { TablaComponenteComponent } from './componentes/inventario/promocion/tabla-componente/tabla-componente.component';
+import { TipoRetencionComponent } from './componentes/configuracion/tipo-retencion/tipo-retencion.component';
 
 //Modulo Caja Bancos
-import { CuentaPropiaComponent } from './caja-bancos/cuenta-propia/cuenta-propia.component';
-import { BancoComponent } from './caja-bancos/banco/banco.component';
+import { CuentaPropiaComponent } from './componentes/caja-banco/cuenta-propia/cuenta-propia.component';
+import { BancoComponent } from './componentes/caja-banco/banco/banco.component';
 
 // Módulo de Ventas
-import { FacturaComponent } from './ventas/factura/factura.component';
-import { NotaCreditoVentaComponent } from './ventas/nota-credito-venta/nota-credito-venta.component';
-import { NotaDebitoVentaComponent } from './ventas/nota-debito-venta/nota-debito-venta.component';
+import { FacturaComponent } from './componentes/venta/factura/factura.component';
+import { NotaCreditoVentaComponent } from './componentes/venta/nota-credito-venta/nota-credito-venta.component';
+import { NotaDebitoVentaComponent } from './componentes/venta/nota-debito-venta/nota-debito-venta.component';
 
 //Módulo de Recaudaciones
-import { RecaudacionComponent } from './recaudacion/recaudacion/recaudacion.component';
-import { RecaudacionNotaDebitoComponent } from './recaudacion/recaudacion-nota-debito/recaudacion-nota-debito.component';
+import { RecaudacionComponent } from './componentes/recaudacion/recaudacion/recaudacion.component';
+import { RecaudacionNotaDebitoComponent } from './componentes/recaudacion/recaudacion-nota-debito/recaudacion-nota-debito.component';
 
 //Módulo de Entregas
-import { GuiaRemisionComponent } from './entregas/guia-remision/guia-remision.component';
-import { TransportistaComponent } from './entregas/transportista/transportista.component';
-import { VehiculoTransporteComponent } from './entregas/vehiculo-transporte/vehiculo-transporte.component';
+import { GuiaRemisionComponent } from './componentes/entrega/guia-remision/guia-remision.component';
+import { TransportistaComponent } from './componentes/entrega/transportista/transportista.component';
+import { VehiculoTransporteComponent } from './componentes/entrega/vehiculo-transporte/vehiculo-transporte.component';
 
 //Módulo de Compras
-import { ProveedorComponent, DialogoMapaProveedorComponent } from './compras/proveedor/proveedor.component';
-import { FacturaCompraComponent } from './compras/factura-compra/factura-compra.component';
-import { GrupoProveedorComponent, DialogoGrupoProveedorCuentaContableComponent } from './compras/grupo-proveedor/grupo-proveedor.component';
-import { NotaCreditoCompraComponent } from './compras/nota-credito-compra/nota-credito-compra.component';
-import { NotaDebitoCompraComponent } from './compras/nota-debito-compra/nota-debito-compra.component';
+import { ProveedorComponent, DialogoMapaProveedorComponent } from './componentes/compra/proveedor/proveedor.component';
+import { FacturaCompraComponent } from './componentes/compra/factura-compra/factura-compra.component';
+import { GrupoProveedorComponent, DialogoGrupoProveedorCuentaContableComponent } from './componentes/compra/grupo-proveedor/grupo-proveedor.component';
+import { NotaCreditoCompraComponent } from './componentes/compra/nota-credito-compra/nota-credito-compra.component';
+import { NotaDebitoCompraComponent } from './componentes/compra/nota-debito-compra/nota-debito-compra.component';
 
 //Módulo de Contabilidad
-import { ContabilizacionComponent } from './contabilidad/contabilizacion/contabilizacion.component';
-import { CuentaContableComponent } from './contabilidad/cuenta-contable/cuenta-contable.component';
-import { MovimientoContableComponent } from './contabilidad/movimiento-contable/movimiento-contable.component';
-import { TablaCuentaContableComponent } from './contabilidad/cuenta-contable/tabla-cuenta-contable/tabla-cuenta-contable.component';
-import { TablaMovimientoContableComponent } from './contabilidad/movimiento-contable/tabla-movimiento-contable/tabla-movimiento-contable.component';
+import { ContabilizacionComponent } from './componentes/contabilidad/contabilizacion/contabilizacion.component';
+import { CuentaContableComponent } from './componentes/contabilidad/cuenta-contable/cuenta-contable.component';
+import { MovimientoContableComponent } from './componentes/contabilidad/movimiento-contable/movimiento-contable.component';
+import { TablaCuentaContableComponent } from './componentes/contabilidad/cuenta-contable/tabla-cuenta-contable/tabla-cuenta-contable.component';
+import { TablaMovimientoContableComponent } from './componentes/contabilidad/movimiento-contable/tabla-movimiento-contable/tabla-movimiento-contable.component';
 
 // Módulo de Usuarios
-import { UsuarioComponent } from './usuarios/usuario/usuario.component';
-import { EmpresaComponent } from './usuarios/empresa/empresa.component';
-import { EstablecimientoComponent, DialogoMapaEstablecimientoComponent } from './usuarios/establecimiento/establecimiento.component';
-import { EstacionComponent } from './usuarios/estacion/estacion.component';
-import { PerfilComponent } from './usuarios/perfil/perfil.component';
-import { PermisoComponent } from './usuarios/permiso/permiso.component';
+import { UsuarioComponent } from './componentes/usuario/usuario/usuario.component';
+import { EmpresaComponent } from './componentes/usuario/empresa/empresa.component';
+import { EstablecimientoComponent, DialogoMapaEstablecimientoComponent } from './componentes/usuario/establecimiento/establecimiento.component';
+import { EstacionComponent } from './componentes/usuario/estacion/estacion.component';
+import { PerfilComponent } from './componentes/usuario/perfil/perfil.component';
+import { PermisoComponent } from './componentes/usuario/permiso/permiso.component';
 
 //Módulo de Configuraciones
-import { UbicacionComponent } from './configuraciones/ubicacion/ubicacion.component';
+import { UbicacionComponent } from './componentes/configuracion/ubicacion/ubicacion.component';
 
 // Otros - borrar al final
-import { DashboardComponent } from './componentes/pages/dashboard/dashboard.component';
+import { DashboardComponent } from './componentes/indicador/dashboard/dashboard.component';
 import { TablesComponent } from './componentes/pages/tables/tables.component';
 import { FormsComponent } from './componentes/pages/forms/forms.component';
-import { MapsComponent } from './componentes/pages/maps/maps.component';
+import { MapsComponent } from './componentes/comun/maps/maps.component';
 import { TypographyComponent } from './componentes/pages/typography/typography.component';
 
 

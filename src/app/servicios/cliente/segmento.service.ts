@@ -1,10 +1,9 @@
 import { Injectable } from '@angular/core';
-import { Respuesta } from '../../respuesta';
-import { urn, options } from '../../constantes';
-import { optionsCargarArchivo } from '../../constantes';
 import { HttpClient } from '@angular/common/http';
-import { map, catchError } from 'rxjs/operators';
-import { Observable, throwError, BehaviorSubject, lastValueFrom } from 'rxjs';
+import { Observable, throwError, map, catchError, BehaviorSubject, lastValueFrom } from 'rxjs';
+import { urn, options, optionsCargarArchivo } from '../../constantes';
+
+import { Respuesta } from '../../respuesta';
 import { environment } from '../../../environments/environment';
 import { Modelo } from '../../modelos/administracion/modelo';
 import { Segmento } from '../../modelos/cliente/segmento';
@@ -37,6 +36,14 @@ export class SegmentoService {
 
   consultar(): Observable<Respuesta> {
     return this.http.get(environment.host + urn.ruta + urn.segmento, options).pipe(
+      map(response => response as Respuesta),
+      catchError(err => {
+        return throwError(()=>err);
+      }));
+  }
+
+  consultarPorEmpresa(empresaId: number): Observable<Respuesta> {
+    return this.http.get(environment.host + urn.ruta + urn.segmento + urn.consultar + urn.slash + empresaId, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);

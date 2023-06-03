@@ -1,0 +1,74 @@
+<nav class="navbar navbar-expand-md fixed-top navbar-dark flex-fill">
+  <!--button class="sidebar-toggler ml-4" type="button">
+    <i class="fa fa-navicon"></i>
+  </button-->
+  <!-- Cabecera -->
+  <div class="navbar-header pl-2 pr-2 ml-3">
+    <a class="navbar-brand m-0 w-100">
+      <!-- <i class="fa fa-flash mr-1"></i> -->
+      <img class="logo-emp" alt="Logo" [src]="'data:image/jpeg;base64,'+empresa.logo64"> 
+      <span class="ml-2">{{empresa.nombreComercial}}</span>
+    </a>
+  </div>
+  <!-- Boton conmutable del sidebar para cuando la pantalla es pequeña  -->
+  <div class="sidebar-toggler ml-auto mr-3">
+    <a class="btn nav-link" (click)="toggleSidebar()"><i class="fa fa-bars"></i></a>
+  </div>
+  <!-- Menu derecha del navBar, para cuando la pantalla es pequeña -->
+  <div class="nav-toggler-right mr-4 d-md-none">
+    <button class="" type="button" (click)="isCollapsed = !isCollapsed" [attr.aria-expanded]="!isCollapsed"
+      aria-controls="collapseBasic">
+      <!-- <span class="navbar-toggler-icon"></span> -->
+      <img src="./assets/images/users/1.jpg" class="img-fluid" alt="">
+    </button>
+    <span class="user-profile nav-alert bg-danger"></span>
+  </div>
+  <!-- Parte izquierda del navBar, incluye el Boton conmutable para el sideBar cuando pantalla grande fija -->
+  <ul class="navbar-nav flex-fill mt-1 align-items-center left-nav" *ngIf="!istabMenu">
+    <li class="nav-item navicon">
+      <a class="btn nav-link" (click)="toggleSidebarPin()"><i class="fa fa-bars"></i></a>
+    </li>
+  </ul>
+  <ul class="navbar-nav flex-fill left-nav" *ngIf="istabMenu"></ul>
+  <!-- Nombre del Sistema Centrado-->
+  <ul class="navbar-nav mt-1 align-items-center left-nav text-center">
+    <li>
+      <img src="./assets/images/visionERP.png" class="logo-erp" alt="ViSion ERP">
+    </li>
+  </ul>
+  <!-- right menu -->
+  <div class="collapse navbar-collapse right-nav" id="collapseBasic" >
+    <ul class="navbar-nav ">
+      <li class="nav-item">
+        <a class="btn nav-link">
+          <i class="far fa-bell"></i>
+          <span class="link-text">Alertas</span>
+          <!-- <span class="badge badge-pill ba dge-danger">3</span> -->
+          <span class="nav-alert notifications"></span>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="btn nav-link">
+          <i class="far fa-envelope"></i>
+          <span class="link-text">Mensajes</span>
+          <!-- <span class="badge badge-pill badge-success">5</span> -->
+          <span class="nav-alert messages"></span>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="btn nav-link" href="#">
+          <i class="fa fa-sign-out" title="Salir" ></i>
+          <span class="link-text" >Salir</span>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="btn nav-link">
+          <!--i class="far fa-user" title="Usuario"></i-->
+          <img class="avatar-user" [src]="usuario.avatar64">
+          <span class="link-text">Perfil</span>
+        </a>
+      </li>
+
+    </ul>
+  </div>
+</nav>
