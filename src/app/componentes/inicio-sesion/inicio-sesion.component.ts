@@ -102,6 +102,7 @@ export class InicioSesionComponent implements OnInit {
 
   iniciarSesion() {
     if (this.contrasena != valores.vacio && this.sesion.usuario.contrasena == md5(this.contrasena)){
+      //console.log(this.sesion);
       this.sesionService.crear(this.sesion).subscribe({
         next: res => {
           this.sesion = res.resultado as Sesion;

@@ -1,6 +1,7 @@
 import { Component, OnInit, HostListener, ElementRef, Renderer2 } from '@angular/core';
 import { valores, validarSesion, mensajes, imagenes, otras, exito, exito_swal, error, error_swal } from '../../../constantes';
 import Swal from 'sweetalert2';
+import { Buffer } from 'buffer';
 
 import { Router } from '@angular/router';
 import { Sesion } from '../../../modelos/usuario/sesion';
@@ -190,6 +191,10 @@ export class EmpresaComponent implements OnInit {
     const archivoCapturado = event.target.files[0];
     this.imagenService.convertirBase64(archivoCapturado).then((imagen: any) => {
       this.empresa.logo64 = imagen.base64;
+      //this.empresa.logo = Buffer.from(imagen.byteArray.buffer).toJSON();
+      //this.empresa.logo = imagen.byteArray;
+      //console.log(this.empresa.logo64);
+      //console.log(this.empresa.logo);
     });
   }
 

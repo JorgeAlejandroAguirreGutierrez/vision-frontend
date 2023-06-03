@@ -3,9 +3,9 @@ import { valores, mensajes, validarSesion, exito, exito_swal, error, error_swal 
 import { Router } from '@angular/router';
 import Swal from 'sweetalert2';
 
-
 import { Sesion } from '../../../modelos/usuario/sesion';
 import { SesionService } from '../../../servicios/usuario/sesion.service';
+import { Empresa } from '../../../modelos/usuario/empresa';
 import { Segmento } from '../../../modelos/cliente/segmento';
 import { SegmentoService } from '../../../servicios/cliente/segmento.service';
 
@@ -30,7 +30,9 @@ export class SegmentoComponent implements OnInit {
   formularioValido: boolean = false;
 
   sesion: Sesion = null;
+  empresa: Empresa = new Empresa();
   segmento: Segmento = new Segmento();
+
   segmentos: Segmento[];
 
   columnas: any[] = [
@@ -44,7 +46,6 @@ export class SegmentoComponent implements OnInit {
   dataSource: MatTableDataSource<Segmento>;
   //dataSource$: BehaviorSubject<MatTableDataSource<Segmento>> = new BehaviorSubject<MatTableDataSource<Segmento>>(null);
   clickedRows = new Set<Segmento>();
-
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
@@ -63,6 +64,7 @@ export class SegmentoComponent implements OnInit {
 
   ngOnInit() {
     this.sesion = validarSesion(this.sesionService, this.router);
+    this.empresa = this.sesion.empresa;
     this.consultar();
   }
 
@@ -131,7 +133,7 @@ export class SegmentoComponent implements OnInit {
   }
 
   consultar() {
-    this.segmentoService.consultar().subscribe({
+    this.segmentoService.consultarPorEmpresa(this.empresa.id).subscribe({
       next: res => {
         this.segmentos = res.resultado as Segmento[]
         this.llenarTabla(this.segmentos);

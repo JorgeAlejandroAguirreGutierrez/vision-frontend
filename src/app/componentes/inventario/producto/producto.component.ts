@@ -8,6 +8,7 @@ import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dial
 
 import { Sesion } from '../../../modelos/usuario/sesion';
 import { SesionService } from '../../../servicios/usuario/sesion.service';
+import { Empresa } from 'src/app/modelos/usuario/empresa';
 import { GrupoProducto } from '../../../modelos/inventario/grupo-producto';
 import { Producto } from '../../../modelos/inventario/producto';
 import { TipoGasto } from '../../../modelos/inventario/tipo-gasto';
@@ -20,7 +21,6 @@ import { Precio } from '../../../modelos/inventario/precio';
 import { SegmentoService } from '../../../servicios/cliente/segmento.service';
 import { Segmento } from '../../../modelos/cliente/segmento';
 import { ProductoService } from '../../../servicios/inventario/producto.service';
-import { CategoriaProductoService } from '../../../servicios/inventario/categoria-producto.service';
 
 import { Proveedor } from '../../../modelos/compra/proveedor';
 import { ProveedorService } from '../../../servicios/compra/proveedor.service';
@@ -30,7 +30,6 @@ import { BodegaService } from '../../../servicios/inventario/bodega.service';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-
 
 @Component({
   selector: 'app-producto',
@@ -61,6 +60,7 @@ export class ProductoComponent implements OnInit {
   costoTotalKardex: number = valores.cero;
 
   producto: Producto = new Producto();
+  empresa: Empresa = new Empresa();
 
   productos: Producto[];
   tiposGastos: TipoGasto[] = [];

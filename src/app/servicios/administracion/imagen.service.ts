@@ -12,7 +12,9 @@ export class ImagenService {
           reader.readAsDataURL($event);
           reader.onload = () => {
             resolve({
-              base64: reader.result
+              base64: (<string>reader.result).split(',')[1],
+              byteArray: new TextEncoder().encode((<string>reader.result).split(',')[1])
+              //byteArray: new Uint8Array(reader.result as ArrayBuffer)
             })
           };
           reader.onerror = error => {
