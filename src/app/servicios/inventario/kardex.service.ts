@@ -49,6 +49,14 @@ export class KardexService {
       }));
   }
 
+  consultarPorEmpresa(empresaId: number): Observable<Respuesta> {
+    return this.http.get(environment.host + urn.ruta + urn.kardex + urn.consultar + urn.slash + empresaId, options).pipe(
+      map(response => response as Respuesta),
+      catchError(err => {
+        return throwError(()=>err);
+      }));
+  }
+
   actualizar(kardex: Kardex): Observable<Respuesta> {
     return this.http.put(environment.host + urn.ruta + urn.kardex, kardex, options).pipe(
       map(response => response as Respuesta),

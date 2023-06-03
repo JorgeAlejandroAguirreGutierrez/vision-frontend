@@ -51,19 +51,4 @@ export class CaracteristicaService {
     );
   }
 
-  consultarBienExistencias(producto: Producto): Observable<Respuesta> {
-    return this.http.get(environment.host + urn.ruta + urn.caracteristica + urn.tipo + urn.bien + urn.slash + producto.id + urn.existencias, options).pipe(
-      map(response => response as Respuesta),
-      catchError(err => {
-        return throwError(()=>err);
-      }));
-  }
-  
-  consultarBienExistenciasBodega(producto: Producto, bodega: Bodega): Observable<Respuesta> {
-    return this.http.get(environment.host + urn.ruta + urn.caracteristica + urn.tipo + urn.bien + urn.slash + producto.id + urn.existencias + urn.slash + bodega.id, options).pipe(
-      map(response => response as Respuesta),
-      catchError(err => {
-        return throwError(()=>err);
-      }));
-  }
 }
