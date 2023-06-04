@@ -5,6 +5,7 @@ import Swal from 'sweetalert2';
 
 import { Sesion } from '../../../modelos/usuario/sesion';
 import { SesionService } from '../../../servicios/usuario/sesion.service';
+import { Empresa } from '../../../modelos/usuario/empresa';
 import { CalificacionCliente } from '../../../modelos/cliente/calificacion-cliente';
 import { CalificacionClienteService } from '../../../servicios/cliente/calificacion-cliente.service';
 
@@ -26,8 +27,10 @@ export class CalificacionClienteComponent implements OnInit {
   abrirPanelNuevo : boolean= true;
   abrirPanelAdmin: boolean = true;
 
-  sesion: Sesion=null;
+  sesion: Sesion = null;
+  empresa: Empresa = new Empresa();
   calificacionCliente= new CalificacionCliente();
+
   calificacionesClientes: CalificacionCliente[];
 
   columnas: any[] = [
@@ -57,6 +60,7 @@ export class CalificacionClienteComponent implements OnInit {
 
   ngOnInit() {
     this.sesion=validarSesion(this.sesionService, this.router);
+    this.empresa = this.sesion.empresa;
     this.consultar();
   }
   
@@ -125,7 +129,7 @@ export class CalificacionClienteComponent implements OnInit {
   }
 
   consultar() {
-    this.calificacionClienteService.consultar().subscribe({
+    this.calificacionClienteService.consultarPorEmpresa(this.empresa.id).subscribe({
       next: res => {
         this.calificacionesClientes = res.resultado as CalificacionCliente[];
         this.llenarTabla(this.calificacionesClientes);

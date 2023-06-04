@@ -7,6 +7,7 @@ import { valores, mensajes, otras, validarSesion, exito, exito_swal, error, erro
 
 import { Sesion } from '../../../modelos/usuario/sesion';
 import { SesionService } from '../../../servicios/usuario/sesion.service';
+import { Empresa } from '../../../modelos/usuario/empresa';
 import { Cliente } from '../../../modelos/cliente/cliente';
 import { ClienteService } from '../../../servicios/cliente/cliente.service';
 import { TipoContribuyente } from '../../../modelos/cliente/tipo-contribuyente';
@@ -57,12 +58,11 @@ export class ClienteComponent implements OnInit {
   inactivo: string = valores.inactivo;
   si: string = valores.si;
   no: string = valores.no;
-  casa: string = valores.etiquetaCasa;
-  trabajo: string = valores.etiquetaTrabajo;
-  empresa: string = valores.etiquetaEmpresa;
+  etiquetaCasa: string = valores.etiquetaCasa;
+  etiquetaTrabajo: string = valores.etiquetaTrabajo;
+  etiquetaEmpresa: string = valores.etiquetaEmpresa;
   direccionPredeterminada: string = valores.si;
 
-  sesion: Sesion;
   ComponenteCliente: Type<any> = ClienteComponent;
 
   abrirPanelNuevoCliente: boolean = true;
@@ -92,6 +92,8 @@ export class ClienteComponent implements OnInit {
   cantonDependiente: string = valores.vacio;
   parroquiaDependiente: string = valores.vacio;
 
+  sesion: Sesion;
+  empresa: Empresa = new Empresa();
   cliente: Cliente = new Cliente();
   telefono: Telefono = new Telefono();
   celular: Celular = new Celular();
@@ -195,6 +197,7 @@ export class ClienteComponent implements OnInit {
 
   ngOnInit() {
     this.sesion = validarSesion(this.sesionService, this.router);
+    this.empresa = this.sesion.empresa;
     this.consultar();
     this.consultarTipoIdentificacion();
     this.consultarTipoContribuyente();
@@ -389,7 +392,6 @@ export class ClienteComponent implements OnInit {
       event.preventDefault();
     if (!this.validarFormularioCliente())
       return;   
-    this.cliente.estacion = this.sesion.usuario.estacion;
     this.agregarTelefonoCorreo();
     this.validarDependiente();
     console.log(this.cliente);
@@ -463,7 +465,7 @@ export class ClienteComponent implements OnInit {
   }
 
   consultar() {
-    this.clienteService.consultar().subscribe({
+    this.clienteService.consultarPorEmpresa(this.empresa.id).subscribe({
       next: res => {
         this.clientes = res.resultado as Cliente[]
         this.llenarTablaCliente(this.clientes);
