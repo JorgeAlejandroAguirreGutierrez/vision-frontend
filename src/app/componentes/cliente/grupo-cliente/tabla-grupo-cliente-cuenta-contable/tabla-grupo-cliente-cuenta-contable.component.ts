@@ -21,10 +21,12 @@ import { MatTableDataSource } from '@angular/material/table';
 })
 export class TablaGrupoClienteCuentaContableComponent implements OnInit {
 
-  sesion: Sesion=null;
   @Output() cuentaContableSeleccionado = new EventEmitter();
-  cuentasContables: CuentaContable[];
+
+  sesion: Sesion=null;
   cuentaContable= new CuentaContable();
+
+  cuentasContables: CuentaContable[];
 
   columnas: any[] = [
     { nombreColumna: 'cuenta', cabecera: 'Cuenta', celda: (row: CuentaContable) => `${row.cuenta}` },

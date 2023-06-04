@@ -5,7 +5,6 @@ import { Genero } from '../configuracion/genero';
 import { EstadoCivil } from './estado-civil';
 import { CalificacionCliente } from './calificacion-cliente';
 import { OrigenIngreso } from './origen-ingreso';
-import { Estacion } from '../usuario/estacion';
 import { Telefono } from './telefono';
 import { Celular } from './celular';
 import { Correo } from './correo';
@@ -30,7 +29,6 @@ export class Cliente {
    etiqueta: string;
    referencia: string;
    tipoIdentificacion: TipoIdentificacion;
-   estacion: Estacion;
    grupoCliente: GrupoCliente;
    tipoContribuyente: TipoContribuyente;
    segmento: Segmento;
@@ -62,7 +60,6 @@ export class Cliente {
       this.referencia = valores.vacio;
       this.ubicacion= new Ubicacion();
       this.tipoIdentificacion=new TipoIdentificacion();
-      this.estacion=new Estacion();
       this.tipoContribuyente=new TipoContribuyente();
       this.segmento=new Segmento();
       this.grupoCliente=new GrupoCliente();

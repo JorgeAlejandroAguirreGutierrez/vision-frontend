@@ -6,6 +6,7 @@ import Swal from 'sweetalert2';
 
 import { Sesion } from '../../../modelos/usuario/sesion';
 import { SesionService } from '../../../servicios/usuario/sesion.service';
+import { Empresa } from '../../../modelos/usuario/empresa';
 import { GrupoCliente } from '../../../modelos/cliente/grupo-cliente';
 import { GrupoClienteService } from '../../../servicios/cliente/grupo-cliente.service';
 import { CuentaContable } from '../../../modelos/contabilidad/cuenta-contable';
@@ -29,7 +30,9 @@ export class GrupoClienteComponent implements OnInit {
   abrirPanelAdmin: boolean = true;
 
   sesion: Sesion=null;
+  empresa: Empresa = new Empresa();
   grupoCliente= new GrupoCliente();
+
   gruposClientes: GrupoCliente[];
 
   columnas: any[] = [
@@ -60,6 +63,7 @@ export class GrupoClienteComponent implements OnInit {
 
   ngOnInit() {
     this.sesion=validarSesion(this.sesionService, this.router);
+    this.empresa = this.sesion.empresa;
     this.consultar();
   }
 
@@ -128,7 +132,7 @@ export class GrupoClienteComponent implements OnInit {
   }
 
   consultar() {
-    this.grupoClienteService.consultar().subscribe({
+    this.grupoClienteService.consultarPorEmpresa(this.empresa.id).subscribe({
       next: res => {
         this.gruposClientes = res.resultado as GrupoCliente[]
         this.llenarTabla(this.gruposClientes);
