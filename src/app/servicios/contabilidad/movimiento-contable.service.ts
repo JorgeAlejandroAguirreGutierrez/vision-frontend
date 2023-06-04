@@ -42,6 +42,15 @@ export class MovimientoContableService {
       }));
   }
 
+  consultarPorEmpresa(empresaId: number): Observable<Respuesta> {
+    return this.http.get(environment.host + urn.ruta + urn.movimientoContable + urn.consultar + urn.slash + empresaId, options).pipe(
+      map(response => response as Respuesta),
+      catchError(err => {
+        return throwError(()=>err);
+      }));
+  }
+
+  
   actualizar(movimientoContable: MovimientoContable): Observable<Respuesta> {
     return this.http.put(environment.host + urn.ruta + urn.movimientoContable, movimientoContable, options).pipe(
       map(response => response as Respuesta),

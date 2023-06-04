@@ -34,6 +34,14 @@ export class ClienteService {
     );
   }
 
+  consultarPorEmpresa(empresaId: number): Observable<Respuesta> {
+    return this.http.get(environment.host + urn.ruta + urn.cliente + urn.consultar + urn.slash + empresaId, options).pipe(
+      map(response => response as Respuesta),
+      catchError(err => {
+        return throwError(()=>err);
+      }));
+  }
+
   consultarActivos(): Observable<Respuesta> {
     return this.http.get<Respuesta>(environment.host + urn.ruta + urn.cliente + urn.consultarActivos, options).pipe(
       map(response => response as Respuesta),
