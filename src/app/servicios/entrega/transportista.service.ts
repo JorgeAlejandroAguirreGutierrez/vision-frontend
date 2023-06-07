@@ -41,6 +41,14 @@ export class TransportistaService {
       }));
   }
 
+  consultarPorEmpresaYEstado(empresaId: number, estado: string): Observable<Respuesta> {
+    return this.http.get(environment.host + urn.ruta + urn.transportista + urn.consultar + urn.slash + empresaId + urn.slash + estado, options).pipe(
+      map(response => response as Respuesta),
+      catchError(err => {
+        return throwError(()=>err);
+      }));
+  }
+
   obtener(transportistaId: number): Observable<Respuesta> {
     return this.http.get(environment.host + urn.ruta + urn.transportista + urn.slash + transportistaId, options).pipe(
       map(response => response as Respuesta),

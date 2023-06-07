@@ -41,7 +41,15 @@ export class MedidaService {
   }
 
   consultarPorEmpresa(empresaId: number): Observable<Respuesta> {
-    return this.http.get(environment.host + urn.ruta + urn.medida + urn.consultar + urn.slash + empresaId, options).pipe(
+    return this.http.get(environment.host + urn.ruta + urn.medida + urn.consultarPorEmpresa + urn.slash + empresaId, options).pipe(
+      map(response => response as Respuesta),
+      catchError(err => {
+        return throwError(()=>err);
+      }));
+  }
+
+  consultarPorEmpresaYEstado(empresaId: number, estado: string): Observable<Respuesta> {
+    return this.http.get(environment.host + urn.ruta + urn.medida + urn.consultarPorEmpresaYEstado + urn.slash + empresaId + urn.slash + estado, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);

@@ -58,6 +58,7 @@ export const urn =
     productoProveedor: "/productoProveedor",
     consultarPorUsuario: "/consultarPorUsuario",
     consultarPorEmpresa: "/consultarPorEmpresa",
+    consultarPorEmpresaYEstado: "/consultarPorEmpresaYEstado",
     consultarGrupos: "/consultarGrupos",
     consultarSubgrupos: "/consultarSubgrupos",
     consultarSecciones: "/consultarSecciones",

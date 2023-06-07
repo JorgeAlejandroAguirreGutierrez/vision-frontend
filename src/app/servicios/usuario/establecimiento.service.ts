@@ -69,13 +69,4 @@ export class EstablecimientoService {
       })
     );
   }
-
-  consultarPorEmpresa(empresaId: number): Observable<Respuesta> {
-    return this.http.get(environment.host + urn.ruta + urn.establecimiento + urn.consultarPorEmpresa + urn.slash + empresaId, options).pipe(
-      map(response => response as Respuesta),
-      catchError(err => {
-        return throwError(()=>err);
-      })
-    );
-  }
 }
