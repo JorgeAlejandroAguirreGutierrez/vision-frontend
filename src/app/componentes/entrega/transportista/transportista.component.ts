@@ -155,7 +155,7 @@ export class TransportistaComponent implements OnInit {
   }
 
   consultarVehiculosTransportes(){
-    this.vehiculoTransporteService.consultarActivos().subscribe({
+    this.vehiculoTransporteService.consultarPorEstado(valores.activo).subscribe({
       next: res => {
         this.vehiculosTransportes = res.resultado as VehiculoTransporte[]
       },

@@ -77,7 +77,7 @@ export class CuentaPropiaComponent implements OnInit {
     this.inicializarFiltros();
   }
   consultarBancos() {
-    this.bancoService.consultarActivos().subscribe({
+    this.bancoService.consultarPorEstado(valores.activo).subscribe({
       next: res => {
         this.bancos = res.resultado as Banco[];
       },

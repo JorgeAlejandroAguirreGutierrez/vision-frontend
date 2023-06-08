@@ -33,8 +33,8 @@ export class VehiculoTransporteService {
     );
   }
 
-  consultarActivos(): Observable<Respuesta> {
-    return this.http.get<Respuesta>(environment.host + urn.ruta + urn.vehiculoTransporte + urn.consultarActivos, options).pipe(
+  consultarPorEstado(estado: string): Observable<Respuesta> {
+    return this.http.get<Respuesta>(environment.host + urn.ruta + urn.vehiculoTransporte + urn.consultarPorEstado + urn.slash + estado, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);

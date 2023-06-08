@@ -124,7 +124,7 @@ export class ProductoComponent implements OnInit {
   }
 
   consultarProveedor(){
-    this.proveedorService.consultarActivos().subscribe({
+    this.proveedorService.consultarPorEstado(valores.activo).subscribe({
       next: res => {
         this.proveedores = res.resultado as Proveedor[];
       },
@@ -132,7 +132,7 @@ export class ProductoComponent implements OnInit {
     });
   }
   consultarImpuesto(){
-    this.impuestoService.consultarActivos().subscribe({
+    this.impuestoService.consultarPorEstado(valores.activo).subscribe({
       next: res => {
         this.impuestos = res.resultado as Impuesto[];
       },
@@ -148,7 +148,7 @@ export class ProductoComponent implements OnInit {
     });
   }
   consultarMedida(){
-    this.medidaService.consultarActivos().subscribe({
+    this.medidaService.consultarPorEstado(valores.activo).subscribe({
       next: res => {
         this.medidas = res.resultado as Medida[];
       },

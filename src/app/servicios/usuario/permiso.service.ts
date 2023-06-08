@@ -41,6 +41,14 @@ export class PermisoService {
       }));
   }
 
+  consultarPorEstado(estado: string): Observable<Respuesta> {
+    return this.http.get(environment.host + urn.ruta + urn.permiso + urn.consultarPorEstado + urn.slash + estado, options).pipe(
+      map(response => response as Respuesta),
+      catchError(err => {
+        return throwError(()=>err);
+      }));
+  }
+
   actualizar(permiso: Permiso): Observable<Respuesta> {
     return this.http.put(environment.host + urn.ruta + urn.permiso, permiso, options).pipe(
       map(response => response as Respuesta),

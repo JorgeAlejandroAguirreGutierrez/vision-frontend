@@ -1,6 +1,6 @@
 import { Component, OnInit, Output, EventEmitter, ElementRef, Renderer2 } from '@angular/core';
 import Swal from 'sweetalert2';
-import { validarSesion, error, error_swal } from '../../../../constantes';
+import { validarSesion, valores, error, error_swal } from '../../../../constantes';
 import { Router } from '@angular/router';
 import { ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
@@ -65,7 +65,7 @@ export class TablaGrupoProductoComponent implements OnInit {
   }
   
   consultar() {
-    this.grupoProductoService.consultarActivos().subscribe({
+    this.grupoProductoService.consultarPorEstado(valores.activo).subscribe({
       next: res => {
         this.gruposProductos = res.resultado as GrupoProducto[];
         this.llenarTabla(this.gruposProductos);

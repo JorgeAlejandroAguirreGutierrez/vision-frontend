@@ -66,20 +66,4 @@ export class DependienteService {
       })
     );
   }
-
-  consultarRazonSocial(dependiente: Dependiente): Observable<Respuesta> {
-    return this.http.get(environment.host + urn.ruta + urn.dependiente + urn.buscar + urn.razonSocial + urn.slash + dependiente.razonSocial + urn.slash + dependiente.cliente.id, options).pipe(
-      map(response => response as Respuesta),
-      catchError(err => {
-        return throwError(err);
-      }));
-  }
-
-  consultarClienteID(dependiente: Dependiente): Observable<Respuesta> {
-    return this.http.get(environment.host + urn.ruta + urn.dependiente + urn.cliente + urn.slash + dependiente.cliente.id, options).pipe(
-      map(response => response as Respuesta),
-      catchError(err => {
-        return throwError(err);
-      }));
-  }
 }

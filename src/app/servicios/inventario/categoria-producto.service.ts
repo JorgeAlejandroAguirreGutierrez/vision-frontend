@@ -57,22 +57,4 @@ export class CategoriaProductoService {
       })
     );
   }
-
-  activar(categoriaProducto: CategoriaProducto): Observable<Respuesta> {
-    return this.http.patch(environment.host + urn.ruta + urn.categoriaProducto + urn.activar, categoriaProducto, options).pipe(
-      map(response => response as Respuesta),
-      catchError(err => {
-        return throwError(()=>err);
-      })
-    );
-  }
-
-  inactivar(categoriaProducto: CategoriaProducto): Observable<Respuesta> {
-    return this.http.patch(environment.host + urn.ruta + urn.categoriaProducto + urn.inactivar, categoriaProducto, options).pipe(
-      map(response => response as Respuesta),
-      catchError(err => {
-        return throwError(()=>err);
-      })
-    );
-  }
 }

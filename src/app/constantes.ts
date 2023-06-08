@@ -57,6 +57,7 @@ export const urn =
     grupoProveedor: "/grupoProveedor",
     productoProveedor: "/productoProveedor",
     consultarPorUsuario: "/consultarPorUsuario",
+    consultarPorEstado: "/consultarPorEstado",
     consultarPorEmpresa: "/consultarPorEmpresa",
     consultarPorEmpresaYEstado: "/consultarPorEmpresaYEstado",
     consultarGrupos: "/consultarGrupos",

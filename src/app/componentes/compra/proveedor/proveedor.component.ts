@@ -166,7 +166,7 @@ export class ProveedorComponent implements OnInit {
     });
   }
   consultarGrupoProveedor() {
-    this.grupoProveedorService.consultarActivos().subscribe({
+    this.grupoProveedorService.consultarPorEstado(valores.activo).subscribe({
       next: (res) => {
         this.gruposProveedores = res.resultado as GrupoProveedor[]
       },
@@ -176,7 +176,7 @@ export class ProveedorComponent implements OnInit {
     });
   }
   consultarFormaPago() {
-    this.formaPagoService.consultarActivos().subscribe({
+    this.formaPagoService.consultarPorEstado(valores.activo).subscribe({
       next: res => {
         this.formasPagos = res.resultado as FormaPago[]
       },
@@ -186,7 +186,7 @@ export class ProveedorComponent implements OnInit {
     });
   }
   consultarPlazoCredito() {
-    this.plazoCreditoService.consultarActivos().subscribe({
+    this.plazoCreditoService.consultarPorEstado(valores.activo).subscribe({
       next: res => {
         this.plazosCreditos = res.resultado as PlazoCredito[]
       },

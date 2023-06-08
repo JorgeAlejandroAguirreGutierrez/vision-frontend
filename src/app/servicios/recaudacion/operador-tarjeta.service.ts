@@ -48,6 +48,14 @@ export class OperadorTarjetaService {
       }));
   }
 
+  consultarPorEstado(estado: string): Observable<Respuesta> {
+    return this.http.get(environment.host + urn.ruta + urn.operadorTarjeta + urn.consultarPorEstado + urn.slash + estado, options).pipe(
+      map(response => response as Respuesta),
+      catchError(err => {
+        return throwError(()=>err);
+      }));
+  }
+
   actualizar(operadorTarjeta: OperadorTarjeta): Observable<Respuesta> {
     return this.http.put(environment.host + urn.ruta + urn.banco, operadorTarjeta, options).pipe(
       map(response => response as Respuesta),

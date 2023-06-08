@@ -40,6 +40,14 @@ export class CuentaPropiaService {
       }));
   }
 
+  consultarPorEstado(estado: string): Observable<Respuesta> {
+    return this.http.get(environment.host + urn.ruta + urn.cuentaPropia + urn.consultarPorEstado + urn.slash + estado, options).pipe(
+      map(response => response as Respuesta),
+      catchError(err => {
+        return throwError(()=>err);
+      }));
+  }
+
   consultarPorEmpresa(empresaId: number): Observable<Respuesta> {
     return this.http.get(environment.host + urn.ruta + urn.cuentaPropia + urn.consultar + urn.slash + empresaId, options).pipe(
       map(response => response as Respuesta),
@@ -50,14 +58,6 @@ export class CuentaPropiaService {
 
   consultarPorEmpresaYEstado(empresaId: number, estado: string): Observable<Respuesta> {
     return this.http.get(environment.host + urn.ruta + urn.cuentaPropia + urn.consultarPorEmpresaYEstado + urn.slash + empresaId + urn.slash + estado, options).pipe(
-      map(response => response as Respuesta),
-      catchError(err => {
-        return throwError(()=>err);
-      }));
-  }
-
-  consultarActivos(): Observable<Respuesta> {
-    return this.http.get(environment.host + urn.ruta + urn.cuentaPropia + urn.consultarActivos, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);

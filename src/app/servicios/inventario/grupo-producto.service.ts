@@ -32,6 +32,15 @@ export class GrupoProductoService {
     );
   }
 
+  consultarPorEstado(estado: string): Observable<Respuesta> {
+    return this.http.get<Respuesta>(environment.host + urn.ruta + urn.grupoProducto + urn.consultarPorEstado + urn.slash + estado, options).pipe(
+      map(response => response as Respuesta),
+      catchError(err => {
+        return throwError(()=>err);
+      })
+    );
+  }
+
   consultarPorEmpresa(empresaId: number): Observable<Respuesta> {
     return this.http.get(environment.host + urn.ruta + urn.grupoProducto + urn.consultarPorEmpresa + urn.slash + empresaId, options).pipe(
       map(response => response as Respuesta),
@@ -46,15 +55,6 @@ export class GrupoProductoService {
       catchError(err => {
         return throwError(()=>err);
       }));
-  }
-
-  consultarActivos(): Observable<Respuesta> {
-    return this.http.get<Respuesta>(environment.host + urn.ruta + urn.grupoProducto + urn.consultarActivos, options).pipe(
-      map(response => response as Respuesta),
-      catchError(err => {
-        return throwError(()=>err);
-      })
-    );
   }
 
   consultarGrupos(): Observable<Respuesta> {

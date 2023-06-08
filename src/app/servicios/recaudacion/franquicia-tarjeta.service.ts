@@ -40,8 +40,16 @@ export class FranquiciaTarjetaService {
       }));
   }
 
+  consultarPorEstado(estado: string): Observable<Respuesta> {
+    return this.http.get(environment.host + urn.ruta + urn.franquiciaTarjeta + urn.consultarPorEstado + urn.slash + estado, options).pipe(
+      map(response => response as Respuesta),
+      catchError(err => {
+        return throwError(()=>err);
+      }));
+  }
+
   actualizar(franquiciaTarjeta: FranquiciaTarjeta): Observable<Respuesta> {
-    return this.http.put(environment.host + urn.ruta + urn.banco, franquiciaTarjeta, options).pipe(
+    return this.http.put(environment.host + urn.ruta + urn.franquiciaTarjeta, franquiciaTarjeta, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);

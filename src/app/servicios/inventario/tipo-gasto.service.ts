@@ -48,22 +48,4 @@ export class TipoGastoService {
       })
     );
   }
-
-  activar(tipoGasto: TipoGasto): Observable<Respuesta> {
-    return this.http.patch(environment.host + urn.ruta + urn.tipoGasto + urn.activar, tipoGasto, options).pipe(
-      map(response => response as Respuesta),
-      catchError(err => {
-        return throwError(()=>err);
-      })
-    );
-  }
-
-  inactivar(tipoGasto: TipoGasto): Observable<Respuesta> {
-    return this.http.patch(environment.host + urn.ruta + urn.tipoGasto + urn.inactivar, tipoGasto, options).pipe(
-      map(response => response as Respuesta),
-      catchError(err => {
-        return throwError(()=>err);
-      })
-    );
-  }
 }
