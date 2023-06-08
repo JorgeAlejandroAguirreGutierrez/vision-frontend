@@ -40,16 +40,24 @@ export class CalificacionClienteService {
       }));
   }
 
-  consultarPorEmpresa(empresaId: number): Observable<Respuesta> {
-    return this.http.get(environment.host + urn.ruta + urn.calificacionCliente + urn.consultar + urn.slash + empresaId, options).pipe(
+  consultarPorEstado(estado: string): Observable<Respuesta> {
+    return this.http.get(environment.host + urn.ruta + urn.calificacionCliente + urn.consultarPorEstado + urn.slash + estado, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);
       }));
   }
 
-  consultarActivos(): Observable<Respuesta> {
-    return this.http.get(environment.host + urn.ruta + urn.calificacionCliente + urn.consultarActivos, options).pipe(
+  consultarPorEmpresa(empresaId: number): Observable<Respuesta> {
+    return this.http.get(environment.host + urn.ruta + urn.calificacionCliente + urn.consultarPorEmpresa + urn.slash + empresaId, options).pipe(
+      map(response => response as Respuesta),
+      catchError(err => {
+        return throwError(()=>err);
+      }));
+  }
+
+  consultarPorEmpresaYEstado(empresaId: number, estado: string): Observable<Respuesta> {
+    return this.http.get(environment.host + urn.ruta + urn.calificacionCliente + urn.consultarPorEmpresaYEstado + urn.slash + empresaId + urn.slash + estado, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);

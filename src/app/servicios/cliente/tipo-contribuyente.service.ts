@@ -24,8 +24,8 @@ export class TipoContribuyenteService {
     );
   }
 
-  obtener(tipo_contribuyente_id: number): Observable<Respuesta> {
-    return this.http.get<Respuesta>(environment.host + urn.ruta + urn.tipoContribuyente + urn.slash + tipo_contribuyente_id, options).pipe(
+  obtener(tipoContribuyenteId: number): Observable<Respuesta> {
+    return this.http.get<Respuesta>(environment.host + urn.ruta + urn.tipoContribuyente + urn.slash + tipoContribuyenteId, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(err);

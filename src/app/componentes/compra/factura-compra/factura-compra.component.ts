@@ -149,7 +149,7 @@ export class FacturaCompraComponent implements OnInit {
     );
   }
   consultarProductos() {
-    this.productoService.consultarActivos().subscribe({
+    this.productoService.consultarPorEstado(valores.activo).subscribe({
       next: res => {
         this.productos = res.resultado as Producto[];
       },

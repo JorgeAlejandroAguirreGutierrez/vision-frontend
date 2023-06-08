@@ -41,8 +41,8 @@ export class MenuOpcionService {
       }));
   }
 
-  consultarActivos(): Observable<Respuesta> {
-    return this.http.get(environment.host + urn.ruta + urn.menuOpcion + urn.consultarActivos, options).pipe(
+  consultarPorEstado(estado: string): Observable<Respuesta> {
+    return this.http.get(environment.host + urn.ruta + urn.menuOpcion + urn.consultarPorEstado + urn.slash + estado, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);

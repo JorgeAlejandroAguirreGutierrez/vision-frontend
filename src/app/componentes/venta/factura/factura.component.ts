@@ -171,7 +171,7 @@ export class FacturaComponent implements OnInit {
   }
 
   consultarClientes() {
-    this.clienteService.consultarActivos().subscribe({
+    this.clienteService.consultarPorEstado(valores.activo).subscribe({
       next: res => {
         this.clientes = res.resultado as Cliente[]
       },
@@ -181,7 +181,7 @@ export class FacturaComponent implements OnInit {
     });
   }
   consultarProductos() {
-    this.productoService.consultarActivos().subscribe({
+    this.productoService.consultarPorEstado(valores.activo).subscribe({
       next: res => {
         this.productos = res.resultado as Producto[];
       },

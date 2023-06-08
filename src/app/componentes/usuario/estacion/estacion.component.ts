@@ -195,7 +195,7 @@ export class EstacionComponent implements OnInit {
   }
 
   consultarRegimenes(){
-    this.regimenService.consultarActivos().subscribe({
+    this.regimenService.consultarPorEstado(valores.activo).subscribe({
       next: res => {
         this.regimenes = res.resultado as Regimen[];
       },

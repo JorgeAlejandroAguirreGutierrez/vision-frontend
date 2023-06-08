@@ -95,7 +95,7 @@ export class EstablecimientoComponent implements OnInit {
   }
 
   consultarRegimenes(){
-    this.regimenService.consultarActivos().subscribe({
+    this.regimenService.consultarPorEstado(valores.activo).subscribe({
       next: res => {
         this.regimenes = res.resultado as Regimen[];
       },
@@ -117,7 +117,7 @@ export class EstablecimientoComponent implements OnInit {
   }
 
   consultarEmpresas() {
-    this.empresaService.consultarActivos().subscribe({
+    this.empresaService.consultarPorEstado(valores.activo).subscribe({
       next: (res) => {
         this.empresas = res.resultado as Empresa[]
       },

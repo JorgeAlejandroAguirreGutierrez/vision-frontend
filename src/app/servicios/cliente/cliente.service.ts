@@ -34,21 +34,29 @@ export class ClienteService {
     );
   }
 
+  consultarPorEstado(estado: string): Observable<Respuesta> {
+    return this.http.get<Respuesta>(environment.host + urn.ruta + urn.cliente + urn.consultarPorEstado + urn.slash + estado, options).pipe(
+      map(response => response as Respuesta),
+      catchError(err => {
+        return throwError(()=>err);
+      })
+    );
+  }
+
   consultarPorEmpresa(empresaId: number): Observable<Respuesta> {
-    return this.http.get(environment.host + urn.ruta + urn.cliente + urn.consultar + urn.slash + empresaId, options).pipe(
+    return this.http.get(environment.host + urn.ruta + urn.cliente + urn.consultarPorEmpresa + urn.slash + empresaId, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);
       }));
   }
 
-  consultarActivos(): Observable<Respuesta> {
-    return this.http.get<Respuesta>(environment.host + urn.ruta + urn.cliente + urn.consultarActivos, options).pipe(
+  consultarPorEmpresaYEstado(empresaId: number, estado: string): Observable<Respuesta> {
+    return this.http.get(environment.host + urn.ruta + urn.cliente + urn.consultarPorEmpresaYEstado + urn.slash + empresaId + urn.slash + estado, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);
-      })
-    );
+      }));
   }
 
   obtener(clienteId: number): Observable<Respuesta> {

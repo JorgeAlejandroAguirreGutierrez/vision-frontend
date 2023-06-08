@@ -15,8 +15,8 @@ export class EstadoCivilService {
 
   constructor(private http: HttpClient, private router: Router) { }
 
-  crear(estado_civil: EstadoCivil): Observable<Respuesta> {
-    return this.http.post(environment.host + urn.ruta + urn.estadoCivil, estado_civil, options).pipe(
+  crear(estadoCivil: EstadoCivil): Observable<Respuesta> {
+    return this.http.post(environment.host + urn.ruta + urn.estadoCivil, estadoCivil, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);
@@ -40,8 +40,9 @@ export class EstadoCivilService {
         return throwError(()=>err);
       }));
   }
-  consultarActivos(): Observable<Respuesta> {
-    return this.http.get(environment.host + urn.ruta + urn.estadoCivil + urn.consultarActivos, options).pipe(
+
+  consultarPorEstado(estado: string): Observable<Respuesta> {
+    return this.http.get(environment.host + urn.ruta + urn.estadoCivil + urn.consultarPorEstado + urn.slash + estado, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);

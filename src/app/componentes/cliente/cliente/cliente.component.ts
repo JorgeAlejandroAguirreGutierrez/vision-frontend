@@ -237,7 +237,7 @@ export class ClienteComponent implements OnInit {
     });
   }
   consultarSegmento(){
-    this.segmentoService.consultarActivos().subscribe({
+    this.segmentoService.consultarPorEstado(valores.activo).subscribe({
       next: (res) => {
         this.segmentos = res.resultado as Segmento[];
       },
@@ -247,7 +247,7 @@ export class ClienteComponent implements OnInit {
     });
   }
   consultarGrupoCliente(){
-    this.grupoClienteService.consultarActivos().subscribe({
+    this.grupoClienteService.consultarPorEstado(valores.activo).subscribe({
       next: (res) => {
         this.gruposClientes = res.resultado as GrupoCliente[]
       },
@@ -257,7 +257,7 @@ export class ClienteComponent implements OnInit {
     });
   }
   consultarGenero(){
-    this.generoService.consultarActivos().subscribe({
+    this.generoService.consultarPorEstado(valores.activo).subscribe({
       next: (res) => {
         this.generos = res.resultado as Genero[]
       },
@@ -267,7 +267,7 @@ export class ClienteComponent implements OnInit {
     });
   }
   consultarEstadoCivil(){
-    this.estadoCivilService.consultarActivos().subscribe({
+    this.estadoCivilService.consultarPorEstado(valores.activo).subscribe({
       next: (res) => {
         this.estadosCiviles = res.resultado as EstadoCivil[]
       },
@@ -277,7 +277,7 @@ export class ClienteComponent implements OnInit {
     });
   }
   consultarOrigenIngreso(){
-    this.origenIngresoService.consultarActivos().subscribe({
+    this.origenIngresoService.consultarPorEstado(valores.activo).subscribe({
       next: (res) => {
         this.origenesIngresos = res.resultado as OrigenIngreso[];
       },
@@ -287,7 +287,7 @@ export class ClienteComponent implements OnInit {
     });
   }
   consultarCalificacionCliente(){
-    this.calificacionClienteService.consultarActivos().subscribe({
+    this.calificacionClienteService.consultarPorEstado(valores.activo).subscribe({
       next: res => {
         this.calificacionesClientes = res.resultado as CalificacionCliente[]
       },
@@ -297,7 +297,7 @@ export class ClienteComponent implements OnInit {
     });
   }
   consultarPlazoCredito(){
-    this.plazoCreditoService.consultarActivos().subscribe({
+    this.plazoCreditoService.consultarPorEstado(valores.activo).subscribe({
       next: res => {
         this.plazosCreditos = res.resultado as PlazoCredito[]
       },
@@ -307,7 +307,7 @@ export class ClienteComponent implements OnInit {
     });
   }
   consultarFormaPago(){
-    this.formaPagoService.consultarActivos().subscribe({
+    this.formaPagoService.consultarPorEstado(valores.activo).subscribe({
       next: res => {
         this.formasPagos = res.resultado as FormaPago[]
       },

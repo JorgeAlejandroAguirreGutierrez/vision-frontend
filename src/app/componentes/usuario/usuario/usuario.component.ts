@@ -179,7 +179,7 @@ export class UsuarioComponent implements OnInit {
   }
 
   consultarPerfiles() {
-    this.perfilService.consultarActivos().subscribe({
+    this.perfilService.consultarPorEstado(valores.activo).subscribe({
       next: res => {
         this.perfiles = res.resultado as Perfil[]
       },
@@ -188,7 +188,7 @@ export class UsuarioComponent implements OnInit {
   }
 
   consultarEstaciones() {
-    this.estacionService.consultarActivos().subscribe({
+    this.estacionService.consultarPorEstado(valores.activo).subscribe({
       next: res => {
         this.estaciones = res.resultado as Estacion[]
       },
