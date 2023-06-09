@@ -22,8 +22,9 @@ export class NavbarComponent implements OnInit {
   isCollapsed: boolean = true;
 
   sesion: Sesion = null;
+  empresa: Empresa = null;
   usuario: Usuario = new Usuario();
-  empresa: Empresa = new Empresa();
+  
 
   constructor(private sesionService: SesionService, private sidebarService: SidebarService, private empresaService: EmpresaService,
             private usuarioService: UsuarioService, private router: Router) { }
@@ -31,6 +32,8 @@ export class NavbarComponent implements OnInit {
 
   ngOnInit() {
     this.sesion = validarSesion(this.sesionService, this.router);
+    this.empresa = this.sesion.usuario.estacion.establecimiento.empresa;
+    this.sesion.empresa = this.empresa;
     this.obtenerEmpresa();
     this.obtenerUsuario();
   }
