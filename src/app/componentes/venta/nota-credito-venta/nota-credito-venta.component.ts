@@ -25,6 +25,7 @@ import { NotaCreditoElectronicaService } from 'src/app/servicios/venta/nota-cred
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
+import { Empresa } from 'src/app/modelos/usuario/empresa';
 
 @Component({
   selector: 'app-nota-credito-venta',
@@ -57,7 +58,8 @@ export class NotaCreditoVentaComponent implements OnInit {
 
   hoy = new Date();
  
-  sesion: Sesion;
+  sesion: Sesion = null;
+  empresa: Empresa = null;
   notaCreditoVenta: NotaCreditoVenta = new NotaCreditoVenta();
   notaCreditoVentaLinea: NotaCreditoVentaLinea = new NotaCreditoVentaLinea();
 
@@ -120,7 +122,8 @@ export class NotaCreditoVentaComponent implements OnInit {
     private router: Router, private notaCreditoVentaService: NotaCreditoVentaService, private facturaService: FacturaService, private datepipe: DatePipe) { this.dateAdapter.setLocale('en-GB') }
 
   ngOnInit() {
-    this.sesion=validarSesion(this.sesionService, this.router);
+    this.sesion = validarSesion(this.sesionService, this.router);
+    this.empresa = this.sesion.usuario.estacion.establecimiento.empresa;
     this.consultar();
     this.consultarClientes();
     this.inicializarFiltros();
@@ -148,7 +151,8 @@ export class NotaCreditoVentaComponent implements OnInit {
   crear(event) {
     if (event!=null)
       event.preventDefault();
-    this.notaCreditoVenta.sesion=this.sesion;
+    this.notaCreditoVenta.sesion = this.sesion;
+    this.notaCreditoVenta.empresa = this.empresa;
     this.notaCreditoVentaService.crear(this.notaCreditoVenta).subscribe(
       res => {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });

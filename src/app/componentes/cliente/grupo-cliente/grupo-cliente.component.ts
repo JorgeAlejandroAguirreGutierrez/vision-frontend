@@ -30,7 +30,7 @@ export class GrupoClienteComponent implements OnInit {
   abrirPanelAdmin: boolean = true;
 
   sesion: Sesion=null;
-  empresa: Empresa = new Empresa();
+  empresa: Empresa = null;
   grupoCliente= new GrupoCliente();
 
   gruposClientes: GrupoCliente[];
@@ -63,7 +63,7 @@ export class GrupoClienteComponent implements OnInit {
 
   ngOnInit() {
     this.sesion=validarSesion(this.sesionService, this.router);
-    this.empresa = this.sesion.empresa;
+    this.empresa = this.sesion.usuario.estacion.establecimiento.empresa;
     this.consultar();
   }
 
@@ -80,6 +80,7 @@ export class GrupoClienteComponent implements OnInit {
       event.preventDefault();
     if (!this.validarFormulario())
       return;
+    this.grupoCliente.empresa = this.empresa;
     this.grupoClienteService.crear(this.grupoCliente).subscribe({
       next: res => {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });

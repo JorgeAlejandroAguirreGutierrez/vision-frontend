@@ -12,6 +12,7 @@ import { ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
+import { Empresa } from 'src/app/modelos/usuario/empresa';
 
 @Component({
   selector: 'app-plazo-credito',
@@ -26,8 +27,9 @@ export class PlazoCreditoComponent implements OnInit {
   abrirPanelNuevo: boolean = true;
   abrirPanelAdmin: boolean = true;
 
-  sesion: Sesion=null;
-  plazoCredito= new PlazoCredito();
+  sesion: Sesion = null;
+  empresa: Empresa = null;
+  plazoCredito = new PlazoCredito();
   plazosCreditos: PlazoCredito[];
 
   columnas: any[] = [
@@ -58,6 +60,7 @@ export class PlazoCreditoComponent implements OnInit {
 
   ngOnInit() {
     this.sesion=validarSesion(this.sesionService, this.router);
+    this.empresa = this.sesion.usuario.estacion.establecimiento.empresa;
     this.consultar();
   }
 
@@ -73,7 +76,8 @@ export class PlazoCreditoComponent implements OnInit {
     if (event != null)
       event.preventDefault();
     if (!this.validarFormulario())
-      return;  
+      return;
+    this.plazoCredito.empresa = this.empresa;
     this.plazoCreditoService.crear(this.plazoCredito).subscribe({
       next: res => {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });

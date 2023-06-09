@@ -13,9 +13,9 @@ import { RetencionCliente } from './retencion-cliente';
 import { FormaPago } from './forma-pago';
 import { PlazoCredito } from './plazo-credito';
 import { Ubicacion } from '../configuracion/ubicacion';
-import { TipoRetencion } from '../configuracion/tipo-retencion';
 import { TipoIdentificacion } from '../configuracion/tipo-identificacion';
 import { valores } from "../../constantes";
+import { Empresa } from '../usuario/empresa';
 
 export class Cliente {
    id:number;
@@ -28,6 +28,8 @@ export class Cliente {
    direccion: string;
    etiqueta: string;
    referencia: string;
+   latitudgeo: number;
+   longitudgeo: number;
    tipoIdentificacion: TipoIdentificacion;
    grupoCliente: GrupoCliente;
    tipoContribuyente: TipoContribuyente;
@@ -40,8 +42,7 @@ export class Cliente {
    estadoCivil: EstadoCivil;
    calificacionCliente: CalificacionCliente;
    origenIngreso: OrigenIngreso;
-   latitudgeo: number;
-   longitudgeo: number;
+   empresa: Empresa;
 
    dependientes: Dependiente[];
    telefonos: Telefono[];

@@ -11,6 +11,7 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { VehiculoTransporte } from 'src/app/modelos/entrega/vehiculo-transporte';
 import { VehiculoTransporteService } from 'src/app/servicios/entrega/vehiculo-transporte.service';
+import { Empresa } from 'src/app/modelos/usuario/empresa';
 
 @Component({
   selector: 'app-transportista',
@@ -25,8 +26,9 @@ export class TransportistaComponent implements OnInit {
   abrirPanelNuevo = true;
   abrirPanelAdmin = true;
 
-  sesion: Sesion=null;
-  transportista= new Transportista();
+  sesion: Sesion = null;
+  empresa: Empresa = null;
+  transportista = new Transportista();
   transportistas: Transportista[];
   vehiculosTransportes: VehiculoTransporte[];
 
@@ -34,8 +36,6 @@ export class TransportistaComponent implements OnInit {
     { nombreColumna: 'codigo', cabecera: 'Código', celda: (row: Transportista) => `${row.codigo}` },
     { nombreColumna: 'nombre', cabecera: 'Nombre', celda: (row: Transportista) => `${row.nombre}` },
     { nombreColumna: 'identificacion', cabecera: 'Identificación', celda: (row: Transportista) => `${row.identificacion}` },
-    { nombreColumna: 'vehiculoPropio', cabecera: 'Vehiculo Propio', celda: (row: Transportista) => `${row.vehiculoPropio}` },
-    { nombreColumna: 'vehiculo', cabecera: 'Vehiculo', celda: (row: Transportista) => `${row.vehiculoTransporte.placa}` },
     { nombreColumna: 'estado', cabecera: 'Estado', celda: (row: Transportista) => `${row.estado}` }
   ];
   cabecera: string[] = this.columnas.map(titulo => titulo.nombreColumna);
@@ -49,7 +49,8 @@ export class TransportistaComponent implements OnInit {
     private sesionService: SesionService,private router: Router) { }
 
   ngOnInit() {
-    this.sesion=validarSesion(this.sesionService, this.router);
+    this.sesion = validarSesion(this.sesionService, this.router);
+    this.empresa = this.sesion.usuario.estacion.establecimiento.empresa;
     this.consultar();
     this.consultarVehiculosTransportes();
   }
@@ -72,6 +73,7 @@ export class TransportistaComponent implements OnInit {
   crear(event) {
     if (event!=null)
       event.preventDefault();
+    this.transportista.empresa = this.empresa;
     this.transportistaService.crear(this.transportista).subscribe(
       res => {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });

@@ -5,6 +5,7 @@ import { TipoComprobante } from '../configuracion/tipo-comprobante';
 import { NotaCreditoCompraLinea } from './nota-credito-compra-linea';
 import { FacturaCompra } from './factura-compra';
 import { Bodega } from '../inventario/bodega';
+import { Empresa } from '../usuario/empresa';
 export class NotaCreditoCompra {
     id: number;
     codigo: string;
@@ -24,6 +25,7 @@ export class NotaCreditoCompra {
     facturaCompra: FacturaCompra;
     sesion: Sesion;
     tipoComprobante: TipoComprobante;
+    empresa: Empresa;
     notaCreditoCompraLineas: NotaCreditoCompraLinea[];
 
     constructor() {

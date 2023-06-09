@@ -87,7 +87,7 @@ export class EstablecimientoComponent implements OnInit {
     private sesionService: SesionService, private router: Router, private ubicacionService: UbicacionService, private regimenService: RegimenService) { }
 
   ngOnInit() {
-    this.sesion=validarSesion(this.sesionService, this.router);
+    this.sesion = validarSesion(this.sesionService, this.router);
     this.consultarEmpresas();
     this.consultar();
     this.consultarRegimenes();

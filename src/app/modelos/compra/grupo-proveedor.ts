@@ -1,5 +1,6 @@
 import { CuentaContable } from "../contabilidad/cuenta-contable";
 import { valores } from "../../constantes";
+import { Empresa } from "../usuario/empresa";
 
 export class GrupoProveedor {
     id: number;
@@ -8,6 +9,7 @@ export class GrupoProveedor {
     abreviatura:string;
     estado:string;
     cuentaContable: CuentaContable;
+    empresa: Empresa;
 
     constructor() {
         this.id = valores.cero;

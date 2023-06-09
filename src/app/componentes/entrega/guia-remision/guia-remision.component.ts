@@ -20,6 +20,8 @@ import { Factura } from 'src/app/modelos/venta/factura';
 import { ClienteService } from 'src/app/servicios/cliente/cliente.service';
 import { MatPaginator } from '@angular/material/paginator';
 import { GuiaRemisionElectronicaService } from 'src/app/servicios/entrega/guia-remision-eletronica.service';
+import { VehiculoTransporte } from 'src/app/modelos/entrega/vehiculo-transporte';
+import { VehiculoTransporteService } from 'src/app/servicios/entrega/vehiculo-transporte.service';
 
 @Component({
   selector: 'app-guia-remision',
@@ -53,6 +55,7 @@ export class GuiaRemisionComponent implements OnInit {
   filtroFacturas: Observable<Factura[]> = new Observable<Factura[]>();
   facturas: Factura[] = [];
   transportistas: Transportista[] = [];
+  vehiculosTransportes: VehiculoTransporte[] = [];
 
   columnas: any[] = [
     { nombreColumna: 'codigo', cabecera: 'Código', celda: (row: GuiaRemision) => `${row.codigo}` },
@@ -61,7 +64,7 @@ export class GuiaRemisionComponent implements OnInit {
     { nombreColumna: 'factura', cabecera: 'Factura', celda: (row: GuiaRemision) => `${row.factura.secuencial}` },
     { nombreColumna: 'direccion', cabecera: 'Direccion', celda: (row: GuiaRemision) => row.opcionGuia == valores.clienteDireccion ? `${row.factura.cliente.direccion}` : `${row.direccionDestinatario}` },
     { nombreColumna: 'transportista', cabecera: 'Transportista', celda: (row: GuiaRemision) => `${row.transportista.nombre}` },
-    { nombreColumna: 'placa', cabecera: 'Placa', celda: (row: GuiaRemision) => `${row.transportista.vehiculoTransporte.placa}` },
+    { nombreColumna: 'placa', cabecera: 'Placa', celda: (row: GuiaRemision) => `${row.vehiculoTransporte.placa}` },
     { nombreColumna: 'estado', cabecera: 'Estado', celda: (row: GuiaRemision) => `${row.estado}` }
   ];
   cabecera: string[] = this.columnas.map(titulo => titulo.nombreColumna);
@@ -79,7 +82,8 @@ export class GuiaRemisionComponent implements OnInit {
   dataSourceLinea = new MatTableDataSource<FacturaLinea>(this.guiaRemision.factura.facturaLineas);
   sesion: Sesion;
 
-  constructor(private clienteService: ClienteService, private sesionService: SesionService, private guiaRemisionElectronicaService: GuiaRemisionElectronicaService, private datepipe: DatePipe,
+  constructor(private clienteService: ClienteService, private sesionService: SesionService, private guiaRemisionElectronicaService: GuiaRemisionElectronicaService, 
+    private vehiculoTransporteService: VehiculoTransporteService, private datepipe: DatePipe,
     private router: Router, private guiaRemisionService: GuiaRemisionService, private facturaService: FacturaService, private transportistaService: TransportistaService, private dateAdapter: DateAdapter<Date>) { this.dateAdapter.setLocale('en-GB') }
 
   @HostListener('window:keypress', ['$event'])
@@ -194,6 +198,15 @@ export class GuiaRemisionComponent implements OnInit {
     this.transportistaService.consultar().subscribe(
       res => {
         this.transportistas = res.resultado as Transportista[]
+      },
+      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+    );
+  }
+
+  consultarVehiculoTransportePorTranasportista(){
+    this.vehiculoTransporteService.consultarPorTransportistaYEstado(this.guiaRemision.transportista.id, valores.activo).subscribe(
+      res => {
+        this.vehiculosTransportes = res.resultado as VehiculoTransporte[]
       },
       err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     );

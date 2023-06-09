@@ -12,6 +12,7 @@ import { ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
+import { Empresa } from 'src/app/modelos/usuario/empresa';
 
 
 @Component({
@@ -27,7 +28,8 @@ export class BodegaComponent implements OnInit {
   activo = valores.activo;
   inactivo = valores.inactivo;
 
-  sesion: Sesion=null;
+  sesion: Sesion = null;
+  empresa: Empresa = null;
   bodega = new Bodega();
   bodegas : Bodega[];
   
@@ -58,6 +60,7 @@ export class BodegaComponent implements OnInit {
 
   ngOnInit() {
     this.sesion = validarSesion(this.sesionService, this.router);
+    this.empresa = this.sesion.usuario.estacion.establecimiento.empresa;
     this.consultar();
   }
   
@@ -74,6 +77,7 @@ export class BodegaComponent implements OnInit {
       event.preventDefault();
     if (!this.validarFormulario())
       return;  
+    this.bodega.empresa = this.empresa;
     this.bodegaService.crear(this.bodega).subscribe({
       next: res => {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });

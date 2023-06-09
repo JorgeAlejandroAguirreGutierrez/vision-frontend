@@ -92,8 +92,8 @@ export class ClienteComponent implements OnInit {
   cantonDependiente: string = valores.vacio;
   parroquiaDependiente: string = valores.vacio;
 
-  sesion: Sesion;
-  empresa: Empresa = new Empresa();
+  sesion: Sesion = null;
+  empresa: Empresa = null;
   cliente: Cliente = new Cliente();
   telefono: Telefono = new Telefono();
   celular: Celular = new Celular();
@@ -197,7 +197,7 @@ export class ClienteComponent implements OnInit {
 
   ngOnInit() {
     this.sesion = validarSesion(this.sesionService, this.router);
-    this.empresa = this.sesion.empresa;
+    this.empresa = this.sesion.usuario.estacion.establecimiento.empresa;
     this.consultar();
     this.consultarTipoIdentificacion();
     this.consultarTipoContribuyente();
@@ -394,6 +394,7 @@ export class ClienteComponent implements OnInit {
       return;   
     this.agregarTelefonoCorreo();
     this.validarDependiente();
+    this.cliente.empresa = this.sesion.usuario.estacion.establecimiento.empresa;
     console.log(this.cliente);
     this.clienteService.crear(this.cliente).subscribe({
       next: res => {
@@ -465,7 +466,7 @@ export class ClienteComponent implements OnInit {
   }
 
   consultar() {
-    this.clienteService.consultarPorEmpresa(this.empresa.id).subscribe({
+    this.clienteService.consultarPorEmpresa(this.sesion.usuario.estacion.establecimiento.empresa.id).subscribe({
       next: res => {
         this.clientes = res.resultado as Cliente[]
         this.llenarTablaCliente(this.clientes);

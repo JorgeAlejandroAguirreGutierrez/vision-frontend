@@ -1,9 +1,10 @@
 import { CuentaContable } from "../../modelos/contabilidad/cuenta-contable";
 import { CategoriaProducto } from "./categoria-producto";
 import { valores } from "../../constantes";
+import { Empresa } from "../usuario/empresa";
 
 export class GrupoProducto {
-    id:number;
+    id: number;
     codigo: string;
     grupo: string;
     subgrupo : string;
@@ -14,6 +15,7 @@ export class GrupoProducto {
     estado: string;
     categoriaProducto: CategoriaProducto;
     cuentaContable: CuentaContable;
+    empresa: Empresa;
 
     constructor() {
         this.id=valores.cero;

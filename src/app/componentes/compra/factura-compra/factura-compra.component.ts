@@ -30,6 +30,7 @@ import { KardexService } from '../../../servicios/inventario/kardex.service';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
+import { Empresa } from 'src/app/modelos/usuario/empresa';
 
 @Component({
   selector: 'app-factura-compra',
@@ -57,7 +58,8 @@ export class FacturaCompraComponent implements OnInit {
 
   hoy = new Date();
 
-  sesion: Sesion;
+  sesion: Sesion = null;
+  empresa: Empresa = null;
   facturaCompra: FacturaCompra = new FacturaCompra();
   facturaCompraLinea: FacturaCompraLinea = new FacturaCompraLinea();
   kardex: Kardex = new Kardex();
@@ -193,6 +195,7 @@ export class FacturaCompraComponent implements OnInit {
       return;
     this.spinnerService.show();   
     this.facturaCompra.sesion = this.sesion;
+    this.facturaCompra.empresa = this.empresa;
     this.facturaCompraService.crear(this.facturaCompra).subscribe({
       next: res => {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });

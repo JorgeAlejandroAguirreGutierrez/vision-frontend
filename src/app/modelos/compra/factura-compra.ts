@@ -3,6 +3,7 @@ import { FacturaCompraLinea } from './factura-compra-linea';
 import { Sesion } from '../usuario/sesion';
 import { valores } from "../../constantes";
 import { TipoComprobante } from '../configuracion/tipo-comprobante';
+import { Empresa } from '../usuario/empresa';
 
 export class FacturaCompra {
     id: number;
@@ -24,6 +25,7 @@ export class FacturaCompra {
     proveedor: Proveedor;
     sesion: Sesion;
     tipoComprobante: TipoComprobante;
+    empresa: Empresa;
     facturaCompraLineas: FacturaCompraLinea[];
 
     constructor() {

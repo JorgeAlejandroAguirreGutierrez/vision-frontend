@@ -10,6 +10,7 @@ import { Sesion } from '../../../modelos/usuario/sesion';
 import { SesionService } from '../../../servicios/usuario/sesion.service';
 import { Medida } from '../../../modelos/inventario/medida';
 import { MedidaService } from '../../../servicios/inventario/medida.service';
+import { Empresa } from 'src/app/modelos/usuario/empresa';
 
 @Component({
   selector: 'app-medida',
@@ -25,7 +26,8 @@ export class MedidaComponent implements OnInit {
   inactivo: string = valores.inactivo;
   tipoMedidas: string[] = tipoMedidas; 
 
-  sesion: Sesion=null;
+  sesion: Sesion = null;
+  empresa: Empresa = null;
   medida = new Medida();
   medidas: Medida[];
   
@@ -56,7 +58,8 @@ export class MedidaComponent implements OnInit {
     private sesionService: SesionService,private router: Router) { }
 
   ngOnInit() {
-    this.sesion=validarSesion(this.sesionService, this.router);
+    this.sesion = validarSesion(this.sesionService, this.router);
+    this.empresa = this.sesion.usuario.estacion.establecimiento.empresa;
     this.consultar();
   }
 
@@ -72,6 +75,7 @@ export class MedidaComponent implements OnInit {
       event.preventDefault();
     if (!this.validarFormulario())
       return;
+    this.medida.empresa = this.empresa;
     this.medidaService.crear(this.medida).subscribe({
       next: res => {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });

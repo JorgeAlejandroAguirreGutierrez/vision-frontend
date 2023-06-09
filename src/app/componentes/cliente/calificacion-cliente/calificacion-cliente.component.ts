@@ -28,7 +28,7 @@ export class CalificacionClienteComponent implements OnInit {
   abrirPanelAdmin: boolean = true;
 
   sesion: Sesion = null;
-  empresa: Empresa = new Empresa();
+  empresa: Empresa = null;
   calificacionCliente= new CalificacionCliente();
 
   calificacionesClientes: CalificacionCliente[];
@@ -59,8 +59,8 @@ export class CalificacionClienteComponent implements OnInit {
         private sesionService: SesionService,private router: Router) { }
 
   ngOnInit() {
-    this.sesion=validarSesion(this.sesionService, this.router);
-    this.empresa = this.sesion.empresa;
+    this.sesion = validarSesion(this.sesionService, this.router);
+    this.empresa = this.sesion.usuario.estacion.establecimiento.empresa;
     this.consultar();
   }
   
@@ -77,6 +77,7 @@ export class CalificacionClienteComponent implements OnInit {
       event.preventDefault();
     if (!this.validarFormulario())
       return;
+    this.calificacionCliente.empresa = this.empresa
     this.calificacionClienteService.crear(this.calificacionCliente).subscribe({
       next: res => {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });

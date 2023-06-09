@@ -1,6 +1,7 @@
 import { AfectacionContable } from "./afectacion-contable";
 import { CuentaContable } from "./cuenta-contable"
 import { valores } from "../../constantes";
+import { Empresa } from "../usuario/empresa";
 
 export class MovimientoContable {
     id:number;
@@ -14,6 +15,7 @@ export class MovimientoContable {
     descuentoVenta: CuentaContable;
     devolucionCostoVenta: CuentaContable;
     afectacionContable: AfectacionContable;
+    empresa: Empresa;
 
     constructor() {
         this.id = valores.cero;

@@ -14,6 +14,7 @@ import { ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
+import { Empresa } from 'src/app/modelos/usuario/empresa';
 
 @Component({
   selector: 'app-grupo-proveedor',
@@ -29,7 +30,8 @@ export class GrupoProveedorComponent implements OnInit {
   abrirPanelNuevo: boolean = true;
   abrirPanelAdmin: boolean = true;
 
-  sesion: Sesion=null;
+  sesion: Sesion = null;
+  empresa: Empresa = null;
   grupoProveedor= new GrupoProveedor();
   gruposProveedores: GrupoProveedor[];
 
@@ -53,7 +55,8 @@ export class GrupoProveedorComponent implements OnInit {
     private sesionService: SesionService,private router: Router) { }
 
   ngOnInit() {
-    this.sesion=validarSesion(this.sesionService, this.router);
+    this.sesion = validarSesion(this.sesionService, this.router);
+    this.empresa = this.sesion.usuario.estacion.establecimiento.empresa;
     this.consultar();
   }
   
@@ -78,6 +81,7 @@ export class GrupoProveedorComponent implements OnInit {
       event.preventDefault();
     if (!this.validarFormulario())
       return;
+    this.grupoProveedor.empresa = this.empresa;
     this.grupoProveedorService.crear(this.grupoProveedor).subscribe({
       next: res => {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });

@@ -30,6 +30,7 @@ import { CategoriaProductoService } from 'src/app/servicios/inventario/categoria
 import { BodegaService } from 'src/app/servicios/inventario/bodega.service';
 import { ProductoService } from 'src/app/servicios/inventario/producto.service';
 import { FacturaCompraLinea } from 'src/app/modelos/compra/factura-compra-linea';
+import { Empresa } from 'src/app/modelos/usuario/empresa';
 
 @Component({
   selector: 'app-nota-debito-compra',
@@ -99,7 +100,8 @@ export class NotaDebitoCompraComponent implements OnInit {
   dataSourceLinea = new MatTableDataSource<NotaDebitoCompraLinea>(this.notaDebitoCompra.notaDebitoCompraLineas);
   columnasFacturaCompraLinea: string[] = ["codigo", 'nombre', 'medida', 'cantidad', 'costoUnitario', 'valorDescuento', 'porcentajeDescuento', 'impuesto', 'bodega', 'total'];
   dataSourceFacturaCompraLinea = new MatTableDataSource<FacturaCompraLinea>(this.notaDebitoCompra.facturaCompra.facturaCompraLineas);
-  sesion: Sesion;
+  sesion: Sesion = null;
+  empresa: Empresa = null;
 
   constructor(private proveedorService: ProveedorService, private sesionService: SesionService, private kardexService: KardexService, private impuestoService: ImpuestoService, private productoService: ProductoService, private datepipe: DatePipe,
     private router: Router, private notaDebitoCompraService: NotaDebitoCompraService, private facturaCompraService: FacturaCompraService, private bodegaService: BodegaService, private categoriaProductoService: CategoriaProductoService) { }
@@ -113,7 +115,8 @@ export class NotaDebitoCompraComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.sesion=validarSesion(this.sesionService, this.router);
+    this.sesion = validarSesion(this.sesionService, this.router);
+    this.empresa = this.sesion.usuario.estacion.establecimiento.empresa;
     this.consultar();
     this.consultarProveedores();
     this.consultarFacturasCompras();
@@ -342,7 +345,8 @@ export class NotaDebitoCompraComponent implements OnInit {
   crear(event) {
     if (event!=null)
       event.preventDefault();
-    this.notaDebitoCompra.sesion=this.sesion;
+    this.notaDebitoCompra.sesion = this.sesion;
+    this.notaDebitoCompra.empresa = this.empresa;
     this.notaDebitoCompraService.crear(this.notaDebitoCompra).subscribe(
       res => {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
