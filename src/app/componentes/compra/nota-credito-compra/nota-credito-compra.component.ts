@@ -158,7 +158,7 @@ export class NotaCreditoCompraComponent implements OnInit {
   }
 
   consultar() {
-    this.notaCreditoCompraService.consultar().subscribe(
+    this.notaCreditoCompraService.consultarPorEmpresa(this.empresa.id).subscribe(
       res => {
         this.notasCreditosCompras = res.resultado as NotaCreditoCompra[]
         this.dataSource = new MatTableDataSource(this.notasCreditosCompras);
@@ -169,7 +169,7 @@ export class NotaCreditoCompraComponent implements OnInit {
   }
 
   consultarProveedores(){
-    this.proveedorService.consultar().subscribe(
+    this.proveedorService.consultarPorEmpresaYEstado(this.empresa.id, valores.activo).subscribe(
       res => {
         this.proveedores = res.resultado as Proveedor[]
       },
@@ -178,7 +178,7 @@ export class NotaCreditoCompraComponent implements OnInit {
   }
 
   consultarFacturasCompras(){
-    this.facturaCompraService.consultar().subscribe(
+    this.facturaCompraService.consultarPorEmpresaYEstado(this.empresa.id, valores.activo).subscribe(
       res => {
         this.facturasCompras = res.resultado as FacturaCompra[]
       },

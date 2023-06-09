@@ -62,7 +62,7 @@ export class GrupoClienteComponent implements OnInit {
     private sesionService: SesionService,private router: Router) { }
 
   ngOnInit() {
-    this.sesion=validarSesion(this.sesionService, this.router);
+    this.sesion = validarSesion(this.sesionService, this.router);
     this.empresa = this.sesion.usuario.estacion.establecimiento.empresa;
     this.consultar();
   }
@@ -172,15 +172,15 @@ export class GrupoClienteComponent implements OnInit {
 
   validarFormulario(): boolean{
     //validar que los campos esten llenos antes de guardar
-    if (this.grupoCliente.descripcion == '') {
+    if (this.grupoCliente.descripcion == valores.vacio) {
       Swal.fire({ icon: error_swal, title: error, text: mensajes.error_falta_datos });
       return false;
     }
-    if (this.grupoCliente.abreviatura == '') {
+    if (this.grupoCliente.abreviatura == valores.vacio) {
       Swal.fire({ icon: error_swal, title: error, text: mensajes.error_falta_datos });
       return false;
     }
-    if (this.grupoCliente.cuentaContable.cuenta == '') {
+    if (this.grupoCliente.cuentaContable.cuenta == valores.vacio) {
       Swal.fire({ icon: error_swal, title: error, text: mensajes.error_falta_datos });
       return false;
     }

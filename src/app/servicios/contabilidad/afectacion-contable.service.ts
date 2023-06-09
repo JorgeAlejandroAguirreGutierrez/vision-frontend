@@ -40,6 +40,14 @@ export class AfectacionContableService {
       }));
   }
 
+  consultarPorEstado(estado: string): Observable<Respuesta> {
+    return this.http.get(environment.host + urn.ruta + urn.afectacionContable +urn.consultarPorEstado + urn.slash + estado, options).pipe(
+      map(response => response as Respuesta),
+      catchError(err => {
+        return throwError(()=>err);
+      }));
+  }
+
   buscar(afectacionContable: AfectacionContable): Observable<Respuesta> {
     return this.http.post(environment.host + urn.ruta + urn.afectacionContable + urn.buscar, afectacionContable, options).pipe(
       map(response => response as Respuesta),

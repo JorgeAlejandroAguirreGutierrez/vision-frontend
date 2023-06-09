@@ -237,7 +237,7 @@ export class ClienteComponent implements OnInit {
     });
   }
   consultarSegmento(){
-    this.segmentoService.consultarPorEstado(valores.activo).subscribe({
+    this.segmentoService.consultarPorEmpresaYEstado(this.empresa.id, valores.activo).subscribe({
       next: (res) => {
         this.segmentos = res.resultado as Segmento[];
       },
@@ -247,7 +247,7 @@ export class ClienteComponent implements OnInit {
     });
   }
   consultarGrupoCliente(){
-    this.grupoClienteService.consultarPorEstado(valores.activo).subscribe({
+    this.grupoClienteService.consultarPorEmpresaYEstado(this.empresa.id, valores.activo).subscribe({
       next: (res) => {
         this.gruposClientes = res.resultado as GrupoCliente[]
       },
@@ -287,7 +287,7 @@ export class ClienteComponent implements OnInit {
     });
   }
   consultarCalificacionCliente(){
-    this.calificacionClienteService.consultarPorEstado(valores.activo).subscribe({
+    this.calificacionClienteService.consultarPorEmpresaYEstado(this.empresa.id, valores.activo).subscribe({
       next: res => {
         this.calificacionesClientes = res.resultado as CalificacionCliente[]
       },
@@ -297,7 +297,7 @@ export class ClienteComponent implements OnInit {
     });
   }
   consultarPlazoCredito(){
-    this.plazoCreditoService.consultarPorEstado(valores.activo).subscribe({
+    this.plazoCreditoService.consultarPorEmpresaYEstado(this.empresa.id, valores.activo).subscribe({
       next: res => {
         this.plazosCreditos = res.resultado as PlazoCredito[]
       },
@@ -489,7 +489,6 @@ export class ClienteComponent implements OnInit {
     if (!this.clickedRows.has(cliente)){
       this.clickedRows.clear();
       this.clickedRows.add(cliente);
-      //this.cliente = { ... cliente};
       this.obtenerCliente(cliente.id);
     } else {
       this.nuevo(null);
@@ -551,8 +550,7 @@ export class ClienteComponent implements OnInit {
     this.posicionCentralDependiente = new Coordenada(valores.latCiudad, valores.lngCiudad);
     this.posicionGeograficaDependiente = new Coordenada(valores.latCiudad, valores.lngCiudad);;
     this.clickedRowsDependiente.clear();
-    if (this.cliente.dependientes.length > 0 && this.verPanelDependiente) // si hay dependientes borra?
-      //this.borrarFiltroDependiente(); 
+    if (this.cliente.dependientes.length > 0 && this.verPanelDependiente)
     this.verIconoEditarDependiente = false;
   }
 
@@ -666,8 +664,6 @@ export class ClienteComponent implements OnInit {
         if (this.cliente.ubicacion.id != 0){
           this.llenarUbicacion();
         }
-        //this.cliente.tipoIdentificacion = res.resultado.tipoIdentificacion as TipoIdentificacion;
-        //this.cliente.tipoContribuyente = res.resultado.tipoContribuyente as TipoContribuyente;
         this.cliente.obligadoContabilidad = this.cliente.tipoContribuyente.obligadoContabilidad;
         this.validarDocumento();
         this.validarDinardap();
@@ -675,8 +671,6 @@ export class ClienteComponent implements OnInit {
       },
       error: (err) => {
         this.nuevo(null);
-        //this.cliente.tipoIdentificacion = null;
-        //this.cliente.tipoContribuyente = new TipoContribuyente();
         Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje });
       }
     });
@@ -720,7 +714,6 @@ export class ClienteComponent implements OnInit {
       this.deshabilitarPlazoCredito = false;
     } else {
       this.deshabilitarPlazoCredito = true;
-      //this.cliente.formaPago.id = 0;
     }
   }
 
@@ -737,18 +730,10 @@ export class ClienteComponent implements OnInit {
       Swal.fire({ icon: error_swal, title: error, text: mensajes.error_falta_datos });
       return false;
     }
-    /*if (this.cliente.referencia == '') {
-      Swal.fire({ icon: error_swal, title: error, text: mensajes.error_falta_datos });
-      return false;
-    }*/
     if (this.provinciaCliente == '' || this.cantonCliente == '' || this.parroquiaCliente == '') {
       Swal.fire({ icon: error_swal, title: error, text: mensajes.error_falta_datos });
       return false;
     }
-    /*if (this. correo.email == '' && this.cliente.correos.length == 0) {
-      Swal.fire({ icon: error_swal, title: error, text: mensajes.error_falta_correo });
-      return false;
-    }*/
     return true;
   }
 
@@ -884,9 +869,9 @@ export class ClienteComponent implements OnInit {
     this.cliente.ubicacion.provincia = this.provinciaCliente;
     this.ubicacionService.consultarCantones(this.provinciaCliente).subscribe({
       next: res => {
-        this.cantonCliente = "";
+        this.cantonCliente = valores.vacio;
         this.cantones = res.resultado as Ubicacion[];
-        this.parroquiaCliente = "";
+        this.parroquiaCliente = valores.vacio;
         this.parroquias = [];
       },
       error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
@@ -897,7 +882,7 @@ export class ClienteComponent implements OnInit {
     this.cliente.ubicacion.canton = this.cantonCliente;
     this.ubicacionService.consultarParroquias(this.cantonCliente).subscribe({
       next: res => {
-        this.parroquiaCliente = "";
+        this.parroquiaCliente = valores.vacio;
         this.parroquias = res.resultado as Ubicacion[];
       },
       error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
@@ -912,9 +897,9 @@ export class ClienteComponent implements OnInit {
     this.dependiente.ubicacion.provincia = this.provinciaDependiente;
     this.ubicacionService.consultarCantones(this.dependiente.ubicacion.provincia).subscribe({
       next: res => {
-        this.cantonDependiente = "";
+        this.cantonDependiente = valores.vacio;
         this.cantonesDependiente = res.resultado as Ubicacion[];
-        this.parroquiaDependiente = "";
+        this.parroquiaDependiente = valores.vacio;
         this.parroquiasDependiente = [];
       },
       error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
@@ -925,7 +910,7 @@ export class ClienteComponent implements OnInit {
     this.dependiente.ubicacion.canton = this.cantonDependiente;
     this.ubicacionService.consultarParroquias(this.dependiente.ubicacion.canton).subscribe({
       next: res => {
-        this.parroquiaDependiente = "";
+        this.parroquiaDependiente = valores.vacio;
         this.parroquiasDependiente = res.resultado as Ubicacion[];
       },
       error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
@@ -948,7 +933,6 @@ export class ClienteComponent implements OnInit {
   }
 
   asignarCoordenadasCliente(){
-    //this.cliente.coordenadas.push(this.posicionGeograficaDireccion);
     this.cliente.latitudgeo = this.posicionGeograficaDireccion.lat;
     this.cliente.longitudgeo = this.posicionGeograficaDireccion.lng;
   }

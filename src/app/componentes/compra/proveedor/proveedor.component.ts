@@ -169,7 +169,7 @@ export class ProveedorComponent implements OnInit {
     });
   }
   consultarGrupoProveedor() {
-    this.grupoProveedorService.consultarPorEstado(valores.activo).subscribe({
+    this.grupoProveedorService.consultarPorEmpresaYEstado(this.empresa.id, valores.activo).subscribe({
       next: (res) => {
         this.gruposProveedores = res.resultado as GrupoProveedor[]
       },
@@ -189,7 +189,7 @@ export class ProveedorComponent implements OnInit {
     });
   }
   consultarPlazoCredito() {
-    this.plazoCreditoService.consultarPorEstado(valores.activo).subscribe({
+    this.plazoCreditoService.consultarPorEmpresaYEstado(this.empresa.id, valores.activo).subscribe({
       next: res => {
         this.plazosCreditos = res.resultado as PlazoCredito[]
       },
@@ -337,7 +337,7 @@ export class ProveedorComponent implements OnInit {
   }
 
   consultar() {
-    this.proveedorService.consultar().subscribe({
+    this.proveedorService.consultarPorEmpresa(this.empresa.id).subscribe({
       next: res => {
         this.proveedores = res.resultado as Proveedor[];
         this.llenarTabla(this.proveedores);
@@ -637,14 +637,14 @@ export class DialogoMapaProveedorComponent {
 
   onNoClick(): void {
     this.dialogRef.close();
-    this.data = new Coordenada(0, 0);
+    this.data = new Coordenada(valores.cero, valores.cero);
   }
 
   coordenadaSeleccionada(event: any) {
     if (event && event.latitud != 0) {
       this.data = event as Coordenada;
     } else {
-      this.data = new Coordenada(0, 0);
+      this.data = new Coordenada(valores.cero, valores.cero);
     }
   }
 }

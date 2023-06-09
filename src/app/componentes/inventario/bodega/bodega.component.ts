@@ -130,7 +130,7 @@ export class BodegaComponent implements OnInit {
   }
   
   consultar() {
-    this.bodegaService.consultar().subscribe({
+    this.bodegaService.consultarPorEmpresa(this.empresa.id).subscribe({
       next: res => {
         this.bodegas = res.resultado as Bodega[]
         this.llenarTabla(this.bodegas);
@@ -169,11 +169,11 @@ export class BodegaComponent implements OnInit {
 
   validarFormulario(): boolean {
     //validar que los campos esten llenos antes de guardar
-    if (this.bodega.nombre == '') {
+    if (this.bodega.nombre == valores.vacio) {
       Swal.fire({ icon: error_swal, title: error, text: mensajes.error_falta_datos });
       return false;
     }
-    if (this.bodega.abreviatura == '') {
+    if (this.bodega.abreviatura == valores.vacio) {
       Swal.fire({ icon: error_swal, title: error, text: mensajes.error_falta_datos });
       return false;
     }

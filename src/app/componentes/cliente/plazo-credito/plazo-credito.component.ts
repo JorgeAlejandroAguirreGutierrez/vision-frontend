@@ -59,7 +59,7 @@ export class PlazoCreditoComponent implements OnInit {
         private sesionService: SesionService,private router: Router) { }
 
   ngOnInit() {
-    this.sesion=validarSesion(this.sesionService, this.router);
+    this.sesion = validarSesion(this.sesionService, this.router);
     this.empresa = this.sesion.usuario.estacion.establecimiento.empresa;
     this.consultar();
   }
@@ -130,7 +130,7 @@ export class PlazoCreditoComponent implements OnInit {
   }
 
   consultar() {
-    this.plazoCreditoService.consultar().subscribe({
+    this.plazoCreditoService.consultarPorEmpresa(this.empresa.id).subscribe({
       next: res => {
         this.plazosCreditos = res.resultado as PlazoCredito[];
         this.llenarTabla(this.plazosCreditos);
@@ -163,21 +163,19 @@ export class PlazoCreditoComponent implements OnInit {
     }
   }
   borrarFiltro() {
-    this.renderer.setProperty(this.inputFiltro.nativeElement, 'value', '');
-    this.dataSource.filter = '';
+    this.renderer.setProperty(this.inputFiltro.nativeElement, 'value', valores.vacio);
+    this.dataSource.filter = valores.vacio;
   }
-
   validarFormulario(): boolean{
-    //validar que los campos esten llenos antes de guardar
-    if (this.plazoCredito.descripcion == '') {
+    if (this.plazoCredito.descripcion == valores.vacio) {
       Swal.fire({ icon: error_swal, title: error, text: mensajes.error_falta_datos });
       return false;
     }
-    if (this.plazoCredito.abreviatura == '') {
+    if (this.plazoCredito.abreviatura == valores.vacio) {
       Swal.fire({ icon: error_swal, title: error, text: mensajes.error_falta_datos });
       return false;
     }
-    if (this.plazoCredito.plazo <= 0) {
+    if (this.plazoCredito.plazo <= valores.cero) {
       Swal.fire({ icon: error_swal, title: error, text: mensajes.error_falta_datos });
       return false;
     }

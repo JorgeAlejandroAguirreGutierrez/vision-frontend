@@ -163,8 +163,8 @@ export class CalificacionClienteComponent implements OnInit {
     }
   }
   borrarFiltro() {
-    this.renderer.setProperty(this.inputFiltro.nativeElement, 'value', '');
-    this.dataSource.filter = '';
+    this.renderer.setProperty(this.inputFiltro.nativeElement, 'value', valores.vacio);
+    this.dataSource.filter = valores.vacio;
   }
 
   validarFormulario(): boolean {

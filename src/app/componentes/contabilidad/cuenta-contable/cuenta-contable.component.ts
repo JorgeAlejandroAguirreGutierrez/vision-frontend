@@ -141,7 +141,7 @@ export class CuentaContableComponent implements OnInit {
   }
 
   consultar() {
-    this.cuentaContableService.consultar().subscribe({
+    this.cuentaContableService.consultarPorEmpresa(this.empresa.id).subscribe({
       next: res => {
         this.cuentasContables = res.resultado as CuentaContable[]
         this.llenarTabla(this.cuentasContables);

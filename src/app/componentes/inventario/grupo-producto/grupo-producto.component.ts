@@ -206,7 +206,7 @@ export class GrupoProductoComponent implements OnInit {
   }
 
   consultar() {
-    this.grupoProductoService.consultar().subscribe({
+    this.grupoProductoService.consultarPorEmpresa(this.empresa.id).subscribe({
       next: res => {
         this.gruposProductos = res.resultado as GrupoProducto[]
         this.llenarDataSource(this.gruposProductos);
@@ -226,7 +226,7 @@ export class GrupoProductoComponent implements OnInit {
   }
 
 consultarGrupos() {
-    this.grupoProductoService.consultarGrupos().subscribe({
+    this.grupoProductoService.consultarPorEmpresaYEstado(this.empresa.id, valores.activo).subscribe({
       next: res => {
         this.grupos = res.resultado as string[];
       },
@@ -448,21 +448,21 @@ consultarGrupos() {
 
   validarFormulario(): boolean {
     //validar que los campos esten llenos antes de guardar
-    if (this.grupoProducto.cuentaContable.cuenta == '') {
+    if (this.grupoProducto.cuentaContable.cuenta == valores.vacio) {
       Swal.fire({ icon: error_swal, title: error, text: mensajes.error_falta_datos });
       return false;
     }
     if (this.grupoProducto.categoriaProducto.id == 1){ //Si en Bien
-      if (this.controlGrupo.value == '' || this.controlSubgrupo.value == '' || this.controlSeccion.value == '') {
+      if (this.controlGrupo.value == valores.vacio || this.controlSubgrupo.value == valores.vacio || this.controlSeccion.value == valores.vacio) {
         Swal.fire({ icon: error_swal, title: error, text: mensajes.error_falta_datos });
         return false;
       }
-      if (this.controlLinea.value == '' || this.controlSublinea.value == '' || this.grupoProducto.presentacion == '') {
+      if (this.controlLinea.value == valores.vacio || this.controlSublinea.value == valores.vacio || this.grupoProducto.presentacion == valores.vacio) {
         Swal.fire({ icon: error_swal, title: error, text: mensajes.error_falta_datos });
         return false;
       } 
     } else { // Si es servicio o AF
-      if (this.controlGrupo.value == '' || this.controlSubgrupo.value == '' || this.grupoProducto.seccion == '') {
+      if (this.controlGrupo.value == valores.vacio || this.controlSubgrupo.value == valores.vacio || this.grupoProducto.seccion == valores.vacio) {
         Swal.fire({ icon: error_swal, title: error, text: mensajes.error_falta_datos });
         return false;
       }

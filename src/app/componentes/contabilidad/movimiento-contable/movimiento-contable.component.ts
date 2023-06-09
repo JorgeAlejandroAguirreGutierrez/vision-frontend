@@ -136,7 +136,7 @@ export class MovimientoContableComponent implements OnInit {
   }
 
   consultar() {
-    this.movimientoContableService.consultar().subscribe({
+    this.movimientoContableService.consultarPorEmpresa(this.empresa.id).subscribe({
       next: res => {
         this.movimientosContables = res.resultado as MovimientoContable[]
       },
@@ -145,7 +145,7 @@ export class MovimientoContableComponent implements OnInit {
   }
 
   consultarAfectacionContable() {
-    this.afectacionContableService.consultar().subscribe({
+    this.afectacionContableService.consultarPorEstado(valores.activo).subscribe({
       next: res => {
         this.afectacionesContables = res.resultado as AfectacionContable[]
       },

@@ -252,40 +252,38 @@ export class UsuarioComponent implements OnInit {
 
   validarFormulario(): boolean {
     //validar que los campos esten llenos antes de guardar
-    if (this.usuario.identificacion == '') {
+    if (this.usuario.identificacion == valores.vacio) {
       Swal.fire({ icon: error_swal, title: error, text: mensajes.error_falta_datos });
       return false;
     }
-    if (this.usuario.nombre == '') {
+    if (this.usuario.nombre == valores.vacio) {
       Swal.fire({ icon: error_swal, title: error, text: mensajes.error_falta_datos });
       return false;
     }
-    if (this.usuario.correo == '') {
+    if (this.usuario.correo == valores.vacio) {
       Swal.fire({ icon: error_swal, title: error, text: mensajes.error_falta_correo });
       return false;
     }
-    if (this.usuario.perfil.descripcion == '') {
+    if (this.usuario.perfil.descripcion == valores.vacio) {
       Swal.fire({ icon: error_swal, title: error, text: mensajes.error_falta_datos });
       return false;
     }
-    if (this.usuario.estacion.descripcion == '') {
+    if (this.usuario.estacion.descripcion == valores.vacio) {
       Swal.fire({ icon: error_swal, title: error, text: mensajes.error_falta_datos });
       return false;
     }
-    if (this.usuario.pregunta == '') {
+    if (this.usuario.pregunta == valores.vacio) {
       Swal.fire({ icon: error_swal, title: error, text: mensajes.error_falta_datos });
       return false;
     }
-    if (this.usuario.respuesta == '') {
+    if (this.usuario.respuesta == valores.vacio) {
       Swal.fire({ icon: error_swal, title: error, text: mensajes.error_falta_datos });
       return false;
     }
-    if (this.usuario.avatar64 == '') {
+    if (this.usuario.avatar64 == valores.vacio) {
       Swal.fire({ icon: error_swal, title: error, text: mensajes.error_falta_imagen });
       return false;
     }
     return true;
   }
-
-
 }

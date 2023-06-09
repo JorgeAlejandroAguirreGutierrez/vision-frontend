@@ -65,7 +65,7 @@ export class BancoComponent implements OnInit {
     private bancoService: BancoService) { }
 
   ngOnInit() {
-    this.sesion=validarSesion(this.sesionService, this.router);
+    this.sesion = validarSesion(this.sesionService, this.router);
     this.consultar();
   }
 

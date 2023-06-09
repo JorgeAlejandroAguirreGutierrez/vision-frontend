@@ -126,7 +126,7 @@ export class TransportistaComponent implements OnInit {
   }
   
   consultar() {
-    this.transportistaService.consultar().subscribe(
+    this.transportistaService.consultarPorEmpresa(this.empresa.id).subscribe(
       res => {
         this.transportistas = res.resultado as Transportista[]
         this.dataSource = new MatTableDataSource(this.transportistas);
