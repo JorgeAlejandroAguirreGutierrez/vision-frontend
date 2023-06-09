@@ -42,6 +42,15 @@ export class VehiculoTransporteService {
     );
   }
 
+  consultarPorTransportistaYEstado(transportistaId: number, estado: string): Observable<Respuesta> {
+    return this.http.get<Respuesta>(environment.host + urn.ruta + urn.vehiculoTransporte + urn.consultarPorTransportistaYEstado + urn.slash + transportistaId + urn.slash + estado, options).pipe(
+      map(response => response as Respuesta),
+      catchError(err => {
+        return throwError(()=>err);
+      })
+    );
+  }
+
   obtener(vehiculoTransporteId: number): Observable<Respuesta> {
     return this.http.get(environment.host + urn.ruta + urn.vehiculoTransporte + urn.slash + vehiculoTransporteId, options).pipe(
       map(response => response as Respuesta),

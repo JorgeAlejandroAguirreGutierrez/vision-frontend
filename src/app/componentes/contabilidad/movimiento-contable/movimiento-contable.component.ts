@@ -15,6 +15,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
 import { AfectacionContableService } from 'src/app/servicios/contabilidad/afectacion-contable.service';
 import { AfectacionContable } from 'src/app/modelos/contabilidad/afectacion-contable';
+import { Empresa } from 'src/app/modelos/usuario/empresa';
 
 
 @Component({
@@ -29,6 +30,7 @@ export class MovimientoContableComponent implements OnInit {
   edicion: boolean = true;
 
   sesion: Sesion = null;
+  empresa: Empresa = null;
   movimientoContable = new MovimientoContable();
   movimientosContables: MovimientoContable[];
   afectacionesContables: AfectacionContable[];
@@ -48,6 +50,7 @@ export class MovimientoContableComponent implements OnInit {
 
   ngOnInit() {
     this.sesion = validarSesion(this.sesionService, this.router);
+    this.empresa = this.sesion.usuario.estacion.establecimiento.empresa;
     this.consultar();
   }
 
@@ -69,6 +72,7 @@ export class MovimientoContableComponent implements OnInit {
   crear(event) {
     if (event != null)
       event.preventDefault();
+    this.movimientoContable.empresa = this.empresa;
     this.movimientoContableService.crear(this.movimientoContable).subscribe({
       next: res => {
         this.movimientoContable = res.resultado as MovimientoContable;

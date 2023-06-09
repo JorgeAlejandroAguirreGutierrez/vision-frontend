@@ -99,7 +99,6 @@ export class CuentaPropiaComponent implements OnInit {
       event.preventDefault();
     if (!this.validarFormulario())
       return;
-    console.log(this.cuentaPropia);  
     this.cuentaPropiaService.crear(this.cuentaPropia).subscribe({
       next: res => {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });

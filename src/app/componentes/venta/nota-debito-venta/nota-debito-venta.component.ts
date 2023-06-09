@@ -34,6 +34,7 @@ import { NotaDebitoElectronicaService } from 'src/app/servicios/venta/nota-debit
 import { MatStepper } from '@angular/material/stepper';
 import { MatSort } from '@angular/material/sort';
 import { NgxSpinnerService } from 'ngx-spinner';
+import { Empresa } from 'src/app/modelos/usuario/empresa';
 
 @Component({
   selector: 'app-nota-debito-venta',
@@ -143,7 +144,8 @@ export class NotaDebitoVentaComponent implements OnInit {
   dataSourceLinea: MatTableDataSource<NotaDebitoVentaLinea> = new MatTableDataSource<NotaDebitoVentaLinea>(this.notaDebitoVenta.notaDebitoVentaLineas);
   clickedRowsLinea = new Set<NotaDebitoVentaLinea>();
 
-  sesion: Sesion;
+  sesion: Sesion = null;
+  empresa: Empresa = null;
   
   si = valores.si;
   no = valores.no;
@@ -167,8 +169,8 @@ export class NotaDebitoVentaComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.sesion=validarSesion(this.sesionService, this.router);
-    console.log(this.notaDebitoVenta);
+    this.sesion = validarSesion(this.sesionService, this.router);
+    this.empresa = this.sesion.usuario.estacion.establecimiento.empresa;
     this.consultar();
     this.consultarClientes();
     this.consultarImpuestos();
@@ -494,6 +496,7 @@ export class NotaDebitoVentaComponent implements OnInit {
       return;
     this.spinnerService.show();  
     this.notaDebitoVenta.sesion = this.sesion;
+    this.notaDebitoVenta.empresa = this.empresa;
     this.notaDebitoVenta.notaDebitoVentaLineas.push(this.notaDebitoVentaLinea);
     this.notaDebitoVentaService.calcular(this.notaDebitoVenta).subscribe({
       next: res => {

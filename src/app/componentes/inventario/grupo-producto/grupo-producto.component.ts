@@ -19,6 +19,7 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { CategoriaProducto } from 'src/app/modelos/inventario/categoria-producto';
 import { CategoriaProductoService } from 'src/app/servicios/inventario/categoria-producto.service';
+import { Empresa } from 'src/app/modelos/usuario/empresa';
 
 
 @Component({
@@ -38,6 +39,7 @@ export class GrupoProductoComponent implements OnInit {
   verInputSeccion: boolean = false;
 
   sesion: Sesion = null;
+  empresa: Empresa = null;
   grupoProducto = new GrupoProducto();
   gruposProductos: GrupoProducto[];
   categoriasProductos: CategoriaProducto[];
@@ -94,6 +96,7 @@ export class GrupoProductoComponent implements OnInit {
 
   ngOnInit() {
     this.sesion = validarSesion(this.sesionService, this.router);
+    this.empresa = this.sesion.usuario.estacion.establecimiento.empresa;
     this.consultar();
     this.consultarGrupos();
     this.consultarCategoriasProductos();

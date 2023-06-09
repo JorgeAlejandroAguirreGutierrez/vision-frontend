@@ -8,6 +8,7 @@ import { Transferencia } from '../recaudacion/transferencia';
 import { TarjetaDebito } from '../recaudacion/tarjeta-debito';
 import { TarjetaCredito } from '../recaudacion/tarjeta-credito';
 import { Credito } from '../recaudacion/credito';
+import { Empresa } from '../usuario/empresa';
 
 export class Factura {
   id: number;
@@ -43,6 +44,7 @@ export class Factura {
   comentario: string;
   cliente: Cliente;
   sesion: Sesion;
+  empresa: Empresa;
   facturaLineas: FacturaLinea[];
 
   //RECAUDACION

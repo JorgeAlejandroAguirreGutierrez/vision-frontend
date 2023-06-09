@@ -32,6 +32,7 @@ import { CorreoProveedor } from 'src/app/modelos/compra/correo-proveedor';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
+import { Empresa } from 'src/app/modelos/usuario/empresa';
 
 @Component({
   selector: 'app-proveedor',
@@ -56,7 +57,8 @@ export class ProveedorComponent implements OnInit {
   deshabilitarObligado: boolean = false;
   deshabilitarPlazoCredito: boolean = true;
 
-  sesion: Sesion;
+  sesion: Sesion = null;
+  empresa: Empresa = null;
   proveedor: Proveedor = new Proveedor();
   proveedorBuscar = new Proveedor();
   segmento: Segmento = new Segmento();
@@ -132,6 +134,7 @@ export class ProveedorComponent implements OnInit {
 
   ngOnInit() {
     this.sesion = validarSesion(this.sesionService, this.router);
+    this.empresa = this.sesion.usuario.estacion.establecimiento.empresa;
     this.consultar();
     this.consultarTipoIdentificacion();
     this.consultarTipoContribuyente();
@@ -273,6 +276,7 @@ export class ProveedorComponent implements OnInit {
     if (!this.validarFormulario())
       return;
     this.agregarTelefonoCorreo();
+    this.proveedor.empresa = this.empresa;
     this.proveedorService.crear(this.proveedor).subscribe({
       next: res => {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });

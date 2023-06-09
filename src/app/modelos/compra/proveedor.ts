@@ -9,6 +9,7 @@ import { FormaPago } from '../cliente/forma-pago';
 import { PlazoCredito } from '../cliente/plazo-credito';
 import { RetencionCliente } from '../cliente/retencion-cliente';
 import { valores } from "../../constantes";
+import { Empresa } from '../usuario/empresa';
 
 
 export class Proveedor {
@@ -25,16 +26,16 @@ export class Proveedor {
     obligadoContabilidad: string;
     fantasma: string;
     relacionado: string;
+    montoFinanciamiento: number;
     estado: string;
     
     tipoIdentificacion: TipoIdentificacion;
     tipoContribuyente: TipoContribuyente;
     grupoProveedor: GrupoProveedor;
     ubicacion: Ubicacion;
-
     formaPago: FormaPago;
-    plazoCredito: PlazoCredito; 
-    montoFinanciamiento: number;
+    plazoCredito: PlazoCredito;
+    empresa: Empresa;
 
     telefonosProveedor: TelefonoProveedor[];
     celularesProveedor: CelularProveedor[];

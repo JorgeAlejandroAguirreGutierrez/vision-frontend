@@ -46,6 +46,7 @@ export class ProductoComponent implements OnInit {
   pvpServicioAF: number = valores.cero;
 
   sesion: Sesion = null;
+  empresa: Empresa = null;
 
   abrirPanelPrecio: boolean = true;
   abrirPanelNuevo: boolean = true;
@@ -60,7 +61,6 @@ export class ProductoComponent implements OnInit {
   costoTotalKardex: number = valores.cero;
 
   producto: Producto = new Producto();
-  empresa: Empresa = new Empresa();
 
   productos: Producto[];
   tiposGastos: TipoGasto[] = [];
@@ -69,8 +69,6 @@ export class ProductoComponent implements OnInit {
   medidas: Medida[] = [];
   bodegas: Bodega[] = [];
   proveedores: Proveedor[] = [];
-
-  //cabeceraPrecios: string[] = ['segmento', 'costo', 'margenGanancia', 'precioSinIva', 'precioVentaPublico', 'precioVentaPublicoManual', 'utilidad', 'utilidadPorcentaje'];
 
   columnasPrecios: any[] = [
     { nombreColumna: 'segmento', cabecera: 'Segmento', celda: (row: Precio) => `${row.segmento.descripcion}` },
@@ -85,7 +83,6 @@ export class ProductoComponent implements OnInit {
   cabeceraPrecios: string[] = this.columnasPrecios.map(titulo => titulo.nombreColumna);
   dataSourcePrecios: MatTableDataSource<Precio>;
   clickedRowsPrecios = new Set<Precio>();
-  //$dataSourcePrecios: BehaviorSubject<MatTableDataSource<Precio>> = new BehaviorSubject<MatTableDataSource<Precio>>(null);
 
   columnas: any[] = [
     { nombreColumna: 'codigo', cabecera: 'Código', celda: (row: Producto) => `${row.codigo}` },
@@ -113,7 +110,8 @@ export class ProductoComponent implements OnInit {
     private segmentoService: SegmentoService, private bodegaService: BodegaService, private medidaService: MedidaService) { }
 
   ngOnInit() {
-    this.sesion=validarSesion(this.sesionService, this.router);
+    this.sesion = validarSesion(this.sesionService, this.router);
+    this.empresa = this.sesion.usuario.estacion.establecimiento.empresa;
     this.consultar();
     this.consultarProveedor();
     this.consultarImpuesto();
@@ -191,6 +189,7 @@ export class ProductoComponent implements OnInit {
       event.preventDefault();
     if (!this.validarFormulario())
       return;
+    this.producto.empresa = this.empresa;
     this.productoService.crear(this.producto).subscribe({
       next: (res) => {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });

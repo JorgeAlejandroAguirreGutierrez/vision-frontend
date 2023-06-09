@@ -1,4 +1,5 @@
 import { valores } from "../../constantes";
+import { Transportista } from "./transportista";
 export class VehiculoTransporte {
     id:number;
     codigo:string;
@@ -11,6 +12,7 @@ export class VehiculoTransporte {
     fabricacion:string;
     numero:string;
     estado: string;
+    transportista: Transportista;
 
     constructor(){
         this.id = valores.cero;

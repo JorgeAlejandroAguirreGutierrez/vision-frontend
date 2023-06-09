@@ -20,8 +20,8 @@ export class VehiculoTransporteComponent implements OnInit {
   abrirPanelNuevo = true;
   abrirPanelAdmin = false;
 
-  sesion: Sesion=null;
-  vehiculoTransporte= new VehiculoTransporte();
+  sesion: Sesion = null;
+  vehiculoTransporte = new VehiculoTransporte();
   VehiculosTransportes: VehiculoTransporte[];
 
   columnas: any[] = [

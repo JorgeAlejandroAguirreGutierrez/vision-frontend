@@ -1,5 +1,6 @@
-import { VehiculoTransporte } from './vehiculo-transporte';
 import { valores } from "../../constantes";
+import { TipoIdentificacion } from '../configuracion/tipo-identificacion';
+import { Empresa } from '../usuario/empresa';
 export class Transportista {
     id: number;
     codigo: string;
@@ -7,7 +8,8 @@ export class Transportista {
     identificacion: string;
     vehiculoPropio: string;
     estado: string;
-    vehiculoTransporte: VehiculoTransporte;
+    tipoIdentificacion: TipoIdentificacion;
+    empresa: Empresa;
 
     constructor(){
         this.id = valores.cero;
@@ -16,6 +18,6 @@ export class Transportista {
         this.identificacion = valores.vacio;
         this.vehiculoPropio = valores.vacio;
         this.estado = valores.activo;
-        this.vehiculoTransporte = new VehiculoTransporte();
+        this.tipoIdentificacion = new TipoIdentificacion();
     }
 }

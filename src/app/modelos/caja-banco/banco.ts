@@ -1,4 +1,5 @@
 import { valores } from "../../constantes";
+import { Empresa } from "../usuario/empresa";
 
 export class Banco {
     id: number;
@@ -9,6 +10,7 @@ export class Banco {
     calificacion: string;
     abreviatura: string;
     estado: string;
+    empresa: Empresa;
 
     constructor(){
         this.id = valores.cero;

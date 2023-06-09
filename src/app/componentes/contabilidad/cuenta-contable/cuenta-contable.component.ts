@@ -13,6 +13,7 @@ import { ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
+import { Empresa } from 'src/app/modelos/usuario/empresa';
 
 @Component({
   selector: 'app-cuenta-contable',
@@ -30,6 +31,7 @@ export class CuentaContableComponent implements OnInit {
   edicion: boolean = true;
 
   sesion: Sesion = null;
+  empresa: Empresa = null;
   cuentaContable: CuentaContable = new CuentaContable();
   cuentasContables: CuentaContable[];
 
@@ -55,6 +57,7 @@ export class CuentaContableComponent implements OnInit {
 
   ngOnInit() {
     this.sesion = validarSesion(this.sesionService, this.router);
+    this.empresa = this.sesion.usuario.estacion.establecimiento.empresa;
     this.consultar();
   }
 
@@ -82,6 +85,7 @@ export class CuentaContableComponent implements OnInit {
   crear(event) {
     if (event != null)
       event.preventDefault();
+    this.cuentaContable.empresa = this.empresa;
     this.cuentaContableService.crear(this.cuentaContable).subscribe({
       next: res => {
         this.cuentaContable = res.resultado as CuentaContable;

@@ -38,6 +38,7 @@ import { MatStepper } from '@angular/material/stepper';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
+import { Empresa } from 'src/app/modelos/usuario/empresa';
 
 
 @Component({
@@ -81,7 +82,8 @@ export class FacturaComponent implements OnInit {
 
   hoy = new Date();
 
-  sesion: Sesion;
+  sesion: Sesion = null;
+  empresa: Empresa = null;
   factura: Factura = new Factura();
   facturaLinea: FacturaLinea = new FacturaLinea();
   kardex: Kardex = new Kardex();
@@ -161,6 +163,7 @@ export class FacturaComponent implements OnInit {
 
   ngOnInit() {
     this.sesion = validarSesion(this.sesionService, this.router);
+    this.empresa = this.sesion.usuario.estacion.establecimiento.empresa;
     this.consultar();
     this.consultarClientes();
     this.consultarProductos();
@@ -225,6 +228,7 @@ export class FacturaComponent implements OnInit {
       event.preventDefault();
     this.spinnerService.show();    
     this.factura.sesion = this.sesion;
+    this.factura.empresa = this.empresa;
     this.facturaService.crear(this.factura).subscribe({
       next: res => {
         this.factura = res.resultado as Factura;

@@ -30,7 +30,7 @@ export class SegmentoComponent implements OnInit {
   formularioValido: boolean = false;
 
   sesion: Sesion = null;
-  empresa: Empresa = new Empresa();
+  empresa: Empresa = null;
   segmento: Segmento = new Segmento();
 
   segmentos: Segmento[];
@@ -44,7 +44,6 @@ export class SegmentoComponent implements OnInit {
   ];
   cabecera: string[] = this.columnas.map(titulo => titulo.nombreColumna);
   dataSource: MatTableDataSource<Segmento>;
-  //dataSource$: BehaviorSubject<MatTableDataSource<Segmento>> = new BehaviorSubject<MatTableDataSource<Segmento>>(null);
   clickedRows = new Set<Segmento>();
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
@@ -64,7 +63,7 @@ export class SegmentoComponent implements OnInit {
 
   ngOnInit() {
     this.sesion = validarSesion(this.sesionService, this.router);
-    this.empresa = this.sesion.empresa;
+    this.empresa = this.sesion.usuario.estacion.establecimiento.empresa;
     this.consultar();
   }
 
@@ -80,7 +79,8 @@ export class SegmentoComponent implements OnInit {
     if (event != null)
       event.preventDefault();
     if (!this.validarFormulario())
-      return;         
+      return; 
+    this.segmento.empresa = this.empresa;
     this.segmentoService.crear(this.segmento).subscribe({
       next: res => {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });

@@ -19,6 +19,7 @@ import { NotaCreditoCompra } from 'src/app/modelos/compra/nota-credito-compra';
 import { NotaCreditoCompraService } from 'src/app/servicios/compra/nota-credito-compra.service';
 import { FacturaCompra } from 'src/app/modelos/compra/factura-compra';
 import { FacturaCompraService } from 'src/app/servicios/compra/factura-compra.service';
+import { Empresa } from 'src/app/modelos/usuario/empresa';
 
 @Component({
   selector: 'app-nota-credito-compra',
@@ -81,7 +82,8 @@ export class NotaCreditoCompraComponent implements OnInit {
 
   columnasLinea: string[] = ["codigo", 'nombre', 'medida', 'cantidad', 'devolucion', 'costoUnitario', 'valorDescuento', 'porcentajeDescuento', 'impuesto', 'bodega', 'total'];
   dataSourceLinea = new MatTableDataSource<NotaCreditoCompraLinea>(this.notaCreditoCompra.notaCreditoCompraLineas);
-  sesion: Sesion;
+  sesion: Sesion = null;
+  empresa: Empresa = null;
 
   constructor(private proveedorService: ProveedorService, private sesionService: SesionService, private datepipe: DatePipe,
     private router: Router, private notaCreditoCompraService: NotaCreditoCompraService, private facturaCompraService: FacturaCompraService) { }
@@ -247,7 +249,8 @@ export class NotaCreditoCompraComponent implements OnInit {
   crear(event) {
     if (event!=null)
       event.preventDefault();
-    this.notaCreditoCompra.sesion=this.sesion;
+    this.notaCreditoCompra.sesion = this.sesion;
+    this.notaCreditoCompra.empresa = this.empresa;
     this.notaCreditoCompraService.crear(this.notaCreditoCompra).subscribe(
       res => {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });

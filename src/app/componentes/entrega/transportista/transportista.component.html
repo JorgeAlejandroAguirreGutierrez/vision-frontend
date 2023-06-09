@@ -67,25 +67,6 @@
                 </div>
                 <div class="col-2">
                     <mat-form-field appearance="standard">
-                        <mat-label>Vehiculo Propio</mat-label>
-                        <mat-select [(ngModel)]="transportista.vehiculoPropio" class="form-control-sm">
-                            <mat-option value="SI">SI</mat-option>
-                            <mat-option value="NO">NO</mat-option>
-                        </mat-select>
-                    </mat-form-field>
-                </div>
-                <div class="col-2">
-                    <mat-form-field appearance="standard">
-                        <mat-label>Vehiculo</mat-label>
-                        <mat-select type="text" [(ngModel)]="transportista.vehiculoTransporte" [compareWith]="compareFn" class="form-control-sm">
-                            <mat-option *ngFor="let vehiculoTransporte of vehiculosTransportes" [value]="vehiculoTransporte">
-                                {{vehiculoTransporte.placa}}
-                            </mat-option>
-                        </mat-select>
-                    </mat-form-field>
-                </div>
-                <div class="col-2">
-                    <mat-form-field appearance="standard">
                         <mat-label>Estado</mat-label>
                         <mat-select [(ngModel)]="transportista.estado" [disabled]="true" class="form-control-sm">
                             <mat-option [value]="activo">{{activo}}</mat-option>

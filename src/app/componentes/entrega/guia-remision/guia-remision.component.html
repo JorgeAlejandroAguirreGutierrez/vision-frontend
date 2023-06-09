@@ -179,10 +179,10 @@
                 <div class="col-3">
                     <mat-form-field appearance="standard">
                         <mat-label>Placa</mat-label>
-                        <mat-select class="form-control-sm" [(ngModel)]="guiaRemision.transportista"
+                        <mat-select class="form-control-sm" [(ngModel)]="guiaRemision.vehiculoTransporte"
                             [compareWith]="compareFn">
-                            <mat-option *ngFor="let transportista of transportistas" [value]="transportista">
-                                {{transportista.vehiculoTransporte.placa}}
+                            <mat-option *ngFor="let vehiculoTransporte of vehiculosTransportes" [value]="vehiculoTransporte">
+                                {{vehiculoTransporte.placa}}
                             </mat-option>
                         </mat-select>
                     </mat-form-field>

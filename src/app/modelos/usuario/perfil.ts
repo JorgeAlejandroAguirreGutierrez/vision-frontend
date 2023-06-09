@@ -11,12 +11,12 @@ export class Perfil {
     permisos: Permiso[];
 
     constructor() {
-        this.id=valores.cero;
-        this.codigo=valores.vacio;
-        this.descripcion=valores.vacio;
-        this.abreviatura=valores.vacio;
-        this.estado=valores.activo;
-        this.multiempresa=valores.no;
-        this.permisos=[];
+        this.id = valores.cero;
+        this.codigo = valores.vacio;
+        this.descripcion = valores.vacio;
+        this.abreviatura = valores.vacio;
+        this.estado = valores.activo;
+        this.multiempresa = valores.no;
+        this.permisos = [];
     }
 }

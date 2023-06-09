@@ -9,6 +9,7 @@ import { NotaDebitoVentaTransferencia } from '../recaudacion/nota-debito-venta-t
 import { NotaDebitoVentaTarjetaDebito } from '../recaudacion/nota-debito-venta-tarjeta-debito';
 import { NotaDebitoVentaTarjetaCredito } from '../recaudacion/nota-debito-venta-tarjeta-credito';
 import { NotaDebitoVentaCredito } from '../recaudacion/nota-debito-venta-credito';
+import { Empresa } from '../usuario/empresa';
 export class NotaDebitoVenta {
     id: number;
     codigo: string;
@@ -27,6 +28,7 @@ export class NotaDebitoVenta {
     factura: Factura;
     sesion: Sesion;
     tipoComprobante: TipoComprobante;
+    empresa: Empresa;
     notaDebitoVentaLineas: NotaDebitoVentaLinea[];
     //RECAUDACION
     totalRecaudacion: number;
