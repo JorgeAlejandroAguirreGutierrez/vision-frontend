@@ -128,7 +128,7 @@ export class MedidaComponent implements OnInit {
   }
   
   consultar() {
-    this.medidaService.consultar().subscribe({
+    this.medidaService.consultarPorEmpresa(this.empresa.id).subscribe({
       next: res => {
         this.medidas = res.resultado as Medida[]
         this.llenarTabla(this.medidas);

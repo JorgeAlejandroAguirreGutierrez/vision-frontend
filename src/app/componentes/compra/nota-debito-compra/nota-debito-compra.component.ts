@@ -199,7 +199,7 @@ export class NotaDebitoCompraComponent implements OnInit {
   }
 
   consultar() {
-    this.notaDebitoCompraService.consultar().subscribe(
+    this.notaDebitoCompraService.consultarPorEmpresa(this.empresa.id).subscribe(
       res => {
         this.notasDebitosCompras = res.resultado as NotaDebitoCompra[]
         this.dataSource = new MatTableDataSource(this.notasDebitosCompras);
@@ -210,7 +210,7 @@ export class NotaDebitoCompraComponent implements OnInit {
   }
 
   consultarProveedores(){
-    this.proveedorService.consultar().subscribe(
+    this.proveedorService.consultarPorEmpresaYEstado(this.empresa.id, valores.activo).subscribe(
       res => {
         this.proveedores = res.resultado as Proveedor[]
       },
@@ -219,7 +219,7 @@ export class NotaDebitoCompraComponent implements OnInit {
   }
 
   consultarFacturasCompras(){
-    this.facturaCompraService.consultar().subscribe(
+    this.facturaCompraService.consultarPorEmpresaYEstado(this.empresa.id, valores.activo).subscribe(
       res => {
         this.facturasCompras = res.resultado as FacturaCompra[]
       },
@@ -228,7 +228,7 @@ export class NotaDebitoCompraComponent implements OnInit {
   }
 
   consultarImpuestos(){
-    this.impuestoService.consultar().subscribe(
+    this.impuestoService.consultarPorEstado(valores.activo).subscribe(
       res => {
         this.impuestos = res.resultado as Impuesto[]
       },
@@ -237,7 +237,7 @@ export class NotaDebitoCompraComponent implements OnInit {
   }
 
   consultarBodegas(){
-    this.bodegaService.consultar().subscribe(
+    this.bodegaService.consultarPorEmpresaYEstado(this.empresa.id, valores.activo).subscribe(
       res => {
         this.bodegas = res.resultado as Bodega[]
       },

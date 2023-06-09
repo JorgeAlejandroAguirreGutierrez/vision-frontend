@@ -122,7 +122,7 @@ export class ProductoComponent implements OnInit {
   }
 
   consultarProveedor(){
-    this.proveedorService.consultarPorEstado(valores.activo).subscribe({
+    this.proveedorService.consultarPorEmpresaYEstado(this.empresa.id, valores.activo).subscribe({
       next: res => {
         this.proveedores = res.resultado as Proveedor[];
       },
@@ -146,7 +146,7 @@ export class ProductoComponent implements OnInit {
     });
   }
   consultarMedida(){
-    this.medidaService.consultarPorEstado(valores.activo).subscribe({
+    this.medidaService.consultarPorEmpresaYEstado(this.empresa.id, valores.activo).subscribe({
       next: res => {
         this.medidas = res.resultado as Medida[];
       },
@@ -154,7 +154,7 @@ export class ProductoComponent implements OnInit {
     });
   }
   consultarBodega(){
-    this.bodegaService.consultar().subscribe({
+    this.bodegaService.consultarPorEmpresaYEstado(this.empresa.id, valores.activo).subscribe({
       next: res => {
         this.bodegas = res.resultado as Bodega[];
       },
@@ -162,7 +162,7 @@ export class ProductoComponent implements OnInit {
     });
   }
   consultarSegmento(){
-    this.segmentoService.consultar().subscribe({
+    this.segmentoService.consultarPorEmpresaYEstado(this.empresa.id, valores.activo).subscribe({
       next: res => {
         this.segmentos = res.resultado as Segmento[];
       },
@@ -245,7 +245,7 @@ export class ProductoComponent implements OnInit {
   }
 
   consultar() {
-    this.productoService.consultar().subscribe({
+    this.productoService.consultarPorEmpresa(this.empresa.id).subscribe({
       next: res => {
         this.productos = res.resultado as Producto[];
         this.llenarTabla(this.productos);
@@ -431,15 +431,15 @@ export class ProductoComponent implements OnInit {
       Swal.fire(error, mensajes.error_proveedor, error_swal);
       return;
     }
-    if (this.producto.impuesto.id == 0) {
+    if (this.producto.impuesto.id == valores.cero) {
       Swal.fire(error, mensajes.error_impuesto, error_swal);
       return false;
     }
-    if (this.producto.tipoGasto.id == 0) {
+    if (this.producto.tipoGasto.id == valores.cero) {
       Swal.fire(error, mensajes.error_tipo_gasto, error_swal);
       return false;
     }
-    if (this.producto.categoriaProducto.id == 0) {
+    if (this.producto.categoriaProducto.id == valores.cero) {
       Swal.fire(error, mensajes.error_tipo_producto, error_swal);
       return false;
     }

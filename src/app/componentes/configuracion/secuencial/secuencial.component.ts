@@ -34,7 +34,7 @@ export class SecuencialComponent implements OnInit {
   abrirPanelNuevo: boolean = true;
   abrirPanelAdmin: boolean = true;
 
-  sesion: Sesion;
+  sesion: Sesion = null;
   secuencial: Secuencial = new Secuencial();
   estacion: Estacion = new Estacion();
 
@@ -74,7 +74,7 @@ export class SecuencialComponent implements OnInit {
     private tipoComprobanteService: TipoComprobanteService, private secuencialService: SecuencialService) { }
 
   ngOnInit() {
-    this.sesion=validarSesion(this.sesionService, this.router);
+    this.sesion = validarSesion(this.sesionService, this.router);
     this.consultarTipoComprobante();
     this.consultarEmpresas();
     this.consultar();

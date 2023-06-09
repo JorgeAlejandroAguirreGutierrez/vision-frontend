@@ -134,7 +134,7 @@ export class GrupoProveedorComponent implements OnInit {
   }
 
   consultar() {
-    this.grupoProveedorService.consultar().subscribe({
+    this.grupoProveedorService.consultarPorEmpresa(this.empresa.id).subscribe({
       next: res => {
         this.gruposProveedores = res.resultado as GrupoProveedor[]
         this.llenarTabla(this.gruposProveedores);
@@ -174,21 +174,21 @@ export class GrupoProveedorComponent implements OnInit {
     }
   }
   borrarFiltro() {
-    this.renderer.setProperty(this.inputFiltro.nativeElement, 'value', '');
-    this.dataSource.filter = '';
+    this.renderer.setProperty(this.inputFiltro.nativeElement, 'value', valores.vacio);
+    this.dataSource.filter = valores.vacio;
   }
 
   validarFormulario(): boolean{
     //validar que los campos esten llenos antes de guardar
-    if (this.grupoProveedor.descripcion == '') {
+    if (this.grupoProveedor.descripcion == valores.vacio) {
       Swal.fire({ icon: error_swal, title: error, text: mensajes.error_falta_datos });
       return false;
     }
-    if (this.grupoProveedor.abreviatura == '') {
+    if (this.grupoProveedor.abreviatura == valores.vacio) {
       Swal.fire({ icon: error_swal, title: error, text: mensajes.error_falta_datos });
       return false;
     }
-    if (this.grupoProveedor.cuentaContable.cuenta == '') {
+    if (this.grupoProveedor.cuentaContable.cuenta == valores.vacio) {
       Swal.fire({ icon: error_swal, title: error, text: mensajes.error_falta_datos });
       return false;
     }
@@ -197,8 +197,7 @@ export class GrupoProveedorComponent implements OnInit {
 
   dialogoCuentasContables(): void {
     const dialogRef = this.dialog.open(DialogoGrupoProveedorCuentaContableComponent, {
-      width: '80%',
-      //data: {}
+      width: '80%'
     });
 
     dialogRef.afterClosed().subscribe(result => {

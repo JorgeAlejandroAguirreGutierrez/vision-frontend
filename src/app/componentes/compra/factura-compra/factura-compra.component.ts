@@ -143,7 +143,7 @@ export class FacturaCompraComponent implements OnInit {
   }
 
   consultarProveedores(){
-    this.proveedorService.consultar().subscribe(
+    this.proveedorService.consultarPorEmpresaYEstado(this.empresa.id, valores.activo).subscribe(
       res => {
         this.proveedores = res.resultado as Proveedor[]
       },
@@ -151,7 +151,7 @@ export class FacturaCompraComponent implements OnInit {
     );
   }
   consultarProductos() {
-    this.productoService.consultarPorEstado(valores.activo).subscribe({
+    this.productoService.consultarPorEmpresaYEstado(this.empresa.id, valores.activo).subscribe({
       next: res => {
         this.productos = res.resultado as Producto[];
       },
@@ -169,7 +169,7 @@ export class FacturaCompraComponent implements OnInit {
     );
   }
   consultarBodegas(){
-    this.bodegaService.consultar().subscribe(
+    this.bodegaService.consultarPorEmpresaYEstado(this.empresa.id, valores.activo).subscribe(
       res => {
         this.bodegas = res.resultado as Bodega[]
       },
@@ -258,7 +258,7 @@ export class FacturaCompraComponent implements OnInit {
   }
 
   consultar() {
-    this.facturaCompraService.consultar().subscribe({
+    this.facturaCompraService.consultarPorEmpresa(this.empresa.id).subscribe({
       next: res => {
         this.facturasCompras = res.resultado as FacturaCompra[];
         this.llenarTablaFacturaCompra(this.facturasCompras);
@@ -329,7 +329,6 @@ export class FacturaCompraComponent implements OnInit {
   }
 
   seleccionarIdentificacionProveedor() {
-    //let clienteId = undefined;
     let proveedorId = this.controlIdentificacionProveedor.value.id;
     this.proveedorService.obtener(proveedorId).subscribe({
       next: res => {
@@ -362,7 +361,6 @@ export class FacturaCompraComponent implements OnInit {
         this.construir();
         this.nuevoFacturaCompraLinea();
         this.spinnerService.hide();
-        //Swal.fire({ icon: exito_swal, title: exito, te  xt: res.mensaje });
       },
       error: err => {
         Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
@@ -373,7 +371,6 @@ export class FacturaCompraComponent implements OnInit {
 
   actualizarFacturaCompraLinea() {
     this.facturaCompra.facturaCompraLineas[this.indiceLinea] = this.facturaCompraLinea;
-    //console.log(this.factura.facturaLineas);
     this.llenarTablaFacturaCompraLinea(this.facturaCompra.facturaCompraLineas);
     this.calcularTotales();
     this.nuevoFacturaCompraLinea();
@@ -396,7 +393,7 @@ export class FacturaCompraComponent implements OnInit {
   }
 
   seleccionFacturaCompraLinea(facturaCompraLinea: FacturaCompraLinea, i:number) {
-    //console.log(i);
+
     if (!this.clickedRowsLinea.has(facturaCompraLinea)) {
       this.clickedRowsLinea.clear();
       this.clickedRowsLinea.add(facturaCompraLinea);
@@ -411,7 +408,6 @@ export class FacturaCompraComponent implements OnInit {
 
   construirFacturaCompraLinea(){
     this.controlProducto.patchValue(this.facturaCompraLinea.producto);
-    //this.precioVentaPublicoManual = parseFloat((this.facturaLinea.precioUnitario+(this.facturaLinea.precioUnitario*this.facturaLinea.impuesto.porcentaje/100)).toFixed(2));
   }
 
   filtroFacturaCompraLinea(event: Event) {
@@ -452,12 +448,8 @@ export class FacturaCompraComponent implements OnInit {
     this.facturaCompraLinea.impuesto = this.facturaCompraLinea.producto.impuesto;
     if (this.facturaCompraLinea.producto.categoriaProducto.id == 1){
       this.esBien = true } else { this.esBien = false };
-    //if (this.facturaCompraLinea.producto.id == valores.cero || this.facturaCompra.proveedor.id == valores.cero) {
-    //  return;
-    //}
-    this.inicializarOpciones(); // Error si no tiene bodega
+    this.inicializarOpciones();
     if (this.esBien){
-      //this.inicializarOpciones();
       this.obtenerUltimoKardex();
     }
   }
@@ -588,9 +580,6 @@ export class FacturaCompraComponent implements OnInit {
       Swal.fire({ icon: error_swal, title: error, text: mensajes.error_falta_datos });
       return false;
     }
-    //if (this.facturaCompraLinea.totalSinDescuentoLinea <= valores.cero){
-    //  return;
-    //}
     return true;
   }  
 }

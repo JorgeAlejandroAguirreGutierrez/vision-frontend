@@ -146,7 +146,6 @@ export class SegmentoComponent implements OnInit {
     this.dataSource = new MatTableDataSource(segmentos);
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
-    //this.dataSource$.next(this.dataSource); //Solo si quiero que se vea en la tablas los cambios
   }
 
   seleccion(segmento: Segmento) {
