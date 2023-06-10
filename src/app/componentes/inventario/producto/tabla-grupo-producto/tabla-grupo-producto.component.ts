@@ -20,10 +20,12 @@ import { CuentaContable } from 'src/app/modelos/contabilidad/cuenta-contable';
 })
 export class TablaGrupoProductoComponent implements OnInit {
 
-  sesion: Sesion = null;
   @Output() grupoProductoSeleccionado = new EventEmitter();
-  gruposProductos: GrupoProducto[];
+
+  sesion: Sesion = null;
   grupoProducto = new GrupoProducto();
+
+  gruposProductos: GrupoProducto[];
 
   columnas: any[] = [
     { nombreColumna: 'categoria', cabecera: 'Categoria', celda: (row: GrupoProducto) => `${row.categoriaProducto.descripcion}`},

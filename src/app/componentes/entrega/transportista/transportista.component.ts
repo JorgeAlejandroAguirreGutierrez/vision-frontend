@@ -27,7 +27,7 @@ export class TransportistaComponent implements OnInit {
   abrirPanelAdmin = true;
 
   sesion: Sesion = null;
-  empresa: Empresa = null;
+  empresa: Empresa = new Empresa();
   transportista = new Transportista();
   transportistas: Transportista[];
   vehiculosTransportes: VehiculoTransporte[];
@@ -50,7 +50,7 @@ export class TransportistaComponent implements OnInit {
 
   ngOnInit() {
     this.sesion = validarSesion(this.sesionService, this.router);
-    this.empresa = this.sesion.usuario.estacion.establecimiento.empresa;
+    this.empresa = this.sesion.empresa;
     this.consultar();
     this.consultarVehiculosTransportes();
   }

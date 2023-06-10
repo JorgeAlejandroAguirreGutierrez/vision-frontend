@@ -2,8 +2,7 @@ import { Component, HostListener, OnInit, ViewChild, Type, ElementRef, Renderer2
 import { UntypedFormControl, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { valores, mensajes, validarSesion, exito, exito_swal, error, error_swal } from '../../../constantes';
 import { Router } from '@angular/router';
-import { Observable } from 'rxjs';
-import { map, startWith } from 'rxjs/operators';
+import { map, startWith, Observable } from 'rxjs';
 import { NgxSpinnerService } from 'ngx-spinner';
 import Swal from 'sweetalert2';
 
@@ -13,6 +12,7 @@ import { AppDateAdapter, APP_DATE_FORMATS } from '../../../modelos/format-date-p
 
 import { Sesion } from '../../../modelos/usuario/sesion';
 import { SesionService } from '../../../servicios/usuario/sesion.service';
+import { Empresa } from '../../../modelos/usuario/empresa';
 import { Cliente } from 'src/app/modelos/cliente/cliente';
 import { ClienteService } from 'src/app/servicios/cliente/cliente.service';
 import { Factura } from 'src/app/modelos/venta/factura';
@@ -25,7 +25,6 @@ import { NotaCreditoElectronicaService } from 'src/app/servicios/venta/nota-cred
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { Empresa } from 'src/app/modelos/usuario/empresa';
 
 @Component({
   selector: 'app-nota-credito-venta',
@@ -59,7 +58,7 @@ export class NotaCreditoVentaComponent implements OnInit {
   hoy = new Date();
  
   sesion: Sesion = null;
-  empresa: Empresa = null;
+  empresa: Empresa = new Empresa();
   notaCreditoVenta: NotaCreditoVenta = new NotaCreditoVenta();
   notaCreditoVentaLinea: NotaCreditoVentaLinea = new NotaCreditoVentaLinea();
 
@@ -123,7 +122,7 @@ export class NotaCreditoVentaComponent implements OnInit {
 
   ngOnInit() {
     this.sesion = validarSesion(this.sesionService, this.router);
-    this.empresa = this.sesion.usuario.estacion.establecimiento.empresa;
+    this.empresa = this.sesion.empresa;
     this.consultar();
     this.consultarClientes();
     this.inicializarFiltros();

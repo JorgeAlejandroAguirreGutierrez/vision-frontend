@@ -8,7 +8,7 @@ import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dial
 
 import { Sesion } from '../../../modelos/usuario/sesion';
 import { SesionService } from '../../../servicios/usuario/sesion.service';
-import { Empresa } from 'src/app/modelos/usuario/empresa';
+import { Empresa } from '../../../modelos/usuario/empresa';
 import { GrupoProducto } from '../../../modelos/inventario/grupo-producto';
 import { Producto } from '../../../modelos/inventario/producto';
 import { TipoGasto } from '../../../modelos/inventario/tipo-gasto';
@@ -45,9 +45,6 @@ export class ProductoComponent implements OnInit {
   no: string = valores.no;
   pvpServicioAF: number = valores.cero;
 
-  sesion: Sesion = null;
-  empresa: Empresa = null;
-
   abrirPanelPrecio: boolean = true;
   abrirPanelNuevo: boolean = true;
   abrirPanelAdmin: boolean = true;
@@ -60,6 +57,8 @@ export class ProductoComponent implements OnInit {
   costoUnitarioKardex: number = valores.cero;
   costoTotalKardex: number = valores.cero;
 
+  sesion: Sesion = null;
+  empresa: Empresa = new Empresa();
   producto: Producto = new Producto();
 
   productos: Producto[];
@@ -111,7 +110,7 @@ export class ProductoComponent implements OnInit {
 
   ngOnInit() {
     this.sesion = validarSesion(this.sesionService, this.router);
-    this.empresa = this.sesion.usuario.estacion.establecimiento.empresa;
+    this.empresa = this.sesion.empresa;
     this.consultar();
     this.consultarProveedor();
     this.consultarImpuesto();

@@ -59,7 +59,7 @@ export class FacturaCompraComponent implements OnInit {
   hoy = new Date();
 
   sesion: Sesion = null;
-  empresa: Empresa = null;
+  empresa: Empresa = new Empresa();
   facturaCompra: FacturaCompra = new FacturaCompra();
   facturaCompraLinea: FacturaCompraLinea = new FacturaCompraLinea();
   kardex: Kardex = new Kardex();
@@ -134,7 +134,7 @@ export class FacturaCompraComponent implements OnInit {
 
   ngOnInit() {
     this.sesion = validarSesion(this.sesionService, this.router);
-    this.empresa = this.sesion.usuario.estacion.establecimiento.empresa;
+    this.empresa = this.sesion.empresa;
     this.consultar();
     this.consultarProveedores();
     this.consultarProductos();
@@ -144,12 +144,12 @@ export class FacturaCompraComponent implements OnInit {
   }
 
   consultarProveedores(){
-    this.proveedorService.consultarPorEmpresaYEstado(this.empresa.id, valores.activo).subscribe(
-      res => {
+    this.proveedorService.consultarPorEmpresaYEstado(this.empresa.id, valores.activo).subscribe({
+      next: res => {
         this.proveedores = res.resultado as Proveedor[]
       },
-      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
-    );
+      error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+    });
   }
   consultarProductos() {
     this.productoService.consultarPorEmpresaYEstado(this.empresa.id, valores.activo).subscribe({
@@ -162,12 +162,12 @@ export class FacturaCompraComponent implements OnInit {
     })
   }
   consultarImpuestos() {
-    this.impuestoService.consultar().subscribe(
-      res => {
+    this.impuestoService.consultar().subscribe({
+      next: res => {
         this.impuestos = res.resultado as Impuesto[]
       },
-      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
-    );
+      error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+    });
   }
   consultarBodegas(){
     this.bodegaService.consultarPorEmpresaYEstado(this.empresa.id, valores.activo).subscribe(
