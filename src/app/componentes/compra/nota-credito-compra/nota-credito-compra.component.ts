@@ -97,7 +97,7 @@ export class NotaCreditoCompraComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.sesion=validarSesion(this.sesionService, this.router);
+    this.sesion = validarSesion(this.sesionService, this.router);
     this.consultar();
     this.consultarProveedores();
     this.consultarFacturasCompras();
