@@ -194,7 +194,7 @@ export class FacturaComponent implements OnInit {
     })
   }
   consultarImpuestos() {
-    this.impuestoService.consultar().subscribe({
+    this.impuestoService.consultarPorEstado(valores.activo).subscribe({
       next: res => {
         this.impuestos = res.resultado as Impuesto[]
       },
@@ -339,7 +339,7 @@ export class FacturaComponent implements OnInit {
   }
 
   consultar() {
-    this.facturaService.consultarPorEmpresaYEstado(this.empresa.id, valores.activo).subscribe({
+    this.facturaService.consultarPorEmpresa(this.empresa.id).subscribe({
       next: res => {
         this.facturas = res.resultado as Factura[];
         this.llenarTablaFactura(this.facturas);

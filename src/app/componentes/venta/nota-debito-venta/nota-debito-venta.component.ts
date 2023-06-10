@@ -237,32 +237,32 @@ export class NotaDebitoVentaComponent implements OnInit {
   inicializarFiltros() {
     this.filtroProductos = this.controlProducto.valueChanges
       .pipe(
-        startWith(''),
+        startWith(valores.vacio),
         map(value => typeof value === 'string' || value == null ? value : value.id),
         map(nombre => typeof nombre === 'string' ? this.filtroProducto(nombre) : this.productos.slice())
       );
     this.filtroIdentificacionClientes = this.controlIdentificacionCliente.valueChanges
       .pipe(
-        startWith(''),
+        startWith(valores.vacio),
         map(value => typeof value === 'string' || value == null ? value : value.id),
         map(identificacion => typeof identificacion === 'string' ? this.filtroIdentificacionCliente(identificacion) : this.clientes.slice())
       );
     this.filtroRazonSocialClientes = this.controlRazonSocialCliente.valueChanges
       .pipe(
-        startWith(''),
+        startWith(valores.vacio),
         map(value => typeof value === 'string' || value == null ? value : value.id),
         map(razon_social => typeof razon_social === 'string' ? this.filtroRazonSocialCliente(razon_social) : this.clientes.slice())
       );
     this.filtroFacturas = this.controlFactura.valueChanges
       .pipe(
-        startWith(''),
+        startWith(valores.vacio),
         map(value => typeof value === 'string' || value == null ? value : value.id),
         map(secuencial => typeof secuencial === 'string' ? this.filtroFactura(secuencial) : this.facturas.slice())
       );
   }
 
   private filtroProducto(value: string): Producto[] {
-    if (this.productos.length > 0) {
+    if (this.productos.length > valores.cero) {
       const filterValue = value.toUpperCase();
       return this.productos.filter(producto => producto.nombre.toUpperCase().includes(filterValue));
     }
@@ -273,7 +273,7 @@ export class NotaDebitoVentaComponent implements OnInit {
   }
 
   private filtroIdentificacionCliente(value: string): Cliente[] {
-    if (this.clientes.length > 0) {
+    if (this.clientes.length > valores.cero) {
       const filterValue = value.toUpperCase();
       return this.clientes.filter(cliente => cliente.identificacion.toUpperCase().includes(filterValue));
     }
@@ -283,7 +283,7 @@ export class NotaDebitoVentaComponent implements OnInit {
     return cliente && cliente.identificacion ? cliente.identificacion : valores.vacio;
   }
   private filtroRazonSocialCliente(value: string): Cliente[] {
-    if (this.clientes.length > 0) {
+    if (this.clientes.length > valores.cero) {
       const filterValue = value.toUpperCase();
       return this.clientes.filter(cliente => cliente.razonSocial.toUpperCase().includes(filterValue));
     }
@@ -293,7 +293,7 @@ export class NotaDebitoVentaComponent implements OnInit {
     return cliente && cliente.razonSocial ? cliente.razonSocial : valores.vacio;
   }
   private filtroFactura(value: string): Factura[] {
-    if (this.facturas.length > 0) {
+    if (this.facturas.length > valores.cero) {
       const filterValue = value.toUpperCase();
       return this.facturas.filter(factura => factura.secuencial.toUpperCase().includes(filterValue));
     }
@@ -304,7 +304,7 @@ export class NotaDebitoVentaComponent implements OnInit {
   }
 
   consultar() {
-    this.notaDebitoVentaService.consultar().subscribe(
+    this.notaDebitoVentaService.consultarPorEmpresa(this.empresa.id).subscribe(
       res => {
         this.notasDebitosVentas = res.resultado as NotaDebitoVenta[]
         this.dataSource = new MatTableDataSource(this.notasDebitosVentas);
@@ -326,11 +326,7 @@ export class NotaDebitoVentaComponent implements OnInit {
   }
 
   consultarProductos(){
-    this.consultarServicios();
-  }
-
-  consultarServicios() {
-    this.productoService.consultarServicio().subscribe(
+    this.productoService.consultarPorCategoriaProductoYEmpresaYEstado(valores.servicio, this.empresa.id, valores.activo).subscribe(
       res => {
         this.productos = res.resultado as Producto[]
       },
@@ -379,7 +375,7 @@ export class NotaDebitoVentaComponent implements OnInit {
   }
 
   consultarClientes(){
-    this.clienteService.consultar().subscribe(
+    this.clienteService.consultarPorEmpresaYEstado(this.empresa.id, valores.activo).subscribe(
       res => {
         this.clientes = res.resultado as Cliente[]
       },
@@ -388,7 +384,7 @@ export class NotaDebitoVentaComponent implements OnInit {
   }
 
   consultarImpuestos(){
-    this.impuestoService.consultar().subscribe(
+    this.impuestoService.consultarPorEstado(valores.activo).subscribe(
       res => {
         this.impuestos = res.resultado as Impuesto[]
       },
@@ -397,7 +393,7 @@ export class NotaDebitoVentaComponent implements OnInit {
   }
 
   consultarBodegas(){
-    this.bodegaService.consultar().subscribe(
+    this.bodegaService.consultarPorEmpresaYEstado(this.empresa.id, valores.activo).subscribe(
       res => {
         this.bodegas = res.resultado as Bodega[]
       },
