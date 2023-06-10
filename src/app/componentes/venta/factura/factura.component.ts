@@ -292,14 +292,12 @@ export class FacturaComponent implements OnInit {
       return;
     }  
     this.spinnerService.show();    
-    //console.log(this.factura);
     this.facturaService.actualizar(this.factura).subscribe({
       next: res => {
         this.factura = res.resultado as Factura;
         this.consultar();
         this.spinnerService.hide();  
         this.stepper.next();
-        //Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
       },
       error: err => {
         Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
@@ -313,7 +311,6 @@ export class FacturaComponent implements OnInit {
       this.factura = event;
       this.llenarFecha();
       this.factura.estado = event.estado;
-      //console.log(this.factura);
     }
   }
 
