@@ -49,7 +49,7 @@ export class CuentaPropiaService {
   }
 
   consultarPorEmpresa(empresaId: number): Observable<Respuesta> {
-    return this.http.get(environment.host + urn.ruta + urn.cuentaPropia + urn.consultar + urn.slash + empresaId, options).pipe(
+    return this.http.get(environment.host + urn.ruta + urn.cuentaPropia + urn.consultarPorEmpresa + urn.slash + empresaId, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);
@@ -58,6 +58,14 @@ export class CuentaPropiaService {
 
   consultarPorEmpresaYEstado(empresaId: number, estado: string): Observable<Respuesta> {
     return this.http.get(environment.host + urn.ruta + urn.cuentaPropia + urn.consultarPorEmpresaYEstado + urn.slash + empresaId + urn.slash + estado, options).pipe(
+      map(response => response as Respuesta),
+      catchError(err => {
+        return throwError(()=>err);
+      }));
+  }
+
+  consultarPorEstadoDistintoBancoAbreviatura(estado: string): Observable<Respuesta> {
+    return this.http.get(environment.host + urn.ruta + urn.cuentaPropia + urn.consultarPorEmpresaYEstado + urn.slash + estado, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);
@@ -100,22 +108,12 @@ export class CuentaPropiaService {
     );
   }
 
-  consultarBancos(): Observable<Respuesta> {
-    return this.http.get(environment.host + urn.ruta + urn.cuentaPropia + urn.consultarBancos, options).pipe(
+  consultarPorBanco(banco: string): Observable<Respuesta> {
+    return this.http.get(environment.host + urn.ruta + urn.cuentaPropia + urn.consultarPorBanco + urn.slash + banco, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);
       }));
   }
-
-  consultarPorBanco(banco: string): Observable<Respuesta> {
-    let params = new HttpParams().set("banco", banco)
-    return this.http.get<Respuesta>(environment.host + urn.ruta + urn.cuentaPropia + urn.consultarPorBanco, {params: params, headers: options.headers}).pipe(
-      map(response => response as Respuesta),
-      catchError(err => {
-        return throwError(()=>err);
-      })
-    );
-  } 
 
 }
