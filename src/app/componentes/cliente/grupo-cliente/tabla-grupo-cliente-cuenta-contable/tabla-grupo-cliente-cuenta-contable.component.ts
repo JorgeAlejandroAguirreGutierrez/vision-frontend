@@ -1,10 +1,11 @@
 import { Component, OnInit, Output, EventEmitter, ElementRef, Renderer2 } from '@angular/core';
-import Swal from 'sweetalert2';
 import { valores, validarSesion, error, error_swal } from '../../../../constantes';
+import { Router } from '@angular/router';
+import Swal from 'sweetalert2';
 
 import { Sesion } from 'src/app/modelos/usuario/sesion';
 import { SesionService } from 'src/app/servicios/usuario/sesion.service';
-import { Router } from '@angular/router';
+import { Empresa } from '../../../../modelos/usuario/empresa';
 import { CuentaContable } from '../../../../modelos/contabilidad/cuenta-contable';
 import { CuentaContableService } from '../../../../servicios/contabilidad/cuenta-contable.service';
 
@@ -24,6 +25,7 @@ export class TablaGrupoClienteCuentaContableComponent implements OnInit {
   @Output() cuentaContableSeleccionado = new EventEmitter();
 
   sesion: Sesion=null;
+  empresa: Empresa = new Empresa();
   cuentaContable= new CuentaContable();
 
   cuentasContables: CuentaContable[];
@@ -47,6 +49,7 @@ export class TablaGrupoClienteCuentaContableComponent implements OnInit {
 
   ngOnInit() {
     this.sesion=validarSesion(this.sesionService, this.router);
+    this.empresa = this.sesion.empresa;
     this.consultar();
   }
 
@@ -56,7 +59,7 @@ export class TablaGrupoClienteCuentaContableComponent implements OnInit {
   }
 
   consultar() {
-    this.cuentaContableService.consultarPorEstado(valores.activo).subscribe({
+    this.cuentaContableService.consultarPorEmpresaYEstado(this.empresa.id, valores.activo).subscribe({
       next: res => {
         this.cuentasContables = res.resultado as CuentaContable[]
         this.llenarDataSource(this.cuentasContables);
