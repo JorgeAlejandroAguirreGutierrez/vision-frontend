@@ -65,7 +65,7 @@ export class CuentaPropiaService {
   }
 
   consultarPorEstadoDistintoBancoAbreviatura(estado: string): Observable<Respuesta> {
-    return this.http.get(environment.host + urn.ruta + urn.cuentaPropia + urn.consultarPorEmpresaYEstado + urn.slash + estado, options).pipe(
+    return this.http.get(environment.host + urn.ruta + urn.cuentaPropia + urn.consultarPorEstadoDistintoBancoAbreviatura + urn.slash + estado, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);
