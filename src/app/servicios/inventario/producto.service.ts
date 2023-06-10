@@ -3,7 +3,7 @@ import { Respuesta } from '../../respuesta';
 import { urn, options } from '../../constantes';
 import {HttpClient} from '@angular/common/http';
 import { map, catchError } from 'rxjs/operators';
-import { Observable, throwError, BehaviorSubject, lastValueFrom } from 'rxjs';
+import { Observable, throwError } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { Producto } from '../../modelos/inventario/producto';
 
@@ -72,48 +72,32 @@ export class ProductoService {
       }));
   }
 
-  consultarBien(): Observable<Respuesta> {
-    return this.http.get(environment.host + urn.ruta + urn.producto + urn.consultarBien, options).pipe(
+  consultarPorCategoriaProductoYEstado(categoriaProducto: string, estado: string): Observable<Respuesta> {
+    return this.http.get(environment.host + urn.ruta + urn.producto + urn.consultarPorCategoriaProductoYEstado + urn.slash + categoriaProducto + urn.slash + urn.slash + estado, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);
       }));
   }
 
-  consultarBienPorProveedor(proveedorId: number): Observable<Respuesta> {
-    return this.http.get(environment.host + urn.ruta + urn.producto + urn.consultarBienPorProveedor + urn.slash + proveedorId, options).pipe(
+  consultarPorCategoriaProductoYProveedorYEstado(categoriaProducto: string, proveedorId: number, estado: string): Observable<Respuesta> {
+    return this.http.get(environment.host + urn.ruta + urn.producto + urn.consultarPorCategoriaProductoYProveedorYEstado + urn.slash + categoriaProducto + urn.slash + proveedorId + urn.slash + urn.slash + estado, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);
       }));
   }
 
-  consultarServicio(): Observable<Respuesta> {
-    return this.http.get(environment.host + urn.ruta + urn.producto + urn.consultarServicio, options).pipe(
+  consultarPorCategoriaProductoYEmpresaYEstado(categoriaProducto: string, empresaId: number, estado: string): Observable<Respuesta> {
+    return this.http.get(environment.host + urn.ruta + urn.producto + urn.consultarPorCategoriaProductoYEmpresaYEstado + urn.slash + categoriaProducto + urn.slash + empresaId + urn.slash + estado, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);
       }));
   }
 
-  consultarServicioPorProveedor(proveedorId: number): Observable<Respuesta> {
-    return this.http.get(environment.host + urn.ruta + urn.producto + urn.consultarServicioPorProveedor + urn.slash + proveedorId, options).pipe(
-      map(response => response as Respuesta),
-      catchError(err => {
-        return throwError(()=>err);
-      }));
-  }
-
-  consultarActivoFijo(): Observable<Respuesta> {
-    return this.http.get(environment.host + urn.ruta + urn.producto + urn.consultarActivoFijo, options).pipe(
-      map(response => response as Respuesta),
-      catchError(err => {
-        return throwError(()=>err);
-      }));
-  }
-
-  consultarActivoFijoPorProveedor(proveedorId: number): Observable<Respuesta> {
-    return this.http.get(environment.host + urn.ruta + urn.producto + urn.consultarActivoFijoPorProveedor + urn.slash + proveedorId, options).pipe(
+  consultarPorCategoriaProductoYProveedorYEmpresaYEstado(categoriaProducto: string, proveedorId: number, empresaId: number, estado: string): Observable<Respuesta> {
+    return this.http.get(environment.host + urn.ruta + urn.producto + urn.consultarPorCategoriaProductoYProveedorYEmpresaYEstado + urn.slash + categoriaProducto + urn.slash + proveedorId +  urn.slash + empresaId + urn.slash + estado, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);

@@ -129,8 +129,26 @@ export class NotaCreditoVentaComponent implements OnInit {
     this.inicializarFiltros();
   }
 
+  consultar() {
+    this.notaCreditoVentaService.consultarPorEmpresa(this.empresa.id).subscribe({
+      next: res => {
+        this.notasCreditosVentas = res.resultado as NotaCreditoVenta[]
+        this.llenarTablaNotaCreditoVenta(this.notasCreditosVentas);
+      },
+      error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+    });
+  }
+
+  llenarTablaNotaCreditoVenta(notasCreditosVentas: NotaCreditoVenta[]) {
+    this.dataSource = new MatTableDataSource(notasCreditosVentas);
+    this.dataSource.filterPredicate = (data: NotaCreditoVenta, filter: string): boolean =>
+      this.datepipe.transform(data.fecha, "dd-MM-yyyy").includes(filter) || data.serie.includes(filter) || 
+      data.secuencial.includes(filter) || data.factura.cliente.razonSocial.includes(filter) || data.estado.includes(filter);
+      this.dataSource.paginator = this.paginator;
+  }
+
   consultarClientes(){
-    this.clienteService.consultar().subscribe({
+    this.clienteService.consultarPorEmpresaYEstado(this.empresa.id, valores.activo).subscribe({
       next: res => {
         this.clientes = res.resultado as Cliente[]
       },
@@ -218,25 +236,6 @@ export class NotaCreditoVentaComponent implements OnInit {
       },
       error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     });
-  }
-
-  consultar() {
-    this.notaCreditoVentaService.consultar().subscribe({
-      next: res => {
-        this.notasCreditosVentas = res.resultado as NotaCreditoVenta[]
-        this.llenarTablaNotaCreditoVenta(this.notasCreditosVentas);
-      },
-      error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
-    });
-  }
-
-  llenarTablaNotaCreditoVenta(notasCreditosVentas: NotaCreditoVenta[]) {
-    this.dataSource = new MatTableDataSource(notasCreditosVentas);
-    this.dataSource.filterPredicate = (data: NotaCreditoVenta, filter: string): boolean =>
-      this.datepipe.transform(data.fecha, "dd-MM-yyyy").includes(filter) || data.serie.includes(filter) || 
-      data.secuencial.includes(filter) || data.factura.cliente.razonSocial.includes(filter) || data.estado.includes(filter);
-      this.dataSource.paginator = this.paginator;
-      //this.dataSourceFacturaCompra.sort = this.sort;
   }
 
   seleccion(notaCreditoVenta: any) {
@@ -365,13 +364,13 @@ export class NotaCreditoVentaComponent implements OnInit {
   inicializarFiltros(){
     this.filtroClientes = this.seleccionCliente.valueChanges
     .pipe(
-      startWith(''),
+      startWith(valores.vacio),
       map(value => typeof value === 'string' || value==null ? value : value.id),
       map(cliente => typeof cliente === 'string' ? this.filtroCliente(cliente) : this.clientes.slice())
     );
     this.filtroFacturas = this.seleccionFactura.valueChanges
       .pipe(
-        startWith(''),
+        startWith(valores.vacio),
         map(value => typeof value === 'string' || value==null ? value : value.id),
         map(factura => typeof factura === 'string' ? this.filtroFactura(factura) : this.facturas.slice())
       );

@@ -174,7 +174,7 @@ export class FacturaComponent implements OnInit {
   }
 
   consultarClientes() {
-    this.clienteService.consultarPorEstado(valores.activo).subscribe({
+    this.clienteService.consultarPorEmpresaYEstado(this.empresa.id, valores.activo).subscribe({
       next: res => {
         this.clientes = res.resultado as Cliente[]
       },
@@ -184,7 +184,7 @@ export class FacturaComponent implements OnInit {
     });
   }
   consultarProductos() {
-    this.productoService.consultarPorEstado(valores.activo).subscribe({
+    this.productoService.consultarPorEmpresaYEstado(this.empresa.id, valores.activo).subscribe({
       next: res => {
         this.productos = res.resultado as Producto[];
       },
@@ -194,7 +194,7 @@ export class FacturaComponent implements OnInit {
     })
   }
   consultarImpuestos() {
-    this.impuestoService.consultar().subscribe({
+    this.impuestoService.consultarPorEstado(valores.activo).subscribe({
       next: res => {
         this.impuestos = res.resultado as Impuesto[]
       },
@@ -204,7 +204,7 @@ export class FacturaComponent implements OnInit {
     });
   }
   consultarBodegas() {
-    this.bodegaService.consultar().subscribe({
+    this.bodegaService.consultarPorEmpresaYEstado(this.empresa.id, valores.activo).subscribe({
       next: res => {
         this.bodegas = res.resultado as Bodega[]
       },
@@ -339,7 +339,7 @@ export class FacturaComponent implements OnInit {
   }
 
   consultar() {
-    this.facturaService.consultar().subscribe({
+    this.facturaService.consultarPorEmpresa(this.empresa.id).subscribe({
       next: res => {
         this.facturas = res.resultado as Factura[];
         this.llenarTablaFactura(this.facturas);
@@ -416,7 +416,6 @@ export class FacturaComponent implements OnInit {
   }
 
   seleccionarIdentificacionCliente() {
-    //let clienteId = undefined;
     let clienteId = this.controlIdentificacionCliente.value.id;
     this.clienteService.obtener(clienteId).subscribe({
       next: res => {
@@ -629,21 +628,11 @@ export class FacturaComponent implements OnInit {
     });
   }
 
-  /*enviarEventoRecaudacion() {
-    this.construir();
-    this.consultar();
-    this.facturaService.enviarEventoRecaudacion(this.factura);
-  }*/
-
   cambiarStepper(event){
-    //console.log(event);
-    //this.consultar();
     if (event.selectedIndex == 0 && event.previouslySelectedIndex == 1){
-      //this.construir();
       this.recaudacionComponent.facturaConRecaudacion.emit(this.factura);
     }
     if (event.selectedIndex == 1 && event.previouslySelectedIndex == 0){
-      //this.facturaService.enviarEventoRecaudacion(this.factura);
     }
   }
 

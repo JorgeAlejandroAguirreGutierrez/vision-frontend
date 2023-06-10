@@ -70,7 +70,10 @@ export const urn =
     consultarPresentaciones: "/consultarPresentaciones",
     consultarProveedor: "/consultarProveedor",
     consultarPorProveedor: "/consultarPorProveedor",
-
+    consultarPorCategoriaProductoYEstado: "/consultarPorCategoriaProductoYEstado",
+    consultarPorCategoriaProductoYProveedorYEstado: "/consultarPorCategoriaProductoYProveedorYEstado",
+    consultarPorCategoriaProductoYEmpresaYEstado: "/consultarPorCategoriaProductoYEmpresaYEstado",
+    consultarPorCategoriaProductoYProveedorYEmpresaYEstado: "/consultarPorCategoriaProductoYProveedorYEmpresaYEstado",
     //Configuración
     estadoCivil: "/estadoCivil",
     impuesto: "/impuesto",

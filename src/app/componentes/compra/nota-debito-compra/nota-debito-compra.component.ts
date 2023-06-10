@@ -268,7 +268,7 @@ export class NotaDebitoCompraComponent implements OnInit {
     }
   }
   consultarBienPorProveedor(proveedorId: number) {
-    this.productoService.consultarBienPorProveedor(proveedorId).subscribe(
+    this.productoService.consultarPorCategoriaProductoYProveedorYEmpresaYEstado(valores.bien, proveedorId, this.empresa.id, valores.activo).subscribe(
       res => {
         this.productos = res.resultado as Producto[]
       },
@@ -278,7 +278,7 @@ export class NotaDebitoCompraComponent implements OnInit {
     );
   }
   consultarServicioPorProveedor(proveedorId: number) {
-    this.productoService.consultarServicioPorProveedor(proveedorId).subscribe(
+    this.productoService.consultarPorCategoriaProductoYProveedorYEmpresaYEstado(valores.servicio, proveedorId, this.empresa.id, valores.activo).subscribe(
       res => {
         this.productos = res.resultado as Producto[]
       },
@@ -288,7 +288,7 @@ export class NotaDebitoCompraComponent implements OnInit {
     );
   }
   consultarActivoFijoPorProveedor(proveedorId: number) {
-    this.productoService.consultarActivoFijoPorProveedor(proveedorId).subscribe(
+    this.productoService.consultarPorCategoriaProductoYProveedorYEmpresaYEstado(valores.activoFijo, proveedorId, this.empresa.id, valores.activo).subscribe(
       res => {
         this.productos = res.resultado as Producto[]
       },
