@@ -176,6 +176,9 @@ export class FacturaComponent implements OnInit {
     this.clienteService.consultarPorEstado(valores.activo).subscribe({
       next: res => {
         this.clientes = res.resultado as Cliente[]
+        this.factura.cliente = this.clientes[0];
+        this.controlIdentificacionCliente.patchValue(this.factura.cliente);
+        this.controlRazonSocialCliente.patchValue(this.factura.cliente);
       },
       error: err => {
         Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
@@ -183,7 +186,7 @@ export class FacturaComponent implements OnInit {
     });
   }
   consultarProductos() {
-    this.productoService.consultarPorEstado(valores.activo).subscribe({
+    this.productoService.consultarPorEmpresaYEstado(this.empresa.id, valores.activo).subscribe({
       next: res => {
         this.productos = res.resultado as Producto[];
       },

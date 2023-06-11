@@ -26,7 +26,7 @@ export class FacturaCompraLinea {
     constructor() {
         this.id = valores.cero;
         this.codigo = valores.vacio;
-        this.cantidad = valores.cero;
+        this.cantidad = valores.uno;
         this.costoUnitario = valores.cero;
         this.costoDistribuido = valores.cero;
         this.costoPromedio = valores.cero;

@@ -13,6 +13,7 @@ import { AppDateAdapter, APP_DATE_FORMATS } from '../../../modelos/format-date-p
 
 import { Sesion } from '../../../modelos/usuario/sesion';
 import { SesionService } from '../../../servicios/usuario/sesion.service';
+import { Empresa } from '../../../modelos/usuario/empresa';
 import { FacturaCompra } from 'src/app/modelos/compra/factura-compra';
 import { FacturaCompraService } from 'src/app/servicios/compra/factura-compra.service';
 import { FacturaCompraLinea } from 'src/app/modelos/compra/factura-compra-linea';
@@ -30,7 +31,6 @@ import { KardexService } from '../../../servicios/inventario/kardex.service';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { Empresa } from 'src/app/modelos/usuario/empresa';
 
 @Component({
   selector: 'app-factura-compra',
@@ -195,6 +195,7 @@ export class FacturaCompraComponent implements OnInit {
     if (!this.validarFormulario())
       return;
     this.spinnerService.show();   
+    this.facturaCompra.numeroFactura = this.facturaCompra.establecimiento + '-' + this.facturaCompra.puntoVenta + '-' + this.facturaCompra.secuencial;
     this.facturaCompra.sesion = this.sesion;
     this.facturaCompra.empresa = this.empresa;
     this.facturaCompraService.crear(this.facturaCompra).subscribe({
@@ -486,6 +487,23 @@ export class FacturaCompraComponent implements OnInit {
     return isNaN (valor) ? valor : parseFloat (valor).toFixed (2);
   }
 
+  rellenarNumeroEstablecimiento() {
+    this.facturaCompra.establecimiento = this.pad(this.facturaCompra.establecimiento, 3);
+  }
+
+  rellenarNumeroPuntoVenta() {
+    this.facturaCompra.puntoVenta = this.pad(this.facturaCompra.puntoVenta, 3);
+  }
+
+  rellenarNumeroSecuencial() {
+    this.facturaCompra.secuencial = this.pad(this.facturaCompra.secuencial, 10);
+  }
+
+  pad(numero: string, size: number): string {
+    while (numero.length < size) numero = "0" + numero;
+    return numero;
+  }
+
   //FILTROS AUTOCOMPLETE
   inicializarFiltros() {
     this.filtroProductos = this.controlProducto.valueChanges
@@ -547,11 +565,8 @@ export class FacturaCompraComponent implements OnInit {
       Swal.fire({ icon: error_swal, title: error, text: mensajes.error_falta_datos });
       return false;
     }
-    if (this.facturaCompra.numeroFactura == valores.vacio || this.facturaCompra.numeroFactura == null){
-      Swal.fire({ icon: error_swal, title: error, text: mensajes.error_falta_datos });
-      return false;
-    }
-    if (this.facturaCompra.numeroFactura == null){
+    if (this.facturaCompra.establecimiento == valores.vacio || this.facturaCompra.puntoVenta == valores.vacio ||
+      this.facturaCompra.secuencial == valores.vacio){
       Swal.fire({ icon: error_swal, title: error, text: mensajes.error_falta_datos });
       return false;
     }
