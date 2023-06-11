@@ -24,13 +24,38 @@ export class EstacionService {
     );
   }
 
-  obtener(estacionId: number): Observable<Respuesta> {
-    return this.http.get<Respuesta>(environment.host + urn.ruta + urn.estacion + urn.slash + estacionId, options).pipe(
+  consultar(): Observable<Respuesta> {
+    return this.http.get(environment.host + urn.ruta + urn.estacion, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);
-      })
-    );
+      }));
+  }
+
+  consultarPorEmpresa(empresaId: number): Observable<Respuesta> {
+    return this.http.get(environment.host + urn.ruta + urn.estacion + urn.consultarPorEmpresa + urn.slash + empresaId, options).pipe(
+      map(response => response as Respuesta),
+      catchError(err => {
+        return throwError(()=>err);
+      }
+    ));
+  }
+
+  consultarPorEstado(estado: string): Observable<Respuesta> {
+    return this.http.get(environment.host + urn.ruta + urn.estacion + urn.consultarPorEstado + urn.slash + estado, options).pipe(
+      map(response => response as Respuesta),
+      catchError(err => {
+        return throwError(()=>err);
+      }));
+  }
+
+  consultarPorEmpresaYEstado(empresaId: number, estado: string): Observable<Respuesta> {
+    return this.http.get(environment.host + urn.ruta + urn.estacion + urn.consultarPorEmpresaYEstado + urn.slash + empresaId + urn.slash + estado, options).pipe(
+      map(response => response as Respuesta),
+      catchError(err => {
+        return throwError(()=>err);
+      }
+    ));
   }
 
   consultarPorEstablecimiento(establecimientoId: number): Observable<Respuesta> {
@@ -51,20 +76,13 @@ export class EstacionService {
     );
   }
 
-  consultar(): Observable<Respuesta> {
-    return this.http.get(environment.host + urn.ruta + urn.estacion, options).pipe(
+  obtener(estacionId: number): Observable<Respuesta> {
+    return this.http.get<Respuesta>(environment.host + urn.ruta + urn.estacion + urn.slash + estacionId, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);
-      }));
-  }
-
-  consultarPorEstado(estado: string): Observable<Respuesta> {
-    return this.http.get(environment.host + urn.ruta + urn.estacion + urn.consultarPorEstado + urn.slash + estado, options).pipe(
-      map(response => response as Respuesta),
-      catchError(err => {
-        return throwError(()=>err);
-      }));
+      })
+    );
   }
 
   actualizar(estacion: Estacion): Observable<Respuesta> {

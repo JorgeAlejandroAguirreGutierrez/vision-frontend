@@ -45,7 +45,9 @@ export class EmpresaComponent implements OnInit {
     { nombreColumna: 'identificacion', cabecera: 'Identificacion', celda: (row: Empresa) => `${row.identificacion}` },
     { nombreColumna: 'razonSocial', cabecera: 'Razon Social', celda: (row: Empresa) => `${row.razonSocial}` },
     { nombreColumna: 'nombreComercial', cabecera: 'Nombre Comercial', celda: (row: Empresa) => `${row.nombreComercial}` },
-    { nombreColumna: 'obligado', cabecera: 'Obligado', celda: (row: Empresa) => `${row.obligadoContabilidad}` },
+    { nombreColumna: 'obligado', cabecera: 'Oblig.', celda: (row: Empresa) => `${row.obligadoContabilidad}` },
+    { nombreColumna: 'especial', cabecera: 'Espec.', celda: (row: Empresa) => `${row.especial}` },
+    { nombreColumna: 'retencion', cabecera: 'Ag. Ret.', celda: (row: Empresa) => `${row.agenteRetencion}` },
     { nombreColumna: 'estado', cabecera: 'Estado', celda: (row: Empresa) => `${row.estado}` }
   ];
   cabecera: string[] = this.columnas.map(titulo => titulo.nombreColumna);

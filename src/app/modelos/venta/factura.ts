@@ -23,14 +23,14 @@ export class Factura {
   subtotalSinDescuento: number;
   subtotalConDescuento: number;
   descuentoTotal: number;
-  subtotalBase12SinDescuento: number;
-  subtotalBase0SinDescuento: number;
-  subtotalBase12ConDescuento: number;
-  subtotalBase0ConDescuento: number;
-  ivaSinDescuento: number;
-  ivaConDescuento: number;
-  totalSinDescuento: number;
-  totalConDescuento: number;
+  subtotalGrabadoSinDescuento: number;
+  subtotalNoGrabadoSinDescuento: number;
+  subtotalGrabadoConDescuento: number;
+  subtotalNoGrabadoConDescuento: number;
+  importeIvaSinDescuento: number;
+  importeIvaTotal: number;
+  valorTotalSinDescuento: number;
+  valorTotal: number;
 
   //DESCUENTO_GENERAL
   valorDescuentoSubtotal: number;
@@ -82,14 +82,14 @@ export class Factura {
     this.subtotalSinDescuento = valores.cero;
     this.subtotalConDescuento = valores.cero;
     this.descuentoTotal = valores.cero;
-    this.subtotalBase12SinDescuento = valores.cero;
-    this.subtotalBase0SinDescuento = valores.cero;
-    this.subtotalBase12ConDescuento = valores.cero;
-    this.subtotalBase0ConDescuento = valores.cero;
-    this.ivaSinDescuento = valores.cero;
-    this.ivaConDescuento = valores.cero;
-    this.totalSinDescuento = valores.cero;
-    this.totalConDescuento = valores.cero;
+    this.subtotalGrabadoSinDescuento = valores.cero;
+    this.subtotalNoGrabadoSinDescuento = valores.cero;
+    this.subtotalGrabadoConDescuento = valores.cero;
+    this.subtotalNoGrabadoConDescuento = valores.cero;
+    this.importeIvaSinDescuento = valores.cero;
+    this.importeIvaTotal = valores.cero;
+    this.valorTotalSinDescuento = valores.cero;
+    this.valorTotal = valores.cero;
 
     this.valorDescuentoSubtotal = valores.cero;
     this.porcentajeDescuentoSubtotal = valores.cero;

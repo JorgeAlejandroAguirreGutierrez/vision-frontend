@@ -47,7 +47,8 @@
                 <div class="col-3">
                     <mat-form-field appearance="standard">
                         <mat-label>Empresa</mat-label>
-                        <mat-select [(ngModel)]="estacion.establecimiento.empresa" [compareWith]="compareFn" (selectionChange)="consultarEstablecimientos()" class="form-control-sm">
+                        <mat-select [(ngModel)]="estacion.establecimiento.empresa" [compareWith]="compareFn" 
+                            (selectionChange)="consultarEstablecimientos()" class="form-control-sm">
                             <mat-option *ngFor="let empresa of empresas" [value]="empresa">
                                 {{empresa.nombreComercial}}
                             </mat-option>
@@ -84,9 +85,8 @@
                 <div class="col-1">
                     <mat-form-field appearance="standard">
                         <mat-label># Pto venta</mat-label>
-                        <input matInput type="text" [(ngModel)]="estacion.codigoSRI" 
-                            [disabled]="estacion.puntoVenta==no? true : false"
-                            oninput="this.value = this.value.toUpperCase()" class="form-control-sm">
+                        <input matInput type="text" [(ngModel)]="estacion.codigoSRI" class="form-control-sm"
+                            [disabled]="estacion.puntoVenta==no? true : false" (blur)="rellenarNumeroPuntoVenta()">
                     </mat-form-field>
                 </div>
                 <div class="col-2">
@@ -151,7 +151,7 @@
             <mat-divider></mat-divider>
             <mat-form-field appearance="standard">
                 <mat-label>Buscar estaciones</mat-label>
-                <input matInput (keyup)="filtro($event)" #input>
+                <input matInput oninput="this.value = this.value.toUpperCase()" (keyup)="filtro($event)" #input>
             </mat-form-field>
             <div class="mat-elevation-z8">
                 <table mat-table [dataSource]="dataSource" matSort>

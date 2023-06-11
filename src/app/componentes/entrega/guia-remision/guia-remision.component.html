@@ -425,7 +425,7 @@
                                 <div class="col-5">
                                     <mat-form-field appearance="standard">
                                         <input matInput type="text "
-                                            [(ngModel)]="guiaRemision.factura.subtotalBase12SinDescuento"
+                                            [(ngModel)]="guiaRemision.factura.subtotalGrabadoSinDescuento"
                                             class="form-control-sm" [disabled]="true">
                                     </mat-form-field>
                                 </div>
@@ -435,7 +435,7 @@
                                 <div class="col-5">
                                     <mat-form-field appearance="standard">
                                         <input matInput type="text "
-                                            [(ngModel)]="guiaRemision.factura.subtotalBase0SinDescuento"
+                                            [(ngModel)]="guiaRemision.factura.subtotalNoGrabadoSinDescuento"
                                             class="form-control-sm " [disabled]="true">
                                     </mat-form-field>
                                 </div>
@@ -444,7 +444,7 @@
                                 </div>
                                 <div class="col-5">
                                     <mat-form-field appearance="standard">
-                                        <input matInput type="text " [(ngModel)]="guiaRemision.factura.ivaSinDescuento"
+                                        <input matInput type="text " [(ngModel)]="guiaRemision.factura.importeIvaSinDescuento"
                                             class="form-control-sm " [disabled]="true">
                                     </mat-form-field>
                                 </div>
@@ -454,7 +454,7 @@
                                 <div class="col-5">
                                     <mat-form-field appearance="standard">
                                         <input matInput type="text "
-                                            [(ngModel)]="guiaRemision.factura.totalConDescuento" class="form-control-sm"
+                                            [(ngModel)]="guiaRemision.factura.valorTotal" class="form-control-sm"
                                             [disabled]="true">
                                     </mat-form-field>
                                 </div>
