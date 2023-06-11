@@ -8,6 +8,9 @@ import { Empresa } from '../usuario/empresa';
 export class FacturaCompra {
     id: number;
     codigo: string;
+    establecimiento: string;
+    puntoVenta: string;
+    secuencial: string;
     numeroFactura: string;
     fecha: Date;
     estado: string;
@@ -31,6 +34,9 @@ export class FacturaCompra {
     constructor() {
         this.id = valores.cero;
         this.codigo = valores.vacio;
+        this.establecimiento = valores.vacio;
+        this.puntoVenta = valores.vacio;
+        this.secuencial = valores.vacio;
         this.numeroFactura = valores.vacio;
         this.fecha = new Date();
         this.estado = valores.activo;

@@ -1,22 +1,25 @@
 import { Component, HostListener, OnInit, ElementRef, Renderer2 } from '@angular/core';
+import { validarSesion, tipoMedidas, mensajes, exito, exito_swal, error, error_swal, valores } from '../../../constantes';
 import { Router } from '@angular/router';
 import Swal from 'sweetalert2';
-import { validarSesion, tipoMedidas, mensajes, exito, exito_swal, error, error_swal, valores } from '../../../constantes';
+
+import { Sesion } from '../../../modelos/usuario/sesion';
+import { SesionService } from '../../../servicios/usuario/sesion.service';
+import { Empresa } from '../../../modelos/usuario/empresa';
+import { Medida } from '../../../modelos/inventario/medida';
+import { MedidaService } from '../../../servicios/inventario/medida.service';
+
 import { ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { Sesion } from '../../../modelos/usuario/sesion';
-import { SesionService } from '../../../servicios/usuario/sesion.service';
-import { Medida } from '../../../modelos/inventario/medida';
-import { MedidaService } from '../../../servicios/inventario/medida.service';
-import { Empresa } from 'src/app/modelos/usuario/empresa';
 
 @Component({
   selector: 'app-medida',
   templateUrl: './medida.component.html',
   styleUrls: ['./medida.component.scss']
 })
+
 export class MedidaComponent implements OnInit {
 
   abrirPanelNuevo = true;
@@ -27,7 +30,7 @@ export class MedidaComponent implements OnInit {
   tipoMedidas: string[] = tipoMedidas; 
 
   sesion: Sesion = null;
-  empresa: Empresa = null;
+  empresa: Empresa = new Empresa();
   medida = new Medida();
   medidas: Medida[];
   
@@ -59,7 +62,7 @@ export class MedidaComponent implements OnInit {
 
   ngOnInit() {
     this.sesion = validarSesion(this.sesionService, this.router);
-    this.empresa = this.sesion.usuario.estacion.establecimiento.empresa;
+    this.empresa = this.sesion.empresa;
     this.consultar();
   }
 

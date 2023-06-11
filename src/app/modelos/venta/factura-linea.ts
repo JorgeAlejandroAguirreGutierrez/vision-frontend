@@ -43,7 +43,7 @@ export class FacturaLinea {
     this.posicion = valores.cero;
     this.entregado = valores.no;
     this.comentario = valores.vacio;
-    this.cantidad = valores.cero;
+    this.cantidad = valores.uno;
     this.precioUnitario = valores.cero;
     this.subsidio = valores.cero;
     this.sinSubsidio = valores.cero;

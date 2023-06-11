@@ -28,7 +28,7 @@ export class PlazoCreditoComponent implements OnInit {
   abrirPanelAdmin: boolean = true;
 
   sesion: Sesion = null;
-  empresa: Empresa = null;
+  empresa: Empresa = new Empresa();
   plazoCredito = new PlazoCredito();
   plazosCreditos: PlazoCredito[];
 
@@ -60,7 +60,7 @@ export class PlazoCreditoComponent implements OnInit {
 
   ngOnInit() {
     this.sesion = validarSesion(this.sesionService, this.router);
-    this.empresa = this.sesion.usuario.estacion.establecimiento.empresa;
+    this.empresa = this.sesion.empresa;
     this.consultar();
   }
 

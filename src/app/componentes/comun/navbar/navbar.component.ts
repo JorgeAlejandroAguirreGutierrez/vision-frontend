@@ -32,14 +32,13 @@ export class NavbarComponent implements OnInit {
 
   ngOnInit() {
     this.sesion = validarSesion(this.sesionService, this.router);
-    this.empresa = this.sesion.usuario.estacion.establecimiento.empresa;
-    this.sesion.empresa = this.empresa;
+    this.empresa = this.sesion.empresa;
     this.obtenerEmpresa();
     this.obtenerUsuario();
   }
 
   obtenerEmpresa() {
-    this.empresaService.obtener(this.sesion.empresa.id).subscribe(
+    this.empresaService.obtener(this.empresa.id).subscribe(
       res => {
         this.empresa = res.resultado as Empresa;
       }

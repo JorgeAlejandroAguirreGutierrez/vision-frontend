@@ -1,14 +1,11 @@
 import { Component, OnInit, ViewChild, ElementRef, Renderer2 } from '@angular/core';
 import { valores, mensajes, validarSesion, exito, exito_swal, error, error_swal } from '../../../constantes';
 import { DatePipe } from '@angular/common';
-import { BehaviorSubject } from 'rxjs';
 import { UntypedFormControl } from '@angular/forms';
-import { Observable } from 'rxjs';
-import { startWith, map } from 'rxjs/operators';
+import { startWith, map, Observable, BehaviorSubject } from 'rxjs';
+import { Router } from '@angular/router';
 import Swal from 'sweetalert2';
-import * as constantes from '../../../constantes';
 
-import * as util from '../../../util';
 import { Producto } from '../../../modelos/inventario/producto';
 import { ProductoService } from '../../../servicios/inventario/producto.service';
 import { Kardex } from '../../../modelos/inventario/kardex';
@@ -19,7 +16,8 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Sesion } from '../../../modelos/usuario/sesion';
 import { SesionService } from '../../../servicios/usuario/sesion.service';
-import { Router } from '@angular/router';
+import { Empresa } from '../../../modelos/usuario/empresa';
+
 
 @Component({
   selector: 'app-kardex',
@@ -28,10 +26,11 @@ import { Router } from '@angular/router';
 })
 export class KardexComponent implements OnInit {
 
-  sesion: Sesion = null;
   abrirPanelAdmin: boolean = true;
   productoSeleccionado: boolean = false;
 
+  sesion: Sesion = null;
+  empresa: Empresa = new Empresa();
   producto: Producto = new Producto();
   kardex: Kardex = new Kardex();
   kardexs: Kardex[] = [];
@@ -66,7 +65,8 @@ export class KardexComponent implements OnInit {
               private kardexService: KardexService, private sesionService: SesionService, private router: Router) { }
 
   ngOnInit() {
-    this.sesion = util.validarSesion(this.sesionService, this.router);
+    this.sesion = validarSesion(this.sesionService, this.router);
+    this.empresa = this.sesion.empresa;
     this.consultarProductos();
     this.filtroProductos = this.controlProducto.valueChanges
       .pipe(
@@ -96,10 +96,10 @@ export class KardexComponent implements OnInit {
       event.preventDefault();
     this.kardexService.actualizar(this.kardex).subscribe({
       next: res => {
-        Swal.fire({ icon: constantes.exito_swal, title: constantes.exito, text: res.mensaje });
+        Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
         this.nuevo(null);
       },
-      error: err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
+      error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     });
   }
 
@@ -151,7 +151,7 @@ export class KardexComponent implements OnInit {
       next: (res) => {
         this.productos = res.resultado as Producto[]
       },
-      error: err => Swal.fire({ icon: constantes.error_swal, title: constantes.error, text: err.error.codigo, footer: err.error.mensaje })
+      error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
       }
     );
   }

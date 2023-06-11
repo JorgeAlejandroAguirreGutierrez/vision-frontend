@@ -2,8 +2,7 @@ import { Component, HostListener, OnInit, ViewChild, Type, ElementRef, Renderer2
 import { UntypedFormControl, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { valores, mensajes, validarSesion, exito, exito_swal, error, error_swal } from '../../../constantes';
 import { Router } from '@angular/router';
-import { Observable } from 'rxjs';
-import { map, startWith } from 'rxjs/operators';
+import { map, startWith, Observable } from 'rxjs';
 import { NgxSpinnerService } from 'ngx-spinner';
 import Swal from 'sweetalert2';
 
@@ -19,6 +18,7 @@ import { RecaudacionComponent } from '../../recaudacion/recaudacion/recaudacion.
 
 import { Sesion } from '../../../modelos/usuario/sesion';
 import { SesionService } from '../../../servicios/usuario/sesion.service';
+import { Empresa } from '../../../modelos/usuario/empresa';
 import { Factura } from '../../../modelos/venta/factura';
 import { FacturaService } from '../../../servicios/venta/factura.service';
 import { FacturaElectronicaService } from 'src/app/servicios/venta/factura-eletronica.service';
@@ -38,7 +38,6 @@ import { MatStepper } from '@angular/material/stepper';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { Empresa } from 'src/app/modelos/usuario/empresa';
 
 
 @Component({
@@ -83,7 +82,7 @@ export class FacturaComponent implements OnInit {
   hoy = new Date();
 
   sesion: Sesion = null;
-  empresa: Empresa = null;
+  empresa: Empresa = new Empresa();
   factura: Factura = new Factura();
   facturaLinea: FacturaLinea = new FacturaLinea();
   kardex: Kardex = new Kardex();
@@ -163,7 +162,7 @@ export class FacturaComponent implements OnInit {
 
   ngOnInit() {
     this.sesion = validarSesion(this.sesionService, this.router);
-    this.empresa = this.sesion.usuario.estacion.establecimiento.empresa;
+    this.empresa = this.sesion.empresa;
     this.consultar();
     this.consultarClientes();
     this.consultarProductos();
@@ -177,6 +176,9 @@ export class FacturaComponent implements OnInit {
     this.clienteService.consultarPorEmpresaYEstado(this.empresa.id, valores.activo).subscribe({
       next: res => {
         this.clientes = res.resultado as Cliente[]
+        this.factura.cliente = this.clientes[0];
+        this.controlIdentificacionCliente.patchValue(this.factura.cliente);
+        this.controlRazonSocialCliente.patchValue(this.factura.cliente);
       },
       error: err => {
         Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })

@@ -1,20 +1,19 @@
-import { Component, OnInit, HostListener, ElementRef, Inject, Renderer2 } from '@angular/core';
+import { Component, OnInit, ViewChild, HostListener, ElementRef, Inject, Renderer2 } from '@angular/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { valores, mensajes, validarSesion, exito, exito_swal, error, error_swal } from '../../../constantes';
+import { Router } from '@angular/router';
 import Swal from 'sweetalert2';
 
-import { Router } from '@angular/router';
 import { Sesion } from '../../../modelos/usuario/sesion';
 import { SesionService } from '../../../servicios/usuario/sesion.service';
+import { Empresa } from '../../../modelos/usuario/empresa';
 import { GrupoProveedor } from '../../../modelos/compra/grupo-proveedor';
 import { GrupoProveedorService } from '../../../servicios/compra/grupo-proveedor.service';
 import { CuentaContable } from '../../../modelos/contabilidad/cuenta-contable';
 
-import { ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { Empresa } from 'src/app/modelos/usuario/empresa';
 
 @Component({
   selector: 'app-grupo-proveedor',
@@ -56,7 +55,7 @@ export class GrupoProveedorComponent implements OnInit {
 
   ngOnInit() {
     this.sesion = validarSesion(this.sesionService, this.router);
-    this.empresa = this.sesion.usuario.estacion.establecimiento.empresa;
+    this.empresa = this.sesion.empresa;
     this.consultar();
   }
   

@@ -66,6 +66,31 @@ export class InicioSesionComponent implements OnInit {
     this.obtenerEstacion();
   }
 
+  obtenerLogo() {
+    let tipo = "LOGO";
+    this.parametroService.obtenerPorTipo(tipo).subscribe({
+      next: res => {
+        let parametro = res.resultado as Parametro;
+        this.urlLogo = environment.prefijoUrlImagenes + parametro.nombre;
+      },
+      error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+    });
+  }
+  consultarEmpresas(){
+    this.empresaService.consultar().subscribe({
+      next: res => {
+        this.empresas = res.resultado as Empresa[];
+      },
+      error: err => {
+        Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+      }
+    });
+  }
+  obtenerEstacion(){
+    // Aqui el codigo para obtener la estación segun la IP y nombre del PC
+    // sesion.estacion = estacion obtenida
+  }
+
   nuevo(){
     this.contrasena = valores.vacio;
     this.ocultarContrasena = true;
@@ -78,26 +103,6 @@ export class InicioSesionComponent implements OnInit {
     this.usuario = new Usuario();
     this.empresa = new Empresa();
     this.estacion = new Estacion();
-  }
-
-  obtenerPorApodo() {
-    this.usuarioService.obtenerPorApodo(this.sesion.usuario.apodo).subscribe({
-      next: res => {
-        this.sesion.usuario = res.resultado as Usuario;
-        this.usuario = this.sesion.usuario;
-        this.multiEmpresa=this.sesion.usuario.perfil.multiempresa == valores.si? true: false;
-        if (this.multiEmpresa){
-          this.sesion.empresa.id = 1; //Iniciar combo empresa
-        } else {
-          // Obtener la empresa de estacion no de usuario, sirve para MVP 1
-          this.sesion.empresa = this.usuario.estacion.establecimiento.empresa; // Cambiar cuando se impl usuario-estación
-        }
-        if (this.sesion.usuario.cambiarContrasena == valores.si) {
-          this.cambiarContrasena = true;
-        }
-      },
-      error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
-    });
   }
 
   iniciarSesion() {
@@ -118,6 +123,26 @@ export class InicioSesionComponent implements OnInit {
     } else {
       Swal.fire({ icon: error_swal, title: error, text: mensajes.error_contrasena });
     }  
+  }
+
+  obtenerPorApodo() {
+    this.usuarioService.obtenerPorApodo(this.sesion.usuario.apodo).subscribe({
+      next: res => {
+        this.sesion.usuario = res.resultado as Usuario;
+        this.usuario = this.sesion.usuario;
+        this.multiEmpresa=this.sesion.usuario.perfil.multiempresa == valores.si? true: false;
+        if (this.multiEmpresa){
+          this.sesion.empresa.id = 1; //Iniciar combo empresa
+        } else {
+          // Obtener la empresa de estacion no de usuario, sirve para MVP 1
+          this.sesion.empresa = this.usuario.estacion.establecimiento.empresa; // Cambiar cuando se impl usuario-estación
+        }
+        if (this.sesion.usuario.cambiarContrasena == valores.si) {
+          this.cambiarContrasena = true;
+        }
+      },
+      error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+    });
   }
 
   crearNuevaContrasena(){
@@ -142,33 +167,6 @@ export class InicioSesionComponent implements OnInit {
   }
   navegarError() {
     this.router.navigateByUrl('/index');
-  }
-
-  consultarEmpresas(){
-    this.empresaService.consultar().subscribe({
-      next: res => {
-        this.empresas = res.resultado as Empresa[];
-      },
-      error: err => {
-        Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
-      }
-    });
-  }
-
-  obtenerLogo() {
-    let tipo = "LOGO";
-    this.parametroService.obtenerPorTipo(tipo).subscribe({
-      next: res => {
-        let parametro = res.resultado as Parametro;
-        this.urlLogo = environment.prefijoUrlImagenes + parametro.nombre;
-      },
-      error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
-    });
-  }
-
-  obtenerEstacion(){
-    // Aqui el codigo para obtener la estación segun la IP y nombre del PC
-    // sesion.estacion = estacion obtenida
   }
 
   // PARA VALIDACION DE CONFIRMACIÓN DE CONTRASEÑA

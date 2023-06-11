@@ -83,7 +83,7 @@ export class NotaCreditoCompraComponent implements OnInit {
   columnasLinea: string[] = ["codigo", 'nombre', 'medida', 'cantidad', 'devolucion', 'costoUnitario', 'valorDescuento', 'porcentajeDescuento', 'impuesto', 'bodega', 'total'];
   dataSourceLinea = new MatTableDataSource<NotaCreditoCompraLinea>(this.notaCreditoCompra.notaCreditoCompraLineas);
   sesion: Sesion = null;
-  empresa: Empresa = null;
+  empresa: Empresa = new Empresa();
 
   constructor(private proveedorService: ProveedorService, private sesionService: SesionService, private datepipe: DatePipe,
     private router: Router, private notaCreditoCompraService: NotaCreditoCompraService, private facturaCompraService: FacturaCompraService) { }
@@ -98,6 +98,7 @@ export class NotaCreditoCompraComponent implements OnInit {
 
   ngOnInit() {
     this.sesion = validarSesion(this.sesionService, this.router);
+    this.empresa = this.sesion.empresa;
     this.consultar();
     this.consultarProveedores();
     this.consultarFacturasCompras();

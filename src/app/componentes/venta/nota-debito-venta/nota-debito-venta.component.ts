@@ -1,40 +1,42 @@
 import { Component, OnInit, ViewChild, HostListener, Renderer2, ElementRef } from '@angular/core';
+import { valores, mensajes, validarSesion, otras, tab_activo, exito, exito_swal, error, error_swal } from '../../../constantes';
+import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
+import { startWith, map, Observable } from 'rxjs';
+import { NgxSpinnerService } from 'ngx-spinner';
+import Swal from 'sweetalert2';
+
 import { DatePipe } from '@angular/common';
 import { DateAdapter, MAT_DATE_FORMATS } from '@angular/material/core';
 import { AppDateAdapter, APP_DATE_FORMATS } from '../../../modelos/format-date-picker';
-import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
-import { MatTableDataSource } from '@angular/material/table';
-import { MatPaginator } from '@angular/material/paginator';
-import { Router } from '@angular/router';
-import { Observable } from 'rxjs';
-import Swal from 'sweetalert2';
-import { startWith, map } from 'rxjs/operators';
+
 import { SesionService } from '../../../servicios/usuario/sesion.service';
 import { Sesion } from '../../../modelos/usuario/sesion';
-import { valores, mensajes, validarSesion, otras, tab_activo, exito, exito_swal, error, error_swal } from '../../../constantes';
-import { NotaDebitoVenta } from 'src/app/modelos/venta/nota-debito-venta';
-import { ClienteService } from 'src/app/servicios/cliente/cliente.service';
-import { Factura } from 'src/app/modelos/venta/factura';
-import { Cliente } from 'src/app/modelos/cliente/cliente';
-import { NotaDebitoVentaLinea } from 'src/app/modelos/venta/nota-debito-venta-linea';
-import { FacturaService } from 'src/app/servicios/venta/factura.service';
-import { NotaDebitoVentaService } from 'src/app/servicios/venta/nota-debito-venta.service';
-import { Producto } from 'src/app/modelos/inventario/producto';
-import { Kardex } from 'src/app/modelos/inventario/kardex';
-import { Impuesto } from 'src/app/modelos/inventario/impuesto';
-import { ImpuestoService } from 'src/app/servicios/inventario/impuesto.service';
-import { Bodega } from 'src/app/modelos/inventario/bodega';
-import { BodegaService } from 'src/app/servicios/inventario/bodega.service';
-import { ProductoService } from 'src/app/servicios/inventario/producto.service';
-import { CategoriaProducto } from 'src/app/modelos/inventario/categoria-producto';
-import { CategoriaProductoService } from 'src/app/servicios/inventario/categoria-producto.service';
-import { KardexService } from 'src/app/servicios/inventario/kardex.service';
-import { FacturaLinea } from 'src/app/modelos/venta/factura-linea';
-import { NotaDebitoElectronicaService } from 'src/app/servicios/venta/nota-debito-eletronica.service';
+import { Empresa } from '../../../modelos/usuario/empresa';
+import { Cliente } from '../../../modelos/cliente/cliente';
+import { ClienteService } from '../../../servicios/cliente/cliente.service';
+import { Factura } from '../../../modelos/venta/factura';
+import { FacturaService } from '../../../servicios/venta/factura.service';
+import { FacturaLinea } from '../../../modelos/venta/factura-linea';
+import { NotaDebitoVenta } from '../../../modelos/venta/nota-debito-venta';
+import { NotaDebitoVentaService } from '../../../servicios/venta/nota-debito-venta.service';
+import { NotaDebitoVentaLinea } from '../../../modelos/venta/nota-debito-venta-linea';
+import { NotaDebitoElectronicaService } from '../../../servicios/venta/nota-debito-eletronica.service';
+import { Producto } from '../../../modelos/inventario/producto';
+import { ProductoService } from '../../../servicios/inventario/producto.service';
+import { Kardex } from '../../../modelos/inventario/kardex';
+import { KardexService } from '../../../servicios/inventario/kardex.service';
+import { Impuesto } from '../../../modelos/inventario/impuesto';
+import { ImpuestoService } from '../../../servicios/inventario/impuesto.service';
+import { Bodega } from '../../../modelos/inventario/bodega';
+import { BodegaService } from '../../../servicios/inventario/bodega.service';
+import { CategoriaProducto } from '../../../modelos/inventario/categoria-producto';
+import { CategoriaProductoService } from '../../../servicios/inventario/categoria-producto.service';
+
 import { MatStepper } from '@angular/material/stepper';
+import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
-import { NgxSpinnerService } from 'ngx-spinner';
-import { Empresa } from 'src/app/modelos/usuario/empresa';
+import { MatTableDataSource } from '@angular/material/table';
 
 @Component({
   selector: 'app-nota-debito-venta',

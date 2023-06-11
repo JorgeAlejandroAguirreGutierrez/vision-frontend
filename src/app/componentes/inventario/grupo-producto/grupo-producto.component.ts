@@ -4,11 +4,13 @@ import { UntypedFormControl } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { startWith, map } from 'rxjs/operators';
 import { valores, mensajes, validarSesion, exito, exito_swal, error, error_swal } from '../../../constantes';
+import { Router } from '@angular/router';
 import Swal from 'sweetalert2';
 
-import { Router } from '@angular/router';
+
 import { Sesion } from '../../../modelos/usuario/sesion';
 import { SesionService } from '../../../servicios/usuario/sesion.service';
+import { Empresa } from '../../../modelos/usuario/empresa';
 import { GrupoProductoService } from '../../../servicios/inventario/grupo-producto.service';
 import { GrupoProducto } from '../../../modelos/inventario/grupo-producto';
 import { CuentaContable } from '../../../modelos/contabilidad/cuenta-contable';
@@ -19,8 +21,6 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { CategoriaProducto } from 'src/app/modelos/inventario/categoria-producto';
 import { CategoriaProductoService } from 'src/app/servicios/inventario/categoria-producto.service';
-import { Empresa } from 'src/app/modelos/usuario/empresa';
-
 
 @Component({
   selector: 'app-grupo-producto',
@@ -39,7 +39,7 @@ export class GrupoProductoComponent implements OnInit {
   verInputSeccion: boolean = false;
 
   sesion: Sesion = null;
-  empresa: Empresa = null;
+  empresa: Empresa = new Empresa();
   grupoProducto = new GrupoProducto();
   gruposProductos: GrupoProducto[];
   categoriasProductos: CategoriaProducto[];
@@ -96,7 +96,7 @@ export class GrupoProductoComponent implements OnInit {
 
   ngOnInit() {
     this.sesion = validarSesion(this.sesionService, this.router);
-    this.empresa = this.sesion.usuario.estacion.establecimiento.empresa;
+    this.empresa = this.sesion.empresa;
     this.consultar();
     this.consultarGrupos();
     this.consultarCategoriasProductos();
