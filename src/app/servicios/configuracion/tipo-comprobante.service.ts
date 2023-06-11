@@ -41,7 +41,7 @@ export class TipoComprobanteService {
   }
 
   consultarPorElectronica(): Observable<Respuesta> {
-    return this.http.get<Respuesta>(environment.host + urn.ruta + urn.tipoComprobante + urn.consultarElectronica, options).pipe(
+    return this.http.get<Respuesta>(environment.host + urn.ruta + urn.tipoComprobante + urn.consultarPorElectronica, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);

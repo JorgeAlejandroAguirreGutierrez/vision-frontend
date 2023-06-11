@@ -75,67 +75,67 @@ export class MenuComponent implements OnInit {
   }
 
   obtenerPermiso(){ //Si quiero que aparezcan solo los módulos que tienen opciones
-    this.sesion.usuario.perfil.permisos.forEach(elemento => {
+    this.sesion.usuario.perfil.permisos.forEach(permiso => {
       // FINANCIERO
-      if (elemento.menuOpcion.modulo == modulos.modulo_clientes){ //  && elemento.menuOpcion.menu == valores.si
+      if (permiso.menuOpcion.modulo == modulos.modulo_clientes){ //  && permiso.menuOpcion.menu == valores.si
         this.permiso_clientes = true;
       }
-      if (elemento.menuOpcion.modulo == modulos.modulo_compras){
+      if (permiso.menuOpcion.modulo == modulos.modulo_compras){
         this.permiso_compras = true;
       }
-      if (elemento.menuOpcion.modulo == modulos.modulo_ventas){
+      if (permiso.menuOpcion.modulo == modulos.modulo_ventas){
         this.permiso_ventas = true;
       }
-      if (elemento.menuOpcion.modulo == modulos.modulo_inventarios){
+      if (permiso.menuOpcion.modulo == modulos.modulo_inventarios){
         this.permiso_inventarios = true;
       }
-      if (elemento.menuOpcion.modulo == modulos.modulo_caja_bancos){
+      if (permiso.menuOpcion.modulo == modulos.modulo_caja_bancos){
         this.permiso_caja_bancos = true;
       }
-      if (elemento.menuOpcion.modulo == modulos.modulo_cuentas_cobrar){
+      if (permiso.menuOpcion.modulo == modulos.modulo_cuentas_cobrar){
         this.permiso_cuentasxcobrar = true;
       }
-      if (elemento.menuOpcion.modulo == modulos.modulo_cuentas_pagar){
+      if (permiso.menuOpcion.modulo == modulos.modulo_cuentas_pagar){
         this.permiso_cuentasxpagar = true;
       }
-      if (elemento.menuOpcion.modulo == modulos.modulo_activos_fijos){
+      if (permiso.menuOpcion.modulo == modulos.modulo_activos_fijos){
         this.permiso_activos_fijos = true;
       }
-      if (elemento.menuOpcion.modulo == modulos.modulo_produccion){
+      if (permiso.menuOpcion.modulo == modulos.modulo_produccion){
         this.permiso_produccion = true;
       }
-      if (elemento.menuOpcion.modulo == modulos.modulo_contabilidad){
+      if (permiso.menuOpcion.modulo == modulos.modulo_contabilidad){
         this.permiso_contabilidad = true;
       }
-      if (elemento.menuOpcion.modulo == modulos.modulo_talento_humano){
+      if (permiso.menuOpcion.modulo == modulos.modulo_talento_humano){
         this.permiso_talento_humano = true;
       }
-      if (elemento.menuOpcion.modulo == modulos.modulo_financiero){
+      if (permiso.menuOpcion.modulo == modulos.modulo_financiero){
         this.permiso_financiero = true;
       }
-      if (elemento.menuOpcion.modulo == modulos.modulo_importacion){
+      if (permiso.menuOpcion.modulo == modulos.modulo_importacion){
         this.permiso_importacion = true;
       }
-      if (elemento.menuOpcion.modulo == modulos.modulo_reportes){
+      if (permiso.menuOpcion.modulo == modulos.modulo_reportes){
         this.permiso_reportes = true;
       }
       // ADMINISTRACIÓN
-      if (elemento.menuOpcion.modulo == modulos.modulo_accesos){
+      if (permiso.menuOpcion.modulo == modulos.modulo_accesos){
         this.permiso_accesos = true;
       }
-      if (elemento.menuOpcion.modulo == modulos.modulo_configuracion){
+      if (permiso.menuOpcion.modulo == modulos.modulo_configuracion){
         this.permiso_configuraciones = true;
       }
-      if (elemento.menuOpcion.modulo == modulos.modulo_indicadores){
+      if (permiso.menuOpcion.modulo == modulos.modulo_indicadores){
         this.permiso_estadisticas = true;
       }
-      if (elemento.menuOpcion.modulo == modulos.modulo_control){
+      if (permiso.menuOpcion.modulo == modulos.modulo_control){
         this.permiso_control = true;
       }
-      if (elemento.menuOpcion.modulo == modulos.modulo_auditoria){
+      if (permiso.menuOpcion.modulo == modulos.modulo_auditoria){
         this.permiso_auditorias = true;
       }
-      if (elemento.menuOpcion.modulo == modulos.modulo_tutoriales){
+      if (permiso.menuOpcion.modulo == modulos.modulo_tutoriales){
         this.permiso_tutoriales = true;
       }
     });

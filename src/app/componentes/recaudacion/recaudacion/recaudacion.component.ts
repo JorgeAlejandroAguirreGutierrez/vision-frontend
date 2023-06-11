@@ -354,11 +354,11 @@ export class RecaudacionComponent implements OnInit, OnChanges {
     this.factura.totalTarjetasDebitos = this.calcularTotalTD();
     this.factura.totalRecaudacion = Number(this.factura.efectivo) + this.factura.totalCheques + this.factura.totalDepositos +
       this.factura.totalTransferencias + this.factura.totalTarjetasCreditos + this.factura.totalTarjetasDebitos;
-    if (this.factura.totalRecaudacion > this.factura.totalConDescuento){
-      this.factura.cambio = Number((this.factura.totalRecaudacion - this.factura.totalConDescuento).toFixed(2));
+    if (this.factura.totalRecaudacion > this.factura.valorTotal){
+      this.factura.cambio = Number((this.factura.totalRecaudacion - this.factura.valorTotal).toFixed(2));
       this.factura.porPagar = valores.cero;
     } else {
-      this.factura.porPagar = Number((this.factura.totalConDescuento - this.factura.totalRecaudacion).toFixed(2));
+      this.factura.porPagar = Number((this.factura.valorTotal - this.factura.totalRecaudacion).toFixed(2));
     }
     this.factura.credito.saldo = this.factura.porPagar;
   }
@@ -855,7 +855,7 @@ export class RecaudacionComponent implements OnInit, OnChanges {
   }
 
   validarTarjetaCredito(): boolean{
-    if (this.factura.totalRecaudacion + Number(this.tarjetaCredito.valor) > this.factura.totalConDescuento) {
+    if (this.factura.totalRecaudacion + Number(this.tarjetaCredito.valor) > this.factura.valorTotal) {
       Swal.fire(error, mensajes.error_agregar_recaudacion, error_swal);
       return false;
     }
@@ -885,7 +885,7 @@ export class RecaudacionComponent implements OnInit, OnChanges {
   }
 
   validarTarjetaDebito(): boolean{
-    if (this.factura.totalRecaudacion + Number(this.tarjetaDebito.valor) > this.factura.totalConDescuento) {
+    if (this.factura.totalRecaudacion + Number(this.tarjetaDebito.valor) > this.factura.valorTotal) {
       Swal.fire(error, mensajes.error_agregar_recaudacion, error_swal);
       return false;
     }

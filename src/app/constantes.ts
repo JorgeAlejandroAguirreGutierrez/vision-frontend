@@ -150,7 +150,7 @@ export const urn =
     notaDebitoEletronica: "/notaDebitoEletronica",
     notaCreditoEletronica: "/notaCreditoEletronica",
     guiaRemisionEletronica: "/guiaRemisionEletronica",
-    consultarElectronica: "/consultarElectronica",
+    consultarPorElectronica: "/consultarPorElectronica",
     banco: "/banco",
     cuentaPropia: "/cuentaPropia",
     consultarPorBanco: "/consultarPorBanco",

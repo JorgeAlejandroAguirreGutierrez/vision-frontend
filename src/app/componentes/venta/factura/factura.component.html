@@ -550,7 +550,7 @@
                                         <div class="col-5">
                                             <mat-form-field appearance="standard">
                                                 <input matInput type="text "
-                                                    [value]="formateaNumero(factura.subtotalBase12ConDescuento)"
+                                                    [value]="formateaNumero(factura.subtotalGrabadoConDescuento)"
                                                     class="form-control-sm " disabled>
                                             </mat-form-field>
                                         </div>
@@ -560,7 +560,7 @@
                                         <div class="col-5">
                                             <mat-form-field appearance="standard">
                                                 <input matInput type="text "
-                                                    [value]="formateaNumero(factura.subtotalBase0ConDescuento)"
+                                                    [value]="formateaNumero(factura.subtotalNoGrabadoConDescuento)"
                                                     class="form-control-sm " disabled>
                                             </mat-form-field>
                                         </div>
@@ -569,7 +569,7 @@
                                         </div>
                                         <div class="col-5">
                                             <mat-form-field appearance="standard">
-                                                <input matInput type="text " [value]="formateaNumero(factura.ivaConDescuento)"
+                                                <input matInput type="text " [value]="formateaNumero(factura.importeIvaTotal)"
                                                     class="form-control-sm " disabled>
                                             </mat-form-field>
                                         </div>
@@ -578,7 +578,7 @@
                                         </div>
                                         <div class="col-5">
                                             <mat-form-field appearance="standard">
-                                                <input matInput type="text" [value]="formateaNumero(factura.totalConDescuento)"
+                                                <input matInput type="text" [value]="formateaNumero(factura.valorTotal)"
                                                     class="form-control-sm" disabled>
                                             </mat-form-field>
                                         </div>

@@ -143,12 +143,20 @@ export class EstacionComponent implements OnInit {
     this.estacionService.consultar().subscribe({
       next: res => {
         this.estaciones = res.resultado as Estacion[];
-        this.dataSource = new MatTableDataSource(this.estaciones);
-        this.dataSource.paginator = this.paginator;
-        this.dataSource.sort = this.sort;
+        this.llenarTablaEstacion(this.estaciones);
       },
       error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     });
+  }
+
+  llenarTablaEstacion(estaciones: Estacion[]){
+    this.dataSource = new MatTableDataSource(estaciones);
+    this.dataSource.filterPredicate = (data: Estacion, filter: string): boolean =>
+    data.codigo.includes(filter) || data.establecimiento.empresa.nombreComercial.includes(filter) || data.establecimiento.descripcion.includes(filter) ||
+    data.descripcion.includes(filter) || data.puntoVenta.includes(filter) || data.codigoSRI.includes(filter) ||
+    data.dispositivo.includes(filter) || data.ip.includes(filter) || data.estado.includes(filter);
+    this.dataSource.paginator = this.paginator;
+    this.dataSource.sort = this.sort;
   }
 
   construir(){
@@ -186,7 +194,8 @@ export class EstacionComponent implements OnInit {
   }
 
   consultarEstablecimientos() {
-    this.establecimientoService.consultarPorEmpresa(this.estacion.establecimiento.empresa.id).subscribe({
+    console.log(this.estacion.establecimiento.empresa.id);
+    this.establecimientoService.consultarPorEmpresaYEstado(this.estacion.establecimiento.empresa.id, valores.activo).subscribe({
       next: res => {
         this.establecimientos = res.resultado as Establecimiento[];
       },
@@ -209,4 +218,12 @@ export class EstacionComponent implements OnInit {
     return a && b && a.id == b.id;
   }
 
+  rellenarNumeroPuntoVenta() {
+    this.estacion.codigoSRI = this.pad(this.estacion.codigoSRI, 3);
+  }
+
+  pad(numero: string, size: number): string {
+    while (numero.length < size) numero = "0" + numero;
+    return numero;
+  }
 }

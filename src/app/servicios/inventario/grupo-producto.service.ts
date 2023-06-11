@@ -57,8 +57,10 @@ export class GrupoProductoService {
       }));
   }
 
-  consultarGrupos(): Observable<Respuesta> {
-    return this.http.get<Respuesta>(environment.host + urn.ruta + urn.grupoProducto+ urn.consultarGrupos, options).pipe(
+  consultarGrupos(empresaId: number, estado: string): Observable<Respuesta> {
+    let params = new HttpParams().set("empresaId", empresaId)
+                                .set("estado", estado)
+    return this.http.get<Respuesta>(environment.host + urn.ruta + urn.grupoProducto+ urn.consultarGrupos, {params: params, headers: options.headers}).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);
@@ -66,8 +68,10 @@ export class GrupoProductoService {
     );
   }
 
-  async consultarGruposAsync(): Promise<Respuesta> {
-    return await lastValueFrom(this.http.get<Respuesta>(environment.host + urn.ruta + urn.grupoProducto + urn.consultarGrupos, options).pipe(
+  async consultarGruposAsync(empresaId: number, estado: string): Promise<Respuesta> {
+    let params = new HttpParams().set("empresaId", empresaId)
+                                .set("estado", estado)
+    return await lastValueFrom(this.http.get<Respuesta>(environment.host + urn.ruta + urn.grupoProducto + urn.consultarGrupos, {params: params, headers: options.headers}).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);
@@ -75,8 +79,10 @@ export class GrupoProductoService {
     ));
   }
 
-  consultarSubgrupos(grupo: string): Observable<Respuesta> {
-    let params = new HttpParams().set("grupo", grupo)
+  consultarSubgrupos(empresaId: number, estado: string, grupo: string): Observable<Respuesta> {
+    let params = new HttpParams().set("empresaId", empresaId)
+                                 .set("estado", estado)
+                                 .set("grupo", grupo)
     return this.http.get<Respuesta>(environment.host + urn.ruta + urn.grupoProducto + urn.consultarSubgrupos, {params: params, headers: options.headers}).pipe(
       map(response => response as Respuesta), 
       catchError(err => {
@@ -85,8 +91,10 @@ export class GrupoProductoService {
     );
   }
 
-  async consultarSubgruposAsync(grupo: string): Promise<Respuesta> {
-    let params = new HttpParams().set("grupo", grupo)
+  async consultarSubgruposAsync(empresaId: number, estado: string, grupo: string): Promise<Respuesta> {
+    let params = new HttpParams().set("empresaId", empresaId)
+                                .set("estado", estado)
+                                .set("grupo", grupo)
     return await lastValueFrom(this.http.get<Respuesta>(environment.host + urn.ruta + urn.grupoProducto+ urn.consultarSubgrupos, {params: params, headers: options.headers}).pipe(
       map(response => response as Respuesta),
       catchError(err => {
@@ -95,8 +103,10 @@ export class GrupoProductoService {
     ));
   }
 
-  consultarSecciones(grupo: string, subgrupo:string): Observable<Respuesta> {
-    let params = new HttpParams().set("grupo", grupo)
+  consultarSecciones(empresaId: number, estado: string, grupo: string, subgrupo:string): Observable<Respuesta> {
+    let params = new HttpParams().set("empresaId", empresaId)
+                                 .set("estado", estado)
+                                 .set("grupo", grupo)
                                  .set("subgrupo", subgrupo)
     return this.http.get<Respuesta>(environment.host + urn.ruta + urn.grupoProducto + urn.consultarSecciones, {params: params, headers: options.headers}).pipe(
       map(response => response as Respuesta),
@@ -106,8 +116,10 @@ export class GrupoProductoService {
     );
   }
 
-  async consultarSeccionesAsync(grupo: string, subgrupo:string): Promise<Respuesta> {
-    let params = new HttpParams().set("grupo", grupo)
+  async consultarSeccionesAsync(empresaId: number, estado: string, grupo: string, subgrupo:string): Promise<Respuesta> {
+    let params = new HttpParams().set("empresaId", empresaId)
+                                 .set("estado", estado)
+                                 .set("grupo", grupo)
                                  .set("subgrupo", subgrupo)
     return await lastValueFrom(this.http.get<Respuesta>(environment.host + urn.ruta + urn.grupoProducto + urn.consultarSecciones, {params: params, headers: options.headers}).pipe(
       map(response => response as Respuesta),
@@ -117,8 +129,10 @@ export class GrupoProductoService {
     ));
   }
 
-  consultarLineas(grupo: string, subgrupo:string, seccion: string): Observable<Respuesta> {
-    let params = new HttpParams().set("grupo", grupo)
+  consultarLineas(empresaId: number, estado: string, grupo: string, subgrupo:string, seccion: string): Observable<Respuesta> {
+    let params = new HttpParams().set("empresaId", empresaId)
+                                 .set("estado", estado)
+                                 .set("grupo", grupo)
                                  .set("subgrupo", subgrupo)
                                  .set("seccion", seccion)
     return this.http.get<Respuesta>(environment.host + urn.ruta + urn.grupoProducto + urn.consultarLineas, {params: params, headers: options.headers}).pipe(
@@ -129,8 +143,10 @@ export class GrupoProductoService {
     );
   }
 
-  async consultarLineasAsync(grupo: string, subgrupo:string, seccion: string): Promise<Respuesta> {
-    let params = new HttpParams().set("grupo", grupo)
+  async consultarLineasAsync(empresaId: number, estado: string, grupo: string, subgrupo:string, seccion: string): Promise<Respuesta> {
+    let params = new HttpParams().set("empresaId", empresaId)
+                                 .set("estado", estado)
+                                 .set("grupo", grupo)
                                  .set("subgrupo", subgrupo)
                                  .set("seccion", seccion)
     return await lastValueFrom(this.http.get<Respuesta>(environment.host + urn.ruta + urn.grupoProducto + urn.consultarLineas, {params: params, headers: options.headers}).pipe(
@@ -141,8 +157,10 @@ export class GrupoProductoService {
     ));
   }
 
-  consultarSublineas(grupo: string, subgrupo:string, seccion: string, linea: string): Observable<Respuesta> {
-    let params = new HttpParams().set("grupo", grupo)
+  consultarSublineas(empresaId: number, estado: string, grupo: string, subgrupo:string, seccion: string, linea: string): Observable<Respuesta> {
+    let params = new HttpParams().set("empresaId", empresaId)
+                                 .set("estado", estado)
+                                 .set("grupo", grupo)
                                  .set("subgrupo", subgrupo)
                                  .set("seccion", seccion)
                                  .set("linea", linea)
@@ -154,8 +172,10 @@ export class GrupoProductoService {
     );
   }
 
-  async consultarSublineasAsync(grupo: string, subgrupo:string, seccion: string, linea: string): Promise<Respuesta> {
-    let params = new HttpParams().set("grupo", grupo)
+  async consultarSublineasAsync(empresaId: number, estado: string, grupo: string, subgrupo:string, seccion: string, linea: string): Promise<Respuesta> {
+    let params = new HttpParams().set("empresaId", empresaId)
+                                 .set("estado", estado)
+                                 .set("grupo", grupo)
                                  .set("subgrupo", subgrupo)
                                  .set("seccion", seccion)
                                  .set("linea", linea)
@@ -167,8 +187,10 @@ export class GrupoProductoService {
     ));
   }
 
-  consultarPresentaciones(grupo: string, subgrupo:string, seccion: string, linea: string, sublinea: string): Observable<Respuesta> {
-    let params = new HttpParams().set("grupo", grupo)
+  consultarPresentaciones(empresaId: number, estado: string, grupo: string, subgrupo:string, seccion: string, linea: string, sublinea: string): Observable<Respuesta> {
+    let params = new HttpParams().set("empresaId", empresaId)
+                                 .set("estado", estado)
+                                 .set("grupo", grupo)
                                  .set("subgrupo", subgrupo)
                                  .set("seccion", seccion)
                                  .set("linea", linea)
@@ -181,8 +203,10 @@ export class GrupoProductoService {
     );
   }
 
-  async consultarPresentacionesAsync(grupo: string, subgrupo:string, seccion: string, linea: string, sublinea: string): Promise<Respuesta> {
-    let params = new HttpParams().set("grupo", grupo)
+  async consultarPresentacionesAsync(empresaId: number, estado: string, grupo: string, subgrupo:string, seccion: string, linea: string, sublinea: string): Promise<Respuesta> {
+    let params = new HttpParams().set("empresaId", empresaId)
+                                 .set("estado", estado)
+                                 .set("grupo", grupo)
                                  .set("subgrupo", subgrupo)
                                  .set("seccion", seccion)
                                  .set("linea", linea)

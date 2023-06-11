@@ -81,7 +81,7 @@ export class FacturaCompraComponent implements OnInit {
   columnasFacturaCompra: any[] = [
     { nombreColumna: 'codigo', cabecera: 'Código', celda: (row: FacturaCompra) => `${row.codigo}`},
     { nombreColumna: 'fecha', cabecera: 'Fecha', celda: (row: FacturaCompra) => `${this.datepipe.transform(row.fecha, "dd-MM-yyyy")}`},
-    { nombreColumna: 'factura', cabecera: 'Factura', celda: (row: FacturaCompra) => `${row.numeroFactura}`},
+    { nombreColumna: 'factura', cabecera: 'Factura', celda: (row: FacturaCompra) => `${row.numeroComprobante}`},
     { nombreColumna: 'proveedor', cabecera: 'Proveedor', celda: (row: FacturaCompra) => `${row.proveedor.razonSocial}`},
     { nombreColumna: 'subtotal', cabecera: 'Subtotal', celda: (row: FacturaCompra) => `$ ${row.subtotalSinDescuento}`},
     { nombreColumna: 'descuento', cabecera: 'Descuento', celda: (row: FacturaCompra) => `$ ${row.valorTotal}`},
@@ -195,7 +195,7 @@ export class FacturaCompraComponent implements OnInit {
     if (!this.validarFormulario())
       return;
     this.spinnerService.show();   
-    this.facturaCompra.numeroFactura = this.facturaCompra.establecimiento + '-' + this.facturaCompra.puntoVenta + '-' + this.facturaCompra.secuencial;
+    this.facturaCompra.numeroComprobante = this.facturaCompra.establecimiento + '-' + this.facturaCompra.puntoVenta + '-' + this.facturaCompra.secuencial;
     this.facturaCompra.sesion = this.sesion;
     this.facturaCompra.empresa = this.empresa;
     this.facturaCompraService.crear(this.facturaCompra).subscribe({
@@ -272,7 +272,7 @@ export class FacturaCompraComponent implements OnInit {
   llenarTablaFacturaCompra(facturasCompras: FacturaCompra[]) {
     this.dataSourceFacturaCompra = new MatTableDataSource(facturasCompras);
     this.dataSourceFacturaCompra.filterPredicate = (data: FacturaCompra, filter: string): boolean =>
-      this.datepipe.transform(data.fecha, "dd-MM-yyyy").includes(filter) || data.numeroFactura.includes(filter) || 
+      this.datepipe.transform(data.fecha, "dd-MM-yyyy").includes(filter) || data.numeroComprobante.includes(filter) || 
       data.proveedor.razonSocial.includes(filter) || data.estado.includes(filter);
       this.dataSourceFacturaCompra.paginator = this.paginatorFacturaCompra;
     this.dataSourceFacturaCompra.sort = this.sort;
@@ -496,7 +496,7 @@ export class FacturaCompraComponent implements OnInit {
   }
 
   rellenarNumeroSecuencial() {
-    this.facturaCompra.secuencial = this.pad(this.facturaCompra.secuencial, 10);
+    this.facturaCompra.secuencial = this.pad(this.facturaCompra.secuencial, 9);
   }
 
   pad(numero: string, size: number): string {
