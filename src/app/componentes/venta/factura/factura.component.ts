@@ -516,6 +516,7 @@ export class FacturaComponent implements OnInit {
     if (!this.validarFormularioLinea())
       return;
     this.facturaLinea.precioUnitario = Number((this.precioVentaPublicoManual * 100 / (100 + this.facturaLinea.impuesto.porcentaje)).toFixed(4));
+    console.log(this.facturaLinea);
     this.facturaService.calcularLinea(this.facturaLinea).subscribe({
       next: res => {
         this.facturaLinea = res.resultado as FacturaLinea;
