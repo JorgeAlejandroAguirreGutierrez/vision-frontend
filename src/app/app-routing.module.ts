@@ -60,7 +60,7 @@ import { RecaudacionNotaDebitoComponent } from './componentes/recaudacion/recaud
 //Módulo de Entregas
 import { GuiaRemisionComponent } from './componentes/entrega/guia-remision/guia-remision.component';
 import { TransportistaComponent } from './componentes/entrega/transportista/transportista.component';
-import { VehiculoTransporteComponent } from './componentes/entrega/vehiculo-transporte/vehiculo-transporte.component';
+import { VehiculoComponent } from './componentes/entrega/vehiculo/vehiculo.component';
 
 //Módulo de Compras
 import { ProveedorComponent, DialogoMapaProveedorComponent } from './componentes/compra/proveedor/proveedor.component';
@@ -120,7 +120,7 @@ const routes: Routes = [
   { path: 'promocion', component: PromocionComponent },
   // Rutas para el modulo de entregas
   { path: 'guiaremision', component: GuiaRemisionComponent },
-  { path: 'cliente/vehiculotransporte', component: VehiculoTransporteComponent },
+  { path: 'cliente/vehiculotransporte', component: VehiculoComponent },
   // Rutas para el modulo de recaudación
   { path: 'recaudacion', component: RecaudacionComponent },
   // Rutas para el modulo de compras
@@ -186,7 +186,7 @@ export const RoutingComponents = [
   // Entregas
   GuiaRemisionComponent,
   TransportistaComponent,
-  VehiculoTransporteComponent,
+  VehiculoComponent,
   // Recaudación
   RecaudacionComponent,
   RecaudacionNotaDebitoComponent,

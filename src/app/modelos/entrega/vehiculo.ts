@@ -1,6 +1,7 @@
 import { valores } from "../../constantes";
 import { Transportista } from "./transportista";
-export class VehiculoTransporte {
+
+export class Vehiculo {
     id:number;
     codigo:string;
     modelo:string;

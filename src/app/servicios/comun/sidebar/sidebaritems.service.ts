@@ -31,7 +31,7 @@ import { MedidaComponent } from '../../../componentes/inventario/medida/medida.c
 //ENTREGA
 import { GuiaRemisionComponent } from '../../../componentes/entrega/guia-remision/guia-remision.component';
 import { TransportistaComponent } from '../../../componentes/entrega/transportista/transportista.component';
-import { VehiculoTransporteComponent } from '../../../componentes/entrega/vehiculo-transporte/vehiculo-transporte.component';
+import { VehiculoComponent } from '../../../componentes/entrega/vehiculo/vehiculo.component';
 //ACCESOS
 import { UsuarioComponent } from '../../../componentes/usuario/usuario/usuario.component';
 import { EmpresaComponent } from '../../../componentes/usuario/empresa/empresa.component';
@@ -103,7 +103,7 @@ export class SidebarItemsService {
       this.llenarOpciones(NotaDebitoVentaComponent, tabs.tab_nota_debito_venta, items.item_nota_debito_venta, icos.ico_nota_debito_venta);
       this.llenarOpciones(GuiaRemisionComponent, tabs.tab_guia_remision, items.item_guia_remision, icos.ico_guia_remision);
       this.llenarOpciones(TransportistaComponent, tabs.tab_transportista, items.item_transportista, icos.ico_transportista);
-      this.llenarOpciones(VehiculoTransporteComponent, tabs.tab_vehiculo_transporte, items.item_vehiculo_transporte, icos.ico_vehiculo_transporte);
+      this.llenarOpciones(VehiculoComponent, tabs.tab_vehiculo_transporte, items.item_vehiculo_transporte, icos.ico_vehiculo_transporte);
     }
 
     if (tabNombre == modulos.modulo_inventarios) {

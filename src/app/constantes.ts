@@ -60,7 +60,6 @@ export const urn =
     consultarPorEstado: "/consultarPorEstado",
     consultarPorEmpresa: "/consultarPorEmpresa",
     consultarPorEmpresaYEstado: "/consultarPorEmpresaYEstado",
-    consultarPorTransportistaYEstado: "/consultarPorTransportistaYEstado",
     consultarPorEstadoDistintoBancoAbreviatura: "/consultarPorEstadoDistintoBancoAbreviatura",
     consultarGrupos: "/consultarGrupos",
     consultarSubgrupos: "/consultarSubgrupos",
@@ -164,7 +163,7 @@ export const urn =
     amortizacion: "/amortizacion",
     guiaRemision: "/guiaRemision",
     transportista: "/transportista",
-    vehiculoTransporte: "/vehiculoTransporte"
+    vehiculo: "/vehiculo"
 }
 
 export const valores = {

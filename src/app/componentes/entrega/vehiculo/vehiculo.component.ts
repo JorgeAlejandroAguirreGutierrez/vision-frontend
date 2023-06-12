@@ -1,13 +1,11 @@
 import { Component, HostListener, OnInit, ViewChild } from '@angular/core';
-import { valores, validarSesion, tab_activo, exito, exito_swal, error, error_swal } from '../../../constantes';
+import { valores, validarSesion, exito, exito_swal, error, error_swal } from '../../../constantes';
 import { Router } from '@angular/router';
 import Swal from 'sweetalert2';
 
-import { Sesion } from '../../../modelos/usuario/sesion';
-import { SesionService } from '../../../servicios/usuario/sesion.service';
+import { Sesion } from 'src/app/modelos/usuario/sesion';
+import { SesionService } from 'src/app/servicios/usuario/sesion.service';
 import { Empresa } from '../../../modelos/usuario/empresa';
-import { Transportista } from '../../../modelos/entrega/transportista';
-import { TransportistaService } from '../../../servicios/entrega/transportista.service';
 import { Vehiculo } from '../../../modelos/entrega/vehiculo';
 import { VehiculoService } from '../../../servicios/entrega/vehiculo.service';
 
@@ -16,45 +14,46 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 
 @Component({
-  selector: 'app-transportista',
-  templateUrl: './transportista.component.html',
-  styleUrls: ['./transportista.component.scss']
+  selector: 'app-vehiculo',
+  templateUrl: './vehiculo.component.html',
+  styleUrls: ['./vehiculo.component.scss']
 })
-export class TransportistaComponent implements OnInit {
-
-  activo: string = valores.activo;
-  inactivo: string = valores.inactivo;
+export class VehiculoComponent implements OnInit {
 
   abrirPanelNuevo = true;
   abrirPanelAdmin = true;
 
   sesion: Sesion = null;
   empresa: Empresa = new Empresa();
-  transportista = new Transportista();
-  transportistas: Transportista[];
+  vehiculo = new Vehiculo();
   vehiculos: Vehiculo[];
 
   columnas: any[] = [
-    { nombreColumna: 'codigo', cabecera: 'Código', celda: (row: Transportista) => `${row.codigo}` },
-    { nombreColumna: 'nombre', cabecera: 'Nombre', celda: (row: Transportista) => `${row.nombre}` },
-    { nombreColumna: 'identificacion', cabecera: 'Identificación', celda: (row: Transportista) => `${row.identificacion}` },
-    { nombreColumna: 'estado', cabecera: 'Estado', celda: (row: Transportista) => `${row.estado}` }
+    { nombreColumna: 'codigo', cabecera: 'Código', celda: (row: Vehiculo) => `${row.codigo}` },
+    { nombreColumna: 'modelo', cabecera: 'Modelo', celda: (row: Vehiculo) => `${row.modelo}` },
+    { nombreColumna: 'placa', cabecera: 'Placa', celda: (row: Vehiculo) => `${row.placa}` },
+    { nombreColumna: 'marca', cabecera: 'Marca', celda: (row: Vehiculo) => `${row.marca}` },
+    { nombreColumna: 'cilindraje', cabecera: 'Cilindraje', celda: (row: Vehiculo) => `${row.cilindraje}` },
+    { nombreColumna: 'clase', cabecera: 'Clase', celda: (row: Vehiculo) => `${row.clase}` },
+    { nombreColumna: 'color', cabecera: 'Color', celda: (row: Vehiculo) => `${row.color}` },
+    { nombreColumna: 'fabricacion', cabecera: 'Fabricacion', celda: (row: Vehiculo) => `${row.fabricacion}` },
+    { nombreColumna: 'numero', cabecera: 'Numero', celda: (row: Vehiculo) => `${row.numero}` },
+    { nombreColumna: 'estado', cabecera: 'Estado', celda: (row: Vehiculo) => `${row.estado}` }
   ];
   cabecera: string[] = this.columnas.map(titulo => titulo.nombreColumna);
-  dataSource: MatTableDataSource<Transportista>;
-  clickedRows = new Set<Transportista>();
+  dataSource: MatTableDataSource<Vehiculo>;
+  clickedRows = new Set<Vehiculo>();
   
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
-  constructor(private transportistaService: TransportistaService, private vehiculoService: VehiculoService,
+  constructor(private vehiculoService: VehiculoService,
     private sesionService: SesionService,private router: Router) { }
 
   ngOnInit() {
     this.sesion = validarSesion(this.sesionService, this.router);
     this.empresa = this.sesion.empresa;
     this.consultar();
-    this.consultarVehiculos();
   }
   
   @HostListener('window:keypress', ['$event'])
@@ -68,18 +67,17 @@ export class TransportistaComponent implements OnInit {
   nuevo(event) {
     if (event!=null)
       event.preventDefault();
-    this.transportista = new Transportista();
+    this.vehiculo = new Vehiculo();
     this.clickedRows.clear();
   }
 
   crear(event) {
     if (event!=null)
       event.preventDefault();
-    this.transportista.empresa = this.empresa;
-    this.transportistaService.crear(this.transportista).subscribe(
+    this.vehiculoService.crear(this.vehiculo).subscribe(
       res => {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
-        this.transportista=res.resultado as Transportista;
+        this.vehiculo=res.resultado as Vehiculo;
         this.consultar();
         this.nuevo(null);
       },
@@ -90,10 +88,10 @@ export class TransportistaComponent implements OnInit {
   actualizar(event) {
     if (event!=null)
       event.preventDefault();
-    this.transportistaService.actualizar(this.transportista).subscribe(
+    this.vehiculoService.actualizar(this.vehiculo).subscribe(
       res => {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
-        this.transportista=res.resultado as Transportista;
+        this.vehiculo=res.resultado as Vehiculo;
         this.consultar();
         this.nuevo(null);
       },
@@ -104,7 +102,7 @@ export class TransportistaComponent implements OnInit {
   activar(event) {
     if (event != null)
       event.preventDefault();
-    this.transportistaService.activar(this.transportista).subscribe({
+    this.vehiculoService.activar(this.vehiculo).subscribe({
       next: res => {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
         this.consultar();
@@ -117,7 +115,7 @@ export class TransportistaComponent implements OnInit {
   inactivar(event) {
     if (event != null)
       event.preventDefault();
-    this.transportistaService.inactivar(this.transportista).subscribe({
+    this.vehiculoService.inactivar(this.vehiculo).subscribe({
       next: res => {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
         this.consultar();
@@ -128,25 +126,29 @@ export class TransportistaComponent implements OnInit {
   }
   
   consultar() {
-    this.transportistaService.consultarPorEmpresa(this.empresa.id).subscribe(
-      res => {
-        this.transportistas = res.resultado as Transportista[]
-        this.dataSource = new MatTableDataSource(this.transportistas);
-        this.dataSource.paginator = this.paginator;
-        this.dataSource.sort = this.sort;
+    this.vehiculoService.consultarPorEmpresa(this.empresa.id).subscribe({
+      next: res => {
+        this.vehiculos = res.resultado as Vehiculo[]
+        this.llenarTablaVehiculoTransporte(this.vehiculos);
       },
-      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
-    );
+      error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+    });
   }
 
-  seleccion(transportista: Transportista) {
-    if (!this.clickedRows.has(transportista)){
+  llenarTablaVehiculoTransporte(vehiculos: Vehiculo[]){
+    this.dataSource = new MatTableDataSource(vehiculos);
+    this.dataSource.paginator = this.paginator;
+    this.dataSource.sort = this.sort;
+  }
+
+  seleccion(vehiculo: Vehiculo) {
+    if (!this.clickedRows.has(vehiculo)){
       this.clickedRows.clear();
-      this.clickedRows.add(transportista);
-      this.transportista = { ... transportista};
+      this.clickedRows.add(vehiculo);
+      this.vehiculo = vehiculo;
     } else {
       this.clickedRows.clear();
-      this.transportista = new Transportista();
+      this.vehiculo = new Vehiculo();
     }
   }
 
@@ -158,16 +160,4 @@ export class TransportistaComponent implements OnInit {
     }
   }
 
-  consultarVehiculos(){
-    this.vehiculoService.consultarPorEstado(valores.activo).subscribe({
-      next: res => {
-        this.vehiculos = res.resultado as Vehiculo[]
-      },
-      error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
-    });
-  }
-
-  compareFn(a: any, b: any) {
-    return a && b && a.id == b.id;
-  }
 }

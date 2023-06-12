@@ -5,22 +5,22 @@
                 <mat-icon>note_add</mat-icon>
             </a>
         </li>
-        <li class="nav-item" *ngIf="vehiculoTransporte.id==0">
+        <li class="nav-item" *ngIf="vehiculo.id==0">
             <a class="nav-link" title="Guardar" role="button" (click)="crear($event)">
                 <mat-icon>save</mat-icon>
             </a>
         </li>
-        <li class="nav-item" *ngIf="vehiculoTransporte.id!=0">
+        <li class="nav-item" *ngIf="vehiculo.id!=0">
             <a class="nav-link" title="Actualizar" role="button" (click)="actualizar($event)">
                 <mat-icon>update</mat-icon>
             </a>
         </li>
-        <li class="nav-item" *ngIf="vehiculoTransporte.id!=0">
+        <li class="nav-item" *ngIf="vehiculo.id!=0">
             <a class="nav-link" title="Activar" role="button" (click)="activar($event)">
                 <mat-icon>check</mat-icon>
             </a>
         </li>
-        <li class="nav-item" *ngIf="vehiculoTransporte.id!=0">
+        <li class="nav-item" *ngIf="vehiculo.id!=0">
             <a class="nav-link" title="Inactivar" role="button" (click)="inactivar($event)">
                 <mat-icon>delete</mat-icon>
             </a>
@@ -45,35 +45,35 @@
                 <div class="col-2">
                     <mat-form-field appearance="standard">
                         <mat-label>Código</mat-label>
-                        <input matInput type="text" [(ngModel)]="vehiculoTransporte.codigo" class="form-control-sm"
+                        <input matInput type="text" [(ngModel)]="vehiculo.codigo" class="form-control-sm"
                             [disabled]="true">
                     </mat-form-field>
                 </div>
                 <div class="col-2">
                     <mat-form-field appearance="standard">
                         <mat-label>Placa</mat-label>
-                        <input matInput type="text" [(ngModel)]="vehiculoTransporte.placa"
+                        <input matInput type="text" [(ngModel)]="vehiculo.placa"
                             oninput="this.value = this.value.toUpperCase()" class="form-control-sm">
                     </mat-form-field>
                 </div>
                 <div class="col-2">
                     <mat-form-field appearance="standard">
                         <mat-label>Marca</mat-label>
-                        <input matInput type="text" [(ngModel)]="vehiculoTransporte.marca"
+                        <input matInput type="text" [(ngModel)]="vehiculo.marca"
                             oninput="this.value = this.value.toUpperCase()" class="form-control-sm">
                     </mat-form-field>
                 </div>
                 <div class="col-3">
                     <mat-form-field appearance="standard">
                         <mat-label>Modelo</mat-label>
-                        <input matInput type="text" [(ngModel)]="vehiculoTransporte.modelo"
+                        <input matInput type="text" [(ngModel)]="vehiculo.modelo"
                             oninput="this.value = this.value.toUpperCase()" class="form-control-sm">
                     </mat-form-field>
                 </div>
                 <div class="col-3">
                     <mat-form-field appearance="standard">
                         <mat-label>Cilindraje</mat-label>
-                        <input matInput type="text" [(ngModel)]="vehiculoTransporte.cilindraje"
+                        <input matInput type="text" [(ngModel)]="vehiculo.cilindraje"
                             oninput="this.value = this.value.toUpperCase()" class="form-control-sm">
                     </mat-form-field>
                 </div>
@@ -82,27 +82,27 @@
                 <div class="col-3">
                     <mat-form-field appearance="standard">
                         <mat-label>Clase</mat-label>
-                        <input matInput type="text" [(ngModel)]="vehiculoTransporte.clase" oninput="this.value = this.value.toUpperCase()" class="form-control-sm">
+                        <input matInput type="text" [(ngModel)]="vehiculo.clase" oninput="this.value = this.value.toUpperCase()" class="form-control-sm">
                     </mat-form-field>
                 </div>
                 <div class="col-3">
                     <mat-form-field appearance="standard">
                         <mat-label>Color</mat-label>
-                        <input matInput type="text" [(ngModel)]="vehiculoTransporte.color"
+                        <input matInput type="text" [(ngModel)]="vehiculo.color"
                             oninput="this.value = this.value.toUpperCase()" class="form-control-sm">
                     </mat-form-field>
                 </div>
                 <div class="col-3">
                     <mat-form-field appearance="standard">
                         <mat-label>Fabricacion</mat-label>
-                        <input matInput type="text" [(ngModel)]="vehiculoTransporte.fabricacion"
+                        <input matInput type="text" [(ngModel)]="vehiculo.fabricacion"
                             oninput="this.value = this.value.toUpperCase()" class="form-control-sm">
                     </mat-form-field>
                 </div>
                 <div class="col-3">
                     <mat-form-field appearance="standard">
                         <mat-label>Numero</mat-label>
-                        <input matInput type="text" [(ngModel)]="vehiculoTransporte.numero"
+                        <input matInput type="text" [(ngModel)]="vehiculo.numero"
                             oninput="this.value = this.value.toUpperCase()" class="form-control-sm">
                     </mat-form-field>
                 </div>
@@ -111,7 +111,7 @@
     </mat-accordion>
     <mat-accordion class="headers-align">
         <mat-expansion-panel (opened)="abrirPanelAdmin = true"
-            (closed)="abrirPanelAdmin = false">
+            (closed)="abrirPanelAdmin = false" [expanded]="abrirPanelAdmin">
             <mat-expansion-panel-header>
                 <mat-panel-title>
                     <i><u>GESTIONAR VEHICULOS DE TRANSPORTE</u></i>

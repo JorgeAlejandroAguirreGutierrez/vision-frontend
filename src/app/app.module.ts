@@ -35,7 +35,7 @@ import { RetencionService } from './servicios/cliente/retencion-cliente.service'
 import { TransportistaService } from './servicios/entrega/transportista.service';
 import { UbicacionService } from './servicios/configuracion/ubicacion.service';
 import { TipoContribuyenteService } from './servicios/cliente/tipo-contribuyente.service';
-import { VehiculoTransporteService } from './servicios/entrega/vehiculo-transporte.service';
+import { VehiculoService } from './servicios/entrega/vehiculo.service';
 import { EmpresaService } from './servicios/usuario/empresa.service';
 import { EstablecimientoService } from './servicios/usuario/establecimiento.service';
 import { EstacionService } from './servicios/usuario/estacion.service';
@@ -77,7 +77,7 @@ import { TipoRetencionService } from './servicios/configuracion/tipo-retencion.s
         AppRoutingModule
     ],
     providers: [PlazoCreditoService, ImpuestoService, RetencionService, ModeloService,
-        TransportistaService, UbicacionService, TipoContribuyenteService, VehiculoTransporteService,
+        TransportistaService, UbicacionService, TipoContribuyenteService, VehiculoService,
         EmpresaService, EstablecimientoService, EstacionService, UsuarioService, DatePipe,
         ClienteService, FacturaService, FacturaCompraService, TipoRetencionService, TabService, GrupoProductoService,
         NotaCreditoCompraService, NotaCreditoVentaService, NotaDebitoCompraService, NotaDebitoVentaService,
