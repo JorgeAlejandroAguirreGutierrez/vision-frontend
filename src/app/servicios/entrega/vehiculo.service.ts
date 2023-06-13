@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { VehiculoTransporte } from '../../modelos/entrega/vehiculo-transporte';
+import { Vehiculo } from '../../modelos/entrega/vehiculo';
 import { Respuesta } from '../../respuesta';
 import { HttpClient } from '@angular/common/http';
 import { map, catchError } from 'rxjs/operators';
@@ -11,12 +11,12 @@ import { environment } from '../../../environments/environment';
 @Injectable({
   providedIn: 'root'
 })
-export class VehiculoTransporteService {
+export class VehiculoService {
 
   constructor(private http: HttpClient, private router: Router) { }
 
-  crear(vehiculoTransporte: VehiculoTransporte): Observable<Respuesta> {
-    return this.http.post(environment.host + urn.ruta + urn.vehiculoTransporte, vehiculoTransporte, options).pipe(
+  crear(vehiculo: Vehiculo): Observable<Respuesta> {
+    return this.http.post(environment.host + urn.ruta + urn.vehiculo, vehiculo, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);
@@ -25,16 +25,24 @@ export class VehiculoTransporteService {
   }
 
   consultar(): Observable<Respuesta> {
-    return this.http.get<Respuesta>(environment.host + urn.ruta + urn.vehiculoTransporte, options).pipe(
+    return this.http.get<Respuesta>(environment.host + urn.ruta + urn.vehiculo, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);
       })
     );
+  }
+
+  consultarPorEmpresa(empresaId: number): Observable<Respuesta> {
+    return this.http.get(environment.host + urn.ruta + urn.vehiculo + urn.consultarPorEmpresa + urn.slash + empresaId, options).pipe(
+      map(response => response as Respuesta),
+      catchError(err => {
+        return throwError(()=>err);
+      }));
   }
 
   consultarPorEstado(estado: string): Observable<Respuesta> {
-    return this.http.get<Respuesta>(environment.host + urn.ruta + urn.vehiculoTransporte + urn.consultarPorEstado + urn.slash + estado, options).pipe(
+    return this.http.get<Respuesta>(environment.host + urn.ruta + urn.vehiculo + urn.consultarPorEstado + urn.slash + estado, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);
@@ -42,8 +50,8 @@ export class VehiculoTransporteService {
     );
   }
 
-  consultarPorTransportistaYEstado(transportistaId: number, estado: string): Observable<Respuesta> {
-    return this.http.get<Respuesta>(environment.host + urn.ruta + urn.vehiculoTransporte + urn.consultarPorTransportistaYEstado + urn.slash + transportistaId + urn.slash + estado, options).pipe(
+  consultarPorEmpresaYEstado(empresaId: number, estado: string): Observable<Respuesta> {
+    return this.http.get<Respuesta>(environment.host + urn.ruta + urn.vehiculo + urn.consultarPorEmpresaYEstado + urn.slash + empresaId + urn.slash + estado, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);
@@ -52,15 +60,15 @@ export class VehiculoTransporteService {
   }
 
   obtener(vehiculoTransporteId: number): Observable<Respuesta> {
-    return this.http.get(environment.host + urn.ruta + urn.vehiculoTransporte + urn.slash + vehiculoTransporteId, options).pipe(
+    return this.http.get(environment.host + urn.ruta + urn.vehiculo + urn.slash + vehiculoTransporteId, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);
       }));
   }
 
-  actualizar(vehiculoTransporte: VehiculoTransporte): Observable<Respuesta> {
-    return this.http.put(environment.host + urn.ruta + urn.vehiculoTransporte, vehiculoTransporte, options).pipe(
+  actualizar(vehiculo: Vehiculo): Observable<Respuesta> {
+    return this.http.put(environment.host + urn.ruta + urn.vehiculo, vehiculo, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);
@@ -68,8 +76,8 @@ export class VehiculoTransporteService {
     );
   }
 
-  activar(vehiculoTransporte: VehiculoTransporte): Observable<Respuesta> {
-    return this.http.patch(environment.host + urn.ruta + urn.vehiculoTransporte + urn.activar, vehiculoTransporte, options).pipe(
+  activar(vehiculo: Vehiculo): Observable<Respuesta> {
+    return this.http.patch(environment.host + urn.ruta + urn.vehiculo + urn.activar, vehiculo, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);
@@ -77,8 +85,8 @@ export class VehiculoTransporteService {
     );
   }
 
-  inactivar(vehiculoTransporte: VehiculoTransporte): Observable<Respuesta> {
-    return this.http.patch(environment.host + urn.ruta + urn.vehiculoTransporte + urn.inactivar, vehiculoTransporte, options).pipe(
+  inactivar(vehiculo: Vehiculo): Observable<Respuesta> {
+    return this.http.patch(environment.host + urn.ruta + urn.vehiculo + urn.inactivar, vehiculo, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);
