@@ -57,7 +57,7 @@
                 <div class="col-2">
                     <mat-form-field appearance="standard">
                         <mat-label>Identificación</mat-label>
-                        <input matInput type="text" [(ngModel)]="proveedor.identificacion"
+                        <input matInput type="text" [(ngModel)]="proveedor.identificacion" [disabled]="proveedor.id!=0"
                             oninput="this.value = this.value.toUpperCase()" class="form-control-sm"
                             (change)="validarIdentificacion()">
                     </mat-form-field>

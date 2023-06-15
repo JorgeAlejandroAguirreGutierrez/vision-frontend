@@ -46,6 +46,7 @@ export const urn =
     identificacion: "/identificacion",
     razonSocial: "/razonSocial",
     consultarPorCliente: "/consultarPorCliente",
+    validarIdentificacionPorEmpresa: "/validarIdentificacionPorEmpresa",
 
     //Compras
     facturaCompra: "/facturaCompra",

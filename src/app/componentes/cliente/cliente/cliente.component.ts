@@ -658,7 +658,7 @@ export class ClienteComponent implements OnInit {
 
   //VALIDACIONES DE CAMPOS
   validarIdentificacion() {
-    this.clienteService.validarIdentificacion(this.cliente.identificacion).subscribe({
+    this.clienteService.validarIdentificacionPorEmpresa(this.empresa.id, this.cliente.identificacion).subscribe({
       next: (res) => {
         this.cliente = res.resultado as Cliente;
         if (this.cliente.ubicacion.id != 0){
