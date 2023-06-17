@@ -56,6 +56,7 @@ export class ClienteComponent implements OnInit {
 
   activo: string = valores.activo;
   inactivo: string = valores.inactivo;
+  suspendido: string = valores.suspendido;
   si: string = valores.si;
   no: string = valores.no;
   etiquetaCasa: string = valores.etiquetaCasa;

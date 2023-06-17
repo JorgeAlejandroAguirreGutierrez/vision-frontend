@@ -178,6 +178,7 @@ export const valores = {
     espacio: " ",
     activo: "ACTIVO",
     inactivo: "INACTIVO",
+    suspendido: "SUSPENDIDO",
     abierto: "ABIERTO",
     cerrado: "CERRADO",
     pendiente: "PENDIENTE",

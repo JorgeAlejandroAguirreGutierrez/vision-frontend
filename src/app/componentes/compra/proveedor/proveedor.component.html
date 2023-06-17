@@ -162,11 +162,8 @@
                 <div class="col-2">
                     <mat-form-field appearance="standard">
                         <mat-label>Estado</mat-label>
-                        <mat-select [(ngModel)]="proveedor.estado" [disabled]="true"
-                            class="form-control-sm">
-                            <mat-option [value]="activo">{{activo}}</mat-option>
-                            <mat-option [value]="inactivo">{{inactivo}}</mat-option>
-                        </mat-select>
+                        <input matInput type="text" [(ngModel)]="proveedor.estado" disabled class="form-control-sm"
+                            [ngClass]="proveedor.estado!='ACTIVO'?'texto-rojo':'texto-verde'">
                     </mat-form-field>
                 </div>
             </div>
