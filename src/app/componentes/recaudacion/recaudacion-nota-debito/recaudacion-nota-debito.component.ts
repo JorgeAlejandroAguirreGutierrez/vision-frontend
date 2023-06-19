@@ -1,13 +1,18 @@
 import { Component, OnInit, Input, ViewChild} from '@angular/core';
+import { valores, mensajes, otras, validarSesion, exito, exito_swal, error, error_swal } from '../../../constantes';
 import { DatePipe } from '@angular/common';
 import { UntypedFormControl } from '@angular/forms';
-import { MatSort } from '@angular/material/sort';
-import { MatTableDataSource } from '@angular/material/table';
-import { MatPaginator } from '@angular/material/paginator';
 import { DateAdapter, MAT_DATE_FORMATS } from '@angular/material/core';
+import { startWith, map } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import Swal from 'sweetalert2';
+
+import { Sesion } from '../../../modelos/usuario/sesion';
+import { SesionService } from '../../../servicios/usuario/sesion.service';
+import { Parametro } from '../../../modelos/configuracion/parametro';
+import { ParametroService } from '../../../servicios/configuracion/parametro.service';
+import { Empresa } from '../../../modelos/usuario/empresa';
 import { NotaDebitoVentaCheque } from '../../../modelos/recaudacion/nota-debito-venta-cheque';
 import { NotaDebitoVentaDeposito } from '../../../modelos/recaudacion/nota-debito-venta-deposito';
 import { NotaDebitoVentaTarjetaCredito } from '../../../modelos/recaudacion/nota-debito-venta-tarjeta-credito';
@@ -15,7 +20,7 @@ import { NotaDebitoVentaTarjetaDebito } from '../../../modelos/recaudacion/nota-
 import { NotaDebitoVentaTransferencia } from 'src/app/modelos/recaudacion/nota-debito-venta-transferencia';
 import { NotaDebitoVentaService } from '../../../servicios/venta/nota-debito-venta.service';
 import { Banco } from '../../../modelos/caja-banco/banco';
-import { startWith, map } from 'rxjs/operators';
+
 import { ClienteService } from '../../../servicios/cliente/cliente.service';
 import { BancoService } from '../../../servicios/caja-banco/banco.service';
 import { FormaPagoService } from '../../../servicios/cliente/forma-pago.service';
@@ -27,14 +32,15 @@ import { FranquiciaTarjetaService } from '../../../servicios/recaudacion/franqui
 import { AppDateAdapter, APP_DATE_FORMATS } from '../../../modelos/format-date-picker';
 import { OperadorTarjeta } from '../../../modelos/recaudacion/operador-tarjeta';
 import { OperadorTarjetaService } from '../../../servicios/recaudacion/operador-tarjeta.service';
-import { SesionService } from '../../../servicios/usuario/sesion.service';
-import { Sesion } from '../../../modelos/usuario/sesion';
-import { Parametro } from '../../../modelos/configuracion/parametro';
-import { ParametroService } from '../../../servicios/configuracion/parametro.service';
-import { valores, mensajes, otras, validarSesion, exito, exito_swal, error, error_swal } from '../../../constantes';
+
+
 import { MatStepper } from '@angular/material/stepper';
 import { NotaDebitoElectronicaService } from 'src/app/servicios/venta/nota-debito-eletronica.service';
 import { NotaDebitoVenta } from 'src/app/modelos/venta/nota-debito-venta';
+
+import { MatSort } from '@angular/material/sort';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatTableDataSource } from '@angular/material/table';
 
 @Component({
   selector: 'app-recaudacion-nota-debito',
@@ -83,12 +89,8 @@ export class RecaudacionNotaDebitoComponent implements OnInit {
   habilitarTitularTarjetaDebito: boolean = true;
   habilitarTitularTarjetaCredito: boolean = true;
 
-  constructor(private notaDebitoVentaService: NotaDebitoVentaService, private notaDebitoElectronicaService: NotaDebitoElectronicaService, 
-    private clienteService: ClienteService, private bancoService: BancoService, private sesionService: SesionService,
-    private cuentaPropiaService: CuentaPropiaService, private operadorTarjetaService: OperadorTarjetaService, private datePipe: DatePipe,
-    private franquiciaTarjetaService: FranquiciaTarjetaService, private formaPagoService: FormaPagoService,
-    private parametroService: ParametroService, private router: Router) { }
-
+  sesion: Sesion;
+  empresa: Empresa = new Empresa();
   notaDebitoVenta: NotaDebitoVenta = new NotaDebitoVenta();
   cheque: NotaDebitoVentaCheque = new NotaDebitoVentaCheque();
   deposito: NotaDebitoVentaDeposito = new NotaDebitoVentaDeposito();
@@ -118,8 +120,15 @@ export class RecaudacionNotaDebitoComponent implements OnInit {
   bancosTarjetasDebitos: Banco[] = [];
   seleccionBancoTarjetaDebito = new UntypedFormControl();
   filtroBancosTarjetasDebitos: Observable<Banco[]> = new Observable<Banco[]>();
+
   @ViewChild(MatSort, { static: true }) sort: MatSort;
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
+
+  constructor(private notaDebitoVentaService: NotaDebitoVentaService, private notaDebitoElectronicaService: NotaDebitoElectronicaService, 
+    private clienteService: ClienteService, private bancoService: BancoService, private sesionService: SesionService,
+    private cuentaPropiaService: CuentaPropiaService, private operadorTarjetaService: OperadorTarjetaService, private datePipe: DatePipe,
+    private franquiciaTarjetaService: FranquiciaTarjetaService, private formaPagoService: FormaPagoService,
+    private parametroService: ParametroService, private router: Router) { }
 
   habilitarCheques: boolean = false;
   columnasCheques: string[] = ['id', 'fecha', 'tipo', 'numero', 'banco', 'valor', 'acciones'];
@@ -143,11 +152,10 @@ export class RecaudacionNotaDebitoComponent implements OnInit {
   habilitarTarjetasDebitos: boolean = false;
   columnasTarjetasDebito: string[] = ['id', 'franquicia', 'banco', 'identificacion', 'nombre', 'titular', 'operador', 'lote', 'valor', 'acciones'];
   dataTarjetasDebitos = new MatTableDataSource<NotaDebitoVentaTarjetaDebito>(this.notaDebitoVenta.tarjetasDebitos);
-
-  sesion: Sesion;
   
   ngOnInit() {
-    this.sesion=validarSesion(this.sesionService, this.router);
+    this.sesion = validarSesion(this.sesionService, this.router);
+    this.empresa = this.sesion.empresa; 
     this.consultarCuentasPropias();
     this.consultarFranquiciasTarjetas();
     this.consultarOperadoresTarjetasCreditos();
@@ -598,7 +606,7 @@ export class RecaudacionNotaDebitoComponent implements OnInit {
   }
 
   validarIdentificacionTarjetaCredito(){
-    this.clienteService.validarIdentificacion(this.tarjetaCredito.identificacion).subscribe(
+    this.clienteService.validarIdentificacionPorEmpresa(this.empresa.id, this.tarjetaCredito.identificacion).subscribe(
       res => {
         if (res.resultado!=null){
           Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
@@ -659,7 +667,7 @@ export class RecaudacionNotaDebitoComponent implements OnInit {
   }
 
   validarIdentificacionTarjetaDebito(){
-    this.clienteService.validarIdentificacion(this.tarjetaDebito.identificacion).subscribe(
+    this.clienteService.validarIdentificacionPorEmpresa(this.empresa.id, this.tarjetaDebito.identificacion).subscribe(
       res => {
         if (res.resultado!=null){
           Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });

@@ -46,6 +46,7 @@ export const urn =
     identificacion: "/identificacion",
     razonSocial: "/razonSocial",
     consultarPorCliente: "/consultarPorCliente",
+    validarIdentificacionPorEmpresa: "/validarIdentificacionPorEmpresa",
 
     //Compras
     facturaCompra: "/facturaCompra",
@@ -177,6 +178,7 @@ export const valores = {
     espacio: " ",
     activo: "ACTIVO",
     inactivo: "INACTIVO",
+    suspendido: "SUSPENDIDO",
     abierto: "ABIERTO",
     cerrado: "CERRADO",
     pendiente: "PENDIENTE",

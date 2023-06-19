@@ -14,6 +14,7 @@ import { Sesion } from '../../../modelos/usuario/sesion';
 import { SesionService } from '../../../servicios/usuario/sesion.service';
 import { Parametro } from '../../../modelos/configuracion/parametro';
 import { ParametroService } from '../../../servicios/configuracion/parametro.service';
+import { Empresa } from '../../../modelos/usuario/empresa';
 import { ClienteService } from '../../../servicios/cliente/cliente.service';
 import { FormaPago } from '../../../modelos/cliente/forma-pago';
 import { FormaPagoService } from '../../../servicios/cliente/forma-pago.service';
@@ -96,7 +97,7 @@ export class RecaudacionComponent implements OnInit, OnChanges {
   deshabilitarTitularTarjetaDebito: boolean = true;
 
   sesion: Sesion;
-
+  empresa: Empresa = new Empresa();
   cheque: Cheque = new Cheque();
   deposito: Deposito = new Deposito();
   transferencia: Transferencia = new Transferencia();
@@ -208,6 +209,7 @@ export class RecaudacionComponent implements OnInit, OnChanges {
 
   ngOnInit() {
     this.sesion = validarSesion(this.sesionService, this.router);
+    this.empresa = this.sesion.empresa;
     this.consultarPeriodicidades();
     this.consultarBancos();
     this.consultarBancosPropios();
@@ -915,7 +917,7 @@ export class RecaudacionComponent implements OnInit, OnChanges {
   }
 
   validarIdentificacion(identificacion: string) {
-    this.clienteService.validarIdentificacion(identificacion).subscribe({
+    this.clienteService.validarIdentificacionPorEmpresa(this.empresa.id, identificacion).subscribe({
       next: res => {
         if (res.resultado != null) {
           //Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });

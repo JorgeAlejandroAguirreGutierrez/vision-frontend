@@ -5,6 +5,7 @@ import Swal from 'sweetalert2';
 import { Router } from '@angular/router';
 import { Sesion } from '../../../modelos/usuario/sesion';
 import { SesionService } from '../../../servicios/usuario/sesion.service';
+import { Empresa } from '../../../modelos/usuario/empresa';
 import { BodegaService } from '../../../servicios/inventario/bodega.service';
 import { Bodega } from '../../../modelos/inventario/bodega';
 
@@ -12,7 +13,7 @@ import { ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { Empresa } from 'src/app/modelos/usuario/empresa';
+
 
 
 @Component({

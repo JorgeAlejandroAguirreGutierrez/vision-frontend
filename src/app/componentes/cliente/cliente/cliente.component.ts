@@ -56,6 +56,7 @@ export class ClienteComponent implements OnInit {
 
   activo: string = valores.activo;
   inactivo: string = valores.inactivo;
+  suspendido: string = valores.suspendido;
   si: string = valores.si;
   no: string = valores.no;
   etiquetaCasa: string = valores.etiquetaCasa;
@@ -658,7 +659,7 @@ export class ClienteComponent implements OnInit {
 
   //VALIDACIONES DE CAMPOS
   validarIdentificacion() {
-    this.clienteService.validarIdentificacion(this.cliente.identificacion).subscribe({
+    this.clienteService.validarIdentificacionPorEmpresa(this.empresa.id, this.cliente.identificacion).subscribe({
       next: (res) => {
         this.cliente = res.resultado as Cliente;
         if (this.cliente.ubicacion.id != 0){

@@ -417,10 +417,12 @@ export class ProveedorComponent implements OnInit {
 
   //VALIDACIONES DE CAMPOS
   validarIdentificacion() {
-    this.proveedorService.validarIdentificacion(this.proveedor.identificacion).subscribe({
+    this.proveedorService.validarIdentificacionPorEmpresa(this.empresa.id, this.proveedor.identificacion).subscribe({
       next: (res) => {
-        this.proveedor.tipoIdentificacion = res.resultado.tipoIdentificacion as TipoIdentificacion;
-        this.proveedor.tipoContribuyente = res.resultado.tipoContribuyente as TipoContribuyente;
+        this.proveedor = res.resultado as Proveedor;
+        if (this.proveedor.ubicacion.id != 0){
+          this.llenarUbicacion();
+        }
         this.validarDocumento();
         this.inicializarOpciones();
       },
@@ -478,10 +480,10 @@ export class ProveedorComponent implements OnInit {
       Swal.fire({ icon: error_swal, title: error, text: mensajes.error_falta_datos });
       return false;
     }
-    if (this.proveedor.referencia == valores.vacio) {
+    /*if (this.proveedor.referencia == valores.vacio) {
       Swal.fire({ icon: error_swal, title: error, text: mensajes.error_falta_datos });
       return false;
-    }
+    }*/
     if (this.provincia == valores.vacio || this.canton == valores.vacio || this.parroquia == valores.vacio) {
       Swal.fire({ icon: error_swal, title: error, text: mensajes.error_falta_datos });
       return false;

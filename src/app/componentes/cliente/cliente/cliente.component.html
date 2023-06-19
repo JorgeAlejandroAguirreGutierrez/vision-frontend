@@ -118,7 +118,7 @@
                         <input matInput type="text" disabled [(ngModel)]="cliente.codigo" class="form-control-sm">
                     </mat-form-field>
                 </div>
-                <div class="col-9">
+                <div class="col-8">
                     <mat-form-field appearance="standard">
                         <mat-label>Razón Social</mat-label>
                         <input matInput type="text" [(ngModel)]="cliente.razonSocial" [disabled]="deshabilitarCliente"
@@ -149,14 +149,17 @@
                         </mat-select>
                     </mat-form-field>
                 </div>
-                <div class="col-1">
+                <div class="col-2">
                     <mat-form-field appearance="standard">
                         <mat-label>Estado</mat-label>
-                        <mat-select [(ngModel)]="cliente.estado" [disabled]="true"
-                            class="form-control-sm">
-                            <mat-option [value]="activo">{{activo}}</mat-option>
+                        <input matInput type="text" [(ngModel)]="cliente.estado" disabled
+                            class="form-control-sm" [ngClass]="cliente.estado!='ACTIVO'?'texto-rojo':'texto-verde'">
+                        <!--mat-select [(ngModel)]="cliente.estado" [disabled]="false" [ngStyle]="{'color':cliente.estado=='SUSPENDIDO'?'#f00':'green', 'font-weight':'bold'}"
+                            class="form-control-sm" panelClass="{'color':'#f00'}">
+                            <mat-option [value]="activo" [ngStyle]="{'color':'#f00'}">{{activo}}</mat-option>
                             <mat-option [value]="inactivo">{{inactivo}}</mat-option>
-                        </mat-select>
+                            <mat-option [value]="suspendido" class="empty-select">{{suspendido}}</mat-option>
+                        </mat-select-->
                     </mat-form-field>
                 </div>
             </div>

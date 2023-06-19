@@ -465,6 +465,7 @@ export class FacturaCompraComponent implements OnInit {
         }
         this.kardex = res.resultado as Kardex;
         this.facturaCompraLinea.costoUnitario = this.kardex.costoPromedio;
+        this.calcularFacturaCompraLinea();
       },
       error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     });
