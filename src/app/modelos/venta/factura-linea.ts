@@ -10,11 +10,8 @@ export class FacturaLinea {
   posicion: number;
   comentario: string;
   entregado: string;
-  consignacion: string;
   cantidad: number;
   precioUnitario: number;
-  subsidio: number;
-  sinSubsidio: number;
   valorDescuentoLinea: number;
   porcentajeDescuentoLinea: number;
   valorPorcentajeDescuentoLinea: number;
@@ -22,21 +19,19 @@ export class FacturaLinea {
   porcentajeDescuentoTotalLinea: number;
   valorPorcentajeDescuentoTotalLinea: number;
   totalDescuentoLinea: number;
-  porcentajeIvaLinea: number;
   subtotalSinDescuentoLinea: number;
   ivaSinDescuentoLinea: number;
   subtotalConDescuentoLinea: number;
   ivaConDescuentoLinea: number;
   totalConDescuentoLinea: number;
-  factura: Factura;
-  //PRECIO SELECCIONADO
-  precio: Precio;
   //PRODUCTO SELECCIONADO
   producto: Producto;
   //IMPUESTO SELECCIONADO
   impuesto: Impuesto;
+  //PRECIO SELECCIONADO
+  precio: Precio;
   //BODEGA SELECCIONADO
-  bodega: Bodega;
+  bodega: Bodega;  
 
   constructor() {
     this.id = valores.cero;
@@ -45,8 +40,6 @@ export class FacturaLinea {
     this.comentario = valores.vacio;
     this.cantidad = valores.uno;
     this.precioUnitario = valores.cero;
-    this.subsidio = valores.cero;
-    this.sinSubsidio = valores.cero;
     this.valorDescuentoLinea = valores.cero;
     this.porcentajeDescuentoLinea = valores.cero;
     this.valorPorcentajeDescuentoLinea = valores.cero;
@@ -54,7 +47,6 @@ export class FacturaLinea {
     this.porcentajeDescuentoTotalLinea = valores.cero;
     this.valorPorcentajeDescuentoTotalLinea = valores.cero;
     this.totalDescuentoLinea = valores.cero;
-    this.porcentajeIvaLinea = valores.cero;
     this.subtotalSinDescuentoLinea = valores.cero;
     this.ivaSinDescuentoLinea = valores.cero;
     this.subtotalConDescuentoLinea = valores.cero;
