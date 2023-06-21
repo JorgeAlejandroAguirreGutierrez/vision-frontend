@@ -85,8 +85,8 @@
                 <div class="col-4">
                     <mat-form-field appearance="standard">
                         <mat-label>Grupo Proveedor</mat-label>
-                        <mat-select [(ngModel)]="proveedor.grupoProveedor.id" class="form-control-sm">
-                            <mat-option *ngFor="let grupoProveedor of gruposProveedores" [value]="grupoProveedor.id">
+                        <mat-select [(ngModel)]="proveedor.grupoProveedor" [compareWith]="compareFn" class="form-control-sm">
+                            <mat-option *ngFor="let grupoProveedor of gruposProveedores" [value]="grupoProveedor">
                                 {{grupoProveedor.descripcion}}
                             </mat-option>
                         </mat-select>
