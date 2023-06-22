@@ -124,8 +124,8 @@ export class FacturaComponent implements OnInit {
     { nombreColumna: 'descuento', cabecera: 'Desc. $', celda: (row: FacturaLinea) => `${row.valorDescuentoLinea}` },
     { nombreColumna: 'descuentoPorcentaje', cabecera: 'Desc. %', celda: (row: FacturaLinea) => `${row.porcentajeDescuentoLinea} %` },
     { nombreColumna: 'subtotal', cabecera: 'Subtotal', celda: (row: FacturaLinea) => `${row.subtotalConDescuentoLinea}` },
-    { nombreColumna: 'iva', cabecera: 'IVA', celda: (row: FacturaLinea) => `${row.ivaConDescuentoLinea}` },
-    { nombreColumna: 'total', cabecera: 'Total', celda: (row: FacturaLinea) => `${row.totalConDescuentoLinea}` },
+    { nombreColumna: 'iva', cabecera: 'IVA', celda: (row: FacturaLinea) => `${row.importeIvaLinea}` },
+    { nombreColumna: 'total', cabecera: 'Total', celda: (row: FacturaLinea) => `${row.totalLinea}` },
     { nombreColumna: 'entregado', cabecera: 'Entreg.', celda: (row: FacturaLinea) => `${row.entregado}` },
     { nombreColumna: 'acciones', cabecera: 'Acciones' }
   ];
@@ -209,6 +209,7 @@ export class FacturaComponent implements OnInit {
     this.bodegaService.consultarPorEmpresaYEstado(this.empresa.id, valores.activo).subscribe({
       next: res => {
         this.bodegas = res.resultado as Bodega[]
+        this.facturaLinea.bodega = this.bodegas[0];
       },
       error: err => {
         Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
@@ -477,7 +478,7 @@ export class FacturaComponent implements OnInit {
     this.dataSourceLinea = new MatTableDataSource(facturaLineas);
     this.dataSourceLinea.filterPredicate = (data: FacturaLinea, filter: string): boolean =>
       data.producto.nombre.includes(filter) || data.producto.medida.abreviatura.includes(filter) || String(data.cantidad).includes(filter) || 
-      String(data.precioUnitario).includes(filter) || String(data.totalConDescuentoLinea).includes(filter) || data.entregado.includes(filter);
+      String(data.precioUnitario).includes(filter) || String(data.subtotalConDescuentoLinea).includes(filter) || data.entregado.includes(filter);
     this.dataSourceLinea.paginator = this.paginatorLinea;
     this.dataSourceLinea.sort = this.sortLinea;
   }
@@ -543,6 +544,7 @@ export class FacturaComponent implements OnInit {
     if (this.facturaLinea.producto.id == valores.cero || this.factura.cliente.id == valores.cero) {
       return;
     }
+    this.inicializarOpciones(); // Error si no tiene bodega
     for (let precio of this.facturaLinea.producto.precios) {
       if (precio.segmento.id == this.factura.cliente.segmento.id) {
         this.facturaLinea.precio = precio; //Servira para la v2, cuando no se modifica el precio
@@ -550,7 +552,6 @@ export class FacturaComponent implements OnInit {
         this.calcularFacturaLinea();
       }
     }
-    this.inicializarOpciones(); // Error si no tiene bodega
     if (this.esBien){
       this.obtenerUltimoKardex();
     }
