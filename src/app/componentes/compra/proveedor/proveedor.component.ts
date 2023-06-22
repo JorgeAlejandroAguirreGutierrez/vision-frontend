@@ -463,7 +463,6 @@ export class ProveedorComponent implements OnInit {
       this.deshabilitarPlazoCredito = false;
     } else {
       this.deshabilitarPlazoCredito = true;
-      //this.cliente.formaPago.id = 0;
     }
   }
 
@@ -480,10 +479,6 @@ export class ProveedorComponent implements OnInit {
       Swal.fire({ icon: error_swal, title: error, text: mensajes.error_falta_datos });
       return false;
     }
-    /*if (this.proveedor.referencia == valores.vacio) {
-      Swal.fire({ icon: error_swal, title: error, text: mensajes.error_falta_datos });
-      return false;
-    }*/
     if (this.provincia == valores.vacio || this.canton == valores.vacio || this.parroquia == valores.vacio) {
       Swal.fire({ icon: error_swal, title: error, text: mensajes.error_falta_datos });
       return false;

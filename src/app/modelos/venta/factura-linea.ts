@@ -10,7 +10,6 @@ export class FacturaLinea {
   posicion: number;
   comentario: string;
   entregado: string;
-  consignacion: string;
   cantidad: number;
   precioUnitario: number;
   //subsidio: number;
