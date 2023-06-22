@@ -1,5 +1,6 @@
 import { valores } from "../../constantes";
 import { Empresa } from "../usuario/empresa";
+
 export class CalificacionCliente {
     id:number;
     codigo: string;

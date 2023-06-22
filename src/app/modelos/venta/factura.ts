@@ -23,13 +23,9 @@ export class Factura {
   subtotalSinDescuento: number;
   subtotalConDescuento: number;
   descuentoTotal: number;
-  subtotalGrabadoSinDescuento: number;
-  subtotalNoGrabadoSinDescuento: number;
   subtotalGrabadoConDescuento: number;
   subtotalNoGrabadoConDescuento: number;
-  importeIvaSinDescuento: number;
   importeIvaTotal: number;
-  valorTotalSinDescuento: number;
   valorTotal: number;
 
   //DESCUENTO_GENERAL
@@ -67,6 +63,7 @@ export class Factura {
   
   constructor() {
     this.id = valores.cero;
+    this.codigo = valores.vacio;
     this.serie = valores.vacio;
     this.secuencial = valores.vacio;
     this.codigoNumerico = valores.vacio;
@@ -82,13 +79,9 @@ export class Factura {
     this.subtotalSinDescuento = valores.cero;
     this.subtotalConDescuento = valores.cero;
     this.descuentoTotal = valores.cero;
-    this.subtotalGrabadoSinDescuento = valores.cero;
-    this.subtotalNoGrabadoSinDescuento = valores.cero;
     this.subtotalGrabadoConDescuento = valores.cero;
     this.subtotalNoGrabadoConDescuento = valores.cero;
-    this.importeIvaSinDescuento = valores.cero;
     this.importeIvaTotal = valores.cero;
-    this.valorTotalSinDescuento = valores.cero;
     this.valorTotal = valores.cero;
 
     this.valorDescuentoSubtotal = valores.cero;

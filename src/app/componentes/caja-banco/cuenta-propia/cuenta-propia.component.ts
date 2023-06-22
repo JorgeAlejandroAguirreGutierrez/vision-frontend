@@ -8,6 +8,7 @@ import Swal from 'sweetalert2';
 
 import { Sesion } from 'src/app/modelos/usuario/sesion';
 import { SesionService } from 'src/app/servicios/usuario/sesion.service';
+import { Empresa } from '../../../modelos/usuario/empresa';
 import { Banco } from '../../../modelos/caja-banco/banco';
 import { BancoService } from '../../../servicios/caja-banco/banco.service';
 import { CuentaPropia } from '../../../modelos/caja-banco/cuenta-propia';
@@ -33,6 +34,7 @@ export class CuentaPropiaComponent implements OnInit {
   abrirPanelAdmin : boolean = true;
 
   sesion: Sesion=null;
+  empresa: Empresa = new Empresa();
   banco: Banco = new Banco();
   cuentaPropia: CuentaPropia = new CuentaPropia();
 
@@ -71,7 +73,8 @@ export class CuentaPropiaComponent implements OnInit {
     private cuentaPropiaService: CuentaPropiaService, private bancoService: BancoService) { }
 
   ngOnInit() {
-    this.sesion=validarSesion(this.sesionService, this.router);
+    this.sesion = validarSesion(this.sesionService, this.router);
+    this.empresa = this.sesion.empresa;
     this.consultar();
     this.consultarBancos();
     this.inicializarFiltros();
@@ -99,6 +102,7 @@ export class CuentaPropiaComponent implements OnInit {
       event.preventDefault();
     if (!this.validarFormulario())
       return;
+    this.cuentaPropia.empresa = this.empresa
     this.cuentaPropiaService.crear(this.cuentaPropia).subscribe({
       next: res => {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
@@ -151,7 +155,7 @@ export class CuentaPropiaComponent implements OnInit {
   }
 
   consultar() {
-    this.cuentaPropiaService.consultar().subscribe({
+    this.cuentaPropiaService.consultarPorEmpresa(this.empresa.id).subscribe({
       next: res => {
         this.cuentasPropias = res.resultado as CuentaPropia[]
         this.llenarTabla(this.cuentasPropias);
