@@ -12,8 +12,6 @@ export class FacturaLinea {
   entregado: string;
   cantidad: number;
   precioUnitario: number;
-  //subsidio: number;
-  //sinSubsidio: number;
   valorDescuentoLinea: number;
   porcentajeDescuentoLinea: number;
   valorPorcentajeDescuentoLinea: number;
@@ -38,8 +36,6 @@ export class FacturaLinea {
     this.comentario = valores.vacio;
     this.cantidad = valores.uno;
     this.precioUnitario = valores.cero;
-    //this.subsidio = valores.cero;
-    //this.sinSubsidio = valores.cero;
     this.valorDescuentoLinea = valores.cero;
     this.porcentajeDescuentoLinea = valores.cero;
     this.valorPorcentajeDescuentoLinea = valores.cero;
