@@ -423,6 +423,19 @@ export const tabs = {
     // Financiero
     // Importaciones
     // Reportes
+    tab_reporte_clientes: "Clientes",
+    tab_reporte_compras: "Compras",
+    tab_reporte_ventas: "Ventas",
+    tab_reporte_inventarios: "Invetarios",
+    tab_reporte_caja_bancos: "Caja bancos",
+    tab_reporte_cuentas_cobrar: "Cuentas x cobrar",
+    tab_reporte_cuentas_pagar: "Cuentas x pagar",
+    tab_reporte_activos_fijos: "Activos fijos",
+    tab_reporte_produccion: "Producción",
+    tab_reporte_contabilidad: "Contabilidad",
+    tab_reporte_talento_humano: "Talento humano",
+    tab_reporte_financiero: "Financiero",
+    tab_reporte_importacion: "Importación",
 
     // Accesos
     tab_usuario: "Usuario",
@@ -502,6 +515,21 @@ export const items = {
     //CONTABILIDAD
     item_cuenta_contable: "Cuentas Contables",
     item_movimiento_contable: "Movimientos Contables",
+
+    //REPORTES
+    item_reporte_clientes: "Cliente",
+    item_reporte_compras: "Compras",
+    item_reporte_ventas: "Ventas",
+    item_reporte_inventarios: "Invetarios",
+    item_reporte_caja_bancos: "Caja Bancos",
+    item_reporte_cuentas_cobrar: "Cuentas Por Cobrar",
+    item_reporte_cuentas_pagar: "Cuentas Por Pagar",
+    item_reporte_activos_fijos: "Activos Fijos",
+    item_reporte_produccion: "Producción",
+    item_reporte_contabilidad: "Contabilidad",
+    item_reporte_talento_humano: "Talento Humano",
+    item_reporte_financiero: "Financiero",
+    item_reporte_importacion: "Importación",
 
     //ACCESOS
     item_usuario: "Usuarios",
@@ -596,6 +624,21 @@ export const icos = {
     // Contabilidad
     ico_cuenta_contable: 'fa fa-sort-amount-asc',
     ico_movimiento_contable: 'fa fa-retweet',
+
+    //REPORTES
+    ico_reporte_clientes: "fa fa-address-book",
+    ico_reporte_compras: "fa fa-truck",
+    ico_reporte_ventas: "fa fa-clipboard",
+    ico_reporte_inventarios: "fa fa-shopping-basket",
+    ico_reporte_caja_bancos: "fa fa-university",
+    ico_reporte_cuentas_cobrar: "fa fa-file-text-o",
+    ico_reporte_cuentas_pagar: "fa fa-file-text-o",
+    ico_reporte_activos_fijos: "fa fa-file-text-o",
+    ico_reporte_produccion: "fa fa-file-text-o",
+    ico_reporte_contabilidad: "fa fa-sort-amount-asc",
+    ico_reporte_talento_humano: "fa fa-file-text-o",
+    ico_reporte_financiero: "fa fa-file-text-o",
+    ico_reporte_importacion: "fa fa-file-text-o",
 
     // Accesos
     ico_usuario: 'fa fa-user',

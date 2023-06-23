@@ -25,6 +25,31 @@ Clase de main.component que hace que todo el contenido de la aplicación sea fle
   }
 }
 
+// NavBar Reportes
+.matToolbar{
+  margin: 0;
+  padding: 0;
+  background: #3d4465!important;
+  color: whitesmoke!important;
+  height: 35px!important;
+}
+
+.contenidoReportes{
+  font-size: 250%;
+  text-align: center;
+  font-weight: bold;
+}
+
+.modulo{
+  font-size: 100%;
+}
+
+
+.nav-spacer {
+  flex: 1 1 auto;
+}
+
+//Otro
 .wrapper.default-theme {
 
   background: $bg-color;
