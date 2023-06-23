@@ -210,7 +210,7 @@ export class NotaDebitoVentaComponent implements OnInit {
     let fecha = new Date(this.notaDebitoVenta.fecha);
     this.notaDebitoVenta.fecha = fecha;
     this.controlIdentificacionCliente.patchValue(this.notaDebitoVenta.factura.cliente);
-    this.controlRazonSocialCliente.patchValue(this.notaDebitoVenta.factura);
+    this.controlRazonSocialCliente.patchValue(this.notaDebitoVenta.factura.cliente);
     this.dataSourceFacturaLinea = new MatTableDataSource<FacturaLinea>(this.notaDebitoVenta.factura.facturaLineas);
     this.dataSourceFacturaLinea.paginator = this.paginatorFacturaLinea;
     this.dataSourceLinea = new MatTableDataSource<NotaDebitoVentaLinea>(this.notaDebitoVenta.notaDebitoVentaLineas);
