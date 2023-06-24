@@ -1,20 +1,16 @@
-a{
+.mat-toolbar>div>a{
     text-decoration: none;
     font-size: 80%;
     white-space: normal;
     font-weight: bold;
-    :hover{
-        color: whitesmoke;
-    }
 }
 
 button{
     font-size: 100%;
     min-width: min-content;
-
 }
 
 .mat-button:hover{
-    color: orange;
+    color: bisque;
     cursor: pointer;
 }

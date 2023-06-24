@@ -1,1 +1,66 @@
-<p>reporte-venta works!</p>
+<nav class="navbar-light nav-fijo">
+    <ul class="navbar-nav">
+        <li class="nav-item" *ngIf="reporteCliente==0">
+            <a class="nav-link" title="Guardar" role="button" (click)="crear($event)">
+                <mat-icon>save</mat-icon>
+            </a>
+        </li>
+        <li class="nav-item" *ngIf="reporteCliente!=0">
+            <a class="nav-link" title="Actualizar" role="button" (click)="actualizar($event)">
+                <mat-icon>update</mat-icon>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" title="Nuevo" role="button" (click)="nuevo($event)">
+                <mat-icon>file_copy</mat-icon>
+            </a>
+        </li>
+    </ul>
+</nav>
+<div class="contenedor">
+    <div style="height: 100vh;">
+        <mat-toolbar class="matToolbar example-toolbar">
+            <button mat-icon-button (click)="snav.toggle()">
+                <mat-icon>menu</mat-icon>
+            </button>
+            <h1 class="example-app-name">Reportes</h1>
+        </mat-toolbar>
+
+        <mat-sidenav-container class="example-sidenav-container" [style.marginTop.px]="mobileQuery.matches ? 56 : 0">
+            <mat-sidenav #snav [mode]="mobileQuery.matches ? 'over' : 'over'" [fixedInViewport]="mobileQuery.matches"
+                fixedTopGap="56">
+                <mat-nav-list>
+                    <a mat-list-item (click)="verReporte('DASHBOARD')">
+                        <mat-icon class="azul">home</mat-icon>
+                        <span class="azul m-l-5">Dashboard</span>
+                    </a>
+                    <a mat-list-item (click)="verReporte('FORMULARIO')">
+                        <mat-icon class="azul">videocam</mat-icon>
+                        <span class="azul m-l-5">Formularios</span>
+                    </a>
+                    <a mat-list-item (click)="verReporte('TABLAS')">
+                        <mat-icon class="azul">exit_to_app</mat-icon>
+                        <span class="azul m-l-5">Tablas</span>
+                    </a>
+                    <a mat-list-item (click)="verReporte('TOPOGRAFIA')">
+                        <mat-icon class="azul">menu</mat-icon>
+                        <span class="azul m-l-5">Topografia</span>
+                    </a>
+                    <a mat-list-item (click)="verReporte('CONTACTO')">
+                        <mat-icon class="azul">people_outline</mat-icon>
+                        <span class="azul m-l-5">Contacto</span>
+                    </a>
+                </mat-nav-list>
+            </mat-sidenav>
+
+            <mat-sidenav-content>
+                <app-dashboard *ngIf="verReporteDashboard"></app-dashboard>
+                <app-forms *ngIf="verReporteFormulario"></app-forms>
+                <app-tables *ngIf="verReporteTablas"></app-tables>
+                <app-typography *ngIf="verReporteTopografia"></app-typography>
+                <app-forms *ngIf="verReporteContacto"></app-forms>
+            </mat-sidenav-content>
+        </mat-sidenav-container>
+    </div>
+
+</div>
