@@ -28,6 +28,27 @@ import { ImpuestoComponent } from './componentes/configuracion/impuesto/impuesto
 import { FormaPagoComponent } from './componentes/cliente/forma-pago/forma-pago.component';
 import { SecuencialComponent } from './componentes/configuracion/secuencial/secuencial.component';
 
+//Módulo de Compras
+import { ProveedorComponent, DialogoMapaProveedorComponent } from './componentes/compra/proveedor/proveedor.component';
+import { FacturaCompraComponent } from './componentes/compra/factura-compra/factura-compra.component';
+import { GrupoProveedorComponent, DialogoGrupoProveedorCuentaContableComponent } from './componentes/compra/grupo-proveedor/grupo-proveedor.component';
+import { NotaCreditoCompraComponent } from './componentes/compra/nota-credito-compra/nota-credito-compra.component';
+import { NotaDebitoCompraComponent } from './componentes/compra/nota-debito-compra/nota-debito-compra.component';
+
+// Módulo de Ventas
+import { FacturaComponent } from './componentes/venta/factura/factura.component';
+import { NotaCreditoVentaComponent } from './componentes/venta/nota-credito-venta/nota-credito-venta.component';
+import { NotaDebitoVentaComponent } from './componentes/venta/nota-debito-venta/nota-debito-venta.component';
+
+//Módulo de Recaudaciones
+import { RecaudacionComponent } from './componentes/recaudacion/recaudacion/recaudacion.component';
+import { RecaudacionNotaDebitoComponent } from './componentes/recaudacion/recaudacion-nota-debito/recaudacion-nota-debito.component';
+
+//Módulo de Entregas
+import { GuiaRemisionComponent } from './componentes/entrega/guia-remision/guia-remision.component';
+import { TransportistaComponent } from './componentes/entrega/transportista/transportista.component';
+import { VehiculoComponent } from './componentes/entrega/vehiculo/vehiculo.component';
+
 //Módulo de Inventarios
 import { BodegaComponent } from './componentes/inventario/bodega/bodega.component';
 import { MedidaComponent } from './componentes/inventario/medida/medida.component';
@@ -48,27 +69,6 @@ import { TipoRetencionComponent } from './componentes/configuracion/tipo-retenci
 import { CuentaPropiaComponent } from './componentes/caja-banco/cuenta-propia/cuenta-propia.component';
 import { BancoComponent } from './componentes/caja-banco/banco/banco.component';
 
-// Módulo de Ventas
-import { FacturaComponent } from './componentes/venta/factura/factura.component';
-import { NotaCreditoVentaComponent } from './componentes/venta/nota-credito-venta/nota-credito-venta.component';
-import { NotaDebitoVentaComponent } from './componentes/venta/nota-debito-venta/nota-debito-venta.component';
-
-//Módulo de Recaudaciones
-import { RecaudacionComponent } from './componentes/recaudacion/recaudacion/recaudacion.component';
-import { RecaudacionNotaDebitoComponent } from './componentes/recaudacion/recaudacion-nota-debito/recaudacion-nota-debito.component';
-
-//Módulo de Entregas
-import { GuiaRemisionComponent } from './componentes/entrega/guia-remision/guia-remision.component';
-import { TransportistaComponent } from './componentes/entrega/transportista/transportista.component';
-import { VehiculoComponent } from './componentes/entrega/vehiculo/vehiculo.component';
-
-//Módulo de Compras
-import { ProveedorComponent, DialogoMapaProveedorComponent } from './componentes/compra/proveedor/proveedor.component';
-import { FacturaCompraComponent } from './componentes/compra/factura-compra/factura-compra.component';
-import { GrupoProveedorComponent, DialogoGrupoProveedorCuentaContableComponent } from './componentes/compra/grupo-proveedor/grupo-proveedor.component';
-import { NotaCreditoCompraComponent } from './componentes/compra/nota-credito-compra/nota-credito-compra.component';
-import { NotaDebitoCompraComponent } from './componentes/compra/nota-debito-compra/nota-debito-compra.component';
-
 //Módulo de Contabilidad
 import { ContabilizacionComponent } from './componentes/contabilidad/contabilizacion/contabilizacion.component';
 import { CuentaContableComponent } from './componentes/contabilidad/cuenta-contable/cuenta-contable.component';
@@ -76,7 +76,22 @@ import { MovimientoContableComponent } from './componentes/contabilidad/movimien
 import { TablaCuentaContableComponent } from './componentes/contabilidad/cuenta-contable/tabla-cuenta-contable/tabla-cuenta-contable.component';
 import { TablaMovimientoContableComponent } from './componentes/contabilidad/movimiento-contable/tabla-movimiento-contable/tabla-movimiento-contable.component';
 
-// Módulo de Usuarios
+// Módulo de reportes
+import { ReporteClienteComponent } from './componentes/reporte/cliente/reporte-cliente/reporte-cliente.component';
+import { ReporteCompraComponent } from './componentes/reporte/compra/reporte-compra/reporte-compra.component';
+import { ReporteVentaComponent } from './componentes/reporte/venta/reporte-venta/reporte-venta.component';
+import { ReporteInventarioComponent } from './componentes/reporte/inventario/reporte-inventario/reporte-inventario.component';
+import { ReporteCajaBancoComponent } from './componentes/reporte/caja-banco/reporte-caja-banco/reporte-caja-banco.component';
+import { ReporteCuentaCobrarComponent } from './componentes/reporte/cuenta-cobrar/reporte-cuenta-cobrar/reporte-cuenta-cobrar.component';
+import { ReporteCuentaPagarComponent } from './componentes/reporte/cuenta-pagar/reporte-cuenta-pagar/reporte-cuenta-pagar.component';
+import { ReporteActivoFijoComponent } from './componentes/reporte/activo-fijo/reporte-activo-fijo/reporte-activo-fijo.component';
+import { ReporteProduccionComponent } from './componentes/reporte/produccion/reporte-produccion/reporte-produccion.component';
+import { ReporteContabilidadComponent } from './componentes/reporte/contabilidad/reporte-contabilidad/reporte-contabilidad.component';
+import { ReporteTalentoHumanoComponent } from './componentes/reporte/talento-humano/reporte-talento-humano/reporte-talento-humano.component';
+import { ReporteFinancieroComponent } from './componentes/reporte/financiero/reporte-financiero/reporte-financiero.component';
+import { ReporteImportacionComponent } from './componentes/reporte/importacion/reporte-importacion/reporte-importacion.component';
+
+// Módulo de Accesos
 import { UsuarioComponent } from './componentes/usuario/usuario/usuario.component';
 import { EmpresaComponent } from './componentes/usuario/empresa/empresa.component';
 import { EstablecimientoComponent, DialogoMapaEstablecimientoComponent } from './componentes/usuario/establecimiento/establecimiento.component';
@@ -87,13 +102,14 @@ import { PermisoComponent } from './componentes/usuario/permiso/permiso.componen
 //Módulo de Configuraciones
 import { UbicacionComponent } from './componentes/configuracion/ubicacion/ubicacion.component';
 
-// Otros - borrar al final
+// Modulo de Indicadores
 import { DashboardComponent } from './componentes/indicador/dashboard/dashboard.component';
+import { MapsComponent } from './componentes/comun/maps/maps.component';
+
+// Otros - borrar al final
 import { TablesComponent } from './componentes/pages/tables/tables.component';
 import { FormsComponent } from './componentes/pages/forms/forms.component';
-import { MapsComponent } from './componentes/comun/maps/maps.component';
 import { TypographyComponent } from './componentes/pages/typography/typography.component';
-
 
 const routes: Routes = [
   { path: '', redirectTo: '/iniciosesion', pathMatch: 'full' },
@@ -103,24 +119,6 @@ const routes: Routes = [
   { path: 'menu', component: MenuComponent },
   // Rutas del Modulo de configuración
   {path: 'cliente/empresa', component: EmpresaComponent},
-  // Rutas para el modulo de usuarios
-  { path: 'usuario', component: UsuarioComponent },
-  { path: 'usuario/establecimiento', component: EstablecimientoComponent },
-  { path: 'usuario/estacion', component: EstacionComponent },
-  // Rutas para el modulo de clientes
-  { path: 'cliente', component: ClienteComponent },
-  { path: 'cliente/grupocliente', component: GrupoClienteComponent },
-  { path: 'cliente/calificacioncliente', component: CalificacionClienteComponent },
-  { path: 'cliente/origeningreso', component: OrigenIngresoComponent },
-  { path: 'cliente/formapago', component: FormaPagoComponent },
-  // Rutas para el Modulo de inventarios
-  { path: 'producto', component: ProductoComponent },
-  { path: 'inventario/medida', component: MedidaComponent },
-  { path: 'inventario/grupoproducto', component: GrupoProductoComponent },
-  { path: 'promocion', component: PromocionComponent },
-  // Rutas para el modulo de entregas
-  { path: 'guiaremision', component: GuiaRemisionComponent },
-  { path: 'cliente/vehiculotransporte', component: VehiculoComponent },
   // Rutas para el modulo de recaudación
   { path: 'recaudacion', component: RecaudacionComponent },
   // Rutas para el modulo de compras
@@ -211,6 +209,20 @@ export const RoutingComponents = [
   MovimientoContableComponent,
   TablaCuentaContableComponent,
   TablaMovimientoContableComponent,
+  //Reportes
+  ReporteClienteComponent,
+  ReporteCompraComponent,
+  ReporteVentaComponent,
+  ReporteInventarioComponent,
+  ReporteCajaBancoComponent,
+  ReporteCuentaCobrarComponent,
+  ReporteCuentaPagarComponent,
+  ReporteActivoFijoComponent,
+  ReporteProduccionComponent,
+  ReporteContabilidadComponent,
+  ReporteTalentoHumanoComponent,
+  ReporteFinancieroComponent,
+  ReporteImportacionComponent,
   //Usuarios
   UsuarioComponent,
   EmpresaComponent,

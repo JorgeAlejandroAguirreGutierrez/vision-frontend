@@ -12,137 +12,146 @@
                 </figure>
             </div>
         </div>
-        <div class="form-group form-row mt-4">
-            <div class="col-3"></div>
-            <div class="form-row col-7">
+        <div style="height: 50vh;">
+            <div class="form-group form-row">
+                <div class="col-3"></div>
                 <div class="form-row col-7">
-                    <div class="col-4"></div>
-                    <div class="col-2 centrar-izq">
-                        <mat-icon class="iconos-grande">account_box</mat-icon>
-                    </div>
-                    <div class="col-6 centrar">
-                        <mat-form-field appearance="standard">
-                            <mat-label>Cúal es su usuario?</mat-label>
-                            <input matInput oninput="this.value = this.value.toUpperCase()" 
-                                [(ngModel)]="sesion.usuario.apodo" (change)="obtenerPorApodo()">
-                        </mat-form-field>
-                    </div>
-                    <ng-container *ngIf="!cambiarContrasena">
+                    <div class="form-row col-7">
                         <div class="col-4"></div>
                         <div class="col-2 centrar-izq">
-                            <mat-icon class="iconos-grande">vpn_key</mat-icon>
+                            <mat-icon class="iconos-grande">account_box</mat-icon>
                         </div>
                         <div class="col-6 centrar">
                             <mat-form-field appearance="standard">
-                                <mat-label>Contraseña</mat-label>
-                                <input matInput [type]="ocultarContrasena ? 'password' : 'text'"
-                                    [(ngModel)]="contrasena" (keyup.enter)="iniciarSesion()">
-                                <button mat-icon-button matSuffix (click)="ocultarContrasena = !ocultarContrasena"
-                                    [attr.aria-label]="'Ocultar password'" [attr.aria-pressed]="ocultarContrasena">
-                                    <mat-icon>{{ocultarContrasena ? 'visibility_off' : 'visibility'}}</mat-icon>
-                                </button>
+                                <mat-label>Cúal es su usuario?</mat-label>
+                                <input matInput oninput="this.value = this.value.toUpperCase()"
+                                    [(ngModel)]="sesion.usuario.apodo" (change)="obtenerPorApodo()">
                             </mat-form-field>
                         </div>
-                        <ng-container *ngIf="multiEmpresa">
+                        <ng-container *ngIf="!cambiarContrasena">
                             <div class="col-4"></div>
                             <div class="col-2 centrar-izq">
-                                <mat-icon class="iconos-grande">location_city</mat-icon>
+                                <mat-icon class="iconos-grande">vpn_key</mat-icon>
                             </div>
                             <div class="col-6 centrar">
                                 <mat-form-field appearance="standard">
-                                    <mat-label>Empresa</mat-label>
-                                    <mat-select [(ngModel)]="sesion.empresa" [compareWith]="compareFn" class="form-control-sm">
-                                        <mat-option *ngFor="let empresa of empresas" [value]="empresa">
-                                            {{empresa.nombreComercial}}
-                                        </mat-option>
-                                    </mat-select>
+                                    <mat-label>Contraseña</mat-label>
+                                    <input matInput [type]="ocultarContrasena ? 'password' : 'text'"
+                                        [(ngModel)]="contrasena" (keyup.enter)="iniciarSesion()">
+                                    <button mat-icon-button matSuffix (click)="ocultarContrasena = !ocultarContrasena"
+                                        [attr.aria-label]="'Ocultar password'" [attr.aria-pressed]="ocultarContrasena">
+                                        <mat-icon>{{ocultarContrasena ? 'visibility_off' : 'visibility'}}</mat-icon>
+                                    </button>
                                 </mat-form-field>
                             </div>
+                            <ng-container *ngIf="multiEmpresa">
+                                <div class="col-4"></div>
+                                <div class="col-2 centrar-izq">
+                                    <mat-icon class="iconos-grande">location_city</mat-icon>
+                                </div>
+                                <div class="col-6 centrar">
+                                    <mat-form-field appearance="standard">
+                                        <mat-label>Empresa</mat-label>
+                                        <mat-select [(ngModel)]="sesion.empresa" [compareWith]="compareFn"
+                                            class="form-control-sm">
+                                            <mat-option *ngFor="let empresa of empresas" [value]="empresa">
+                                                {{empresa.nombreComercial}}
+                                            </mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                </div>
+                            </ng-container>
+                            <div class="col-6"></div>
+                            <div class="col-6 centrar-titulo m-t-10">
+                                <button type="button" class="btn btn-primary boton text-center"
+                                    (click)="iniciarSesion()">
+                                    <b>Iniciar Sesión</b></button>
+                            </div>
+                            <div class="col-6"></div>
+                            <div class="col-6 centrar m-t-10 font-10">
+                                <p (click)="openDialog()">Olvidó su contraseña</p>
+                            </div>
                         </ng-container>
-                        <div class="col-6"></div>
-                        <div class="col-6 centrar-titulo m-t-10">
-                            <button type="button" class="btn btn-primary boton text-center" (click)="iniciarSesion()">
-                                <b>Iniciar Sesión</b></button>
-                        </div>
-                        <div class="col-6"></div>
-                        <div class="col-6 centrar m-t-10 font-10">
-                            <p (click)="openDialog()">Olvidó su contraseña</p>
-                        </div>
-                    </ng-container>
-                    <ng-container *ngIf="cambiarContrasena">
-                        <div class="col-4"></div>
-                        <div class="col-2 centrar-izq">
-                            <mat-icon class="iconos-grande">password</mat-icon>
-                        </div>
-                        <div class="col-6 centrar">
-                            <mat-form-field appearance="standard">
-                                <mat-label>Contraseña actual</mat-label>
-                                <input matInput [type]="ocultarContrasena ? 'password' : 'text'"
-                                    [(ngModel)]="contrasena">
-                                <button mat-icon-button matSuffix (click)="ocultarContrasena = !ocultarContrasena"
-                                    [attr.aria-label]="'Ocultar password'" [attr.aria-pressed]="ocultarContrasena">
-                                    <mat-icon>{{ocultarContrasena ? 'visibility_off' : 'visibility'}}</mat-icon>
-                                </button>
-                            </mat-form-field>
-                        </div>
-                        <div class="col-4"></div>
-                        <div class="col-2 centrar-izq">
-                            <mat-icon class="iconos-grande">vpn_key</mat-icon>
-                        </div>
-                        <div class="col-6 centrar" [formGroup]="formGroupContrasena">
-                            <mat-form-field appearance="standard">
-                                <mat-label>Nueva contraseña</mat-label>
-                                <input matInput [type]="ocultarNuevaContrasena ? 'password' : 'text'"
-                                    formControlName="password">
-                                <button mat-icon-button matSuffix
-                                    (click)="ocultarNuevaContrasena = !ocultarNuevaContrasena"
-                                    [attr.aria-label]="'Ocultar password'" [attr.aria-pressed]="ocultarNuevaContrasena">
-                                    <mat-icon>{{ocultarNuevaContrasena ? 'visibility_off' : 'visibility'}}</mat-icon>
-                                </button>
-                                <mat-error *ngIf="formGroupContrasena.get('password').invalid">
-                                    {{mensajeErrorContrasena()}}
-                                </mat-error>
-                            </mat-form-field>
-                        </div>
-                        <div class="col-4"></div>
-                        <div class="col-2 centrar-izq">
-                            <mat-icon class="iconos-grande">key</mat-icon>
-                        </div>
-                        <div class="col-6 centrar" [formGroup]="formGroupContrasena">
-                            <mat-form-field appearance="standard">
-                                <mat-label>Confirmar contraseña</mat-label>
-                                <input matInput [type]="ocultarConfirmarContrasena ? 'password' : 'text'"
-                                    formControlName="confirmPassword" (input)="onPasswordInput()">
-                                <button mat-icon-button matSuffix (click)="ocultarConfirmarContrasena = !ocultarConfirmarContrasena"
-                                    [attr.aria-label]="'Ocultar password'" [attr.aria-pressed]="ocultarConfirmarContrasena">
-                                    <mat-icon>{{ocultarConfirmarContrasena ? 'visibility_off' : 'visibility'}}
-                                    </mat-icon>
-                                </button>
-                                <mat-error *ngIf="formGroupContrasena.get('confirmPassword').invalid">
-                                    {{mensajeErrorConfirmarContrasena()}}</mat-error>
-                            </mat-form-field>
-                        </div>
-                        <div class="col-6"></div>
-                        <div class="col-6 centrar-titulo m-t-10">
-                            <button type="button" class="btn btn-primary boton text-center" (click)="crearNuevaContrasena()">
-                                <b>Guardar</b></button>
-                        </div>
-                    </ng-container>
+                        <ng-container *ngIf="cambiarContrasena">
+                            <div class="col-4"></div>
+                            <div class="col-2 centrar-izq">
+                                <mat-icon class="iconos-grande">password</mat-icon>
+                            </div>
+                            <div class="col-6 centrar">
+                                <mat-form-field appearance="standard">
+                                    <mat-label>Contraseña actual</mat-label>
+                                    <input matInput [type]="ocultarContrasena ? 'password' : 'text'"
+                                        [(ngModel)]="contrasena">
+                                    <button mat-icon-button matSuffix (click)="ocultarContrasena = !ocultarContrasena"
+                                        [attr.aria-label]="'Ocultar password'" [attr.aria-pressed]="ocultarContrasena">
+                                        <mat-icon>{{ocultarContrasena ? 'visibility_off' : 'visibility'}}</mat-icon>
+                                    </button>
+                                </mat-form-field>
+                            </div>
+                            <div class="col-4"></div>
+                            <div class="col-2 centrar-izq">
+                                <mat-icon class="iconos-grande">vpn_key</mat-icon>
+                            </div>
+                            <div class="col-6 centrar" [formGroup]="formGroupContrasena">
+                                <mat-form-field appearance="standard">
+                                    <mat-label>Nueva contraseña</mat-label>
+                                    <input matInput [type]="ocultarNuevaContrasena ? 'password' : 'text'"
+                                        formControlName="password">
+                                    <button mat-icon-button matSuffix
+                                        (click)="ocultarNuevaContrasena = !ocultarNuevaContrasena"
+                                        [attr.aria-label]="'Ocultar password'"
+                                        [attr.aria-pressed]="ocultarNuevaContrasena">
+                                        <mat-icon>{{ocultarNuevaContrasena ? 'visibility_off' :
+                                            'visibility'}}</mat-icon>
+                                    </button>
+                                    <mat-error *ngIf="formGroupContrasena.get('password').invalid">
+                                        {{mensajeErrorContrasena()}}
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+                            <div class="col-4"></div>
+                            <div class="col-2 centrar-izq">
+                                <mat-icon class="iconos-grande">key</mat-icon>
+                            </div>
+                            <div class="col-6 centrar" [formGroup]="formGroupContrasena">
+                                <mat-form-field appearance="standard">
+                                    <mat-label>Confirmar contraseña</mat-label>
+                                    <input matInput [type]="ocultarConfirmarContrasena ? 'password' : 'text'"
+                                        formControlName="confirmPassword" (input)="onPasswordInput()">
+                                    <button mat-icon-button matSuffix
+                                        (click)="ocultarConfirmarContrasena = !ocultarConfirmarContrasena"
+                                        [attr.aria-label]="'Ocultar password'"
+                                        [attr.aria-pressed]="ocultarConfirmarContrasena">
+                                        <mat-icon>{{ocultarConfirmarContrasena ? 'visibility_off' : 'visibility'}}
+                                        </mat-icon>
+                                    </button>
+                                    <mat-error *ngIf="formGroupContrasena.get('confirmPassword').invalid">
+                                        {{mensajeErrorConfirmarContrasena()}}</mat-error>
+                                </mat-form-field>
+                            </div>
+                            <div class="col-6"></div>
+                            <div class="col-6 centrar-titulo m-t-10">
+                                <button type="button" class="btn btn-primary boton text-center"
+                                    (click)="crearNuevaContrasena()">
+                                    <b>Guardar</b></button>
+                            </div>
+                        </ng-container>
 
-                </div>
-                <div class="form-row col-5 ml-1">
-                    <div class="col-8">
-                        <mat-card class="foto" *ngIf="sesion.usuario.id==0">
-                            <img width="100%" height="100%" src="assets/images/users/avatar.jpg">
-                        </mat-card>
-                        <mat-card class="foto" *ngIf="sesion.usuario.id!=0">
-                            <img width="100%" height="100%" [src]="sesion.usuario.avatar64">
-                        </mat-card>
                     </div>
-                    <div class="col-4"></div>
+                    <div class="form-row col-5 ml-1">
+                        <div class="col-8">
+                            <mat-card class="foto" *ngIf="sesion.usuario.id==0">
+                                <img width="100%" height="100%" src="assets/images/users/avatar.jpg">
+                            </mat-card>
+                            <mat-card class="foto" *ngIf="sesion.usuario.id!=0">
+                                <img width="100%" height="100%" [src]="sesion.usuario.avatar64">
+                            </mat-card>
+                        </div>
+                        <div class="col-4"></div>
+                    </div>
                 </div>
+                <div class="col-2"></div>
             </div>
-            <div class="col-2"></div>
         </div>
     </div>
 </div>

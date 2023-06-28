@@ -74,7 +74,7 @@ export class MenuComponent implements OnInit {
     this.obtenerPermiso();
   }
 
-  obtenerPermiso(){ //Si quiero que aparezcan solo los módulos que tienen opciones
+  obtenerPermiso(){ //Deben aparezcer solo los módulos que tienen opciones y aparecer MENU=SI; por el momento no
     this.sesion.usuario.perfil.permisos.forEach(permiso => {
       // FINANCIERO
       if (permiso.menuOpcion.modulo == modulos.modulo_clientes){ //  && permiso.menuOpcion.menu == valores.si

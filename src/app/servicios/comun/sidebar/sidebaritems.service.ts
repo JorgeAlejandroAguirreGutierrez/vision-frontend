@@ -21,6 +21,10 @@ import { NotaDebitoCompraComponent } from 'src/app/componentes/compra/nota-debit
 import { FacturaComponent } from "../../../componentes/venta/factura/factura.component";
 import { NotaCreditoVentaComponent } from '../../../componentes/venta/nota-credito-venta/nota-credito-venta.component';
 import { NotaDebitoVentaComponent } from 'src/app/componentes/venta/nota-debito-venta/nota-debito-venta.component';
+//ENTREGA
+import { GuiaRemisionComponent } from '../../../componentes/entrega/guia-remision/guia-remision.component';
+import { TransportistaComponent } from '../../../componentes/entrega/transportista/transportista.component';
+import { VehiculoComponent } from '../../../componentes/entrega/vehiculo/vehiculo.component';
 //INVENTARIOS
 import { GrupoProductoComponent } from '../../../componentes/inventario/grupo-producto/grupo-producto.component';
 import { ProductoComponent } from "../../../componentes/inventario/producto/producto.component";
@@ -28,10 +32,27 @@ import { KardexComponent } from "../../../componentes/inventario/kardex/kardex.c
 import { PromocionComponent } from "../../../componentes/inventario/promocion/promocion.component";
 import { BodegaComponent } from "../../../componentes/inventario/bodega/bodega.component";
 import { MedidaComponent } from '../../../componentes/inventario/medida/medida.component';
-//ENTREGA
-import { GuiaRemisionComponent } from '../../../componentes/entrega/guia-remision/guia-remision.component';
-import { TransportistaComponent } from '../../../componentes/entrega/transportista/transportista.component';
-import { VehiculoComponent } from '../../../componentes/entrega/vehiculo/vehiculo.component';
+//CAJA BANCOS
+import { CuentaPropiaComponent } from '../../../componentes/caja-banco/cuenta-propia/cuenta-propia.component';
+import { BancoComponent } from '../../../componentes/caja-banco/banco/banco.component';
+//CONTABILIDAD
+import { MovimientoContableComponent } from '../../../componentes/contabilidad/movimiento-contable/movimiento-contable.component';
+import { CuentaContableComponent } from '../../../componentes/contabilidad/cuenta-contable/cuenta-contable.component';
+//REPORTES
+import { ReporteClienteComponent } from '../../../componentes/reporte/cliente/reporte-cliente/reporte-cliente.component';
+import { ReporteCompraComponent } from '../../../componentes/reporte/compra/reporte-compra/reporte-compra.component';
+import { ReporteVentaComponent } from '../../../componentes/reporte/venta/reporte-venta/reporte-venta.component';
+import { ReporteInventarioComponent } from '../../../componentes/reporte/inventario/reporte-inventario/reporte-inventario.component';
+import { ReporteCajaBancoComponent } from '../../../componentes/reporte/caja-banco/reporte-caja-banco/reporte-caja-banco.component';
+import { ReporteCuentaCobrarComponent } from '../../../componentes/reporte/cuenta-cobrar/reporte-cuenta-cobrar/reporte-cuenta-cobrar.component';
+import { ReporteCuentaPagarComponent } from '../../../componentes/reporte/cuenta-pagar/reporte-cuenta-pagar/reporte-cuenta-pagar.component';
+import { ReporteActivoFijoComponent } from '../../../componentes/reporte/activo-fijo/reporte-activo-fijo/reporte-activo-fijo.component';
+import { ReporteProduccionComponent } from '../../../componentes/reporte/produccion/reporte-produccion/reporte-produccion.component';
+import { ReporteContabilidadComponent } from '../../../componentes/reporte/contabilidad/reporte-contabilidad/reporte-contabilidad.component';
+import { ReporteTalentoHumanoComponent } from '../../../componentes/reporte/talento-humano/reporte-talento-humano/reporte-talento-humano.component';
+import { ReporteFinancieroComponent } from '../../../componentes/reporte/financiero/reporte-financiero/reporte-financiero.component';
+import { ReporteImportacionComponent } from '../../../componentes/reporte/importacion/reporte-importacion/reporte-importacion.component';
+
 //ACCESOS
 import { UsuarioComponent } from '../../../componentes/usuario/usuario/usuario.component';
 import { EmpresaComponent } from '../../../componentes/usuario/empresa/empresa.component';
@@ -50,12 +71,7 @@ import { ExportarComponent } from '../../../componentes/configuracion/exportar/e
 import { TipoRetencionComponent } from '../../../componentes/configuracion/tipo-retencion/tipo-retencion.component';
 //INDICADORES
 import { DashboardComponent } from '../../../componentes/indicador/dashboard/dashboard.component';
-//CONTABILIDAD
-import { MovimientoContableComponent } from '../../../componentes/contabilidad/movimiento-contable/movimiento-contable.component';
-import { CuentaContableComponent } from '../../../componentes/contabilidad/cuenta-contable/cuenta-contable.component';
-//CAJA BANCOS
-import { CuentaPropiaComponent } from '../../../componentes/caja-banco/cuenta-propia/cuenta-propia.component';
-import { BancoComponent } from '../../../componentes/caja-banco/banco/banco.component';
+
 
 @Injectable({
   providedIn: 'root'
@@ -63,14 +79,15 @@ import { BancoComponent } from '../../../componentes/caja-banco/banco/banco.comp
 export class SidebarItemsService {
 
   opciones = new Array<SidebarItem>();
-  permisoOpciones: Permiso[] = [];
+  permisos: Permiso[] = [];
 
   constructor() { }
 
+  /******* LLENAR OPCIONES EN EL SIDEBAR */
   llenarOpciones(Componente: Type<any>, tabTitulo: string, itemNombre: string, icoItem: string) {
-    // VALIDAR SI TIENE PERMISO PARA VER LAS OPCIONES EN EL SIDEBAR
-    this.permisoOpciones.forEach(elemento => {
-      if (elemento.menuOpcion.opcion == itemNombre.toUpperCase() && elemento.menuOpcion.menu==valores.si && elemento.estado==valores.activo){
+    // Validar si tiene permisos para ver la opcion en el sidebar
+    this.permisos.forEach(permiso => {
+      if (permiso.menuOpcion.opcion == itemNombre.toUpperCase() && permiso.menuOpcion.menu==valores.si && permiso.estado==valores.activo){
         this.opciones.push(new SidebarItem(Componente, tabTitulo, itemNombre, icoItem));
       }
     });
@@ -78,7 +95,7 @@ export class SidebarItemsService {
 
   menuOpciones(tabNombre: string, sesion: Sesion): SidebarItem[] {
     this.opciones = [];
-    this.permisoOpciones = sesion.usuario.perfil.permisos;
+    this.permisos = sesion.usuario.perfil.permisos;
     if (tabNombre == modulos.modulo_clientes) {
       this.llenarOpciones(GrupoClienteComponent, tabs.tab_grupo_cliente, items.item_grupo_cliente, icos.ico_grupo_cliente);
       this.llenarOpciones(ClienteComponent, tabs.tab_cliente, items.item_cliente, icos.ico_cliente);
@@ -151,7 +168,19 @@ export class SidebarItemsService {
     }
 
     if (tabNombre == modulos.modulo_reportes) {
-
+      this.llenarOpciones(ReporteClienteComponent, tabs.tab_reporte_clientes, items.item_reporte_clientes, icos.ico_reporte_clientes);
+      this.llenarOpciones(ReporteCompraComponent, tabs.tab_reporte_compras, items.item_reporte_compras, icos.ico_reporte_compras);
+      this.llenarOpciones(ReporteVentaComponent, tabs.tab_reporte_ventas, items.item_reporte_ventas, icos.ico_reporte_ventas);
+      this.llenarOpciones(ReporteInventarioComponent, tabs.tab_reporte_inventarios, items.item_reporte_inventarios, icos.ico_reporte_inventarios);
+      this.llenarOpciones(ReporteCajaBancoComponent, tabs.tab_reporte_caja_bancos, items.item_reporte_caja_bancos, icos.ico_reporte_caja_bancos);
+      this.llenarOpciones(ReporteCuentaCobrarComponent, tabs.tab_reporte_cuentas_cobrar, items.item_reporte_cuentas_cobrar, icos.ico_reporte_cuentas_cobrar);
+      this.llenarOpciones(ReporteCuentaPagarComponent, tabs.tab_reporte_cuentas_pagar, items.item_reporte_cuentas_pagar, icos.ico_reporte_cuentas_pagar);
+      this.llenarOpciones(ReporteActivoFijoComponent, tabs.tab_reporte_activos_fijos, items.item_reporte_activos_fijos, icos.ico_reporte_activos_fijos);
+      this.llenarOpciones(ReporteProduccionComponent, tabs.tab_reporte_produccion, items.item_reporte_produccion, icos.ico_reporte_produccion);
+      this.llenarOpciones(ReporteContabilidadComponent, tabs.tab_reporte_contabilidad, items.item_reporte_contabilidad, icos.ico_reporte_contabilidad);
+      this.llenarOpciones(ReporteTalentoHumanoComponent, tabs.tab_reporte_talento_humano, items.item_reporte_talento_humano, icos.ico_reporte_talento_humano);
+      this.llenarOpciones(ReporteFinancieroComponent, tabs.tab_reporte_financiero, items.item_reporte_financiero, icos.ico_reporte_financiero);
+      this.llenarOpciones(ReporteImportacionComponent, tabs.tab_reporte_importacion, items.item_reporte_importacion, icos.ico_reporte_importacion);
     }
 
     if (tabNombre == modulos.modulo_accesos) {
