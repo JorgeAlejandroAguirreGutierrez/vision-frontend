@@ -362,7 +362,7 @@
                     <mat-form-field appearance="standard">
                         <mat-label>Bancos Propios</mat-label>
                         <mat-select [(ngModel)]="deposito.cuentaPropia.banco.abreviatura" 
-                            (selectionChange)="consultarPorBanco(deposito.cuentaPropia.banco.abreviatura, 'DEPOSITO')" class="form-control-sm">
+                            (selectionChange)="consultarCuentasPropias(deposito.cuentaPropia.banco.abreviatura, 'DEPOSITO')" class="form-control-sm">
                             <mat-option *ngFor="let bancoPropio of bancosPropios" [value]="bancoPropio">
                                 {{bancoPropio}}
                             </mat-option>
@@ -489,7 +489,7 @@
                     <mat-form-field appearance="standard">
                         <mat-label>Bancos Propios</mat-label>
                         <mat-select [(ngModel)]="transferencia.cuentaPropia.banco.abreviatura" 
-                            (selectionChange)="consultarPorBanco(transferencia.cuentaPropia.banco.abreviatura, 'TRANSFERENCIA')" class="form-control-sm">
+                            (selectionChange)="consultarCuentasPropias(transferencia.cuentaPropia.banco.abreviatura, 'TRANSFERENCIA')" class="form-control-sm">
                             <mat-option *ngFor="let bancoPropio of bancosPropios" [value]="bancoPropio">
                                 {{bancoPropio}}
                             </mat-option>
@@ -648,7 +648,7 @@
                     <mat-form-field appearance="standard">
                         <mat-label>Cédula</mat-label>
                         <input matInput type="text" class="form-control-sm" [(ngModel)]="tarjetaCredito.identificacion"
-                            (change)="validarIdentificacion(tarjetaCredito.identificacion)"
+                            (change)="validarIdentificacion(tarjetaCredito.identificacion, 'TC')"
                             [disabled]="deshabilitarTitularTarjetaCredito">
                     </mat-form-field>
                 </div>
@@ -806,7 +806,7 @@
                     <mat-form-field appearance="standard">
                         <mat-label>Cédula</mat-label>
                         <input matInput type="text" class="form-control-sm" [(ngModel)]="tarjetaDebito.identificacion"
-                            (change)="validarIdentificacion(tarjetaDebito.identificacion)"
+                            (change)="validarIdentificacion(tarjetaDebito.identificacion, 'TD')"
                             [disabled]="deshabilitarTitularTarjetaDebito">
                     </mat-form-field>
                 </div>

@@ -248,7 +248,7 @@ export class RecaudacionComponent implements OnInit, OnChanges {
     });
   }
   consultarBancosPropios() {
-    this.cuentaPropiaService.consultarPorEstadoDistintoBancoAbreviatura(valores.activo).subscribe({
+    this.cuentaPropiaService.consultarBancoDistintoPorEmpresaYEstado(this.empresa.id, valores.activo).subscribe({
       next: res => {
         this.bancosPropios = res.resultado as String[]
       },
@@ -394,8 +394,8 @@ export class RecaudacionComponent implements OnInit, OnChanges {
     this.calcularRecaudacion();
   }
 
-  consultarPorBanco(banco: string, formaPago: string) {
-    this.cuentaPropiaService.consultarPorBanco(banco).subscribe({
+  consultarCuentasPropias(banco: string, formaPago: string) {
+    this.cuentaPropiaService.consultarPorEmpresaYBanco(this.empresa.id, banco).subscribe({
       next: res => {
         this.cuentasPropias = res.resultado as CuentaPropia[];
         this.inicializarCuentasPropias(this.cuentasPropias, formaPago);
@@ -916,11 +916,17 @@ export class RecaudacionComponent implements OnInit, OnChanges {
     return true;
   }
 
-  validarIdentificacion(identificacion: string) {
-    this.clienteService.validarIdentificacionPorEmpresa(this.empresa.id, identificacion).subscribe({
+  validarIdentificacion(identificacion: string, tipo: string) {
+    this.facturaService.validarIdentificacion(identificacion).subscribe({
       next: res => {
-        if (res.resultado != null) {
-          //Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
+        if (res.resultado != '') {
+          if (tipo == 'TC') {
+            this.tarjetaCredito.identificacion = identificacion;
+            this.tarjetaCredito.nombre = res.resultado;
+          } else {
+            this.tarjetaDebito.identificacion = identificacion;
+            this.tarjetaDebito.nombre = res.resultado;
+          }
         } else {
           this.tarjetaCredito.identificacion = valores.vacio;
           Swal.fire({ icon: error_swal, title: exito, text: res.mensaje });

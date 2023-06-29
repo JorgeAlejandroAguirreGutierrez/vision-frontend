@@ -64,8 +64,16 @@ export class CuentaPropiaService {
       }));
   }
 
-  consultarPorEstadoDistintoBancoAbreviatura(estado: string): Observable<Respuesta> {
-    return this.http.get(environment.host + urn.ruta + urn.cuentaPropia + urn.consultarPorEstadoDistintoBancoAbreviatura + urn.slash + estado, options).pipe(
+  consultarBancoDistintoPorEmpresaYEstado(empresaId: number, estado: string): Observable<Respuesta> {
+    return this.http.get(environment.host + urn.ruta + urn.cuentaPropia + urn.consultarBancoDistintoPorEmpresaYEstado + urn.slash + empresaId + urn.slash + estado, options).pipe(
+      map(response => response as Respuesta),
+      catchError(err => {
+        return throwError(()=>err);
+      }));
+  }
+
+  consultarPorEmpresaYBanco(empresaId: number, banco: string): Observable<Respuesta> {
+    return this.http.patch(environment.host + urn.ruta + urn.cuentaPropia + urn.consultarPorEmpresaYBanco + urn.slash + empresaId, banco, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);
@@ -106,14 +114,6 @@ export class CuentaPropiaService {
         return throwError(()=>err);
       })
     );
-  }
-
-  consultarPorBanco(banco: string): Observable<Respuesta> {
-    return this.http.get(environment.host + urn.ruta + urn.cuentaPropia + urn.consultarPorBanco + urn.slash + banco, options).pipe(
-      map(response => response as Respuesta),
-      catchError(err => {
-        return throwError(()=>err);
-      }));
   }
 
 }
