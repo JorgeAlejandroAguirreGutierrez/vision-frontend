@@ -34,30 +34,34 @@ export class NotaCreditoCompraComponent implements OnInit {
 
   panelOpenState = false;
 
-  hoy = new Date();
+  si: string = valores.si;
+  no: string = valores.no;
+  emitida: string = valores.emitida;
+  anulada: string = valores.anulada;
+  noFacturada: string = valores.noFacturada;
+  facturada:string = valores.facturada;
+  noRecaudada: string = valores.noRecaudada;
+  recaudada: string = valores.recaudada;
+  devolucion: string = valores.devolucion;
+  descuento: string = valores.descuento;
+  conjunta: string = valores.conjunta;
 
   deshabilitarDevolucion = true;
   deshabilitarDescuento = true;
+  
+  hoy = new Date();
 
-  devolucion = valores.devolucion;
-  descuento = valores.descuento;
-  conjunta = valores.conjunta;
-
-  si = valores.si;
-  no = valores.no;
-  emitida = valores.emitida;
-  anulada = valores.anulada;
-  noFacturada = valores.noFacturada;
-  facturada = valores.facturada;
-  noRecaudada = valores.noRecaudada;
-  recaudada = valores.recaudada;
+  facturaCompra: FacturaCompra = new FacturaCompra();
   
   seleccionProveedor = new UntypedFormControl();
+  controlIdentificacionProveedor = new UntypedFormControl();
+  controlProveedor = new UntypedFormControl();
   filtroProveedores: Observable<Proveedor[]> = new Observable<Proveedor[]>();
   proveedores: Proveedor[] = [];
   seleccionFacturaCompra = new UntypedFormControl();
   filtroFacturasCompras: Observable<FacturaCompra[]> = new Observable<FacturaCompra[]>();
   facturasCompras: FacturaCompra[] = [];
+  filtroIdentificacionProveedores: Observable<Proveedor[]> = new Observable<Proveedor[]>();
 
   columnas: any[] = [
     { nombreColumna: 'codigo', cabecera: 'Código', celda: (row: NotaCreditoCompra) => `${row.codigo}`},
@@ -85,9 +89,6 @@ export class NotaCreditoCompraComponent implements OnInit {
   sesion: Sesion = null;
   empresa: Empresa = new Empresa();
 
-  constructor(private proveedorService: ProveedorService, private sesionService: SesionService, private datepipe: DatePipe,
-    private router: Router, private notaCreditoCompraService: NotaCreditoCompraService, private facturaCompraService: FacturaCompraService) { }
-
   @HostListener('window:keypress', ['$event'])
   keyEvent($event: KeyboardEvent) {
     if (($event.shiftKey || $event.metaKey) && $event.key == "G") //SHIFT + G
@@ -96,23 +97,45 @@ export class NotaCreditoCompraComponent implements OnInit {
       this.nuevo(null);
   }
 
+  constructor(private proveedorService: ProveedorService, private sesionService: SesionService, private datepipe: DatePipe,
+    private router: Router, private notaCreditoCompraService: NotaCreditoCompraService, private facturaCompraService: FacturaCompraService) { }
+
   ngOnInit() {
     this.sesion = validarSesion(this.sesionService, this.router);
     this.empresa = this.sesion.empresa;
     this.consultar();
     this.consultarProveedores();
     this.consultarFacturasCompras();
-    this.filtroProveedores = this.seleccionProveedor.valueChanges
-      .pipe(
-        startWith(valores.vacio),
-        map(value => typeof value === 'string' || value==null ? value : value.id),
-        map(proveedor => typeof proveedor === 'string' ? this.filtroProveedor(proveedor) : this.proveedores.slice())
-      );
+    this.inicializarFiltros();
     this.filtroFacturasCompras = this.seleccionFacturaCompra.valueChanges
       .pipe(
         startWith(valores.vacio),
         map(value => typeof value === 'string' || value==null ? value : value.id),
         map(facturaCompra => typeof facturaCompra === 'string' ? this.filtroFacturaCompra(facturaCompra) : this.facturasCompras.slice())
+      );
+  }
+
+  verIdentificacionProveedor(proveedor: Proveedor): string {
+    return proveedor && proveedor.identificacion ? proveedor.identificacion : valores.vacio;
+  }
+
+  verProveedor(proveedor: Proveedor): string {
+    return proveedor && proveedor.razonSocial ? proveedor.razonSocial : '';
+  }
+
+  //FILTROS AUTOCOMPLETE
+  inicializarFiltros() {
+    this.filtroIdentificacionProveedores = this.controlIdentificacionProveedor.valueChanges
+      .pipe(
+        startWith(''),
+        map(value => typeof value === 'string' || value == null ? value : value.id),
+        map(identificacion => typeof identificacion === 'string' ? this.filtroIdentificacionProveedor(identificacion) : this.proveedores.slice())
+    );
+    this.filtroProveedores = this.controlProveedor.valueChanges
+      .pipe(
+        startWith(valores.vacio),
+        map(value => typeof value === 'string' || value==null ? value : value.id),
+        map(proveedor => typeof proveedor === 'string' ? this.filtroProveedor(proveedor) : this.proveedores.slice())
       );
   }
   
@@ -123,8 +146,13 @@ export class NotaCreditoCompraComponent implements OnInit {
     }
     return [];
   }
-  verProveedor(proveedor: Proveedor): string {
-    return proveedor && proveedor.razonSocial ? proveedor.razonSocial : '';
+
+  private filtroIdentificacionProveedor(value: string): Proveedor[] {
+    if (this.proveedores.length > 0) {
+      const filterValue = value.toUpperCase();
+      return this.proveedores.filter(proveedor => proveedor.identificacion.toUpperCase().includes(filterValue));
+    }
+    return [];
   }
 
   private filtroFacturaCompra(value: string): FacturaCompra[] {
@@ -141,6 +169,7 @@ export class NotaCreditoCompraComponent implements OnInit {
   nuevo(event){
     if (event!=null)
       event.preventDefault();
+    this.controlIdentificacionProveedor.patchValue(valores.vacio);
     this.notaCreditoCompra = new NotaCreditoCompra();
     this.seleccionProveedor.patchValue(valores.vacio);
     this.seleccionFacturaCompra.patchValue(valores.vacio);
@@ -151,6 +180,7 @@ export class NotaCreditoCompraComponent implements OnInit {
   construir() {
     let fecha = new Date(this.notaCreditoCompra.fecha);
     this.notaCreditoCompra.fecha = fecha;
+    this.controlIdentificacionProveedor.patchValue(this.notaCreditoCompra.facturaCompra.proveedor);
     this.seleccionProveedor.patchValue(this.notaCreditoCompra.facturaCompra.proveedor);
     this.seleccionFacturaCompra.patchValue(this.notaCreditoCompra.facturaCompra);
     this.dataSourceLinea = new MatTableDataSource<NotaCreditoCompraLinea>(this.notaCreditoCompra.notaCreditoCompraLineas);
@@ -188,20 +218,28 @@ export class NotaCreditoCompraComponent implements OnInit {
   }
 
   seleccionarProveedor() {
-    let proveedorId = this.seleccionProveedor.value.id;
-    this.proveedorService.obtener(proveedorId).subscribe(
-      res => {
-        this.notaCreditoCompra.facturaCompra.proveedor = res.resultado as Proveedor;
-        this.seleccionProveedor.patchValue(this.notaCreditoCompra.facturaCompra.proveedor);
-        this.facturaCompraService.consultarPorProveedor(this.notaCreditoCompra.facturaCompra.proveedor.id).subscribe(
-          res => {
-            this.facturasCompras = res.resultado as FacturaCompra[]
-          },
-          err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
-        );
+    let proveedorId = this.controlProveedor.value.id;
+    this.proveedorService.obtener(proveedorId).subscribe({
+      next: res => {
+        this.facturaCompra.proveedor = res.resultado as Proveedor;
+        this.controlIdentificacionProveedor.patchValue(this.facturaCompra.proveedor);
+        this.controlProveedor.patchValue(this.facturaCompra.proveedor);
+
       },
-      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
-    );
+      error: err => Swal.fire({icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+    });
+  }
+
+  seleccionarIdentificacionProveedor() {
+    let proveedorId = this.controlIdentificacionProveedor.value.id;
+    this.proveedorService.obtener(proveedorId).subscribe({
+      next: res => {
+        Object.assign(this.facturaCompra.proveedor, res.resultado as Proveedor);
+        this.controlIdentificacionProveedor.patchValue(this.facturaCompra.proveedor);
+        this.controlProveedor.patchValue(this.facturaCompra.proveedor);
+      },
+      error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+    });
   }
 
   seleccionarFacturaCompra() {
@@ -213,6 +251,23 @@ export class NotaCreditoCompraComponent implements OnInit {
       },
       err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     );
+  }
+
+  rellenarNumeroEstablecimiento(){
+    this.facturaCompra.establecimiento = this.pad(this.facturaCompra.establecimiento, 3);
+  }
+  
+  rellenarNumeroPuntoVenta(){
+    this.facturaCompra.puntoVenta = this.pad(this.facturaCompra.puntoVenta, 3);
+  }
+
+  rellenarNumeroSecuencial(){
+    this.facturaCompra.secuencial = this.pad(this.facturaCompra.secuencial, 9);
+  }
+
+  pad(numero: string, size: number): string {
+    while (numero.length < size) numero = "0" + numero;
+    return numero;
   }
 
   seleccionarOperacion(){
