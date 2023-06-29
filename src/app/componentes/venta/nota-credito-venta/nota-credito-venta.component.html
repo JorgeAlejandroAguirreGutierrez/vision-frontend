@@ -95,7 +95,7 @@
                                 [disabled]="true">
                         </mat-form-field>
                     </div>
-                    <div class="col-3">
+                    <div class="col-5">
                         <mat-form-field appearance="standard">
                             <mat-label>Factura</mat-label>
                             <mat-autocomplete #factura="matAutocomplete" [displayWith]="verFactura"
@@ -108,7 +108,7 @@
                                 [formControl]="seleccionFactura" [matAutocomplete]="factura">
                         </mat-form-field>
                     </div>
-                    <div class="col-3">
+                    <div class="col-5">
                         <mat-form-field appearance="standard">
                             <mat-label>Operacion</mat-label>
                             <mat-select class="form-control-sm" [(ngModel)]="notaCreditoVenta.operacion"

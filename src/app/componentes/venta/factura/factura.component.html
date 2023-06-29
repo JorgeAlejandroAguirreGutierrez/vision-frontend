@@ -164,13 +164,13 @@
                                     </ng-container>
                                 </div>
                             </section>
-                            <div class="col-12">
+                            <!--div class="col-12">
                                 <mat-form-field appearance="standard">
                                     <mat-label>Clave de Acceso - Factura Electrónica</mat-label>
                                     <input matInput type="text" class="form-control-sm"
                                         [(ngModel)]="factura.claveAcceso" disabled>
                                 </mat-form-field>
-                            </div>
+                            </div-->
                         </div>
                         <div class="form-row col-3 linea-vertical ml-1">
                             <div class="col-3">
@@ -317,14 +317,6 @@
                                             </mat-select>
                                         </mat-form-field>
                                     </div>
-                                    <div class="col-2">
-                                        <mat-form-field appearance="standard">
-                                            <mat-label>PVP</mat-label>
-                                            <input matInput type="text" appFormatoDecimal step="0.01"
-                                                [(ngModel)]="precioVentaPublicoManual"
-                                                (change)="calcularFacturaLinea()" class="form-control-sm">
-                                        </mat-form-field>
-                                    </div>
                                     <div class="col-1">
                                         <mat-form-field appearance="standard">
                                             <mat-label>Desc. $</mat-label>
@@ -344,9 +336,17 @@
                                     </div>
                                     <div class="col-2">
                                         <mat-form-field appearance="standard">
+                                            <mat-label>PVP</mat-label>
+                                            <input matInput type="text" appFormatoDecimal step="0.01"
+                                                [(ngModel)]="precioVentaPublicoManual"
+                                                (change)="calcularFacturaLinea()" class="form-control-sm">
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col-2">
+                                        <mat-form-field appearance="standard">
                                             <mat-label>Subtotal</mat-label>
                                             <input matInput type="text" appFormatoDecimal
-                                                [(ngModel)]="facturaLinea.totalConDescuentoLinea"
+                                                [(ngModel)]="facturaLinea.totalLinea"
                                                 class="form-control-sm" disabled>
                                         </mat-form-field>
                                     </div>

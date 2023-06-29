@@ -121,8 +121,8 @@ export class NotaDebitoVentaComponent implements OnInit {
     { nombreColumna: 'descuento', cabecera: 'Desc. $', celda: (row: FacturaLinea) => `${row.valorDescuentoLinea}` },
     { nombreColumna: 'descuentoPorcentaje', cabecera: 'Desc. %', celda: (row: FacturaLinea) => `${row.porcentajeDescuentoLinea} %` },
     { nombreColumna: 'subtotal', cabecera: 'Subtotal', celda: (row: FacturaLinea) => `${row.subtotalConDescuentoLinea}` },
-    { nombreColumna: 'iva', cabecera: 'IVA', celda: (row: FacturaLinea) => `${row.ivaConDescuentoLinea}` },
-    { nombreColumna: 'total', cabecera: 'Total', celda: (row: FacturaLinea) => `${row.totalConDescuentoLinea}` },
+    { nombreColumna: 'iva', cabecera: 'IVA', celda: (row: FacturaLinea) => `${row.importeIvaLinea}` },
+    { nombreColumna: 'total', cabecera: 'Total', celda: (row: FacturaLinea) => `${row.subtotalConDescuentoLinea}` },
     { nombreColumna: 'entregado', cabecera: 'Entreg.', celda: (row: FacturaLinea) => `${row.entregado}` }
   ];
   cabeceraFacturaLinea: string[] = this.columnasFacturaLinea.map(titulo => titulo.nombreColumna);
@@ -210,7 +210,7 @@ export class NotaDebitoVentaComponent implements OnInit {
     let fecha = new Date(this.notaDebitoVenta.fecha);
     this.notaDebitoVenta.fecha = fecha;
     this.controlIdentificacionCliente.patchValue(this.notaDebitoVenta.factura.cliente);
-    this.controlRazonSocialCliente.patchValue(this.notaDebitoVenta.factura);
+    this.controlRazonSocialCliente.patchValue(this.notaDebitoVenta.factura.cliente);
     this.dataSourceFacturaLinea = new MatTableDataSource<FacturaLinea>(this.notaDebitoVenta.factura.facturaLineas);
     this.dataSourceFacturaLinea.paginator = this.paginatorFacturaLinea;
     this.dataSourceLinea = new MatTableDataSource<NotaDebitoVentaLinea>(this.notaDebitoVenta.notaDebitoVentaLineas);

@@ -1,0 +1,61 @@
+<nav class="navbar-light nav-fijo">
+    <ul class="navbar-nav">
+        <li class="nav-item" *ngIf="reporteCliente==0">
+            <a class="nav-link" title="Guardar" role="button" (click)="crear($event)">
+                <mat-icon>save</mat-icon>
+            </a>
+        </li>
+        <li class="nav-item" *ngIf="reporteCliente!=0">
+            <a class="nav-link" title="Actualizar" role="button" (click)="actualizar($event)">
+                <mat-icon>update</mat-icon>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" title="Nuevo" role="button" (click)="nuevo($event)">
+                <mat-icon>file_copy</mat-icon>
+            </a>
+        </li>
+    </ul>
+</nav>
+<div class="contenedor">
+  <div style="height: 100vh;"> 
+      <mat-toolbar class="matToolbar">
+        <div fxShow="true" fxHide.gt-sm="true">
+          <button mat-icon-button (click)="sidenav.toggle()">
+            <mat-icon>menu</mat-icon>
+          </button>
+        </div>
+        <a class="modulo m-l-10">
+          <span style="color:whitesmoke">Compras</span>
+        </a>
+        <span class="nav-spacer"></span>
+        <div fxShow="true" fxHide.lt-md="true">
+          <a mat-button (click)="verReporte('DASHBOARD')">Dashboard</a>
+          <a mat-button (click)="verReporte('FORMULARIO')">Formularios</a>
+          <a mat-button (click)="verReporte('TABLAS')">Tablas</a>
+          <a mat-button (click)="verReporte('TOPOGRAFIA')">Topografia</a>
+          <a mat-button (click)="verReporte('CONTACTO')">Contacto</a>
+        </div>
+      </mat-toolbar>
+
+      <mat-sidenav-container fxFlexFill >
+        <mat-sidenav color="primary" #sidenav fxLayout="column" mode="over"  opened="false" fxHide.gt-sm="true">
+          <div fxLayout="column">
+              <a mat-button (click)="verReporte('DASHBOARD')">Dashboard</a>
+              <a mat-button (click)="verReporte('FORMULARIO')">Formularios</a>
+              <a mat-button (click)="verReporte('TABLAS')">Tablas</a>
+              <a mat-button (click)="verReporte('TOPOGRAFIA')">Topografia</a>
+              <a mat-button (click)="verReporte('CONTACTO')">Contacto</a>
+          </div>
+        </mat-sidenav>
+        <mat-sidenav-content fxFlexFill class="contenidoReportes">
+          <app-dashboard *ngIf="verReporteDashboard"></app-dashboard>
+          <app-forms *ngIf="verReporteFormulario"></app-forms>
+          <app-tables *ngIf="verReporteTablas"></app-tables>
+          <app-typography *ngIf="verReporteTopografia"></app-typography>
+          <app-forms *ngIf="verReporteContacto"></app-forms>
+        </mat-sidenav-content>
+    
+      </mat-sidenav-container>
+    </div>
+</div>       

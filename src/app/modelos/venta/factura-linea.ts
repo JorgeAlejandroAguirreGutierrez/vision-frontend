@@ -18,20 +18,16 @@ export class FacturaLinea {
   valorDescuentoTotalLinea: number;
   porcentajeDescuentoTotalLinea: number;
   valorPorcentajeDescuentoTotalLinea: number;
-  totalDescuentoLinea: number;
   subtotalSinDescuentoLinea: number;
-  ivaSinDescuentoLinea: number;
   subtotalConDescuentoLinea: number;
-  ivaConDescuentoLinea: number;
-  totalConDescuentoLinea: number;
-  //PRODUCTO SELECCIONADO
-  producto: Producto;
-  //IMPUESTO SELECCIONADO
+  importeIvaLinea: number;
+  totalLinea: number;
+  factura: Factura;
+
   impuesto: Impuesto;
-  //PRECIO SELECCIONADO
+  producto: Producto;
+  bodega: Bodega;
   precio: Precio;
-  //BODEGA SELECCIONADO
-  bodega: Bodega;  
 
   constructor() {
     this.id = valores.cero;
@@ -46,15 +42,14 @@ export class FacturaLinea {
     this.valorDescuentoTotalLinea = valores.cero;
     this.porcentajeDescuentoTotalLinea = valores.cero;
     this.valorPorcentajeDescuentoTotalLinea = valores.cero;
-    this.totalDescuentoLinea = valores.cero;
     this.subtotalSinDescuentoLinea = valores.cero;
-    this.ivaSinDescuentoLinea = valores.cero;
     this.subtotalConDescuentoLinea = valores.cero;
-    this.ivaConDescuentoLinea = valores.cero;
-    this.totalConDescuentoLinea = valores.cero;
-    this.producto = new Producto();
-    this.precio = new Precio();
+    this.importeIvaLinea = valores.cero;
+    this.totalLinea = valores.cero;
+
     this.impuesto = new Impuesto();
+    this.producto = new Producto();
     this.bodega = new Bodega();
+    this.precio = new Precio();
   }
 }
