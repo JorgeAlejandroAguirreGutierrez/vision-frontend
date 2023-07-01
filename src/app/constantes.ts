@@ -134,7 +134,7 @@ export const urn =
     establecimiento: "/establecimiento",
     establecimientoPuntoVenta: "/establecimientoPuntoVenta",
     estacion: "/estacion",
-    obtenerPorApodo: "/obtenerPorApodo",
+    obtenerPorApodoYEstado: "/obtenerPorApodoYEstado",
 
     //Ventas
     factura: "/factura",
