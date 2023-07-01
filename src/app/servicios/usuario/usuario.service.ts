@@ -86,8 +86,8 @@ export class UsuarioService {
     );
   }
 
-  obtenerPorApodo(apodo: string): Observable<Respuesta> {
-    return this.http.get(environment.host + urn.ruta + urn.usuario + urn.obtenerPorApodo + urn.slash + apodo, options).pipe(
+  obtenerPorApodoYEstado(apodo: string, estado: string): Observable<Respuesta> {
+    return this.http.get(environment.host + urn.ruta + urn.usuario + urn.obtenerPorApodoYEstado + urn.slash + apodo + urn.slash + estado, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);
