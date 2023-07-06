@@ -29,7 +29,9 @@ export const urn =
     obtenerPorAbreviatura: "/obtenerPorAbreviatura",
     personalizado: "/personalizado",
     generar: "/generar",
+    obtener: "/obtener",
     pdf: "/pdf",
+    excel: "/excel",
     enviarPDFYXML: "/enviarPDFYXML",
     obtenerPDF: "/obtenerPDF",
     // Cliente
@@ -165,7 +167,12 @@ export const urn =
     amortizacion: "/amortizacion",
     guiaRemision: "/guiaRemision",
     transportista: "/transportista",
-    vehiculo: "/vehiculo"
+    vehiculo: "/vehiculo",
+
+    //REPORTES
+    reporteVenta: "/reporteVenta",
+    reporteKardex: "/reporteKardex",
+    reporteCaja: "/reporteCaja"
 }
 
 export const valores = {
