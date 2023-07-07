@@ -7,7 +7,7 @@ import { Router } from '@angular/router';
 
 
 export const host='http://localhost:8000/api';
-export const ruta: string='/sicecuador';
+export const ruta: string='/vision';
 export const dependiente: string='/dependiente';
 export const plazoCredito: string='/plazoCredito';
 export const datoAdicional: string='/datoAdicional';
