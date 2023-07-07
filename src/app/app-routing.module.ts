@@ -79,7 +79,6 @@ import { TablaMovimientoContableComponent } from './componentes/contabilidad/mov
 // Módulo de reportes
 import { ReporteClienteComponent } from './componentes/reporte/cliente/reporte-cliente/reporte-cliente.component';
 import { ReporteCompraComponent } from './componentes/reporte/compra/reporte-compra/reporte-compra.component';
-import { ReporteVentaComponent } from './componentes/reporte/venta/reporte-venta/reporte-venta.component';
 import { ReporteInventarioComponent } from './componentes/reporte/inventario/reporte-inventario/reporte-inventario.component';
 import { ReporteCajaBancoComponent } from './componentes/reporte/caja-banco/reporte-caja-banco/reporte-caja-banco.component';
 import { ReporteCuentaCobrarComponent } from './componentes/reporte/cuenta-cobrar/reporte-cuenta-cobrar/reporte-cuenta-cobrar.component';
@@ -90,6 +89,10 @@ import { ReporteContabilidadComponent } from './componentes/reporte/contabilidad
 import { ReporteTalentoHumanoComponent } from './componentes/reporte/talento-humano/reporte-talento-humano/reporte-talento-humano.component';
 import { ReporteFinancieroComponent } from './componentes/reporte/financiero/reporte-financiero/reporte-financiero.component';
 import { ReporteImportacionComponent } from './componentes/reporte/importacion/reporte-importacion/reporte-importacion.component';
+
+import { ReporteVentaComponent } from './componentes/reporte/reporte-venta/reporte-venta.component';
+import { ReporteCajaComponent } from './componentes/reporte/reporte-caja/reporte-caja.component';
+import { ReporteKardexComponent } from './componentes/reporte/reporte-kardex/reporte-kardex.component';
 
 // Módulo de Accesos
 import { UsuarioComponent } from './componentes/usuario/usuario/usuario.component';
@@ -212,7 +215,6 @@ export const RoutingComponents = [
   //Reportes
   ReporteClienteComponent,
   ReporteCompraComponent,
-  ReporteVentaComponent,
   ReporteInventarioComponent,
   ReporteCajaBancoComponent,
   ReporteCuentaCobrarComponent,
@@ -223,6 +225,10 @@ export const RoutingComponents = [
   ReporteTalentoHumanoComponent,
   ReporteFinancieroComponent,
   ReporteImportacionComponent,
+
+  ReporteVentaComponent,
+  ReporteCajaComponent,
+  ReporteKardexComponent,
   //Usuarios
   UsuarioComponent,
   EmpresaComponent,
