@@ -6,7 +6,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "siice-frontend": {
+    "vision-frontend": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
@@ -23,7 +23,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "dist/siice-frontend",
+            "outputPath": "dist/vision-frontend",
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",
@@ -87,10 +87,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "browserTarget": "siice-frontend:build:production"
+              "browserTarget": "vision-frontend:build:production"
             },
             "development": {
-              "browserTarget": "siice-frontend:build:development"
+              "browserTarget": "vision-frontend:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -98,7 +98,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "siice-frontend:build"
+            "browserTarget": "vision-frontend:build"
           }
         },
         "test": {
