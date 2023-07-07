@@ -6,7 +6,7 @@ export class ReporteCaja {
     fechaFinal: string;
     //DATOS GENERALES
     fecha: string;
-    periodoDelReporte: string;
+    periodoReporte: string;
     usuario: string;
     perfil: string;
     //COMPROBANTES EMITIDOS

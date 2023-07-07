@@ -3,7 +3,7 @@ import { MediaMatcher } from '@angular/cdk/layout';
 import { ReporteVenta } from 'src/app/modelos/reporte/reporte-venta';
 import { ReporteVentaService } from 'src/app/servicios/reporte/reporte-venta.service';
 import Swal from 'sweetalert2';
-import { valores, mensajes, otras, validarSesion, exito, exito_swal, error, error_swal } from '../../../../constantes';
+import { valores, mensajes, otras, validarSesion, exito, exito_swal, error, error_swal } from '../../../constantes';
 import { Sesion } from 'src/app/modelos/usuario/sesion';
 import { Empresa } from 'src/app/modelos/usuario/empresa';
 import { SesionService } from 'src/app/servicios/usuario/sesion.service';
@@ -28,7 +28,7 @@ export class ReporteVentaComponent implements OnInit {
 
   private _mobileQueryListener: () => void;
 
-  constructor(private reporteVentaservice: ReporteVentaService, private sesionService: SesionService, private datepipe: DatePipe, private router: Router, 
+  constructor(private reporteVentaService: ReporteVentaService, private sesionService: SesionService, private datepipe: DatePipe, private router: Router, 
     changeDetectorRef: ChangeDetectorRef, media: MediaMatcher) {
     this.mobileQuery = media.matchMedia('(max-width: 600px)');
     this._mobileQueryListener = () => changeDetectorRef.detectChanges();
@@ -48,9 +48,7 @@ export class ReporteVentaComponent implements OnInit {
   obtener(){
     this.fechaInicio = this.datepipe.transform(this.fechaInicio, "dd-MM-yyyy");
     this.fechaFinal = this.datepipe.transform(this.fechaFinal, "dd-MM-yyyy");
-    console.log(this.fechaInicio);
-    console.log(this.fechaFinal);
-    this.reporteVentaservice.obtener(this.sesion.usuario.apodo, this.fechaInicio, this.fechaFinal, this.empresa.id).subscribe({
+    this.reporteVentaService.obtener(this.sesion.usuario.apodo, this.fechaInicio, this.fechaFinal, this.empresa.id).subscribe({
       next: res => {
         this.reporteVenta = res.resultado as ReporteVenta;
       },
@@ -61,12 +59,12 @@ export class ReporteVentaComponent implements OnInit {
   pdf(event){
     this.fechaInicio = this.datepipe.transform(this.fechaInicio, "dd-MM-yyyy");
     this.fechaFinal = this.datepipe.transform(this.fechaFinal, "dd-MM-yyyy");
-    this.reporteVentaservice.pdf(this.sesion.usuario.apodo, this.fechaInicio, this.fechaFinal, this.empresa.id);
+    this.reporteVentaService.pdf(this.sesion.usuario.apodo, this.fechaInicio, this.fechaFinal, this.empresa.id);
   }
 
   excel(event){
     this.fechaInicio = this.datepipe.transform(this.fechaInicio, "dd-MM-yyyy");
     this.fechaFinal = this.datepipe.transform(this.fechaFinal, "dd-MM-yyyy");
-    this.reporteVentaservice.excel(this.sesion.usuario.apodo, this.fechaInicio, this.fechaFinal, this.empresa.id);
+    this.reporteVentaService.excel(this.sesion.usuario.apodo, this.fechaInicio, this.fechaFinal, this.empresa.id);
   }
 }

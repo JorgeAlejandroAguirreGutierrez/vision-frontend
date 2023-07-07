@@ -13,8 +13,17 @@ export class ReporteKardexService {
 
   constructor(private http: HttpClient) { }
 
-  pdf(apodo: string, fechaInicio: string, fechaFinal: string, empresaId: number) {
-    this.http.get(environment.host + urn.ruta + urn.reporteKardex + urn.pdf + urn.slash + apodo + urn.slash + fechaInicio + urn.slash + fechaFinal + urn.slash + empresaId, optionsGenerarArchivo)
+  obtener(apodo: string, fechaInicio: string, fechaFinal: string, productoId: number): Observable<Respuesta> {
+    return this.http.get<Respuesta>(environment.host + urn.ruta + urn.reporteKardex + urn.obtener + urn.slash + apodo + urn.slash + fechaInicio + urn.slash + fechaFinal + urn.slash + productoId, options).pipe(
+      map(response => response as Respuesta),
+      catchError(err => {
+        return throwError(()=>err);
+      })
+    );
+  }
+
+  pdf(apodo: string, fechaInicio: string, fechaFinal: string, productoId: number) {
+    this.http.get(environment.host + urn.ruta + urn.reporteKardex + urn.pdf + urn.slash + apodo + urn.slash + fechaInicio + urn.slash + fechaFinal + urn.slash + productoId, optionsGenerarArchivo)
     .subscribe((blob: Blob) => {
       const fileName = "reporteKardex.pdf";
       let link = document.createElement("a");
@@ -31,12 +40,21 @@ export class ReporteKardexService {
     });
   }
 
-  obtener(apodo: string, fechaInicio: string, fechaFinal: string, empresaId: number): Observable<Respuesta> {
-    return this.http.get<Respuesta>(environment.host + urn.ruta + urn.reporteKardex + urn.obtener + urn.slash + apodo + urn.slash + fechaInicio + urn.slash + fechaFinal + urn.slash + empresaId, options).pipe(
-      map(response => response as Respuesta),
-      catchError(err => {
-        return throwError(()=>err);
-      })
-    );
+  excel(apodo: string, fechaInicio: string, fechaFinal: string, empresaId: number) {
+    this.http.get(environment.host + urn.ruta + urn.reporteKardex + urn.excel + urn.slash + apodo + urn.slash + fechaInicio + urn.slash + fechaFinal + urn.slash + empresaId, optionsGenerarArchivo)
+    .subscribe((blob: Blob) => {
+      const fileName = "reporteKardex.xlsx";
+      let link = document.createElement("a");
+      if (link.download !== undefined) 
+      {
+          let url = URL.createObjectURL(blob);
+          link.setAttribute("href", url);
+          link.setAttribute("download", fileName);
+          link.style.visibility = 'hidden';
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+      }
+    });
   }
 }

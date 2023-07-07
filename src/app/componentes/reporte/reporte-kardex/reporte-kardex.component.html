@@ -1,0 +1,192 @@
+<nav class="navbar-light nav-fijo">
+    <ul class="navbar-nav">
+        <li class="nav-item">
+            <a class="nav-link" title="pdf" role="button" (click)="pdf($event)">
+                <mat-icon>save</mat-icon>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" title="excel" role="button" (click)="excel($event)">
+                <mat-icon>save</mat-icon>
+            </a>
+        </li>
+    </ul>
+</nav>
+<div class="contenedor">
+    <div class="form-row">
+        <div class="col-3">
+            <mat-form-field appearance="standard">
+                <mat-label>Fecha Inicio</mat-label>
+                <input matInput [matDatepicker]="picker1" class="form-control-sm" [(ngModel)]="fechaInicio" [max]="hoy">
+                <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                <mat-datepicker #picker1></mat-datepicker>
+            </mat-form-field>
+        </div>
+        <div class="col-3">
+            <mat-form-field appearance="standard">
+                <mat-label>Fecha Final</mat-label>
+                <input matInput [matDatepicker]="picker2" class="form-control-sm" [(ngModel)]="fechaFinal" [max]="hoy">
+                <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+                <mat-datepicker #picker2></mat-datepicker>
+            </mat-form-field>
+        </div>
+        <div class="col-3">
+            <mat-form-field appearance="standard">
+                <mat-label>Producto</mat-label>
+                <mat-select [(ngModel)]="producto" [compareWith]="compareFn" class="form-control-sm">
+                    <mat-option *ngFor="let producto of productos" [value]="producto">
+                        {{producto.nombre}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
+        <div class="col-2">
+            <button mat-button (click)="obtener()">
+                Generar reporte
+            </button>
+        </div>
+    </div>
+    <div class="row">
+        <h1>{{reporteKardex.razonSocial}}</h1>
+    </div>
+    <div class="row">
+        <h2>{{reporteKardex.nombreComercial}}</h2>
+    </div>
+    <div class="row">
+        <h2>{{reporteKardex.nombreReporte}}</h2>
+    </div>
+    <div class="row">
+        <h2>{{reporteKardex.periodoReporte}}</h2>
+    </div>
+    <div class="row">
+        <div class="col-4">
+            DATOS GENERALES<br>
+            FECHA DEL REPORTE: {{reporteKardex.fecha}}<br>
+            PERIODO DEL REPORTE: {{reporteKardex.periodoReporte}}<br>
+            USUARIO: {{reporteKardex.usuario}}<br>
+            CARGO: {{reporteKardex.perfil}}
+        </div>
+        <div class="col-4">
+            PRODUCTO<br>
+            NOMBRE: {{reporteKardex.nombre}}<br>
+            MODELO: {{reporteKardex.modelo}}<br>
+            SERIE: {{reporteKardex.serie}}<br>
+            CADUCIDAD: {{reporteKardex.caducidad}}
+        </div>
+        <div class="col-4">
+            VALORACION<br>
+            COSTO PROMEDIO: {{reporteKardex.costoPromedio}}<br>
+            ULTIMO COSTO: {{reporteKardex.ultimoCosto}}<br>
+            MARGEN RENTABILIDAD PROMEDIO: {{reporteKardex.margenRentabilidadPromedio}}<br>
+            TARIFA PRODUCTO: {{reporteKardex.tarifaProducto}}
+        </div>
+    </div>
+    <br>
+    <div class="row">
+        <div class="col-12">
+            TARJETA KARDEX  
+            <table class="table table-hover table-bordered">
+                <thead class="table-active">
+                    <tr>
+                        <th>ID</th>
+                        <th>FECHA</th>
+                        <th>ORG</th>
+                        <th>BOD</th>
+                        <th>DOC</th>
+                        <th>PROV/CLIENTE</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let reporteKardexLinea of reporteKardex.reporteKardexLineas; let i=index">
+                        <td>{{i + 1}}</td>
+                        <td>{{reporteKardexLinea.fecha}}</td>
+                        <td>{{reporteKardexLinea.org}}</td>
+                        <td>{{reporteKardexLinea.bodega}}</td>
+                        <td>{{reporteKardexLinea.documento}}</td>
+                        <td>{{reporteKardexLinea.provCliente}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <br>
+    <div class="row">
+        <div class="col-4">
+            INGRESOS<br>
+            <table class="table table-hover table-bordered">
+                <thead class="table-active">
+                    <tr>
+                        <th>ID</th>
+                        <th>CANTIDAD</th>
+                        <th>COSTO</th>
+                        <th>COSTO TOTAL</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let reporteKardexLinea of reporteKardex.reporteKardexLineas; let i=index">
+                        <td>{{i + 1}}</td>
+                        <td>{{reporteKardexLinea.ingresoCantidad}}</td>
+                        <td>{{reporteKardexLinea.ingresoCosto}}</td>
+                        <td>{{reporteKardexLinea.ingresoCostoTotal}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="col-4">
+            SALIDAS<br>
+            <table class="table table-hover table-bordered">
+                <thead class="table-active">
+                    <tr>
+                        <th>ID</th>
+                        <th>CANTIDAD</th>
+                        <th>COSTO</th>
+                        <th>TOTAL</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let reporteKardexLinea of reporteKardex.reporteKardexLineas; let i=index">
+                        <td>{{i + 1}}</td>
+                        <td>{{reporteKardexLinea.salidaCantidad}}</td>
+                        <td>{{reporteKardexLinea.salidaCosto}}</td>
+                        <td>{{reporteKardexLinea.salidaCostoTotal}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="col-4">
+            EXISTENCIAS<br>
+            <table class="table table-hover table-bordered">
+                <thead class="table-active">
+                    <tr>
+                        <th>ID</th>
+                        <th>CANTIDAD</th>
+                        <th>COSTO</th>
+                        <th>TOTAL</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let reporteKardexLinea of reporteKardex.reporteKardexLineas; let i=index">
+                        <td>{{i + 1}}</td>
+                        <td>{{reporteKardexLinea.existenciaCantidad}}</td>
+                        <td>{{reporteKardexLinea.existenciaCosto}}</td>
+                        <td>{{reporteKardexLinea.existenciaCostoTotal}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-6">
+            _______________________________<br>
+            {{reporteKardex.nombreRepresentanteLegal}}<br>
+            {{reporteKardex.cargoRepresentanteLegal}}<br>
+            {{reporteKardex.empresaRepresentanteLegal}}<br>
+        </div>
+        <div class="col-6">
+            _______________________________<br>
+            {{reporteKardex.nombreUsuario}}<br>
+            {{reporteKardex.cargoUsuario}}<br>
+            {{reporteKardex.empresaUsuario}}<br>
+        </div>
+    </div>
+</div>

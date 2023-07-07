@@ -8,7 +8,7 @@ export class ReporteKardex {
     fechaInicio: string;
     fechaFinal: string;
     fecha: string;
-    periodoDelReporte: string;
+    periodoReporte: string;
     usuario: string;
     perfil: string;
     //PRODUCTO
