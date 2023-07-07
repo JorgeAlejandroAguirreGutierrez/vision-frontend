@@ -11,7 +11,7 @@ export const urn =
      */
     //Global
     slash: "/",
-    ruta: "/sicecuador",
+    ruta: "/vision",
     modelo: "/modelo",
     activar: "/activar",
     inactivar: "/inactivar",
