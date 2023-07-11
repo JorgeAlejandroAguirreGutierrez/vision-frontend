@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, HostListener, ElementRef, Renderer2  } from '@angular/core';
+import { Component, OnInit, ViewChild, HostListener, ElementRef, Renderer2 } from '@angular/core';
 import { FormGroup, FormControl } from '@angular/forms';
 import { valores, mensajes, validarSesion, exito, exito_swal, error, error_swal } from '../../../../constantes';
 import { Router } from '@angular/router';
@@ -6,48 +6,41 @@ import { BehaviorSubject } from 'rxjs';
 import Swal from 'sweetalert2';
 
 import { DatePipe } from '@angular/common';
-import { MediaMatcher } from '@angular/cdk/layout';
-import { ReporteVenta } from 'src/app/modelos/reporte/reporte-venta';
-import { ReporteVentaService } from 'src/app/servicios/reporte/reporte-venta.service';
-import { ReporteVentaLinea } from 'src/app/modelos/reporte/reporte-venta-linea';
-
 import { Sesion } from '../../../../modelos/usuario/sesion';
 import { SesionService } from '../../../../servicios/usuario/sesion.service';
 import { Empresa } from '../../../../modelos/usuario/empresa';
+import { ReporteVenta } from 'src/app/modelos/reporte/reporte-venta';
+import { ReporteVentaService } from 'src/app/servicios/reporte/reporte-venta.service';
+import { ReporteVentaLinea } from 'src/app/modelos/reporte/reporte-venta-linea';
 
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 
-const today = new Date();
-const month = today.getMonth();
-const year = today.getFullYear();
-
 @Component({
   selector: 'app-detalle-ventas',
   templateUrl: './detalle-ventas.component.html',
-  styleUrls: ['./detalle-ventas.component.scss']
+  styleUrls: ['./detalle-ventas.component.scss'],
+
 })
 export class DetalleVentasComponent implements OnInit {
 
-  abrirPanelNuevo: boolean = true;
-  abrirPanelAdmin: boolean = true;
+  abrirPanelPeriodo: boolean = true;
+  abrirPanelDetalle: boolean = true;
   abrirPanelResumen: boolean = true;
 
-  reporteVenta = new ReporteVenta();
-  fechaInicio: string = null;
-  fechaFinal: string = null;
-
   hoy = new Date();
-  mobileQuery: MediaQueryList;
+  fechaInicio: Date = new Date();
+  fechaFinal: Date = new Date();
 
   sesion: Sesion = null;
   empresa: Empresa = new Empresa();
-
-  //subtotal0 = new BehaviorSubject(this.reporteVenta.total0);
+  reporteVenta = new ReporteVenta();
 
   reporteVentas: ReporteVenta[] = [];
   reporteVentaLineas: ReporteVentaLinea[] = [];
+
+  //subtotal0 = new BehaviorSubject(this.reporteVenta.total0);
   
   columnas: any[] = [
     { nombreColumna: 'fecha', cabecera: 'Fecha', pie: 'Total :',celda: (row: ReporteVentaLinea) => `${row.fecha}` },
@@ -104,31 +97,21 @@ export class DetalleVentasComponent implements OnInit {
   @ViewChild("inputFiltro") inputFiltro: ElementRef;
 
   constructor(private renderer: Renderer2, private sesionService: SesionService, private router: Router, 
-    private datepipe: DatePipe, private reporteVentaService: ReporteVentaService ) { }
-
-  campaignOne = new FormGroup({
-    start: new FormControl(new Date(year, month, 13)),
-    end: new FormControl(new Date(year, month, 17)),
-  });
-  campaignTwo = new FormGroup({
-    start: new FormControl(new Date(year, month, 15)),
-    end: new FormControl(new Date(year, month, 19)),
-  });
+    private datepipe: DatePipe, private reporteVentaService: ReporteVentaService) { } 
 
   ngOnInit(): void {
     this.sesion = validarSesion(this.sesionService, this.router);
     this.empresa = this.sesion.empresa;
   }
   
-
   obtener(){
-    this.fechaInicio = this.datepipe.transform(this.fechaInicio, "dd-MM-yyyy");
-    this.fechaFinal = this.datepipe.transform(this.fechaFinal, "dd-MM-yyyy");
-    this.reporteVentaService.obtener(this.sesion.usuario.apodo, this.fechaInicio, this.fechaFinal, this.empresa.id).subscribe({
+    let fechaInicio = this.datepipe.transform(this.fechaInicio, "dd-MM-yyyy");
+    let fechaFinal = this.datepipe.transform(this.fechaFinal, "dd-MM-yyyy");
+    this.reporteVentaService.obtener(this.sesion.usuario.apodo, fechaInicio, fechaFinal, this.empresa.id).subscribe({
       next: res => {
         this.reporteVenta = res.resultado as ReporteVenta;
         this.reporteVentas.push(this.reporteVenta);
-        this.dataSourceResumen = new MatTableDataSource<ReporteVenta>(this.reporteVentas);
+        this.dataSourceResumen = new MatTableDataSource(this.reporteVentas);
         this.llenarTablaVentaLineas(this.reporteVenta.reporteVentaLineas);
       },
       error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
@@ -143,30 +126,27 @@ export class DetalleVentasComponent implements OnInit {
       data.vendedor.includes(filter) || data.tipoVenta.includes(filter);
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
-    this.calcularSubtotal0();
   }
 
   pdf(event){
-    this.fechaInicio = this.datepipe.transform(this.fechaInicio, "dd-MM-yyyy");
-    this.fechaFinal = this.datepipe.transform(this.fechaFinal, "dd-MM-yyyy");
-    this.reporteVentaService.pdf(this.sesion.usuario.apodo, this.fechaInicio, this.fechaFinal, this.empresa.id);
+    let fechaInicio = this.datepipe.transform(this.fechaInicio, "dd-MM-yyyy");
+    let fechaFinal = this.datepipe.transform(this.fechaFinal, "dd-MM-yyyy");
+    this.reporteVentaService.pdf(this.sesion.usuario.apodo, fechaInicio, fechaFinal, this.empresa.id);
   }
 
   excel(event){
-    this.fechaInicio = this.datepipe.transform(this.fechaInicio, "dd-MM-yyyy");
-    this.fechaFinal = this.datepipe.transform(this.fechaFinal, "dd-MM-yyyy");
-    this.reporteVentaService.excel(this.sesion.usuario.apodo, this.fechaInicio, this.fechaFinal, this.empresa.id);
+    let fechaInicio = this.datepipe.transform(this.fechaInicio, "dd-MM-yyyy");
+    let fechaFinal = this.datepipe.transform(this.fechaFinal, "dd-MM-yyyy");
+    this.reporteVentaService.excel(this.sesion.usuario.apodo, fechaInicio, fechaFinal, this.empresa.id);
   }
   
-
-
   seleccion(reporteVentaLinea: ReporteVentaLinea) {
     if (!this.clickedRows.has(reporteVentaLinea)){
       this.clickedRows.clear();
       this.clickedRows.add(reporteVentaLinea);
       //this.calificacionCliente = { ... calificacionCliente};
     } else {
-      //this.nuevo(null);
+      this.clickedRows.clear();
     }
   }
 

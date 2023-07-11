@@ -19,11 +19,11 @@ export class ReporteInventarioComponent implements OnInit {
   
   verReporte(nombre: string){
     this.iniciarVistaReporte();
-    if (nombre == 'DETALLE'){
+    if (nombre == 'CIERRE'){
       this.verKardexMercaderia = true;
       return;
     }
-    if (nombre == 'CIERRE'){
+    if (nombre == 'OTRO'){
       this.verCierreCaja = true;
       return;
     }
