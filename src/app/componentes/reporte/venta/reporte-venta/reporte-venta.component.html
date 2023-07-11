@@ -11,19 +11,19 @@
         <mat-sidenav-container class="example-sidenav-container">
             <mat-sidenav #snav mode="over" fixedTopGap="56" position="end">
                 <mat-nav-list>
-                    <a mat-list-item (click)="verReporte('CIERRE')">
+                    <a mat-list-item (click)="verReporte('DETALLE')">
                         <mat-icon class="azul">home</mat-icon>
-                        <span class="azul m-l-5">Cierre de Caja</span>
+                        <span class="azul m-l-5">Detalle Ventas</span>
                     </a>
-                    <a mat-list-item (click)="verReporte('OTRO')">
+                    <a mat-list-item (click)="verReporte('CIERRE')">
                         <mat-icon class="azul">videocam</mat-icon>
-                        <span class="azul m-l-5">Otro</span>
+                        <span class="azul m-l-5">Cierre Caja</span>
                     </a>
                 </mat-nav-list>
             </mat-sidenav>
 
             <mat-sidenav-content>
-                <app-kardex-mercaderia *ngIf="verKardexMercaderia"></app-kardex-mercaderia>
+                <app-detalle-ventas *ngIf="verDetalleVentas"></app-detalle-ventas>
                 <app-cierre-caja *ngIf="verCierreCaja"></app-cierre-caja>
             </mat-sidenav-content>
         </mat-sidenav-container>

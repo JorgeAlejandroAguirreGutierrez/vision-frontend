@@ -30,7 +30,8 @@
             "tsConfig": "tsconfig.app.json",
             "inlineStyleLanguage": "scss",
             "allowedCommonJsDependencies": [
-              "sweetalert2"
+              "sweetalert2",
+              "moment"
             ],
             "assets": [
               "src/favicon.ico",

@@ -1,0 +1,212 @@
+<nav class="navbar-light nav-fijo">
+    <ul class="navbar-nav">
+        <li class="nav-item">
+            <a class="nav-link" title="pdf" role="button" (click)="pdf($event)">
+                <mat-icon>picture_as_pdf</mat-icon>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" title="excel" role="button" (click)="excel($event)">
+                <mat-icon>cloud_download</mat-icon>
+            </a>
+        </li>
+    </ul>
+</nav>
+<div>
+    <mat-accordion class="headers-align">
+        <mat-expansion-panel (opened)="abrirPanelPeriodo = true" (closed)="abrirPanelPeriodo = false"
+            [expanded]="abrirPanelPeriodo">
+            <mat-expansion-panel-header>
+                <mat-panel-title>
+                    <i><u>PERÍODO</u></i>
+                </mat-panel-title>
+                <mat-panel-description>
+                    {{abrirPanelPeriodo ? 'Ocultar detalle de ventas' : 'Ver detalle de ventas'}}
+                    <mat-icon>local_activity</mat-icon>
+                </mat-panel-description>
+            </mat-expansion-panel-header>
+            <mat-divider></mat-divider>
+            <div class="form-group form-row">
+                <div class="col-2"></div>
+                <div class="col-3">
+                    <mat-form-field appearance="standard">
+                        <mat-label>Fecha Inicio</mat-label>
+                        <input matInput [matDatepicker]="picker1" class="form-control-sm" [(ngModel)]="fechaInicio"
+                            [max]="hoy" datePickerFormat="DD/MM/YYYY">
+                        <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                        <mat-datepicker #picker1></mat-datepicker>
+                    </mat-form-field>
+                </div>
+                <div class="col-3">
+                    <mat-form-field appearance="standard">
+                        <mat-label>Fecha Final</mat-label>
+                        <input matInput [matDatepicker]="picker2" class="form-control-sm" [(ngModel)]="fechaFinal"
+                            [max]="hoy" datePickerFormat="DD/MM/YYYY">
+                        <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+                        <mat-datepicker #picker2></mat-datepicker>
+                    </mat-form-field>
+                </div>
+                <div class="col-1"></div>
+                <div class="col-2">
+                    <button mat-raised-button color="primary" (click)="obtener()">Generar reporte</button>
+                </div>
+            </div>
+        </mat-expansion-panel>
+    </mat-accordion>
+    <mat-accordion class="headers-align">
+        <mat-expansion-panel (opened)="abrirPanelDetalle = true" (closed)="abrirPanelDetalle = false"
+            [expanded]="abrirPanelDetalle">
+            <mat-expansion-panel-header>
+                <mat-panel-title>
+                    <i><u>DETALLE DE VENTAS</u></i>
+                </mat-panel-title>
+                <mat-panel-description>
+                    {{abrirPanelDetalle ? 'Ocultar detalle de ventas' : 'Ver detalle de ventas'}}
+                    <mat-icon>playlist_add_check</mat-icon>
+                </mat-panel-description>
+            </mat-expansion-panel-header>
+            <mat-divider></mat-divider>
+            <div class="form-group form-row">
+                <div class="col-12">
+                    <div class="row">
+                        <h2>{{reporteVenta.nombreComercial}}</h2>
+                    </div>
+                    <div class="row">
+                        <h3>{{reporteVenta.nombreReporte}}</h3>
+                    </div>
+                    <div>
+                        <b>PERIODO :</b> {{reporteVenta.periodoReporte}}<br>
+                        <b>USUARIO :</b> {{reporteVenta.usuario}}<br>
+                        <b>CARGO :</b> {{reporteVenta.perfil}}<br>
+                        <b>FECHA :</b> {{reporteVenta.fecha}}<br>
+                    </div>
+                    <mat-divider></mat-divider>
+                </div>
+                <div class="col-12">
+                    <mat-form-field appearance="standard">
+                        <mat-label>Buscar detalle</mat-label>
+                        <input matInput oninput="this.value = this.value.toUpperCase()" (keyup)="filtro($event)"
+                            #inputFiltro>
+                        <button mat-button *ngIf="inputFiltro.value" matSuffix mat-icon-button (click)="borrarFiltro()">
+                            <mat-icon>close</mat-icon>
+                        </button>
+                    </mat-form-field>
+                    <div class="mat-elevation-z8">
+                        <table mat-table [dataSource]="dataSource" matSort>
+                            <ng-container *ngFor="let columna of columnas" [matColumnDef]="columna.nombreColumna">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header> {{ columna.cabecera }}
+                                </th>
+                                <td mat-cell *matCellDef="let row"> {{ columna.celda(row) }} </td>
+                                <ng-container *ngIf="columna.nombreColumna!='subtotal0'">
+                                    <td mat-footer-cell *matFooterCellDef> {{columna.pie}} </td>
+                                </ng-container>
+                                <ng-container *ngIf="columna.nombreColumna=='subtotal0'">
+                                    <td mat-footer-cell *matFooterCellDef> {{ 0 | currency}}
+                                    </td>
+                                </ng-container>
+                            </ng-container>
+                            <tr mat-header-row *matHeaderRowDef="cabecera"></tr>
+                            <tr mat-row (click)="seleccion(row)" [class.selected-row]="clickedRows.has(row)"
+                                *matRowDef="let row; columns: cabecera;"></tr>
+                            <tr mat-footer-row *matFooterRowDef="cabecera"></tr>
+                            <tr class="mat-row" *matNoDataRow>
+                                <td class="mat-cell" colspan="6">No hay datos que coincidan con el detalle de
+                                    ventas: "{{inputFiltro.value}}"
+                                </td>
+                            </tr>
+                        </table>
+                        <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" showFirstLastButtons></mat-paginator>
+                    </div>
+                    <!--td>TOTALES</td>
+                        <td>{{reporteVenta.total0}}</td>
+                        <td>{{reporteVenta.total12}}</td>
+                        <td>{{reporteVenta.totalIva}}</td>
+                        <td>{{reporteVenta.total}}</td-->
+                </div>
+            </div>
+        </mat-expansion-panel>
+    </mat-accordion>
+
+    <mat-accordion class="headers-align">
+        <mat-expansion-panel (opened)="abrirPanelResumen = true" (closed)="abrirPanelResumen = false"
+            [expanded]="abrirPanelResumen">
+            <mat-expansion-panel-header>
+                <mat-panel-title>
+                    <i><u>RESUMEN</u></i>
+                </mat-panel-title>
+                <mat-panel-description>
+                    {{abrirPanelResumen ? 'Ocultar resumen de ventas' : 'Ver resumen de ventas'}}
+                    <mat-icon>playlist_add_check</mat-icon>
+                </mat-panel-description>
+            </mat-expansion-panel-header>
+            <mat-divider></mat-divider>
+            <div class="form-group form-row">
+                <div class="col-5">
+                    <div class="col-12 centrar-titulo">COMPROBANTES EMITIDOS</div>
+                    <div class="mat-elevation-z8 centrar">
+                        <table mat-table [dataSource]="dataSourceResumen" matSort>
+                            <ng-container *ngFor="let columna of columnasComprobantes"
+                                [matColumnDef]="columna.nombreColumna">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header class="centrarCabecera"> {{
+                                    columna.cabecera }} </th>
+                                <td mat-cell *matCellDef="let row"> {{ columna.celda(row) }} </td>
+                            </ng-container>
+                            <tr mat-header-row *matHeaderRowDef="cabeceraComprobantes"></tr>
+                            <tr mat-row *matRowDef="let row; columns: cabeceraComprobantes"
+                                [class.selected-row]="clickedRowsResumen.has(row)"></tr>
+                        </table>
+                    </div>
+                </div>
+                <div class="col-7">
+                    <div class="col-12 centrar-titulo">RESUMEN DE VENTAS</div>
+                    <div class="mat-elevation-z8 centrar">
+                        <table mat-table [dataSource]="dataSourceResumen" matSort>
+                            <ng-container *ngFor="let columna of columnasResumen"
+                                [matColumnDef]="columna.nombreColumna">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header class="centrarCabecera"> {{
+                                    columna.cabecera }} </th>
+                                <td mat-cell *matCellDef="let row"> {{ columna.celda(row) }} </td>
+                            </ng-container>
+                            <tr mat-header-row *matHeaderRowDef="cabeceraResumen"></tr>
+                            <tr mat-row *matRowDef="let row; columns: cabeceraResumen"
+                                [class.selected-row]="clickedRowsResumen.has(row)"></tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <br>
+            <div class="form-group form-row">
+                <div class="col-12">
+                    <div class="col-12 centrar-titulo">COBROS</div>
+                    <div class="mat-elevation-z8 centrar">
+                        <table mat-table [dataSource]="dataSourceResumen" matSort>
+                            <ng-container *ngFor="let columna of columnasCobros" [matColumnDef]="columna.nombreColumna">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header class="centrarCabecera"> {{
+                                    columna.cabecera }} </th>
+                                <td mat-cell *matCellDef="let row"> {{ columna.celda(row) }} </td>
+                            </ng-container>
+                            <tr mat-header-row *matHeaderRowDef="cabeceraCobros"></tr>
+                            <tr mat-row *matRowDef="let row; columns: cabeceraCobros"
+                                [class.selected-row]="clickedRowsResumen.has(row)"></tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <br><br>
+            <div class="form-group form-row">
+                <div class="col-6 centrar">
+                    _______________________________<br>
+                    {{reporteVenta.nombreRepresentanteLegal}}<br>
+                    <b>{{reporteVenta.cargoRepresentanteLegal}}</b><br>
+                    <b>{{reporteVenta.empresaRepresentanteLegal}}</b><br>
+                </div>
+                <div class="col-6 centrar">
+                    _______________________________<br>
+                    {{reporteVenta.nombreUsuario}}<br>
+                    <b>{{reporteVenta.cargoUsuario}}</b><br>
+                    <b>{{reporteVenta.empresaUsuario}}</b><br>
+                </div>
+            </div>
+        </mat-expansion-panel>
+    </mat-accordion>
+</div>
