@@ -1,0 +1,455 @@
+<nav class="navbar-light nav-fijo">
+    <ul class="navbar-nav">
+        <li class="nav-item">
+            <a class="nav-link" title="pdf" role="button" (click)="pdf($event)">
+                <mat-icon>save</mat-icon>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" title="excel" role="button" (click)="excel($event)">
+                <mat-icon>save</mat-icon>
+            </a>
+        </li>
+    </ul>
+</nav>
+<div style="height: 100vh;">
+    <div class="form-row">
+        <div class="col-5">
+            <mat-form-field appearance="standard">
+                <mat-label>Fecha Inicio</mat-label>
+                <input matInput [matDatepicker]="picker1" class="form-control-sm" [(ngModel)]="fechaInicio" [max]="hoy">
+                <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                <mat-datepicker #picker1></mat-datepicker>
+            </mat-form-field>
+        </div>
+        <div class="col-5">
+            <mat-form-field appearance="standard">
+                <mat-label>Fecha Final</mat-label>
+                <input matInput [matDatepicker]="picker2" class="form-control-sm" [(ngModel)]="fechaFinal" [max]="hoy">
+                <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+                <mat-datepicker #picker2></mat-datepicker>
+            </mat-form-field>
+        </div>
+        <div class="col-2">
+            <button mat-button (click)="obtener()">
+                Generar reporte
+            </button>
+        </div>
+    </div>
+    <div class="form-row">
+        <div class="col-2">
+            <mat-form-field appearance="standard">
+                <mat-label>Billetes de 100</mat-label>
+                <input matInput type="text" [(ngModel)]="billete100" class="form-control-sm">
+            </mat-form-field>
+        </div>
+        <div class="col-2">
+            <mat-form-field appearance="standard">
+                <mat-label>Billetes de 50</mat-label>
+                <input matInput type="text" [(ngModel)]="billete50" class="form-control-sm">
+            </mat-form-field>
+        </div>
+        <div class="col-2">
+            <mat-form-field appearance="standard">
+                <mat-label>Billetes de 20</mat-label>
+                <input matInput type="text" [(ngModel)]="billete20" class="form-control-sm">
+            </mat-form-field>
+        </div>
+        <div class="col-2">
+            <mat-form-field appearance="standard">
+                <mat-label>Billetes de 10</mat-label>
+                <input matInput type="text" [(ngModel)]="billete10" class="form-control-sm">
+            </mat-form-field>
+        </div>
+        <div class="col-2">
+            <mat-form-field appearance="standard">
+                <mat-label>Billetes de 5</mat-label>
+                <input matInput type="text" [(ngModel)]="billete5" class="form-control-sm">
+            </mat-form-field>
+        </div>
+        <div class="col-2">
+            <mat-form-field appearance="standard">
+                <mat-label>Billetes de 2</mat-label>
+                <input matInput type="text" [(ngModel)]="billete2" class="form-control-sm">
+            </mat-form-field>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <mat-form-field appearance="standard">
+                <mat-label>Billetes de 1</mat-label>
+                <input matInput type="text" [(ngModel)]="billete1" class="form-control-sm">
+            </mat-form-field>
+        </div>
+    </div>
+    <div class="form-row">
+        <div class="col-2">
+            <mat-form-field appearance="standard">
+                <mat-label>Monedas de 1</mat-label>
+                <input matInput type="text" [(ngModel)]="moneda1" class="form-control-sm">
+            </mat-form-field>
+        </div>
+        <div class="col-2">
+            <mat-form-field appearance="standard">
+                <mat-label>Monedas de 0,50</mat-label>
+                <input matInput type="text" [(ngModel)]="moneda050" class="form-control-sm">
+            </mat-form-field>
+        </div>
+        <div class="col-2">
+            <mat-form-field appearance="standard">
+                <mat-label>Monedas de 0,25</mat-label>
+                <input matInput type="text" [(ngModel)]="moneda025" class="form-control-sm">
+            </mat-form-field>
+        </div>
+        <div class="col-2">
+            <mat-form-field appearance="standard">
+                <mat-label>Monedas de 0,10</mat-label>
+                <input matInput type="text" [(ngModel)]="moneda010" class="form-control-sm">
+            </mat-form-field>
+        </div>
+        <div class="col-2">
+            <mat-form-field appearance="standard">
+                <mat-label>Monedas de 0,05</mat-label>
+                <input matInput type="text" [(ngModel)]="moneda005" class="form-control-sm">
+            </mat-form-field>
+        </div>
+        <div class="col-2">
+            <mat-form-field appearance="standard">
+                <mat-label>Monedas de 0,01</mat-label>
+                <input matInput type="text" [(ngModel)]="moneda001" class="form-control-sm">
+            </mat-form-field>
+        </div>
+    </div>
+    <div class="row">
+        <h1>{{reporteCaja.razonSocial}}</h1>
+    </div>
+    <div class="row">
+        <h2>{{reporteCaja.nombreComercial}}</h2>
+    </div>
+    <div class="row">
+        <h2>{{reporteCaja.nombreReporte}}</h2>
+    </div>
+    <div class="row">
+        <h2>{{reporteCaja.periodoReporte}}</h2>
+    </div>
+    <div class="row">
+        <div class="col-4">
+            DATOS GENERALES<br>
+            FECHA DEL REPORTE: {{reporteCaja.fecha}}<br>
+            PERIODO DEL REPORTE: {{reporteCaja.periodoReporte}}<br>
+            USUARIO: {{reporteCaja.usuario}}<br>
+            CARGO: {{reporteCaja.perfil}}
+        </div>
+        <div class="col-4">
+            COMPROBANTES EMITIDOS<br>
+            <table class="table table-hover table-bordered">
+                <thead class="table-active">
+                    <tr>
+                        <th>FACTURAS EMITIDAS</th>
+                        <th>FACTURAS ANULADAS</th>
+                        <th>TOTAL</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>{{reporteCaja.facturasEmitidas}}</td>
+                        <td>{{reporteCaja.facturasAnuladas}}</td>
+                        <td>{{reporteCaja.facturasTotales}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="col-4">
+            RESUMEN DE VENTAS<br>
+            <table class="table table-hover table-bordered">
+                <thead class="table-active">
+                    <tr>
+                        <th>VENTAS GRAVADAS CON 12%</th>
+                        <th>VENTAS GRAVADAS CON 0%</th>
+                        <th>IVA TARIFA 12%</th>
+                        <th>TOTAL</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>{{reporteCaja.total0}}</td>
+                        <td>{{reporteCaja.total12}}</td>
+                        <td>{{reporteCaja.totalIva}}</td>
+                        <td>{{reporteCaja.total}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12">
+            CIERRE DE CAJA VENTAS AL CONTADO
+            <table class="table table-hover table-bordered">
+                <thead class="table-active">
+                    <tr>
+                        <th>EFECTIVO</th>
+                        <th>CHEQUE</th>
+                        <th>TARJETA DE CREDITO</th>
+                        <th>TARJETA DE DEBITO</th>
+                        <th>TRANSFERENCIAS</th>
+                        <th>DEPOSITOS</th>
+                        <th>CREDITO</th>
+                        <th>RETENCION</th>
+                        <th>CXC</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>{{reporteCaja.efectivo}}</td>
+                        <td>{{reporteCaja.cheque}}</td>
+                        <td>{{reporteCaja.tarjetaCredito}}</td>
+                        <td>{{reporteCaja.tarjetaDebito}}</td>
+                        <td>{{reporteCaja.transferencia}}</td>
+                        <td>{{reporteCaja.deposito}}</td>
+                        <td>{{reporteCaja.credito}}</td>
+                        <td>0</td>
+                        <td>0</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12">
+            CIERRE DE COBROS
+            <table class="table table-hover table-bordered">
+                <thead class="table-active">
+                    <tr>
+                        <th>EFECTIVO</th>
+                        <th>CHEQUE</th>
+                        <th>TARJETA DE CREDITO</th>
+                        <th>TARJETA DE DEBITO</th>
+                        <th>TRANSFERENCIAS</th>
+                        <th>DEPOSITOS</th>
+                        <th>CREDITO</th>
+                        <th>RETENCION</th>
+                        <th>CXC</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12">
+            GASTOS
+            <table class="table table-hover table-bordered">
+                <thead class="table-active">
+                    <tr>
+                        <th>EFECTIVO</th>
+                        <th>CHEQUE</th>
+                        <th>TARJETA DE CREDITO</th>
+                        <th>TARJETA DE DEBITO</th>
+                        <th>TRANSFERENCIAS</th>
+                        <th>DEPOSITOS</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-4">
+            <table class="table table-hover table-bordered">
+                <thead class="table-active">
+                    <tr>
+                        <th>TOTAL CAJA DIARIA</th>
+                        <th>${{reporteCaja.totalRecaudacion}}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>TOTAL EFECTIVO</td>
+                        <td>${{reporteCaja.efectivo}}</td>
+                    </tr>
+                    <tr>
+                        <td>TOTAL CHEQUES</td>
+                        <td>${{reporteCaja.cheque}}</td>
+                    </tr>
+                    <tr>
+                        <td>TOTAL TARJETAS DE CREDITO</td>
+                        <td>${{reporteCaja.tarjetaCredito}}</td>
+                    </tr>
+                    <tr>
+                        <td>TOTAL TARJETAS DE DEBITO</td>
+                        <td>${{reporteCaja.tarjetaDebito}}</td>
+                    </tr>
+                    <tr>
+                        <td>TOTAL TRANSFERENCIAS</td>
+                        <td>${{reporteCaja.transferencia}}</td>
+                    </tr>
+                    <tr>
+                        <td>TOTAL DEPOSITOS</td>
+                        <td>${{reporteCaja.deposito}}</td>
+                    </tr>
+                    <tr>
+                        <td>TOTAL CREDITO</td>
+                        <td>${{reporteCaja.credito}}</td>
+                    </tr>
+                    <tr>
+                        <td>TOTAL CXC</td>
+                        <td>$0</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="col-4">
+            BILLETES
+            <table class="table table-hover table-bordered">
+                <thead class="table-active">
+                    <tr>
+                        <th>CANTIDAD</th>
+                        <th>DENOMINACION</th>
+                        <th>TOTAL</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>{{reporteCaja.cantidadBillete100}}</td>
+                        <td>${{reporteCaja.denominacionBillete100}}</td>
+                        <td>${{reporteCaja.totalBillete100}}</td>
+                    </tr>
+                    <tr>
+                        <td>{{reporteCaja.cantidadBillete50}}</td>
+                        <td>${{reporteCaja.denominacionBillete50}}</td>
+                        <td>${{reporteCaja.totalBillete50}}</td>
+                    </tr>
+                    <tr>
+                        <td>{{reporteCaja.cantidadBillete20}}</td>
+                        <td>${{reporteCaja.denominacionBillete20}}</td>
+                        <td>${{reporteCaja.totalBillete20}}</td>
+                    </tr>
+                    <tr>
+                        <td>{{reporteCaja.cantidadBillete10}}</td>
+                        <td>${{reporteCaja.denominacionBillete10}}</td>
+                        <td>${{reporteCaja.totalBillete10}}</td>
+                    </tr>
+                    <tr>
+                        <td>{{reporteCaja.cantidadBillete5}}</td>
+                        <td>${{reporteCaja.denominacionBillete5}}</td>
+                        <td>${{reporteCaja.totalBillete5}}</td>
+                    </tr>
+                    <tr>
+                        <td>{{reporteCaja.cantidadBillete2}}</td>
+                        <td>${{reporteCaja.denominacionBillete2}}</td>
+                        <td>${{reporteCaja.totalBillete2}}</td>
+                    </tr>
+                    <tr>
+                        <td>{{reporteCaja.cantidadBillete1}}</td>
+                        <td>${{reporteCaja.denominacionBillete1}}</td>
+                        <td>${{reporteCaja.totalBillete1}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="col-4">
+            MONEDAS
+            <table class="table table-hover table-bordered">
+                <thead class="table-active">
+                    <tr>
+                        <th>CANTIDAD</th>
+                        <th>DENOMINACION</th>
+                        <th>TOTAL</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>${{reporteCaja.cantidadMoneda1}}</td>
+                        <td>${{reporteCaja.denominacionMoneda1}}</td>
+                        <td>${{reporteCaja.totalMoneda1}}</td>
+                    </tr>
+                    <tr>
+                        <td>${{reporteCaja.cantidadMoneda050}}</td>
+                        <td>${{reporteCaja.denominacionMoneda050}}</td>
+                        <td>${{reporteCaja.totalMoneda050}}</td>
+                    </tr>
+                    <tr>
+                        <td>${{reporteCaja.cantidadMoneda025}}</td>
+                        <td>${{reporteCaja.denominacionMoneda025}}</td>
+                        <td>${{reporteCaja.totalMoneda025}}</td>
+                    </tr>
+                    <tr>
+                        <td>${{reporteCaja.cantidadMoneda010}}</td>
+                        <td>${{reporteCaja.denominacionMoneda010}}</td>
+                        <td>${{reporteCaja.totalMoneda010}}</td>
+                    </tr>
+                    <tr>
+                        <td>${{reporteCaja.cantidadMoneda005}}</td>
+                        <td>${{reporteCaja.denominacionMoneda005}}</td>
+                        <td>${{reporteCaja.totalMoneda005}}</td>
+                    </tr>
+                    <tr>
+                        <td>${{reporteCaja.cantidadMoneda001}}</td>
+                        <td>${{reporteCaja.denominacionMoneda001}}</td>
+                        <td>${{reporteCaja.totalMoneda001}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="row">
+        DIFERENCIAS
+    </div>
+    <div class="row">
+        <div class="col-6">
+            <table class="table table-hover table-bordered">
+                <thead class="table-active">
+                    <tr>
+                        <th>FALTANTE DE CAJA</th>
+                        <th>${{reporteCaja.faltante}}</th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+        <div class="col-6">
+            <table class="table table-hover table-bordered">
+                <thead class="table-active">
+                    <tr>
+                        <th>SOBRANTE DE CAJA</th>
+                        <th>${{reporteCaja.sobrante}}</th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-6">
+            _______________________________<br>
+            {{reporteCaja.nombreRepresentanteLegal}}<br>
+            {{reporteCaja.cargoRepresentanteLegal}}<br>
+            {{reporteCaja.empresaRepresentanteLegal}}<br>
+        </div>
+        <div class="col-6">
+            _______________________________<br>
+            {{reporteCaja.nombreUsuario}}<br>
+            {{reporteCaja.cargoUsuario}}<br>
+            {{reporteCaja.empresaUsuario}}<br>
+        </div>
+    </div>
+</div>

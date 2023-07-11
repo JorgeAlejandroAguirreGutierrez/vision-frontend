@@ -1,13 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 
 @Component({
-  selector: 'app-reporte-inventario',
-  templateUrl: './reporte-inventario.component.html',
-  styleUrls: ['./reporte-inventario.component.scss']
+  selector: 'app-reporte-venta',
+  templateUrl: './reporte-venta.component.html',
+  styleUrls: ['./reporte-venta.component.scss']
 })
-export class ReporteInventarioComponent implements OnInit {
 
-  verKardexMercaderia: boolean = true;
+export class ReporteVentaComponent implements OnInit {
+
+  verDetalleVentas: boolean = true;
   verCierreCaja: boolean = false;
 
   constructor() {
@@ -20,7 +21,7 @@ export class ReporteInventarioComponent implements OnInit {
   verReporte(nombre: string){
     this.iniciarVistaReporte();
     if (nombre == 'DETALLE'){
-      this.verKardexMercaderia = true;
+      this.verDetalleVentas = true;
       return;
     }
     if (nombre == 'CIERRE'){
@@ -30,7 +31,7 @@ export class ReporteInventarioComponent implements OnInit {
   }
 
   iniciarVistaReporte(){
-    this.verKardexMercaderia = false;
+    this.verDetalleVentas = false;
     this.verCierreCaja = false;
   }
 

@@ -11,11 +11,11 @@ import { Router } from '@angular/router';
 import { DatePipe } from '@angular/common';
 
 @Component({
-  selector: 'app-reporte-venta',
-  templateUrl: './reporte-venta.component.html',
-  styleUrls: ['./reporte-venta.component.scss']
+  selector: 'app-reporte-venta1',
+  templateUrl: './reporte-venta1.component.html',
+  styleUrls: ['./reporte-venta1.component.scss']
 })
-export class ReporteVentaComponent implements OnInit {
+export class ReporteVenta1Component implements OnInit {
 
   reporteVenta = new ReporteVenta();
   sesion: Sesion = null;

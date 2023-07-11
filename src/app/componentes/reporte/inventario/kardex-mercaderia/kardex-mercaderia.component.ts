@@ -1,7 +1,7 @@
 import { Component, OnInit, ChangeDetectorRef, ViewChild } from '@angular/core';
 import { MediaMatcher } from '@angular/cdk/layout';
 import Swal from 'sweetalert2';
-import { valores, mensajes, otras, validarSesion, exito, exito_swal, error, error_swal } from '../../../constantes';
+import { valores, mensajes, otras, validarSesion, exito, exito_swal, error, error_swal } from '../../../../constantes';
 import { Sesion } from 'src/app/modelos/usuario/sesion';
 import { Empresa } from 'src/app/modelos/usuario/empresa';
 import { SesionService } from 'src/app/servicios/usuario/sesion.service';
@@ -13,11 +13,11 @@ import { Producto } from 'src/app/modelos/inventario/producto';
 import { ProductoService } from 'src/app/servicios/inventario/producto.service';
 
 @Component({
-  selector: 'app-reporte-kardex',
-  templateUrl: './reporte-kardex.component.html',
-  styleUrls: ['./reporte-kardex.component.scss']
+  selector: 'app-kardex-mercaderia',
+  templateUrl: './kardex-mercaderia.component.html',
+  styleUrls: ['./kardex-mercaderia.component.scss']
 })
-export class ReporteKardexComponent implements OnInit {
+export class KardexMercaderiaComponent implements OnInit {
 
   reporteKardex = new ReporteKardex();
   sesion: Sesion = null;
