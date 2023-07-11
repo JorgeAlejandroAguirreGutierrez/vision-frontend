@@ -80,9 +80,10 @@ import { TablaMovimientoContableComponent } from './componentes/contabilidad/mov
 import { ReporteClienteComponent } from './componentes/reporte/cliente/reporte-cliente/reporte-cliente.component';
 import { ReporteCompraComponent } from './componentes/reporte/compra/reporte-compra/reporte-compra.component';
 import { ReporteVentaComponent } from './componentes/reporte/venta/reporte-venta/reporte-venta.component';
-import { DetalleVentasComponent } from './componentes/reporte/venta/detalle-ventas/detalle-ventas.component';
-import { CierreCajaComponent } from './componentes/reporte/venta/cierre-caja/cierre-caja.component';
+  import { DetalleVentasComponent } from './componentes/reporte/venta/detalle-ventas/detalle-ventas.component';
+  import { CierreCajaComponent } from './componentes/reporte/venta/cierre-caja/cierre-caja.component';
 import { ReporteInventarioComponent } from './componentes/reporte/inventario/reporte-inventario/reporte-inventario.component';
+  import { KardexMercaderiaComponent } from './componentes/reporte/inventario/kardex-mercaderia/kardex-mercaderia.component';
 import { ReporteCajaBancoComponent } from './componentes/reporte/caja-banco/reporte-caja-banco/reporte-caja-banco.component';
 import { ReporteCuentaCobrarComponent } from './componentes/reporte/cuenta-cobrar/reporte-cuenta-cobrar/reporte-cuenta-cobrar.component';
 import { ReporteCuentaPagarComponent } from './componentes/reporte/cuenta-pagar/reporte-cuenta-pagar/reporte-cuenta-pagar.component';
@@ -93,9 +94,7 @@ import { ReporteTalentoHumanoComponent } from './componentes/reporte/talento-hum
 import { ReporteFinancieroComponent } from './componentes/reporte/financiero/reporte-financiero/reporte-financiero.component';
 import { ReporteImportacionComponent } from './componentes/reporte/importacion/reporte-importacion/reporte-importacion.component';
 
-import { ReporteVenta1Component } from './componentes/reporte/reporte-venta/reporte-venta1.component';
 import { ReporteCajaComponent } from './componentes/reporte/reporte-caja/reporte-caja.component';
-import { KardexMercaderiaComponent } from './componentes/reporte/inventario/kardex-mercaderia/kardex-mercaderia.component';
 
 // Módulo de Accesos
 import { UsuarioComponent } from './componentes/usuario/usuario/usuario.component';
@@ -221,7 +220,6 @@ export const RoutingComponents = [
   ReporteVentaComponent,
   DetalleVentasComponent,
   CierreCajaComponent,
-  ReporteVenta1Component,
   ReporteInventarioComponent,
   KardexMercaderiaComponent,
   ReporteCajaBancoComponent,
