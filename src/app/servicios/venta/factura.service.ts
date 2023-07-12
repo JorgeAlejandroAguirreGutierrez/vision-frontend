@@ -77,6 +77,30 @@ export class FacturaService {
       }));
   }
 
+  consultarPorClienteYEstado(clienteId: number, estado: string): Observable<Respuesta> {
+    return this.http.get(environment.host + urn.ruta + urn.factura + urn.consultarPorClienteYEstado + urn.slash + clienteId + urn.slash + estado, options).pipe(
+      map(response => response as Respuesta),
+      catchError(err => {
+        return throwError(() => err);
+      }));
+  }
+
+  consultarPorClienteYEstadoYEstadoInterno(clienteId: number, estado: string, estadoInterno: string): Observable<Respuesta> {
+    return this.http.get(environment.host + urn.ruta + urn.factura + urn.consultarPorClienteYEstadoYEstadoInterno + urn.slash + clienteId + urn.slash + estado + urn.slash + estadoInterno, options).pipe(
+      map(response => response as Respuesta),
+      catchError(err => {
+        return throwError(() => err);
+      }));
+  }
+
+  consultarPorClienteYEstadoYEstadoInternoYEstadoSri(clienteId: number, estado: string, estadoInterno: string, estadoSri: string): Observable<Respuesta> {
+    return this.http.get(environment.host + urn.ruta + urn.factura + urn.consultarPorClienteYEstadoYEstadoInternoYEstadoSri + urn.slash + clienteId + urn.slash + estado + urn.slash + estadoInterno + urn.slash + estadoSri, options).pipe(
+      map(response => response as Respuesta),
+      catchError(err => {
+        return throwError(() => err);
+      }));
+  }
+
   obtener(facturaId: number): Observable<Respuesta> {
     return this.http.get(environment.host + urn.ruta + urn.factura+ urn.slash + facturaId, options).pipe(
       map(response => response as Respuesta),

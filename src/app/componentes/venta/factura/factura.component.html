@@ -9,7 +9,7 @@
                             <mat-icon>save</mat-icon>
                         </a>
                     </li>
-                    <li class="nav-item" *ngIf="factura.id!=0">
+                    <li class="nav-item" *ngIf="factura.id != 0">
                         <a class="nav-link" title="Actualizar" role="button" (click)="actualizar($event)">
                             <mat-icon>update</mat-icon>
                         </a>
@@ -23,42 +23,39 @@
                         <a class="nav-link" title="Cliente" role="button" (click)="abrirTabCliente($event)">
                             <mat-icon>person_add</mat-icon>
                         </a>
-                    </li>  
+                    </li>
                     <li class="nav-item">
                         <a class="nav-link" title="Producto" role="button" (click)="abrirTabProducto($event)">
                             <mat-icon>shopping_basket</mat-icon>
                         </a>
-                    </li>   
-                    <ng-container *ngIf="factura.id!=0">
-                        <li class="nav-item" *ngIf="factura.estado!=activo">
-                            <a class="nav-link" title="Activar" role="button" (click)="activar($event)">
-                                <mat-icon>assignment_turned_in</mat-icon>
-                            </a>
-                        </li>
-                        <li class="nav-item" *ngIf="factura.estado==activo">
-                            <a class="nav-link" title="Inactivar" role="button" (click)="inactivar($event)">
-                                <mat-icon>delete_forever</mat-icon>
-                            </a>
-                        </li>
-                        <li class="nav-item" *ngIf="factura.estado == 'RECAUDADA'">
-                            <a class="nav-link" title="Crear Factura Electronica" href="#" role="button"
-                                (click)="crearFacturaElectronica($event)">
-                                <mat-icon>point_of_sale</mat-icon>
-                            </a>
-                        </li>
-                        <li class="nav-item" *ngIf="(factura.estado == 'RECAUDADA' || factura.estado == 'FACTURADA')">
-                            <a class="nav-link" title="Obtener PDF" href="#" role="button"
-                                (click)="obtenerPDF($event)">
-                                <mat-icon>picture_as_pdf</mat-icon>
-                            </a>
-                        </li>
-                        <li class="nav-item" *ngIf="(factura.estado == 'RECAUDADA' || factura.estado == 'FACTURADA')">
-                            <a class="nav-link" title="Enviar PDF Y XML" href="#" role="button"
-                                (click)="enviarPDFYXML($event)">
-                                <mat-icon>forward_to_inbox</mat-icon>
-                            </a>
-                        </li>
-                    </ng-container>
+                    </li>
+                    <li class="nav-item" *ngIf="factura.id != 0 && factura.estado == estadoInactivo">
+                        <a class="nav-link" title="Activar" role="button" (click)="activar($event)">
+                            <mat-icon>assignment_turned_in</mat-icon>
+                        </a>
+                    </li>
+                    <li class="nav-item" *ngIf="factura.id != 0 && factura.estado == estadoActivo">
+                        <a class="nav-link" title="Inactivar" role="button" (click)="inactivar($event)">
+                            <mat-icon>delete_forever</mat-icon>
+                        </a>
+                    </li>
+                    <li class="nav-item" *ngIf="factura.id != 0 && factura.estado == estadoActivo && factura.estadoInterno == estadoInternoEmitida && factura.estadoSri == estadoSriPendiente">
+                        <a class="nav-link" title="Crear Factura Electronica" href="#" role="button"
+                            (click)="crearFacturaElectronica($event)">
+                            <mat-icon>point_of_sale</mat-icon>
+                        </a>
+                    </li>
+                    <li class="nav-item" *ngIf="factura.estado == estadoActivo && factura.estadoInterno == estadoInternoRecaudada">
+                        <a class="nav-link" title="Obtener PDF" href="#" role="button" (click)="obtenerPDF($event)">
+                            <mat-icon>picture_as_pdf</mat-icon>
+                        </a>
+                    </li>
+                    <li class="nav-item" *ngIf="factura.estado == estadoActivo && factura.estadoInterno == estadoInternoEmitida && factura.estadoSri == estadoSriAutorizada">
+                        <a class="nav-link" title="Enviar PDF Y XML" href="#" role="button"
+                            (click)="enviarPDFYXML($event)">
+                            <mat-icon>forward_to_inbox</mat-icon>
+                        </a>
+                    </li>
                     <li class="nav-item">
                         <a class="nav-link" title="Recaudación" role="button" (click)="stepperSiguiente(stepper)">
                             <mat-icon>redo</mat-icon>
@@ -69,14 +66,15 @@
             <ng-template matStepLabel>Facturación</ng-template>
             <mat-divider></mat-divider>
             <mat-accordion class="headers-align">
-                <mat-expansion-panel (opened)="abrirPanelFacturaCliente = true" (closed)="abrirPanelFacturaCliente = false"
-                    [expanded]="abrirPanelFacturaCliente">
+                <mat-expansion-panel (opened)="abrirPanelFacturaCliente = true"
+                    (closed)="abrirPanelFacturaCliente = false" [expanded]="abrirPanelFacturaCliente">
                     <mat-expansion-panel-header>
                         <mat-panel-title>
                             <i><u>DATOS PARA FACTURA</u></i>
                         </mat-panel-title>
                         <mat-panel-description>
-                            {{abrirPanelFacturaCliente ? 'Ocultar datos cliente' : 'Información del cliente para facturar'}}
+                            {{abrirPanelFacturaCliente ? 'Ocultar datos cliente' : 'Información del cliente para
+                            facturar'}}
                             <mat-icon>account_circle</mat-icon>
                         </mat-panel-description>
                     </mat-expansion-panel-header>
@@ -87,9 +85,12 @@
                                 <mat-form-field appearance="standard">
                                     <mat-label>Identificación</mat-label>
                                     <input matInput type="text" class="form-control-sm" placeholder="Cédula/RUC"
-                                        [formControl]="controlIdentificacionCliente" [matAutocomplete]="identificacionCliente">
-                                    <mat-autocomplete #identificacionCliente="matAutocomplete" [displayWith]="verIdentificacionCliente"
-                                        (optionSelected)="seleccionarIdentificacionCliente()" (opened)="consultarClientes()">
+                                        [formControl]="controlIdentificacionCliente"
+                                        [matAutocomplete]="identificacionCliente">
+                                    <mat-autocomplete #identificacionCliente="matAutocomplete"
+                                        [displayWith]="verIdentificacionCliente"
+                                        (optionSelected)="seleccionarIdentificacionCliente()"
+                                        (opened)="consultarClientes()">
                                         <mat-option *ngFor="let cliente of filtroIdentificacionClientes | async"
                                             [value]="cliente">{{cliente.identificacion}}
                                         </mat-option>
@@ -104,7 +105,8 @@
                                         oninput="this.value = this.value.toUpperCase()">
                                     <mat-autocomplete #razonSocialCliente="matAutocomplete"
                                         [displayWith]="verRazonSocialCliente"
-                                        (optionSelected)="seleccionarRazonSocialCliente()" (opened)="consultarClientes()">
+                                        (optionSelected)="seleccionarRazonSocialCliente()"
+                                        (opened)="consultarClientes()">
                                         <mat-option *ngFor="let cliente of filtroRazonSocialClientes | async"
                                             [value]="cliente">
                                             {{cliente.razonSocial}}
@@ -115,7 +117,8 @@
                             <div class="col-2">
                                 <mat-form-field appearance="standard">
                                     <mat-label>Fecha</mat-label>
-                                    <input matInput [matDatepicker]="picker1" class="form-control-sm" [(ngModel)]="factura.fecha" [max]="hoy">
+                                    <input matInput [matDatepicker]="picker1" class="form-control-sm"
+                                        [(ngModel)]="factura.fecha" [max]="hoy">
                                     <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
                                     <mat-datepicker #picker1></mat-datepicker>
                                 </mat-form-field>
@@ -134,8 +137,8 @@
                                             <mat-form-field appearance="standard">
                                                 <mat-label>Teléfono</mat-label>
                                                 <b matPrefix>+593 &nbsp;</b>
-                                                <input matInput type="tel" [value]="telefono.numero" class="form-control-sm"
-                                                    [disabled]="true">
+                                                <input matInput type="tel" [value]="telefono.numero"
+                                                    class="form-control-sm" [disabled]="true">
                                             </mat-form-field>
                                         </div>
                                     </ng-container>
@@ -146,8 +149,8 @@
                                             <mat-form-field appearance="standard">
                                                 <mat-label>Celular</mat-label>
                                                 <b matPrefix>+593 &nbsp;</b>
-                                                <input matInput type="tel" [value]="celular.numero" class="form-control-sm"
-                                                    [disabled]="true">
+                                                <input matInput type="tel" [value]="celular.numero"
+                                                    class="form-control-sm" [disabled]="true">
                                             </mat-form-field>
                                         </div>
                                     </ng-container>
@@ -164,13 +167,6 @@
                                     </ng-container>
                                 </div>
                             </section>
-                            <!--div class="col-12">
-                                <mat-form-field appearance="standard">
-                                    <mat-label>Clave de Acceso - Factura Electrónica</mat-label>
-                                    <input matInput type="text" class="form-control-sm"
-                                        [(ngModel)]="factura.claveAcceso" disabled>
-                                </mat-form-field>
-                            </div-->
                         </div>
                         <div class="form-row col-3 linea-vertical ml-1">
                             <div class="col-3">
@@ -219,12 +215,8 @@
                                 <mat-form-field appearance="standard">
                                     <mat-label>Estado</mat-label>
                                     <mat-select class="form-control-sm" [(ngModel)]="factura.estado" [disabled]="true">
-                                        <mat-option [value]="emitida">{{emitida}}</mat-option>
-                                        <mat-option [value]="anulada">{{anulada}}</mat-option>
-                                        <mat-option [value]="noFacturada">{{noFacturada}}</mat-option>
-                                        <mat-option [value]="facturada">{{facturada}}</mat-option>
-                                        <mat-option [value]="noRecaudada">{{noRecaudada}}</mat-option>
-                                        <mat-option [value]="recaudada">{{recaudada}}</mat-option>
+                                        <mat-option [value]="estadoActivo">{{estadoActivo}}</mat-option>
+                                        <mat-option [value]="estadoInactivo">{{estadoInactivo}}</mat-option>
                                     </mat-select>
                                 </mat-form-field>
                             </div>
@@ -257,8 +249,10 @@
                                                 [formControl]="controlProducto" [matAutocomplete]="producto"
                                                 oninput="this.value = this.value.toUpperCase()">
                                             <mat-autocomplete #producto="matAutocomplete" [displayWith]="verProducto"
-                                                (optionSelected)="seleccionarProducto()" (opened)="consultarProductos()">
-                                                <mat-option *ngFor="let producto of filtroProductos | async" [value]="producto">
+                                                (optionSelected)="seleccionarProducto()"
+                                                (opened)="consultarProductos()">
+                                                <mat-option *ngFor="let producto of filtroProductos | async"
+                                                    [value]="producto">
                                                     {{producto.nombre}}
                                                 </mat-option>
                                             </mat-autocomplete>
@@ -295,8 +289,9 @@
                                     <div class="col-1">
                                         <mat-form-field appearance="standard">
                                             <mat-label>Cantidad</mat-label>
-                                            <input matInput type="text" appFormatoDecimal [(ngModel)]="facturaLinea.cantidad"
-                                                (change)="calcularFacturaLinea()" class="form-control-sm">
+                                            <input matInput type="text" appFormatoDecimal
+                                                [(ngModel)]="facturaLinea.cantidad" (change)="calcularFacturaLinea()"
+                                                class="form-control-sm">
                                         </mat-form-field>
                                     </div>
                                     <div class="col-1">
@@ -330,24 +325,22 @@
                                             <mat-label>Desc. %</mat-label>
                                             <input matInput type="text" appFormatoDecimal min="0" max="100" step="0.01"
                                                 [(ngModel)]="facturaLinea.porcentajeDescuentoLinea"
-                                                (change)="calcularFacturaLinea()"
-                                                class="form-control-sm">
+                                                (change)="calcularFacturaLinea()" class="form-control-sm">
                                         </mat-form-field>
                                     </div>
                                     <div class="col-2">
                                         <mat-form-field appearance="standard">
                                             <mat-label>PVP</mat-label>
                                             <input matInput type="text" appFormatoDecimal step="0.01"
-                                                [(ngModel)]="precioVentaPublicoManual"
-                                                (change)="calcularFacturaLinea()" class="form-control-sm">
+                                                [(ngModel)]="precioVentaPublicoManual" (change)="calcularFacturaLinea()"
+                                                class="form-control-sm">
                                         </mat-form-field>
                                     </div>
                                     <div class="col-2">
                                         <mat-form-field appearance="standard">
                                             <mat-label>Subtotal</mat-label>
                                             <input matInput type="text" appFormatoDecimal
-                                                [(ngModel)]="facturaLinea.totalLinea"
-                                                class="form-control-sm" disabled>
+                                                [(ngModel)]="facturaLinea.totalLinea" class="form-control-sm" disabled>
                                         </mat-form-field>
                                     </div>
                                     <div class="col-1">
@@ -408,14 +401,15 @@
                                                 [disabled]="true">
                                         </mat-form-field>
                                     </div>
-                                </div>  
+                                </div>
                             </mat-card>
                         </div>
                         <mat-divider></mat-divider>
                         <div class="col-12">
                             <mat-form-field appearance="standard">
                                 <mat-label>Buscar producto agregado</mat-label>
-                                <input matInput oninput="this.value = this.value.toUpperCase()" (keyup)="filtroFacturaLinea($event)" #inputFiltroLinea>
+                                <input matInput oninput="this.value = this.value.toUpperCase()"
+                                    (keyup)="filtroFacturaLinea($event)" #inputFiltroLinea>
                                 <button mat-button *ngIf="inputFiltroLinea.value" matSuffix mat-icon-button
                                     (click)="borrarFiltroFacturaLinea()">
                                     <mat-icon>close</mat-icon>
@@ -426,7 +420,8 @@
                                     <!-- Columnas Dinamicas -->
                                     <ng-container *ngFor="let columna of columnasLinea"
                                         [matColumnDef]="columna.nombreColumna">
-                                        <th mat-header-cell *matHeaderCellDef mat-sort-header> {{ columna.cabecera }} </th>
+                                        <th mat-header-cell *matHeaderCellDef mat-sort-header> {{ columna.cabecera }}
+                                        </th>
                                         <td mat-cell *matCellDef="let row; let i=index">
                                             <ng-container *ngIf="columna.nombreColumna!='acciones'">
                                                 {{ columna.celda(row) }}
@@ -440,14 +435,15 @@
                                     </ng-container>
                                     <tr mat-header-row *matHeaderRowDef="cabeceraLinea"></tr>
                                     <tr mat-row *matRowDef="let row; let i=index; columns: cabeceraLinea"
-                                        (click)="seleccionFacturaLinea(row, i)" [class.selected-row]="clickedRowsLinea.has(row)"></tr>
+                                        (click)="seleccionFacturaLinea(row, i)"
+                                        [class.selected-row]="clickedRowsLinea.has(row)"></tr>
                                     <!-- Row shown when there is no matching data. -->
                                     <tr class="mat-row" *matNoDataRow>
                                         <td class="mat-cell" colspan="11">No hay productos agregados o filtrados
                                         </td>
                                     </tr>
                                 </table>
-                                <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" showFirstLastButtons 
+                                <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" showFirstLastButtons
                                     #paginatorLinea></mat-paginator>
                             </div>
                             <div class="azul" *ngIf="!clickedRowsLinea.size">
@@ -478,8 +474,8 @@
                                             <div class="col-6">
                                                 <mat-form-field appearance="standard">
                                                     <mat-label>Porcentaje</mat-label>
-                                                    <input matInput type="text" appFormatoDecimal min="0" max="100" step="0.01"
-                                                        [(ngModel)]="factura.porcentajeDescuentoSubtotal"
+                                                    <input matInput type="text" appFormatoDecimal min="0" max="100"
+                                                        step="0.01" [(ngModel)]="factura.porcentajeDescuentoSubtotal"
                                                         (change)="calcularTotales()" class="form-control-sm">
                                                 </mat-form-field>
                                             </div>
@@ -491,11 +487,11 @@
                                         <mat-label>DESCUENTO AL TOTAL</mat-label>
                                     </div>
                                     <mat-card class="mat-elevation-z8">
-                                        <div class="form-row">      
+                                        <div class="form-row">
                                             <div class="col-6">
                                                 <mat-form-field appearance="standard">
                                                     <mat-label>Valor</mat-label>
-                                                    <input matInput type="text" appFormatoDecimal min="0" step="0.01" 
+                                                    <input matInput type="text" appFormatoDecimal min="0" step="0.01"
                                                         [(ngModel)]="factura.valorDescuentoTotal"
                                                         (change)="calcularTotales()" class="form-control-sm">
                                                 </mat-form-field>
@@ -503,14 +499,14 @@
                                             <div class="col-6">
                                                 <mat-form-field appearance="standard">
                                                     <mat-label>Porcentaje</mat-label>
-                                                    <input matInput type="text" appFormatoDecimal min="0" max="100" step="0.01"
-                                                        [(ngModel)]="factura.porcentajeDescuentoTotal"
+                                                    <input matInput type="text" appFormatoDecimal min="0" max="100"
+                                                        step="0.01" [(ngModel)]="factura.porcentajeDescuentoTotal"
                                                         (change)="calcularTotales()" class="form-control-sm">
                                                 </mat-form-field>
                                             </div>
                                         </div>
                                     </mat-card>
-                                </div>    
+                                </div>
                             </div>
                             <div class="col-5 linea-vertical">
                                 <br>
@@ -531,7 +527,8 @@
                                         </div>
                                         <div class="col-5">
                                             <mat-form-field appearance="standard">
-                                                <input matInput type="text" [value]="formateaNumero(factura.subtotalSinDescuento)"
+                                                <input matInput type="text"
+                                                    [value]="formateaNumero(factura.subtotalSinDescuento)"
                                                     class="form-control-sm" disabled>
                                             </mat-form-field>
                                         </div>
@@ -540,7 +537,8 @@
                                         </div>
                                         <div class="col-5">
                                             <mat-form-field appearance="standard">
-                                                <input matInput type="text" [value]="formateaNumero(factura.descuentoTotal)"
+                                                <input matInput type="text"
+                                                    [value]="formateaNumero(factura.descuentoTotal)"
                                                     class="form-control-sm" disabled>
                                             </mat-form-field>
                                         </div>
@@ -569,7 +567,8 @@
                                         </div>
                                         <div class="col-5">
                                             <mat-form-field appearance="standard">
-                                                <input matInput type="text " [value]="formateaNumero(factura.importeIvaTotal)"
+                                                <input matInput type="text "
+                                                    [value]="formateaNumero(factura.importeIvaTotal)"
                                                     class="form-control-sm " disabled>
                                             </mat-form-field>
                                         </div>
@@ -597,14 +596,15 @@
                             <i><u>GESTIONAR FACTURAS</u></i>
                         </mat-panel-title>
                         <mat-panel-description>
-                            {{abrirPanelAdminFactura ? 'Ocultar administrador de facturas' : 'Administrar facturas existentes'}}
+                            {{abrirPanelAdminFactura ? 'Ocultar administrador de facturas' : 'Administrar facturas
+                            existentes'}}
                             <mat-icon>group</mat-icon>
                         </mat-panel-description>
                     </mat-expansion-panel-header>
                     <mat-divider></mat-divider>
                     <mat-form-field appearance="standard">
                         <mat-label>Buscar factura</mat-label>
-                        <input matInput oninput="this.value = this.value.toUpperCase()" (keyup)="filtroFactura($event)" 
+                        <input matInput oninput="this.value = this.value.toUpperCase()" (keyup)="filtroFactura($event)"
                             placeholder="Ej. BA" #inputFiltro>
                         <button mat-button *ngIf="inputFiltro.value" matSuffix mat-icon-button
                             (click)="borrarFiltroFactura()">
@@ -614,7 +614,8 @@
                     <div class="mat-elevation-z8">
                         <table mat-table [dataSource]="dataSourceFactura" matSort #matSort="matSort">
                             <!-- Columnas Dinamicas -->
-                            <ng-container *ngFor="let columna of columnasFactura" [matColumnDef]="columna.nombreColumna">
+                            <ng-container *ngFor="let columna of columnasFactura"
+                                [matColumnDef]="columna.nombreColumna">
                                 <th mat-header-cell *matHeaderCellDef mat-sort-header> {{ columna.cabecera }} </th>
                                 <td mat-cell *matCellDef="let row"> {{ columna.celda(row) }} </td>
                             </ng-container>
@@ -623,7 +624,7 @@
                                 *matRowDef="let row; columns: cabeceraFactura;"></tr>
 
                             <tr class="mat-row" *matNoDataRow>
-                                <td class="mat-cell" colspan="6">No hay datos que coincidan con la factura: 
+                                <td class="mat-cell" colspan="6">No hay datos que coincidan con la factura:
                                     "{{inputFiltro.value}}"</td>
                             </tr>
                         </table>
@@ -640,14 +641,15 @@
             </mat-accordion>
         </mat-step>
         <!-- Paso Recaudación -->
-        <mat-step [stepControl]="recaudacionSteeperFormGroup" [editable]="steeperEditable" (selectionChange)="cambiarStepper($event)">
+        <mat-step [stepControl]="recaudacionSteeperFormGroup" [editable]="steeperEditable"
+            (selectionChange)="cambiarStepper($event)">
             <ng-template matStepLabel>Recaudación</ng-template>
-            <app-recaudacion [stepper]="stepper" [factura]="factura" (facturaConRecaudacion)="actualizarRecaudacion($event)"
-                (llamarNuevo)="nuevo()"></app-recaudacion>
+            <app-recaudacion [stepper]="stepper" [factura]="factura"
+                (facturaConRecaudacion)="actualizarRecaudacion($event)" (llamarNuevo)="nuevo()"></app-recaudacion>
         </mat-step>
     </mat-stepper>
     <!--button type="button" class="btn btn-sm btn-primary" (click)="showSpinner()">Show Spinner</button-->
-    <ngx-spinner size="medium" type="line-spin-fade-rotating" [fullScreen] = "true" [zIndex]="1000">
+    <ngx-spinner size="medium" type="line-spin-fade-rotating" [fullScreen]="true" [zIndex]="1000">
         <p style="font-size: 20px; color: white">Cargando...</p>
     </ngx-spinner>
 </div>

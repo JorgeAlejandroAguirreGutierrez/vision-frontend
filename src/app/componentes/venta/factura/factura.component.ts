@@ -52,23 +52,22 @@ import { MatTableDataSource } from '@angular/material/table';
 
 export class FacturaComponent implements OnInit {
 
-  activo: string = valores.estadoActivo;
-  inactivo: string = valores.estadoInactivo;
-  si: string = valores.si;
-  no: string = valores.no;
-  emitida: string = valores.emitida;
-  anulada: string = valores.anulada;
-  noFacturada: string = valores.noFacturada;
-  facturada: string = valores.facturada;
-  noRecaudada: string = valores.noRecaudada;
-  recaudada: string = valores.recaudada;
-  categoriaProducto: string = valores.bien;
-
-  saldo: number = valores.cero;
-  saldoTotal: number = valores.cero;
-  costoUnitario: number = valores.cero;
-  costoPromedio: number = valores.cero;
-  precioVentaPublicoManual: number = valores.cero;
+  estadoActivo = valores.estadoActivo;
+  estadoInactivo = valores.estadoInactivo;
+  estadoInternoEmitida = valores.estadoInternoEmitida;
+  estadoInternoRecaudada = valores.estadoInternoRecaudada;
+  estadoInternoAnulada = valores.estadoInternoAnulada
+  estadoSriPendiente = valores.estadoSriPendiente;
+  estadoSriAutorizada = valores.estadoSriAutorizada;
+  estadoSriAnulada = valores.estadoSriAnulada;
+  si = valores.si;
+  no = valores.no;
+  categoriaProducto = valores.bien;
+  saldo = valores.cero;
+  saldoTotal = valores.cero;
+  costoUnitario = valores.cero;
+  costoPromedio = valores.cero;
+  precioVentaPublicoManual = valores.cero;
   indiceLinea: number;
 
   steeperLinear: boolean = false;
@@ -292,10 +291,6 @@ export class FacturaComponent implements OnInit {
   actualizar(event) {
     if (event != null)
       event.preventDefault();
-    if (this.factura.estado == this.recaudada){
-      Swal.fire({ icon: error_swal, title: error, text: mensajes.error_factura_recaudada });
-      return;
-    }  
     this.spinnerService.show();    
     this.facturaService.actualizar(this.factura).subscribe({
       next: res => {

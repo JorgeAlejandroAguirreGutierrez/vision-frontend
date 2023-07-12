@@ -49,6 +49,9 @@ export const urn =
     identificacion: "/identificacion",
     razonSocial: "/razonSocial",
     consultarPorCliente: "/consultarPorCliente",
+    consultarPorClienteYEstado: "/consultarPorClienteYEstado",
+    consultarPorClienteYEstadoYEstadoInterno: "/consultarPorClienteYEstadoYEstadoInterno",
+    consultarPorClienteYEstadoYEstadoInternoYEstadoSri: "/consultarPorClienteYEstadoYEstadoInternoYEstadoSri",
     validarIdentificacionPorEmpresa: "/validarIdentificacionPorEmpresa",
 
     //Compras
@@ -77,6 +80,7 @@ export const urn =
     consultarPorCategoriaProductoYProveedorYEstado: "/consultarPorCategoriaProductoYProveedorYEstado",
     consultarPorCategoriaProductoYEmpresaYEstado: "/consultarPorCategoriaProductoYEmpresaYEstado",
     consultarPorCategoriaProductoYProveedorYEmpresaYEstado: "/consultarPorCategoriaProductoYProveedorYEmpresaYEstado",
+    pagar: "/pagar",
     //Configuración
     estadoCivil: "/estadoCivil",
     impuesto: "/impuesto",
@@ -188,8 +192,8 @@ export const valores = {
     estadoActivo: "ACTIVO",
     estadoInactivo: "INACTIVO",
     //ESTADOS VENTAS
-    estadoInternoRecaudada: "RECAUDADA",
     estadoInternoEmitida: "EMITIDA",
+    estadoInternoRecaudada: "RECAUDADA",
     estadoInternoAnulada: "ANULADA",
     estadoSriPendiente: "PENDIENTE",
     estadoSriAutorizada: "AUTORIZADA",
@@ -204,12 +208,6 @@ export const valores = {
     pendiente: "PENDIENTE",
     entregado: "ENTREGADO",
     sinGuia: "SIN GUIA",
-    noRecaudada: "NO RECAUDADA",
-    recaudada: "RECAUDADA",
-    emitida: "EMITIDA",
-    anulada: "ANULADA",
-    facturada: "FACTURADA",
-    noFacturada: "NO FACTURADA",
     si: "SI",
     no: "NO",
     ahorros: "AHORROS",

@@ -36,14 +36,16 @@ import { MatTableDataSource } from '@angular/material/table';
 })
 export class NotaCreditoVentaComponent implements OnInit {
 
+  estadoActivo = valores.estadoActivo;
+  estadoInactivo = valores.estadoInactivo;
+  estadoInternoEmitida = valores.estadoInternoEmitida;
+  estadoInternoRecaudada = valores.estadoInternoRecaudada;
+  estadoInternoAnulada = valores.estadoInternoAnulada
+  estadoSriPendiente = valores.estadoSriPendiente;
+  estadoSriAutorizada = valores.estadoSriAutorizada;
+  estadoSriAnulada = valores.estadoSriAnulada;
   si = valores.si;
   no = valores.no;
-  emitida = valores.emitida;
-  anulada = valores.anulada;
-  noFacturada = valores.noFacturada;
-  facturada = valores.facturada;
-  noRecaudada = valores.noRecaudada;
-  recaudada = valores.recaudada;
   devolucion = valores.devolucion;
   descuento = valores.descuento;
   conjunta = valores.conjunta;
@@ -285,7 +287,7 @@ export class NotaCreditoVentaComponent implements OnInit {
       res => {
         this.notaCreditoVenta.factura.cliente = res.resultado as Cliente;
         this.seleccionCliente.patchValue(this.notaCreditoVenta.factura.cliente);
-        this.facturaService.consultarPorCliente(this.notaCreditoVenta.factura.cliente.id).subscribe(
+        this.facturaService.consultarPorClienteYEstadoYEstadoInterno(this.notaCreditoVenta.factura.cliente.id, this.estadoActivo, this.estadoInternoRecaudada).subscribe(
           res => {
             this.facturas = res.resultado as Factura[]
           },

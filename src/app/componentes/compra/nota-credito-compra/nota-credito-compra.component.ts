@@ -34,14 +34,12 @@ export class NotaCreditoCompraComponent implements OnInit {
 
   panelOpenState = false;
 
+  estadoActivo: string = valores.estadoActivo;
+  estadoInactivo: string = valores.estadoInactivo;
+  estadoInternoPorPagar: string = valores.estadoInternoPorPagar;
+  estadoInternoPagada: string = valores.estadoInternoPagada;
   si: string = valores.si;
   no: string = valores.no;
-  emitida: string = valores.emitida;
-  anulada: string = valores.anulada;
-  noFacturada: string = valores.noFacturada;
-  facturada:string = valores.facturada;
-  noRecaudada: string = valores.noRecaudada;
-  recaudada: string = valores.recaudada;
   devolucion: string = valores.devolucion;
   descuento: string = valores.descuento;
   conjunta: string = valores.conjunta;

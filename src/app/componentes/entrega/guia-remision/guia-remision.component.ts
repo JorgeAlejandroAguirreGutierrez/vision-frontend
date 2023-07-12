@@ -37,15 +37,18 @@ export class GuiaRemisionComponent implements OnInit {
 
   cargar = false;
   hoy = new Date();
+
+  estadoActivo: string = valores.estadoActivo;
+  estadoInactivo: string = valores.estadoInactivo;
+  estadoInternoEmitida: string = valores.estadoInternoEmitida;
+  estadoInternoRecaudada: string = valores.estadoInternoRecaudada;
+  estadoInternoAnulada: string = valores.estadoInternoAnulada
+  estadoSriPendiente: string = valores.estadoSriPendiente;
+  estadoSriAutorizada: string = valores.estadoSriAutorizada;
+  estadoSriAnulada: string = valores.estadoSriAnulada;
   
   si = valores.si;
   no = valores.no;
-  emitida = valores.emitida;
-  anulada = valores.anulada;
-  noFacturada = valores.noFacturada;
-  facturada = valores.facturada;
-  noRecaudada = valores.noRecaudada;
-  recaudada = valores.recaudada;
   clienteDireccion = valores.clienteDireccion;
   nuevaDireccion = valores.nuevaDireccion;
 
