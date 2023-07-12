@@ -21,8 +21,8 @@ import { Empresa } from 'src/app/modelos/usuario/empresa';
 })
 export class BancoComponent implements OnInit {
 
-  activo = valores.activo;
-  inactivo = valores.inactivo;
+  activo = valores.estadoActivo;
+  inactivo = valores.estadoInactivo;
 
   edicion: boolean = true;
   abrirPanelNuevo : boolean= true;

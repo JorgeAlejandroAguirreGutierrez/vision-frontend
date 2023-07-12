@@ -20,8 +20,8 @@ import { MatSort } from '@angular/material/sort';
 })
 export class RegimenComponent implements OnInit {
 
-  activo: string = valores.activo;
-  inactivo: string = valores.inactivo;
+  activo: string = valores.estadoActivo;
+  inactivo: string = valores.estadoInactivo;
   si: string = valores.si;
   no: string = valores.no;
   

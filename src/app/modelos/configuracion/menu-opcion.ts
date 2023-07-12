@@ -20,6 +20,6 @@ export class MenuOpcion {
         this.menu = valores.si;
         this.tabla = valores.vacio;
         this.abreviatura = valores.vacio;
-        this.estado = valores.activo;
+        this.estado = valores.estadoActivo;
     }
 }

@@ -118,7 +118,7 @@ export class GuiaRemisionComponent implements OnInit {
     );
   }
   consultarTransportistas() {
-    this.transportistaService.consultarPorEmpresaYEstado(this.empresa.id, valores.activo).subscribe({
+    this.transportistaService.consultarPorEmpresaYEstado(this.empresa.id, valores.estadoActivo).subscribe({
       next: res => {
         this.transportistas = res.resultado as Transportista[]
       },
@@ -126,7 +126,7 @@ export class GuiaRemisionComponent implements OnInit {
     });
   }
   consultarVehiculos(){
-    this.vehiculoService.consultarPorEmpresaYEstado(this.empresa.id, valores.activo).subscribe(
+    this.vehiculoService.consultarPorEmpresaYEstado(this.empresa.id, valores.estadoActivo).subscribe(
       res => {
         this.vehiculos = res.resultado as Vehiculo[]
       },

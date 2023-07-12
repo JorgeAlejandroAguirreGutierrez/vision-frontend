@@ -22,8 +22,8 @@ import { MatTableDataSource } from '@angular/material/table';
 })
 export class TransportistaComponent implements OnInit {
 
-  activo: string = valores.activo;
-  inactivo: string = valores.inactivo;
+  activo: string = valores.estadoActivo;
+  inactivo: string = valores.estadoInactivo;
 
   abrirPanelNuevo = true;
   abrirPanelAdmin = true;
@@ -159,7 +159,7 @@ export class TransportistaComponent implements OnInit {
   }
 
   consultarVehiculos(){
-    this.vehiculoService.consultarPorEstado(valores.activo).subscribe({
+    this.vehiculoService.consultarPorEstado(valores.estadoActivo).subscribe({
       next: res => {
         this.vehiculos = res.resultado as Vehiculo[]
       },

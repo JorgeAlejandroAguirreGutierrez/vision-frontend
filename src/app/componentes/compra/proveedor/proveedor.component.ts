@@ -41,8 +41,8 @@ import { Empresa } from 'src/app/modelos/usuario/empresa';
 })
 export class ProveedorComponent implements OnInit {
 
-  activo: string = valores.activo;
-  inactivo: string = valores.inactivo;
+  activo: string = valores.estadoActivo;
+  inactivo: string = valores.estadoInactivo;
   si: string = valores.si;
   no: string = valores.no;
   provincia: string = valores.vacio;
@@ -169,7 +169,7 @@ export class ProveedorComponent implements OnInit {
     });
   }
   consultarGrupoProveedor() {
-    this.grupoProveedorService.consultarPorEmpresaYEstado(this.empresa.id, valores.activo).subscribe({
+    this.grupoProveedorService.consultarPorEmpresaYEstado(this.empresa.id, valores.estadoActivo).subscribe({
       next: (res) => {
         this.gruposProveedores = res.resultado as GrupoProveedor[]
       },
@@ -179,7 +179,7 @@ export class ProveedorComponent implements OnInit {
     });
   }
   consultarFormaPago() {
-    this.formaPagoService.consultarPorEstado(valores.activo).subscribe({
+    this.formaPagoService.consultarPorEstado(valores.estadoActivo).subscribe({
       next: res => {
         this.formasPagos = res.resultado as FormaPago[]
       },
@@ -189,7 +189,7 @@ export class ProveedorComponent implements OnInit {
     });
   }
   consultarPlazoCredito() {
-    this.plazoCreditoService.consultarPorEmpresaYEstado(this.empresa.id, valores.activo).subscribe({
+    this.plazoCreditoService.consultarPorEmpresaYEstado(this.empresa.id, valores.estadoActivo).subscribe({
       next: res => {
         this.plazosCreditos = res.resultado as PlazoCredito[]
       },

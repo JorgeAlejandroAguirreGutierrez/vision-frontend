@@ -28,8 +28,8 @@ import { EstacionService } from 'src/app/servicios/usuario/estacion.service';
 
 export class UsuarioComponent implements OnInit {
 
-  activo: string = valores.activo;
-  inactivo: string = valores.inactivo;
+  activo: string = valores.estadoActivo;
+  inactivo: string = valores.estadoInactivo;
 
   abrirPanelNuevo: boolean = true;
   abrirPanelAdmin: boolean = true;
@@ -179,7 +179,7 @@ export class UsuarioComponent implements OnInit {
   }
 
   consultarPerfiles() {
-    this.perfilService.consultarPorEstado(valores.activo).subscribe({
+    this.perfilService.consultarPorEstado(valores.estadoActivo).subscribe({
       next: res => {
         this.perfiles = res.resultado as Perfil[]
       },
@@ -188,7 +188,7 @@ export class UsuarioComponent implements OnInit {
   }
 
   consultarEstaciones() {
-    this.estacionService.consultarPorEstado(valores.activo).subscribe({
+    this.estacionService.consultarPorEstado(valores.estadoActivo).subscribe({
       next: res => {
         this.estaciones = res.resultado as Estacion[]
       },

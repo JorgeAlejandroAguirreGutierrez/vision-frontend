@@ -17,6 +17,6 @@ export class TipoRetencion {
         this.codigoSRI=valores.vacio;
         this.descripcion=valores.vacio;
         this.porcentaje=valores.cero;
-        this.estado=valores.activo;
+        this.estado=valores.estadoActivo;
     }
 }

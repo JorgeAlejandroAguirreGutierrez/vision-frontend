@@ -25,8 +25,8 @@ import { MatTableDataSource } from '@angular/material/table';
 })
 export class PermisoComponent implements OnInit {
 
-  activo: string = valores.activo;
-  inactivo: string = valores.inactivo;
+  activo: string = valores.estadoActivo;
+  inactivo: string = valores.estadoInactivo;
   si: string = valores.si;
   no: string = valores.no;
 
@@ -168,7 +168,7 @@ export class PermisoComponent implements OnInit {
       },
       error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     });*/
-    this.permiso.estado = valores.activo;
+    this.permiso.estado = valores.estadoActivo;
     this.perfil.permisos[this.indexPermiso] = this.permiso;
     this.actualizar(null);
   }
@@ -182,7 +182,7 @@ export class PermisoComponent implements OnInit {
       },
       error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     });*/
-    this.permiso.estado = valores.inactivo;
+    this.permiso.estado = valores.estadoInactivo;
     this.perfil.permisos[this.indexPermiso] = this.permiso;
     this.actualizar(null);
   }

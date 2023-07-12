@@ -11,7 +11,7 @@ import Swal from 'sweetalert2';
 import { startWith, map } from 'rxjs/operators';
 import { SesionService } from '../../../servicios/usuario/sesion.service';
 import { Sesion } from '../../../modelos/usuario/sesion';
-import { valores, mensajes, validarSesion, otras, tab_activo, exito, exito_swal, error, error_swal } from '../../../constantes';
+import { valores, mensajes, validarSesion, exito, exito_swal, error, error_swal } from '../../../constantes';
 import { ProveedorService } from 'src/app/servicios/compra/proveedor.service';
 import { Proveedor } from 'src/app/modelos/compra/proveedor';
 import { NotaDebitoCompraService } from 'src/app/servicios/compra/nota-debito-compra.service';
@@ -79,7 +79,8 @@ export class NotaDebitoCompraComponent implements OnInit {
     { nombreColumna: 'fecha', cabecera: 'Fecha', celda: (row: NotaDebitoCompra) => `${this.datepipe.transform(row.fecha, "dd-MM-yyyy")}`},
     { nombreColumna: 'proveedor', cabecera: 'Proveedor', celda: (row: NotaDebitoCompra) => `${row.facturaCompra.proveedor.razonSocial}`},
     { nombreColumna: 'total', cabecera: 'Total', celda: (row: NotaDebitoCompra) => `$${row.totalSinDescuento}`},
-    { nombreColumna: 'estado', cabecera: 'Estado', celda: (row: NotaDebitoCompra) => `${row.estado}`}
+    { nombreColumna: 'estado', cabecera: 'Estado', celda: (row: NotaDebitoCompra) => `${row.estado}`},
+    { nombreColumna: 'estadoInterno', cabecera: 'Estado Interno', celda: (row: NotaDebitoCompra) => `${row.estadoInterno}`}
   ];
   cabecera: string[]  = this.columnas.map(titulo => titulo.nombreColumna);
   dataSource: MatTableDataSource<NotaDebitoCompra>;
@@ -210,7 +211,7 @@ export class NotaDebitoCompraComponent implements OnInit {
   }
 
   consultarProveedores(){
-    this.proveedorService.consultarPorEmpresaYEstado(this.empresa.id, valores.activo).subscribe(
+    this.proveedorService.consultarPorEmpresaYEstado(this.empresa.id, valores.estadoActivo).subscribe(
       res => {
         this.proveedores = res.resultado as Proveedor[]
       },
@@ -219,7 +220,7 @@ export class NotaDebitoCompraComponent implements OnInit {
   }
 
   consultarFacturasCompras(){
-    this.facturaCompraService.consultarPorEmpresaYEstado(this.empresa.id, valores.activo).subscribe(
+    this.facturaCompraService.consultarPorEmpresaYEstado(this.empresa.id, valores.estadoActivo).subscribe(
       res => {
         this.facturasCompras = res.resultado as FacturaCompra[]
       },
@@ -228,7 +229,7 @@ export class NotaDebitoCompraComponent implements OnInit {
   }
 
   consultarImpuestos(){
-    this.impuestoService.consultarPorEstado(valores.activo).subscribe(
+    this.impuestoService.consultarPorEstado(valores.estadoActivo).subscribe(
       res => {
         this.impuestos = res.resultado as Impuesto[]
       },
@@ -237,7 +238,7 @@ export class NotaDebitoCompraComponent implements OnInit {
   }
 
   consultarBodegas(){
-    this.bodegaService.consultarPorEmpresaYEstado(this.empresa.id, valores.activo).subscribe(
+    this.bodegaService.consultarPorEmpresaYEstado(this.empresa.id, valores.estadoActivo).subscribe(
       res => {
         this.bodegas = res.resultado as Bodega[]
       },
@@ -268,7 +269,7 @@ export class NotaDebitoCompraComponent implements OnInit {
     }
   }
   consultarBienPorProveedor(proveedorId: number) {
-    this.productoService.consultarPorCategoriaProductoYProveedorYEmpresaYEstado(valores.bien, proveedorId, this.empresa.id, valores.activo).subscribe(
+    this.productoService.consultarPorCategoriaProductoYProveedorYEmpresaYEstado(valores.bien, proveedorId, this.empresa.id, valores.estadoActivo).subscribe(
       res => {
         this.productos = res.resultado as Producto[]
       },
@@ -278,7 +279,7 @@ export class NotaDebitoCompraComponent implements OnInit {
     );
   }
   consultarServicioPorProveedor(proveedorId: number) {
-    this.productoService.consultarPorCategoriaProductoYProveedorYEmpresaYEstado(valores.servicio, proveedorId, this.empresa.id, valores.activo).subscribe(
+    this.productoService.consultarPorCategoriaProductoYProveedorYEmpresaYEstado(valores.servicio, proveedorId, this.empresa.id, valores.estadoActivo).subscribe(
       res => {
         this.productos = res.resultado as Producto[]
       },
@@ -288,7 +289,7 @@ export class NotaDebitoCompraComponent implements OnInit {
     );
   }
   consultarActivoFijoPorProveedor(proveedorId: number) {
-    this.productoService.consultarPorCategoriaProductoYProveedorYEmpresaYEstado(valores.activoFijo, proveedorId, this.empresa.id, valores.activo).subscribe(
+    this.productoService.consultarPorCategoriaProductoYProveedorYEmpresaYEstado(valores.activoFijo, proveedorId, this.empresa.id, valores.estadoActivo).subscribe(
       res => {
         this.productos = res.resultado as Producto[]
       },

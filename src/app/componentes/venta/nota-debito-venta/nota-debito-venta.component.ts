@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild, HostListener, Renderer2, ElementRef } from '@angular/core';
-import { valores, mensajes, validarSesion, otras, tab_activo, exito, exito_swal, error, error_swal } from '../../../constantes';
+import { valores, mensajes, validarSesion, exito, exito_swal, error, error_swal } from '../../../constantes';
 import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { startWith, map, Observable } from 'rxjs';
@@ -90,7 +90,9 @@ export class NotaDebitoVentaComponent implements OnInit {
     { nombreColumna: 'cliente', cabecera: 'Cliente', celda: (row: NotaDebitoVenta) => `${row.factura.cliente.razonSocial}`},
     { nombreColumna: 'factura', cabecera: 'Factura', celda: (row: NotaDebitoVenta) => `${row.factura.secuencial}`},
     { nombreColumna: 'total', cabecera: 'Total', celda: (row: NotaDebitoVenta) => `$${row.totalConDescuento}`},
-    { nombreColumna: 'estado', cabecera: 'Estado', celda: (row: NotaDebitoVenta) => `${row.estado}`}
+    { nombreColumna: 'estado', cabecera: 'Estado', celda: (row: NotaDebitoVenta) => `${row.estado}`},
+    { nombreColumna: 'estadoInterno', cabecera: 'Estado Interno', celda: (row: NotaDebitoVenta) => `${row.estadoInterno}`},
+    { nombreColumna: 'estadoSri', cabecera: 'Estado SRI', celda: (row: NotaDebitoVenta) => `${row.estadoSri}`}
   ];
   cabecera: string[]  = this.columnas.map(titulo => titulo.nombreColumna);
   dataSource: MatTableDataSource<NotaDebitoVenta>;
@@ -328,7 +330,7 @@ export class NotaDebitoVentaComponent implements OnInit {
   }
 
   consultarProductos(){
-    this.productoService.consultarPorCategoriaProductoYEmpresaYEstado(valores.servicio, this.empresa.id, valores.activo).subscribe(
+    this.productoService.consultarPorCategoriaProductoYEmpresaYEstado(valores.servicio, this.empresa.id, valores.estadoActivo).subscribe(
       res => {
         this.productos = res.resultado as Producto[]
       },
@@ -377,7 +379,7 @@ export class NotaDebitoVentaComponent implements OnInit {
   }
 
   consultarClientes(){
-    this.clienteService.consultarPorEmpresaYEstado(this.empresa.id, valores.activo).subscribe(
+    this.clienteService.consultarPorEmpresaYEstado(this.empresa.id, valores.estadoActivo).subscribe(
       res => {
         this.clientes = res.resultado as Cliente[]
       },
@@ -386,7 +388,7 @@ export class NotaDebitoVentaComponent implements OnInit {
   }
 
   consultarImpuestos(){
-    this.impuestoService.consultarPorEstado(valores.activo).subscribe(
+    this.impuestoService.consultarPorEstado(valores.estadoActivo).subscribe(
       res => {
         this.impuestos = res.resultado as Impuesto[]
       },
@@ -395,7 +397,7 @@ export class NotaDebitoVentaComponent implements OnInit {
   }
 
   consultarBodegas(){
-    this.bodegaService.consultarPorEmpresaYEstado(this.empresa.id, valores.activo).subscribe(
+    this.bodegaService.consultarPorEmpresaYEstado(this.empresa.id, valores.estadoActivo).subscribe(
       res => {
         this.bodegas = res.resultado as Bodega[]
       },

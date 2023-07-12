@@ -54,8 +54,8 @@ import { MatTableDataSource } from '@angular/material/table';
 })
 export class ClienteComponent implements OnInit {
 
-  activo: string = valores.activo;
-  inactivo: string = valores.inactivo;
+  activo: string = valores.estadoActivo;
+  inactivo: string = valores.estadoInactivo;
   suspendido: string = valores.suspendido;
   si: string = valores.si;
   no: string = valores.no;
@@ -238,7 +238,7 @@ export class ClienteComponent implements OnInit {
     });
   }
   consultarSegmento(){
-    this.segmentoService.consultarPorEmpresaYEstado(this.empresa.id, valores.activo).subscribe({
+    this.segmentoService.consultarPorEmpresaYEstado(this.empresa.id, valores.estadoActivo).subscribe({
       next: (res) => {
         this.segmentos = res.resultado as Segmento[];
       },
@@ -248,7 +248,7 @@ export class ClienteComponent implements OnInit {
     });
   }
   consultarGrupoCliente(){
-    this.grupoClienteService.consultarPorEmpresaYEstado(this.empresa.id, valores.activo).subscribe({
+    this.grupoClienteService.consultarPorEmpresaYEstado(this.empresa.id, valores.estadoActivo).subscribe({
       next: (res) => {
         this.gruposClientes = res.resultado as GrupoCliente[]
       },
@@ -258,7 +258,7 @@ export class ClienteComponent implements OnInit {
     });
   }
   consultarGenero(){
-    this.generoService.consultarPorEstado(valores.activo).subscribe({
+    this.generoService.consultarPorEstado(valores.estadoActivo).subscribe({
       next: (res) => {
         this.generos = res.resultado as Genero[]
       },
@@ -268,7 +268,7 @@ export class ClienteComponent implements OnInit {
     });
   }
   consultarEstadoCivil(){
-    this.estadoCivilService.consultarPorEstado(valores.activo).subscribe({
+    this.estadoCivilService.consultarPorEstado(valores.estadoActivo).subscribe({
       next: (res) => {
         this.estadosCiviles = res.resultado as EstadoCivil[]
       },
@@ -278,7 +278,7 @@ export class ClienteComponent implements OnInit {
     });
   }
   consultarOrigenIngreso(){
-    this.origenIngresoService.consultarPorEstado(valores.activo).subscribe({
+    this.origenIngresoService.consultarPorEstado(valores.estadoActivo).subscribe({
       next: (res) => {
         this.origenesIngresos = res.resultado as OrigenIngreso[];
       },
@@ -288,7 +288,7 @@ export class ClienteComponent implements OnInit {
     });
   }
   consultarCalificacionCliente(){
-    this.calificacionClienteService.consultarPorEmpresaYEstado(this.empresa.id, valores.activo).subscribe({
+    this.calificacionClienteService.consultarPorEmpresaYEstado(this.empresa.id, valores.estadoActivo).subscribe({
       next: res => {
         this.calificacionesClientes = res.resultado as CalificacionCliente[]
       },
@@ -298,7 +298,7 @@ export class ClienteComponent implements OnInit {
     });
   }
   consultarPlazoCredito(){
-    this.plazoCreditoService.consultarPorEmpresaYEstado(this.empresa.id, valores.activo).subscribe({
+    this.plazoCreditoService.consultarPorEmpresaYEstado(this.empresa.id, valores.estadoActivo).subscribe({
       next: res => {
         this.plazosCreditos = res.resultado as PlazoCredito[]
       },
@@ -308,7 +308,7 @@ export class ClienteComponent implements OnInit {
     });
   }
   consultarFormaPago(){
-    this.formaPagoService.consultarPorEstado(valores.activo).subscribe({
+    this.formaPagoService.consultarPorEstado(valores.estadoActivo).subscribe({
       next: res => {
         this.formasPagos = res.resultado as FormaPago[]
       },
@@ -597,11 +597,11 @@ export class ClienteComponent implements OnInit {
   }
 
   activarDependiente(dependienteSeleccionado: Dependiente) {
-    dependienteSeleccionado.estado = valores.activo;
+    dependienteSeleccionado.estado = valores.estadoActivo;
   }
 
   inactivarDependiente(dependienteSeleccionado: Dependiente) {
-    dependienteSeleccionado.estado = valores.inactivo;
+    dependienteSeleccionado.estado = valores.estadoInactivo;
   }
 
   seleccionDependiente(dependiente: Dependiente) {

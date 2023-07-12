@@ -1,5 +1,5 @@
 import { Component, HostListener, OnInit, ViewChild, Type, ElementRef, Renderer2 } from '@angular/core';
-import { UntypedFormControl, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
+import { UntypedFormControl } from '@angular/forms';
 import { valores, mensajes, validarSesion, exito, exito_swal, error, error_swal } from '../../../constantes';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
@@ -45,8 +45,8 @@ export class FacturaCompraComponent implements OnInit {
 
   si: string = valores.si;
   no: string = valores.no;
-  activo: string = valores.activo;
-  inactivo: string = valores.inactivo;
+  activo: string = valores.estadoActivo;
+  inactivo: string = valores.estadoInactivo;
 
   indiceLinea: number;
 
@@ -86,7 +86,8 @@ export class FacturaCompraComponent implements OnInit {
     { nombreColumna: 'subtotal', cabecera: 'Subtotal', celda: (row: FacturaCompra) => `$ ${row.subtotalSinDescuento}`},
     { nombreColumna: 'descuento', cabecera: 'Descuento', celda: (row: FacturaCompra) => `$ ${row.valorTotal}`},
     { nombreColumna: 'total', cabecera: 'Total', celda: (row: FacturaCompra) => `$ ${row.valorTotal}`},
-    { nombreColumna: 'estado', cabecera: 'Estado', celda: (row: FacturaCompra) => `${row.estado}`}
+    { nombreColumna: 'estado', cabecera: 'Estado', celda: (row: FacturaCompra) => `${row.estado}`},
+    { nombreColumna: 'estadoInterno', cabecera: 'Estado Interno', celda: (row: FacturaCompra) => `${row.estado}`}
   ];
   cabeceraFacturaCompra: string[]  = this.columnasFacturaCompra.map(titulo => titulo.nombreColumna);
   dataSourceFacturaCompra: MatTableDataSource<FacturaCompra>;
@@ -144,7 +145,7 @@ export class FacturaCompraComponent implements OnInit {
   }
 
   consultarProveedores(){
-    this.proveedorService.consultarPorEmpresaYEstado(this.empresa.id, valores.activo).subscribe({
+    this.proveedorService.consultarPorEmpresaYEstado(this.empresa.id, valores.estadoActivo).subscribe({
       next: res => {
         this.proveedores = res.resultado as Proveedor[]
       },
@@ -152,7 +153,7 @@ export class FacturaCompraComponent implements OnInit {
     });
   }
   consultarProductos() {
-    this.productoService.consultarPorEmpresaYEstado(this.empresa.id, valores.activo).subscribe({
+    this.productoService.consultarPorEmpresaYEstado(this.empresa.id, valores.estadoActivo).subscribe({
       next: res => {
         this.productos = res.resultado as Producto[];
       },
@@ -170,7 +171,7 @@ export class FacturaCompraComponent implements OnInit {
     });
   }
   consultarBodegas(){
-    this.bodegaService.consultarPorEmpresaYEstado(this.empresa.id, valores.activo).subscribe(
+    this.bodegaService.consultarPorEmpresaYEstado(this.empresa.id, valores.estadoActivo).subscribe(
       res => {
         this.bodegas = res.resultado as Bodega[]
       },

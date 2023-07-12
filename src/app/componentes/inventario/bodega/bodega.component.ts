@@ -26,8 +26,8 @@ export class BodegaComponent implements OnInit {
   abrirPanelNuevo = true;
   abrirPanelAdmin = true;
 
-  activo = valores.activo;
-  inactivo = valores.inactivo;
+  activo = valores.estadoActivo;
+  inactivo = valores.estadoInactivo;
 
   sesion: Sesion = null;
   empresa: Empresa = new Empresa();

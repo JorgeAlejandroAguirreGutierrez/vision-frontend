@@ -32,7 +32,7 @@ export class Empresa {
         this.resolucionEspecial = valores.vacio;
         this.agenteRetencion = valores.no;
         this.resolucionAgente = valores.vacio;
-        this.estado = valores.activo;
+        this.estado = valores.estadoActivo;
         this.tipoIdentificacion = new TipoIdentificacion();
     }
 }

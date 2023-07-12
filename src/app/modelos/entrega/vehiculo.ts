@@ -26,6 +26,6 @@ export class Vehiculo {
         this.color = valores.vacio;
         this.fabricacion = valores.vacio;
         this.numero = valores.vacio;
-        this.estado = valores.activo;
+        this.estado = valores.estadoActivo;
     }
 }

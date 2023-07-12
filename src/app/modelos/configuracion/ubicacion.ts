@@ -13,7 +13,7 @@ export class Ubicacion {
         this.provincia = valores.vacio;
         this.canton = valores.vacio;
         this.parroquia = valores.vacio;
-        this.estado = valores.activo;
+        this.estado = valores.estadoActivo;
     }
     
 }

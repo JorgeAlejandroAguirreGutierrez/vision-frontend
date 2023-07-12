@@ -14,6 +14,6 @@ export class Regimen {
         this.descripcion = valores.vacio;
         this.abreviatura = valores.vacio;
         this.visible = valores.no;
-        this.estado = valores.activo;
+        this.estado = valores.estadoActivo;
     }
 }

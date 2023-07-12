@@ -13,6 +13,6 @@ export class TipoIdentificacion {
         this.codigoSRI = valores.vacio;
         this.descripcion=valores.vacio;
         this.abreviatura=valores.vacio;
-        this.estado=valores.activo;
+        this.estado=valores.estadoActivo;
     }
 }

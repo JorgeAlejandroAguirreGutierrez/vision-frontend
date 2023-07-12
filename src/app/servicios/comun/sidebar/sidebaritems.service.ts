@@ -90,7 +90,7 @@ export class SidebarItemsService {
   llenarOpciones(Componente: Type<any>, tabTitulo: string, itemNombre: string, icoItem: string) {
     // Validar si tiene permisos para ver la opcion en el sidebar
     this.permisos.forEach(permiso => {
-      if (permiso.menuOpcion.opcion == itemNombre.toUpperCase() && permiso.menuOpcion.menu==valores.si && permiso.estado==valores.activo){
+      if (permiso.menuOpcion.opcion == itemNombre.toUpperCase() && permiso.menuOpcion.menu==valores.si && permiso.estado==valores.estadoActivo){
         this.opciones.push(new SidebarItem(Componente, tabTitulo, itemNombre, icoItem));
       }
     });
