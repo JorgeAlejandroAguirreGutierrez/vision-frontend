@@ -24,7 +24,7 @@ export class Dependiente {
         this.codigo = valores.vacio;
         this.razonSocial = valores.vacio;
         this.direccion = valores.vacio;
-        this.estado = valores.activo;
+        this.estado = valores.estadoActivo;
         this.latitudgeo=valores.latCiudad;
         this.longitudgeo=valores.lngCiudad;
         this.ubicacion = new Ubicacion();

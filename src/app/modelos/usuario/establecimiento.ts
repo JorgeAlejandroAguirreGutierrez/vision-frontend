@@ -30,7 +30,7 @@ export class Establecimiento {
         this.direccion = valores.vacio;
         this.latitud = valores.cero;
         this.latitud = valores.cero;
-        this.estado = valores.activo;
+        this.estado = valores.estadoActivo;
         this.regimen = new Regimen();
         this.ubicacion = new Ubicacion();
         this.empresa = new Empresa();

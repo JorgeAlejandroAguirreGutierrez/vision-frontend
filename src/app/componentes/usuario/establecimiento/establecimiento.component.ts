@@ -34,8 +34,8 @@ import { MatTableDataSource } from '@angular/material/table';
 
 export class EstablecimientoComponent implements OnInit {
 
-  activo: string = valores.activo;
-  inactivo: string = valores.inactivo;
+  activo: string = valores.estadoActivo;
+  inactivo: string = valores.estadoInactivo;
 
   sesion: Sesion=null;
   abrirPanelAdmin: boolean = true;
@@ -95,7 +95,7 @@ export class EstablecimientoComponent implements OnInit {
   }
 
   consultarRegimenes(){
-    this.regimenService.consultarPorEstado(valores.activo).subscribe({
+    this.regimenService.consultarPorEstado(valores.estadoActivo).subscribe({
       next: res => {
         this.regimenes = res.resultado as Regimen[];
       },
@@ -117,7 +117,7 @@ export class EstablecimientoComponent implements OnInit {
   }
 
   consultarEmpresas() {
-    this.empresaService.consultarPorEstado(valores.activo).subscribe({
+    this.empresaService.consultarPorEstado(valores.estadoActivo).subscribe({
       next: (res) => {
         this.empresas = res.resultado as Empresa[]
       },

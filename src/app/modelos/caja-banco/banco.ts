@@ -20,6 +20,6 @@ export class Banco {
         this.subsistema = valores.vacio;
         this.calificacion = valores.vacio;
         this.abreviatura = valores.vacio;
-        this.estado = valores.activo;    
+        this.estado = valores.estadoActivo;    
     }
 }

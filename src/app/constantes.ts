@@ -184,8 +184,20 @@ export const valores = {
     menosUno: -1,
     vacio: "",
     espacio: " ",
-    activo: "ACTIVO",
-    inactivo: "INACTIVO",
+    //ESTADOS
+    estadoActivo: "ACTIVO",
+    estadoInactivo: "INACTIVO",
+    //ESTADOS VENTAS
+    estadoInternoRecaudada: "RECAUDADA",
+    estadoInternoEmitida: "EMITIDA",
+    estadoInternoAnulada: "ANULADA",
+    estadoSriPendiente: "PENDIENTE",
+    estadoSriAutorizada: "AUTORIZADA",
+    estadoSriAnulada: "ANULADA",
+    //ESTADOS COMPRAS
+    estadoInternoPagada: "PAGADA",
+    estadoInternoPorPagar: "POR PAGAR",
+
     suspendido: "SUSPENDIDO",
     abierto: "ABIERTO",
     cerrado: "CERRADO",

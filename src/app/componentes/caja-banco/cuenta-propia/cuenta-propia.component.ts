@@ -25,8 +25,8 @@ import { MatPaginator } from '@angular/material/paginator';
 })
 export class CuentaPropiaComponent implements OnInit {
 
-  activo: string = valores.activo;
-  inactivo: string = valores.inactivo;
+  activo: string = valores.estadoActivo;
+  inactivo: string = valores.estadoInactivo;
   ahorros: string = valores.ahorros;
   corriente: string = valores.corriente;
 
@@ -80,7 +80,7 @@ export class CuentaPropiaComponent implements OnInit {
     this.inicializarFiltros();
   }
   consultarBancos() {
-    this.bancoService.consultarPorEstado(valores.activo).subscribe({
+    this.bancoService.consultarPorEstado(valores.estadoActivo).subscribe({
       next: res => {
         this.bancos = res.resultado as Banco[];
       },

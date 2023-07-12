@@ -248,7 +248,7 @@ export class RecaudacionComponent implements OnInit, OnChanges {
     });
   }
   consultarBancosPropios() {
-    this.cuentaPropiaService.consultarBancoDistintoPorEmpresaYEstado(this.empresa.id, valores.activo).subscribe({
+    this.cuentaPropiaService.consultarBancoDistintoPorEmpresaYEstado(this.empresa.id, valores.estadoActivo).subscribe({
       next: res => {
         this.bancosPropios = res.resultado as String[]
       },

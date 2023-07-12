@@ -32,7 +32,7 @@ export class Producto {
     this.codigo = valores.vacio;
     this.nombre = valores.vacio;
     this.consignacion = valores.vacio;
-    this.estado = valores.activo;
+    this.estado = valores.estadoActivo;
     this.categoriaProducto = new CategoriaProducto();
     this.grupoProducto = new GrupoProducto();
     this.tipoGasto = new TipoGasto();

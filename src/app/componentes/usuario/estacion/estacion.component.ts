@@ -27,8 +27,8 @@ import { MatTableDataSource } from '@angular/material/table';
 })
 export class EstacionComponent implements OnInit {
 
-  activo: string = valores.activo;
-  inactivo: string = valores.inactivo;
+  activo: string = valores.estadoActivo;
+  inactivo: string = valores.estadoInactivo;
   si: string = valores.si;
   no: string = valores.no;
 
@@ -195,7 +195,7 @@ export class EstacionComponent implements OnInit {
 
   consultarEstablecimientos() {
     console.log(this.estacion.establecimiento.empresa.id);
-    this.establecimientoService.consultarPorEmpresaYEstado(this.estacion.establecimiento.empresa.id, valores.activo).subscribe({
+    this.establecimientoService.consultarPorEmpresaYEstado(this.estacion.establecimiento.empresa.id, valores.estadoActivo).subscribe({
       next: res => {
         this.establecimientos = res.resultado as Establecimiento[];
       },
@@ -204,7 +204,7 @@ export class EstacionComponent implements OnInit {
   }
 
   consultarRegimenes(){
-    this.regimenService.consultarPorEstado(valores.activo).subscribe({
+    this.regimenService.consultarPorEstado(valores.estadoActivo).subscribe({
       next: res => {
         this.regimenes = res.resultado as Regimen[];
       },

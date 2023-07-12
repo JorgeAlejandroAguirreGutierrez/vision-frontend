@@ -67,7 +67,7 @@ export class TablaGrupoProductoComponent implements OnInit {
   }
   
   consultar() {
-    this.grupoProductoService.consultarPorEstado(valores.activo).subscribe({
+    this.grupoProductoService.consultarPorEstado(valores.estadoActivo).subscribe({
       next: res => {
         this.gruposProductos = res.resultado as GrupoProducto[];
         this.llenarTabla(this.gruposProductos);

@@ -29,8 +29,8 @@ import { CategoriaProductoService } from 'src/app/servicios/inventario/categoria
 })
 export class GrupoProductoComponent implements OnInit {
 
-  activo: string = valores.activo;
-  inactivo: string = valores.inactivo;
+  activo: string = valores.estadoActivo;
+  inactivo: string = valores.estadoInactivo;
 
   abrirPanelNuevo: boolean = true;
   abrirPanelAdmin: boolean = true;
@@ -104,7 +104,7 @@ export class GrupoProductoComponent implements OnInit {
   }
 
   consultarGrupos() {
-    this.grupoProductoService.consultarGrupos(this.empresa.id, valores.activo).subscribe({
+    this.grupoProductoService.consultarGrupos(this.empresa.id, valores.estadoActivo).subscribe({
       next: res => {
         this.grupos = res.resultado as string[];
       },
@@ -276,7 +276,7 @@ export class GrupoProductoComponent implements OnInit {
   }
   async seleccionarGrupo() {
     if (this.controlGrupo.value != null) {
-      await this.grupoProductoService.consultarSubgruposAsync(this.empresa.id, valores.activo, this.controlGrupo.value).then(
+      await this.grupoProductoService.consultarSubgruposAsync(this.empresa.id, valores.estadoActivo, this.controlGrupo.value).then(
         res => {
           this.subgrupos = res.resultado as string[];
         },
@@ -301,7 +301,7 @@ export class GrupoProductoComponent implements OnInit {
   }
   async seleccionarSubgrupo() {
     if (this.controlSubgrupo.value != null) {
-      await this.grupoProductoService.consultarSeccionesAsync(this.empresa.id, valores.activo, this.grupoProducto.grupo, this.controlSubgrupo.value).then(
+      await this.grupoProductoService.consultarSeccionesAsync(this.empresa.id, valores.estadoActivo, this.grupoProducto.grupo, this.controlSubgrupo.value).then(
         res => {
           this.secciones = res.resultado as string[];
         },
@@ -325,7 +325,7 @@ export class GrupoProductoComponent implements OnInit {
   }
   async seleccionarSeccion() {
     if (this.controlSeccion.value != null) {
-      await this.grupoProductoService.consultarLineasAsync(this.empresa.id, valores.activo, this.grupoProducto.grupo, this.grupoProducto.subgrupo, this.controlSeccion.value).then(
+      await this.grupoProductoService.consultarLineasAsync(this.empresa.id, valores.estadoActivo, this.grupoProducto.grupo, this.grupoProducto.subgrupo, this.controlSeccion.value).then(
         res => {
           this.lineas = res.resultado as string[];
         },
@@ -349,7 +349,7 @@ export class GrupoProductoComponent implements OnInit {
   }
   async seleccionarLinea() {
     if (this.controlLinea.value != null) {
-      await this.grupoProductoService.consultarSublineasAsync(this.empresa.id, valores.activo, this.grupoProducto.grupo, this.grupoProducto.subgrupo, this.grupoProducto.seccion, this.controlLinea.value).then(
+      await this.grupoProductoService.consultarSublineasAsync(this.empresa.id, valores.estadoActivo, this.grupoProducto.grupo, this.grupoProducto.subgrupo, this.grupoProducto.seccion, this.controlLinea.value).then(
         res => {
           this.sublineas = res.resultado as string[];
         },

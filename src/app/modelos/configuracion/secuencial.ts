@@ -14,7 +14,7 @@ export class Secuencial {
         this.id = valores.cero;
         this.codigo = valores.vacio;
         this.numeroSiguiente = valores.cero;
-        this.estado = valores.activo;
+        this.estado = valores.estadoActivo;
         this.tipoComprobante = new TipoComprobante();
         this.estacion = new Estacion();
     }

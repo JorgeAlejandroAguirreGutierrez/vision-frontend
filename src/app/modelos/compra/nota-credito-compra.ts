@@ -14,6 +14,7 @@ export class NotaCreditoCompra {
     operacion: string;
     fecha: Date;
     estado: string;
+    estadoInterno: string;
     subtotalSinDescuento: number;
     descuentoTotal: number;
     subtotalBase12SinDescuento: number;
@@ -34,7 +35,8 @@ export class NotaCreditoCompra {
         this.secuencial = valores.vacio;
         this.operacion = valores.vacio;
         this.fecha = new Date();
-        this.estado = valores.noFacturada;
+        this.estado = valores.estadoActivo;
+        this.estadoInterno = valores.vacio;
         this.subtotalSinDescuento = valores.cero;
         this.descuentoTotal = valores.cero;
         this.subtotalBase12SinDescuento = valores.cero;

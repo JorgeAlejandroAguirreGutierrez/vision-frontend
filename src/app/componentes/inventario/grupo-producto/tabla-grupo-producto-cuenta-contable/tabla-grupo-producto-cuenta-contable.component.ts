@@ -53,7 +53,7 @@ export class TablaGrupoProductoCuentaContableComponent implements OnInit {
   }
 
   consultar() {
-    this.cuentaContableService.consultarPorEstado(valores.activo).subscribe({
+    this.cuentaContableService.consultarPorEstado(valores.estadoActivo).subscribe({
       next: res => {
         this.cuentasContables = res.resultado as CuentaContable[]
         this.dataSource = new MatTableDataSource(this.cuentasContables);

@@ -12,7 +12,7 @@ export class Permiso {
   constructor(){
     this.id=valores.cero;
     this.codigo=valores.vacio;
-    this.estado = valores.activo;
+    this.estado = valores.estadoActivo;
     this.menuOpcion = new MenuOpcion();
     this.perfil=new Perfil();
   }

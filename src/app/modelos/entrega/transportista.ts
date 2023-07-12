@@ -17,7 +17,7 @@ export class Transportista {
         this.nombre = valores.vacio;
         this.identificacion = valores.vacio;
         this.vehiculoPropio = valores.vacio;
-        this.estado = valores.activo;
+        this.estado = valores.estadoActivo;
         this.tipoIdentificacion = new TipoIdentificacion();
     }
 }

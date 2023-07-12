@@ -12,7 +12,7 @@ export class EstacionUsuario {
     constructor() {
         this.id=valores.cero;
         this.codigo=valores.vacio;
-        this.estado=valores.activo;
+        this.estado=valores.estadoActivo;
         this.usuario=new Usuario();
         this.estacion=new Estacion();
     }

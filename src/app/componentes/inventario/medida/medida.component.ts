@@ -25,8 +25,8 @@ export class MedidaComponent implements OnInit {
   abrirPanelNuevo = true;
   abrirPanelAdmin = true;
 
-  activo: string = valores.activo;
-  inactivo: string = valores.inactivo;
+  activo: string = valores.estadoActivo;
+  inactivo: string = valores.estadoInactivo;
   tipoMedidas: string[] = tipoMedidas; 
 
   sesion: Sesion = null;

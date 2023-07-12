@@ -18,7 +18,7 @@ export class Sesion {
         this.ip = valores.vacio;
         this.fechaApertura = new Date();
         this.fechaCierre = new Date();
-        this.estado = valores.activo;
+        this.estado = valores.estadoActivo;
         this.usuario = new Usuario();
         this.empresa = new Empresa();
     }

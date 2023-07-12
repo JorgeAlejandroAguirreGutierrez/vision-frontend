@@ -11,7 +11,7 @@ import Swal from 'sweetalert2';
 import { startWith, map } from 'rxjs/operators';
 import { SesionService } from '../../../servicios/usuario/sesion.service';
 import { Sesion } from '../../../modelos/usuario/sesion';
-import { valores, validarSesion, otras, tab_activo, exito, exito_swal, error, error_swal } from '../../../constantes';
+import { valores, validarSesion, exito, exito_swal, error, error_swal } from '../../../constantes';
 import { ProveedorService } from 'src/app/servicios/compra/proveedor.service';
 import { Proveedor } from 'src/app/modelos/compra/proveedor';
 import { NotaCreditoCompraLinea } from 'src/app/modelos/compra/nota-credito-compra-linea';
@@ -70,7 +70,8 @@ export class NotaCreditoCompraComponent implements OnInit {
     { nombreColumna: 'fecha', cabecera: 'Fecha', celda: (row: NotaCreditoCompra) => `${this.datepipe.transform(row.fecha, "dd-MM-yyyy")}`},
     { nombreColumna: 'proveedor', cabecera: 'Proveedor', celda: (row: NotaCreditoCompra) => `${row.facturaCompra.proveedor.razonSocial}`},
     { nombreColumna: 'total', cabecera: 'Total', celda: (row: NotaCreditoCompra) => `$${row.totalSinDescuento}`},
-    { nombreColumna: 'estado', cabecera: 'Estado', celda: (row: NotaCreditoCompra) => `${row.estado}`}
+    { nombreColumna: 'estado', cabecera: 'Estado', celda: (row: NotaCreditoCompra) => `${row.estado}`},
+    { nombreColumna: 'estadoInterno', cabecera: 'Estado Interno', celda: (row: NotaCreditoCompra) => `${row.estadoInterno}`}
   ];
   cabecera: string[]  = this.columnas.map(titulo => titulo.nombreColumna);
   dataSource: MatTableDataSource<NotaCreditoCompra>;
@@ -200,7 +201,7 @@ export class NotaCreditoCompraComponent implements OnInit {
   }
 
   consultarProveedores(){
-    this.proveedorService.consultarPorEmpresaYEstado(this.empresa.id, valores.activo).subscribe(
+    this.proveedorService.consultarPorEmpresaYEstado(this.empresa.id, valores.estadoActivo).subscribe(
       res => {
         this.proveedores = res.resultado as Proveedor[]
       },
@@ -209,7 +210,7 @@ export class NotaCreditoCompraComponent implements OnInit {
   }
 
   consultarFacturasCompras(){
-    this.facturaCompraService.consultarPorEmpresaYEstado(this.empresa.id, valores.activo).subscribe(
+    this.facturaCompraService.consultarPorEmpresaYEstado(this.empresa.id, valores.estadoActivo).subscribe(
       res => {
         this.facturasCompras = res.resultado as FacturaCompra[]
       },

@@ -19,7 +19,7 @@ export class CuentaPropia {
         this.tipoCuenta = valores.vacio;
         this.nombre = valores.vacio;
         this.numero = valores.vacio;
-        this.estado = valores.activo;
+        this.estado = valores.estadoActivo;
         this.banco = new Banco();
     }
 }

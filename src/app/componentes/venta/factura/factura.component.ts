@@ -52,8 +52,8 @@ import { MatTableDataSource } from '@angular/material/table';
 
 export class FacturaComponent implements OnInit {
 
-  activo: string = valores.activo;
-  inactivo: string = valores.inactivo;
+  activo: string = valores.estadoActivo;
+  inactivo: string = valores.estadoInactivo;
   si: string = valores.si;
   no: string = valores.no;
   emitida: string = valores.emitida;
@@ -110,7 +110,9 @@ export class FacturaComponent implements OnInit {
     { nombreColumna: 'secuencial', cabecera: 'Secuencial', celda: (row: Factura) => `${row.secuencial}` },
     { nombreColumna: 'cliente', cabecera: 'Cliente', celda: (row: Factura) => `${row.cliente.razonSocial}` },
     { nombreColumna: 'total', cabecera: 'Total', celda: (row: Factura) => `$${row.valorTotal}` },
-    { nombreColumna: 'estado', cabecera: 'Estado', celda: (row: Factura) => `${row.estado}` }
+    { nombreColumna: 'estado', cabecera: 'Estado', celda: (row: Factura) => `${row.estado}` },
+    { nombreColumna: 'estadoInterno', cabecera: 'Estado Interno', celda: (row: Factura) => `${row.estadoInterno}` },
+    { nombreColumna: 'estadoSri', cabecera: 'Estado SRI', celda: (row: Factura) => `${row.estadoSri}` }
   ];
   cabeceraFactura: string[] = this.columnasFactura.map(titulo => titulo.nombreColumna);
   dataSourceFactura: MatTableDataSource<Factura>;
@@ -173,7 +175,7 @@ export class FacturaComponent implements OnInit {
   }
 
   consultarClientes() {
-    this.clienteService.consultarPorEmpresaYEstado(this.empresa.id, valores.activo).subscribe({
+    this.clienteService.consultarPorEmpresaYEstado(this.empresa.id, valores.estadoActivo).subscribe({
       next: res => {
         this.clientes = res.resultado as Cliente[]
         this.factura.cliente = this.clientes[0];
@@ -186,7 +188,7 @@ export class FacturaComponent implements OnInit {
     });
   }
   consultarProductos() {
-    this.productoService.consultarPorEmpresaYEstado(this.empresa.id, valores.activo).subscribe({
+    this.productoService.consultarPorEmpresaYEstado(this.empresa.id, valores.estadoActivo).subscribe({
       next: res => {
         this.productos = res.resultado as Producto[];
       },
@@ -196,7 +198,7 @@ export class FacturaComponent implements OnInit {
     })
   }
   consultarImpuestos() {
-    this.impuestoService.consultarPorEstado(valores.activo).subscribe({
+    this.impuestoService.consultarPorEstado(valores.estadoActivo).subscribe({
       next: res => {
         this.impuestos = res.resultado as Impuesto[]
       },
@@ -206,7 +208,7 @@ export class FacturaComponent implements OnInit {
     });
   }
   consultarBodegas() {
-    this.bodegaService.consultarPorEmpresaYEstado(this.empresa.id, valores.activo).subscribe({
+    this.bodegaService.consultarPorEmpresaYEstado(this.empresa.id, valores.estadoActivo).subscribe({
       next: res => {
         this.bodegas = res.resultado as Bodega[]
         this.facturaLinea.bodega = this.bodegas[0];

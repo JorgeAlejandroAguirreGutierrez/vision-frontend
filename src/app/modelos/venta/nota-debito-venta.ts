@@ -17,6 +17,8 @@ export class NotaDebitoVenta {
     secuencial: string;
     fecha: Date;
     estado: string;
+    estadoInterno: string;
+    estadoSri: string;
     subtotalSinDescuento: number;
     descuentoTotal: number;
     subtotalBase12SinDescuento: number;
@@ -53,7 +55,9 @@ export class NotaDebitoVenta {
         this.codigo = valores.vacio;
         this.secuencial = valores.vacio;
         this.fecha = new Date();
-        this.estado = valores.noFacturada;
+        this.estado = valores.estadoActivo;
+        this.estadoInterno = valores.vacio;
+        this.estadoSri = valores.vacio;
         this.subtotalSinDescuento = valores.cero;
         this.descuentoTotal = valores.cero;
         this.subtotalBase12SinDescuento = valores.cero;

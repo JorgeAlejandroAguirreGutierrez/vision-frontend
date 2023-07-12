@@ -26,8 +26,8 @@ import { MatTableDataSource } from '@angular/material/table';
 
 export class EmpresaComponent implements OnInit {
 
-  activo: string = valores.activo;
-  inactivo: string = valores.inactivo;
+  activo: string = valores.estadoActivo;
+  inactivo: string = valores.estadoInactivo;
   si: string = valores.si;
   no: string = valores.no;
 
