@@ -41,6 +41,7 @@ import { CuentaContableComponent } from '../../../componentes/contabilidad/cuent
 //REPORTES
 import { ReporteClienteComponent } from '../../../componentes/reporte/cliente/reporte-cliente/reporte-cliente.component';
 import { ReporteCompraComponent } from '../../../componentes/reporte/compra/reporte-compra/reporte-compra.component';
+import { ReporteVentaComponent } from '../../../componentes/reporte/venta/reporte-venta/reporte-venta.component';
 import { ReporteInventarioComponent } from '../../../componentes/reporte/inventario/reporte-inventario/reporte-inventario.component';
 import { ReporteCajaBancoComponent } from '../../../componentes/reporte/caja-banco/reporte-caja-banco/reporte-caja-banco.component';
 import { ReporteCuentaCobrarComponent } from '../../../componentes/reporte/cuenta-cobrar/reporte-cuenta-cobrar/reporte-cuenta-cobrar.component';
@@ -52,9 +53,9 @@ import { ReporteTalentoHumanoComponent } from '../../../componentes/reporte/tale
 import { ReporteFinancieroComponent } from '../../../componentes/reporte/financiero/reporte-financiero/reporte-financiero.component';
 import { ReporteImportacionComponent } from '../../../componentes/reporte/importacion/reporte-importacion/reporte-importacion.component';
 
-import { ReporteVentaComponent } from '../../../componentes/reporte/reporte-venta/reporte-venta.component';
+
 import { ReporteCajaComponent } from 'src/app/componentes/reporte/reporte-caja/reporte-caja.component';
-import { ReporteKardexComponent } from 'src/app/componentes/reporte/reporte-kardex/reporte-kardex.component';
+import { KardexMercaderiaComponent } from 'src/app/componentes/reporte/inventario/kardex-mercaderia/kardex-mercaderia.component';
 
 //ACCESOS
 import { UsuarioComponent } from '../../../componentes/usuario/usuario/usuario.component';
@@ -173,6 +174,7 @@ export class SidebarItemsService {
     if (tabNombre == modulos.modulo_reportes) {
       this.llenarOpciones(ReporteClienteComponent, tabs.tab_reporte_clientes, items.item_reporte_clientes, icos.ico_reporte_clientes);
       this.llenarOpciones(ReporteCompraComponent, tabs.tab_reporte_compras, items.item_reporte_compras, icos.ico_reporte_compras);
+      this.llenarOpciones(ReporteVentaComponent, tabs.tab_reporte_ventas, items.item_reporte_ventas, icos.ico_reporte_ventas);
       this.llenarOpciones(ReporteInventarioComponent, tabs.tab_reporte_inventarios, items.item_reporte_inventarios, icos.ico_reporte_inventarios);
       this.llenarOpciones(ReporteCajaBancoComponent, tabs.tab_reporte_caja_bancos, items.item_reporte_caja_bancos, icos.ico_reporte_caja_bancos);
       this.llenarOpciones(ReporteCuentaCobrarComponent, tabs.tab_reporte_cuentas_cobrar, items.item_reporte_cuentas_cobrar, icos.ico_reporte_cuentas_cobrar);
@@ -186,7 +188,7 @@ export class SidebarItemsService {
 
       this.llenarOpciones(ReporteVentaComponent, tabs.tab_reporte_talento_humano, items.item_reporte_talento_humano, icos.ico_reporte_talento_humano);
       this.llenarOpciones(ReporteCajaComponent, tabs.tab_reporte_financiero, items.item_reporte_financiero, icos.ico_reporte_financiero);
-      this.llenarOpciones(ReporteKardexComponent, tabs.tab_reporte_importacion, items.item_reporte_importacion, icos.ico_reporte_importacion);
+      this.llenarOpciones(KardexMercaderiaComponent, tabs.tab_reporte_importacion, items.item_reporte_importacion, icos.ico_reporte_importacion);
     }
 
     if (tabNombre == modulos.modulo_accesos) {

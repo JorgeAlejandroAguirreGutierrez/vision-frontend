@@ -540,7 +540,7 @@ export const items = {
     item_reporte_clientes: "Cliente",
     item_reporte_compras: "Compras",
     item_reporte_ventas: "Ventas",
-    item_reporte_inventarios: "Invetarios",
+    item_reporte_inventarios: "Inventarios",
     item_reporte_caja_bancos: "Caja Bancos",
     item_reporte_cuentas_cobrar: "Cuentas Por Cobrar",
     item_reporte_cuentas_pagar: "Cuentas Por Pagar",

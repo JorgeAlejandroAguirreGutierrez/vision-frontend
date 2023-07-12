@@ -79,7 +79,11 @@ import { TablaMovimientoContableComponent } from './componentes/contabilidad/mov
 // Módulo de reportes
 import { ReporteClienteComponent } from './componentes/reporte/cliente/reporte-cliente/reporte-cliente.component';
 import { ReporteCompraComponent } from './componentes/reporte/compra/reporte-compra/reporte-compra.component';
+import { ReporteVentaComponent } from './componentes/reporte/venta/reporte-venta/reporte-venta.component';
+  import { DetalleVentasComponent } from './componentes/reporte/venta/detalle-ventas/detalle-ventas.component';
+  import { CierreCajaComponent } from './componentes/reporte/venta/cierre-caja/cierre-caja.component';
 import { ReporteInventarioComponent } from './componentes/reporte/inventario/reporte-inventario/reporte-inventario.component';
+  import { KardexMercaderiaComponent } from './componentes/reporte/inventario/kardex-mercaderia/kardex-mercaderia.component';
 import { ReporteCajaBancoComponent } from './componentes/reporte/caja-banco/reporte-caja-banco/reporte-caja-banco.component';
 import { ReporteCuentaCobrarComponent } from './componentes/reporte/cuenta-cobrar/reporte-cuenta-cobrar/reporte-cuenta-cobrar.component';
 import { ReporteCuentaPagarComponent } from './componentes/reporte/cuenta-pagar/reporte-cuenta-pagar/reporte-cuenta-pagar.component';
@@ -90,9 +94,7 @@ import { ReporteTalentoHumanoComponent } from './componentes/reporte/talento-hum
 import { ReporteFinancieroComponent } from './componentes/reporte/financiero/reporte-financiero/reporte-financiero.component';
 import { ReporteImportacionComponent } from './componentes/reporte/importacion/reporte-importacion/reporte-importacion.component';
 
-import { ReporteVentaComponent } from './componentes/reporte/reporte-venta/reporte-venta.component';
 import { ReporteCajaComponent } from './componentes/reporte/reporte-caja/reporte-caja.component';
-import { ReporteKardexComponent } from './componentes/reporte/reporte-kardex/reporte-kardex.component';
 
 // Módulo de Accesos
 import { UsuarioComponent } from './componentes/usuario/usuario/usuario.component';
@@ -215,7 +217,11 @@ export const RoutingComponents = [
   //Reportes
   ReporteClienteComponent,
   ReporteCompraComponent,
+  ReporteVentaComponent,
+  DetalleVentasComponent,
+  CierreCajaComponent,
   ReporteInventarioComponent,
+  KardexMercaderiaComponent,
   ReporteCajaBancoComponent,
   ReporteCuentaCobrarComponent,
   ReporteCuentaPagarComponent,
@@ -226,9 +232,9 @@ export const RoutingComponents = [
   ReporteFinancieroComponent,
   ReporteImportacionComponent,
 
-  ReporteVentaComponent,
+
   ReporteCajaComponent,
-  ReporteKardexComponent,
+
   //Usuarios
   UsuarioComponent,
   EmpresaComponent,

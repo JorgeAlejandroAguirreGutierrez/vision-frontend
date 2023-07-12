@@ -6,6 +6,11 @@ import { CommonModule, DatePipe } from '@angular/common';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
+// Formato de Fecha
+import { MatDatepickerModule } from "@angular/material/datepicker";
+import { MatMomentDateModule } from "@angular/material-moment-adapter";
+import { DatePickerFormatDirective } from "./componentes/comun/formato/date-picker-format.directive";
+
 // Componentes de Angular Material
 import { MaterialModule } from './componentes/material-module';
 
@@ -22,7 +27,7 @@ import { NgxSpinnerModule } from 'ngx-spinner';
 import { TabContentComponent } from "./componentes/comun/tab/tab-content.component";
 import { ContentContainerDirective } from "./componentes/comun/tab/content-container.directive";
 import { TabService } from "./servicios/comun/tab/tab.service";
-import { FormatoDecimalDirective } from "./componentes/comun/tab/FormatoDecimal.directive";
+import { FormatoDecimalDirective } from "./componentes/comun/formato/FormatoDecimal.directive";
 
 //Tienda - Estructura: Cabecera y Menu
 import { LocationStrategy, PathLocationStrategy } from '@angular/common';
@@ -61,6 +66,7 @@ import { TipoRetencionService } from './servicios/configuracion/tipo-retencion.s
         TabContentComponent,
         ContentContainerDirective,
         FormatoDecimalDirective,
+        DatePickerFormatDirective,
         RoutingComponents
     ],
     imports: [
@@ -73,6 +79,8 @@ import { TipoRetencionService } from './servicios/configuracion/tipo-retencion.s
         NgbModule,
         FlexLayoutModule,
         MaterialModule,
+        MatDatepickerModule,
+        MatMomentDateModule,
         GoogleMapsModule,
         NgxSpinnerModule,
         AppRoutingModule
