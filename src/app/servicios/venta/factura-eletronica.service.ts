@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { Factura } from '../../modelos/venta/factura';
 import { Respuesta } from '../../respuesta';
 import { HttpClient } from '@angular/common/http';
 import { map, catchError } from 'rxjs/operators';
