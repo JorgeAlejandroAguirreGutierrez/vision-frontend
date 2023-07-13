@@ -50,7 +50,7 @@
                             <mat-icon>picture_as_pdf</mat-icon>
                         </a>
                     </li>
-                    <li class="nav-item" *ngIf="factura.estado == estadoActivo && factura.estadoInterno == estadoInternoEmitida && factura.estadoSri == estadoSriAutorizada">
+                    <li class="nav-item" *ngIf="factura.estado == estadoActivo && factura.estadoInterno == estadoInternoRecaudada && factura.estadoSri == estadoSriAutorizada">
                         <a class="nav-link" title="Enviar PDF Y XML" href="#" role="button"
                             (click)="enviarPDFYXML($event)">
                             <mat-icon>forward_to_inbox</mat-icon>
