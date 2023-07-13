@@ -3,7 +3,7 @@ import { valores, mensajes, otras, validarSesion, exito, exito_swal, error, erro
 import { DatePipe } from '@angular/common';
 import { UntypedFormControl } from '@angular/forms';
 import { DateAdapter, MAT_DATE_FORMATS } from '@angular/material/core';
-import { AppDateAdapter, APP_DATE_FORMATS } from '../../../modelos/format-date-picker';
+import { AppDateAdapter, APP_DATE_FORMATS } from '../../comun/formato/format-date-picker';
 import { Router } from '@angular/router';
 import { startWith, map } from 'rxjs/operators';
 import { NgxSpinnerService } from 'ngx-spinner';

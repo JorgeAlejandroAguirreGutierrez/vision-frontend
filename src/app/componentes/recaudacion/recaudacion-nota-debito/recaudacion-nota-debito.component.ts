@@ -29,7 +29,7 @@ import { CuentaPropia } from '../../../modelos/caja-banco/cuenta-propia';
 import { CuentaPropiaService } from '../../../servicios/caja-banco/cuenta-propia.service';
 import { FranquiciaTarjeta } from '../../../modelos/recaudacion/franquicia-tarjeta';
 import { FranquiciaTarjetaService } from '../../../servicios/recaudacion/franquicia-tarjeta.service';
-import { AppDateAdapter, APP_DATE_FORMATS } from '../../../modelos/format-date-picker';
+import { AppDateAdapter, APP_DATE_FORMATS } from '../../comun/formato/format-date-picker';
 import { OperadorTarjeta } from '../../../modelos/recaudacion/operador-tarjeta';
 import { OperadorTarjetaService } from '../../../servicios/recaudacion/operador-tarjeta.service';
 

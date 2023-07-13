@@ -597,11 +597,11 @@ export const icos = {
     ico_calificacion_cliente: 'fa fa-star-half-o',
 
     // Compras
+    ico_grupo_proveedor: 'fa fa-suitcase',
     ico_proveedor: 'fa fa-truck',
     ico_factura_compra: 'fa fa-cart-arrow-down',
-    ico_grupo_proveedor: 'fa fa-suitcase',
-    ico_nota_credito_compra: 'fa fa-share',
-    ico_nota_debito_compra: 'fa fa-reply',
+    ico_nota_credito_compra: 'fa fa-reply',
+    ico_nota_debito_compra: 'fa fa-share',
 
     // Ventas
     ico_factura: 'fa fa-clipboard',

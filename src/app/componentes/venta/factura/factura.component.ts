@@ -8,7 +8,7 @@ import Swal from 'sweetalert2';
 
 import { DatePipe } from '@angular/common';
 import { DateAdapter, MAT_DATE_FORMATS } from '@angular/material/core';
-import { AppDateAdapter, APP_DATE_FORMATS } from '../../../modelos/format-date-picker';
+import { AppDateAdapter, APP_DATE_FORMATS } from '../../comun/formato/format-date-picker';
 
 import { TabService } from '../../../servicios/comun/tab/tab.service';
 import { FooterComponent } from "../../comun/footer/footer.component";

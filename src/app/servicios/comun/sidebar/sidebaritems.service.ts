@@ -1,6 +1,6 @@
 import { Injectable, Type } from '@angular/core';
 import { modulos, tabs, items, icos, valores } from '../../../constantes';
-import { SidebarItem } from "../../../modelos/sidebar-item.model";
+import { SidebarItem } from "../../../modelos/comun/sidebar-item.model";
 import { Sesion } from '../../../modelos/usuario/sesion';
 import { Permiso } from '../../../modelos/usuario/permiso';
 //CLIENTES

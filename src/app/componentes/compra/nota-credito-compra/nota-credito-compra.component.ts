@@ -1,93 +1,112 @@
 import { Component, OnInit, ViewChild, HostListener } from '@angular/core';
-import { DatePipe } from '@angular/common';
-import { DateAdapter, MAT_DATE_FORMATS } from '@angular/material/core';
-import { AppDateAdapter, APP_DATE_FORMATS } from '../../../modelos/format-date-picker';
+import { valores, validarSesion, otras, tab_activo, exito, exito_swal, error, error_swal } from '../../../constantes';
 import { UntypedFormControl } from '@angular/forms';
-import { MatTableDataSource } from '@angular/material/table';
-import { MatPaginator } from '@angular/material/paginator';
 import { Router } from '@angular/router';
+import { startWith, map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 import Swal from 'sweetalert2';
-import { startWith, map } from 'rxjs/operators';
-import { SesionService } from '../../../servicios/usuario/sesion.service';
+
+import { DatePipe } from '@angular/common';
+import { DateAdapter, MAT_DATE_FORMATS } from '@angular/material/core';
+import { AppDateAdapter, APP_DATE_FORMATS } from '../../comun/formato/format-date-picker';
+
 import { Sesion } from '../../../modelos/usuario/sesion';
-import { valores, validarSesion, otras, tab_activo, exito, exito_swal, error, error_swal } from '../../../constantes';
-import { ProveedorService } from 'src/app/servicios/compra/proveedor.service';
-import { Proveedor } from 'src/app/modelos/compra/proveedor';
-import { NotaCreditoCompraLinea } from 'src/app/modelos/compra/nota-credito-compra-linea';
-import { NotaCreditoCompra } from 'src/app/modelos/compra/nota-credito-compra';
-import { NotaCreditoCompraService } from 'src/app/servicios/compra/nota-credito-compra.service';
-import { FacturaCompra } from 'src/app/modelos/compra/factura-compra';
-import { FacturaCompraService } from 'src/app/servicios/compra/factura-compra.service';
-import { Empresa } from 'src/app/modelos/usuario/empresa';
+import { SesionService } from '../../../servicios/usuario/sesion.service';
+import { Empresa } from '../../../modelos/usuario/empresa';
+import { Proveedor } from '../../../modelos/compra/proveedor';
+import { ProveedorService } from '../../../servicios/compra/proveedor.service';
+import { NotaCreditoCompra } from '../../../modelos/compra/nota-credito-compra';
+import { NotaCreditoCompraService } from '../../../servicios/compra/nota-credito-compra.service';
+import { NotaCreditoCompraLinea } from '../../../modelos/compra/nota-credito-compra-linea';
+import { FacturaCompra } from '../../../modelos/compra/factura-compra';
+import { FacturaCompraService } from '../../../servicios/compra/factura-compra.service';
+
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSort } from '@angular/material/sort';
+import { MatTableDataSource } from '@angular/material/table';
+import { FacturaCompraLinea } from 'src/app/modelos/compra/factura-compra-linea';
 
 @Component({
   selector: 'app-nota-credito-compra',
   templateUrl: './nota-credito-compra.component.html',
   styleUrls: ['./nota-credito-compra.component.scss'],
   providers: [
-    {provide: DateAdapter, useClass: AppDateAdapter},
-    {provide: MAT_DATE_FORMATS, useValue: APP_DATE_FORMATS}
+    { provide: DateAdapter, useClass: AppDateAdapter },
+    { provide: MAT_DATE_FORMATS, useValue: APP_DATE_FORMATS }
   ]
 })
+
 export class NotaCreditoCompraComponent implements OnInit {
 
-  panelOpenState = false;
+  abrirPanelNuevoNC: boolean = true;
+  abrirPanelNCLinea: boolean = false;
+  abrirPanelAdmin: boolean = true;
+
+  deshabilitarDevolucion = true;
+  deshabilitarDescuento = true;
 
   si: string = valores.si;
   no: string = valores.no;
-  emitida: string = valores.emitida;
-  anulada: string = valores.anulada;
-  noFacturada: string = valores.noFacturada;
-  facturada:string = valores.facturada;
-  noRecaudada: string = valores.noRecaudada;
-  recaudada: string = valores.recaudada;
+  activo: string = valores.activo;
+  inactivo: string = valores.inactivo;
   devolucion: string = valores.devolucion;
   descuento: string = valores.descuento;
   conjunta: string = valores.conjunta;
 
-  deshabilitarDevolucion = true;
-  deshabilitarDescuento = true;
-  
   hoy = new Date();
 
+  sesion: Sesion = null;
+  empresa: Empresa = new Empresa();
   facturaCompra: FacturaCompra = new FacturaCompra();
-  
-  seleccionProveedor = new UntypedFormControl();
-  controlIdentificacionProveedor = new UntypedFormControl();
-  controlProveedor = new UntypedFormControl();
-  filtroProveedores: Observable<Proveedor[]> = new Observable<Proveedor[]>();
-  proveedores: Proveedor[] = [];
-  seleccionFacturaCompra = new UntypedFormControl();
-  filtroFacturasCompras: Observable<FacturaCompra[]> = new Observable<FacturaCompra[]>();
-  facturasCompras: FacturaCompra[] = [];
-  filtroIdentificacionProveedores: Observable<Proveedor[]> = new Observable<Proveedor[]>();
-
-  columnas: any[] = [
-    { nombreColumna: 'codigo', cabecera: 'Código', celda: (row: NotaCreditoCompra) => `${row.codigo}`},
-    { nombreColumna: 'serie', cabecera: 'Serie', celda: (row: NotaCreditoCompra) => `${row.serie}`},
-    { nombreColumna: 'secuencial', cabecera: 'Código', celda: (row: NotaCreditoCompra) => `${row.secuencial}`},
-    { nombreColumna: 'fecha', cabecera: 'Fecha', celda: (row: NotaCreditoCompra) => `${this.datepipe.transform(row.fecha, "dd-MM-yyyy")}`},
-    { nombreColumna: 'proveedor', cabecera: 'Proveedor', celda: (row: NotaCreditoCompra) => `${row.facturaCompra.proveedor.razonSocial}`},
-    { nombreColumna: 'total', cabecera: 'Total', celda: (row: NotaCreditoCompra) => `$${row.totalSinDescuento}`},
-    { nombreColumna: 'estado', cabecera: 'Estado', celda: (row: NotaCreditoCompra) => `${row.estado}`}
-  ];
-  cabecera: string[]  = this.columnas.map(titulo => titulo.nombreColumna);
-  dataSource: MatTableDataSource<NotaCreditoCompra>;
-  clickedRows = new Set<NotaCreditoCompra>();
-  abrirPanelAdmin = false;
-  notasCreditosCompras: NotaCreditoCompra[] = [];
-  
-  @ViewChild("paginator") paginator: MatPaginator;
-  @ViewChild("paginatorLinea") paginatorLinea: MatPaginator;
-
   notaCreditoCompra: NotaCreditoCompra = new NotaCreditoCompra();
   notaCreditoCompraLinea: NotaCreditoCompraLinea = new NotaCreditoCompraLinea();
 
-  columnasLinea: string[] = ["codigo", 'nombre', 'medida', 'cantidad', 'devolucion', 'costoUnitario', 'valorDescuento', 'porcentajeDescuento', 'impuesto', 'bodega', 'total'];
-  dataSourceLinea = new MatTableDataSource<NotaCreditoCompraLinea>(this.notaCreditoCompra.notaCreditoCompraLineas);
-  sesion: Sesion = null;
-  empresa: Empresa = new Empresa();
+  proveedores: Proveedor[] = [];
+  notasCreditosCompras: NotaCreditoCompra[] = [];
+  facturasCompras: FacturaCompra[] = [];
+
+  seleccionProveedor = new UntypedFormControl();
+  seleccionFacturaCompra = new UntypedFormControl();
+  controlIdentificacionProveedor = new UntypedFormControl();
+  controlProveedor = new UntypedFormControl();
+
+  filtroProveedores: Observable<Proveedor[]> = new Observable<Proveedor[]>();
+  filtroFacturasCompras: Observable<FacturaCompra[]> = new Observable<FacturaCompra[]>();
+  filtroIdentificacionProveedores: Observable<Proveedor[]> = new Observable<Proveedor[]>();
+
+  columnas: any[] = [
+    { nombreColumna: 'codigo', cabecera: 'Código', celda: (row: NotaCreditoCompra) => `${row.codigo}` },
+    { nombreColumna: 'fecha', cabecera: 'Fecha', celda: (row: NotaCreditoCompra) => `${this.datepipe.transform(row.fecha, "dd-MM-yyyy")}` },
+    { nombreColumna: 'serie', cabecera: 'Serie', celda: (row: NotaCreditoCompra) => `${row.serie}` },
+    { nombreColumna: 'secuencial', cabecera: 'Código', celda: (row: NotaCreditoCompra) => `${row.secuencial}` },
+    { nombreColumna: 'proveedor', cabecera: 'Proveedor', celda: (row: NotaCreditoCompra) => `${row.facturaCompra.proveedor.razonSocial}` },
+    { nombreColumna: 'total', cabecera: 'Total', celda: (row: NotaCreditoCompra) => `$${row.totalSinDescuento}` },
+    { nombreColumna: 'estado', cabecera: 'Estado', celda: (row: NotaCreditoCompra) => `${row.estado}` }
+  ];
+  cabecera: string[] = this.columnas.map(titulo => titulo.nombreColumna);
+  dataSource: MatTableDataSource<NotaCreditoCompra>;
+  clickedRows = new Set<NotaCreditoCompra>();
+
+  columnasLinea: any[] = [
+    { nombreColumna: 'nombre', cabecera: 'nombre', celda: (row: NotaCreditoCompraLinea) => `${row.producto.nombre}` },
+    { nombreColumna: 'medida', cabecera: 'medida', celda: (row: NotaCreditoCompraLinea) => `${row.producto.medida.abreviatura}` },
+    { nombreColumna: 'cantidad', cabecera: 'cantidad', celda: (row: NotaCreditoCompraLinea) => `${row.cantidad}` },
+    { nombreColumna: 'devolucion', cabecera: 'devolucion', celda: (row: NotaCreditoCompraLinea) => `${row.devolucion}` },
+    { nombreColumna: 'costounitario', cabecera: 'C. Unit', celda: (row: NotaCreditoCompraLinea) => `${row.costoUnitario}` },
+    { nombreColumna: 'valorDescuento', cabecera: 'Descuento', celda: (row: NotaCreditoCompraLinea) => `${row.valorDescuentoLinea}` },
+    { nombreColumna: 'porcentajeDescuento', cabecera: 'Descuento %', celda: (row: NotaCreditoCompraLinea) => `${row.porcentajeDescuentoLinea}` },
+    { nombreColumna: 'impuesto', cabecera: 'Importe', celda: (row: NotaCreditoCompraLinea) => `${row.producto.impuesto.porcentaje}` },
+    { nombreColumna: 'bodega', cabecera: 'bodega', celda: (row: NotaCreditoCompraLinea) => `${row.bodega.abreviatura}` },
+    { nombreColumna: 'total', cabecera: 'C. Unit', celda: (row: NotaCreditoCompraLinea) => `${row.costoUnitario}` },
+  ];
+  cabeceraLinea: string[] = this.columnasLinea.map(titulo => titulo.nombreColumna);
+  dataSourceLinea: MatTableDataSource<NotaCreditoCompraLinea>;
+  clickedRowsLinea = new Set<NotaCreditoCompra>();
+
+  @ViewChild("paginator") paginator: MatPaginator;
+  @ViewChild("paginatorLinea") paginatorLinea: MatPaginator;
+  @ViewChild('matSort') sort: MatSort;
+  @ViewChild('matSortLinea') sortLinea: MatSort;
 
   @HostListener('window:keypress', ['$event'])
   keyEvent($event: KeyboardEvent) {
@@ -107,67 +126,20 @@ export class NotaCreditoCompraComponent implements OnInit {
     this.consultarProveedores();
     this.consultarFacturasCompras();
     this.inicializarFiltros();
-    this.filtroFacturasCompras = this.seleccionFacturaCompra.valueChanges
-      .pipe(
-        startWith(valores.vacio),
-        map(value => typeof value === 'string' || value==null ? value : value.id),
-        map(facturaCompra => typeof facturaCompra === 'string' ? this.filtroFacturaCompra(facturaCompra) : this.facturasCompras.slice())
-      );
   }
 
-  verIdentificacionProveedor(proveedor: Proveedor): string {
-    return proveedor && proveedor.identificacion ? proveedor.identificacion : valores.vacio;
+  consultarProveedores() {
+    this.proveedorService.consultarPorEmpresaYEstado(this.empresa.id, valores.activo).subscribe({
+      next: res => {
+        this.proveedores = res.resultado as Proveedor[]
+      },
+      error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+    });
   }
 
-  verProveedor(proveedor: Proveedor): string {
-    return proveedor && proveedor.razonSocial ? proveedor.razonSocial : '';
-  }
 
-  //FILTROS AUTOCOMPLETE
-  inicializarFiltros() {
-    this.filtroIdentificacionProveedores = this.controlIdentificacionProveedor.valueChanges
-      .pipe(
-        startWith(''),
-        map(value => typeof value === 'string' || value == null ? value : value.id),
-        map(identificacion => typeof identificacion === 'string' ? this.filtroIdentificacionProveedor(identificacion) : this.proveedores.slice())
-    );
-    this.filtroProveedores = this.controlProveedor.valueChanges
-      .pipe(
-        startWith(valores.vacio),
-        map(value => typeof value === 'string' || value==null ? value : value.id),
-        map(proveedor => typeof proveedor === 'string' ? this.filtroProveedor(proveedor) : this.proveedores.slice())
-      );
-  }
-  
-  private filtroProveedor(value: string): Proveedor[] {
-    if(this.proveedores.length > valores.cero) {
-      const filterValue = value.toLowerCase();
-      return this.proveedores.filter(proveedor => proveedor.razonSocial.toLowerCase().includes(filterValue));
-    }
-    return [];
-  }
-
-  private filtroIdentificacionProveedor(value: string): Proveedor[] {
-    if (this.proveedores.length > 0) {
-      const filterValue = value.toUpperCase();
-      return this.proveedores.filter(proveedor => proveedor.identificacion.toUpperCase().includes(filterValue));
-    }
-    return [];
-  }
-
-  private filtroFacturaCompra(value: string): FacturaCompra[] {
-    if(this.facturasCompras.length > valores.cero) {
-      const filterValue = value.toLowerCase();
-      return this.facturasCompras.filter(facturaCompra => facturaCompra.numeroComprobante.toLowerCase().includes(filterValue));
-    }
-    return [];
-  }
-  verFacturaCompra(facturaCompra: FacturaCompra): string {
-    return facturaCompra && facturaCompra.numeroComprobante ? facturaCompra.numeroComprobante : valores.vacio;
-  }
-
-  nuevo(event){
-    if (event!=null)
+  nuevo(event) {
+    if (event != null)
       event.preventDefault();
     this.controlIdentificacionProveedor.patchValue(valores.vacio);
     this.notaCreditoCompra = new NotaCreditoCompra();
@@ -177,133 +149,8 @@ export class NotaCreditoCompraComponent implements OnInit {
     this.clickedRows.clear();
   }
 
-  construir() {
-    let fecha = new Date(this.notaCreditoCompra.fecha);
-    this.notaCreditoCompra.fecha = fecha;
-    this.controlIdentificacionProveedor.patchValue(this.notaCreditoCompra.facturaCompra.proveedor);
-    this.seleccionProveedor.patchValue(this.notaCreditoCompra.facturaCompra.proveedor);
-    this.seleccionFacturaCompra.patchValue(this.notaCreditoCompra.facturaCompra);
-    this.dataSourceLinea = new MatTableDataSource<NotaCreditoCompraLinea>(this.notaCreditoCompra.notaCreditoCompraLineas);
-    this.dataSourceLinea.paginator = this.paginatorLinea;
-    this.seleccionarOperacion();
-  }
-
-  consultar() {
-    this.notaCreditoCompraService.consultarPorEmpresa(this.empresa.id).subscribe(
-      res => {
-        this.notasCreditosCompras = res.resultado as NotaCreditoCompra[]
-        this.dataSource = new MatTableDataSource(this.notasCreditosCompras);
-        this.dataSource.paginator = this.paginator;
-      },
-      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
-    );
-  }
-
-  consultarProveedores(){
-    this.proveedorService.consultarPorEmpresaYEstado(this.empresa.id, valores.activo).subscribe(
-      res => {
-        this.proveedores = res.resultado as Proveedor[]
-      },
-      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
-    );
-  }
-
-  consultarFacturasCompras(){
-    this.facturaCompraService.consultarPorEmpresaYEstado(this.empresa.id, valores.activo).subscribe(
-      res => {
-        this.facturasCompras = res.resultado as FacturaCompra[]
-      },
-      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
-    );
-  }
-
-  seleccionarProveedor() {
-    let proveedorId = this.controlProveedor.value.id;
-    this.proveedorService.obtener(proveedorId).subscribe({
-      next: res => {
-        this.facturaCompra.proveedor = res.resultado as Proveedor;
-        this.controlIdentificacionProveedor.patchValue(this.facturaCompra.proveedor);
-        this.controlProveedor.patchValue(this.facturaCompra.proveedor);
-
-      },
-      error: err => Swal.fire({icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
-    });
-  }
-
-  seleccionarIdentificacionProveedor() {
-    let proveedorId = this.controlIdentificacionProveedor.value.id;
-    this.proveedorService.obtener(proveedorId).subscribe({
-      next: res => {
-        Object.assign(this.facturaCompra.proveedor, res.resultado as Proveedor);
-        this.controlIdentificacionProveedor.patchValue(this.facturaCompra.proveedor);
-        this.controlProveedor.patchValue(this.facturaCompra.proveedor);
-      },
-      error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
-    });
-  }
-
-  seleccionarFacturaCompra() {
-    let facturaCompraId = this.seleccionFacturaCompra.value.id;
-    this.notaCreditoCompraService.obtenerPorFacturaCompra(facturaCompraId).subscribe(
-      res => {
-        this.notaCreditoCompra = res.resultado as NotaCreditoCompra;
-        this.construir();
-      },
-      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
-    );
-  }
-
-  rellenarNumeroEstablecimiento(){
-    this.facturaCompra.establecimiento = this.pad(this.facturaCompra.establecimiento, 3);
-  }
-  
-  rellenarNumeroPuntoVenta(){
-    this.facturaCompra.puntoVenta = this.pad(this.facturaCompra.puntoVenta, 3);
-  }
-
-  rellenarNumeroSecuencial(){
-    this.facturaCompra.secuencial = this.pad(this.facturaCompra.secuencial, 9);
-  }
-
-  pad(numero: string, size: number): string {
-    while (numero.length < size) numero = "0" + numero;
-    return numero;
-  }
-
-  seleccionarOperacion(){
-    for(let notaCreditoCompraLinea of this.notaCreditoCompra.notaCreditoCompraLineas){
-      notaCreditoCompraLinea.devolucion = valores.cero;
-      notaCreditoCompraLinea.porcentajeDescuentoLinea = valores.cero;
-      notaCreditoCompraLinea.valorDescuentoLinea = valores.cero;
-    }
-    if(this.notaCreditoCompra.operacion == valores.devolucion){
-      this.deshabilitarDevolucion = false;
-      this.deshabilitarDescuento = true;
-    }
-    if(this.notaCreditoCompra.operacion == valores.descuento){
-      this.deshabilitarDevolucion = true;
-      this.deshabilitarDescuento = false;
-    }
-    if(this.notaCreditoCompra.operacion == valores.conjunta){
-      this.deshabilitarDevolucion = false;
-      this.deshabilitarDescuento = false;
-    }
-  }
-
-  seleccionarDevolucion() {
-    this.calcular();
-  }
-  
-  seleccionarValorDescuentoLinea() {
-    this.calcular();
-  }
-
-  seleccionarPorcentajeDescuentoLinea() {
-    this.calcular();
-  }
-
   crear(event) {
-    if (event!=null)
+    if (event != null)
       event.preventDefault();
     this.notaCreditoCompra.sesion = this.sesion;
     this.notaCreditoCompra.empresa = this.empresa;
@@ -317,14 +164,14 @@ export class NotaCreditoCompraComponent implements OnInit {
     );
   }
 
-  actualizar(event){
-    if (event!=null)
+  actualizar(event) {
+    if (event != null)
       event.preventDefault();
     this.notaCreditoCompraService.actualizar(this.notaCreditoCompra).subscribe(
       res => {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
         this.consultar();
-        this.nuevo(null);        
+        this.nuevo(null);
       },
       err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     );
@@ -355,25 +202,150 @@ export class NotaCreditoCompraComponent implements OnInit {
       error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     });
   }
-  
+
+  consultar() {
+    this.notaCreditoCompraService.consultarPorEmpresa(this.empresa.id).subscribe(
+      res => {
+        this.notasCreditosCompras = res.resultado as NotaCreditoCompra[]
+        this.llenarTablaNotaCreditoCompra(this.notasCreditosCompras);
+      },
+      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+    );
+  }
+
+  llenarTablaNotaCreditoCompra(notasCreditosCompras: NotaCreditoCompra[]) {
+    this.dataSource = new MatTableDataSource(notasCreditosCompras);
+    this.dataSource.filterPredicate = (data: NotaCreditoCompra, filter: string): boolean =>
+      this.datepipe.transform(data.fecha, "dd-MM-yyyy").includes(filter) || data.serie.includes(filter) || data.secuencial.includes(filter) || 
+      data.facturaCompra.proveedor.razonSocial.includes(filter) || data.estado.includes(filter);
+    this.dataSource.paginator = this.paginator;
+    this.dataSource.sort = this.sort;
+  }
+
   seleccion(notaCreditoCompra: any) {
-    if (!this.clickedRows.has(notaCreditoCompra)){
+    if (!this.clickedRows.has(notaCreditoCompra)) {
       this.clickedRows.clear();
       this.clickedRows.add(notaCreditoCompra);
-      this.notaCreditoCompraService.obtener(notaCreditoCompra.id).subscribe({
-        next: res => {
-          this.notaCreditoCompra = res.resultado as NotaCreditoCompra;
-          this.construir();
-        },
-        error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
-      });
+      this.obtenerNotaCredito(notaCreditoCompra);
     } else {
-      this.clickedRows.clear();
-      this.notaCreditoCompra = new NotaCreditoCompra();
+      this.nuevo(null);
     }
   }
 
-  calcular(){
+  obtenerNotaCredito(notaCreditoCompra: NotaCreditoCompra){
+    this.notaCreditoCompraService.obtener(notaCreditoCompra.id).subscribe({
+      next: res => {
+        this.notaCreditoCompra = res.resultado as NotaCreditoCompra;
+        this.construir();
+      },
+      error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+    });
+  }
+
+  construir() {
+    let fecha = new Date(this.notaCreditoCompra.fecha);
+    this.notaCreditoCompra.fecha = fecha;
+    this.controlIdentificacionProveedor.patchValue(this.notaCreditoCompra.facturaCompra.proveedor);
+    this.seleccionProveedor.patchValue(this.notaCreditoCompra.facturaCompra.proveedor);
+    this.seleccionFacturaCompra.patchValue(this.notaCreditoCompra.facturaCompra);
+    this.dataSourceLinea = new MatTableDataSource<NotaCreditoCompraLinea>(this.notaCreditoCompra.notaCreditoCompraLineas);
+    this.dataSourceLinea.paginator = this.paginatorLinea;
+    this.seleccionarOperacion();
+  }
+
+  seleccionarIdentificacionProveedor() {
+    let proveedorId = this.controlIdentificacionProveedor.value.id;
+    this.proveedorService.obtener(proveedorId).subscribe({
+      next: res => {
+        Object.assign(this.facturaCompra.proveedor, res.resultado as Proveedor);
+        this.controlIdentificacionProveedor.patchValue(this.facturaCompra.proveedor);
+        this.controlProveedor.patchValue(this.facturaCompra.proveedor);
+      },
+      error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+    });
+  }
+  verIdentificacionProveedor(proveedor: Proveedor): string {
+    return proveedor && proveedor.identificacion ? proveedor.identificacion : valores.vacio;
+  }
+
+  seleccionarProveedor() {
+    let proveedorId = this.controlProveedor.value.id;
+    this.proveedorService.obtener(proveedorId).subscribe({
+      next: res => {
+        this.facturaCompra.proveedor = res.resultado as Proveedor;
+        this.controlIdentificacionProveedor.patchValue(this.facturaCompra.proveedor);
+        this.controlProveedor.patchValue(this.facturaCompra.proveedor);
+        this.consultarFacturasCompras();
+      },
+      error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+    });
+  }
+  verProveedor(proveedor: Proveedor): string {
+    return proveedor && proveedor.razonSocial ? proveedor.razonSocial : '';
+  }
+
+  consultarFacturasCompras() {
+    this.facturaCompraService.consultarPorEmpresaYEstado(this.empresa.id, valores.activo).subscribe(
+      res => {
+        this.facturasCompras = res.resultado as FacturaCompra[]
+      },
+      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+    );
+  }
+
+  seleccionarFacturaCompra() {
+    let facturaCompraId = this.seleccionFacturaCompra.value.id;
+    this.notaCreditoCompraService.obtenerPorFacturaCompra(facturaCompraId).subscribe({
+      next: res => {
+        this.notaCreditoCompra = res.resultado as NotaCreditoCompra;
+        this.llenarTablaFacturaCompra(this.notaCreditoCompra.notaCreditoCompraLineas);
+      },
+      error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+    });
+  }
+
+  llenarTablaFacturaCompra(notasCreditoComprasLineas: NotaCreditoCompraLinea[]) {
+    this.dataSourceLinea = new MatTableDataSource(notasCreditoComprasLineas);
+    this.dataSourceLinea.filterPredicate = (data: NotaCreditoCompraLinea, filter: string): boolean =>
+      data.producto.nombre.includes(filter) || data.producto.medida.abreviatura.includes(filter) || 
+      data.producto.impuesto.abreviatura.includes(filter) || data.bodega.abreviatura.includes(filter);
+      this.dataSourceLinea.paginator = this.paginatorLinea;
+    this.dataSourceLinea.sort = this.sortLinea;
+  }
+
+  seleccionarOperacion() {
+    for (let notaCreditoCompraLinea of this.notaCreditoCompra.notaCreditoCompraLineas) {
+      notaCreditoCompraLinea.devolucion = valores.cero;
+      notaCreditoCompraLinea.porcentajeDescuentoLinea = valores.cero;
+      notaCreditoCompraLinea.valorDescuentoLinea = valores.cero;
+    }
+    if (this.notaCreditoCompra.operacion == valores.devolucion) {
+      this.deshabilitarDevolucion = false;
+      this.deshabilitarDescuento = true;
+    }
+    if (this.notaCreditoCompra.operacion == valores.descuento) {
+      this.deshabilitarDevolucion = true;
+      this.deshabilitarDescuento = false;
+    }
+    if (this.notaCreditoCompra.operacion == valores.conjunta) {
+      this.deshabilitarDevolucion = false;
+      this.deshabilitarDescuento = false;
+    }
+  }
+
+  seleccionarDevolucion(i: number, devolucion: number) {
+    this.calcular();
+  }
+
+  seleccionarValorDescuentoLinea(i: number, valorDescuento: number) {
+    this.calcular();
+  }
+
+  seleccionarPorcentajeDescuentoLinea() {
+    this.calcular();
+  }
+
+  calcular() {
     this.notaCreditoCompraService.calcular(this.notaCreditoCompra).subscribe(
       res => {
         this.notaCreditoCompra = res.resultado as NotaCreditoCompra;
@@ -383,11 +355,11 @@ export class NotaCreditoCompraComponent implements OnInit {
     );
   }
 
-  seleccionarValorDescuentoTotal(){
-    this.calcular(); 
+  seleccionarValorDescuentoTotal() {
+    this.calcular();
   }
-  seleccionarPorcentajeDescuentoTotal(){
-    this.calcular();   
+  seleccionarPorcentajeDescuentoTotal() {
+    this.calcular();
   }
 
   filtro(event: Event) {
@@ -398,8 +370,75 @@ export class NotaCreditoCompraComponent implements OnInit {
     }
   }
 
+  rellenarNumeroEstablecimiento() {
+    this.notaCreditoCompra.serie = this.pad(this.notaCreditoCompra.serie, 3);
+  }
+
+  rellenarNumeroPuntoVenta() {
+    this.notaCreditoCompra.serie = this.pad(this.notaCreditoCompra.serie, 3);
+  }
+
+  rellenarNumeroSecuencial() {
+    this.notaCreditoCompra.secuencial = this.pad(this.notaCreditoCompra.secuencial, 9);
+  }
+
+  pad(numero: string, size: number): string {
+    while (numero.length < size) numero = "0" + numero;
+    return numero;
+  }
+
   compareFn(a: any, b: any) {
     return a && b && a.id == b.id;
   }
 
+
+
+  //FILTROS AUTOCOMPLETE
+  inicializarFiltros() {
+    this.filtroIdentificacionProveedores = this.controlIdentificacionProveedor.valueChanges
+      .pipe(
+        startWith(''),
+        map(value => typeof value === 'string' || value == null ? value : value.id),
+        map(identificacion => typeof identificacion === 'string' ? this.filtroIdentificacionProveedor(identificacion) : this.proveedores.slice())
+      );
+    this.filtroProveedores = this.controlProveedor.valueChanges
+      .pipe(
+        startWith(valores.vacio),
+        map(value => typeof value === 'string' || value == null ? value : value.id),
+        map(proveedor => typeof proveedor === 'string' ? this.filtroProveedor(proveedor) : this.proveedores.slice())
+      );
+    this.filtroFacturasCompras = this.seleccionFacturaCompra.valueChanges
+      .pipe(
+        startWith(valores.vacio),
+        map(value => typeof value === 'string' || value == null ? value : value.id),
+        map(facturaCompra => typeof facturaCompra === 'string' ? this.filtroFacturaCompra(facturaCompra) : this.facturasCompras.slice())
+      );
+  }
+
+  private filtroProveedor(value: string): Proveedor[] {
+    if (this.proveedores.length > valores.cero) {
+      const filterValue = value.toLowerCase();
+      return this.proveedores.filter(proveedor => proveedor.razonSocial.toLowerCase().includes(filterValue));
+    }
+    return [];
+  }
+
+  private filtroIdentificacionProveedor(value: string): Proveedor[] {
+    if (this.proveedores.length > 0) {
+      const filterValue = value.toUpperCase();
+      return this.proveedores.filter(proveedor => proveedor.identificacion.toUpperCase().includes(filterValue));
+    }
+    return [];
+  }
+
+  private filtroFacturaCompra(value: string): FacturaCompra[] {
+    if (this.facturasCompras.length > valores.cero) {
+      const filterValue = value.toLowerCase();
+      return this.facturasCompras.filter(facturaCompra => facturaCompra.numeroComprobante.toLowerCase().includes(filterValue));
+    }
+    return [];
+  }
+  verFacturaCompra(facturaCompra: FacturaCompra): string {
+    return facturaCompra && facturaCompra.numeroComprobante ? facturaCompra.numeroComprobante : valores.vacio;
+  }
 }

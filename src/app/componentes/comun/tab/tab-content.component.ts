@@ -3,7 +3,7 @@ import { Component, Input, OnInit, ViewContainerRef } from "@angular/core";
 
 //import { ContentContainerDirective } from "./content-container.directive";
 import { SkeletonComponent } from "./skeleton.component";
-import { Tab } from "../../../modelos/tab.model";
+import { Tab } from "../../../modelos/comun/tab.model";
 
 @Component({
   selector: "app-tab-content",
