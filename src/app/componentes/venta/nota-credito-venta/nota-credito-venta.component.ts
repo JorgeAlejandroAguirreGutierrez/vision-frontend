@@ -24,6 +24,7 @@ import { NotaCreditoElectronicaService } from 'src/app/servicios/venta/nota-cred
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
   selector: 'app-nota-credito-venta',
@@ -121,7 +122,7 @@ export class NotaCreditoVentaComponent implements OnInit {
   }
 
   constructor(private renderer: Renderer2, private clienteService: ClienteService, private sesionService: SesionService, private notaCreditoElectronicaService: NotaCreditoElectronicaService, private dateAdapter: DateAdapter<Date>,
-    private router: Router, private notaCreditoVentaService: NotaCreditoVentaService, private facturaService: FacturaService, private datepipe: DatePipe) { this.dateAdapter.setLocale('en-GB') }
+    private router: Router, private notaCreditoVentaService: NotaCreditoVentaService, private facturaService: FacturaService, private spinnerService: NgxSpinnerService, private datepipe: DatePipe) { this.dateAdapter.setLocale('en-GB') }
 
   ngOnInit() {
     this.sesion = validarSesion(this.sesionService, this.router);
@@ -356,6 +357,28 @@ export class NotaCreditoVentaComponent implements OnInit {
   }
   seleccionarPorcentajeDescuentoTotal(){
     this.calcular();   
+  }
+
+  obtenerPDF(event){
+    if (event != null)
+      event.preventDefault();
+    this.notaCreditoElectronicaService.obtenerPDF(this.notaCreditoVenta.id);
+  }
+  
+  enviarPDFYXML(event){
+    if (event != null)
+      event.preventDefault();
+    this.spinnerService.show();
+    this.notaCreditoElectronicaService.enviarPDFYXML(this.notaCreditoVenta.id).subscribe({
+      next: res => {
+        Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
+        this.spinnerService.hide();  
+      },
+      error: err => {
+        Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+        this.spinnerService.hide();  
+      }
+    });
   }
 
   compareFn(a: any, b: any) {

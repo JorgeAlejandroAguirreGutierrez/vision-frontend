@@ -31,6 +31,16 @@
                     <mat-icon>point_of_sale</mat-icon>
                 </a>
             </li>
+            <li class="nav-item" *ngIf="notaCreditoVenta.estado == estadoActivo && notaCreditoVenta.estadoInterno == estadoInternoEmitida">
+                <a class="nav-link" title="Obtener PDF" href="#" role="button" (click)="obtenerPDF($event)">
+                    <mat-icon>picture_as_pdf</mat-icon>
+                </a>
+            </li>
+            <li class="nav-item" *ngIf="notaCreditoVenta.estado == estadoActivo && notaCreditoVenta.estadoInterno == estadoInternoEmitida && notaCreditoVenta.estadoSri == estadoSriAutorizada">
+                <a class="nav-link" title="Enviar PDF Y XML" href="#" role="button" (click)="enviarPDFYXML($event)">
+                    <mat-icon>forward_to_inbox</mat-icon>
+                </a>
+            </li>
         </ul>
     </nav>
     <div *ngIf="cargar">

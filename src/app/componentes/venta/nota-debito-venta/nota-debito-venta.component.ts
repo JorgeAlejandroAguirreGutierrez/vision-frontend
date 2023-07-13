@@ -728,6 +728,28 @@ export class NotaDebitoVentaComponent implements OnInit {
     });
   }
 
+  obtenerPDF(event){
+    if (event != null)
+      event.preventDefault();
+    this.notaDebitoElectronicaService.obtenerPDF(this.notaDebitoVenta.id);
+  }
+  
+  enviarPDFYXML(event){
+    if (event != null)
+      event.preventDefault();
+    this.spinnerService.show();
+    this.notaDebitoElectronicaService.enviarPDFYXML(this.notaDebitoVenta.id).subscribe({
+      next: res => {
+        Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
+        this.spinnerService.hide();  
+      },
+      error: err => {
+        Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+        this.spinnerService.hide();  
+      }
+    });
+  }
+
   borrarFiltroLinea() {
     this.renderer.setProperty(this.inputFiltroLinea.nativeElement, 'value', '');
     this.dataSourceLinea.filter = '';
