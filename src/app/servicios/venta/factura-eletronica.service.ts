@@ -20,6 +20,7 @@ export class FacturaElectronicaService {
         return throwError(() => err);
       }));
   }
+  
   obtenerPDF(facturaId: number) {
     this.http.get(environment.host + urn.ruta + urn.facturaElectronica + urn.obtenerPDF + urn.slash + facturaId, optionsGenerarArchivo)
     .subscribe((blob: Blob) => {
@@ -37,6 +38,7 @@ export class FacturaElectronicaService {
       }
     });
   }
+
   enviarPDFYXML(facturaId: number): Observable<Respuesta> {
     return this.http.get(environment.host + urn.ruta + urn.facturaElectronica + urn.enviarPDFYXML + urn.slash + facturaId, options).pipe(
       map(response => response as Respuesta),
