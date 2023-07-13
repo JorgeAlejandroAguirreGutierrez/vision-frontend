@@ -176,12 +176,8 @@
                         <mat-form-field appearance="standard">
                             <mat-label>Estado</mat-label>
                             <mat-select [(ngModel)]="notaDebitoVenta.estado" [disabled]="true" class="form-control-sm">
-                                <mat-option [value]="emitida">{{emitida}}</mat-option>
-                                <mat-option [value]="anulada">{{anulada}}</mat-option>
-                                <mat-option [value]="noFacturada">{{noFacturada}}</mat-option>
-                                <mat-option [value]="facturada">{{facturada}}</mat-option>
-                                <mat-option [value]="noRecaudada">{{noRecaudada}}</mat-option>
-                                <mat-option [value]="recaudada">{{recaudada}}</mat-option>
+                                <mat-option [value]="estadoActivo">{{estadoActivo}}</mat-option>
+                                <mat-option [value]="estadoInactivo">{{estadoInactivo}}</mat-option>
                             </mat-select>
                         </mat-form-field>
                     </div>

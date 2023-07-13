@@ -52,12 +52,10 @@ export class NotaDebitoCompraComponent implements OnInit {
   
   si = valores.si;
   no = valores.no;
-  emitida = valores.emitida;
-  anulada = valores.anulada;
-  noFacturada = valores.noFacturada;
-  facturada = valores.facturada;
-  noRecaudada = valores.noRecaudada;
-  recaudada = valores.recaudada;
+  estadoActivo: string = valores.estadoActivo;
+  estadoInactivo: string = valores.estadoInactivo;
+  estadoInternoPorPagar: string = valores.estadoInternoPorPagar;
+  estadoInternoPagada: string = valores.estadoInternoPagada;
   
   seleccionProveedor = new UntypedFormControl();
   filtroProveedores: Observable<Proveedor[]> = new Observable<Proveedor[]>();

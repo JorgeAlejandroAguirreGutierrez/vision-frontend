@@ -28,6 +28,11 @@
                     </a>
                 </li>
             </ng-container>
+            <li class="nav-item" *ngIf="facturaCompra.id!=0">
+                <a class="nav-link" title="Pagar" role="button" (click)="pagar($event)">
+                    <mat-icon>attach_money</mat-icon>
+                </a>
+            </li>
         </ul>
     </nav>
     <ng-template matStepLabel>Factura de Compra</ng-template>

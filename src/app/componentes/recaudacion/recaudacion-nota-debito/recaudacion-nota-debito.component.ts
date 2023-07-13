@@ -56,14 +56,16 @@ export class RecaudacionNotaDebitoComponent implements OnInit {
 
   @Input('stepper') stepper: MatStepper;
 
-  si = valores.si;
-  no = valores.no;
-  emitida = valores.emitida;
-  anulada = valores.anulada;
-  noFacturada = valores.noFacturada;
-  facturada = valores.facturada;
-  noRecaudada = valores.noRecaudada;
-  recaudada = valores.recaudada;
+  estadoActivo: string = valores.estadoActivo;
+  estadoInactivo: string = valores.estadoInactivo;
+  estadoInternoEmitida: string = valores.estadoInternoEmitida;
+  estadoInternoRecaudada: string = valores.estadoInternoRecaudada;
+  estadoInternoAnulada: string = valores.estadoInternoAnulada
+  estadoSriPendiente: string = valores.estadoSriPendiente;
+  estadoSriAutorizada: string = valores.estadoSriAutorizada;
+  estadoSriAnulada: string = valores.estadoSriAnulada;
+  si: string = valores.si;
+  no: string = valores.no;
   indiceEditar: number = -1;
 
   cargar: boolean = false;

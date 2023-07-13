@@ -151,14 +151,16 @@ export class NotaDebitoVentaComponent implements OnInit {
   sesion: Sesion = null;
   empresa: Empresa = null;
   
+  estadoActivo: string = valores.estadoActivo;
+  estadoInactivo: string = valores.estadoInactivo;
+  estadoInternoEmitida: string = valores.estadoInternoEmitida;
+  estadoInternoRecaudada: string = valores.estadoInternoRecaudada;
+  estadoInternoAnulada: string = valores.estadoInternoAnulada
+  estadoSriPendiente: string = valores.estadoSriPendiente;
+  estadoSriAutorizada: string = valores.estadoSriAutorizada;
+  estadoSriAnulada: string = valores.estadoSriAnulada;
   si = valores.si;
   no = valores.no;
-  emitida = valores.emitida;
-  anulada = valores.anulada;
-  noFacturada = valores.noFacturada;
-  facturada = valores.facturada;
-  noRecaudada = valores.noRecaudada;
-  recaudada = valores.recaudada;
 
   constructor(private renderer: Renderer2, private clienteService: ClienteService, private sesionService: SesionService, private impuestoService: ImpuestoService, private bodegaService: BodegaService, private dateAdapter: DateAdapter<Date>,
     private router: Router, private notaDebitoVentaService: NotaDebitoVentaService, private facturaService: FacturaService, private productoService: ProductoService, private notaDebitoElectronicaService: NotaDebitoElectronicaService,
@@ -413,7 +415,7 @@ export class NotaDebitoVentaComponent implements OnInit {
         this.notaDebitoVenta.factura.cliente = res.resultado as Cliente;
         this.controlIdentificacionCliente.patchValue(this.notaDebitoVenta.factura.cliente);
         this.controlRazonSocialCliente.patchValue(this.notaDebitoVenta.factura.cliente);
-        this.facturaService.consultarPorCliente(this.notaDebitoVenta.factura.cliente.id).subscribe(
+        this.facturaService.consultarPorClienteYEstadoYEstadoInterno(this.notaDebitoVenta.factura.cliente.id, this.estadoActivo, this.estadoInternoRecaudada).subscribe(
           res => {
             this.facturas = res.resultado as Factura[]
           },
