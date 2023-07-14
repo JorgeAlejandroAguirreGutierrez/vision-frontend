@@ -1,0 +1,44 @@
+.resultados{
+    border: 2px solid #5b6582 !important;
+    border-radius: 10px !important;
+    padding: 0 8px !important;
+    margin: 5px;
+}
+
+.mat-column-devolucion,
+.mat-column-costounitario,
+.mat-column-valorDescuento,
+.mat-column-porcentajeDescuento {
+    width: 100px;
+    max-width: 100px;
+    word-wrap: break-word;
+}
+
+.mat-column-impuesto,
+.mat-column-subtotal {
+    text-align: center;
+}
+
+::ng-deep .mat-column-devolucion>.mat-sort-header-container {
+    justify-content: center;
+}
+
+::ng-deep .mat-column-costounitario>.mat-sort-header-container {
+    justify-content: center;
+}
+
+::ng-deep .mat-column-valorDescuento>.mat-sort-header-container {
+    justify-content: center;
+}
+
+::ng-deep .mat-column-porcentajeDescuento>.mat-sort-header-container {
+    justify-content: center;
+}
+
+::ng-deep .mat-column-impuesto>.mat-sort-header-container {
+    justify-content: center;
+}
+
+::ng-deep .mat-column-subtotal>.mat-sort-header-container {
+    justify-content: center;
+}
