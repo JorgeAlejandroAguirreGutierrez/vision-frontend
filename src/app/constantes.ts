@@ -34,6 +34,7 @@ export const urn =
     excel: "/excel",
     enviarPDFYXML: "/enviarPDFYXML",
     obtenerPDF: "/obtenerPDF",
+    
     // Cliente
     calificacionCliente: "/calificacionCliente",
     cliente: "/cliente",
@@ -81,6 +82,7 @@ export const urn =
     consultarPorCategoriaProductoYEmpresaYEstado: "/consultarPorCategoriaProductoYEmpresaYEstado",
     consultarPorCategoriaProductoYProveedorYEmpresaYEstado: "/consultarPorCategoriaProductoYProveedorYEmpresaYEstado",
     pagar: "/pagar",
+    
     //Configuración
     estadoCivil: "/estadoCivil",
     impuesto: "/impuesto",
@@ -141,6 +143,7 @@ export const urn =
     establecimientoPuntoVenta: "/establecimientoPuntoVenta",
     estacion: "/estacion",
     obtenerPorApodoYEstado: "/obtenerPorApodoYEstado",
+    subirCertificado: "/subirCertificado",
 
     //Ventas
     factura: "/factura",
