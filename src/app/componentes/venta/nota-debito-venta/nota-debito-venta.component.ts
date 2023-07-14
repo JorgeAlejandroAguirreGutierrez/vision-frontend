@@ -119,12 +119,12 @@ export class NotaDebitoVentaComponent implements OnInit {
     { nombreColumna: 'nombre', cabecera: 'Producto', celda: (row: FacturaLinea) => `${row.producto.nombre}` },
     { nombreColumna: 'medida', cabecera: 'Medida', celda: (row: FacturaLinea) => `${row.producto.medida.abreviatura}` },
     { nombreColumna: 'cantidad', cabecera: 'Cant.', celda: (row: FacturaLinea) => `${row.cantidad}` },
-    { nombreColumna: 'valor', cabecera: 'P. Unit', celda: (row: FacturaLinea) => `${row.precioUnitario}` },
-    { nombreColumna: 'descuento', cabecera: 'Desc. $', celda: (row: FacturaLinea) => `${row.valorDescuentoLinea}` },
+    { nombreColumna: 'valor', cabecera: 'P. Unit', celda: (row: FacturaLinea) => `$ ${row.precioUnitario}` },
+    { nombreColumna: 'descuento', cabecera: 'Desc. $', celda: (row: FacturaLinea) => `$ ${row.valorDescuentoLinea}` },
     { nombreColumna: 'descuentoPorcentaje', cabecera: 'Desc. %', celda: (row: FacturaLinea) => `${row.porcentajeDescuentoLinea} %` },
-    { nombreColumna: 'subtotal', cabecera: 'Subtotal', celda: (row: FacturaLinea) => `${row.subtotalConDescuentoLinea}` },
-    { nombreColumna: 'iva', cabecera: 'IVA', celda: (row: FacturaLinea) => `${row.importeIvaLinea}` },
-    { nombreColumna: 'total', cabecera: 'Total', celda: (row: FacturaLinea) => `${row.subtotalConDescuentoLinea}` },
+    { nombreColumna: 'subtotal', cabecera: 'Subtotal', celda: (row: FacturaLinea) => `$ ${row.subtotalConDescuentoLinea}` },
+    { nombreColumna: 'iva', cabecera: 'IVA', celda: (row: FacturaLinea) => `$ ${row.importeIvaLinea}` },
+    { nombreColumna: 'total', cabecera: 'Total', celda: (row: FacturaLinea) => `$ ${row.subtotalConDescuentoLinea}` },
     { nombreColumna: 'entregado', cabecera: 'Entreg.', celda: (row: FacturaLinea) => `${row.entregado}` }
   ];
   cabeceraFacturaLinea: string[] = this.columnasFacturaLinea.map(titulo => titulo.nombreColumna);
@@ -135,12 +135,12 @@ export class NotaDebitoVentaComponent implements OnInit {
     { nombreColumna: 'nombre', cabecera: 'Producto', celda: (row: NotaDebitoVentaLinea) => `${row.producto.nombre}` },
     { nombreColumna: 'medida', cabecera: 'Medida', celda: (row: NotaDebitoVentaLinea) => `${row.producto.medida.abreviatura}` },
     { nombreColumna: 'cantidad', cabecera: 'Cant.', celda: (row: NotaDebitoVentaLinea) => `${row.cantidad}` },
-    { nombreColumna: 'valor', cabecera: 'P. Unit', celda: (row: NotaDebitoVentaLinea) => `${row.precioUnitario}` },
-    { nombreColumna: 'descuento', cabecera: 'Desc. $', celda: (row: NotaDebitoVentaLinea) => `${row.valorDescuentoLinea}` },
+    { nombreColumna: 'valor', cabecera: 'P. Unit', celda: (row: NotaDebitoVentaLinea) => `$ ${row.precioUnitario}` },
+    { nombreColumna: 'descuento', cabecera: 'Desc. $', celda: (row: NotaDebitoVentaLinea) => `$ ${row.valorDescuentoLinea}` },
     { nombreColumna: 'descuentoPorcentaje', cabecera: 'Desc. %', celda: (row: NotaDebitoVentaLinea) => `${row.porcentajeDescuentoLinea} %` },
-    { nombreColumna: 'subtotal', cabecera: 'Subtotal', celda: (row: NotaDebitoVentaLinea) => `${row.subtotalConDescuentoLinea}` },
-    { nombreColumna: 'iva', cabecera: 'IVA', celda: (row: NotaDebitoVentaLinea) => `${row.ivaConDescuentoLinea}` },
-    { nombreColumna: 'total', cabecera: 'Total', celda: (row: NotaDebitoVentaLinea) => `${row.totalConDescuentoLinea}` },
+    { nombreColumna: 'subtotal', cabecera: 'Subtotal', celda: (row: NotaDebitoVentaLinea) => `$ ${row.subtotalConDescuentoLinea}` },
+    { nombreColumna: 'iva', cabecera: 'IVA', celda: (row: NotaDebitoVentaLinea) => `$ ${row.ivaConDescuentoLinea}` },
+    { nombreColumna: 'total', cabecera: 'Total', celda: (row: NotaDebitoVentaLinea) => `$ ${row.totalConDescuentoLinea}` },
     { nombreColumna: 'entregado', cabecera: 'Entreg.', celda: (row: NotaDebitoVentaLinea) => `${row.entregado}` },
     { nombreColumna: 'acciones', cabecera: 'Acciones' }
   ];
