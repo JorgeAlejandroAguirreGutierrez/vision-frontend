@@ -36,7 +36,7 @@
                     <mat-icon>picture_as_pdf</mat-icon>
                 </a>
             </li>
-            <li class="nav-item" *ngIf="notaCreditoVenta.estado == estadoActivo && notaCreditoVenta.estadoInterno == estadoInternoEmitida && notaCreditoVenta.estadoSri == estadoSriAutorizada">
+            <li class="nav-item" *ngIf="notaCreditoVenta.id != 0 && notaCreditoVenta.estado == estadoActivo && notaCreditoVenta.estadoInterno == estadoInternoEmitida && notaCreditoVenta.estadoSri == estadoSriAutorizada">
                 <a class="nav-link" title="Enviar PDF Y XML" href="#" role="button" (click)="enviarPDFYXML($event)">
                     <mat-icon>forward_to_inbox</mat-icon>
                 </a>
