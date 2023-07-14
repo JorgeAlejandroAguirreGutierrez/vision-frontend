@@ -88,16 +88,15 @@ export class NotaCreditoCompraComponent implements OnInit {
   clickedRows = new Set<NotaCreditoCompra>();
 
   columnasLinea: any[] = [
-    { nombreColumna: 'nombre', cabecera: 'nombre', celda: (row: NotaCreditoCompraLinea) => `${row.producto.nombre}` },
-    { nombreColumna: 'medida', cabecera: 'medida', celda: (row: NotaCreditoCompraLinea) => `${row.producto.medida.abreviatura}` },
-    { nombreColumna: 'cantidad', cabecera: 'cantidad', celda: (row: NotaCreditoCompraLinea) => `${row.cantidad}` },
-    { nombreColumna: 'devolucion', cabecera: 'devolucion', celda: (row: NotaCreditoCompraLinea) => `${row.devolucion}` },
+    { nombreColumna: 'producto', cabecera: 'Producto', celda: (row: NotaCreditoCompraLinea) => `${row.producto.nombre}` },
+    { nombreColumna: 'medida', cabecera: 'Medida', celda: (row: NotaCreditoCompraLinea) => `${row.producto.medida.abreviatura}` },
+    { nombreColumna: 'cantidad', cabecera: 'Cantidad', celda: (row: NotaCreditoCompraLinea) => `${row.cantidad}` },
+    { nombreColumna: 'devolucion', cabecera: 'Cant Dev', celda: (row: NotaCreditoCompraLinea) => `${row.devolucion}` },
     { nombreColumna: 'costounitario', cabecera: 'C. Unit', celda: (row: NotaCreditoCompraLinea) => `${row.costoUnitario}` },
     { nombreColumna: 'valorDescuento', cabecera: 'Descuento', celda: (row: NotaCreditoCompraLinea) => `${row.valorDescuentoLinea}` },
     { nombreColumna: 'porcentajeDescuento', cabecera: 'Descuento %', celda: (row: NotaCreditoCompraLinea) => `${row.porcentajeDescuentoLinea}` },
     { nombreColumna: 'impuesto', cabecera: 'Importe', celda: (row: NotaCreditoCompraLinea) => `${row.producto.impuesto.porcentaje}` },
-    { nombreColumna: 'bodega', cabecera: 'bodega', celda: (row: NotaCreditoCompraLinea) => `${row.bodega.abreviatura}` },
-    { nombreColumna: 'total', cabecera: 'C. Unit', celda: (row: NotaCreditoCompraLinea) => `${row.costoUnitario}` },
+    { nombreColumna: 'subtotal', cabecera: 'Subtotal', celda: (row: NotaCreditoCompraLinea) => `${row.totalSinDescuentoLinea}` },
   ];
   cabeceraLinea: string[] = this.columnasLinea.map(titulo => titulo.nombreColumna);
   dataSourceLinea: MatTableDataSource<NotaCreditoCompraLinea>;
@@ -333,15 +332,19 @@ export class NotaCreditoCompraComponent implements OnInit {
     }
   }
 
-  seleccionarDevolucion(i: number, devolucion: number) {
+  actualizarDevolucion(i: number, devolucion: number) {
     this.calcular();
   }
 
-  seleccionarValorDescuentoLinea(i: number, valorDescuento: number) {
+  actualizarCostoUnitario(i: number, costoUnitario: number) {
     this.calcular();
   }
 
-  seleccionarPorcentajeDescuentoLinea() {
+  actualizarValorDescuentoLinea(i: number, valorDescuento: number) {
+    this.calcular();
+  }
+
+  actualizarPorcentajeDescuentoLinea(i: number, porcentajeDescuento: number) {
     this.calcular();
   }
 

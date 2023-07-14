@@ -172,20 +172,33 @@
                         <ng-container *ngFor="let columna of columnasLinea"
                             [matColumnDef]="columna.nombreColumna">
                             <th mat-header-cell *matHeaderCellDef mat-sort-header class="centrarCabecera"> {{ columna.cabecera }} </th>
-                            <td mat-cell *matCellDef="let row; let i=index">
-                                <ng-container *ngIf="columna.nombreColumna!='devolucion' && columna.nombreColumna!='valorDescuento'">
+                            <td mat-cell *matCellDef="let row; let i=index" >
+                                <ng-container *ngIf="columna.nombreColumna!='devolucion' && columna.nombreColumna!='costounitario' && 
+                                    columna.nombreColumna!='valorDescuento' && columna.nombreColumna!='porcentajeDescuento' ">
                                     {{ columna.celda(row) }}
                                 </ng-container>
                                 <ng-container *ngIf="columna.nombreColumna=='devolucion'">
                                     <mat-form-field floatLabel="never">
                                         <input matInput type="text" appFormatoDecimal [(ngModel)]="row.devolucion" 
-                                        (change)="seleccionarDevolucion(i, row.devolucion)">
+                                        (change)="actualizarDevolucion(i, row.devolucion)" [disabled]="deshabilitarDevolucion">
+                                    </mat-form-field>
+                                </ng-container>
+                                <ng-container *ngIf="columna.nombreColumna=='costounitario'">
+                                    <mat-form-field floatLabel="never">
+                                        <input matInput type="text" appFormatoDecimal [(ngModel)]="row.costoUnitario"
+                                        (change)="actualizarCostoUnitario(i, row.devolucion)" [disabled]="deshabilitarDevolucion">
                                     </mat-form-field>
                                 </ng-container>
                                 <ng-container *ngIf="columna.nombreColumna=='valorDescuento'">
                                     <mat-form-field floatLabel="never">
                                         <input matInput type="text" appFormatoDecimal [(ngModel)]="row.valorDescuentoLinea" 
-                                        (change)="seleccionarValorDescuentoLinea(i, row.valorDescuentoLinea)">
+                                        (change)="actualizarValorDescuentoLinea(i, row.valorDescuentoLinea)" [disabled]="deshabilitarDescuento">
+                                    </mat-form-field>
+                                </ng-container>
+                                <ng-container *ngIf="columna.nombreColumna=='porcentajeDescuento'">
+                                    <mat-form-field floatLabel="never">
+                                        <input matInput type="text" appFormatoDecimal [(ngModel)]="row.valorDescuentoLinea" 
+                                        (change)="actualizarPorcentajeDescuentoLinea(i, row.valorDescuentoLinea)" [disabled]="deshabilitarDescuento">
                                     </mat-form-field>
                                 </ng-container>
                             </td>
@@ -215,7 +228,7 @@
                         </div>
                     </div>
                     <div class="col-4">
-                        <mat-card>
+                        <mat-card class="resultados">
                             <div class="form-group form-row">
                                 <div class="col-7 negrita centrar-vertical-izq">
                                     <mat-label>Subtotal :</mat-label>
