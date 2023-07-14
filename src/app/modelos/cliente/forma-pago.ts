@@ -13,7 +13,7 @@ export class FormaPago {
         this.descripcion = valores.vacio;
         this.abreviatura = valores.vacio;
         this.codigoSRI = valores.vacio;
-        this.estado = valores.activo;
+        this.estado = valores.estadoActivo;
     }
     
 }

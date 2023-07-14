@@ -52,7 +52,7 @@ export class Proveedor {
         this.latitudgeo = valores.latCiudad;
         this.longitudgeo = valores.lngCiudad;
         this.obligadoContabilidad = valores.no;
-        this.estado = valores.activo;
+        this.estado = valores.estadoActivo;
         this.especial = valores.no;
         this.fantasma = valores.no;
         this.relacionado = valores.no;

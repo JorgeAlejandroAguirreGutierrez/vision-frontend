@@ -13,6 +13,6 @@ export class Modelo {
         this.nombre=valores.vacio;
         this.nombreTecnico=valores.vacio;
         this.endpoint=valores.vacio;
-        this.estado=valores.activo;
+        this.estado=valores.estadoActivo;
     }
 }

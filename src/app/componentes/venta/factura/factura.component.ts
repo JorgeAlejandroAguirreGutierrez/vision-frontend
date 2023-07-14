@@ -52,23 +52,22 @@ import { MatTableDataSource } from '@angular/material/table';
 
 export class FacturaComponent implements OnInit {
 
-  activo: string = valores.activo;
-  inactivo: string = valores.inactivo;
-  si: string = valores.si;
-  no: string = valores.no;
-  emitida: string = valores.emitida;
-  anulada: string = valores.anulada;
-  noFacturada: string = valores.noFacturada;
-  facturada: string = valores.facturada;
-  noRecaudada: string = valores.noRecaudada;
-  recaudada: string = valores.recaudada;
-  categoriaProducto: string = valores.bien;
-
-  saldo: number = valores.cero;
-  saldoTotal: number = valores.cero;
-  costoUnitario: number = valores.cero;
-  costoPromedio: number = valores.cero;
-  precioVentaPublicoManual: number = valores.cero;
+  estadoActivo = valores.estadoActivo;
+  estadoInactivo = valores.estadoInactivo;
+  estadoInternoEmitida = valores.estadoInternoEmitida;
+  estadoInternoRecaudada = valores.estadoInternoRecaudada;
+  estadoInternoAnulada = valores.estadoInternoAnulada
+  estadoSriPendiente = valores.estadoSriPendiente;
+  estadoSriAutorizada = valores.estadoSriAutorizada;
+  estadoSriAnulada = valores.estadoSriAnulada;
+  si = valores.si;
+  no = valores.no;
+  categoriaProducto = valores.bien;
+  saldo = valores.cero;
+  saldoTotal = valores.cero;
+  costoUnitario = valores.cero;
+  costoPromedio = valores.cero;
+  precioVentaPublicoManual = valores.cero;
   indiceLinea: number;
 
   steeperLinear: boolean = false;
@@ -110,7 +109,9 @@ export class FacturaComponent implements OnInit {
     { nombreColumna: 'secuencial', cabecera: 'Secuencial', celda: (row: Factura) => `${row.secuencial}` },
     { nombreColumna: 'cliente', cabecera: 'Cliente', celda: (row: Factura) => `${row.cliente.razonSocial}` },
     { nombreColumna: 'total', cabecera: 'Total', celda: (row: Factura) => `$${row.valorTotal}` },
-    { nombreColumna: 'estado', cabecera: 'Estado', celda: (row: Factura) => `${row.estado}` }
+    { nombreColumna: 'estado', cabecera: 'Estado', celda: (row: Factura) => `${row.estado}` },
+    { nombreColumna: 'estadoInterno', cabecera: 'Estado Interno', celda: (row: Factura) => `${row.estadoInterno}` },
+    { nombreColumna: 'estadoSri', cabecera: 'Estado SRI', celda: (row: Factura) => `${row.estadoSri}` }
   ];
   cabeceraFactura: string[] = this.columnasFactura.map(titulo => titulo.nombreColumna);
   dataSourceFactura: MatTableDataSource<Factura>;
@@ -173,7 +174,7 @@ export class FacturaComponent implements OnInit {
   }
 
   consultarClientes() {
-    this.clienteService.consultarPorEmpresaYEstado(this.empresa.id, valores.activo).subscribe({
+    this.clienteService.consultarPorEmpresaYEstado(this.empresa.id, valores.estadoActivo).subscribe({
       next: res => {
         this.clientes = res.resultado as Cliente[]
         this.factura.cliente = this.clientes[0];
@@ -186,7 +187,7 @@ export class FacturaComponent implements OnInit {
     });
   }
   consultarProductos() {
-    this.productoService.consultarPorEmpresaYEstado(this.empresa.id, valores.activo).subscribe({
+    this.productoService.consultarPorEmpresaYEstado(this.empresa.id, valores.estadoActivo).subscribe({
       next: res => {
         this.productos = res.resultado as Producto[];
       },
@@ -196,7 +197,7 @@ export class FacturaComponent implements OnInit {
     })
   }
   consultarImpuestos() {
-    this.impuestoService.consultarPorEstado(valores.activo).subscribe({
+    this.impuestoService.consultarPorEstado(valores.estadoActivo).subscribe({
       next: res => {
         this.impuestos = res.resultado as Impuesto[]
       },
@@ -206,7 +207,7 @@ export class FacturaComponent implements OnInit {
     });
   }
   consultarBodegas() {
-    this.bodegaService.consultarPorEmpresaYEstado(this.empresa.id, valores.activo).subscribe({
+    this.bodegaService.consultarPorEmpresaYEstado(this.empresa.id, valores.estadoActivo).subscribe({
       next: res => {
         this.bodegas = res.resultado as Bodega[]
         this.facturaLinea.bodega = this.bodegas[0];
@@ -290,10 +291,6 @@ export class FacturaComponent implements OnInit {
   actualizar(event) {
     if (event != null)
       event.preventDefault();
-    if (this.factura.estado == this.recaudada){
-      Swal.fire({ icon: error_swal, title: error, text: mensajes.error_factura_recaudada });
-      return;
-    }  
     this.spinnerService.show();    
     this.facturaService.actualizar(this.factura).subscribe({
       next: res => {

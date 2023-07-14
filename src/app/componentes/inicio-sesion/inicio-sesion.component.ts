@@ -126,7 +126,7 @@ export class InicioSesionComponent implements OnInit {
   }
 
   obtenerPorApodo() {
-    this.usuarioService.obtenerPorApodoYEstado(this.sesion.usuario.apodo, valores.activo).subscribe({
+    this.usuarioService.obtenerPorApodoYEstado(this.sesion.usuario.apodo, valores.estadoActivo).subscribe({
       next: res => {
         this.sesion.usuario = res.resultado as Usuario;
         this.usuario = this.sesion.usuario;

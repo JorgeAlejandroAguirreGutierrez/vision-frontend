@@ -6,80 +6,76 @@
                     <mat-icon>save</mat-icon>
                 </a>
             </li>
-            <ng-container *ngIf="factura.id!=0">
-                <li class="nav-item" *ngIf="!verPanelCheques">
-                    <a class="nav-link" title="ver Cheques" role="button" (click)="verPanelCheques = true">
-                        <mat-icon>payments</mat-icon>
-                    </a>
-                </li>
-                <li class="nav-item" *ngIf="verPanelCheques">
-                    <a class="nav-link" title="Ocultar Cheques" role="button" (click)="verPanelCheques = false">
-                        <mat-icon>subtitles_off</mat-icon>
-                    </a>
-                </li>
-                <li class="nav-item" *ngIf="!verPanelDepositos">
-                    <a class="nav-link" title="ver Depósitos" role="button" (click)="verPanelDepositos = true">
-                        <mat-icon>receipt_long</mat-icon>
-                    </a>
-                </li>
-                <li class="nav-item" *ngIf="verPanelDepositos">
-                    <a class="nav-link" title="Ocultar Depósitos" role="button" (click)="verPanelDepositos = false">
-                        <mat-icon>signal_cellular_no_sim</mat-icon>
-                    </a>
-                </li>
-                <li class="nav-item" *ngIf="!verPanelTransferencias">
-                    <a class="nav-link" title="ver Transferencias" role="button"
-                        (click)="verPanelTransferencias = true">
-                        <mat-icon>move_down</mat-icon>
-                    </a>
-                </li>
-                <li class="nav-item" *ngIf="verPanelTransferencias">
-                    <a class="nav-link" title="Ocultar Transferencias" role="button"
-                        (click)="verPanelTransferencias = false">
-                        <mat-icon>move_up</mat-icon>
-                    </a>
-                </li>
-                <li class="nav-item" *ngIf="!verPanelTarjetasCredito">
-                    <a class="nav-link" title="ver T. Crédito" role="button" (click)="verPanelTarjetasCredito = true">
-                        <mat-icon>add_card</mat-icon>
-                    </a>
-                </li>
-                <li class="nav-item" *ngIf="verPanelTarjetasCredito">
-                    <a class="nav-link" title="Ocultar T. Crédito" role="button"
-                        (click)="verPanelTarjetasCredito = false">
-                        <mat-icon>credit_card_off</mat-icon>
-                    </a>
-                </li>
-                <li class="nav-item" *ngIf="!verPanelTarjetasDebito">
-                    <a class="nav-link" title="ver T. Débito" role="button" (click)="verPanelTarjetasDebito = true">
-                        <mat-icon>local_atm</mat-icon>
-                    </a>
-                </li>
-                <li class="nav-item" *ngIf="verPanelTarjetasDebito">
-                    <a class="nav-link" title="Ocultar T. Débito" role="button"
-                        (click)="verPanelTarjetasDebito = false">
-                        <mat-icon>money_off_csred</mat-icon>
-                    </a>
-                </li>
-                <li class="nav-item" *ngIf="factura.estado == 'RECAUDADA'">
-                    <a class="nav-link" title="Crear Factura Electronica" href="#" role="button"
-                        (click)="crearFacturaElectronica($event)">
-                        <mat-icon>point_of_sale</mat-icon>
-                    </a>
-                </li>
-                <li class="nav-item" *ngIf="(factura.estado == 'RECAUDADA' || factura.estado == 'FACTURADA')">
-                    <a class="nav-link" title="Obtener PDF" href="#" role="button"
-                        (click)="obtenerPDF($event)">
-                        <mat-icon>picture_as_pdf</mat-icon>
-                    </a>
-                </li>
-                <li class="nav-item" *ngIf="(factura.estado == 'RECAUDADA' || factura.estado == 'FACTURADA')">
-                    <a class="nav-link" title="Enviar PDF Y XML" href="#" role="button"
-                        (click)="enviarPDFYXML($event)">
-                        <mat-icon>forward_to_inbox</mat-icon>
-                    </a>
-                </li>
-            </ng-container>
+            <li class="nav-item" *ngIf="!verPanelCheques">
+                <a class="nav-link" title="ver Cheques" role="button" (click)="verPanelCheques = true">
+                    <mat-icon>payments</mat-icon>
+                </a>
+            </li>
+            <li class="nav-item" *ngIf="verPanelCheques">
+                <a class="nav-link" title="Ocultar Cheques" role="button" (click)="verPanelCheques = false">
+                    <mat-icon>subtitles_off</mat-icon>
+                </a>
+            </li>
+            <li class="nav-item" *ngIf="!verPanelDepositos">
+                <a class="nav-link" title="ver Depósitos" role="button" (click)="verPanelDepositos = true">
+                    <mat-icon>receipt_long</mat-icon>
+                </a>
+            </li>
+            <li class="nav-item" *ngIf="verPanelDepositos">
+                <a class="nav-link" title="Ocultar Depósitos" role="button" (click)="verPanelDepositos = false">
+                    <mat-icon>signal_cellular_no_sim</mat-icon>
+                </a>
+            </li>
+            <li class="nav-item" *ngIf="!verPanelTransferencias">
+                <a class="nav-link" title="ver Transferencias" role="button" (click)="verPanelTransferencias = true">
+                    <mat-icon>move_down</mat-icon>
+                </a>
+            </li>
+            <li class="nav-item" *ngIf="verPanelTransferencias">
+                <a class="nav-link" title="Ocultar Transferencias" role="button"
+                    (click)="verPanelTransferencias = false">
+                    <mat-icon>move_up</mat-icon>
+                </a>
+            </li>
+            <li class="nav-item" *ngIf="!verPanelTarjetasCredito">
+                <a class="nav-link" title="ver T. Crédito" role="button" (click)="verPanelTarjetasCredito = true">
+                    <mat-icon>add_card</mat-icon>
+                </a>
+            </li>
+            <li class="nav-item" *ngIf="verPanelTarjetasCredito">
+                <a class="nav-link" title="Ocultar T. Crédito" role="button" (click)="verPanelTarjetasCredito = false">
+                    <mat-icon>credit_card_off</mat-icon>
+                </a>
+            </li>
+            <li class="nav-item" *ngIf="!verPanelTarjetasDebito">
+                <a class="nav-link" title="ver T. Débito" role="button" (click)="verPanelTarjetasDebito = true">
+                    <mat-icon>local_atm</mat-icon>
+                </a>
+            </li>
+            <li class="nav-item" *ngIf="verPanelTarjetasDebito">
+                <a class="nav-link" title="Ocultar T. Débito" role="button" (click)="verPanelTarjetasDebito = false">
+                    <mat-icon>money_off_csred</mat-icon>
+                </a>
+            </li>
+            <li class="nav-item"
+                *ngIf="factura.id != 0 && factura.estado == estadoActivo && factura.estadoInterno == estadoInternoRecaudada && factura.estadoSri == estadoSriPendiente">
+                <a class="nav-link" title="Crear Factura Electronica" href="#" role="button"
+                    (click)="crearFacturaElectronica($event)">
+                    <mat-icon>point_of_sale</mat-icon>
+                </a>
+            </li>
+            <li class="nav-item"
+                *ngIf="factura.estado == estadoActivo && factura.estadoInterno == estadoInternoRecaudada">
+                <a class="nav-link" title="Obtener PDF" href="#" role="button" (click)="obtenerPDF($event)">
+                    <mat-icon>picture_as_pdf</mat-icon>
+                </a>
+            </li>
+            <li class="nav-item"
+                *ngIf="factura.id != 0 && factura.estado == estadoActivo && factura.estadoInterno == estadoInternoRecaudada && factura.estadoSri == estadoSriAutorizada">
+                <a class="nav-link" title="Enviar PDF Y XML" href="#" role="button" (click)="enviarPDFYXML($event)">
+                    <mat-icon>forward_to_inbox</mat-icon>
+                </a>
+            </li>
             <li class="nav-item">
                 <a class="nav-link" title="Facturación" role="button" (click)="stepperPrevio(stepper)">
                     <mat-icon>undo</mat-icon>
@@ -116,8 +112,8 @@
                             <div class="col-6">
                                 <mat-form-field appearance="standard">
                                     <mat-label>Valor Factura</mat-label>
-                                    <input matInput type="text" [(ngModel)]="factura.valorTotal"
-                                        class="form-control-sm" [disabled]="true">
+                                    <input matInput type="text" [(ngModel)]="factura.valorTotal" class="form-control-sm"
+                                        [disabled]="true">
                                 </mat-form-field>
                             </div>
                             <div class="col-6">
@@ -161,7 +157,8 @@
                             <div class="col-6">
                                 <mat-form-field appearance="standard">
                                     <mat-label>Unidad de Tiempo</mat-label>
-                                    <mat-select class="form-control-sm" [(ngModel)]="factura.credito.unidadTiempo" disabled>
+                                    <mat-select class="form-control-sm" [(ngModel)]="factura.credito.unidadTiempo"
+                                        disabled>
                                         <mat-option *ngFor="let periodicidad of periodicidades"
                                             [value]="periodicidad.nombre">
                                             {{periodicidad.nombre}}
@@ -211,17 +208,13 @@
                                 <mat-form-field appearance="standard">
                                     <mat-label>Estado</mat-label>
                                     <mat-select [(ngModel)]="factura.estado" [disabled]="true" class="form-control-sm">
-                                        <mat-option [value]="emitida">{{emitida}}</mat-option>
-                                        <mat-option [value]="anulada">{{anulada}}</mat-option>
-                                        <mat-option [value]="noFacturada">{{noFacturada}}</mat-option>
-                                        <mat-option [value]="facturada">{{facturada}}</mat-option>
-                                        <mat-option [value]="noRecaudada">{{noRecaudada}}</mat-option>
-                                        <mat-option [value]="recaudada">{{recaudada}}</mat-option>
+                                        <mat-option [value]="estadoActivo">{{estadoActivo}}</mat-option>
+                                        <mat-option [value]="estadoInactivo">{{estadoInactivo}}</mat-option>
                                     </mat-select>
                                 </mat-form-field>
                             </div>
-                        </div>    
-                    </mat-card>    
+                        </div>
+                    </mat-card>
                 </div>
             </div>
         </mat-expansion-panel>
@@ -361,8 +354,9 @@
                 <div class="col-2">
                     <mat-form-field appearance="standard">
                         <mat-label>Bancos Propios</mat-label>
-                        <mat-select [(ngModel)]="deposito.cuentaPropia.banco.abreviatura" 
-                            (selectionChange)="consultarCuentasPropias(deposito.cuentaPropia.banco.abreviatura, 'DEPOSITO')" class="form-control-sm">
+                        <mat-select [(ngModel)]="deposito.cuentaPropia.banco.abreviatura"
+                            (selectionChange)="consultarCuentasPropias(deposito.cuentaPropia.banco.abreviatura, 'DEPOSITO')"
+                            class="form-control-sm">
                             <mat-option *ngFor="let bancoPropio of bancosPropios" [value]="bancoPropio">
                                 {{bancoPropio}}
                             </mat-option>
@@ -382,7 +376,7 @@
                 <div class="col-2">
                     <mat-form-field appearance="standard">
                         <mat-label>Tipo Cta.</mat-label>
-                        <input matInput type="text" [(ngModel)]="deposito.cuentaPropia.tipoCuenta" 
+                        <input matInput type="text" [(ngModel)]="deposito.cuentaPropia.tipoCuenta"
                             class="form-control-sm" disabled>
                     </mat-form-field>
                 </div>
@@ -438,7 +432,8 @@
                         </ng-container>
                         <tr mat-header-row *matHeaderRowDef="cabeceraDepositos"></tr>
                         <tr mat-row *matRowDef="let row; let i=index; columns: cabeceraDepositos"
-                            (click)="seleccionDeposito(row, i)" [class.selected-row]="clickedRowsDepositos.has(row)"></tr>
+                            (click)="seleccionDeposito(row, i)" [class.selected-row]="clickedRowsDepositos.has(row)">
+                        </tr>
                         <tr mat-footer-row *matFooterRowDef="cabeceraDepositos"></tr>
                         <!-- Row shown when there is no matching data. -->
                         <tr class="mat-row" *matNoDataRow>
@@ -488,8 +483,9 @@
                 <div class="col-2">
                     <mat-form-field appearance="standard">
                         <mat-label>Bancos Propios</mat-label>
-                        <mat-select [(ngModel)]="transferencia.cuentaPropia.banco.abreviatura" 
-                            (selectionChange)="consultarCuentasPropias(transferencia.cuentaPropia.banco.abreviatura, 'TRANSFERENCIA')" class="form-control-sm">
+                        <mat-select [(ngModel)]="transferencia.cuentaPropia.banco.abreviatura"
+                            (selectionChange)="consultarCuentasPropias(transferencia.cuentaPropia.banco.abreviatura, 'TRANSFERENCIA')"
+                            class="form-control-sm">
                             <mat-option *ngFor="let bancoPropio of bancosPropios" [value]="bancoPropio">
                                 {{bancoPropio}}
                             </mat-option>
@@ -537,7 +533,8 @@
                 <div class="mat-elevation-z8 col-12">
                     <table mat-table [dataSource]="dataSourceTransferencias" matSort #MatSortTransferencias="matSort">
                         <!-- Columnas Dinamicas -->
-                        <ng-container *ngFor="let columna of columnasTransferencias" [matColumnDef]="columna.nombreColumna">
+                        <ng-container *ngFor="let columna of columnasTransferencias"
+                            [matColumnDef]="columna.nombreColumna">
                             <th mat-header-cell *matHeaderCellDef mat-sort-header> {{ columna.cabecera }} </th>
                             <td mat-cell *matCellDef="let row; let i=index">
                                 <ng-container *ngIf="columna.nombreColumna!='acciones'">
@@ -553,12 +550,14 @@
                                 <td mat-footer-cell *matFooterCellDef> {{columna.pie}} </td>
                             </ng-container>
                             <ng-container *ngIf="columna.nombreColumna=='valor'">
-                                <td mat-footer-cell *matFooterCellDef> {{calcularTotalTransferencias() | currency}} </td>
+                                <td mat-footer-cell *matFooterCellDef> {{calcularTotalTransferencias() | currency}}
+                                </td>
                             </ng-container>
                         </ng-container>
                         <tr mat-header-row *matHeaderRowDef="cabeceraTransferencias"></tr>
                         <tr mat-row *matRowDef="let row; let i=index; columns: cabeceraTransferencias"
-                            (click)="seleccionTransferencia(row, i)" [class.selected-row]="clickedRowsTransferencias.has(row)"></tr>
+                            (click)="seleccionTransferencia(row, i)"
+                            [class.selected-row]="clickedRowsTransferencias.has(row)"></tr>
                         <tr mat-footer-row *matFooterRowDef="cabeceraTransferencias"></tr>
                         <!-- Row shown when there is no matching data. -->
                         <tr class="mat-row" *matNoDataRow>
@@ -581,7 +580,8 @@
                     <i><u>TARJETAS DE CRÉDITO</u></i>
                 </mat-panel-title>
                 <mat-panel-description>
-                    {{abrirPanelTarjetasCredito ? 'Ocultar pagos con tarjeta de crédito' : 'Recaudación con tarjeta de crédito'}}
+                    {{abrirPanelTarjetasCredito ? 'Ocultar pagos con tarjeta de crédito' : 'Recaudación con tarjeta de
+                    crédito'}}
                     <div class="derecha">Total tarjetas de crédito: {{calcularTotalTC() | currency}}</div>
                 </mat-panel-description>
             </mat-expansion-panel-header>
@@ -600,7 +600,8 @@
                     <mat-form-field appearance="standard">
                         <mat-label>Franquicia</mat-label>
                         <mat-select class="form-control-sm" [(ngModel)]="tarjetaCredito.franquiciaTarjeta">
-                            <mat-option *ngFor="let franquiciaTarjeta of franquiciasTarjetas" [value]="franquiciaTarjeta">
+                            <mat-option *ngFor="let franquiciaTarjeta of franquiciasTarjetas"
+                                [value]="franquiciaTarjeta">
                                 {{franquiciaTarjeta.nombre}}
                             </mat-option>
                         </mat-select>
@@ -694,7 +695,8 @@
                 <div class="mat-elevation-z8 col-12">
                     <table mat-table [dataSource]="dataSourceTarjetasCredito" matSort #MatSortTarjetaCredito="matSort">
                         <!-- Columnas Dinamicas -->
-                        <ng-container *ngFor="let columna of columnasTarjetasCredito" [matColumnDef]="columna.nombreColumna">
+                        <ng-container *ngFor="let columna of columnasTarjetasCredito"
+                            [matColumnDef]="columna.nombreColumna">
                             <th mat-header-cell *matHeaderCellDef mat-sort-header> {{ columna.cabecera }} </th>
                             <td mat-cell *matCellDef="let row; let i=index">
                                 <ng-container *ngIf="columna.nombreColumna!='acciones'">
@@ -715,7 +717,8 @@
                         </ng-container>
                         <tr mat-header-row *matHeaderRowDef="cabeceraTarjetasCredito"></tr>
                         <tr mat-row *matRowDef="let row; let i=index; columns: cabeceraTarjetasCredito"
-                            (click)="seleccionTarjetaCredito(row, i)" [class.selected-row]="clickedRowsTarjetasCredito.has(row)"></tr>
+                            (click)="seleccionTarjetaCredito(row, i)"
+                            [class.selected-row]="clickedRowsTarjetasCredito.has(row)"></tr>
                         <tr mat-footer-row *matFooterRowDef="cabeceraTarjetasCredito"></tr>
                         <!-- Row shown when there is no matching data. -->
                         <tr class="mat-row" *matNoDataRow>
@@ -738,7 +741,8 @@
                     <i><u>TARJETAS DE DÉBITO</u></i>
                 </mat-panel-title>
                 <mat-panel-description>
-                    {{abrirPanelTarjetasDebito ? 'Ocultar pagos con tarjeta de débito' : 'Recaudación con tarjeta de débito'}}
+                    {{abrirPanelTarjetasDebito ? 'Ocultar pagos con tarjeta de débito' : 'Recaudación con tarjeta de
+                    débito'}}
                     <div class="derecha">Total tarjetas de débito: {{calcularTotalTD() | currency}}</div>
                 </mat-panel-description>
             </mat-expansion-panel-header>
@@ -779,8 +783,7 @@
                     <mat-form-field appearance="standard">
                         <mat-label>Operador</mat-label>
                         <mat-select class="form-control-sm" [(ngModel)]="tarjetaDebito.operadorTarjeta">
-                            <mat-option *ngFor="let operadorTarjeta of operadoresTarjetas"
-                                [value]="operadorTarjeta">
+                            <mat-option *ngFor="let operadorTarjeta of operadoresTarjetas" [value]="operadorTarjeta">
                                 {{operadorTarjeta.nombre}}
                             </mat-option>
                         </mat-select>
@@ -842,7 +845,8 @@
                 <div class="mat-elevation-z8 col-12">
                     <table mat-table [dataSource]="dataSourceTarjetasDebito" matSort #MatSortTarjetaDebito="matSort">
                         <!-- Columnas Dinamicas -->
-                        <ng-container *ngFor="let columna of columnasTarjetasDebito" [matColumnDef]="columna.nombreColumna">
+                        <ng-container *ngFor="let columna of columnasTarjetasDebito"
+                            [matColumnDef]="columna.nombreColumna">
                             <th mat-header-cell *matHeaderCellDef mat-sort-header> {{ columna.cabecera }} </th>
                             <td mat-cell *matCellDef="let row; let i=index">
                                 <ng-container *ngIf="columna.nombreColumna!='acciones'">
@@ -863,7 +867,8 @@
                         </ng-container>
                         <tr mat-header-row *matHeaderRowDef="cabeceraTarjetasDebito"></tr>
                         <tr mat-row *matRowDef="let row; let i=index; columns: cabeceraTarjetasDebito"
-                            (click)="seleccionTarjetaDebito(row, i)" [class.selected-row]="clickedRowsTarjetasDebito.has(row)"></tr>
+                            (click)="seleccionTarjetaDebito(row, i)"
+                            [class.selected-row]="clickedRowsTarjetasDebito.has(row)"></tr>
                         <tr mat-footer-row *matFooterRowDef="cabeceraTarjetasDebito"></tr>
                         <!-- Row shown when there is no matching data. -->
                         <tr class="mat-row" *matNoDataRow>

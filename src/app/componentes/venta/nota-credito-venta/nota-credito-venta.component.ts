@@ -1,9 +1,8 @@
-import { Component, HostListener, OnInit, ViewChild, Type, ElementRef, Renderer2 } from '@angular/core';
-import { UntypedFormControl, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
+import { Component, HostListener, OnInit, ViewChild, ElementRef, Renderer2 } from '@angular/core';
+import { UntypedFormControl } from '@angular/forms';
 import { valores, mensajes, validarSesion, exito, exito_swal, error, error_swal } from '../../../constantes';
 import { Router } from '@angular/router';
 import { map, startWith, Observable } from 'rxjs';
-import { NgxSpinnerService } from 'ngx-spinner';
 import Swal from 'sweetalert2';
 
 import { DatePipe } from '@angular/common';
@@ -25,6 +24,7 @@ import { NotaCreditoElectronicaService } from 'src/app/servicios/venta/nota-cred
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
   selector: 'app-nota-credito-venta',
@@ -37,14 +37,16 @@ import { MatTableDataSource } from '@angular/material/table';
 })
 export class NotaCreditoVentaComponent implements OnInit {
 
+  estadoActivo = valores.estadoActivo;
+  estadoInactivo = valores.estadoInactivo;
+  estadoInternoEmitida = valores.estadoInternoEmitida;
+  estadoInternoRecaudada = valores.estadoInternoRecaudada;
+  estadoInternoAnulada = valores.estadoInternoAnulada
+  estadoSriPendiente = valores.estadoSriPendiente;
+  estadoSriAutorizada = valores.estadoSriAutorizada;
+  estadoSriAnulada = valores.estadoSriAnulada;
   si = valores.si;
   no = valores.no;
-  emitida = valores.emitida;
-  anulada = valores.anulada;
-  noFacturada = valores.noFacturada;
-  facturada = valores.facturada;
-  noRecaudada = valores.noRecaudada;
-  recaudada = valores.recaudada;
   devolucion = valores.devolucion;
   descuento = valores.descuento;
   conjunta = valores.conjunta;
@@ -81,7 +83,9 @@ export class NotaCreditoVentaComponent implements OnInit {
     { nombreColumna: 'cliente', cabecera: 'Cliente', celda: (row: NotaCreditoVenta) => `${row.factura.cliente.razonSocial}`},
     { nombreColumna: 'factura', cabecera: 'Factura', celda: (row: NotaCreditoVenta) => `${row.factura.secuencial}`},
     { nombreColumna: 'total', cabecera: 'Total', celda: (row: NotaCreditoVenta) => `$${row.totalConDescuento}`},
-    { nombreColumna: 'estado', cabecera: 'Estado', celda: (row: NotaCreditoVenta) => `${row.estado}`}
+    { nombreColumna: 'estado', cabecera: 'Estado', celda: (row: NotaCreditoVenta) => `${row.estado}`},
+    { nombreColumna: 'estadoInterno', cabecera: 'Estado Interno', celda: (row: NotaCreditoVenta) => `${row.estadoInterno}`},
+    { nombreColumna: 'estadoSri', cabecera: 'Estado SRI', celda: (row: NotaCreditoVenta) => `${row.estadoSri}`}
   ];
   cabecera: string[]  = this.columnas.map(titulo => titulo.nombreColumna);
   dataSource: MatTableDataSource<NotaCreditoVenta>;
@@ -118,7 +122,7 @@ export class NotaCreditoVentaComponent implements OnInit {
   }
 
   constructor(private renderer: Renderer2, private clienteService: ClienteService, private sesionService: SesionService, private notaCreditoElectronicaService: NotaCreditoElectronicaService, private dateAdapter: DateAdapter<Date>,
-    private router: Router, private notaCreditoVentaService: NotaCreditoVentaService, private facturaService: FacturaService, private datepipe: DatePipe) { this.dateAdapter.setLocale('en-GB') }
+    private router: Router, private notaCreditoVentaService: NotaCreditoVentaService, private facturaService: FacturaService, private spinnerService: NgxSpinnerService, private datepipe: DatePipe) { this.dateAdapter.setLocale('en-GB') }
 
   ngOnInit() {
     this.sesion = validarSesion(this.sesionService, this.router);
@@ -147,7 +151,7 @@ export class NotaCreditoVentaComponent implements OnInit {
   }
 
   consultarClientes(){
-    this.clienteService.consultarPorEmpresaYEstado(this.empresa.id, valores.activo).subscribe({
+    this.clienteService.consultarPorEmpresaYEstado(this.empresa.id, valores.estadoActivo).subscribe({
       next: res => {
         this.clientes = res.resultado as Cliente[]
       },
@@ -284,7 +288,7 @@ export class NotaCreditoVentaComponent implements OnInit {
       res => {
         this.notaCreditoVenta.factura.cliente = res.resultado as Cliente;
         this.seleccionCliente.patchValue(this.notaCreditoVenta.factura.cliente);
-        this.facturaService.consultarPorCliente(this.notaCreditoVenta.factura.cliente.id).subscribe(
+        this.facturaService.consultarPorClienteYEstadoYEstadoInterno(this.notaCreditoVenta.factura.cliente.id, this.estadoActivo, this.estadoInternoRecaudada).subscribe(
           res => {
             this.facturas = res.resultado as Factura[]
           },
@@ -353,6 +357,28 @@ export class NotaCreditoVentaComponent implements OnInit {
   }
   seleccionarPorcentajeDescuentoTotal(){
     this.calcular();   
+  }
+
+  obtenerPDF(event){
+    if (event != null)
+      event.preventDefault();
+    this.notaCreditoElectronicaService.obtenerPDF(this.notaCreditoVenta.id);
+  }
+  
+  enviarPDFYXML(event){
+    if (event != null)
+      event.preventDefault();
+    this.spinnerService.show();
+    this.notaCreditoElectronicaService.enviarPDFYXML(this.notaCreditoVenta.id).subscribe({
+      next: res => {
+        Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
+        this.spinnerService.hide();  
+      },
+      error: err => {
+        Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+        this.spinnerService.hide();  
+      }
+    });
   }
 
   compareFn(a: any, b: any) {

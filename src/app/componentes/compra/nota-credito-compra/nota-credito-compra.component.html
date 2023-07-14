@@ -143,10 +143,9 @@
                     <div class="col-7">
                         <mat-form-field appearance="standard">
                             <mat-label>Estado</mat-label>
-                            <mat-select class="form-control-sm" [(ngModel)]="notaCreditoCompra.estado"
-                                [disabled]="true">
-                                <mat-option [value]="activo">{{activo}}</mat-option>
-                                <mat-option [value]="inactivo">{{inactivo}}</mat-option>
+                            <mat-select class="form-control-sm" [(ngModel)]="notaCreditoCompra.facturaCompra.estado" [disabled]="true">
+                                <mat-option [value]="estadoActivo">{{estadoActivo}}</mat-option>
+                                <mat-option [value]="estadoInactivo">{{estadoInactivo}}</mat-option>
                             </mat-select>
                         </mat-form-field>
                     </div>

@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild, HostListener, Renderer2, ElementRef } from '@angular/core';
-import { valores, mensajes, validarSesion, otras, tab_activo, exito, exito_swal, error, error_swal } from '../../../constantes';
+import { valores, mensajes, validarSesion, exito, exito_swal, error, error_swal } from '../../../constantes';
 import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { startWith, map, Observable } from 'rxjs';
@@ -90,7 +90,9 @@ export class NotaDebitoVentaComponent implements OnInit {
     { nombreColumna: 'cliente', cabecera: 'Cliente', celda: (row: NotaDebitoVenta) => `${row.factura.cliente.razonSocial}`},
     { nombreColumna: 'factura', cabecera: 'Factura', celda: (row: NotaDebitoVenta) => `${row.factura.secuencial}`},
     { nombreColumna: 'total', cabecera: 'Total', celda: (row: NotaDebitoVenta) => `$${row.totalConDescuento}`},
-    { nombreColumna: 'estado', cabecera: 'Estado', celda: (row: NotaDebitoVenta) => `${row.estado}`}
+    { nombreColumna: 'estado', cabecera: 'Estado', celda: (row: NotaDebitoVenta) => `${row.estado}`},
+    { nombreColumna: 'estadoInterno', cabecera: 'Estado Interno', celda: (row: NotaDebitoVenta) => `${row.estadoInterno}`},
+    { nombreColumna: 'estadoSri', cabecera: 'Estado SRI', celda: (row: NotaDebitoVenta) => `${row.estadoSri}`}
   ];
   cabecera: string[]  = this.columnas.map(titulo => titulo.nombreColumna);
   dataSource: MatTableDataSource<NotaDebitoVenta>;
@@ -149,14 +151,16 @@ export class NotaDebitoVentaComponent implements OnInit {
   sesion: Sesion = null;
   empresa: Empresa = null;
   
+  estadoActivo: string = valores.estadoActivo;
+  estadoInactivo: string = valores.estadoInactivo;
+  estadoInternoEmitida: string = valores.estadoInternoEmitida;
+  estadoInternoRecaudada: string = valores.estadoInternoRecaudada;
+  estadoInternoAnulada: string = valores.estadoInternoAnulada
+  estadoSriPendiente: string = valores.estadoSriPendiente;
+  estadoSriAutorizada: string = valores.estadoSriAutorizada;
+  estadoSriAnulada: string = valores.estadoSriAnulada;
   si = valores.si;
   no = valores.no;
-  emitida = valores.emitida;
-  anulada = valores.anulada;
-  noFacturada = valores.noFacturada;
-  facturada = valores.facturada;
-  noRecaudada = valores.noRecaudada;
-  recaudada = valores.recaudada;
 
   constructor(private renderer: Renderer2, private clienteService: ClienteService, private sesionService: SesionService, private impuestoService: ImpuestoService, private bodegaService: BodegaService, private dateAdapter: DateAdapter<Date>,
     private router: Router, private notaDebitoVentaService: NotaDebitoVentaService, private facturaService: FacturaService, private productoService: ProductoService, private notaDebitoElectronicaService: NotaDebitoElectronicaService,
@@ -328,7 +332,7 @@ export class NotaDebitoVentaComponent implements OnInit {
   }
 
   consultarProductos(){
-    this.productoService.consultarPorCategoriaProductoYEmpresaYEstado(valores.servicio, this.empresa.id, valores.activo).subscribe(
+    this.productoService.consultarPorCategoriaProductoYEmpresaYEstado(valores.servicio, this.empresa.id, valores.estadoActivo).subscribe(
       res => {
         this.productos = res.resultado as Producto[]
       },
@@ -377,7 +381,7 @@ export class NotaDebitoVentaComponent implements OnInit {
   }
 
   consultarClientes(){
-    this.clienteService.consultarPorEmpresaYEstado(this.empresa.id, valores.activo).subscribe(
+    this.clienteService.consultarPorEmpresaYEstado(this.empresa.id, valores.estadoActivo).subscribe(
       res => {
         this.clientes = res.resultado as Cliente[]
       },
@@ -386,7 +390,7 @@ export class NotaDebitoVentaComponent implements OnInit {
   }
 
   consultarImpuestos(){
-    this.impuestoService.consultarPorEstado(valores.activo).subscribe(
+    this.impuestoService.consultarPorEstado(valores.estadoActivo).subscribe(
       res => {
         this.impuestos = res.resultado as Impuesto[]
       },
@@ -395,7 +399,7 @@ export class NotaDebitoVentaComponent implements OnInit {
   }
 
   consultarBodegas(){
-    this.bodegaService.consultarPorEmpresaYEstado(this.empresa.id, valores.activo).subscribe(
+    this.bodegaService.consultarPorEmpresaYEstado(this.empresa.id, valores.estadoActivo).subscribe(
       res => {
         this.bodegas = res.resultado as Bodega[]
       },
@@ -411,7 +415,7 @@ export class NotaDebitoVentaComponent implements OnInit {
         this.notaDebitoVenta.factura.cliente = res.resultado as Cliente;
         this.controlIdentificacionCliente.patchValue(this.notaDebitoVenta.factura.cliente);
         this.controlRazonSocialCliente.patchValue(this.notaDebitoVenta.factura.cliente);
-        this.facturaService.consultarPorCliente(this.notaDebitoVenta.factura.cliente.id).subscribe(
+        this.facturaService.consultarPorClienteYEstadoYEstadoInterno(this.notaDebitoVenta.factura.cliente.id, this.estadoActivo, this.estadoInternoRecaudada).subscribe(
           res => {
             this.facturas = res.resultado as Factura[]
           },
@@ -720,6 +724,28 @@ export class NotaDebitoVentaComponent implements OnInit {
       error: err => {
         Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje });
         this.cargar = false;
+      }
+    });
+  }
+
+  obtenerPDF(event){
+    if (event != null)
+      event.preventDefault();
+    this.notaDebitoElectronicaService.obtenerPDF(this.notaDebitoVenta.id);
+  }
+  
+  enviarPDFYXML(event){
+    if (event != null)
+      event.preventDefault();
+    this.spinnerService.show();
+    this.notaDebitoElectronicaService.enviarPDFYXML(this.notaDebitoVenta.id).subscribe({
+      next: res => {
+        Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
+        this.spinnerService.hide();  
+      },
+      error: err => {
+        Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+        this.spinnerService.hide();  
       }
     });
   }

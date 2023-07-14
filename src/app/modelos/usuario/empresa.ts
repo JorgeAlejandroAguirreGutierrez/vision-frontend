@@ -8,7 +8,6 @@ export class Empresa {
     razonSocial:string;
     nombreComercial: string;
     direccion: string;
-    //logo: Uint8Array;
     logo64: string;
     obligadoContabilidad: string;
     especial: string;
@@ -17,6 +16,8 @@ export class Empresa {
     resolucionAgente: string;
     estado: string;
     tipoIdentificacion: TipoIdentificacion;
+    certificado: string;
+    contrasena: string;
     
     constructor() {
         this.id = valores.cero;
@@ -25,14 +26,15 @@ export class Empresa {
         this.razonSocial = valores.vacio;
         this.nombreComercial = valores.vacio;
         this.direccion = valores.vacio;
-        //this.logo = new Uint8Array(1);
         this.logo64 = valores.vacio;
         this.obligadoContabilidad = valores.no;
         this.especial = valores.no;
         this.resolucionEspecial = valores.vacio;
         this.agenteRetencion = valores.no;
         this.resolucionAgente = valores.vacio;
-        this.estado = valores.activo;
+        this.estado = valores.estadoActivo;
         this.tipoIdentificacion = new TipoIdentificacion();
+        this.certificado = valores.vacio;
+        this.contrasena = valores.vacio;
     }
 }

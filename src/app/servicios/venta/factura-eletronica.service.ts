@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { Factura } from '../../modelos/venta/factura';
 import { Respuesta } from '../../respuesta';
 import { HttpClient } from '@angular/common/http';
 import { map, catchError } from 'rxjs/operators';
@@ -21,6 +20,7 @@ export class FacturaElectronicaService {
         return throwError(() => err);
       }));
   }
+  
   obtenerPDF(facturaId: number) {
     this.http.get(environment.host + urn.ruta + urn.facturaElectronica + urn.obtenerPDF + urn.slash + facturaId, optionsGenerarArchivo)
     .subscribe((blob: Blob) => {
@@ -38,6 +38,7 @@ export class FacturaElectronicaService {
       }
     });
   }
+
   enviarPDFYXML(facturaId: number): Observable<Respuesta> {
     return this.http.get(environment.host + urn.ruta + urn.facturaElectronica + urn.enviarPDFYXML + urn.slash + facturaId, options).pipe(
       map(response => response as Respuesta),

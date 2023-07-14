@@ -19,6 +19,8 @@ export class Factura {
   fecha: Date;
   claveAcceso: String;
   estado: string;
+  estadoInterno: string;
+  estadoSri: string;
 
   subtotalSinDescuento: number;
   subtotalConDescuento: number;
@@ -69,7 +71,9 @@ export class Factura {
     this.codigoNumerico = valores.vacio;
     this.claveAcceso = valores.vacio;
     this.fecha = new Date();
-    this.estado = valores.noFacturada;
+    this.estado = valores.estadoActivo;
+    this.estadoInterno = valores.vacio;
+    this.estadoSri = valores.vacio;
 
     this.cliente = new Cliente();
     this.facturaLineas = [];

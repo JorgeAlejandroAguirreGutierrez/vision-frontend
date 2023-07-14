@@ -20,11 +20,12 @@ import { NotaCreditoCompraService } from '../../../servicios/compra/nota-credito
 import { NotaCreditoCompraLinea } from '../../../modelos/compra/nota-credito-compra-linea';
 import { FacturaCompra } from '../../../modelos/compra/factura-compra';
 import { FacturaCompraService } from '../../../servicios/compra/factura-compra.service';
+import { FacturaCompraLinea } from 'src/app/modelos/compra/factura-compra-linea';
 
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { FacturaCompraLinea } from 'src/app/modelos/compra/factura-compra-linea';
+
 
 @Component({
   selector: 'app-nota-credito-compra',
@@ -45,10 +46,12 @@ export class NotaCreditoCompraComponent implements OnInit {
   deshabilitarDevolucion = true;
   deshabilitarDescuento = true;
 
+  estadoActivo: string = valores.estadoActivo;
+  estadoInactivo: string = valores.estadoInactivo;
+  estadoInternoPorPagar: string = valores.estadoInternoPorPagar;
+  estadoInternoPagada: string = valores.estadoInternoPagada;
   si: string = valores.si;
   no: string = valores.no;
-  activo: string = valores.activo;
-  inactivo: string = valores.inactivo;
   devolucion: string = valores.devolucion;
   descuento: string = valores.descuento;
   conjunta: string = valores.conjunta;
@@ -128,7 +131,7 @@ export class NotaCreditoCompraComponent implements OnInit {
   }
 
   consultarProveedores() {
-    this.proveedorService.consultarPorEmpresaYEstado(this.empresa.id, valores.activo).subscribe({
+    this.proveedorService.consultarPorEmpresaYEstado(this.empresa.id, valores.estadoActivo).subscribe({
       next: res => {
         this.proveedores = res.resultado as Proveedor[]
       },
@@ -284,7 +287,7 @@ export class NotaCreditoCompraComponent implements OnInit {
   }
 
   consultarFacturasCompras() {
-    this.facturaCompraService.consultarPorEmpresaYEstado(this.empresa.id, valores.activo).subscribe(
+    this.facturaCompraService.consultarPorEmpresaYEstado(this.empresa.id, valores.estadoActivo).subscribe(
       res => {
         this.facturasCompras = res.resultado as FacturaCompra[]
       },

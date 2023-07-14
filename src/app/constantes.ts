@@ -34,6 +34,7 @@ export const urn =
     excel: "/excel",
     enviarPDFYXML: "/enviarPDFYXML",
     obtenerPDF: "/obtenerPDF",
+    
     // Cliente
     calificacionCliente: "/calificacionCliente",
     cliente: "/cliente",
@@ -49,6 +50,9 @@ export const urn =
     identificacion: "/identificacion",
     razonSocial: "/razonSocial",
     consultarPorCliente: "/consultarPorCliente",
+    consultarPorClienteYEstado: "/consultarPorClienteYEstado",
+    consultarPorClienteYEstadoYEstadoInterno: "/consultarPorClienteYEstadoYEstadoInterno",
+    consultarPorClienteYEstadoYEstadoInternoYEstadoSri: "/consultarPorClienteYEstadoYEstadoInternoYEstadoSri",
     validarIdentificacionPorEmpresa: "/validarIdentificacionPorEmpresa",
 
     //Compras
@@ -77,6 +81,8 @@ export const urn =
     consultarPorCategoriaProductoYProveedorYEstado: "/consultarPorCategoriaProductoYProveedorYEstado",
     consultarPorCategoriaProductoYEmpresaYEstado: "/consultarPorCategoriaProductoYEmpresaYEstado",
     consultarPorCategoriaProductoYProveedorYEmpresaYEstado: "/consultarPorCategoriaProductoYProveedorYEmpresaYEstado",
+    pagar: "/pagar",
+    
     //Configuración
     estadoCivil: "/estadoCivil",
     impuesto: "/impuesto",
@@ -137,6 +143,7 @@ export const urn =
     establecimientoPuntoVenta: "/establecimientoPuntoVenta",
     estacion: "/estacion",
     obtenerPorApodoYEstado: "/obtenerPorApodoYEstado",
+    subirCertificado: "/subirCertificado",
 
     //Ventas
     factura: "/factura",
@@ -150,9 +157,9 @@ export const urn =
     notaCreditoVenta: "/notaCreditoVenta",
     notaDebitoVenta: "/notaDebitoVenta",
     obtenerPorFactura: "/obtenerPorFactura",
-    notaDebitoEletronica: "/notaDebitoEletronica",
-    notaCreditoEletronica: "/notaCreditoEletronica",
-    guiaRemisionEletronica: "/guiaRemisionEletronica",
+    notaDebitoElectronica: "/notaDebitoElectronica",
+    notaCreditoElectronica: "/notaCreditoElectronica",
+    guiaRemisionElectronica: "/guiaRemisionElectronica",
     consultarPorElectronica: "/consultarPorElectronica",
     banco: "/banco",
     cuentaPropia: "/cuentaPropia",
@@ -184,20 +191,26 @@ export const valores = {
     menosUno: -1,
     vacio: "",
     espacio: " ",
-    activo: "ACTIVO",
-    inactivo: "INACTIVO",
+    //ESTADOS
+    estadoActivo: "ACTIVO",
+    estadoInactivo: "INACTIVO",
+    //ESTADOS VENTAS
+    estadoInternoEmitida: "EMITIDA",
+    estadoInternoRecaudada: "RECAUDADA",
+    estadoInternoAnulada: "ANULADA",
+    estadoSriPendiente: "PENDIENTE",
+    estadoSriAutorizada: "AUTORIZADA",
+    estadoSriAnulada: "ANULADA",
+    //ESTADOS COMPRAS
+    estadoInternoPagada: "PAGADA",
+    estadoInternoPorPagar: "POR PAGAR",
+
     suspendido: "SUSPENDIDO",
     abierto: "ABIERTO",
     cerrado: "CERRADO",
     pendiente: "PENDIENTE",
     entregado: "ENTREGADO",
     sinGuia: "SIN GUIA",
-    noRecaudada: "NO RECAUDADA",
-    recaudada: "RECAUDADA",
-    emitida: "EMITIDA",
-    anulada: "ANULADA",
-    facturada: "FACTURADA",
-    noFacturada: "NO FACTURADA",
     si: "SI",
     no: "NO",
     ahorros: "AHORROS",

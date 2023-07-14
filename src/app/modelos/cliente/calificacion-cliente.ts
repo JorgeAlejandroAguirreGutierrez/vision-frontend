@@ -14,7 +14,7 @@ export class CalificacionCliente {
         this.codigo=valores.vacio;
         this.descripcion=valores.vacio;
         this.abreviatura=valores.vacio;
-        this.estado=valores.activo;
+        this.estado=valores.estadoActivo;
     }
     
 }

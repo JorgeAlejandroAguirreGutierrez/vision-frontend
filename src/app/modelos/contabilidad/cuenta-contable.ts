@@ -22,6 +22,6 @@ export class CuentaContable {
         this.fe = valores.no;
         this.casillero=valores.vacio;
         this.mapeo=valores.vacio;
-        this.estado=valores.activo;
+        this.estado=valores.estadoActivo;
     }
 }

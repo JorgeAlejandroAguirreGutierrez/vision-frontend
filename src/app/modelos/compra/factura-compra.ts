@@ -14,6 +14,7 @@ export class FacturaCompra {
     numeroComprobante: string;
     fecha: Date;
     estado: string;
+    estadoInterno: string;
 
     subtotalSinDescuento: number;
     descuentoTotal: number;
@@ -42,7 +43,8 @@ export class FacturaCompra {
         this.secuencial = valores.vacio;
         this.numeroComprobante = valores.vacio;
         this.fecha = new Date();
-        this.estado = valores.activo;
+        this.estado = valores.estadoActivo;
+        this.estadoInterno = valores.vacio;
 
         this.subtotalSinDescuento = valores.cero;
         this.descuentoTotal = valores.cero;

@@ -36,6 +36,16 @@
                             <mat-icon>point_of_sale</mat-icon>
                         </a>
                     </li>
+                    <li class="nav-item" *ngIf="notaDebitoVenta.estado == estadoActivo && notaDebitoVenta.estadoInterno == estadoInternoEmitida">
+                        <a class="nav-link" title="Obtener PDF" href="#" role="button" (click)="obtenerPDF($event)">
+                            <mat-icon>picture_as_pdf</mat-icon>
+                        </a>
+                    </li>
+                    <li class="nav-item" *ngIf="notaDebitoVenta.estado == estadoActivo && notaDebitoVenta.estadoInterno == estadoInternoRecaudada && notaDebitoVenta.estadoSri == estadoSriAutorizada">
+                        <a class="nav-link" title="Enviar PDF Y XML" href="#" role="button" (click)="enviarPDFYXML($event)">
+                            <mat-icon>forward_to_inbox</mat-icon>
+                        </a>
+                    </li>
                 </ul>
             </nav>
             <div *ngIf="cargar">
@@ -190,12 +200,8 @@
                                 <mat-label>Estado</mat-label>
                                 <mat-select class="form-control-sm" [(ngModel)]="notaDebitoVenta.estado"
                                     [disabled]="true">
-                                    <mat-option [value]="emitida">{{emitida}}</mat-option>
-                                    <mat-option [value]="anulada">{{anulada}}</mat-option>
-                                    <mat-option [value]="noFacturada">{{noFacturada}}</mat-option>
-                                    <mat-option [value]="facturada">{{facturada}}</mat-option>
-                                    <mat-option [value]="noRecaudada">{{noRecaudada}}</mat-option>
-                                    <mat-option [value]="recaudada">{{recaudada}}</mat-option>
+                                    <mat-option [value]="estadoActivo">{{estadoActivo}}</mat-option>
+                                    <mat-option [value]="estadoInactivo">{{estadoInactivo}}</mat-option>
                                 </mat-select>
                             </mat-form-field>
                         </div>

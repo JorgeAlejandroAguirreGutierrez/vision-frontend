@@ -56,7 +56,7 @@ export class Cliente {
       this.identificacion=valores.vacio;
       this.obligadoContabilidad = valores.no;
       this.especial=valores.no;
-      this.estado=valores.activo;
+      this.estado=valores.estadoActivo;
       this.direccion = valores.vacio;
       this.referencia = valores.vacio;
       this.ubicacion= new Ubicacion();

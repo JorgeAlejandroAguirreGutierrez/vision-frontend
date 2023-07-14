@@ -15,6 +15,6 @@ export class PlazoCredito {
         this.descripcion = valores.vacio;
         this.abreviatura = valores.vacio;
         this.plazo = valores.cero;
-        this.estado = valores.activo;
+        this.estado = valores.estadoActivo;
      }
 }

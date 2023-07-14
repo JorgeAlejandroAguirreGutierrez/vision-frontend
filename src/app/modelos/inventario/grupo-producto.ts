@@ -26,7 +26,7 @@ export class GrupoProducto {
         this.linea=valores.vacio;
         this.sublinea=valores.vacio;
         this.presentacion=valores.vacio;
-        this.estado=valores.activo;
+        this.estado=valores.estadoActivo;
         this.categoriaProducto = new CategoriaProducto();
         this.cuentaContable = new CuentaContable();
     }

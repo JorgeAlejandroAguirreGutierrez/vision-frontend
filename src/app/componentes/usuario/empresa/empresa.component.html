@@ -81,7 +81,7 @@
                                 oninput="this.value = this.value.toUpperCase()" class="form-control-sm">
                         </mat-form-field>
                     </div>
-                    <div class="col-1">
+                    <div class="col-2">
                         <mat-form-field appearance="standard">
                             <mat-label>Oblig.</mat-label>
                             <mat-select [(ngModel)]="empresa.obligadoContabilidad" class="form-control-sm">
@@ -90,20 +90,13 @@
                             </mat-select>
                         </mat-form-field>
                     </div>
-                    <div class="col-1">
+                    <div class="col-2">
                         <mat-form-field appearance="standard">
                             <mat-label>Especial</mat-label>
                             <mat-select [(ngModel)]="empresa.especial" class="form-control-sm">
                                 <mat-option [value]="si">{{si}}</mat-option>
                                 <mat-option [value]="no">{{no}}</mat-option>
                             </mat-select>
-                        </mat-form-field>
-                    </div>
-                    <div class="col-2">
-                        <mat-form-field appearance="standard">
-                            <mat-label># Resol. Especial</mat-label>
-                            <input matInput type="text" [(ngModel)]="empresa.resolucionEspecial"
-                                oninput="this.value = this.value.toUpperCase()" class="form-control-sm">
                         </mat-form-field>
                     </div>
                     <div class="col-7">
@@ -113,14 +106,21 @@
                                 oninput="this.value = this.value.toUpperCase()" class="form-control-sm">
                         </mat-form-field>
                     </div>
-                    <div class="col-1">
+                    <div class="col-3">
+                        <mat-form-field appearance="standard">
+                            <mat-label># Resol. Especial</mat-label>
+                            <input matInput type="text" [(ngModel)]="empresa.resolucionEspecial"
+                                oninput="this.value = this.value.toUpperCase()" class="form-control-sm">
+                        </mat-form-field>
+                    </div>
+                    <div class="col-2">
                         <mat-form-field appearance="standard">
                             <mat-label>Estado</mat-label>
                             <input matInput type="text" [(ngModel)]="empresa.estado" [disabled]="true"
                                 class="form-control-sm">
                         </mat-form-field>
                     </div>
-                    <div class="col-1">
+                    <div class="col-3">
                         <mat-form-field appearance="standard">
                             <mat-label>Ag. Retención</mat-label>
                             <mat-select [(ngModel)]="empresa.agenteRetencion" class="form-control-sm">
@@ -136,10 +136,20 @@
                                 oninput="this.value = this.value.toUpperCase()" class="form-control-sm">
                         </mat-form-field>
                     </div>
+                    <div class="col-3">
+                        <mat-label>{{empresa.certificado}}</mat-label>
+                        <input type="file" (change)="capturarCertificado($event)">
+                    </div>
+                    <div class="col-3">
+                        <mat-form-field appearance="standard">
+                            <mat-label>Contraseña del Certificado</mat-label>
+                            <input matInput type="text" [(ngModel)]="empresa.contrasena" class="form-control-sm">
+                        </mat-form-field>
+                    </div>
                 </div>
                 <div class="col-2">
                     <mat-card class="foto">
-                        <img width="100%" height="100%" [src]="'data:image/jpeg;base64,'+ empresa.logo64"> 
+                        <img width="100%" height="100%" [src]="'data:image/jpeg;base64,'+ empresa.logo64">
                     </mat-card>
                     <input type="file" (change)="capturarFile($event)">
                 </div>
@@ -162,8 +172,7 @@
             <mat-form-field appearance="standard">
                 <mat-label>Buscar empresa</mat-label>
                 <input matInput oninput="this.value = this.value.toUpperCase()" (keyup)="filtro($event)" #inputFiltro>
-                <button mat-button *ngIf="inputFiltro.value" matSuffix mat-icon-button
-                    (click)="borrarFiltro()">
+                <button mat-button *ngIf="inputFiltro.value" matSuffix mat-icon-button (click)="borrarFiltro()">
                     <mat-icon>close</mat-icon>
                 </button>
             </mat-form-field>
@@ -178,7 +187,7 @@
                     <tr mat-row (click)="seleccion(row)" [class.selected-row]="clickedRows.has(row)"
                         *matRowDef="let row; columns: cabecera;"></tr>
                     <tr class="mat-row" *matNoDataRow>
-                        <td class="mat-cell" colspan="6">No hay datos que coincidan con la empresa: 
+                        <td class="mat-cell" colspan="6">No hay datos que coincidan con la empresa:
                             "{{inputFiltro.value}}"
                         </td>
                     </tr>

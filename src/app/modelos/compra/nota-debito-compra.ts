@@ -11,6 +11,7 @@ export class NotaDebitoCompra {
     secuencial: string;
     fecha: Date;
     estado: string;
+    estadoInterno: string;
     valorDescuentoTotal: number;
     porcentajeDescuentoTotal: number;
     subtotalSinDescuento: number;
@@ -31,7 +32,8 @@ export class NotaDebitoCompra {
         this.codigo = valores.vacio;
         this.secuencial = valores.vacio;
         this.fecha = new Date();
-        this.estado = valores.noFacturada;
+        this.estado = valores.estadoActivo;
+        this.estadoInterno = valores.vacio;
         this.valorDescuentoTotal = valores.cero;
         this.porcentajeDescuentoTotal = valores.cero;
         this.subtotalSinDescuento = valores.cero;

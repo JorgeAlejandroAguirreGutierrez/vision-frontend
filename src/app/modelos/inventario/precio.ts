@@ -25,7 +25,7 @@ export class Precio {
         this.precioVentaPublicoManual = valores.cero;
         this.utilidad = valores.cero;
         this.utilidadPorcentaje = valores.cero;
-        this.estado = valores.activo;
+        this.estado = valores.estadoActivo;
         this.segmento = new Segmento();
         this.producto = new Producto();
     }

@@ -1,8 +1,6 @@
 import { Component, OnInit, HostListener, ElementRef, Renderer2 } from '@angular/core';
 import { valores, validarSesion, mensajes, imagenes, otras, exito, exito_swal, error, error_swal } from '../../../constantes';
 import Swal from 'sweetalert2';
-import { Buffer } from 'buffer';
-
 import { Router } from '@angular/router';
 import { Sesion } from '../../../modelos/usuario/sesion';
 import { SesionService } from '../../../servicios/usuario/sesion.service';
@@ -26,16 +24,18 @@ import { MatTableDataSource } from '@angular/material/table';
 
 export class EmpresaComponent implements OnInit {
 
-  activo: string = valores.activo;
-  inactivo: string = valores.inactivo;
+  activo: string = valores.estadoActivo;
+  inactivo: string = valores.estadoInactivo;
   si: string = valores.si;
   no: string = valores.no;
+
+  certificado = null;
 
   abrirPanelNuevo: boolean = true;
   abrirPanelAdmin: boolean = true;
   deshabilitarIdentificacion: boolean = false;
 
-  sesion: Sesion=null;
+  sesion: Sesion = null;
   empresa: Empresa = new Empresa();
 
   empresas: Empresa[];
@@ -92,6 +92,9 @@ export class EmpresaComponent implements OnInit {
     this.empresaService.crear(this.empresa).subscribe({
       next: res => {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
+        this.empresa = res.resultado as Empresa;
+        this.empresa.logo64 = imagenes.logo_empresa;
+        this.subirCertificado();
         this.consultar();
         this.nuevo(null);
       },
@@ -107,6 +110,9 @@ export class EmpresaComponent implements OnInit {
     this.empresaService.actualizar(this.empresa).subscribe({
       next: res => {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
+        this.empresa = res.resultado as Empresa;
+        this.empresa.logo64 = imagenes.logo_empresa;
+        this.subirCertificado();
         this.consultar();
         this.nuevo(null);
       },
@@ -193,10 +199,6 @@ export class EmpresaComponent implements OnInit {
     const archivoCapturado = event.target.files[0];
     this.imagenService.convertirBase64(archivoCapturado).then((imagen: any) => {
       this.empresa.logo64 = imagen.base64;
-      //this.empresa.logo = Buffer.from(imagen.byteArray.buffer).toJSON();
-      //this.empresa.logo = imagen.byteArray;
-      //console.log(this.empresa.logo64);
-      //console.log(this.empresa.logo);
     });
   }
 
@@ -214,8 +216,7 @@ export class EmpresaComponent implements OnInit {
   }
 
   validarFormulario(): boolean {
-    //validar que los campos esten llenos antes de guardar
-    if (this.empresa.identificacion == '') {
+    if (this.empresa.identificacion == valores.vacio) {
       Swal.fire({ icon: error_swal, title: error, text: mensajes.error_falta_datos });
       return false;
     }
@@ -223,22 +224,38 @@ export class EmpresaComponent implements OnInit {
       Swal.fire({ icon: error_swal, title: error, text: mensajes.error_ruc });
       return false;
     }
-    if (this.empresa.razonSocial == '') {
+    if (this.empresa.razonSocial == valores.vacio) {
       Swal.fire({ icon: error_swal, title: error, text: mensajes.error_falta_datos });
       return false;
     }
-    if (this.empresa.nombreComercial == '') {
+    if (this.empresa.nombreComercial == valores.vacio) {
       Swal.fire({ icon: error_swal, title: error, text: mensajes.error_falta_datos });
       return false;
     }
-    if (this.empresa.direccion == '') {
+    if (this.empresa.direccion == valores.vacio) {
       Swal.fire({ icon: error_swal, title: error, text: mensajes.error_falta_datos });
       return false;
     }
-    if (this.empresa.logo64 == '') {
+    if (this.empresa.logo64 == valores.vacio) {
       Swal.fire({ icon: error_swal, title: error, text: mensajes.error_falta_imagen });
       return false;
     }
     return true;
+  }
+
+  capturarCertificado(event : any) : any{
+    this.certificado = event.target.files[0];
+  }
+
+  subirCertificado() : any{
+    this.empresaService.subirCertificado(this.empresa.id, this.certificado).subscribe({
+      next: (res) => {
+        this.empresa = res.resultado as Empresa;
+        this.empresa.logo64 = imagenes.logo_empresa;
+      },
+      error: (err) => {
+        Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje });
+      }
+    });
   }
 }

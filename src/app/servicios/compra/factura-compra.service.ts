@@ -119,8 +119,8 @@ export class FacturaCompraService {
     );
   }
 
-  facturar(facturaCompraId: number): Observable<Respuesta> {
-    return this.http.get<Respuesta>(environment.host + urn.ruta + urn.facturaCompra + urn.facturar + urn.slash + facturaCompraId, options).pipe(
+  pagar(facturaCompraId: number): Observable<Respuesta> {
+    return this.http.get<Respuesta>(environment.host + urn.ruta + urn.facturaCompra + urn.pagar + urn.slash + facturaCompraId, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);

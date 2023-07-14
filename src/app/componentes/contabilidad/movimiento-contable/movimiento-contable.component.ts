@@ -145,7 +145,7 @@ export class MovimientoContableComponent implements OnInit {
   }
 
   consultarAfectacionContable() {
-    this.afectacionContableService.consultarPorEstado(valores.activo).subscribe({
+    this.afectacionContableService.consultarPorEstado(valores.estadoActivo).subscribe({
       next: res => {
         this.afectacionesContables = res.resultado as AfectacionContable[]
       },

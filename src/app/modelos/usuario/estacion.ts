@@ -22,7 +22,7 @@ export class Estacion {
         this.dispositivo = valores.vacio;
         this.ip = valores.vacio;
         this.puntoVenta = valores.no;
-        this.estado = valores.activo;
+        this.estado = valores.estadoActivo;
         this.regimen = new Regimen();
         this.establecimiento = new Establecimiento();
     }

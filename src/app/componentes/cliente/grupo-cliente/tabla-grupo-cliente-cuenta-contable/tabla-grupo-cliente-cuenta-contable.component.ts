@@ -59,7 +59,7 @@ export class TablaGrupoClienteCuentaContableComponent implements OnInit {
   }
 
   consultar() {
-    this.cuentaContableService.consultarPorEmpresaYEstado(this.empresa.id, valores.activo).subscribe({
+    this.cuentaContableService.consultarPorEmpresaYEstado(this.empresa.id, valores.estadoActivo).subscribe({
       next: res => {
         this.cuentasContables = res.resultado as CuentaContable[]
         this.llenarDataSource(this.cuentasContables);

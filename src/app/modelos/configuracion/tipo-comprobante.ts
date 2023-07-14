@@ -16,6 +16,6 @@ export class TipoComprobante {
         this.abreviatura = valores.vacio;
         this.nombreTabla = valores.vacio;
         this.electronica = valores.no;
-        this.estado = valores.activo;
+        this.estado = valores.estadoActivo;
     }
 }

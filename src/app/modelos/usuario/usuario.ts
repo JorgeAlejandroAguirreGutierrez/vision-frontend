@@ -38,7 +38,7 @@ export class Usuario {
       this.cambiarContrasena = valores.si;
       this.pregunta = valores.vacio;
       this.respuesta = valores.vacio;
-      this.estado = valores.activo;
+      this.estado = valores.estadoActivo;
       this.perfil = new Perfil();
       this.estacion=new Estacion();
     }

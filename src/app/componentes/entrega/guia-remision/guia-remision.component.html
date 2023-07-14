@@ -6,30 +6,41 @@
                     <mat-icon>file_copy</mat-icon>
                 </a>
             </li>
-            <li class="nav-item" *ngIf="guiaRemision.id==0">
+            <li class="nav-item" *ngIf="guiaRemision.id == 0">
                 <a class="nav-link" title="Guardar" role="button" (click)="crear($event)">
                     <mat-icon>save</mat-icon>
                 </a>
             </li>
-            <li class="nav-item" *ngIf="guiaRemision.id!=0">
+            <li class="nav-item" *ngIf="guiaRemision.id != 0">
                 <a class="nav-link" title="Actualizar" role="button" (click)="actualizar($event)">
                     <mat-icon>update</mat-icon>
                 </a>
             </li>
-            <li class="nav-item" *ngIf="guiaRemision.id!=0">
+            <li class="nav-item" *ngIf="guiaRemision.id != 0 && guiaRemision.estado == estadoInactivo">
                 <a class="nav-link" title="Activar" role="button" (click)="activar($event)">
                     <mat-icon>check</mat-icon>
                 </a>
-            </li>
-            <li class="nav-item" *ngIf="guiaRemision.id!=0">
+            </li> 
+            <li class="nav-item" *ngIf="guiaRemision.id != 0 && guiaRemision.estado == estadoActivo">
                 <a class="nav-link" title="Inactivar" role="button" (click)="inactivar($event)">
                     <mat-icon>delete</mat-icon>
                 </a>
             </li>
-            <li class="nav-item" *ngIf="guiaRemision.id!=0">
+            <li class="nav-item" *ngIf="guiaRemision.id != 0 && guiaRemision.estado == estadoActivo && guiaRemision.estadoInterno == estadoInternoEmitida && guiaRemision.estadoSri == estadoSriPendiente">
                 <a class="nav-link" title="Crear Guia Remision Electronica" href="#" role="button"
                     (click)="crearGuiaRemisionElectronica($event)">
                     <mat-icon>publish</mat-icon>
+                </a>
+            </li>
+            <li class="nav-item" *ngIf="guiaRemision.estado == estadoActivo && guiaRemision.estadoInterno == estadoInternoEmitida">
+                <a class="nav-link" title="Obtener PDF" href="#" role="button" (click)="obtenerPDF($event)">
+                    <mat-icon>picture_as_pdf</mat-icon>
+                </a>
+            </li>
+            <li class="nav-item" *ngIf="guiaRemision.estado == estadoActivo && guiaRemision.estadoInterno == estadoInternoEmitida && guiaRemision.estadoSri == estadoSriAutorizada">
+                <a class="nav-link" title="Enviar PDF Y XML" href="#" role="button"
+                    (click)="enviarPDFYXML($event)">
+                    <mat-icon>forward_to_inbox</mat-icon>
                 </a>
             </li>
         </ul>
@@ -279,12 +290,8 @@
                     <mat-form-field appearance="standard">
                         <mat-label>Estado</mat-label>
                         <mat-select class="form-control-sm" [(ngModel)]="guiaRemision.estado" [disabled]="true">
-                            <mat-option [value]="emitida">{{emitida}}</mat-option>
-                            <mat-option [value]="anulada">{{anulada}}</mat-option>
-                            <mat-option [value]="noFacturada">{{noFacturada}}</mat-option>
-                            <mat-option [value]="facturada">{{facturada}}</mat-option>
-                            <mat-option [value]="noRecaudada">{{noRecaudada}}</mat-option>
-                            <mat-option [value]="recaudada">{{recaudada}}</mat-option>
+                            <mat-option [value]="estadoActivo">{{estadoActivo}}</mat-option>
+                            <mat-option [value]="estadoInactivo">{{estadoInactivo}}</mat-option>
                         </mat-select>
                     </mat-form-field>
                 </div>

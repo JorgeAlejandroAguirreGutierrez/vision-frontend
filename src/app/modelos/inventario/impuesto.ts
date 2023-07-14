@@ -13,6 +13,6 @@ export class Impuesto {
         this.codigo = valores.vacio;
         this.codigoSRI = valores.vacio;
         this.porcentaje = valores.cero;
-        this.estado = valores.activo;
+        this.estado = valores.estadoActivo;
     }
 }

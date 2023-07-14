@@ -25,6 +25,7 @@ import { GuiaRemisionElectronicaService } from '../../../servicios/entrega/guia-
 
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
   selector: 'app-guia-remision',
@@ -37,15 +38,18 @@ export class GuiaRemisionComponent implements OnInit {
 
   cargar = false;
   hoy = new Date();
+
+  estadoActivo: string = valores.estadoActivo;
+  estadoInactivo: string = valores.estadoInactivo;
+  estadoInternoEmitida: string = valores.estadoInternoEmitida;
+  estadoInternoRecaudada: string = valores.estadoInternoRecaudada;
+  estadoInternoAnulada: string = valores.estadoInternoAnulada
+  estadoSriPendiente: string = valores.estadoSriPendiente;
+  estadoSriAutorizada: string = valores.estadoSriAutorizada;
+  estadoSriAnulada: string = valores.estadoSriAnulada;
   
   si = valores.si;
   no = valores.no;
-  emitida = valores.emitida;
-  anulada = valores.anulada;
-  noFacturada = valores.noFacturada;
-  facturada = valores.facturada;
-  noRecaudada = valores.noRecaudada;
-  recaudada = valores.recaudada;
   clienteDireccion = valores.clienteDireccion;
   nuevaDireccion = valores.nuevaDireccion;
 
@@ -88,7 +92,7 @@ export class GuiaRemisionComponent implements OnInit {
   dataSourceLinea = new MatTableDataSource<FacturaLinea>(this.guiaRemision.factura.facturaLineas);
 
   constructor(private clienteService: ClienteService, private sesionService: SesionService, private guiaRemisionElectronicaService: GuiaRemisionElectronicaService, 
-    private vehiculoService: VehiculoService, private datepipe: DatePipe,
+    private vehiculoService: VehiculoService, private spinnerService: NgxSpinnerService, private datepipe: DatePipe,
     private router: Router, private guiaRemisionService: GuiaRemisionService, private facturaService: FacturaService, private transportistaService: TransportistaService, private dateAdapter: DateAdapter<Date>) { this.dateAdapter.setLocale('en-GB') }
 
   @HostListener('window:keypress', ['$event'])
@@ -118,7 +122,7 @@ export class GuiaRemisionComponent implements OnInit {
     );
   }
   consultarTransportistas() {
-    this.transportistaService.consultarPorEmpresaYEstado(this.empresa.id, valores.activo).subscribe({
+    this.transportistaService.consultarPorEmpresaYEstado(this.empresa.id, valores.estadoActivo).subscribe({
       next: res => {
         this.transportistas = res.resultado as Transportista[]
       },
@@ -126,7 +130,7 @@ export class GuiaRemisionComponent implements OnInit {
     });
   }
   consultarVehiculos(){
-    this.vehiculoService.consultarPorEmpresaYEstado(this.empresa.id, valores.activo).subscribe(
+    this.vehiculoService.consultarPorEmpresaYEstado(this.empresa.id, valores.estadoActivo).subscribe(
       res => {
         this.vehiculos = res.resultado as Vehiculo[]
       },
@@ -347,5 +351,27 @@ export class GuiaRemisionComponent implements OnInit {
   }
   verFactura(factura: Factura): string {
     return factura && factura.secuencial ? factura.secuencial : valores.vacio;
+  }
+
+  obtenerPDF(event){
+    if (event != null)
+      event.preventDefault();
+    this.guiaRemisionElectronicaService.obtenerPDF(this.guiaRemision.id);
+  }
+  
+  enviarPDFYXML(event){
+    if (event != null)
+      event.preventDefault();
+    this.spinnerService.show();
+    this.guiaRemisionElectronicaService.enviarPDFYXML(this.guiaRemision.id).subscribe({
+      next: res => {
+        Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
+        this.spinnerService.hide();  
+      },
+      error: err => {
+        Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+        this.spinnerService.hide();  
+      }
+    });
   }
 }

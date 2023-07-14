@@ -39,8 +39,8 @@ import { MatTableDataSource } from '@angular/material/table';
 
 export class ProductoComponent implements OnInit {
 
-  activo: string = valores.activo;
-  inactivo: string = valores.inactivo;
+  activo: string = valores.estadoActivo;
+  inactivo: string = valores.estadoInactivo;
   si: string = valores.si;
   no: string = valores.no;
   pvpServicioAF: number = valores.cero;
@@ -121,7 +121,7 @@ export class ProductoComponent implements OnInit {
   }
 
   consultarProveedor(){
-    this.proveedorService.consultarPorEmpresaYEstado(this.empresa.id, valores.activo).subscribe({
+    this.proveedorService.consultarPorEmpresaYEstado(this.empresa.id, valores.estadoActivo).subscribe({
       next: res => {
         this.proveedores = res.resultado as Proveedor[];
       },
@@ -129,7 +129,7 @@ export class ProductoComponent implements OnInit {
     });
   }
   consultarImpuesto(){
-    this.impuestoService.consultarPorEstado(valores.activo).subscribe({
+    this.impuestoService.consultarPorEstado(valores.estadoActivo).subscribe({
       next: res => {
         this.impuestos = res.resultado as Impuesto[];
       },
@@ -145,7 +145,7 @@ export class ProductoComponent implements OnInit {
     });
   }
   consultarMedida(){
-    this.medidaService.consultarPorEmpresaYEstado(this.empresa.id, valores.activo).subscribe({
+    this.medidaService.consultarPorEmpresaYEstado(this.empresa.id, valores.estadoActivo).subscribe({
       next: res => {
         this.medidas = res.resultado as Medida[];
       },
@@ -153,7 +153,7 @@ export class ProductoComponent implements OnInit {
     });
   }
   consultarBodega(){
-    this.bodegaService.consultarPorEmpresaYEstado(this.empresa.id, valores.activo).subscribe({
+    this.bodegaService.consultarPorEmpresaYEstado(this.empresa.id, valores.estadoActivo).subscribe({
       next: res => {
         this.bodegas = res.resultado as Bodega[];
       },
@@ -161,7 +161,7 @@ export class ProductoComponent implements OnInit {
     });
   }
   consultarSegmento(){
-    this.segmentoService.consultarPorEmpresaYEstado(this.empresa.id, valores.activo).subscribe({
+    this.segmentoService.consultarPorEmpresaYEstado(this.empresa.id, valores.estadoActivo).subscribe({
       next: res => {
         this.segmentos = res.resultado as Segmento[];
       },

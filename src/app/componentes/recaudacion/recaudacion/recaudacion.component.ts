@@ -59,14 +59,16 @@ export class RecaudacionComponent implements OnInit, OnChanges {
 
   menosUno: number = valores.menosUno;
 
+  estadoActivo: string = valores.estadoActivo;
+  estadoInactivo: string = valores.estadoInactivo;
+  estadoInternoEmitida: string = valores.estadoInternoEmitida;
+  estadoInternoRecaudada: string = valores.estadoInternoRecaudada;
+  estadoInternoAnulada: string = valores.estadoInternoAnulada
+  estadoSriPendiente: string = valores.estadoSriPendiente;
+  estadoSriAutorizada: string = valores.estadoSriAutorizada;
+  estadoSriAnulada: string = valores.estadoSriAnulada;
   si: string = valores.si;
   no: string = valores.no;
-  emitida: string = valores.emitida;
-  anulada: string = valores.anulada;
-  noFacturada: string = valores.noFacturada;
-  facturada: string = valores.facturada;
-  noRecaudada: string = valores.noRecaudada;
-  recaudada: string = valores.recaudada;
   chequeALaVista: string = valores.chequeALaVista;
   chequePosfechado: string = valores.chequePosfechado;
   transferenciaDirecta: string = valores.transferenciaDirecta;
@@ -202,7 +204,7 @@ export class RecaudacionComponent implements OnInit, OnChanges {
   @ViewChild('MatPaginatorTarjetasDebito') paginatorTarjetasDebito: MatPaginator;
 
   constructor(private facturaService: FacturaService, private facturaElectronicaService: FacturaElectronicaService,
-    private clienteService: ClienteService, private bancoService: BancoService, private sesionService: SesionService,
+    private bancoService: BancoService, private sesionService: SesionService,
     private cuentaPropiaService: CuentaPropiaService, private operadorTarjetaService: OperadorTarjetaService, private datePipe: DatePipe,
     private franquiciaTarjetaService: FranquiciaTarjetaService, private formaPagoService: FormaPagoService,
     private parametroService: ParametroService, private router: Router, private spinnerService: NgxSpinnerService) { }
@@ -216,16 +218,9 @@ export class RecaudacionComponent implements OnInit, OnChanges {
     this.consultarFranquiciasTarjetas();
     this.consultarOperadoresTarjetas();
     this.inicializarFiltros();
-
-    /*this.facturaService.eventoRecaudacion.subscribe((data: Factura) => {
-      this.factura = data;
-      this.llenarTablasFormasPago();
-      this.nuevo();
-    });*/
   }
 
   ngOnChanges() {
-    //console.log('Código ejecutado despues de recibir datos del componente padre');
     this.llenarTablasFormasPago();
     this.nuevo();
   }
@@ -248,7 +243,7 @@ export class RecaudacionComponent implements OnInit, OnChanges {
     });
   }
   consultarBancosPropios() {
-    this.cuentaPropiaService.consultarBancoDistintoPorEmpresaYEstado(this.empresa.id, valores.activo).subscribe({
+    this.cuentaPropiaService.consultarBancoDistintoPorEmpresaYEstado(this.empresa.id, valores.estadoActivo).subscribe({
       next: res => {
         this.bancosPropios = res.resultado as String[]
       },
@@ -284,8 +279,7 @@ export class RecaudacionComponent implements OnInit, OnChanges {
   crearRecaudacion(event) {
     if (event != null)
       event.preventDefault();
-    this.spinnerService.show();  
-      //console.log(this.factura);
+    this.spinnerService.show();
     this.facturaService.recaudar(this.factura).subscribe({
       next: res => {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
