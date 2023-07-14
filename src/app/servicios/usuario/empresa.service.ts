@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Empresa } from '../../modelos/usuario/empresa';
 import { Respuesta } from '../../respuesta';
-import { urn, options } from '../../constantes';
+import { urn, options, optionsCargarArchivo } from '../../constantes';
 import {HttpClient} from '@angular/common/http';
 import { map, catchError } from 'rxjs/operators';
 import { Observable, throwError } from 'rxjs';
@@ -82,5 +82,18 @@ export class EmpresaService {
         return throwError(()=>err);
       })
     );
-  }  
+  }
+
+  subirCertificado(empresaId: number, file: File): Observable<Respuesta> {
+    // Create form data
+    const formData = new FormData(); 
+    // Store form name as "file" with file data
+    formData.append("file", file, file.name);
+    return this.http.post(environment.host + urn.ruta + urn.empresa + urn.subirCertificado + urn.slash + empresaId, formData, optionsCargarArchivo).pipe(
+      map(response => response as Respuesta),
+      catchError(err => {
+        return throwError(()=>err);
+      })
+    );
+  }
 }
