@@ -645,19 +645,19 @@ export class FacturaComponent implements OnInit {
   inicializarFiltros() {
     this.filtroProductos = this.controlProducto.valueChanges
       .pipe(
-        startWith(''),
+        startWith(valores.vacio),
         map(value => typeof value === 'string' || value == null ? value : value.id),
         map(nombre => typeof nombre === 'string' ? this.filtroProducto(nombre) : this.productos.slice())
       );
     this.filtroIdentificacionClientes = this.controlIdentificacionCliente.valueChanges
       .pipe(
-        startWith(''),
+        startWith(valores.vacio),
         map(value => typeof value === 'string' || value == null ? value : value.id),
         map(identificacion => typeof identificacion === 'string' ? this.filtroIdentificacionCliente(identificacion) : this.clientes.slice())
       );
     this.filtroRazonSocialClientes = this.controlRazonSocialCliente.valueChanges
       .pipe(
-        startWith(''),
+        startWith(valores.vacio),
         map(value => typeof value === 'string' || value == null ? value : value.id),
         map(razon_social => typeof razon_social === 'string' ? this.filtroRazonSocialCliente(razon_social) : this.clientes.slice())
       );
