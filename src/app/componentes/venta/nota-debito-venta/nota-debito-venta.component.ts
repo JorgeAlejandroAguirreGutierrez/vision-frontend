@@ -179,6 +179,7 @@ export class NotaDebitoVentaComponent implements OnInit {
     this.empresa = this.sesion.usuario.estacion.establecimiento.empresa;
     this.consultar();
     this.consultarClientes();
+    this.consultarProductos();
     this.consultarImpuestos();
     this.consultarCategoriasProductos();
     this.consultarBodegas();
