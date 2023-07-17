@@ -56,6 +56,11 @@
                             <mat-icon>forward_to_inbox</mat-icon>
                         </a>
                     </li>
+                    <li class="nav-item" *ngIf="factura.estado == estadoActivo && factura.estadoInterno == estadoInternoRecaudada">
+                        <a class="nav-link" title="Obtener TICKET" href="#" role="button" (click)="obtenerTicket($event)">
+                            <mat-icon>format_align_justify</mat-icon>
+                        </a>
+                    </li>
                     <li class="nav-item">
                         <a class="nav-link" title="Recaudación" role="button" (click)="stepperSiguiente(stepper)">
                             <mat-icon>redo</mat-icon>

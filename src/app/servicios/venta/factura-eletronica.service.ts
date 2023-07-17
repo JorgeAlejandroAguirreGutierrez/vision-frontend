@@ -46,4 +46,22 @@ export class FacturaElectronicaService {
         return throwError(() => err);
       }));
   }
+
+  obtenerTicket(facturaId: number) {
+    this.http.get(environment.host + urn.ruta + urn.facturaElectronica + urn.obtenerTicket + urn.slash + facturaId, optionsGenerarArchivo)
+    .subscribe((blob: Blob) => {
+      const fileName = "ticket.pdf";
+      let link = document.createElement("a");
+      if (link.download !== undefined) 
+      {
+          let url = URL.createObjectURL(blob);
+          link.setAttribute("href", url);
+          link.setAttribute("download", fileName);
+          link.style.visibility = 'hidden';
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+      }
+    });
+  }
 }
