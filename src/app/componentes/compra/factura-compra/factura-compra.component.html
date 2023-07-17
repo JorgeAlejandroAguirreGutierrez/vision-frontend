@@ -74,7 +74,7 @@
                             <mat-autocomplete #proveedor="matAutocomplete" [displayWith]="verProveedor"
                                 (optionSelected)="seleccionarProveedor()">
                                 <mat-option *ngFor="let proveedor of filtroProveedores | async" [value]="proveedor">
-                                    {{proveedor.razonSocial}}
+                                    {{ proveedor.nombreComercial }}
                                 </mat-option>
                             </mat-autocomplete>
                         </mat-form-field>

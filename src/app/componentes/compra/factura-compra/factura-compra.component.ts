@@ -1,4 +1,4 @@
-import { Component, HostListener, OnInit, ViewChild, Type, ElementRef, Renderer2 } from '@angular/core';
+import { Component, HostListener, OnInit, ViewChild, ElementRef, Renderer2 } from '@angular/core';
 import { UntypedFormControl } from '@angular/forms';
 import { valores, mensajes, validarSesion, exito, exito_swal, error, error_swal } from '../../../constantes';
 import { Router } from '@angular/router';
@@ -573,7 +573,7 @@ export class FacturaCompraComponent implements OnInit {
     return [];
   }
   verProveedor(proveedor: Proveedor): string {
-    return proveedor && proveedor.razonSocial ? proveedor.razonSocial : valores.vacio;
+    return proveedor && proveedor.nombreComercial ? proveedor.nombreComercial : valores.vacio;
   }
 
   //VALIDACIONES
