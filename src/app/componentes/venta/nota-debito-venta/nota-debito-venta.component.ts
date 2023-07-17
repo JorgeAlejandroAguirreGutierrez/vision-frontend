@@ -79,7 +79,6 @@ export class NotaDebitoVentaComponent implements OnInit {
   categoriasProductos: CategoriaProducto[] = [];
   precioVentaPublicoManual: number = valores.cero;
   indiceLinea: number;
-  esBien: boolean = true; 
   
 
   columnas: any[] = [
@@ -211,7 +210,6 @@ export class NotaDebitoVentaComponent implements OnInit {
   }
 
   construir() {
-    console.log(this.notaDebitoVenta);
     let fecha = new Date(this.notaDebitoVenta.fecha);
     this.notaDebitoVenta.fecha = fecha;
     this.controlIdentificacionCliente.patchValue(this.notaDebitoVenta.factura.cliente);
@@ -346,11 +344,11 @@ export class NotaDebitoVentaComponent implements OnInit {
   seleccionarProducto() {
     this.notaDebitoVentaLinea.producto = this.controlProducto.value;
     this.notaDebitoVentaLinea.impuesto = this.notaDebitoVentaLinea.producto.impuesto;
-    if (this.notaDebitoVentaLinea.producto.categoriaProducto.id == 1){
-      this.esBien = true } else { this.esBien = false };
-    if(this.notaDebitoVentaLinea.producto.id == valores.cero || this.notaDebitoVentaLinea.bodega.id == valores.cero || this.notaDebitoVenta.factura.cliente.id == valores.cero){
+    if(this.notaDebitoVentaLinea.producto.id == valores.cero || this.notaDebitoVenta.factura.cliente.id == valores.cero){
+      Swal.fire({ icon: error_swal, title: error, text: mensajes.error_factura })
       return;
     }
+    
     for(let precio of this.notaDebitoVentaLinea.producto.precios){
       if (precio.segmento.id == this.notaDebitoVenta.factura.cliente.segmento.id){
         this.notaDebitoVentaLinea.precio = precio;
@@ -358,27 +356,6 @@ export class NotaDebitoVentaComponent implements OnInit {
         this.calcularLinea();
       }
     }
-    this.inicializarOpciones(); // Error si no tiene bodega
-    if (this.esBien){
-      this.obtenerUltimoKardex();
-    }
-  }
-
-  inicializarOpciones() {
-    this.notaDebitoVentaLinea.bodega = this.bodegas[0];
-  }
-
-  obtenerUltimoKardex(){
-    this.kardexService.obtenerUltimoPorBodega(this.notaDebitoVentaLinea.bodega.id, this.notaDebitoVentaLinea.producto.id).subscribe(
-      res => {
-        if (res.resultado == null){
-          Swal.fire({ icon: error_swal, title: error, text: mensajes.error_kardex_vacio });
-          return;
-        }
-        this.kardex = res.resultado as Kardex;
-      },
-      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
-    );
   }
 
   consultarClientes(){
@@ -691,6 +668,7 @@ export class NotaDebitoVentaComponent implements OnInit {
     if (this.notaDebitoVentaLinea.impuesto.id == valores.cero){
       return;
     }
+    this.notaDebitoVentaLinea.precioUnitario = Number((this.precioVentaPublicoManual * 100 / (100 + this.notaDebitoVentaLinea.impuesto.porcentaje)).toFixed(4));
     this.notaDebitoVentaService.calcularLinea(this.notaDebitoVentaLinea).subscribe(
       res => {
         this.notaDebitoVentaLinea = res.resultado as NotaDebitoVentaLinea;

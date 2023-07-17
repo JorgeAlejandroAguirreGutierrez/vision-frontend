@@ -31,7 +31,7 @@
                     <mat-icon>point_of_sale</mat-icon>
                 </a>
             </li>
-            <li class="nav-item" *ngIf="notaCreditoVenta.estado == estadoActivo && notaCreditoVenta.estadoInterno == estadoInternoEmitida">
+            <li class="nav-item" *ngIf="notaCreditoVenta.id != 0 && notaCreditoVenta.estado == estadoActivo && notaCreditoVenta.estadoInterno == estadoInternoEmitida">
                 <a class="nav-link" title="Obtener PDF" href="#" role="button" (click)="obtenerPDF($event)">
                     <mat-icon>picture_as_pdf</mat-icon>
                 </a>

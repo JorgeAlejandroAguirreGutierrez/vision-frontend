@@ -325,7 +325,7 @@
                                             <mat-label>Bodega</mat-label>
                                             <mat-select [(ngModel)]="notaDebitoVentaLinea.bodega"
                                                 (selectionChange)="seleccionarBodega()" [compareWith]="compareFn"
-                                                class="form-control-sm" [disabled]="!esBien">
+                                                class="form-control-sm" [disabled]="true">
                                                 <mat-option *ngFor="let bodega of bodegas; let i=index"
                                                     [value]="bodega">
                                                     {{bodega.abreviatura}}

@@ -41,8 +41,8 @@ import { Empresa } from 'src/app/modelos/usuario/empresa';
 })
 export class ProveedorComponent implements OnInit {
 
-  activo: string = valores.estadoActivo;
-  inactivo: string = valores.estadoInactivo;
+  estadoActivo: string = valores.estadoActivo;
+  estadoInactivo: string = valores.estadoInactivo;
   si: string = valores.si;
   no: string = valores.no;
   provincia: string = valores.vacio;
@@ -420,7 +420,7 @@ export class ProveedorComponent implements OnInit {
     this.proveedorService.validarIdentificacionPorEmpresa(this.empresa.id, this.proveedor.identificacion).subscribe({
       next: (res) => {
         this.proveedor = res.resultado as Proveedor;
-        if (this.proveedor.ubicacion.id != 0){
+        if (this.proveedor.ubicacion.id != valores.cero){
           this.llenarUbicacion();
         }
         this.validarDocumento();

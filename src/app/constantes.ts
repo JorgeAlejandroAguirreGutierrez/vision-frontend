@@ -316,7 +316,8 @@ export const mensajes = {
     error_falta_correo: "DEBE AGREGAR POR LO MENOS UN CORREO ELECTRÓNICO PARA LA FACTURACIÓN",
     error_falta_imagen: "DEBE SELECCIONAR UNA IMAGEN",
     error_ruc: "DEBE INGRESAR UN RUC",
-    error_permiso_existe: "EL PERMISO YA SE ENCUENTRA AGREGADO"
+    error_permiso_existe: "EL PERMISO YA SE ENCUENTRA AGREGADO",
+    error_factura: "ERROR SELECCIONAR LA FACTURA"
 }
 
 export const otras = {
