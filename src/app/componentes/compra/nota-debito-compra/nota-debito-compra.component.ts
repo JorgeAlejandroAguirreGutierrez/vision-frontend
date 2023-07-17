@@ -93,7 +93,6 @@ export class NotaDebitoCompraComponent implements OnInit {
   notaDebitoCompra: NotaDebitoCompra = new NotaDebitoCompra();
   notaDebitoCompraLinea: NotaDebitoCompraLinea = new NotaDebitoCompraLinea();
   kardex: Kardex = new Kardex();
-  categoriaProducto = valores.vacio;
 
   columnasLinea: string[] = ["codigo", 'nombre', 'medida', 'cantidad', 'costoUnitario', 'valorDescuento', 'porcentajeDescuento', 'impuesto', 'bodega', 'total'];
   dataSourceLinea = new MatTableDataSource<NotaDebitoCompraLinea>(this.notaDebitoCompra.notaDebitoCompraLineas);
@@ -256,44 +255,13 @@ export class NotaDebitoCompraComponent implements OnInit {
   }
 
   consultarProductos(){
-    if (this.categoriaProducto == valores.bien){
-      this.consultarBienPorProveedor(this.notaDebitoCompra.facturaCompra.proveedor.id);
-    }
-    if (this.categoriaProducto == valores.servicio){
-      this.consultarServicioPorProveedor(this.notaDebitoCompra.facturaCompra.proveedor.id);
-    }
-    if (this.categoriaProducto == valores.activoFijo){
-      this.consultarActivoFijoPorProveedor(this.notaDebitoCompra.facturaCompra.proveedor.id);
-    }
-  }
-  consultarBienPorProveedor(proveedorId: number) {
-    this.productoService.consultarPorCategoriaProductoYProveedorYEmpresaYEstado(valores.bien, proveedorId, this.empresa.id, valores.estadoActivo).subscribe(
+    this.productoService.consultarPorCategoriaProductoYProveedorYEmpresaYEstado(valores.bien, this.notaDebitoCompra.facturaCompra.proveedor.id, this.empresa.id, valores.estadoActivo).subscribe(
       res => {
         this.productos = res.resultado as Producto[]
       },
       err => {
         Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
       } 
-    );
-  }
-  consultarServicioPorProveedor(proveedorId: number) {
-    this.productoService.consultarPorCategoriaProductoYProveedorYEmpresaYEstado(valores.servicio, proveedorId, this.empresa.id, valores.estadoActivo).subscribe(
-      res => {
-        this.productos = res.resultado as Producto[]
-      },
-      err => {
-        Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
-      } 
-    );
-  }
-  consultarActivoFijoPorProveedor(proveedorId: number) {
-    this.productoService.consultarPorCategoriaProductoYProveedorYEmpresaYEstado(valores.activoFijo, proveedorId, this.empresa.id, valores.estadoActivo).subscribe(
-      res => {
-        this.productos = res.resultado as Producto[]
-      },
-      err => {
-        Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
-      }
     );
   }
 
