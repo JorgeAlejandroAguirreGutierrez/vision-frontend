@@ -385,19 +385,7 @@
                     </div>
                 </div>
                 <div class="form-row col-9 linea-vertical">
-                    <div class="col-1">
-                        <mat-form-field appearance="standard">
-                            <mat-label>Tipo</mat-label>
-                            <mat-select [(ngModel)]="categoriaProducto" (selectionChange)="consultarProductos()"
-                                class="form-control-sm">
-                                <mat-option *ngFor="let categoriaProducto of categoriasProductos"
-                                    [value]="categoriaProducto.abreviatura">
-                                    {{categoriaProducto.descripcion}}
-                                </mat-option>
-                            </mat-select>
-                        </mat-form-field>
-                    </div>
-                    <div class="col-8">
+                    <div class="col-9">
                         <mat-form-field appearance="standard">
                             <mat-label>Producto</mat-label>
                             <mat-autocomplete #producto="matAutocomplete" [displayWith]="verProducto"
