@@ -1,27 +1,30 @@
-import { Proveedor } from './proveedor';
 import { Sesion } from '../usuario/sesion';
 import { valores } from "../../constantes";
 import { TipoComprobante } from '../configuracion/tipo-comprobante';
 import { NotaCreditoCompraLinea } from './nota-credito-compra-linea';
 import { FacturaCompra } from './factura-compra';
-import { Bodega } from '../inventario/bodega';
 import { Empresa } from '../usuario/empresa';
+
 export class NotaCreditoCompra {
     id: number;
     codigo: string;
-    serie: string;
+    establecimiento: string;
+    puntoVenta: string;
     secuencial: string;
+    numeroComprobante: string;
     operacion: string;
     fecha: Date;
     estado: string;
     estadoInterno: string;
+
     subtotalSinDescuento: number;
     descuentoTotal: number;
-    subtotalBase12SinDescuento: number;
-    subtotalBase0SinDescuento: number;
+    subtotalGrabadoSinDescuento: number;
+    subtotalNoGrabadoSinDescuento: number;
     ivaSinDescuento: number;
     totalSinDescuento: number;
     totalConDescuento: number;
+
     comentario: string;
     facturaCompra: FacturaCompra;
     sesion: Sesion;
@@ -37,12 +40,14 @@ export class NotaCreditoCompra {
         this.fecha = new Date();
         this.estado = valores.estadoActivo;
         this.estadoInterno = valores.vacio;
+
         this.subtotalSinDescuento = valores.cero;
         this.descuentoTotal = valores.cero;
-        this.subtotalBase12SinDescuento = valores.cero;
-        this.subtotalBase0SinDescuento = valores.cero;
+        this.subtotalGrabadoSinDescuento = valores.cero;
+        this.subtotalNoGrabadoSinDescuento = valores.cero;
         this.ivaSinDescuento = valores.cero;
         this.totalSinDescuento = valores.cero;
+
         this.comentario = valores.vacio;
         this.facturaCompra = new FacturaCompra();
         this.sesion = new Sesion();
