@@ -34,6 +34,7 @@ export const urn =
     excel: "/excel",
     enviarPDFYXML: "/enviarPDFYXML",
     obtenerPDF: "/obtenerPDF",
+    obtenerTicket: "/obtenerTicket",
     
     // Cliente
     calificacionCliente: "/calificacionCliente",
