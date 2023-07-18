@@ -41,9 +41,8 @@ export class NotaCreditoCompraComponent implements OnInit {
   abrirPanelNuevoNC: boolean = true;
   abrirPanelNCLinea: boolean = false;
   abrirPanelAdmin: boolean = true;
+  deshabilitarCostoUnitario = false;
 
-  deshabilitarDevolucion = false;
-  deshabilitarDescuento = true;
 
   si: string = valores.si;
   no: string = valores.no;
@@ -80,7 +79,7 @@ export class NotaCreditoCompraComponent implements OnInit {
     { nombreColumna: 'fecha', cabecera: 'Fecha', celda: (row: NotaCreditoCompra) => `${this.datepipe.transform(row.fecha, "dd-MM-yyyy")}` },
     { nombreColumna: 'comprobante', cabecera: 'Comprobante', celda: (row: NotaCreditoCompra) => `${row.numeroComprobante}` },
     { nombreColumna: 'proveedor', cabecera: 'Proveedor', celda: (row: NotaCreditoCompra) => `${row.facturaCompra.proveedor.nombreComercial}` },
-    { nombreColumna: 'total', cabecera: 'Total', celda: (row: NotaCreditoCompra) => `$ ${row.totalSinDescuento}` },
+    { nombreColumna: 'total', cabecera: 'Total', celda: (row: NotaCreditoCompra) => `$ ${row.valorTotal}` },
     { nombreColumna: 'estado', cabecera: 'Estado', celda: (row: NotaCreditoCompra) => `${row.estado}` }
   ];
   cabecera: string[] = this.columnas.map(titulo => titulo.nombreColumna);
@@ -90,13 +89,14 @@ export class NotaCreditoCompraComponent implements OnInit {
   columnasLinea: any[] = [
     { nombreColumna: 'producto', cabecera: 'Producto', celda: (row: NotaCreditoCompraLinea) => `${row.producto.nombre}` },
     { nombreColumna: 'medida', cabecera: 'Medida', celda: (row: NotaCreditoCompraLinea) => `${row.producto.medida.abreviatura}` },
-    { nombreColumna: 'cantidad', cabecera: 'Cantidad', celda: (row: NotaCreditoCompraLinea) => `${row.cantidad}` },
-    { nombreColumna: 'devolucion', cabecera: 'Cant Dev', celda: (row: NotaCreditoCompraLinea) => `${row.devolucion}` },
-    { nombreColumna: 'costounitario', cabecera: 'C. Unit', celda: (row: NotaCreditoCompraLinea) => `${row.costoUnitario}` },
-    { nombreColumna: 'valorDescuento', cabecera: 'Descuento', celda: (row: NotaCreditoCompraLinea) => `${row.valorDescuentoLinea}` },
-    { nombreColumna: 'porcentajeDescuento', cabecera: 'Descuento %', celda: (row: NotaCreditoCompraLinea) => `${row.porcentajeDescuentoLinea}` },
-    { nombreColumna: 'impuesto', cabecera: 'Importe', celda: (row: NotaCreditoCompraLinea) => `${row.producto.impuesto.porcentaje}` },
-    { nombreColumna: 'subtotal', cabecera: 'Subtotal', celda: (row: NotaCreditoCompraLinea) => `${row.totalSinDescuentoLinea}` },
+    { nombreColumna: 'cantidadcompra', cabecera: 'Cant Comp', celda: (row: NotaCreditoCompraLinea) => `${row.cantidadCompra}` },
+    { nombreColumna: 'cunitariocompra', cabecera: 'C.U. Comp', celda: (row: NotaCreditoCompraLinea) => `${row.costoUnitarioCompra}` },
+    { nombreColumna: 'cantidad', cabecera: 'Cant NC', celda: (row: NotaCreditoCompraLinea) => `${row.cantidad}` },
+    { nombreColumna: 'costounitario', cabecera: 'C.U NC', celda: (row: NotaCreditoCompraLinea) => `${row.costoUnitario}` },
+    { nombreColumna: 'impuesto', cabecera: 'IVA %', celda: (row: NotaCreditoCompraLinea) => `${row.impuesto.porcentaje} %` },
+    { nombreColumna: 'subtotal', cabecera: 'Subtotal', celda: (row: NotaCreditoCompraLinea) => `${row.subtotalLinea}` },
+    { nombreColumna: 'importe', cabecera: 'Importe', celda: (row: NotaCreditoCompraLinea) => `${row.importeIvaLinea}` },
+    { nombreColumna: 'total', cabecera: 'Total', celda: (row: NotaCreditoCompraLinea) => `${row.totalLinea}` }
   ];
   cabeceraLinea: string[] = this.columnasLinea.map(titulo => titulo.nombreColumna);
   dataSourceLinea: MatTableDataSource<NotaCreditoCompraLinea>;
@@ -353,16 +353,16 @@ export class NotaCreditoCompraComponent implements OnInit {
 
   seleccionarOperacion() {
     if (this.notaCreditoCompra.operacion == valores.devolucion) {
-      this.deshabilitarDevolucion = false;
-      this.deshabilitarDescuento = true;
+      this.deshabilitarCostoUnitario = false;
+      for (let i=0; i < this.notaCreditoCompra.notaCreditoCompraLineas.length; i++){
+        this.notaCreditoCompra.notaCreditoCompraLineas[i].cantidad = valores.cero;
+      }
     }
     if (this.notaCreditoCompra.operacion == valores.descuento) {
-      this.deshabilitarDevolucion = true;
-      this.deshabilitarDescuento = false;
-    }
-    if (this.notaCreditoCompra.operacion == valores.conjunta) {
-      this.deshabilitarDevolucion = false;
-      this.deshabilitarDescuento = false;
+      this.deshabilitarCostoUnitario = true;
+      for (let i=0; i < this.notaCreditoCompra.notaCreditoCompraLineas.length; i++){
+        this.notaCreditoCompra.notaCreditoCompraLineas[i].cantidad = this.notaCreditoCompra.notaCreditoCompraLineas[i].cantidadCompra;
+      }
     }
   }
 
@@ -400,6 +400,10 @@ export class NotaCreditoCompraComponent implements OnInit {
 
   //VALIDACIONES
   validarFormulario(): boolean {
+    if (this.notaCreditoCompra.fecha == null || this.notaCreditoCompra.fecha > this.hoy){
+      Swal.fire({ icon: error_swal, title: error, text: mensajes.error_falta_datos });
+      return false;
+    }
     if (this.notaCreditoCompra.facturaCompra.id == valores.cero){
       Swal.fire({ icon: error_swal, title: error, text: mensajes.error_falta_datos });
       return false;

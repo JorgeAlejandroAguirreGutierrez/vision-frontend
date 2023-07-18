@@ -17,6 +17,7 @@ export class FacturaCompra {
     estadoInterno: string;
 
     subtotalSinDescuento: number;
+    subtotalConDescuento: number;
     descuentoTotal: number;
     subtotalGrabadoConDescuento: number;
     subtotalNoGrabadoConDescuento: number;
@@ -47,6 +48,7 @@ export class FacturaCompra {
         this.estadoInterno = valores.vacio;
 
         this.subtotalSinDescuento = valores.cero;
+        this.subtotalConDescuento = valores.cero;
         this.descuentoTotal = valores.cero;
         this.subtotalGrabadoConDescuento = valores.cero;
         this.subtotalNoGrabadoConDescuento = valores.cero;
