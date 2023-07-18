@@ -288,6 +288,12 @@ export class FacturaComponent implements OnInit {
     });
   }
 
+  obtenerTicket(event){
+    if (event != null)
+      event.preventDefault();
+    this.facturaElectronicaService.obtenerTicket(this.factura.id);
+  }
+
   actualizar(event) {
     if (event != null)
       event.preventDefault();
