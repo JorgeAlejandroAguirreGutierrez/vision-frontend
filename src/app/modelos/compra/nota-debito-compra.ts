@@ -7,8 +7,10 @@ import { Empresa } from '../usuario/empresa';
 export class NotaDebitoCompra {
     id: number;
     codigo: string;
-    serie: string;
+    establecimiento: string;
+    puntoVenta: string;
     secuencial: string;
+    numeroComprobante: string;
     fecha: Date;
     estado: string;
     estadoInterno: string;
