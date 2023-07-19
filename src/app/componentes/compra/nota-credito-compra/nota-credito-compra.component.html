@@ -98,15 +98,21 @@
                             </mat-autocomplete>
                         </mat-form-field>
                     </div>
-                    <div class="col-5">
+                    <div class="col-3">
                         <mat-form-field appearance="standard">
                             <mat-label>Operacion</mat-label>
                             <mat-select [(ngModel)]="notaCreditoCompra.operacion"
                                 (selectionChange)="seleccionarOperacion()" class="form-control-sm">
                                 <mat-option [value]="devolucion">{{devolucion}}</mat-option>
                                 <mat-option [value]="descuento">{{descuento}}</mat-option>
-                                <mat-option [value]="conjunta">{{conjunta}}</mat-option>
                             </mat-select>
+                        </mat-form-field>
+                    </div>
+                    <div class="col-2">
+                        <mat-form-field appearance="standard">
+                            <mat-label>V. Descuento</mat-label>
+                            <input matInput type="text" [(ngModel)]="notaCreditoCompra.descuento" class="form-control-sm"
+                                (change)="calcular()" [disabled]="!deshabilitarCostoUnitario">
                         </mat-form-field>
                     </div>
                 </div>
@@ -173,32 +179,19 @@
                             [matColumnDef]="columna.nombreColumna">
                             <th mat-header-cell *matHeaderCellDef mat-sort-header class="centrarCabecera"> {{ columna.cabecera }} </th>
                             <td mat-cell *matCellDef="let row; let i=index" >
-                                <ng-container *ngIf="columna.nombreColumna!='devolucion' && columna.nombreColumna!='costounitario' && 
-                                    columna.nombreColumna!='valorDescuento' && columna.nombreColumna!='porcentajeDescuento' ">
+                                <ng-container *ngIf="columna.nombreColumna!='cantidad' && columna.nombreColumna!='costounitario'">
                                     {{ columna.celda(row) }}
                                 </ng-container>
-                                <ng-container *ngIf="columna.nombreColumna=='devolucion'">
+                                <ng-container *ngIf="columna.nombreColumna=='cantidad'">
                                     <mat-form-field floatLabel="never">
-                                        <input matInput type="text" appFormatoDecimal [(ngModel)]="row.devolucion" 
-                                        (change)="calcular()" [disabled]="deshabilitarDevolucion">
+                                        <input matInput type="text" appFormatoDecimal [(ngModel)]="row.cantidad" 
+                                        (change)="calcular()">
                                     </mat-form-field>
                                 </ng-container>
                                 <ng-container *ngIf="columna.nombreColumna=='costounitario'">
                                     <mat-form-field floatLabel="never">
                                         <input matInput type="text" appFormatoDecimal [(ngModel)]="row.costoUnitario"
-                                        (change)="calcular()" [disabled]="deshabilitarDevolucion">
-                                    </mat-form-field>
-                                </ng-container>
-                                <ng-container *ngIf="columna.nombreColumna=='valorDescuento'">
-                                    <mat-form-field floatLabel="never">
-                                        <input matInput type="text" appFormatoDecimal [(ngModel)]="row.valorDescuentoLinea" 
-                                        (change)="calcular()" [disabled]="deshabilitarDescuento">
-                                    </mat-form-field>
-                                </ng-container>
-                                <ng-container *ngIf="columna.nombreColumna=='porcentajeDescuento'">
-                                    <mat-form-field floatLabel="never">
-                                        <input matInput type="text" appFormatoDecimal [(ngModel)]="row.valorDescuentoLinea" 
-                                        (change)="calcular()" [disabled]="deshabilitarDescuento">
+                                        (change)="calcular()" [disabled]="deshabilitarCostoUnitario">
                                     </mat-form-field>
                                 </ng-container>
                             </td>
@@ -234,16 +227,7 @@
                                 </div>
                                 <div class="col-5">
                                     <mat-form-field appearance="standard">
-                                        <input matInput type="text" [(ngModel)]="notaCreditoCompra.subtotalSinDescuento"
-                                            class="form-control-sm" [disabled]="true">
-                                    </mat-form-field>
-                                </div>
-                                <div class="col-7 negrita centrar-vertical-izq">
-                                    <mat-label>Descuento :</mat-label>
-                                </div>
-                                <div class="col-5">
-                                    <mat-form-field appearance="standard">
-                                        <input matInput type="text" [(ngModel)]="notaCreditoCompra.descuentoTotal"
+                                        <input matInput type="text" [(ngModel)]="notaCreditoCompra.subtotal"
                                             class="form-control-sm" [disabled]="true">
                                     </mat-form-field>
                                 </div>
@@ -253,7 +237,7 @@
                                 <div class="col-5">
                                     <mat-form-field appearance="standard">
                                         <input matInput type="text "
-                                            [(ngModel)]="notaCreditoCompra.subtotalGrabadoSinDescuento"
+                                            [(ngModel)]="notaCreditoCompra.subtotalGrabado"
                                             class="form-control-sm" [disabled]="true">
                                     </mat-form-field>
                                 </div>
@@ -263,7 +247,7 @@
                                 <div class="col-5">
                                     <mat-form-field appearance="standard">
                                         <input matInput type="text "
-                                            [(ngModel)]="notaCreditoCompra.subtotalNoGrabadoSinDescuento"
+                                            [(ngModel)]="notaCreditoCompra.subtotalNoGrabado"
                                             class="form-control-sm " [disabled]="true">
                                     </mat-form-field>
                                 </div>
@@ -272,7 +256,7 @@
                                 </div>
                                 <div class="col-5">
                                     <mat-form-field appearance="standard">
-                                        <input matInput type="text " [(ngModel)]="notaCreditoCompra.ivaSinDescuento"
+                                        <input matInput type="text " [(ngModel)]="notaCreditoCompra.importeIvaTotal"
                                             class="form-control-sm " [disabled]="true">
                                     </mat-form-field>
                                 </div>
@@ -281,7 +265,7 @@
                                 </div>
                                 <div class="col-5">
                                     <mat-form-field appearance="standard">
-                                        <input matInput type="text " [(ngModel)]="notaCreditoCompra.totalSinDescuento"
+                                        <input matInput type="text " [(ngModel)]="notaCreditoCompra.valorTotal"
                                             class="form-control-sm" [disabled]="true">
                                     </mat-form-field>
                                 </div>

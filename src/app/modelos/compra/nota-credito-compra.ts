@@ -14,16 +14,15 @@ export class NotaCreditoCompra {
     numeroComprobante: string;
     operacion: string;
     fecha: Date;
-    estado: string;
     estadoInterno: string;
+    estado: string;
 
-    subtotalSinDescuento: number;
-    descuentoTotal: number;
-    subtotalGrabadoSinDescuento: number;
-    subtotalNoGrabadoSinDescuento: number;
-    ivaSinDescuento: number;
-    totalSinDescuento: number;
-    totalConDescuento: number;
+    descuento: number;
+    subtotal: number;
+    subtotalGrabado: number;
+    subtotalNoGrabado: number;
+    importeIvaTotal: number;
+    valorTotal: number;
 
     comentario: string;
     facturaCompra: FacturaCompra;
@@ -35,18 +34,21 @@ export class NotaCreditoCompra {
     constructor() {
         this.id = valores.cero;
         this.codigo = valores.vacio;
+        this.establecimiento = valores.vacio;
+        this.puntoVenta = valores.vacio;
         this.secuencial = valores.vacio;
+        this.numeroComprobante = valores.vacio;
         this.operacion = valores.vacio;
         this.fecha = new Date();
         this.estado = valores.estadoActivo;
         this.estadoInterno = valores.vacio;
 
-        this.subtotalSinDescuento = valores.cero;
-        this.descuentoTotal = valores.cero;
-        this.subtotalGrabadoSinDescuento = valores.cero;
-        this.subtotalNoGrabadoSinDescuento = valores.cero;
-        this.ivaSinDescuento = valores.cero;
-        this.totalSinDescuento = valores.cero;
+        this.descuento = valores.cero;
+        this.subtotal = valores.cero;
+        this.subtotalGrabado = valores.cero;
+        this.subtotalNoGrabado = valores.cero;
+        this.importeIvaTotal = valores.cero;
+        this.valorTotal = valores.cero;
 
         this.comentario = valores.vacio;
         this.facturaCompra = new FacturaCompra();

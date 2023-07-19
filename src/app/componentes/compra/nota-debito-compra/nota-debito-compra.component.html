@@ -43,115 +43,131 @@
             </mat-expansion-panel-header>
             <mat-divider></mat-divider>
             <div class="form-group form-row">
-                <div class="form-row col-9">
-                    <div class="col-3">
-                        <mat-form-field>
-                            <mat-label>Ruc</mat-label>
-                            <input matInput type="text" class="form-control-sm" placeholder="RUC" 
-                                [(ngModel)]="proveedorSeleccionado" (ngModelChange)="filtrarIdentificaciones($event)" 
-                                [matAutocomplete]="autoIdentificacion" oninput="this.value = this.value.toUpperCase()">
-                            <mat-autocomplete #autoIdentificacion="matAutocomplete"  [displayWith]="verIdentificacion"
-                                (optionSelected)="seleccionarIdentificacion($event)" (opened)="consultarProveedores()">
-                                <mat-option *ngFor="let proveedor of filtroIdentificaciones" [value]="proveedor">
-                                    {{ proveedor.identificacion }}
-                                </mat-option>
-                            </mat-autocomplete>
-                        </mat-form-field>
-                    </div>
-                    <div class="col-9">
-                        <mat-form-field>
-                            <mat-label>Proveedor</mat-label>
-                            <input matInput type="text" class="form-control-sm" placeholder="Nombre Comercial" 
-                                [(ngModel)]="proveedorSeleccionado" (ngModelChange)="filtrarProveedores($event)" 
-                                [matAutocomplete]="autoProveedor" oninput="this.value = this.value.toUpperCase()">
-                                <button mat-button *ngIf="proveedorSeleccionado" matSuffix mat-icon-button
-                                    (click)="borrarProveedor()">
-                                    <mat-icon>close</mat-icon>
-                                </button>    
-                            <mat-autocomplete #autoProveedor="matAutocomplete"  [displayWith]="verProveedor"
-                                (optionSelected)="seleccionarProveedor($event)" (opened)="consultarProveedores()">
-                                <mat-option *ngFor="let proveedor of filtroProveedores" [value]="proveedor">
-                                    {{ proveedor.nombreComercial }}
-                                </mat-option>
-                            </mat-autocomplete>
-                        </mat-form-field>
-                    </div>
-                    <div class="col-3">
-                        <mat-form-field appearance="standard">
-                            <mat-label>Fecha</mat-label>
-                            <input matInput [matDatepicker]="picker1" class="form-control-sm"
-                                [(ngModel)]="notaCreditoCompra.fecha" [max]="hoy" >
-                            <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
-                            <mat-datepicker #picker1></mat-datepicker>
-                        </mat-form-field>
-                    </div>
-                    <div class="col-4">
-                        <mat-form-field>
-                            <mat-label>Factura de Compra</mat-label>
-                            <input matInput type="text" class="form-control-sm" placeholder="No. Factura" 
-                                [(ngModel)]="facturaCompraSeleccionado" (ngModelChange)="filtrarFacturasCompras($event)" 
-                                [matAutocomplete]="autoFacturaCompra" oninput="this.value = this.value.toUpperCase()">
-                            <mat-autocomplete #autoFacturaCompra="matAutocomplete"  [displayWith]="verFacturaCompra"
-                                (optionSelected)="seleccionarFacturaCompra($event)">
-                                <mat-option *ngFor="let facturaCompra of filtroFacturaCompras" [value]="facturaCompra">
-                                    {{ facturaCompra.numeroComprobante }}
-                                </mat-option>
-                            </mat-autocomplete>
-                        </mat-form-field>
-                    </div>
-                    <div class="col-5">
-                        <mat-form-field appearance="standard">
-                            <mat-label>Operacion</mat-label>
-                            <mat-select [(ngModel)]="notaCreditoCompra.operacion"
-                                (selectionChange)="seleccionarOperacion()" class="form-control-sm">
-                                <mat-option [value]="devolucion">{{devolucion}}</mat-option>
-                                <mat-option [value]="descuento">{{descuento}}</mat-option>
-                                <mat-option [value]="conjunta">{{conjunta}}</mat-option>
-                            </mat-select>
-                        </mat-form-field>
-                    </div>
+                <div class="col-8">
+                    <mat-form-field appearance="standard">
+                        <mat-label>Proveedor</mat-label>
+                        <mat-autocomplete #proveedor="matAutocomplete" [displayWith]="verProveedor"
+                            (optionSelected)="seleccionarProveedor()">
+                            <mat-option *ngFor="let proveedor of filtroProveedores | async" [value]="proveedor">
+                                {{proveedor.razonSocial}}
+                            </mat-option>
+                        </mat-autocomplete>
+                        <input matInput type="text" class="form-control-sm" placeholder="Razon Social"
+                            [formControl]="seleccionProveedor" [matAutocomplete]="proveedor">
+                    </mat-form-field>
                 </div>
-                <div class="form-row col-3 linea-vertical ml-1">
-                    <div class="col-3">
-                        <mat-form-field appearance="standard">
-                            <mat-label>Estab.</mat-label>
-                            <input matInput type="text" class="form-control-sm"
-                                [(ngModel)]="notaCreditoCompra.establecimiento"
-                                (blur)="rellenarNumeroEstablecimiento()">
-                        </mat-form-field>
-                    </div>
-                    <div class="col-3">
-                        <mat-form-field appearance="standard">
-                            <mat-label>Punto V.</mat-label>
-                            <input matInput type="text" class="form-control-sm"
-                                [(ngModel)]="notaCreditoCompra.puntoVenta"
-                                (blur)="rellenarNumeroPuntoVenta()">
-                        </mat-form-field>
-                    </div>
-                    <div class="col-6">
-                        <mat-form-field appearance="standard">
-                            <mat-label>Secuencial</mat-label>
-                            <input matInput type="text" class="form-control-sm"
-                                [(ngModel)]="notaCreditoCompra.secuencial"
-                                (blur)="rellenarNumeroSecuencial()">
-                        </mat-form-field>
-                    </div>
-                    <div class="col-5">
-                        <mat-form-field appearance="standard">
-                            <mat-label>Usuario</mat-label>
-                            <input matInput type="text" class="form-control-sm" [(ngModel)]="sesion.usuario.apodo"
-                                [disabled]="true">
-                        </mat-form-field>
-                    </div>
-                    <div class="col-7">
-                        <mat-form-field appearance="standard">
-                            <mat-label>Estado</mat-label>
-                            <mat-select class="form-control-sm" [(ngModel)]="notaCreditoCompra.facturaCompra.estado" [disabled]="true">
-                                <mat-option [value]="estadoActivo">{{estadoActivo}}</mat-option>
-                                <mat-option [value]="estadoInactivo">{{estadoInactivo}}</mat-option>
-                            </mat-select>
-                        </mat-form-field>
-                    </div>
+                <div class="col-4">
+                    <mat-form-field appearance="standard">
+                        <mat-label>Ruc</mat-label>
+                        <input matInput type="text"
+                            [(ngModel)]="notaDebitoCompra.facturaCompra.proveedor.identificacion"
+                            class="form-control-sm" [disabled]="true">
+                    </mat-form-field>
+                </div>
+                <div class="col-12">
+                    <mat-form-field appearance="standard">
+                        <mat-label>Direccion</mat-label>
+                        <input matInput type="text" [(ngModel)]="notaDebitoCompra.facturaCompra.proveedor.direccion"
+                            class="form-control-sm" [disabled]="true">
+                    </mat-form-field>
+                </div>
+                <div class="form-row col-4">
+                    <ng-container
+                        *ngFor="let telefono of notaDebitoCompra.facturaCompra.proveedor.telefonosProveedor; let i=index ">
+                        <div class="col-9">
+                            <mat-form-field appearance="standard">
+                                <mat-label>Teléfono</mat-label>
+                                <b matPrefix>+593 &nbsp;</b>
+                                <input matInput type="tel" [value]="telefono.numero" class="form-control-sm"
+                                    [disabled]="true">
+                            </mat-form-field>
+                        </div>
+                        <div class="col-3 iconos">
+                            <button mat-icon-button [disabled]="true">
+                                <mat-icon class="iconos-peque">close</mat-icon>
+                            </button>
+                        </div>
+                    </ng-container>
+                </div>
+                <div class="form-row col-4">
+                    <ng-container
+                        *ngFor="let celular of notaDebitoCompra.facturaCompra.proveedor.celularesProveedor; let i=index ">
+                        <div class="col-9">
+                            <mat-form-field appearance="standard">
+                                <mat-label>Celular</mat-label>
+                                <b matPrefix>+593 &nbsp;</b>
+                                <input matInput type="tel" [value]="celular.numero" class="form-control-sm"
+                                    [disabled]="true">
+                            </mat-form-field>
+                        </div>
+                        <div class="col-3 iconos">
+                            <button mat-icon-button [disabled]="true">
+                                <mat-icon class="iconos-peque">close</mat-icon>
+                            </button>
+                        </div>
+                    </ng-container>
+                </div>
+                <div class="form-row col-4">
+                    <ng-container
+                        *ngFor="let correo of notaDebitoCompra.facturaCompra.proveedor.correosProveedor; let i=index ">
+                        <div class="col-9">
+                            <mat-form-field appearance="standard">
+                                <mat-label>Correo electrónico</mat-label>
+                                <input matInput type="text " [(ngModel)]="correo.email" class="form-control-sm "
+                                    [disabled]="true">
+                            </mat-form-field>
+                        </div>
+                        <div class="col-3 iconos">
+                            <button mat-icon-button [disabled]="true">
+                                <mat-icon class="iconos-peque">close</mat-icon>
+                            </button>
+                        </div>
+                    </ng-container>
+                </div>
+                <div class="col-3">
+                    <mat-form-field appearance="standard">
+                        <mat-label>Fecha</mat-label>
+                        <input matInput [matDatepicker]="picker1" class="form-control-sm" [(ngModel)]="notaDebitoCompra.fecha" [max]="hoy">
+                        <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                        <mat-datepicker #picker1></mat-datepicker>
+                    </mat-form-field>
+                </div>
+                <div class="col-3">
+                    <mat-form-field appearance="standard">
+                        <mat-label>Secuencial</mat-label>
+                        <input matInput type="text" class="form-control-sm" [(ngModel)]="notaDebitoCompra.secuencial"
+                            [disabled]="true">
+                    </mat-form-field>
+                </div>
+                <div class="col-3">
+                    <mat-form-field appearance="standard">
+                        <mat-label>Usuario</mat-label>
+                        <input matInput type="text" class="form-control-sm"
+                            [(ngModel)]="notaDebitoCompra.sesion.usuario.nombre" [disabled]="true">
+                    </mat-form-field>
+                </div>
+                <div class="col-3">
+                    <mat-form-field appearance="standard">
+                        <mat-label>Estado</mat-label>
+                        <mat-select class="form-control-sm" [(ngModel)]="notaDebitoCompra.estado" [disabled]="true">
+                            <mat-option [value]="estadoActivo">{{estadoActivo}}</mat-option>
+                            <mat-option [value]="estadoInactivo">{{estadoInactivo}}</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+                <div class="col-12">
+                    <mat-form-field appearance="standard">
+                        <mat-label>Factura de Compra</mat-label>
+                        <mat-autocomplete #facturaCompra="matAutocomplete" [displayWith]="verFacturaCompra"
+                            (optionSelected)="seleccionarFacturaCompra()">
+                            <mat-option *ngFor="let facturaCompra of filtroFacturasCompras | async"
+                                [value]="facturaCompra">
+                                {{facturaCompra.numeroComprobante}}
+                            </mat-option>
+                        </mat-autocomplete>
+                        <input matInput type="text" class="form-control-sm" placeholder="Secuencial Factura de Compra"
+                            [formControl]="seleccionFacturaCompra" [matAutocomplete]="facturaCompra">
+                    </mat-form-field>
                 </div>
             </div>
         </mat-expansion-panel>

@@ -1,27 +1,33 @@
 import { valores } from "../../constantes";
-import { Bodega } from "../inventario/bodega";
+import { Impuesto } from "../inventario/impuesto";
 import { Producto } from "../inventario/producto";
+import { Bodega } from "../inventario/bodega";
+
 export class NotaCreditoCompraLinea {
     id: number;
     codigo: string;
+    cantidadCompra: number;
+    costoUnitarioCompra: number;
     cantidad: number;
-    devolucion: number;
     costoUnitario: number;
-    valorDescuentoLinea: number;
-    porcentajeDescuentoLinea: number;
-    totalSinDescuentoLinea: number;
+    subtotalLinea: number;
+    importeIvaLinea: number;
+    totalLinea: number;
+    impuesto: Impuesto;
     producto: Producto;
     bodega: Bodega;
 
     constructor() {
         this.id = valores.cero;
         this.codigo = valores.vacio;
-        this.cantidad = valores.cero;
-        this.devolucion = valores.cero;
+        this.cantidadCompra = valores.cero;
         this.costoUnitario = valores.cero;
-        this.valorDescuentoLinea = valores.cero;
-        this.porcentajeDescuentoLinea = valores.cero;
-        this.totalSinDescuentoLinea = valores.cero;
+        this.cantidad = valores.cero;
+        this.costoUnitario = valores.cero;
+        this.subtotalLinea = valores.cero;
+        this.importeIvaLinea = valores.cero;
+        this.totalLinea = valores.cero;
+        this.impuesto = new Impuesto();
         this.producto = new Producto();
         this.bodega = new Bodega();
     }
