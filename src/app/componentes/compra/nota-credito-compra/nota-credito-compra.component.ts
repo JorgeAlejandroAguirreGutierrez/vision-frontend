@@ -79,7 +79,7 @@ export class NotaCreditoCompraComponent implements OnInit {
     { nombreColumna: 'proveedor', cabecera: 'Proveedor', celda: (row: NotaCreditoCompra) => `${row.facturaCompra.proveedor.nombreComercial}` },
     { nombreColumna: 'total', cabecera: 'Total', celda: (row: NotaCreditoCompra) => `$ ${row.valorTotal}` },
     { nombreColumna: 'estado', cabecera: 'Estado', celda: (row: NotaCreditoCompra) => `${row.estado}` },
-    { nombreColumna: 'estado', cabecera: 'Estado', celda: (row: NotaCreditoCompra) => `${row.estadoInterno}` }
+    { nombreColumna: 'estadoInterno', cabecera: 'Estado Interno', celda: (row: NotaCreditoCompra) => `${row.estadoInterno}` }
   ];
   cabecera: string[] = this.columnas.map(titulo => titulo.nombreColumna);
   dataSource: MatTableDataSource<NotaCreditoCompra>;
@@ -374,7 +374,7 @@ export class NotaCreditoCompraComponent implements OnInit {
     this.notaCreditoCompra.secuencial = this.pad(this.notaCreditoCompra.secuencial, 9);
   }
 
-  pad(numero: string, size: number): string {
+  private pad(numero: string, size: number): string {
     while (numero.length < size) numero = "0" + numero;
     return numero;
   }
