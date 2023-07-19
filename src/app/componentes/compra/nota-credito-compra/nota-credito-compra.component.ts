@@ -253,12 +253,16 @@ export class NotaCreditoCompraComponent implements OnInit {
   }
 
   construir() {
-    let fecha = new Date(this.notaCreditoCompra.fecha);
-    this.notaCreditoCompra.fecha = fecha;
     this.proveedorSeleccionado = this.notaCreditoCompra.facturaCompra.proveedor;
+    this.construirFecha();
     this.facturaCompraSeleccionado = this.notaCreditoCompra.facturaCompra;
     this.llenarTablaNotaCreditoCompraLineas(this.notaCreditoCompra.notaCreditoCompraLineas);
     this.seleccionarOperacion();
+  }
+
+  construirFecha(){
+    let fecha = new Date(this.notaCreditoCompra.fecha);
+    this.notaCreditoCompra.fecha = fecha;
   }
 
   filtroNotaCreditoCompra(event: Event) {
@@ -334,8 +338,7 @@ export class NotaCreditoCompraComponent implements OnInit {
     this.notaCreditoCompraService.obtenerPorFacturaCompra(facturaCompraId).subscribe({
       next: res => {
         this.notaCreditoCompra = res.resultado as NotaCreditoCompra;
-        let fecha = new Date(this.notaCreditoCompra.fecha);
-        this.notaCreditoCompra.fecha = fecha;
+        this.construirFecha();
         this.llenarTablaNotaCreditoCompraLineas(this.notaCreditoCompra.notaCreditoCompraLineas);
       },
       error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
@@ -389,18 +392,25 @@ export class NotaCreditoCompraComponent implements OnInit {
 
   // CALCULOS
   calcular() {
+    this.spinnerService.show();  
     this.notaCreditoCompraService.calcular(this.notaCreditoCompra).subscribe({
       next: res => {
         this.notaCreditoCompra = res.resultado as NotaCreditoCompra;
+        this.construirFecha();
         this.llenarTablaNotaCreditoCompraLineas(this.notaCreditoCompra.notaCreditoCompraLineas);
+        this.spinnerService.hide();
       },
-      error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+      error: err => {
+        Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+        this.spinnerService.hide();
+      }
     });
+    
   }
 
   //VALIDACIONES
   validarFormulario(): boolean {
-    if (this.notaCreditoCompra.fecha == null || this.notaCreditoCompra.fecha > this.hoy){
+    if (this.notaCreditoCompra.fecha == null ){ //|| this.notaCreditoCompra.fecha > this.hoy
       Swal.fire({ icon: error_swal, title: error, text: mensajes.error_falta_datos });
       return false;
     }
