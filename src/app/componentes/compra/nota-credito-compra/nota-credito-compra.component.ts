@@ -18,12 +18,10 @@ import { NotaCreditoCompraService } from '../../../servicios/compra/nota-credito
 import { NotaCreditoCompraLinea } from '../../../modelos/compra/nota-credito-compra-linea';
 import { FacturaCompra } from '../../../modelos/compra/factura-compra';
 import { FacturaCompraService } from '../../../servicios/compra/factura-compra.service';
-import { FacturaCompraLinea } from 'src/app/modelos/compra/factura-compra-linea';
 
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { P } from '@angular/cdk/keycodes';
 
 
 @Component({
@@ -76,11 +74,12 @@ export class NotaCreditoCompraComponent implements OnInit {
 
   columnas: any[] = [
     { nombreColumna: 'codigo', cabecera: 'Código', celda: (row: NotaCreditoCompra) => `${row.codigo}` },
-    { nombreColumna: 'fecha', cabecera: 'Fecha', celda: (row: NotaCreditoCompra) => `${this.datepipe.transform(row.fecha, "dd-MM-yyyy")}` },
+    { nombreColumna: 'fecha', cabecera: 'Fecha', celda: (row: NotaCreditoCompra) => `${this.datepipe.transform(row.fecha, valores.fechaCorta)}` },
     { nombreColumna: 'comprobante', cabecera: 'Comprobante', celda: (row: NotaCreditoCompra) => `${row.numeroComprobante}` },
     { nombreColumna: 'proveedor', cabecera: 'Proveedor', celda: (row: NotaCreditoCompra) => `${row.facturaCompra.proveedor.nombreComercial}` },
     { nombreColumna: 'total', cabecera: 'Total', celda: (row: NotaCreditoCompra) => `$ ${row.valorTotal}` },
-    { nombreColumna: 'estado', cabecera: 'Estado', celda: (row: NotaCreditoCompra) => `${row.estado}` }
+    { nombreColumna: 'estado', cabecera: 'Estado', celda: (row: NotaCreditoCompra) => `${row.estado}` },
+    { nombreColumna: 'estadoInterno', cabecera: 'Estado Interno', celda: (row: NotaCreditoCompra) => `${row.estadoInterno}` }
   ];
   cabecera: string[] = this.columnas.map(titulo => titulo.nombreColumna);
   dataSource: MatTableDataSource<NotaCreditoCompra>;
@@ -132,8 +131,6 @@ export class NotaCreditoCompraComponent implements OnInit {
     this.proveedorService.consultarPorEmpresaYEstado(this.empresa.id, valores.estadoActivo).subscribe({
       next: res => {
         this.proveedores = res.resultado as Proveedor[]
-        //this.filtroIdentificaciones = this.proveedores;
-        //this.filtroProveedores = this.proveedores;
       },
       error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     });
@@ -157,7 +154,7 @@ export class NotaCreditoCompraComponent implements OnInit {
     this.spinnerService.show();   
     this.notaCreditoCompra.sesion = this.sesion;
     this.notaCreditoCompra.empresa = this.empresa;
-    this.notaCreditoCompra.numeroComprobante = this.notaCreditoCompra.establecimiento + '-' + this.notaCreditoCompra.puntoVenta + '-' + this.notaCreditoCompra.secuencial;
+    this.notaCreditoCompra.numeroComprobante = this.notaCreditoCompra.establecimiento + valores.guion + this.notaCreditoCompra.puntoVenta + valores.guion + this.notaCreditoCompra.secuencial;
     this.notaCreditoCompraService.crear(this.notaCreditoCompra).subscribe({
       next: res => {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
@@ -226,7 +223,7 @@ export class NotaCreditoCompraComponent implements OnInit {
   llenarTablaNotaCreditoCompra(notasCreditosCompras: NotaCreditoCompra[]) {
     this.dataSource = new MatTableDataSource(notasCreditosCompras);
     this.dataSource.filterPredicate = (data: NotaCreditoCompra, filter: string): boolean =>
-      this.datepipe.transform(data.fecha, "dd-MM-yyyy").includes(filter) || data.numeroComprobante.includes(filter) || data.secuencial.includes(filter) || 
+      this.datepipe.transform(data.fecha, valores.fechaCorta).includes(filter) || data.numeroComprobante.includes(filter) || data.secuencial.includes(filter) || 
       data.facturaCompra.proveedor.razonSocial.includes(filter) || data.estado.includes(filter);
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
@@ -304,12 +301,11 @@ export class NotaCreditoCompraComponent implements OnInit {
     return proveedor && proveedor.nombreComercial ? proveedor.nombreComercial : valores.vacio;
   }
   filtrarProveedores(event: any){
-    //console.log(event);
     this.filtroProveedores = this.proveedores.filter(proveedor => proveedor.nombreComercial.toUpperCase().includes(event));
   }
   borrarProveedor(){
-    this.proveedorSeleccionado=new Proveedor();
-    this.filtroProveedores=[];
+    this.proveedorSeleccionado = new Proveedor();
+    this.filtroProveedores = [];
   }
 
   consultarFacturasCompras(proveedorId: number) {
@@ -378,7 +374,7 @@ export class NotaCreditoCompraComponent implements OnInit {
     this.notaCreditoCompra.secuencial = this.pad(this.notaCreditoCompra.secuencial, 9);
   }
 
-  pad(numero: string, size: number): string {
+  private pad(numero: string, size: number): string {
     while (numero.length < size) numero = "0" + numero;
     return numero;
   }

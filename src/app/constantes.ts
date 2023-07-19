@@ -193,6 +193,7 @@ export const valores = {
     menosUno: -1,
     vacio: "",
     espacio: " ",
+    guion: "-",
     //ESTADOS
     estadoActivo: "ACTIVO",
     estadoInactivo: "INACTIVO",
@@ -207,6 +208,7 @@ export const valores = {
     estadoInternoPagada: "PAGADA",
     estadoInternoPorPagar: "POR PAGAR",
 
+    fechaCorta: "dd-MM-yyyy",
     suspendido: "SUSPENDIDO",
     abierto: "ABIERTO",
     cerrado: "CERRADO",
