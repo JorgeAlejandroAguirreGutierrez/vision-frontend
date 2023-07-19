@@ -12,11 +12,26 @@
     word-wrap: break-word;
 }
 
+.mat-column-medida,
+.mat-column-cantidadcompra,
+.mat-column-cunitariocompra,
 .mat-column-impuesto,
 .mat-column-subtotal,
 .mat-column-importe,
 .mat-column-total {
     text-align: center;
+}
+
+::ng-deep .mat-column-medida>.mat-sort-header-container {
+    justify-content: center;
+}
+
+::ng-deep .mat-column-cantidadcompra>.mat-sort-header-container {
+    justify-content: center;
+}
+
+::ng-deep .mat-column-cunitariocompra>.mat-sort-header-container {
+    justify-content: center;
 }
 
 ::ng-deep .mat-column-cantidad>.mat-sort-header-container {
