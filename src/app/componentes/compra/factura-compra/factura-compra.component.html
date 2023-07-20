@@ -59,8 +59,8 @@
                                 [formControl]="controlIdentificacionProveedor" [matAutocomplete]="identificacionProveedor">
                             <mat-autocomplete #identificacionProveedor="matAutocomplete" [displayWith]="verIdentificacionProveedor"
                                 (optionSelected)="seleccionarIdentificacionProveedor()" (opened)="consultarProveedores()">
-                                <mat-option *ngFor="let proveedor of filtroIdentificacionProveedores | async"
-                                    [value]="proveedor">{{proveedor.identificacion}}
+                                <mat-option *ngFor="let proveedor of filtroIdentificacionProveedores | async" [value]="proveedor">
+                                    {{proveedor.identificacion}}
                                 </mat-option>
                             </mat-autocomplete>
                         </mat-form-field>
@@ -68,12 +68,12 @@
                     <div class="col-9">
                         <mat-form-field appearance="standard">
                             <mat-label>Proveedor</mat-label>
-                            <input matInput type="text" class="form-control-sm" placeholder="Razon Social"
-                                [formControl]="controlProveedor" [matAutocomplete]="proveedor"
+                            <input matInput type="text" class="form-control-sm" placeholder="Nombre Comercial"
+                                [formControl]="controlNombreComercialProveedor" [matAutocomplete]="proveedor"
                                 oninput="this.value = this.value.toUpperCase()">
-                            <mat-autocomplete #proveedor="matAutocomplete" [displayWith]="verProveedor"
-                                (optionSelected)="seleccionarProveedor()">
-                                <mat-option *ngFor="let proveedor of filtroProveedores | async" [value]="proveedor">
+                            <mat-autocomplete #proveedor="matAutocomplete" [displayWith]="verNombreComercialProveedor"
+                                (optionSelected)="seleccionarNombreComercialProveedor()">
+                                <mat-option *ngFor="let proveedor of filtroNombreComercialProveedores | async" [value]="proveedor">
                                     {{ proveedor.nombreComercial }}
                                 </mat-option>
                             </mat-autocomplete>

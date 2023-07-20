@@ -58,8 +58,8 @@ export class NotaCreditoVentaService {
       }));
   }
 
-  consultarPorEmpresaYEstado(empresaId: number, estado: string): Observable<Respuesta> {
-    return this.http.get(environment.host + urn.ruta + urn.notaCreditoVenta + urn.consultarPorEmpresaYEstado + urn.slash + empresaId + urn.slash + estado, options).pipe(
+  consultarPorEmpresaYEstadoInternoYEstado(empresaId: number, estadoInterno: string, estado: string): Observable<Respuesta> {
+    return this.http.get(environment.host + urn.ruta + urn.notaCreditoVenta + urn.consultarPorEmpresaYEstadoInternoYEstado + urn.slash + empresaId + urn.slash + estadoInterno + urn.slash + estado, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);
