@@ -45,9 +45,9 @@ export class KardexComponent implements OnInit {
   @ViewChild("inputFiltro") inputFiltro: ElementRef;
 
   columnas: any[] = [
-    { nombreColumna: 'fecha', cabecera: 'Fecha', celda: (row: Kardex) => `${this.datepipe.transform(row.fecha, 'dd/MM/yyyy') } ` },
-    { nombreColumna: 'comprobante', cabecera: 'Comprobante', celda: (row: Kardex) => `${row.tipoComprobante.abreviatura}` },
-    { nombreColumna: 'referencia', cabecera: 'Referencia', celda: (row: Kardex) => `${row.referencia}` },
+    { nombreColumna: 'fecha', cabecera: 'Fecha', celda: (row: Kardex) => `${this.datepipe.transform(row.fecha, 'dd-MM-yyyy') } ` },
+    { nombreColumna: 'documento', cabecera: 'Documento', celda: (row: Kardex) => `${row.tipoComprobante.abreviatura}` },
+    { nombreColumna: 'comprobante', cabecera: 'Comprobante', celda: (row: Kardex) => `${row.referencia}` },
     { nombreColumna: 'operacion', cabecera: 'Operacion', celda: (row: Kardex) => `${row.tipoOperacion.abreviatura}` },
     { nombreColumna: 'entrada', cabecera: 'Entrada', celda: (row: Kardex) => `${row.entrada}` },
     { nombreColumna: 'salida', cabecera: 'Salida', celda: (row: Kardex) => `${row.salida}` },
@@ -118,6 +118,9 @@ export class KardexComponent implements OnInit {
   llenarTablaKardex(kardexs: Kardex[]) {
     this.ordenarAsc(kardexs, 'id');
     this.dataSource = new MatTableDataSource(kardexs);
+    this.dataSource.filterPredicate = (data: Kardex, filter: string): boolean =>
+    this.datepipe.transform(data.fecha, valores.fechaCorta).includes(filter) || data.tipoComprobante.abreviatura.includes(filter) || data.referencia.includes(filter) || 
+    data.tipoOperacion.abreviatura.includes(filter);
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
   }

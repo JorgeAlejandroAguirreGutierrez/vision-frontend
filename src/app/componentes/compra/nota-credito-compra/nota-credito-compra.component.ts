@@ -39,7 +39,7 @@ export class NotaCreditoCompraComponent implements OnInit {
   abrirPanelNuevoNC: boolean = true;
   abrirPanelNCLinea: boolean = false;
   abrirPanelAdmin: boolean = true;
-  deshabilitarCostoUnitario = false;
+  deshabilitarDescuento = true;
 
 
   si: string = valores.si;
@@ -95,7 +95,8 @@ export class NotaCreditoCompraComponent implements OnInit {
     { nombreColumna: 'impuesto', cabecera: 'IVA %', celda: (row: NotaCreditoCompraLinea) => `${row.impuesto.porcentaje} %` },
     { nombreColumna: 'subtotal', cabecera: 'Subtotal', celda: (row: NotaCreditoCompraLinea) => `${row.subtotalLinea}` },
     { nombreColumna: 'importe', cabecera: 'Importe', celda: (row: NotaCreditoCompraLinea) => `${row.importeIvaLinea}` },
-    { nombreColumna: 'total', cabecera: 'Total', celda: (row: NotaCreditoCompraLinea) => `${row.totalLinea}` }
+    { nombreColumna: 'total', cabecera: 'Total', celda: (row: NotaCreditoCompraLinea) => `${row.totalLinea}` },
+    { nombreColumna: 'acciones', cabecera: 'Acciones' }
   ];
   cabeceraLinea: string[] = this.columnasLinea.map(titulo => titulo.nombreColumna);
   dataSourceLinea: MatTableDataSource<NotaCreditoCompraLinea>;
@@ -143,6 +144,7 @@ export class NotaCreditoCompraComponent implements OnInit {
     this.proveedorSeleccionado = new Proveedor();
     this.facturaCompraSeleccionado = new FacturaCompra();
     this.dataSourceLinea = new MatTableDataSource<NotaCreditoCompraLinea>([]);
+    this.deshabilitarDescuento = true;
     this.clickedRows.clear();
   }
 
@@ -174,14 +176,16 @@ export class NotaCreditoCompraComponent implements OnInit {
       event.preventDefault();
     if (!this.validarFormulario())
       return; 
-    this.notaCreditoCompraService.actualizar(this.notaCreditoCompra).subscribe(
-      res => {
+    this.notaCreditoCompraService.actualizar(this.notaCreditoCompra).subscribe({
+      next: res => {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
         this.consultar();
         this.nuevo(null);
       },
-      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
-    );
+      error: err => {
+        Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+      }
+    });
   }
 
   activar(event) {
@@ -249,15 +253,20 @@ export class NotaCreditoCompraComponent implements OnInit {
     });
   }
 
+  eliminarNotaCreditoCompraLinea(i: number){
+    this.notaCreditoCompra.notaCreditoCompraLineas.splice(i, 1);
+    this.calcular();
+  }
+
   construir() {
     this.proveedorSeleccionado = this.notaCreditoCompra.facturaCompra.proveedor;
-    this.construirFecha();
+    this.formatearFecha();
     this.facturaCompraSeleccionado = this.notaCreditoCompra.facturaCompra;
     this.llenarTablaNotaCreditoCompraLineas(this.notaCreditoCompra.notaCreditoCompraLineas);
     this.seleccionarOperacion();
   }
 
-  construirFecha(){
+  formatearFecha(){
     let fecha = new Date(this.notaCreditoCompra.fecha);
     this.notaCreditoCompra.fecha = fecha;
   }
@@ -334,7 +343,7 @@ export class NotaCreditoCompraComponent implements OnInit {
     this.notaCreditoCompraService.obtenerPorFacturaCompra(facturaCompraId).subscribe({
       next: res => {
         this.notaCreditoCompra = res.resultado as NotaCreditoCompra;
-        this.construirFecha();
+        this.formatearFecha();
         this.llenarTablaNotaCreditoCompraLineas(this.notaCreditoCompra.notaCreditoCompraLineas);
       },
       error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
@@ -352,15 +361,20 @@ export class NotaCreditoCompraComponent implements OnInit {
 
   seleccionarOperacion() {
     if (this.notaCreditoCompra.operacion == valores.devolucion) {
-      this.deshabilitarCostoUnitario = false;
-      for (let i=0; i < this.notaCreditoCompra.notaCreditoCompraLineas.length; i++){
-        this.notaCreditoCompra.notaCreditoCompraLineas[i].cantidad = valores.cero;
+      this.notaCreditoCompra.descuento = valores.cero;
+      this.deshabilitarDescuento = true;
+      if (this.notaCreditoCompra.id == valores.cero){
+        for (let i=0; i < this.notaCreditoCompra.notaCreditoCompraLineas.length; i++){
+          this.notaCreditoCompra.notaCreditoCompraLineas[i].cantidad = valores.cero;
+        }
       }
     }
     if (this.notaCreditoCompra.operacion == valores.descuento) {
-      this.deshabilitarCostoUnitario = true;
-      for (let i=0; i < this.notaCreditoCompra.notaCreditoCompraLineas.length; i++){
-        this.notaCreditoCompra.notaCreditoCompraLineas[i].cantidad = this.notaCreditoCompra.notaCreditoCompraLineas[i].cantidadCompra;
+      this.deshabilitarDescuento = false;
+      if (this.notaCreditoCompra.id == valores.cero){
+        for (let i=0; i < this.notaCreditoCompra.notaCreditoCompraLineas.length; i++){
+          this.notaCreditoCompra.notaCreditoCompraLineas[i].cantidad = this.notaCreditoCompra.notaCreditoCompraLineas[i].cantidadCompra;
+        }
       }
     }
   }
@@ -392,7 +406,7 @@ export class NotaCreditoCompraComponent implements OnInit {
     this.notaCreditoCompraService.calcular(this.notaCreditoCompra).subscribe({
       next: res => {
         this.notaCreditoCompra = res.resultado as NotaCreditoCompra;
-        this.construirFecha();
+        this.formatearFecha();
         this.llenarTablaNotaCreditoCompraLineas(this.notaCreditoCompra.notaCreditoCompraLineas);
         this.spinnerService.hide();
       },

@@ -1,6 +1,6 @@
 import { Component, OnInit, HostListener } from '@angular/core';
 import Swal from 'sweetalert2';
-import { valores, validarSesion, tab_activo, exito, exito_swal, error, error_swal } from '../../../constantes';
+import { valores, validarSesion, exito, exito_swal, error, error_swal } from '../../../constantes';
 
 import { Sesion } from '../../../modelos/usuario/sesion';
 import { SesionService } from '../../../servicios/usuario/sesion.service';

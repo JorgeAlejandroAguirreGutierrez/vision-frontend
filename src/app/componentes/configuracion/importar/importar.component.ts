@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ModeloService } from '../../../servicios/administracion/modelo.service';
 import { Modelo } from '../../../modelos/administracion/modelo';
 import Swal from 'sweetalert2';
-import { valores, validarSesion, tab_activo, exito, exito_swal, error, error_swal } from '../../../constantes';
+import { valores, validarSesion, exito, exito_swal, error, error_swal } from '../../../constantes';
 import { SesionService } from '../../../servicios/usuario/sesion.service';
 import { Router } from '@angular/router';
 import { Sesion } from '../../../modelos/usuario/sesion';
