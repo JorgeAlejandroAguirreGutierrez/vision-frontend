@@ -72,11 +72,11 @@ export class FacturaCompraComponent implements OnInit {
 
   controlProducto = new UntypedFormControl();
   controlIdentificacionProveedor = new UntypedFormControl();
-  controlProveedor = new UntypedFormControl();
+  controlNombreComercialProveedor = new UntypedFormControl();
 
   filtroProductos: Observable<Producto[]> = new Observable<Producto[]>();
   filtroIdentificacionProveedores: Observable<Proveedor[]> = new Observable<Proveedor[]>();
-  filtroProveedores: Observable<Proveedor[]> = new Observable<Proveedor[]>();
+  filtroNombreComercialProveedores: Observable<Proveedor[]> = new Observable<Proveedor[]>();
 
   columnasFacturaCompra: any[] = [
     { nombreColumna: 'codigo', cabecera: 'Código', celda: (row: FacturaCompra) => `${row.codigo}`},
@@ -182,7 +182,7 @@ export class FacturaCompraComponent implements OnInit {
   nuevo(){
     this.facturaCompra = new FacturaCompra();
     this.controlIdentificacionProveedor.patchValue(valores.vacio);
-    this.controlProveedor.patchValue(valores.vacio);
+    this.controlNombreComercialProveedor.patchValue(valores.vacio);
     this.controlProducto.patchValue(valores.vacio);
     this.dataSourceLinea = new MatTableDataSource<FacturaCompraLinea>([]);
     this.clickedRowsFacturaCompra.clear();
@@ -196,7 +196,7 @@ export class FacturaCompraComponent implements OnInit {
     if (!this.validarFormulario())
       return;
     this.spinnerService.show();   
-    this.facturaCompra.numeroComprobante = this.facturaCompra.establecimiento + '-' + this.facturaCompra.puntoVenta + '-' + this.facturaCompra.secuencial;
+    this.facturaCompra.numeroComprobante = this.facturaCompra.establecimiento + valores.guion + this.facturaCompra.puntoVenta + valores.guion + this.facturaCompra.secuencial;
     this.facturaCompra.sesion = this.sesion;
     this.facturaCompra.empresa = this.empresa;
     this.facturaCompraService.crear(this.facturaCompra).subscribe({
@@ -273,7 +273,7 @@ export class FacturaCompraComponent implements OnInit {
   llenarTablaFacturaCompra(facturasCompras: FacturaCompra[]) {
     this.dataSourceFacturaCompra = new MatTableDataSource(facturasCompras);
     this.dataSourceFacturaCompra.filterPredicate = (data: FacturaCompra, filter: string): boolean =>
-      this.datepipe.transform(data.fecha, "dd-MM-yyyy").includes(filter) || data.numeroComprobante.includes(filter) || 
+      this.datepipe.transform(data.fecha, valores.fechaCorta).includes(filter) || data.numeroComprobante.includes(filter) || 
       data.proveedor.razonSocial.includes(filter) || data.estado.includes(filter);
       this.dataSourceFacturaCompra.paginator = this.paginatorFacturaCompra;
     this.dataSourceFacturaCompra.sort = this.sort;
@@ -303,7 +303,7 @@ export class FacturaCompraComponent implements OnInit {
     let fecha = new Date(this.facturaCompra.fecha);
     this.facturaCompra.fecha = fecha;
     this.controlIdentificacionProveedor.patchValue(this.facturaCompra.proveedor);
-    this.controlProveedor.patchValue(this.facturaCompra.proveedor);
+    this.controlNombreComercialProveedor.patchValue(this.facturaCompra.proveedor);
     this.llenarTablaFacturaCompraLinea(this.facturaCompra.facturaCompraLineas);
   }
 
@@ -319,13 +319,13 @@ export class FacturaCompraComponent implements OnInit {
     this.dataSourceFacturaCompra.filter = '';
   }
 
-  seleccionarProveedor() {
-    let proveedorId = this.controlProveedor.value.id;
+  seleccionarNombreComercialProveedor() {
+    let proveedorId = this.controlNombreComercialProveedor.value.id;
     this.proveedorService.obtener(proveedorId).subscribe({
       next: res => {
         this.facturaCompra.proveedor = res.resultado as Proveedor;
         this.controlIdentificacionProveedor.patchValue(this.facturaCompra.proveedor);
-        this.controlProveedor.patchValue(this.facturaCompra.proveedor);
+        this.controlNombreComercialProveedor.patchValue(this.facturaCompra.proveedor);
       },
       error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     });
@@ -337,7 +337,7 @@ export class FacturaCompraComponent implements OnInit {
       next: res => {
         Object.assign(this.facturaCompra.proveedor, res.resultado as Proveedor);
         this.controlIdentificacionProveedor.patchValue(this.facturaCompra.proveedor);
-        this.controlProveedor.patchValue(this.facturaCompra.proveedor);
+        this.controlNombreComercialProveedor.patchValue(this.facturaCompra.proveedor);
       },
       error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     });
@@ -535,11 +535,11 @@ export class FacturaCompraComponent implements OnInit {
         map(value => typeof value === 'string' || value == null ? value : value.id),
         map(identificacion => typeof identificacion === 'string' ? this.filtroIdentificacionProveedor(identificacion) : this.proveedores.slice())
     );
-    this.filtroProveedores = this.controlProveedor.valueChanges
+    this.filtroNombreComercialProveedores = this.controlNombreComercialProveedor.valueChanges
       .pipe(
         startWith(valores.vacio),
         map(value => typeof value === 'string' || value==null ? value : value.id),
-        map(proveedor => typeof proveedor === 'string' ? this.filtroProveedor(proveedor) : this.proveedores.slice())
+        map(proveedor => typeof proveedor === 'string' ? this.filtroNombreComercialProveedor(proveedor) : this.proveedores.slice())
       );
   }
 
@@ -565,14 +565,14 @@ export class FacturaCompraComponent implements OnInit {
     return proveedor && proveedor.identificacion ? proveedor.identificacion : valores.vacio;
   }
 
-  private filtroProveedor(value: string): Proveedor[] {
+  private filtroNombreComercialProveedor(value: string): Proveedor[] {
     if(this.proveedores.length > valores.cero) {
       const filterValue = value.toLowerCase();
       return this.proveedores.filter(proveedor => proveedor.razonSocial.toLowerCase().includes(filterValue));
     }
     return [];
   }
-  verProveedor(proveedor: Proveedor): string {
+  verNombreComercialProveedor(proveedor: Proveedor): string {
     return proveedor && proveedor.nombreComercial ? proveedor.nombreComercial : valores.vacio;
   }
 
