@@ -365,7 +365,7 @@
                                 [formControl]="controlProducto" [matAutocomplete]="producto">
                         </mat-form-field>
                     </div>
-                    <div class="col-2">
+                    <div class="col-3">
                         <mat-form-field appearance="standard">
                             <mat-label>Medida</mat-label>
                             <input matInput type="text" [(ngModel)]="notaDebitoCompraLinea.producto.medida.descripcion"
@@ -418,7 +418,7 @@
                         <mat-form-field appearance="standard">
                             <mat-label>IVA</mat-label>
                             <mat-select [(ngModel)]="notaDebitoCompraLinea.impuesto" [compareWith]="compareFn"
-                                (selectionChange)="seleccionarImpuesto()" class="form-control-sm">
+                                (selectionChange)="seleccionarImpuesto()" class="form-control-sm" [disabled]="true">
                                 <mat-option *ngFor="let impuesto of impuestos" [value]="impuesto">
                                     {{impuesto.porcentaje}}
                                 </mat-option>
