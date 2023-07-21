@@ -443,7 +443,8 @@ export class NotaDebitoCompraComponent implements OnInit {
   }
 
   seleccionarProducto() {
-    this.notaDebitoCompraLinea.producto=this.controlProducto.value;
+    this.notaDebitoCompraLinea.producto = this.controlProducto.value;
+    this.notaDebitoCompraLinea.impuesto = this.notaDebitoCompraLinea.producto.impuesto;
     if(this.notaDebitoCompraLinea.producto.id == valores.cero || this.notaDebitoCompraLinea.bodega.id == valores.cero || this.notaDebitoCompra.facturaCompra.proveedor.id == valores.cero){
       return;
     }

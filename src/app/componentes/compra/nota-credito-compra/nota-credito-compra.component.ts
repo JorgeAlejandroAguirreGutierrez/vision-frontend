@@ -77,7 +77,7 @@ export class NotaCreditoCompraComponent implements OnInit {
     { nombreColumna: 'fecha', cabecera: 'Fecha', celda: (row: NotaCreditoCompra) => `${this.datepipe.transform(row.fecha, valores.fechaCorta)}` },
     { nombreColumna: 'comprobante', cabecera: 'Comprobante', celda: (row: NotaCreditoCompra) => `${row.numeroComprobante}` },
     { nombreColumna: 'proveedor', cabecera: 'Proveedor', celda: (row: NotaCreditoCompra) => `${row.facturaCompra.proveedor.nombreComercial}` },
-    { nombreColumna: 'total', cabecera: 'Total', celda: (row: NotaCreditoCompra) => `$ ${row.valorTotal}` },
+    { nombreColumna: 'total', cabecera: 'Total', celda: (row: NotaCreditoCompra) => `$ ${row.total}` },
     { nombreColumna: 'estado', cabecera: 'Estado', celda: (row: NotaCreditoCompra) => `${row.estado}` },
     { nombreColumna: 'estadoInterno', cabecera: 'Estado Interno', celda: (row: NotaCreditoCompra) => `${row.estadoInterno}` }
   ];
