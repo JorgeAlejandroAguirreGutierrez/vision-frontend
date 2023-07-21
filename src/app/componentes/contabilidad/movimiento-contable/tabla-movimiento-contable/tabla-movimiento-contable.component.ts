@@ -1,7 +1,7 @@
 import { Component, OnInit, Output, EventEmitter, ElementRef, Renderer2 } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import Swal from 'sweetalert2';
-import { valores, validarSesion, tab_activo, exito, exito_swal, error, error_swal } from '../../../../constantes';
+import { valores, validarSesion, error, error_swal } from '../../../../constantes';
 import { MovimientoContableService } from '../../../../servicios/contabilidad/movimiento-contable.service';
 import { MovimientoContable } from '../../../../modelos/contabilidad/movimiento-contable';
 

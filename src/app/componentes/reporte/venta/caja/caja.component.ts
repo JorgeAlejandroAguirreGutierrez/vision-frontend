@@ -11,11 +11,11 @@ import { ReporteCaja } from 'src/app/modelos/reporte/reporte-caja';
 import { ReporteCajaService } from 'src/app/servicios/reporte/reporte-caja.service';
 
 @Component({
-  selector: 'app-cierre-caja',
-  templateUrl: './cierre-caja.component.html',
-  styleUrls: ['./cierre-caja.component.scss']
+  selector: 'app-caja',
+  templateUrl: './caja.component.html',
+  styleUrls: ['./caja.component.scss']
 })
-export class CierreCajaComponent implements OnInit {
+export class CajaComponent implements OnInit {
 
   abrirPanelPeriodo: boolean = true;
   abrirPanelDetalle: boolean = true;

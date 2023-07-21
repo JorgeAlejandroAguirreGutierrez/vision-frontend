@@ -1,5 +1,6 @@
 import { Injectable, Type } from '@angular/core';
-import { modulos, tabs, items, icos, valores } from '../../../constantes';
+import { modulos, valores } from '../../../constantes';
+import { tabs, items, icos } from '../../../constantes-tab';
 import { SidebarItem } from "../../../modelos/comun/sidebar-item.model";
 import { Sesion } from '../../../modelos/usuario/sesion';
 import { Permiso } from '../../../modelos/usuario/permiso';
@@ -15,12 +16,13 @@ import { PlazoCreditoComponent } from '../../../componentes/cliente/plazo-credit
 import { ProveedorComponent } from '../../../componentes/compra/proveedor/proveedor.component';
 import { GrupoProveedorComponent } from '../../../componentes/compra/grupo-proveedor/grupo-proveedor.component';
 import { NotaCreditoCompraComponent } from '../../../componentes/compra/nota-credito-compra/nota-credito-compra.component';
-import { FacturaCompraComponent } from 'src/app/componentes/compra/factura-compra/factura-compra.component';
-import { NotaDebitoCompraComponent } from 'src/app/componentes/compra/nota-debito-compra/nota-debito-compra.component';
+import { FacturaCompraComponent } from '../../../componentes/compra/factura-compra/factura-compra.component';
+import { NotaDebitoCompraComponent } from '../../../componentes/compra/nota-debito-compra/nota-debito-compra.component';
 //VENTAS
 import { FacturaComponent } from "../../../componentes/venta/factura/factura.component";
 import { NotaCreditoVentaComponent } from '../../../componentes/venta/nota-credito-venta/nota-credito-venta.component';
-import { NotaDebitoVentaComponent } from 'src/app/componentes/venta/nota-debito-venta/nota-debito-venta.component';
+import { NotaDebitoVentaComponent } from '../../../componentes/venta/nota-debito-venta/nota-debito-venta.component';
+import { CierreCajaComponent } from '../../../componentes/venta/cierre-caja/cierre-caja.component';
 //ENTREGA
 import { GuiaRemisionComponent } from '../../../componentes/entrega/guia-remision/guia-remision.component';
 import { TransportistaComponent } from '../../../componentes/entrega/transportista/transportista.component';
@@ -52,10 +54,6 @@ import { ReporteContabilidadComponent } from '../../../componentes/reporte/conta
 import { ReporteTalentoHumanoComponent } from '../../../componentes/reporte/talento-humano/reporte-talento-humano/reporte-talento-humano.component';
 import { ReporteFinancieroComponent } from '../../../componentes/reporte/financiero/reporte-financiero/reporte-financiero.component';
 import { ReporteImportacionComponent } from '../../../componentes/reporte/importacion/reporte-importacion/reporte-importacion.component';
-
-
-import { ReporteCajaComponent } from 'src/app/componentes/reporte/reporte-caja/reporte-caja.component';
-import { KardexMercaderiaComponent } from 'src/app/componentes/reporte/inventario/kardex-mercaderia/kardex-mercaderia.component';
 
 //ACCESOS
 import { UsuarioComponent } from '../../../componentes/usuario/usuario/usuario.component';
@@ -123,6 +121,7 @@ export class SidebarItemsService {
       this.llenarOpciones(NotaCreditoVentaComponent, tabs.tab_nota_credito_venta, items.item_nota_credito_venta, icos.ico_nota_credito_venta);
       this.llenarOpciones(NotaDebitoVentaComponent, tabs.tab_nota_debito_venta, items.item_nota_debito_venta, icos.ico_nota_debito_venta);
       this.llenarOpciones(GuiaRemisionComponent, tabs.tab_guia_remision, items.item_guia_remision, icos.ico_guia_remision);
+      this.llenarOpciones(CierreCajaComponent, tabs.tab_cierre_caja, items.item_cierre_caja, icos.ico_cierre_caja);
       this.llenarOpciones(TransportistaComponent, tabs.tab_transportista, items.item_transportista, icos.ico_transportista);
       this.llenarOpciones(VehiculoComponent, tabs.tab_vehiculo_transporte, items.item_vehiculo_transporte, icos.ico_vehiculo_transporte);
     }
@@ -182,13 +181,10 @@ export class SidebarItemsService {
       this.llenarOpciones(ReporteActivoFijoComponent, tabs.tab_reporte_activos_fijos, items.item_reporte_activos_fijos, icos.ico_reporte_activos_fijos);
       this.llenarOpciones(ReporteProduccionComponent, tabs.tab_reporte_produccion, items.item_reporte_produccion, icos.ico_reporte_produccion);
       this.llenarOpciones(ReporteContabilidadComponent, tabs.tab_reporte_contabilidad, items.item_reporte_contabilidad, icos.ico_reporte_contabilidad);
-       //this.llenarOpciones(ReporteTalentoHumanoComponent, tabs.tab_reporte_talento_humano, items.item_reporte_talento_humano, icos.ico_reporte_talento_humano);
-      //this.llenarOpciones(ReporteFinancieroComponent, tabs.tab_reporte_financiero, items.item_reporte_financiero, icos.ico_reporte_financiero);
-      //this.llenarOpciones(ReporteImportacionComponent, tabs.tab_reporte_importacion, items.item_reporte_importacion, icos.ico_reporte_importacion);
+      this.llenarOpciones(ReporteTalentoHumanoComponent, tabs.tab_reporte_talento_humano, items.item_reporte_talento_humano, icos.ico_reporte_talento_humano);
+      this.llenarOpciones(ReporteFinancieroComponent, tabs.tab_reporte_financiero, items.item_reporte_financiero, icos.ico_reporte_financiero);
+      this.llenarOpciones(ReporteImportacionComponent, tabs.tab_reporte_importacion, items.item_reporte_importacion, icos.ico_reporte_importacion);
 
-      this.llenarOpciones(ReporteVentaComponent, tabs.tab_reporte_talento_humano, items.item_reporte_talento_humano, icos.ico_reporte_talento_humano);
-      this.llenarOpciones(ReporteCajaComponent, tabs.tab_reporte_financiero, items.item_reporte_financiero, icos.ico_reporte_financiero);
-      this.llenarOpciones(KardexMercaderiaComponent, tabs.tab_reporte_importacion, items.item_reporte_importacion, icos.ico_reporte_importacion);
     }
 
     if (tabNombre == modulos.modulo_accesos) {

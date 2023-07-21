@@ -1,0 +1,272 @@
+<nav class="navbar-light nav-fijo">
+    <ul class="navbar-nav">
+        <li class="nav-item" *ngIf="cierreCaja.id==0">
+            <a class="nav-link" title="Guardar" role="button" (click)="crear($event)">
+                <mat-icon>save</mat-icon>
+            </a>
+        </li>
+        <li class="nav-item" *ngIf="cierreCaja.id!=0">
+            <a class="nav-link" title="Actualizar" role="button" (click)="actualizar($event)">
+                <mat-icon>update</mat-icon>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" title="Nuevo" role="button" (click)="nuevo($event)">
+                <mat-icon>file_copy</mat-icon>
+            </a>
+        </li>
+        <ng-container *ngIf="cierreCaja.id!=0">
+            <li class="nav-item" *ngIf="cierreCaja.estado!=estadoActivo">
+                <a class="nav-link" title="Activar" role="button" (click)="activar($event)">
+                    <mat-icon>assignment_turned_in</mat-icon>
+                </a>
+            </li>
+            <li class="nav-item" *ngIf="cierreCaja.estado==estadoActivo">
+                <a class="nav-link" title="Inactivar" role="button" (click)="inactivar($event)">
+                    <mat-icon>delete_forever</mat-icon>
+                </a>
+            </li>
+        </ng-container>
+        <li class="nav-item">
+            <a class="nav-link" title="pdf" role="button" (click)="pdf($event)">
+                <mat-icon>picture_as_pdf</mat-icon>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" title="excel" role="button" (click)="excel($event)">
+                <mat-icon>cloud_download</mat-icon>
+            </a>
+        </li>
+    </ul>
+</nav>
+<div class="contenedor">
+    <mat-accordion class="headers-align">
+        <mat-expansion-panel (opened)="abrirPanelNuevo = true" (closed)="abrirPanelNuevo = false"
+            [expanded]="abrirPanelNuevo">
+            <mat-expansion-panel-header>
+                <mat-panel-title>
+                    <i><u>CIERRE DE CAJA</u></i>
+                </mat-panel-title>
+                <mat-panel-description>
+                    {{abrirPanelNuevo ? 'Ocultar cierre de caja' : 'Ver cierre de caja'}}
+                    <mat-icon>playlist_add_check</mat-icon>
+                </mat-panel-description>
+            </mat-expansion-panel-header>
+            <mat-divider></mat-divider>
+            <div class="form-group form-row">
+                <div class="col-4">
+                    <div class="centrar-titulo fondo">
+                        <mat-label>DETALLE DE BILLETES</mat-label>
+                    </div>
+                    <mat-card class="mat-elevation-z8">
+                        <div class="form-row">
+                            <div class="col-6">
+                                <mat-form-field appearance="standard">
+                                    <mat-label>Billetes de 100</mat-label>
+                                    <input matInput type="text" [(ngModel)]="cierreCaja.billete100"
+                                        class="form-control-sm" (change)="calcularTotales()">
+                                </mat-form-field>
+                            </div>
+                            <div class="col-6">
+                                <mat-form-field appearance="standard">
+                                    <mat-label>Billetes de 50</mat-label>
+                                    <input matInput type="text" [(ngModel)]="cierreCaja.billete50"
+                                        class="form-control-sm" (change)="calcularTotales()">
+                                </mat-form-field>
+                            </div>
+                            <div class="col-6">
+                                <mat-form-field appearance="standard">
+                                    <mat-label>Billetes de 20</mat-label>
+                                    <input matInput type="text" [(ngModel)]="cierreCaja.billete20"
+                                        class="form-control-sm" (change)="calcularTotales()">
+                                </mat-form-field>
+                            </div>
+                            <div class="col-6">
+                                <mat-form-field appearance="standard">
+                                    <mat-label>Billetes de 10</mat-label>
+                                    <input matInput type="text" [(ngModel)]="cierreCaja.billete10"
+                                        class="form-control-sm" (change)="calcularTotales()">
+                                </mat-form-field>
+                            </div>
+                            <div class="col-6">
+                                <mat-form-field appearance="standard">
+                                    <mat-label>Billetes de 5</mat-label>
+                                    <input matInput type="text" [(ngModel)]="cierreCaja.billete5"
+                                        class="form-control-sm" (change)="calcularTotales()">
+                                </mat-form-field>
+                            </div>
+                            <div class="col-6">
+                                <mat-form-field appearance="standard">
+                                    <mat-label>Billetes de 1</mat-label>
+                                    <input matInput type="text" [(ngModel)]="cierreCaja.billete1"
+                                        class="form-control-sm" (change)="calcularTotales()">
+                                </mat-form-field>
+                            </div>
+                        </div>
+                    </mat-card>
+                </div>
+                <div class="col-4 linea-vertical">
+                    <div class="centrar-titulo fondo">
+                        <mat-label>DETALLE DE MONEDAS</mat-label>
+                    </div>
+                    <mat-card class="mat-elevation-z8">
+                        <div class="form-row">
+                            <div class="col-6">
+                                <mat-form-field appearance="standard">
+                                    <mat-label>Monedas de 1,00</mat-label>
+                                    <input matInput type="text" [(ngModel)]="cierreCaja.moneda100"
+                                        class="form-control-sm" (change)="calcularTotales()">
+                                </mat-form-field>
+                            </div>
+                            <div class="col-6">
+                                <mat-form-field appearance="standard">
+                                    <mat-label>Monedas de 0,50</mat-label>
+                                    <input matInput type="text" [(ngModel)]="cierreCaja.moneda50"
+                                        class="form-control-sm" (change)="calcularTotales()">
+                                </mat-form-field>
+                            </div>
+                            <div class="col-6">
+                                <mat-form-field appearance="standard">
+                                    <mat-label>Monedas de 0,25</mat-label>
+                                    <input matInput type="text" [(ngModel)]="cierreCaja.moneda25"
+                                        class="form-control-sm" (change)="calcularTotales()">
+                                </mat-form-field>
+                            </div>
+                            <div class="col-6">
+                                <mat-form-field appearance="standard">
+                                    <mat-label>Monedas de 0,10</mat-label>
+                                    <input matInput type="text" [(ngModel)]="cierreCaja.moneda10"
+                                        class="form-control-sm" (change)="calcularTotales()">
+                                </mat-form-field>
+                            </div>
+                            <div class="col-6">
+                                <mat-form-field appearance="standard">
+                                    <mat-label>Monedas de 0,05</mat-label>
+                                    <input matInput type="text" [(ngModel)]="cierreCaja.moneda5" class="form-control-sm"
+                                        (change)="calcularTotales()">
+                                </mat-form-field>
+                            </div>
+                            <div class="col-6">
+                                <mat-form-field appearance="standard">
+                                    <mat-label>Monedas de 0,01</mat-label>
+                                    <input matInput type="text" [(ngModel)]="cierreCaja.moneda1" class="form-control-sm"
+                                        (change)="calcularTotales()">
+                                </mat-form-field>
+                            </div>
+                        </div>
+                    </mat-card>
+                </div>
+                <div class="col-4 linea-vertical">
+                    <div class="centrar-titulo fondo">
+                        <mat-label>RESUMEN</mat-label>
+                    </div>
+                    <mat-card class="mat-elevation-z8">
+                        <div class="form-row">
+                            <div class="col-6">
+                                <mat-form-field appearance="standard">
+                                    <mat-label>Fecha</mat-label>
+                                    <input matInput [matDatepicker]="picker1" class="form-control-sm" disabled
+                                        [(ngModel)]="cierreCaja.fecha" [max]="hoy" datePickerFormat="DD-MM-YYYY">
+                                    <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                                    <mat-datepicker #picker1></mat-datepicker>
+                                </mat-form-field>
+                            </div>
+                            <div class="col-6">
+                                <mat-form-field appearance="standard">
+                                    <mat-label>Estado</mat-label>
+                                    <mat-select class="form-control-sm" [(ngModel)]="cierreCaja.estado" disabled>
+                                        <mat-option [value]="estadoActivo">{{estadoActivo}}</mat-option>
+                                        <mat-option [value]="estadoInactivo">{{estadoInactivo}}</mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+                            <div class="col-6">
+                                <mat-form-field appearance="standard">
+                                    <mat-label>Vendedor</mat-label>
+                                    <input matInput type="text" class="form-control-sm"
+                                        [(ngModel)]="sesion.usuario.apodo" disabled>
+                                </mat-form-field>
+                            </div>
+                            <div class="col-6">
+                                <mat-form-field appearance="standard">
+                                    <mat-label>Pto. Venta</mat-label>
+                                    <input matInput type="text" class="form-control-sm"
+                                        [(ngModel)]="sesion.usuario.estacion.descripcion" disabled>
+                                </mat-form-field>
+                            </div>
+                            <div class="col-4">
+                                <mat-form-field appearance="standard">
+                                    <mat-label>Total Billetes</mat-label>
+                                    <input matInput type="text" [(ngModel)]="cierreCaja.totalBilletes"
+                                        class="form-control-sm" disabled>
+                                </mat-form-field>
+                            </div>
+                            <div class="col-4">
+                                <mat-form-field appearance="standard">
+                                    <mat-label>Total Monedas</mat-label>
+                                    <input matInput type="text" [(ngModel)]="cierreCaja.totalMonedas"
+                                        class="form-control-sm" disabled>
+                                </mat-form-field>
+                            </div>
+                            <div class="col-4">
+                                <mat-form-field appearance="standard">
+                                    <mat-label>Total Caja</mat-label>
+                                    <input matInput type="text" [(ngModel)]="cierreCaja.totalCaja"
+                                        class="form-control-sm" disabled>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                    </mat-card>
+                </div>
+            </div>
+        </mat-expansion-panel>
+    </mat-accordion>
+    <mat-accordion class="headers-align">
+        <mat-expansion-panel (opened)="abrirPanelAdmin = true" (closed)="abrirPanelAdmin = false" 
+            [expanded]="abrirPanelAdmin">
+            <mat-expansion-panel-header>
+                <mat-panel-title>
+                    <i><u>GESTIONAR CIERRES DE CAJA</u></i>
+                </mat-panel-title>
+                <mat-panel-description>
+                    {{abrirPanelAdmin ? 'Ocultar cierres de caja' : 'Administrar cierres de caja'}}
+                    <mat-icon>playlist_add_check</mat-icon>
+                </mat-panel-description>
+            </mat-expansion-panel-header>
+            <mat-divider></mat-divider>
+            <mat-form-field appearance="standard">
+                <mat-label>Buscar calificaciones</mat-label>
+                <input matInput oninput="this.value = this.value.toUpperCase()" (keyup)="filtro($event)" #inputFiltro>
+                <button mat-button *ngIf="inputFiltro.value" matSuffix mat-icon-button
+                    (click)="borrarFiltro()">
+                    <mat-icon>close</mat-icon>
+                </button>
+            </mat-form-field>
+            <div class="mat-elevation-z8">
+                <table mat-table [dataSource]="dataSource" matSort>
+                    <!-- Columnas Dinamicas -->
+                    <ng-container *ngFor="let columna of columnas" [matColumnDef]="columna.nombreColumna">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> {{ columna.cabecera }} </th>
+                        <td mat-cell *matCellDef="let row"> {{ columna.celda(row) }} </td>
+                    </ng-container>
+                    <tr mat-header-row *matHeaderRowDef="cabecera"></tr>
+                    <tr mat-row (click)="seleccion(row)" [class.selected-row]="clickedRows.has(row)"
+                        *matRowDef="let row; columns: cabecera;"></tr>
+                    <!-- Row shown when there is no matching data. -->
+                    <tr class="mat-row" *matNoDataRow>
+                        <td class="mat-cell" colspan="6">No hay cierres de caja que coincidan con: 
+                            "{{inputFiltro.value}}" 
+                        </td>
+                    </tr>
+                </table>
+                <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" showFirstLastButtons></mat-paginator>
+            </div>
+            <div class="azul" *ngIf="!clickedRows.size">
+                Seleccione una fila para editar
+            </div>
+            <div class="azul" *ngFor="let clickedRow of clickedRows">
+                Id: {{clickedRow.id}} seleccionado
+            </div>
+        </mat-expansion-panel>
+    </mat-accordion>
+</div>

@@ -39,6 +39,7 @@ import { NotaDebitoCompraComponent } from './componentes/compra/nota-debito-comp
 import { FacturaComponent } from './componentes/venta/factura/factura.component';
 import { NotaCreditoVentaComponent } from './componentes/venta/nota-credito-venta/nota-credito-venta.component';
 import { NotaDebitoVentaComponent } from './componentes/venta/nota-debito-venta/nota-debito-venta.component';
+import { CierreCajaComponent } from './componentes/venta/cierre-caja/cierre-caja.component';
 
 //Módulo de Recaudaciones
 import { RecaudacionComponent } from './componentes/recaudacion/recaudacion/recaudacion.component';
@@ -81,7 +82,7 @@ import { ReporteClienteComponent } from './componentes/reporte/cliente/reporte-c
 import { ReporteCompraComponent } from './componentes/reporte/compra/reporte-compra/reporte-compra.component';
 import { ReporteVentaComponent } from './componentes/reporte/venta/reporte-venta/reporte-venta.component';
   import { DetalleVentasComponent } from './componentes/reporte/venta/detalle-ventas/detalle-ventas.component';
-  import { CierreCajaComponent } from './componentes/reporte/venta/cierre-caja/cierre-caja.component';
+  import { CajaComponent } from './componentes/reporte/venta/caja/caja.component';
 import { ReporteInventarioComponent } from './componentes/reporte/inventario/reporte-inventario/reporte-inventario.component';
   import { KardexMercaderiaComponent } from './componentes/reporte/inventario/kardex-mercaderia/kardex-mercaderia.component';
 import { ReporteCajaBancoComponent } from './componentes/reporte/caja-banco/reporte-caja-banco/reporte-caja-banco.component';
@@ -200,6 +201,7 @@ export const RoutingComponents = [
   FacturaComponent,
   NotaCreditoVentaComponent,
   NotaDebitoVentaComponent,
+  CierreCajaComponent,
   // Compras
   ProveedorComponent,
   DialogoMapaProveedorComponent,
@@ -219,7 +221,7 @@ export const RoutingComponents = [
   ReporteCompraComponent,
   ReporteVentaComponent,
   DetalleVentasComponent,
-  CierreCajaComponent,
+  CajaComponent,
   ReporteInventarioComponent,
   KardexMercaderiaComponent,
   ReporteCajaBancoComponent,
@@ -232,7 +234,6 @@ export const RoutingComponents = [
   ReporteFinancieroComponent,
   ReporteImportacionComponent,
 
-
   ReporteCajaComponent,
 
   //Usuarios
@@ -243,14 +244,15 @@ export const RoutingComponents = [
   EstacionComponent,
   PerfilComponent,
   PermisoComponent,
-  // configuración
+  //Configuración
   TipoRetencionComponent,
   UbicacionComponent,
   EstadoCivilComponent,
   RegimenComponent,
   SecuencialComponent,
-  //otros
+  //Indicadores
   DashboardComponent,
+  //otros
   TablesComponent,
   FormsComponent,
   MapsComponent,
