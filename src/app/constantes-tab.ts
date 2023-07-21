@@ -293,11 +293,11 @@ export const icos = {
     ico_secuencial: 'fa-solid fa-list-ol',
     ico_tipo_retencion: 'fa-regular fa-handshake',
     ico_regimen: 'fa-solid fa-fax',
-    ico_exportacion: 'fa fa-download',
-    ico_importacion: 'fa fa-upload',
+    ico_exportacion: 'fa-solid fa-file-export',
+    ico_importacion: 'fa-solid fa-file-import',
 
     // Estadisticas
-    ico_indicadores: 'fa fa-bar-chart',
+    ico_indicadores: 'fa-solid fa-chart-column',
 
     // Otros
     ico_contabilizacion: 'fa fa-file-text-o',

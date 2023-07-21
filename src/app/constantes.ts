@@ -162,6 +162,7 @@ export const urn =
     notaCreditoElectronica: "/notaCreditoElectronica",
     guiaRemisionElectronica: "/guiaRemisionElectronica",
     consultarPorElectronica: "/consultarPorElectronica",
+    cierreCaja: "/cierreCaja",
     banco: "/banco",
     cuentaPropia: "/cuentaPropia",
     consultarBancoDistintoPorEmpresaYEstado: "/consultarBancoDistintoPorEmpresaYEstado",
