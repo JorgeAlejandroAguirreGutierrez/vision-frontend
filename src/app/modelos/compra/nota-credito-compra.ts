@@ -19,10 +19,10 @@ export class NotaCreditoCompra {
 
     descuento: number;
     subtotal: number;
-    subtotalGrabado: number;
-    subtotalNoGrabado: number;
-    importeIvaTotal: number;
-    valorTotal: number;
+    subtotalGravado: number;
+    subtotalNoGravado: number;
+    importeIva: number;
+    total: number;
 
     comentario: string;
     facturaCompra: FacturaCompra;
@@ -45,10 +45,10 @@ export class NotaCreditoCompra {
 
         this.descuento = valores.cero;
         this.subtotal = valores.cero;
-        this.subtotalGrabado = valores.cero;
-        this.subtotalNoGrabado = valores.cero;
-        this.importeIvaTotal = valores.cero;
-        this.valorTotal = valores.cero;
+        this.subtotalGravado = valores.cero;
+        this.subtotalNoGravado = valores.cero;
+        this.importeIva = valores.cero;
+        this.total = valores.cero;
 
         this.comentario = valores.vacio;
         this.facturaCompra = new FacturaCompra();

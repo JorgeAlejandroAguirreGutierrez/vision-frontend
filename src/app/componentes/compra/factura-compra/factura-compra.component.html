@@ -374,7 +374,7 @@
                                 <div class="form-row">
                                     <div class="col-6">
                                         <mat-form-field appearance="standard">
-                                            <mat-label>Grabado</mat-label>
+                                            <mat-label>Gravado</mat-label>
                                             <input matInput type="text" appFormatoDecimal
                                                 [(ngModel)]="facturaCompra.valorDistribuidoTotal"
                                                 (change)="formateaValor($event)"
@@ -383,7 +383,7 @@
                                     </div>
                                     <div class="col-6">
                                         <mat-form-field appearance="standard">
-                                            <mat-label>No Grabado</mat-label>
+                                            <mat-label>No Gravado</mat-label>
                                             <input matInput type="text" appFormatoDecimal
                                                 [(ngModel)]="facturaCompra.valorDistribuidoTotal"
                                                 (change)="formateaValor($event)"
@@ -430,7 +430,7 @@
                                 </div>
                                 <div class="col-5">
                                     <mat-form-field appearance="standard">
-                                        <input matInput type="text " [value]="formateaNumero(facturaCompra.subtotalGrabadoConDescuento)"
+                                        <input matInput type="text " [value]="formateaNumero(facturaCompra.subtotalGravadoConDescuento)"
                                             class="form-control-sm " [disabled]="true">
                                     </mat-form-field>
                                 </div>
@@ -440,7 +440,7 @@
                                 <div class="col-5">
                                     <mat-form-field appearance="standard">
                                         <input matInput type="text "
-                                            [value]="formateaNumero(facturaCompra.subtotalNoGrabadoConDescuento)"
+                                            [value]="formateaNumero(facturaCompra.subtotalNoGravadoConDescuento)"
                                             class="form-control-sm " [disabled]="true">
                                     </mat-form-field>
                                 </div>

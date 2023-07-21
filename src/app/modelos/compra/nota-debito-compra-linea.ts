@@ -5,16 +5,13 @@ import { Producto } from "../inventario/producto";
 export class NotaDebitoCompraLinea {
     id: number;
     codigo: string;
-    posicion: number;
-    entregado: string;
-    consignacion: string;
-    costoUnitario: number;
     cantidad: number;
-    valorDescuentoLinea: number;
-    porcentajeDescuentoLinea: number;
-    ivaSinDescuentoLinea: number;
-    totalSinDescuentoLinea: number;
-    totalConDescuentoLinea: number;
+    costoUnitario: number;
+    descuento: number;
+    subtotalLinea: number;
+    ivaLinea: number;
+    totalLinea: number;
+    entregado: string;
     //IMPUESTO SELECCIONADO
     impuesto: Impuesto;
     //PRODUCTO SELECCIONADO
@@ -27,9 +24,11 @@ export class NotaDebitoCompraLinea {
         this.codigo = valores.vacio;
         this.cantidad = valores.cero;
         this.costoUnitario = valores.cero;
-        this.valorDescuentoLinea = valores.cero;
-        this.porcentajeDescuentoLinea = valores.cero; 
-        this.totalSinDescuentoLinea = valores.cero;
+        this.descuento = valores.cero;
+        this.subtotalLinea = valores.cero;
+        this.ivaLinea = valores.cero;
+        this.totalLinea = valores.cero;
+        this.entregado = valores.no;
         this.impuesto = new Impuesto();
         this.producto = new Producto();
         this.bodega = new Bodega();
