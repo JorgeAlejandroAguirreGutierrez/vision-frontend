@@ -21,7 +21,7 @@ export class NotaCreditoCompra {
     subtotal: number;
     subtotalGravado: number;
     subtotalNoGravado: number;
-    iva: number;
+    importeIva: number;
     total: number;
 
     comentario: string;
@@ -47,7 +47,7 @@ export class NotaCreditoCompra {
         this.subtotal = valores.cero;
         this.subtotalGravado = valores.cero;
         this.subtotalNoGravado = valores.cero;
-        this.iva = valores.cero;
+        this.importeIva = valores.cero;
         this.total = valores.cero;
 
         this.comentario = valores.vacio;

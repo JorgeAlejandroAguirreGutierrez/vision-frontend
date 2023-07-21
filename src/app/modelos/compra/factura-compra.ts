@@ -19,8 +19,8 @@ export class FacturaCompra {
     subtotalSinDescuento: number;
     subtotalConDescuento: number;
     descuentoTotal: number;
-    subtotalGrabadoConDescuento: number;
-    subtotalNoGrabadoConDescuento: number;
+    subtotalGravadoConDescuento: number;
+    subtotalNoGravadoConDescuento: number;
     importeIvaTotal: number;
     valorTotal: number;
 
@@ -50,8 +50,8 @@ export class FacturaCompra {
         this.subtotalSinDescuento = valores.cero;
         this.subtotalConDescuento = valores.cero;
         this.descuentoTotal = valores.cero;
-        this.subtotalGrabadoConDescuento = valores.cero;
-        this.subtotalNoGrabadoConDescuento = valores.cero;
+        this.subtotalGravadoConDescuento = valores.cero;
+        this.subtotalNoGravadoConDescuento = valores.cero;
         this.importeIvaTotal = valores.cero;
         this.valorTotal = valores.cero;
 
