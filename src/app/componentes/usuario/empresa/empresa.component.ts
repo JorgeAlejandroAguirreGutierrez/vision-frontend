@@ -8,7 +8,6 @@ import { ImagenService } from '../../../servicios/administracion/imagen.service'
 
 import { Empresa } from '../../../modelos/usuario/empresa';
 import { EmpresaService } from '../../../servicios/usuario/empresa.service';
-import { TipoIdentificacion } from '../../../modelos/configuracion/tipo-identificacion';
 
 import { ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
@@ -69,9 +68,9 @@ export class EmpresaComponent implements OnInit {
   
   @HostListener('window:keypress', ['$event'])
   keyEvent($event: KeyboardEvent) {
-    if (($event.shiftKey || $event.metaKey) && $event.key == 'G') //SHIFT + G
+    if (($event.shiftKey || $event.metaKey) && ($event.ctrlKey || $event.metaKey) && $event.key == 'G') //SHIFT + G
       this.crear(null);
-    if (($event.shiftKey || $event.metaKey) && $event.key == 'N') //ASHIFT + N
+    if (($event.shiftKey || $event.metaKey) && $event.key == 'N') //SHIFT + N
       this.nuevo(null);
   }
 
@@ -93,7 +92,7 @@ export class EmpresaComponent implements OnInit {
       next: res => {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
         this.empresa = res.resultado as Empresa;
-        this.empresa.logo64 = imagenes.logo_empresa;
+        //this.empresa.logo64 = imagenes.logo_empresa;
         this.subirCertificado();
         this.consultar();
         this.nuevo(null);
@@ -111,7 +110,7 @@ export class EmpresaComponent implements OnInit {
       next: res => {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
         this.empresa = res.resultado as Empresa;
-        this.empresa.logo64 = imagenes.logo_empresa;
+        //this.empresa.logo64 = imagenes.logo_empresa;
         this.subirCertificado();
         this.consultar();
         this.nuevo(null);
@@ -195,21 +194,42 @@ export class EmpresaComponent implements OnInit {
     this.dataSource.filter = '';
   }
 
-  capturarFile(event : any) : any{
+  capturarLogo(event : any) : any{
     const archivoCapturado = event.target.files[0];
     this.imagenService.convertirBase64(archivoCapturado).then((imagen: any) => {
       this.empresa.logo64 = imagen.base64;
     });
   }
 
+  capturarCertificado(event : any) : any{
+    this.certificado = event.target.files[0];
+    this.empresa.certificado = this.certificado.name;
+  }
+
+  subirCertificado() : any{
+    if (this.certificado != null){
+      console.log(this.certificado.name);
+      this.empresaService.subirCertificado(this.empresa.id, this.certificado).subscribe({
+        next: (res) => {
+          this.empresa = res.resultado as Empresa;
+          //this.empresa.logo64 = imagenes.logo_empresa;
+        },
+        error: (err) => {
+          Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje });
+        }
+      });
+    }
+  }
+
   //VALIDACIONES
   validarIdentificacion() {
     this.empresaService.validarIdentificacion(this.empresa.identificacion).subscribe({
       next: (res) => {
-        this.empresa.tipoIdentificacion = res.resultado.tipoIdentificacion as TipoIdentificacion;
+        this.empresa = res.resultado as Empresa;
+        this.empresa.logo64 = imagenes.logo_empresa;
       },
       error: (err) => {
-        this.empresa.tipoIdentificacion = null;
+        this.empresa = new Empresa();
         Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje });
       }
     });
@@ -241,21 +261,5 @@ export class EmpresaComponent implements OnInit {
       return false;
     }
     return true;
-  }
-
-  capturarCertificado(event : any) : any{
-    this.certificado = event.target.files[0];
-  }
-
-  subirCertificado() : any{
-    this.empresaService.subirCertificado(this.empresa.id, this.certificado).subscribe({
-      next: (res) => {
-        this.empresa = res.resultado as Empresa;
-        this.empresa.logo64 = imagenes.logo_empresa;
-      },
-      error: (err) => {
-        Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje });
-      }
-    });
   }
 }

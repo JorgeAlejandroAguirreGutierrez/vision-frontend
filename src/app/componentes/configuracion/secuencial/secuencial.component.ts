@@ -106,8 +106,8 @@ export class SecuencialComponent implements OnInit {
       error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     });
   }
-  consultarEstaciones() {
-    this.estacionService.consultarPorEstablecimientoPuntoVenta(this.secuencial.estacion.establecimiento.id).subscribe({
+  consultarPuntosVenta() {
+    this.estacionService.consultarPuntosVentaPorEstablecimiento(this.secuencial.estacion.establecimiento.id).subscribe({
       next: res => {
         this.estaciones = res.resultado as Estacion[];
       },
@@ -205,6 +205,8 @@ export class SecuencialComponent implements OnInit {
       this.clickedRows.clear();
       this.clickedRows.add(secuencial);
       this.secuencial = { ... secuencial};
+      this.consultarEstablecimientos();
+      this.consultarPuntosVenta();
     } else {
       this.nuevo(null);
     }

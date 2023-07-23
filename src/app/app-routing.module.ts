@@ -10,7 +10,7 @@ import { ImportarComponent } from './componentes/configuracion/importar/importar
 import { ExportarComponent } from './componentes/configuracion/exportar/exportar.component';
 
 // Componentes de Inicio
-import { InicioSesionComponent, CambioCredencialesComponent } from './componentes/inicio-sesion/inicio-sesion.component';
+import { InicioSesionComponent, CambioCredencialesComponent } from './componentes/comun/inicio-sesion/inicio-sesion.component';
 import { MainComponent } from './componentes/comun/main/main.component';
 import { MenuComponent } from './componentes/comun/menu/menu.component';
 

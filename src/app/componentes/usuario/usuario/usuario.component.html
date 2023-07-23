@@ -44,138 +44,177 @@
             </mat-expansion-panel-header>
             <mat-divider></mat-divider>
             <div class="form-group form-row">
-                <div class="form-row col-3 mr-2">
+                <div class="form-row col-10">
+                    <div class="form-row col-3 mr-2">
+                        <div class="col-12">
+                            <mat-form-field appearance="standard">
+                                <mat-label>Usuario</mat-label>
+                                <input matInput type="text" [(ngModel)]="usuario.apodo" oninput="this.value = this.value.toUpperCase()" class="form-control-sm">
+                            </mat-form-field>
+                        </div>
+                        <div class="col-12">
+                            <mat-form-field appearance="standard">
+                                <mat-label>Contraseña</mat-label>
+                                <input matInput [type]="ocultarContrasena ? 'password' : 'text'" [(ngModel)]="usuario.contrasena">
+                                <button mat-icon-button matSuffix (click)="ocultarContrasena = !ocultarContrasena"
+                                    [attr.aria-label]="'Ocultar password'" [attr.aria-pressed]="ocultarContrasena">
+                                    <mat-icon>{{ocultarContrasena ? 'visibility_off' : 'visibility'}}</mat-icon>
+                                </button>
+                            </mat-form-field>
+                        </div>
+                        <div class="col-12">
+                            <mat-form-field appearance="standard">
+                                <mat-label>Confirmar Contraseña</mat-label>
+                                <input matInput [type]="ocultarContrasena2 ? 'password' : 'text'" [(ngModel)]="usuario.confirmarContrasena" (change)="validarContrasena()">
+                                <button mat-icon-button matSuffix (click)="ocultarContrasena2 = !ocultarContrasena2"
+                                    [attr.aria-label]="'Ocultar password2'" [attr.aria-pressed]="ocultarContrasena2">
+                                    <mat-icon>{{ocultarContrasena2 ? 'visibility_off' : 'visibility'}}</mat-icon>
+                                </button>
+                            </mat-form-field>
+                        </div>
+                        <div class="col-12 centrar labelBeforeSlide">
+                            <mat-label class="mr-2">Cambiar Contraseña : </mat-label>
+                            <mat-slide-toggle class="azul" [checked]="cambiarContrasena" (toggleChange)="alternarCambiarContrasena()"></mat-slide-toggle>
+                        </div>
+                    </div>
+                    <div class="form-row col-9 linea-vertical">
+                        <div class="col-3">
+                            <mat-form-field appearance="standard">
+                                <mat-label>Identificacion</mat-label>
+                                <input matInput type="text" [(ngModel)]="usuario.identificacion" class="form-control-sm"
+                                (change)="validarIdentificacion(usuario.identificacion)">
+                            </mat-form-field>
+                        </div>
+                        <div class="col-9">
+                            <mat-form-field appearance="standard">
+                                <mat-label>Nombre</mat-label>
+                                <input matInput type="text" [(ngModel)]="usuario.nombre" class="form-control-sm"
+                                    oninput="this.value = this.value.toUpperCase()">
+                            </mat-form-field>
+                        </div>
+                        <div class="col-3">
+                            <mat-form-field appearance="standard">
+                                <mat-label>Teléfono</mat-label>
+                                <b matPrefix>+593 &nbsp;</b>
+                                <input matInput type="tel" [(ngModel)]="usuario.telefono" class="form-control-sm"
+                                    (change)="validarTelefono()" placeholder="03-2999-123" oninput="this.value = this.value.replace
+                                    ( /^(\d{2})(\d{4})(\d{3})$/, '$1-$2-$3')">
+                            </mat-form-field>
+                        </div>
+                        <div class="col-3">
+                            <mat-form-field appearance="standard">
+                                <mat-label>Celular</mat-label>
+                                <b matPrefix>+593 </b>
+                                <input matInput type="tel" [(ngModel)]="usuario.celular" class="form-control-sm"
+                                    (change)="validarCelular()" placeholder="09-9999-1234" oninput="this.value = this.value.replace
+                                            ( /^(\d{2})(\d{4})(\d{4})$/, '$1-$2-$3')">
+                            </mat-form-field>
+                        </div>
+                        <div class="col-6">
+                            <mat-form-field appearance="standard">
+                                <mat-label>Correo</mat-label>
+                                <input matInput placeholder="ejemplo@evoluciontic.com" [(ngModel)]="usuario.correo"
+                                oninput="this.value = this.value.toLowerCase()" appFormatoDecimal class="form-control-sm">
+                            </mat-form-field>
+                        </div>
+                        <div class="col-7">
+                            <mat-form-field appearance="standard">
+                                <mat-label>Pregunta de Seguridad</mat-label>
+                                <mat-select [(ngModel)]="usuario.pregunta" [compareWith]="compareFn"
+                                    class="form-control-sm">
+                                    <mat-option *ngFor="let pregunta of preguntas" [value]="pregunta">
+                                        {{pregunta}}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+                        <div class="col-5">
+                            <mat-form-field appearance="standard">
+                                <mat-label>Respuesta</mat-label>
+                                <input matInput type="text" [(ngModel)]="usuario.respuesta" class="form-control-sm"
+                                    oninput="this.value = this.value.toUpperCase()">
+                            </mat-form-field>
+                        </div>
+                        <div class="col-3">
+                            <mat-form-field appearance="standard">
+                                <mat-label>Perfil</mat-label>
+                                <mat-select [(ngModel)]="usuario.perfil" [compareWith]="compareFn" class="form-control-sm">
+                                    <mat-option *ngFor="let perfil of perfiles" [value]="perfil">
+                                        {{perfil.descripcion}}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+                        <div class="col-2">
+                            <mat-form-field appearance="standard">
+                                <mat-label>Multiempresa</mat-label>
+                                <input matInput type="text" [(ngModel)]="usuario.perfil.multiempresa" 
+                                class="form-control-sm" disabled>
+                            </mat-form-field>
+                        </div>
+                        <div class="col-7">
+                            <mat-form-field appearance="standard">
+                                <mat-label>Empresa</mat-label>
+                                <mat-select [(ngModel)]="usuario.estacion.establecimiento.empresa" [compareWith]="compareFn"
+                                    (selectionChange)="consultarEstablecimientos()" class="form-control-sm">
+                                    <mat-option *ngFor="let empresa of empresas" [value]="empresa">
+                                        {{empresa.nombreComercial}}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+                        <div class="col-5">
+                            <mat-form-field appearance="standard">
+                                <mat-label>Establecimiento</mat-label>
+                                <mat-select [(ngModel)]="usuario.estacion.establecimiento" [compareWith]="compareFn" 
+                                    (selectionChange)="consultarEstaciones()" class="form-control-sm">
+                                    <mat-option *ngFor="let establecimiento of establecimientos" [value]="establecimiento">
+                                        {{establecimiento.descripcion}}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+                        <div class="col-5">
+                            <mat-form-field appearance="standard">
+                                <mat-label>PC Asignado</mat-label>
+                                <mat-select [(ngModel)]="usuario.estacion" [compareWith]="compareFn" class="form-control-sm">
+                                    <mat-option *ngFor="let estacion of estaciones" [value]="estacion">
+                                        {{estacion.descripcion}}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+                        <div class="col-2">
+                            <mat-form-field appearance="standard">
+                                <mat-label>Estado</mat-label>
+                                <mat-select [(ngModel)]="usuario.estado" [disabled]="true"
+                                    class="form-control-sm">
+                                    <mat-option [value]="activo">{{activo}}</mat-option>
+                                    <mat-option [value]="inactivo">{{inactivo}}</mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                </div>    
+                <div class="form-row col-2">
                     <div class="col-12">
-                        <mat-form-field appearance="standard">
-                            <mat-label>Usuario</mat-label>
-                            <input matInput type="text" [(ngModel)]="usuario.apodo" oninput="this.value = this.value.toUpperCase()" class="form-control-sm">
-                        </mat-form-field>
-                    </div>
-                    <div class="col-12">
-                        <mat-form-field appearance="standard">
-                            <mat-label>Contraseña</mat-label>
-                            <input matInput [type]="ocultarContrasena ? 'password' : 'text'" [(ngModel)]="usuario.contrasena">
-                            <button mat-icon-button matSuffix (click)="ocultarContrasena = !ocultarContrasena"
-                                [attr.aria-label]="'Ocultar password'" [attr.aria-pressed]="ocultarContrasena">
-                                <mat-icon>{{ocultarContrasena ? 'visibility_off' : 'visibility'}}</mat-icon>
-                            </button>
-                        </mat-form-field>
-                    </div>
-                    <div class="col-12">
-                        <mat-form-field appearance="standard">
-                            <mat-label>Confirmar Contraseña</mat-label>
-                            <input matInput [type]="ocultarContrasena2 ? 'password' : 'text'" [(ngModel)]="usuario.confirmarContrasena" (change)="validarContrasena()">
-                            <button mat-icon-button matSuffix (click)="ocultarContrasena2 = !ocultarContrasena2"
-                                [attr.aria-label]="'Ocultar password2'" [attr.aria-pressed]="ocultarContrasena2">
-                                <mat-icon>{{ocultarContrasena2 ? 'visibility_off' : 'visibility'}}</mat-icon>
-                            </button>
-                        </mat-form-field>
-                    </div>
-                    <div class="col-12 centrar labelBeforeSlide">
-                        <mat-label class="mr-2">Cambiar Contraseña : </mat-label>
-                        <mat-slide-toggle color="primary" [checked]="cambiarContrasena" (toggleChange)="alternarCambiarContrasena()"></mat-slide-toggle>
-                    </div>
-                </div>
-                <div class="form-row col-7 linea-vertical">
-                    <div class="col-3">
-                        <mat-form-field appearance="standard">
-                            <mat-label>Identificacion</mat-label>
-                            <input matInput type="text" [(ngModel)]="usuario.identificacion" class="form-control-sm">
-                        </mat-form-field>
-                    </div>
-                    <div class="col-9">
-                        <mat-form-field appearance="standard">
-                            <mat-label>Nombre</mat-label>
-                            <input matInput type="text" [(ngModel)]="usuario.nombre" class="form-control-sm"
-                                oninput="this.value = this.value.toUpperCase()">
-                        </mat-form-field>
-                    </div>
-                    <div class="col-4">
-                        <mat-form-field appearance="standard">
-                            <mat-label>Teléfono</mat-label>
-                            <b matPrefix>+593 &nbsp;</b>
-                            <input matInput type="tel" [(ngModel)]="usuario.telefono" class="form-control-sm"
-                                (change)="validarTelefono()" placeholder="03-2999-123" oninput="this.value = this.value.replace
-                                ( /^(\d{2})(\d{4})(\d{3})$/, '$1-$2-$3')">
-                        </mat-form-field>
-                    </div>
-                    <div class="col-4">
-                        <mat-form-field appearance="standard">
-                            <mat-label>Celular</mat-label>
-                            <b matPrefix>+593 </b>
-                            <input matInput type="tel" [(ngModel)]="usuario.celular" class="form-control-sm"
-                                (change)="validarCelular()" placeholder="09-9999-1234" oninput="this.value = this.value.replace
-                                        ( /^(\d{2})(\d{4})(\d{4})$/, '$1-$2-$3')">
-                        </mat-form-field>
-                    </div>
-                    <div class="col-4">
-                        <mat-form-field appearance="standard">
-                            <mat-label>Correo</mat-label>
-                            <input matInput placeholder="ejemplo@evoluciontic.com" [(ngModel)]="usuario.correo"
-                            oninput="this.value = this.value.toLowerCase()" class="form-control-sm">
-                        </mat-form-field>
-                    </div>
-                    <div class="col-3">
-                        <mat-form-field appearance="standard">
-                            <mat-label>Perfil</mat-label>
-                            <mat-select [(ngModel)]="usuario.perfil" [compareWith]="compareFn" class="form-control-sm">
-                                <mat-option *ngFor="let perfil of perfiles" [value]="perfil">
-                                    {{perfil.descripcion}}
-                                </mat-option>
-                            </mat-select>
-                        </mat-form-field>
-                    </div>
-                    <div class="col-3">
-                        <mat-form-field appearance="standard">
-                            <mat-label>Estacion</mat-label>
-                            <mat-select [(ngModel)]="usuario.estacion" [compareWith]="compareFn" class="form-control-sm">
-                                <mat-option *ngFor="let estacion of estaciones" [value]="estacion">
-                                    {{estacion.descripcion}}
-                                </mat-option>
-                            </mat-select>
-                        </mat-form-field>
-                    </div>
-                    <div class="col-2">
-                        <mat-form-field appearance="standard">
-                            <mat-label>Estado</mat-label>
-                            <mat-select [(ngModel)]="usuario.estado" [disabled]="true"
-                                class="form-control-sm">
-                                <mat-option [value]="activo">{{activo}}</mat-option>
-                                <mat-option [value]="inactivo">{{inactivo}}</mat-option>
-                            </mat-select>
-                        </mat-form-field>
-                    </div>
-                    <div class="col-4">
                         <mat-form-field appearance="standard">
                             <mat-label>Código</mat-label>
                             <input matInput type="text" [(ngModel)]="usuario.codigo" class="form-control-sm"
                                 [disabled]="true">
                         </mat-form-field>
                     </div>
-                    <div class="col-7">
-                        <mat-form-field appearance="standard">
-                            <mat-label>Pregunta de Seguridad</mat-label>
-                            <mat-select [(ngModel)]="usuario.pregunta" [compareWith]="compareFn"
-                                class="form-control-sm">
-                                <mat-option *ngFor="let pregunta of preguntas" [value]="pregunta">
-                                    {{pregunta}}
-                                </mat-option>
-                            </mat-select>
-                        </mat-form-field>
+                    <div class="col-12">
+                        <mat-card class="foto" (click)="fileInput.click()" title="click">
+                            <img width="100%" height="100%" [src]="'data:image/jpeg;base64,'+usuario.avatar64">
+                        </mat-card>
                     </div>
-                    <div class="col-5">
-                        <mat-form-field appearance="standard">
-                            <mat-label>Respuesta</mat-label>
-                            <input matInput type="text" [(ngModel)]="usuario.respuesta" class="form-control-sm"
-                                oninput="this.value = this.value.toUpperCase()">
-                        </mat-form-field>
+                    <div class="col-12 centrar mb-1">
+                        <button class="centrar botonAzul" type="button" mat-raised-button 
+                            (click)="fileInput.click()">Escoja Avatar</button>
+                        <input type="file" hidden (change)="capturarFile($event)" #fileInput>
+                        <!--span class="file-name">{{selectedFile?.name}}</span-->
                     </div>
-                </div>
-                <div class="col-2">
-                    <mat-card class="foto">
-                        <img width="100%" height="100%" [src]="usuario.avatar64">
-                    </mat-card>
-                    <input type="file" (change)="capturarFile($event)">
                 </div>
             </div>
         </mat-expansion-panel>

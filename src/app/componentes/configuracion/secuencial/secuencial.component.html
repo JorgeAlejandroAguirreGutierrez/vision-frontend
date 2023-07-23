@@ -70,7 +70,7 @@
                     <mat-form-field appearance="standard">
                         <mat-label>Establecimiento</mat-label>
                         <mat-select [(ngModel)]="secuencial.estacion.establecimiento" [compareWith]="compareFn" 
-                            (selectionChange)="consultarEstaciones()" class="form-control-sm">
+                            (selectionChange)="consultarPuntosVenta()" class="form-control-sm">
                             <mat-option *ngFor="let establecimiento of establecimientos" [value]="establecimiento">
                                 {{establecimiento.codigoSRI}}
                             </mat-option>

@@ -76,7 +76,7 @@ export class EmpresaService {
   }
 
   validarIdentificacion(identificacion: string): Observable<Respuesta> {
-    return this.http.get(environment.host + urn.ruta + urn.cliente + '/identificacion/validar/' + identificacion, options).pipe(
+    return this.http.get(environment.host + urn.ruta + urn.empresa + urn.validarIdentificacion + urn.slash + identificacion, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);
@@ -86,14 +86,14 @@ export class EmpresaService {
 
   subirCertificado(empresaId: number, file: File): Observable<Respuesta> {
     // Create form data
-    const formData = new FormData(); 
-    // Store form name as "file" with file data
-    formData.append("file", file, file.name);
-    return this.http.post(environment.host + urn.ruta + urn.empresa + urn.subirCertificado + urn.slash + empresaId, formData, optionsCargarArchivo).pipe(
-      map(response => response as Respuesta),
-      catchError(err => {
-        return throwError(()=>err);
-      })
-    );
-  }
+      const formData = new FormData(); 
+      // Store form name as "file" with file data
+      formData.append("file", file, file.name);
+      return this.http.post(environment.host + urn.ruta + urn.empresa + urn.subirCertificado + urn.slash + empresaId, formData, optionsCargarArchivo).pipe(
+        map(response => response as Respuesta),
+        catchError(err => {
+          return throwError(()=>err);
+        })
+      );
+    }
 }

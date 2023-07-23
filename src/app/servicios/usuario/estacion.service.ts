@@ -67,8 +67,17 @@ export class EstacionService {
     );
   }
 
-  consultarPorEstablecimientoPuntoVenta(establecimientoId: number): Observable<Respuesta> {
-    return this.http.get<Respuesta>(environment.host + urn.ruta + urn.estacion + urn.establecimientoPuntoVenta + urn.slash + establecimientoId, options).pipe(
+  consultarEstacionesPorEstablecimiento(establecimientoId: number): Observable<Respuesta> {
+    return this.http.get<Respuesta>(environment.host + urn.ruta + urn.estacion + urn.estacionesPorEstablecimiento + urn.slash + establecimientoId, options).pipe(
+      map(response => response as Respuesta),
+      catchError(err => {
+        return throwError(()=>err);
+      })
+    );
+  }
+
+  consultarPuntosVentaPorEstablecimiento(establecimientoId: number): Observable<Respuesta> {
+    return this.http.get<Respuesta>(environment.host + urn.ruta + urn.estacion + urn.puntosVentaPorEstablecimiento + urn.slash + establecimientoId, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);
