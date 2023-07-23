@@ -12,13 +12,18 @@ import { Usuario } from '../../../modelos/usuario/usuario';
 import { UsuarioService } from '../../../servicios/usuario/usuario.service';
 import { Perfil } from '../../../modelos/usuario/perfil';
 import { PerfilService } from '../../../servicios/usuario/perfil.service';
+import { FacturaService } from '../../../servicios/venta/factura.service';
+import { Empresa } from '../../../modelos/usuario/empresa';
+import { EmpresaService } from '../../../servicios/usuario/empresa.service';
+import { Establecimiento } from '../../../modelos/usuario/establecimiento';
+import { EstablecimientoService } from '../../../servicios/usuario/establecimiento.service';
+import { Estacion } from '../../../modelos/usuario/estacion';
+import { EstacionService } from '../../../servicios/usuario/estacion.service';
 
 import { ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { Estacion } from 'src/app/modelos/usuario/estacion';
-import { EstacionService } from 'src/app/servicios/usuario/estacion.service';
 
 @Component({
   selector: 'app-usuario',
@@ -42,6 +47,8 @@ export class UsuarioComponent implements OnInit {
 
   usuarios: Usuario[];
   perfiles: Perfil[] = [];
+  empresas: Empresa[] = [];
+  establecimientos: Establecimiento[] = [];
   estaciones: Estacion[] = [];
   preguntas: any[] = preguntas;
 
@@ -51,6 +58,8 @@ export class UsuarioComponent implements OnInit {
     { nombreColumna: 'nombre', cabecera: 'Nombre', celda: (row: Usuario) => `${row.nombre}` },
     { nombreColumna: 'apodo', cabecera: 'Usuario', celda: (row: Usuario) => `${row.apodo}` },
     { nombreColumna: 'perfil', cabecera: 'Perfil', celda: (row: Usuario) => `${row.perfil.descripcion}` },
+    { nombreColumna: 'establecimiento', cabecera: 'Establ', celda: (row: Usuario) => `${row.estacion.establecimiento.codigoSRI}` },
+    { nombreColumna: 'estacion', cabecera: 'Pto Vta', celda: (row: Usuario) => `${row.estacion.codigoSRI}` },
     { nombreColumna: 'estado', cabecera: 'Estado', celda: (row: Usuario) => `${row.estado}` }
   ];
   cabecera: string[] = this.columnas.map(titulo => titulo.nombreColumna);
@@ -61,15 +70,50 @@ export class UsuarioComponent implements OnInit {
   @ViewChild(MatSort) sort: MatSort;
   @ViewChild("inputFiltro") inputFiltro: ElementRef;
 
-  constructor(private renderer: Renderer2, private usuarioService: UsuarioService, private perfilService: PerfilService, private estacionService: EstacionService, 
-            private imagenService: ImagenService, private sesionService: SesionService, private router: Router) { }
+  constructor(private renderer: Renderer2, private usuarioService: UsuarioService, private perfilService: PerfilService, private empresaService: EmpresaService, 
+      private establecimientoService: EstablecimientoService, private estacionService: EstacionService, 
+      private imagenService: ImagenService, private sesionService: SesionService, private router: Router, private facturaService: FacturaService) { }
 
   ngOnInit() {
     this.sesion = validarSesion(this.sesionService, this.router);
     this.usuario.avatar64 = imagenes.avatar_usuario;
     this.consultar();
     this.consultarPerfiles();
-    this.consultarEstaciones();
+    this.consultarEmpresas();
+  }
+
+  consultarPerfiles() {
+    this.perfilService.consultarPorEstado(valores.estadoActivo).subscribe({
+      next: res => {
+        this.perfiles = res.resultado as Perfil[]
+      },
+      error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+    });
+  }
+  consultarEmpresas() {
+    this.empresaService.consultar().subscribe({
+      next: (res) => {
+        this.empresas = res.resultado as Empresa[]
+      },
+      error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+      }
+    );
+  }
+  consultarEstablecimientos() {
+    this.establecimientoService.consultarPorEmpresa(this.usuario.estacion.establecimiento.empresa.id).subscribe({
+      next: res => {
+        this.establecimientos = res.resultado as Establecimiento[];
+      },
+      error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+    });
+  }
+  consultarEstaciones() {
+    this.estacionService.consultarEstacionesPorEstablecimiento(this.usuario.estacion.establecimiento.id).subscribe({
+      next: res => {
+        this.estaciones = res.resultado as Estacion[];
+      },
+      error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+    });
   }
 
   nuevo(event) {
@@ -161,6 +205,8 @@ export class UsuarioComponent implements OnInit {
       this.clickedRows.add(usuario);
       this.usuario = { ... usuario};
       this.cambiarContrasena = this.usuario.cambiarContrasena == valores.si? true : false;
+      this.consultarEstablecimientos();
+      this.consultarEstaciones();
     } else {
       this.nuevo(null);
     }
@@ -178,24 +224,6 @@ export class UsuarioComponent implements OnInit {
     this.dataSource.filter = '';
   }
 
-  consultarPerfiles() {
-    this.perfilService.consultarPorEstado(valores.estadoActivo).subscribe({
-      next: res => {
-        this.perfiles = res.resultado as Perfil[]
-      },
-      error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
-    });
-  }
-
-  consultarEstaciones() {
-    this.estacionService.consultarPorEstado(valores.estadoActivo).subscribe({
-      next: res => {
-        this.estaciones = res.resultado as Estacion[]
-      },
-      error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
-    });
-  }
-
   alternarCambiarContrasena(){
     this.cambiarContrasena = !this.cambiarContrasena;
     if (this.cambiarContrasena){
@@ -209,8 +237,8 @@ export class UsuarioComponent implements OnInit {
     return a && b && a.id == b.id;
   }
 
-  capturarFile(event: any): any {
-    const archivoCapturado = event.target.files[0];
+  capturarFile(event: any): void {
+    const archivoCapturado = event.target.files[0] ?? null;
     this.imagenService.convertirBase64(archivoCapturado).then((imagen: any) => {
       this.usuario.avatar64 = imagen.base64;
     });
@@ -222,6 +250,21 @@ export class UsuarioComponent implements OnInit {
   }
 
   // VALIDACIONES
+  validarIdentificacion(identificacion: string) {
+    this.facturaService.validarIdentificacion(identificacion).subscribe({
+      next: res => {
+        if (res.resultado != '') {
+            this.usuario.nombre = res.resultado;
+        } 
+      },
+      error: err => {
+        Swal.fire(error, err.error.mensaje, error_swal);
+        this.usuario.identificacion = valores.vacio;
+        this.usuario.nombre = valores.vacio;
+      }
+    });
+  }
+
   validarContrasena(){
     if (this.usuario.contrasena != this.usuario.confirmarContrasena) {
       Swal.fire({ icon: error_swal, title: error, text: mensajes.error_contrasena_invalida });
@@ -286,4 +329,5 @@ export class UsuarioComponent implements OnInit {
     }
     return true;
   }
+  
 }

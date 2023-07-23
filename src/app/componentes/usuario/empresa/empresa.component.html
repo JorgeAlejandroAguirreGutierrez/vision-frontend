@@ -92,6 +92,20 @@
                     </div>
                     <div class="col-2">
                         <mat-form-field appearance="standard">
+                            <mat-label>Estado</mat-label>
+                            <input matInput type="text" [(ngModel)]="empresa.estado" [disabled]="true"
+                                class="form-control-sm">
+                        </mat-form-field>
+                    </div>
+                    <div class="col-8">
+                        <mat-form-field appearance="standard">
+                            <mat-label>Dirección Matriz</mat-label>
+                            <input matInput type="text" [(ngModel)]="empresa.direccion"
+                                oninput="this.value = this.value.toUpperCase()" class="form-control-sm">
+                        </mat-form-field>
+                    </div>
+                    <div class="col-2">
+                        <mat-form-field appearance="standard">
                             <mat-label>Especial</mat-label>
                             <mat-select [(ngModel)]="empresa.especial" class="form-control-sm">
                                 <mat-option [value]="si">{{si}}</mat-option>
@@ -99,28 +113,15 @@
                             </mat-select>
                         </mat-form-field>
                     </div>
-                    <div class="col-7">
-                        <mat-form-field appearance="standard">
-                            <mat-label>Dirección Matriz</mat-label>
-                            <input matInput type="text" [(ngModel)]="empresa.direccion"
-                                oninput="this.value = this.value.toUpperCase()" class="form-control-sm">
-                        </mat-form-field>
-                    </div>
-                    <div class="col-3">
+                    <div class="col-2">
                         <mat-form-field appearance="standard">
                             <mat-label># Resol. Especial</mat-label>
-                            <input matInput type="text" [(ngModel)]="empresa.resolucionEspecial"
+                            <input matInput type="text" [(ngModel)]="empresa.resolucionEspecial" 
+                                [disabled]="empresa.especial == 'SI'? false : true"
                                 oninput="this.value = this.value.toUpperCase()" class="form-control-sm">
                         </mat-form-field>
                     </div>
                     <div class="col-2">
-                        <mat-form-field appearance="standard">
-                            <mat-label>Estado</mat-label>
-                            <input matInput type="text" [(ngModel)]="empresa.estado" [disabled]="true"
-                                class="form-control-sm">
-                        </mat-form-field>
-                    </div>
-                    <div class="col-3">
                         <mat-form-field appearance="standard">
                             <mat-label>Ag. Retención</mat-label>
                             <mat-select [(ngModel)]="empresa.agenteRetencion" class="form-control-sm">
@@ -129,29 +130,40 @@
                             </mat-select>
                         </mat-form-field>
                     </div>
-                    <div class="col-3">
+                    <div class="col-4">
                         <mat-form-field appearance="standard">
                             <mat-label># Resol. Agente</mat-label>
                             <input matInput type="text" [(ngModel)]="empresa.resolucionAgente"
+                                [disabled]="empresa.agenteRetencion == 'SI'? false : true"
                                 oninput="this.value = this.value.toUpperCase()" class="form-control-sm">
                         </mat-form-field>
                     </div>
-                    <div class="col-3">
-                        <mat-label>{{empresa.certificado}}</mat-label>
-                        <input type="file" (change)="capturarCertificado($event)">
+                    <div class="col-2 centrar">
+                        <button class="centrar botonAzul" type="button" mat-raised-button 
+                            (click)="inputCertificado.click()">Certificado</button>
+                        <input type="file" hidden (change)="capturarCertificado($event)" #inputCertificado>
+                        <!--span class="file-name">{{certificado?.name}}</span-->
+                        <span class="file-name">{{empresa.certificado}}</span>
                     </div>
-                    <div class="col-3">
+                    <div class="col-4">
                         <mat-form-field appearance="standard">
                             <mat-label>Contraseña del Certificado</mat-label>
                             <input matInput type="password" [(ngModel)]="empresa.contrasena" class="form-control-sm">
                         </mat-form-field>
                     </div>
                 </div>
-                <div class="col-2">
-                    <mat-card class="foto">
-                        <img width="100%" height="100%" [src]="'data:image/jpeg;base64,'+ empresa.logo64">
-                    </mat-card>
-                    <input type="file" (change)="capturarFile($event)">
+                <div class="form-row col-2">
+                    <div class="col-12">
+                        <mat-card class="foto">
+                            <img width="100%" height="100%" [src]="'data:image/jpeg;base64,'+ empresa.logo64">
+                        </mat-card>
+                    </div>
+                    <div class="col-12 centrar mb-1">
+                        <button class="centrar botonAzul" type="button" mat-raised-button 
+                            (click)="inputLogo.click()">Subir Logo</button>
+                        <input type="file" hidden (change)="capturarLogo($event)" #inputLogo>
+                        <!--span class="file-name">{{selectedFile?.name}}</span-->
+                    </div>
                 </div>
             </div>
         </mat-expansion-panel>
