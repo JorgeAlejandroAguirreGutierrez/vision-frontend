@@ -380,9 +380,8 @@ export class ClienteComponent implements OnInit {
     this.telefono = new Telefono();
     this.celular = new Celular();
     this.correo = new Correo();
-    this.posicionCentralDireccion = new Coordenada(valores.latCiudad, valores.lngCiudad);
-    this.posicionGeograficaDireccion = new Coordenada(valores.latCiudad, valores.lngCiudad);
     this.clickedRows.clear();
+    this.inicializarMapaCliente();
     this.borrarFiltroCliente();
     this.deshabilitarObligado = false;
     this.abrirPanelUbicacion = true;
@@ -489,6 +488,7 @@ export class ClienteComponent implements OnInit {
   seleccion(cliente: any) {
     if (!this.clickedRows.has(cliente)){
       this.clickedRows.clear();
+      this.inicializarMapaCliente();
       this.clickedRows.add(cliente);
       this.obtenerCliente(cliente.id);
     } else {
@@ -548,8 +548,7 @@ export class ClienteComponent implements OnInit {
     this.telefonoDependiente = new TelefonoDependiente();
     this.celularDependiente = new CelularDependiente();
     this.correoDependiente = new CorreoDependiente();
-    this.posicionCentralDependiente = new Coordenada(valores.latCiudad, valores.lngCiudad);
-    this.posicionGeograficaDependiente = new Coordenada(valores.latCiudad, valores.lngCiudad);;
+    this.inicializarMapaDependiente();
     this.clickedRowsDependiente.clear();
     if (this.cliente.dependientes.length > 0 && this.verPanelDependiente)
     this.verIconoEditarDependiente = false;
@@ -607,6 +606,7 @@ export class ClienteComponent implements OnInit {
   seleccionDependiente(dependiente: Dependiente) {
     if (!this.clickedRowsDependiente.has(dependiente)){
       this.clickedRowsDependiente.clear();
+      this.inicializarMapaDependiente();
       this.clickedRowsDependiente.add(dependiente);
       this.dependiente = { ... dependiente};
       this.llenarUbicacionDependiente();
@@ -944,6 +944,11 @@ export class ClienteComponent implements OnInit {
     this.posicionCentralDireccion = this.posicionGeograficaDireccion;
   }
 
+  inicializarMapaCliente(){
+    this.posicionCentralDireccion = new Coordenada(valores.latCiudad, valores.lngCiudad);
+    this.posicionGeograficaDireccion = new Coordenada(valores.latCiudad, valores.lngCiudad);
+  }
+
   asignarCoordenadasDependiente(){
     this.dependiente.latitudgeo = this.posicionGeograficaDependiente.lat;
     this.dependiente.longitudgeo = this.posicionGeograficaDependiente.lng;
@@ -953,6 +958,11 @@ export class ClienteComponent implements OnInit {
     this.posicionGeograficaDependiente.lat = this.dependiente.latitudgeo;
     this.posicionGeograficaDependiente.lng = this.dependiente.longitudgeo;
     this.posicionCentralDependiente = this.posicionGeograficaDependiente;
+  }
+
+  inicializarMapaDependiente(){
+    this.posicionCentralDependiente = new Coordenada(valores.latCiudad, valores.lngCiudad);
+    this.posicionGeograficaDependiente = new Coordenada(valores.latCiudad, valores.lngCiudad);
   }
 
   compareFn(a: any, b: any) {

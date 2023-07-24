@@ -12,8 +12,8 @@ export class Establecimiento {
     codigoSRI: string;
     descripcion: string;
     direccion: string;
-    latitud: number;
-    longitud: number;
+    latitudgeo: number;
+    longitudgeo: number;
     estado: string;
     regimen: Regimen;
     ubicacion: Ubicacion;
@@ -28,8 +28,8 @@ export class Establecimiento {
         this.codigoSRI = valores.vacio;
         this.descripcion = valores.vacio;
         this.direccion = valores.vacio;
-        this.latitud = valores.cero;
-        this.latitud = valores.cero;
+        this.latitudgeo = valores.latCiudad;
+        this.longitudgeo = valores.lngCiudad;
         this.estado = valores.estadoActivo;
         this.regimen = new Regimen();
         this.ubicacion = new Ubicacion();

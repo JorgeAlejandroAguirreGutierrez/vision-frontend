@@ -48,7 +48,7 @@
                     <mat-form-field appearance="standard">
                         <mat-label>Empresa</mat-label>
                         <mat-select [(ngModel)]="estacion.establecimiento.empresa" [compareWith]="compareFn" 
-                            (selectionChange)="consultarEstablecimientos()" class="form-control-sm">
+                            (selectionChange)="consultarEstablecimientos()" [disabled]="deshabilitarEmpresa" class="form-control-sm">
                             <mat-option *ngFor="let empresa of empresas" [value]="empresa">
                                 {{empresa.nombreComercial}}
                             </mat-option>

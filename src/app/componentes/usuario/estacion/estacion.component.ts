@@ -34,6 +34,7 @@ export class EstacionComponent implements OnInit {
 
   abrirPanelNuevo: boolean = true;
   abrirPanelAdmin: boolean = true;
+  deshabilitarEmpresa: boolean = true;
 
   sesion: Sesion = null;
   estacion: Estacion = new Estacion();
@@ -75,9 +76,41 @@ export class EstacionComponent implements OnInit {
 
   ngOnInit() {
     this.sesion=validarSesion(this.sesionService, this.router);
+    this.estacion.establecimiento.empresa = this.sesion.empresa;
+    this.deshabilitarEmpresa = this.sesion.usuario.perfil.multiempresa == 'SI'? false : true;
     this.consultarEmpresas();
+    this.consultarEstablecimientos();
     this.consultarRegimenes();
     this.consultar();
+  }
+
+  consultarEmpresas() {
+    this.empresaService.consultar().subscribe({
+      next: (res) => {
+        this.empresas = res.resultado as Empresa[]
+      },
+      error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+      }
+    );
+  }
+  consultarEstablecimientos() {
+    this.consultar();
+    this.establecimientoService.consultarPorEmpresaYEstado(this.estacion.establecimiento.empresa.id, valores.estadoActivo).subscribe({
+      next: res => {
+        this.establecimientos = res.resultado as Establecimiento[];
+      },
+      error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+    });
+  }
+  consultarRegimenes(){
+    this.regimenService.consultarPorEstado(valores.estadoActivo).subscribe({
+      next: res => {
+        this.regimenes = res.resultado as Regimen[];
+      },
+      error: err => {
+        Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje });
+      }
+    });
   }
 
   nuevo(event) {
@@ -140,7 +173,7 @@ export class EstacionComponent implements OnInit {
   }
 
   consultar() {
-    this.estacionService.consultar().subscribe({
+    this.estacionService.consultarPorEmpresa(this.estacion.establecimiento.empresa.id).subscribe({
       next: res => {
         this.estaciones = res.resultado as Estacion[];
         this.llenarTablaEstacion(this.estaciones);
@@ -152,15 +185,11 @@ export class EstacionComponent implements OnInit {
   llenarTablaEstacion(estaciones: Estacion[]){
     this.dataSource = new MatTableDataSource(estaciones);
     this.dataSource.filterPredicate = (data: Estacion, filter: string): boolean =>
-    data.codigo.includes(filter) || data.establecimiento.empresa.nombreComercial.includes(filter) || data.establecimiento.descripcion.includes(filter) ||
-    data.descripcion.includes(filter) || data.puntoVenta.includes(filter) || data.codigoSRI.includes(filter) ||
-    data.dispositivo.includes(filter) || data.ip.includes(filter) || data.estado.includes(filter);
+      data.codigo.includes(filter) || data.establecimiento.empresa.nombreComercial.includes(filter) || data.establecimiento.descripcion.includes(filter) ||
+      data.descripcion.includes(filter) || data.puntoVenta.includes(filter) || data.codigoSRI.includes(filter) ||
+      data.dispositivo.includes(filter) || data.ip.includes(filter) || data.estado.includes(filter);
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
-  }
-
-  construir(){
-    this.consultarEstablecimientos();
   }
 
   seleccion(estacion: Estacion) {
@@ -168,10 +197,8 @@ export class EstacionComponent implements OnInit {
       this.clickedRows.clear();
       this.clickedRows.add(estacion);
       this.estacion = { ... estacion};
-      this.construir();
     } else {
-      this.clickedRows.clear();
-      this.estacion = new Estacion();
+      this.nuevo(null);
     }
   }
 
@@ -181,37 +208,6 @@ export class EstacionComponent implements OnInit {
     if (this.dataSource.paginator) {
       this.dataSource.paginator.firstPage();
     }
-  }
-
-  consultarEmpresas() {
-    this.empresaService.consultar().subscribe({
-      next: (res) => {
-        this.empresas = res.resultado as Empresa[]
-      },
-      error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
-      }
-    );
-  }
-
-  consultarEstablecimientos() {
-    console.log(this.estacion.establecimiento.empresa.id);
-    this.establecimientoService.consultarPorEmpresaYEstado(this.estacion.establecimiento.empresa.id, valores.estadoActivo).subscribe({
-      next: res => {
-        this.establecimientos = res.resultado as Establecimiento[];
-      },
-      error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
-    });
-  }
-
-  consultarRegimenes(){
-    this.regimenService.consultarPorEstado(valores.estadoActivo).subscribe({
-      next: res => {
-        this.regimenes = res.resultado as Regimen[];
-      },
-      error: err => {
-        Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje });
-      }
-    });
   }
 
   compareFn(a: any, b: any) {
