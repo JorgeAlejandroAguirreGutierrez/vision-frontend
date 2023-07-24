@@ -105,8 +105,7 @@ export class FacturaComponent implements OnInit {
 
   columnasFactura: any[] = [
     { nombreColumna: 'fecha', cabecera: 'Fecha', celda: (row: Factura) => `${this.datepipe.transform(row.fecha, "dd-MM-yyyy")}` },
-    { nombreColumna: 'serie', cabecera: 'Serie', celda: (row: Factura) => `${row.serie}` },
-    { nombreColumna: 'secuencial', cabecera: 'Secuencial', celda: (row: Factura) => `${row.secuencial}` },
+    { nombreColumna: 'comprobante', cabecera: 'Comprobante', celda: (row: Factura) => `${row.numeroComprobante}` },
     { nombreColumna: 'cliente', cabecera: 'Cliente', celda: (row: Factura) => `${row.cliente.razonSocial}` },
     { nombreColumna: 'total', cabecera: 'Total', celda: (row: Factura) => `$${row.valorTotal}` },
     { nombreColumna: 'estado', cabecera: 'Estado', celda: (row: Factura) => `${row.estado}` },
@@ -164,6 +163,8 @@ export class FacturaComponent implements OnInit {
   ngOnInit() {
     this.sesion = validarSesion(this.sesionService, this.router);
     this.empresa = this.sesion.empresa;
+    this.factura.establecimiento = this.sesion.usuario.estacion.establecimiento.codigoSRI;
+    this.factura.puntoVenta = this.sesion.usuario.estacion.codigoSRI;
     this.consultar();
     this.consultarClientes();
     this.consultarProductos();
@@ -359,7 +360,7 @@ export class FacturaComponent implements OnInit {
   llenarTablaFactura(facturas: Factura[]) {
     this.dataSourceFactura = new MatTableDataSource(facturas);
     this.dataSourceFactura.filterPredicate = (data: Factura, filter: string): boolean =>
-      this.datepipe.transform(data.fecha, "dd-MM-yyyy").includes(filter) || data.serie.includes(filter) || data.secuencial.includes(filter) || 
+      this.datepipe.transform(data.fecha, "dd-MM-yyyy").includes(filter) || data.numeroComprobante.includes(filter) || data.secuencial.includes(filter) || 
       data.cliente.razonSocial.includes(filter) || data.estado.includes(filter);
     this.dataSourceFactura.paginator = this.paginator;
     this.dataSourceFactura.sort = this.sort;

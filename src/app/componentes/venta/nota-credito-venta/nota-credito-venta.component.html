@@ -90,30 +90,16 @@
                             <mat-datepicker #picker></mat-datepicker>
                         </mat-form-field>
                     </div>
-                    <div class="col-9">
-                        <mat-form-field appearance="standard">
-                            <mat-label>Direccion</mat-label>
-                            <input matInput type="text" [(ngModel)]="notaCreditoVenta.factura.cliente.direccion"
-                                class="form-control-sm" [disabled]="true">
-                        </mat-form-field>
-                    </div>
-                    <div class="col-2">
-                        <mat-form-field appearance="standard">
-                            <mat-label>Serie</mat-label>
-                            <input matInput type="text" class="form-control-sm" [(ngModel)]="notaCreditoVenta.factura.serie"
-                                [disabled]="true">
-                        </mat-form-field>
-                    </div>
-                    <div class="col-5">
+                    <div class="col-4">
                         <mat-form-field appearance="standard">
                             <mat-label>Factura</mat-label>
                             <mat-autocomplete #factura="matAutocomplete" [displayWith]="verFactura"
                                 (optionSelected)="obtenerPorFactura()">
                                 <mat-option *ngFor="let factura of filtroFacturas | async" [value]="factura">
-                                    {{factura.secuencial}}
+                                    {{factura.numeroComprobante}}
                                 </mat-option>
                             </mat-autocomplete>
-                            <input matInput type="text" class="form-control-sm" placeholder="Secuencial Factura"
+                            <input matInput type="text" class="form-control-sm" placeholder="No. Factura"
                                 [formControl]="seleccionFactura" [matAutocomplete]="factura">
                         </mat-form-field>
                     </div>
@@ -154,7 +140,7 @@
                     <div class="col-6">
                         <mat-form-field appearance="standard">
                             <mat-label>Usuario</mat-label>
-                            <input matInput type="text" class="form-control-sm" [(ngModel)]="sesion.usuario.nombre"
+                            <input matInput type="text" class="form-control-sm" [(ngModel)]="sesion.usuario.apodo"
                                 [disabled]="true">
                         </mat-form-field>
                     </div>

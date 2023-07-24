@@ -242,7 +242,7 @@ export class NotaCreditoCompraComponent implements OnInit {
       this.nuevo(null);
     }
   }
-
+ 
   obtenerNotaCredito(notaCreditoCompra: NotaCreditoCompra){
     this.notaCreditoCompraService.obtener(notaCreditoCompra.id).subscribe({
       next: res => {

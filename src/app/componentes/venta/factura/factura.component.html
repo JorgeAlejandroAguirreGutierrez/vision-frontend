@@ -177,14 +177,14 @@
                                 <mat-form-field appearance="standard">
                                     <mat-label>Estab.</mat-label>
                                     <input matInput type="text" class="form-control-sm"
-                                        [(ngModel)]="sesion.usuario.estacion.establecimiento.codigoSRI" disabled>
+                                        [(ngModel)]="factura.establecimiento" disabled>
                                 </mat-form-field>
                             </div>
                             <div class="col-3">
                                 <mat-form-field appearance="standard">
                                     <mat-label>Punto V.</mat-label>
                                     <input matInput type="text" class="form-control-sm"
-                                        [(ngModel)]="sesion.usuario.estacion.codigoSRI" disabled>
+                                        [(ngModel)]="factura.puntoVenta" disabled>
                                 </mat-form-field>
                             </div>
                             <div class="col-6">
@@ -547,22 +547,22 @@
                                             </mat-form-field>
                                         </div>
                                         <div class="col-7 negrita centrar-vertical-izq">
-                                            <mat-label>Subtotal Grabado :</mat-label>
+                                            <mat-label>Subtotal Gravado :</mat-label>
                                         </div>
                                         <div class="col-5">
                                             <mat-form-field appearance="standard">
                                                 <input matInput type="text "
-                                                    [value]="formateaNumero(factura.subtotalGrabadoConDescuento)"
+                                                    [value]="formateaNumero(factura.subtotalGravadoConDescuento)"
                                                     class="form-control-sm " disabled>
                                             </mat-form-field>
                                         </div>
                                         <div class="col-7 negrita centrar-vertical-izq">
-                                            <mat-label>Subtotal No Grabado :</mat-label>
+                                            <mat-label>Subtotal No Gravado :</mat-label>
                                         </div>
                                         <div class="col-5">
                                             <mat-form-field appearance="standard">
                                                 <input matInput type="text "
-                                                    [value]="formateaNumero(factura.subtotalNoGrabadoConDescuento)"
+                                                    [value]="formateaNumero(factura.subtotalNoGravadoConDescuento)"
                                                     class="form-control-sm " disabled>
                                             </mat-form-field>
                                         </div>
