@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, Inject } from '@angular/core';
+import { Component, OnInit, ViewChild, Inject, ElementRef, Renderer2 } from '@angular/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MapInfoWindow, MapMarker } from '@angular/google-maps';
 import { Router } from '@angular/router';
@@ -40,6 +40,7 @@ export class EstablecimientoComponent implements OnInit {
   sesion: Sesion=null;
   abrirPanelAdmin: boolean = true;
   abrirPanelNuevo: boolean = true;
+  deshabilitarEmpresa: boolean = true;
 
   establecimiento: Establecimiento = new Establecimiento();
   telefono = new TelefonoEstablecimiento();
@@ -54,11 +55,10 @@ export class EstablecimientoComponent implements OnInit {
   parroquias: Ubicacion[];
 
   //Mapa
-  latitud: number = valores.latCiudad;
-  longitud: number = valores.lngCiudad;
-  posicionCentral: Coordenada = new Coordenada(this.latitud, this.longitud);
-  posicionGeografica: Coordenada;
-  coordenadas: Coordenada[] = [];
+  latInicial: number = valores.latCiudad;
+  posicionCentral: Coordenada = new Coordenada(valores.latCiudad, valores.lngCiudad);
+  posicionGeografica: Coordenada = new Coordenada(valores.latCiudad, valores.lngCiudad);
+  //coordenadas: Coordenada[] = [];
   options: google.maps.MapOptions = {
     mapTypeId: 'hybrid',
     zoomControl: true,
@@ -70,6 +70,7 @@ export class EstablecimientoComponent implements OnInit {
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
+  @ViewChild("inputFiltro") inputFiltro: ElementRef;
 
   columnas: any[] = [
     { nombreColumna: 'codigo', cabecera: 'Código', celda: (row: Establecimiento) => `${row.codigo}`},
@@ -83,17 +84,28 @@ export class EstablecimientoComponent implements OnInit {
   dataSource: MatTableDataSource<Establecimiento>;
   clickedRows = new Set<Establecimiento>();
   
-  constructor(public dialog: MatDialog, private establecimientoService: EstablecimientoService, private empresaService: EmpresaService, 
+  constructor(private renderer: Renderer2, public dialog: MatDialog, private establecimientoService: EstablecimientoService, private empresaService: EmpresaService, 
     private sesionService: SesionService, private router: Router, private ubicacionService: UbicacionService, private regimenService: RegimenService) { }
 
   ngOnInit() {
     this.sesion = validarSesion(this.sesionService, this.router);
+    this.establecimiento.empresa = this.sesion.empresa;
+    this.deshabilitarEmpresa = this.sesion.usuario.perfil.multiempresa == 'SI'? false : true;
     this.consultarEmpresas();
     this.consultar();
     this.consultarRegimenes();
     this.consultarProvincias();
   }
 
+  consultarEmpresas() {
+    this.empresaService.consultarPorEstado(valores.estadoActivo).subscribe({
+      next: (res) => {
+        this.empresas = res.resultado as Empresa[]
+      },
+      error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+      }
+    );
+  }
   consultarRegimenes(){
     this.regimenService.consultarPorEstado(valores.estadoActivo).subscribe({
       next: res => {
@@ -116,30 +128,6 @@ export class EstablecimientoComponent implements OnInit {
     });
   }
 
-  consultarEmpresas() {
-    this.empresaService.consultarPorEstado(valores.estadoActivo).subscribe({
-      next: (res) => {
-        this.empresas = res.resultado as Empresa[]
-      },
-      error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
-      }
-    );
-  }
-
-  consultar(){
-    this.establecimientoService.consultar().subscribe({
-      next: res => {
-        this.establecimientos = res.resultado as Establecimiento[];
-        this.dataSource = new MatTableDataSource(this.establecimientos);
-        this.dataSource.paginator = this.paginator;
-        this.dataSource.sort = this.sort;
-      },
-      error: err => {
-        Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
-      }
-    });
-  }
-
   nuevo(event: any) {
     if (event!=null)
       event.preventDefault();
@@ -147,12 +135,27 @@ export class EstablecimientoComponent implements OnInit {
     this.telefono = new TelefonoEstablecimiento();
     this.celular = new CelularEstablecimiento();
     this.correo = new CorreoEstablecimiento();
+    this.inicializarMapa();
     this.clickedRows.clear();
   }
 
   crear(event: any) {
     if (event!=null)
       event.preventDefault();
+    if (!this.validarFormulario())
+      return;    
+    this.agregarTelefonoCorreo();
+    this.establecimientoService.crear(this.establecimiento).subscribe({
+      next: res => {
+        Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
+        this.consultar();
+        this.nuevo(null);
+      },
+      error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+    });
+  }
+
+  agregarTelefonoCorreo(){
     if(this.telefono.numero != valores.vacio){
       this.establecimiento.telefonosEstablecimiento.push(this.telefono);
     }
@@ -162,36 +165,23 @@ export class EstablecimientoComponent implements OnInit {
     if(this.correo.email != valores.vacio){
       this.establecimiento.correosEstablecimiento.push(this.correo);
     }
-    this.establecimientoService.crear(this.establecimiento).subscribe(
-      res => {
-        Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
-        this.consultar();
-        this.nuevo(null);
-      },
-      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
-    );
   }
 
   actualizar(event: any) {
     if (event!=null)
       event.preventDefault();
-    if(this.telefono.numero != valores.vacio){
-      this.establecimiento.telefonosEstablecimiento.push(this.telefono);
-    }
-    if(this.celular.numero != valores.vacio){
-      this.establecimiento.celularesEstablecimiento.push(this.celular);
-    }
-    if(this.correo.email != valores.vacio){
-      this.establecimiento.correosEstablecimiento.push(this.correo);
-    }
-    this.establecimientoService.actualizar(this.establecimiento).subscribe(
-      res => {
+    if (!this.validarFormulario())
+      return;    
+    this.agregarTelefonoCorreo();
+    console.log(this.establecimiento);
+    this.establecimientoService.actualizar(this.establecimiento).subscribe({
+      next: res => {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
         this.consultar();
         this.nuevo(null);
       },
-      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
-    );
+      error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+    });
   }
 
   activar(event) {
@@ -220,8 +210,51 @@ export class EstablecimientoComponent implements OnInit {
     });
   }
 
-  compareFn(a: any, b: any) {
-    return a && b && a.id == b.id;
+  consultar(){
+    this.establecimientoService.consultarPorEmpresa(this.establecimiento.empresa.id).subscribe({
+      next: res => {
+        this.establecimientos = res.resultado as Establecimiento[];
+        this.llenarTabla(this.establecimientos);
+      },
+      error: err => {
+        Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+      }
+    });
+  }
+
+  llenarTabla(establecimientos: Establecimiento[]){
+    this.dataSource = new MatTableDataSource(establecimientos);
+    this.dataSource.filterPredicate = (data: Establecimiento, filter: string): boolean =>
+      data.codigo.includes(filter) || data.empresa.nombreComercial.includes(filter) || data.descripcion.includes(filter) || 
+      data.direccion.includes(filter) || data.codigoSRI.includes(filter) || data.estado.includes(filter);
+    this.dataSource.paginator = this.paginator;
+    this.dataSource.sort = this.sort;
+  }
+
+  seleccion(establecimiento: Establecimiento) {
+    if (!this.clickedRows.has(establecimiento)){
+      this.clickedRows.clear();
+      this.inicializarMapa();
+      this.clickedRows.add(establecimiento);
+      this.establecimiento = { ... establecimiento};
+      this.recuperarCoordenadas();
+      this.seleccionarProvincia();
+      this.seleccionarCanton();
+    } else {
+      this.nuevo(null);
+    }
+  }
+
+  filtro(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.dataSource.filter = filterValue.trim().toUpperCase();
+    if (this.dataSource.paginator) {
+      this.dataSource.paginator.firstPage();
+    }
+  }
+  borrarFiltro() {
+    this.renderer.setProperty(this.inputFiltro.nativeElement, 'value', valores.vacio);
+    this.dataSource.filter = valores.vacio;
   }
 
   seleccionarProvincia() {
@@ -259,14 +292,12 @@ export class EstablecimientoComponent implements OnInit {
       this.telefono = new TelefonoEstablecimiento();
     }
   }
-
   validarTelefono() {
     let digito = this.telefono.numero.substring(0, 1);
     if (this.telefono.numero.length != 11 || digito != "0") {
       Swal.fire({ icon: error_swal, title: error, text: mensajes.error_telefono_invalido });
     }
   }
-
   eliminarTelefono(i: number) {
     this.establecimiento.telefonosEstablecimiento.splice(i, 1);
   }
@@ -281,7 +312,6 @@ export class EstablecimientoComponent implements OnInit {
       this.celular = new CelularEstablecimiento();
     }
   }
-
   validarCelular() {
     let digito = this.celular.numero.substring(0, 2);
     if (this.celular.numero.length != 12 || digito != "09") {
@@ -289,7 +319,6 @@ export class EstablecimientoComponent implements OnInit {
       Swal.fire({ icon: error_swal, title: error, text: mensajes.error_celular_invalido });
     }
   }
-
   eliminarCelular(i: number) {
     this.establecimiento.celularesEstablecimiento.splice(i, 1);
   }
@@ -303,41 +332,65 @@ export class EstablecimientoComponent implements OnInit {
       this.correo = new CorreoEstablecimiento();
     }
   }
-
   validarCorreo() {
     let arroba = this.correo.email.includes("@");
     if (!arroba) {
       Swal.fire({ icon: error_swal, title: error, text: mensajes.error_correo_invalido });
     }
   }
-
   eliminarCorreo(i: number) {
     this.establecimiento.correosEstablecimiento.splice(i, 1);
   }
 
-  seleccion(establecimiento: Establecimiento) {
-    if (!this.clickedRows.has(establecimiento)){
-      this.clickedRows.clear();
-      this.clickedRows.add(establecimiento);
-      this.establecimiento = { ... establecimiento};
-    } else {
-      this.clickedRows.clear();
-      this.establecimiento = new Establecimiento();
-    }
-  }
-
-  filtro(event: Event) {
-    const filterValue = (event.target as HTMLInputElement).value;
-    this.dataSource.filter = filterValue.trim().toUpperCase();
-    if (this.dataSource.paginator) {
-      this.dataSource.paginator.firstPage();
-    }
-  }
-
+  //MAPA
   openInfoWindow(marker: MapMarker, infoWindow: MapInfoWindow) {
     infoWindow.open(marker);
   }
 
+  asignarCoordenadas(){
+    this.establecimiento.latitudgeo = this.posicionGeografica.lat;
+    this.establecimiento.longitudgeo = this.posicionGeografica.lng;
+  }
+
+  recuperarCoordenadas(){
+    this.posicionGeografica.lat = this.establecimiento.latitudgeo;
+    this.posicionGeografica.lng = this.establecimiento.longitudgeo;
+    this.posicionCentral = this.posicionGeografica;
+  }
+
+  inicializarMapa(){
+    this.posicionCentral = new Coordenada(valores.latCiudad, valores.lngCiudad);
+    this.posicionGeografica = new Coordenada(valores.latCiudad, valores.lngCiudad);
+  }
+
+  compareFn(a: any, b: any) {
+    return a && b && a.id == b.id;
+  }
+
+  validarFormulario(): boolean {
+    if (this.establecimiento.empresa.id == valores.cero) {
+      Swal.fire({ icon: error_swal, title: error, text: mensajes.error_falta_datos });
+      return false;
+    }
+    if (this.establecimiento.regimen.id == valores.cero) {
+      Swal.fire({ icon: error_swal, title: error, text: mensajes.error_falta_datos });
+      return false;
+    }
+    if (this.establecimiento.codigoSRI == valores.vacio) {
+      Swal.fire({ icon: error_swal, title: error, text: mensajes.error_falta_datos });
+      return false;
+    }
+    if (this.establecimiento.direccion == valores.vacio) {
+      Swal.fire({ icon: error_swal, title: error, text: mensajes.error_falta_datos });
+      return false;
+    }
+    if (this.establecimiento.ubicacion.parroquia == valores.vacio) {
+      Swal.fire({ icon: error_swal, title: error, text: mensajes.error_falta_imagen });
+      return false;
+    }
+    return true;
+  }
+  
   dialogoMapas(): void {
     const dialogRef = this.dialog.open(DialogoMapaEstablecimientoComponent, {
       width: '80%',
@@ -348,8 +401,7 @@ export class EstablecimientoComponent implements OnInit {
       if (result) {
         this.posicionGeografica = result as Coordenada;
         this.posicionCentral = this.posicionGeografica;
-        this.establecimiento.latitud = this.posicionGeografica.lat;
-        this.establecimiento.longitud = this.posicionGeografica.lng;
+        this.asignarCoordenadas();
       }
     });
   }
@@ -371,14 +423,14 @@ export class DialogoMapaEstablecimientoComponent {
 
   onNoClick(): void {
     this.dialogRef.close();
-    this.data = new Coordenada(0,0);
+    this.data = new Coordenada(valores.latCiudad, valores.lngCiudad);
   }
 
   coordenadaSeleccionada(event: any) {
-    if (event && event.latitud != 0) {
+    if (event && event.latitud != valores.latCiudad) {
       this.data = event as Coordenada;
     } else {
-      this.data = new Coordenada(0,0);
+      this.data = new Coordenada(valores.latCiudad, valores.lngCiudad);
     }
   }
 }

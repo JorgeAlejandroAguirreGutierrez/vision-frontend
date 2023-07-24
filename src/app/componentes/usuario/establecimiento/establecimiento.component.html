@@ -40,8 +40,8 @@
                     <div class="col-7">
                         <mat-form-field appearance="standard">
                             <mat-label>Razón Social de la Empresa</mat-label>
-                            <mat-select [(ngModel)]="establecimiento.empresa" [compareWith]="compareFn"
-                                class="form-control-sm">
+                            <mat-select [(ngModel)]="establecimiento.empresa" [compareWith]="compareFn" class="form-control-sm"
+                                (selectionChange)="consultar()" [disabled]="deshabilitarEmpresa">
                                 <mat-option *ngFor="let empresa of empresas" [value]="empresa">
                                     {{empresa.razonSocial}}
                                 </mat-option>
@@ -51,8 +51,8 @@
                     <div class="col-5">
                         <mat-form-field appearance="standard">
                             <mat-label>Nombre comercial de la empresa</mat-label>
-                            <mat-select [(ngModel)]="establecimiento.empresa" [compareWith]="compareFn"
-                                class="form-control-sm">
+                            <mat-select [(ngModel)]="establecimiento.empresa" [compareWith]="compareFn" class="form-control-sm"
+                                (selectionChange)="consultar()" [disabled]="deshabilitarEmpresa">
                                 <mat-option *ngFor="let empresa of empresas" [value]="empresa">
                                     {{empresa.nombreComercial}}
                                 </mat-option>
@@ -233,7 +233,8 @@
                         <div class="col-9">
                             <mat-form-field appearance="standard">
                                 <mat-label>Correo electrónico</mat-label>
-                                <input matInput type="text" [(ngModel)]="correo.email" oninput="this.value = this.value.toUpperCase()" class="form-control-sm">
+                                <input matInput type="text" [(ngModel)]="correo.email" 
+                                oninput="this.value = this.value.toLowerCase()" class="form-control-sm">
                             </mat-form-field>
                         </div>
                         <div class="col-3 iconos">
@@ -247,7 +248,7 @@
                                     <mat-label>Correo electrónico</mat-label>
                                     <input matInput type="text " [value]="correo.email"
                                     oninput="this.value = this.value.toUpperCase()" class="form-control-sm" disabled
-                                        (change)="validarCorreo()" placeholder="ejemplo@futiristic.com">
+                                        (change)="validarCorreo()" placeholder="ejemplo@evoluciontic.com">
                                 </mat-form-field>
                             </div>
                             <div class="col-3 iconos">
@@ -259,14 +260,13 @@
                     </div>
                 </div>
                 <div class="col-4 text-center linea-vertical">
-                    <!--mat-label>Georeferencia</mat-label-->
                     <mat-card title="Doble click para maximizar">
                         <google-map width="100%" [height]="220" [center]="posicionCentral" [zoom]="15"
                             [options]="options" (dblclick)="dialogoMapas()">
-                            <map-marker #markerEmpresa="mapMarker" *ngIf="posicionGeografica"
+                            <map-marker #markerEstablecimiento="mapMarker" *ngIf="posicionGeografica.lat != latInicial"
                                 [position]="posicionGeografica"
-                                (mapClick)="openInfoWindow(markerEmpresa, infoWindowEmpresa)"></map-marker>
-                            <map-info-window #infoWindowEmpresa="mapInfoWindow">
+                                (mapClick)="openInfoWindow(markerEstablecimiento, infoWindowEstablecimiento)"></map-marker>
+                            <map-info-window #infoWindowEstablecimiento="mapInfoWindow">
                                 <div>
                                     <p>Latitud: {{ posicionGeografica?.lat }}</p>
                                     <p>Longitud: {{ posicionGeografica?.lng }}</p>
@@ -286,15 +286,18 @@
                     <i><u>GESTIONAR ESTABLECIMIENTOS</u></i>
                 </mat-panel-title>
                 <mat-panel-description>
-                    {{abrirPanelAdmin ? 'Ocultar asignar establecimientos' : 'Gestionar establecimientos de la
-                    empresa'}}
+                    {{abrirPanelAdmin ? 'Ocultar asignar establecimientos' : 'Gestionar establecimientos de la empresa'}}
                     <mat-icon>playlist_add</mat-icon>
                 </mat-panel-description>
             </mat-expansion-panel-header>
             <mat-divider></mat-divider>
             <mat-form-field appearance="standard">
                 <mat-label>Buscar establecimientos</mat-label>
-                <input matInput (keyup)="filtro($event)" #input>
+                <input matInput oninput="this.value = this.value.toUpperCase()" (keyup)="filtro($event)" #inputFiltro>
+                <button mat-button *ngIf="inputFiltro.value" matSuffix mat-icon-button
+                    (click)="borrarFiltro()">
+                    <mat-icon>close</mat-icon>
+                </button>
             </mat-form-field>
             <div class="mat-elevation-z8">
                 <table mat-table [dataSource]="dataSource" matSort>
