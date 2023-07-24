@@ -1,5 +1,5 @@
 import { Component, OnInit, HostListener } from '@angular/core';
-import { valores, dispositivos, validarSesion, exito, exito_swal, error, error_swal } from '../../../constantes';
+import { valores, dispositivos, validarSesion, mensajes, exito, exito_swal, error, error_swal } from '../../../constantes';
 import Swal from 'sweetalert2';
 
 import { Router } from '@angular/router';
@@ -122,7 +122,9 @@ export class EstacionComponent implements OnInit {
 
   crear(event) {
     if (event != null)
-      event.preventDefault();  
+      event.preventDefault();
+    if (!this.validarFormulario())
+      return;      
     this.estacionService.crear(this.estacion).subscribe({
       next: res => {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
@@ -136,6 +138,8 @@ export class EstacionComponent implements OnInit {
   actualizar(event) {
     if (event != null)
       event.preventDefault();
+    if (!this.validarFormulario())
+      return;    
     this.estacionService.actualizar(this.estacion).subscribe({
       next: res => {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
@@ -196,10 +200,19 @@ export class EstacionComponent implements OnInit {
     if (!this.clickedRows.has(estacion)){
       this.clickedRows.clear();
       this.clickedRows.add(estacion);
-      this.estacion = { ... estacion};
+      this.obtener(estacion.id);
     } else {
       this.nuevo(null);
     }
+  }
+
+  obtener(estacionId: number){
+    this.estacionService.obtener(estacionId).subscribe({
+      next: res => {
+        this.estacion = res.resultado as Estacion;
+      },
+      error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+    });
   }
 
   filtro(event: Event) {
@@ -221,5 +234,29 @@ export class EstacionComponent implements OnInit {
   pad(numero: string, size: number): string {
     while (numero.length < size) numero = "0" + numero;
     return numero;
+  }
+
+  validarFormulario(): boolean {
+    if (this.estacion.establecimiento.empresa.id == valores.cero) {
+      Swal.fire({ icon: error_swal, title: error, text: mensajes.error_falta_datos });
+      return false;
+    }
+    if (this.estacion.establecimiento.id == valores.cero) {
+      Swal.fire({ icon: error_swal, title: error, text: mensajes.error_falta_datos });
+      return false;
+    }
+    if (this.estacion.descripcion == valores.vacio) {
+      Swal.fire({ icon: error_swal, title: error, text: mensajes.error_falta_datos });
+      return false;
+    }
+    if (this.estacion.puntoVenta == valores.si && this.estacion.codigoSRI == valores.vacio) {
+      Swal.fire({ icon: error_swal, title: error, text: mensajes.error_falta_datos });
+      return false;
+    }
+    if (this.estacion.dispositivo == valores.vacio) {
+      Swal.fire({ icon: error_swal, title: error, text: mensajes.error_falta_imagen });
+      return false;
+    }
+    return true;
   }
 }

@@ -36,7 +36,7 @@
                         <mat-form-field appearance="standard">
                             <mat-label>Perfil</mat-label>
                             <mat-select [(ngModel)]="perfil" [compareWith]="compareFn" 
-                                (selectionChange)="consultar(perfil)" class="form-control-sm">
+                                (selectionChange)="consultar()" class="form-control-sm">
                                 <mat-option *ngFor="let perfil of perfiles" [value]="perfil">
                                     {{perfil.descripcion}}
                                 </mat-option>

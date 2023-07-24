@@ -1,4 +1,4 @@
-import { Component, OnInit, HostListener, ElementRef, Renderer2 } from '@angular/core';
+import { Component, OnInit, ViewChild, HostListener, ElementRef, Renderer2 } from '@angular/core';
 import { valores, validarSesion, mensajes, exito, exito_swal, error, error_swal } from '../../../constantes';
 import Swal from 'sweetalert2';
 
@@ -12,7 +12,6 @@ import { PerfilService } from '../../../servicios/usuario/perfil.service';
 import { Permiso } from 'src/app/modelos/usuario/permiso';
 import { PermisoService } from '../../../servicios/usuario/permiso.service';
 
-import { ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
@@ -43,6 +42,7 @@ export class PermisoComponent implements OnInit {
   permiso: Permiso = new Permiso();
 
   perfiles: Perfil[];
+  permisos: Permiso[] = [];
   modulos: String[] = [];
   menuOpciones: MenuOpcion[] = [];
 
@@ -109,6 +109,7 @@ export class PermisoComponent implements OnInit {
     if (event != null)
       event.preventDefault();
     this.perfil = new Perfil();
+    this.permisos = [];
     this.dataSource = new MatTableDataSource<Permiso>([]);
     this.deshabilitarPermisos = true;
     this.nuevoPermiso();
@@ -116,6 +117,7 @@ export class PermisoComponent implements OnInit {
 
   nuevoPermiso(){
     this.permiso = new Permiso();
+    //this.menuOpciones = [];
     this.clickedRows.clear();
     this.indexPermiso = valores.menosUno;
   }
@@ -123,26 +125,35 @@ export class PermisoComponent implements OnInit {
   actualizar(event) {
     if (event != null)
       event.preventDefault();
-    //console.log(this.perfil);  
+    //console.log(this.perfil);
     this.perfilService.actualizar(this.perfil).subscribe({
       next: res => {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
-        this.consultar(this.perfil);
+        this.consultar();
         this.nuevoPermiso();
       },
       error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     });
   }
 
-  consultar(perfil: Perfil) {
+  consultar() {
       //console.log(this.permisos);
-      this.deshabilitarPermisos = false;
-      this.llenarTabla(perfil.permisos);
-      this.nuevoPermiso();
+      this.permisoService.consultarPorPerfil(this.perfil.id).subscribe({
+        next: res => {
+          this.permisos = res.resultado as Permiso[];
+          this.deshabilitarPermisos = false;
+          this.llenarTabla(this.permisos);
+          this.nuevoPermiso();
+        },
+        error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+      });
   }
 
   llenarTabla(permisos: Permiso[]){
     this.dataSource = new MatTableDataSource(permisos);
+    this.dataSource.filterPredicate = (data: Permiso, filter: string): boolean =>
+      data.codigo.includes(filter) || data.menuOpcion.modulo.includes(filter) || data.menuOpcion.opcion.includes(filter) ||
+      data.menuOpcion.operacion.includes(filter) || data.menuOpcion.menu.includes(filter) || data.estado.includes(filter);
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
   }
@@ -168,6 +179,7 @@ export class PermisoComponent implements OnInit {
       },
       error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     });*/
+
     this.permiso.estado = valores.estadoActivo;
     this.perfil.permisos[this.indexPermiso] = this.permiso;
     this.actualizar(null);
@@ -176,15 +188,18 @@ export class PermisoComponent implements OnInit {
   inactivar(event){
     if (event != null)
       event.preventDefault();
-    /*this.permisoService.inactivar(this.permiso).subscribe({
+    console.log(this.permiso);  
+    this.permiso.perfil.id = this.perfil.id;
+    this.permisoService.inactivar(this.permiso).subscribe({
       next: res => {
-        Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });  
+        Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
+        //this.consultar();
       },
       error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
-    });*/
-    this.permiso.estado = valores.estadoInactivo;
-    this.perfil.permisos[this.indexPermiso] = this.permiso;
-    this.actualizar(null);
+    });
+    //this.permiso.estado = valores.estadoInactivo;
+    //this.perfil.permisos[this.indexPermiso] = this.permiso;
+    //this.actualizar(null);
   }
 
   filtro(event: Event) {
@@ -200,22 +215,22 @@ export class PermisoComponent implements OnInit {
   }
 
   agregarPermiso(){
+    if (!this.validarPermiso()) return;
     if (this.existePermiso()) return;
     this.perfil.permisos.push({ ...this.permiso});
-    this.consultar(this.perfil);
-    this.nuevoPermiso();
+    this.llenarTabla(this.perfil.permisos);
   }
 
   actualizarPermiso(){
+    if (!this.validarPermiso()) return;
     if (this.existePermiso()) return;
     this.perfil.permisos[this.indexPermiso] = this.permiso;
-    this.consultar(this.perfil);
-    this.nuevoPermiso();
+    this.llenarTabla(this.perfil.permisos);
   }
 
   eliminarPermiso(i: number) {
     this.perfil.permisos.splice(i, 1);
-    this.consultar(this.perfil);
+    this.llenarTabla(this.perfil.permisos);
   }
 
   compareFn(a: any, b: any) {
@@ -231,5 +246,17 @@ export class PermisoComponent implements OnInit {
       } 
     };
     return false
+  }
+
+  validarPermiso(): boolean {
+    if (this.permiso.menuOpcion.id == valores.cero) {
+      Swal.fire({ icon: error_swal, title: error, text: mensajes.error_falta_datos });
+      return false;
+    }
+    if (this.permiso.menuOpcion.modulo == valores.vacio) {
+      Swal.fire({ icon: error_swal, title: error, text: mensajes.error_falta_datos });
+      return false;
+    }
+    return true;
   }
 }

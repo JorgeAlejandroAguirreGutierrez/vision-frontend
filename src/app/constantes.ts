@@ -139,6 +139,7 @@ export const urn =
     usuario: "/usuario",
     estacionUsuario: "estacionUsuario",
     perfil: "/perfil",
+    consultarPorPerfil: "/consultarPorPerfil",
     permiso: "/permiso",
     sesion: "/sesion",
     establecimiento: "/establecimiento",
