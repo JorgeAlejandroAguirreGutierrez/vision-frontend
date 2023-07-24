@@ -189,7 +189,6 @@ export class PermisoComponent implements OnInit {
     if (event != null)
       event.preventDefault();
     console.log(this.permiso);  
-    this.permiso.perfil.id = this.perfil.id;
     this.permisoService.inactivar(this.permiso).subscribe({
       next: res => {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
