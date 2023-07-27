@@ -4,18 +4,21 @@ import { TipoComprobante } from '../configuracion/tipo-comprobante';
 import { NotaCreditoVentaLinea } from './nota-credito-venta-linea';
 import { Factura } from './factura';
 import { Empresa } from '../usuario/empresa';
+
 export class NotaCreditoVenta {
     id: number;
     codigo: string;
-    serie: string;
+    establecimiento: string;
+    puntoVenta: string;
     secuencial: string;
+    numeroComprobante: string;
     operacion: string;
     fecha: Date;
     estado: string;
     estadoInterno: string;
     estadoSri: string;
     subtotalSinDescuento: number;
-    descuentoTotal: number;
+    descuento: number;
     subtotalBase12SinDescuento: number;
     subtotalBase0SinDescuento: number;
     ivaSinDescuento: number;
@@ -31,14 +34,17 @@ export class NotaCreditoVenta {
     constructor() {
         this.id = valores.cero;
         this.codigo = valores.vacio;
+        this.establecimiento = valores.vacio;
+        this.puntoVenta = valores.vacio;
         this.secuencial = valores.vacio;
+        this.numeroComprobante = valores.vacio;
         this.operacion = valores.vacio;
         this.fecha = new Date();
         this.estado = valores.estadoActivo;
         this.estadoInterno = valores.vacio;
         this.estadoSri = valores.vacio;
         this.subtotalSinDescuento = valores.cero;
-        this.descuentoTotal = valores.cero;
+        this.descuento = valores.cero;
         this.subtotalBase12SinDescuento = valores.cero;
         this.subtotalBase0SinDescuento = valores.cero;
         this.ivaSinDescuento = valores.cero;

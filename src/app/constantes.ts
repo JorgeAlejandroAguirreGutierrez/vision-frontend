@@ -51,7 +51,7 @@ export const urn =
     razonSocial: "/razonSocial",
     consultarPorCliente: "/consultarPorCliente",
     consultarPorClienteYEstado: "/consultarPorClienteYEstado",
-    consultarPorClienteYEstadoYEstadoInterno: "/consultarPorClienteYEstadoYEstadoInterno",
+    consultarPorEmpresaYClienteYEstado: "/consultarPorEmpresaYClienteYEstado",
     consultarPorClienteYEstadoYEstadoInternoYEstadoSri: "/consultarPorClienteYEstadoYEstadoInternoYEstadoSri",
     validarIdentificacionPorEmpresa: "/validarIdentificacionPorEmpresa",
 
@@ -69,7 +69,7 @@ export const urn =
     consultarPorEmpresa: "/consultarPorEmpresa",
     consultarPorEmpresaYEstado: "/consultarPorEmpresaYEstado",
     consultarPorEmpresaYEstadoInternoYEstado: "/consultarPorEmpresaYEstadoInternoYEstado",
-    consultarPorProveedorYEmpresaYEstadoInternoYEstado: "/consultarPorProveedorYEmpresaYEstadoInternoYEstado",
+    consultarPorEmpresaYProveedorYEstado: "/consultarPorEmpresaYProveedorYEstado",
     consultarPorEmpresaYBanco: "/consultarPorEmpresaYBanco",
     consultarGrupos: "/consultarGrupos",
     consultarSubgrupos: "/consultarSubgrupos",

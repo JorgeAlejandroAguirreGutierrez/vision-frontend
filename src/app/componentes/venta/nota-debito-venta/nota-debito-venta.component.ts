@@ -83,14 +83,13 @@ export class NotaDebitoVentaComponent implements OnInit {
 
   columnas: any[] = [
     { nombreColumna: 'codigo', cabecera: 'Código', celda: (row: NotaDebitoVenta) => `${row.codigo}`},
-    { nombreColumna: 'serie', cabecera: 'Serie', celda: (row: NotaDebitoVenta) => `${row.serie}`},
-    { nombreColumna: 'secuencial', cabecera: 'Secuencial', celda: (row: NotaDebitoVenta) => `${row.secuencial}`},
+    { nombreColumna: 'comprobante', cabecera: 'Comprobante', celda: (row: NotaDebitoVenta) => `${row.numeroComprobante}`},
     { nombreColumna: 'fecha', cabecera: 'Fecha', celda: (row: NotaDebitoVenta) => `${this.datepipe.transform(row.fecha, "dd/MM/yyyy")}`},
     { nombreColumna: 'cliente', cabecera: 'Cliente', celda: (row: NotaDebitoVenta) => `${row.factura.cliente.razonSocial}`},
     { nombreColumna: 'factura', cabecera: 'Factura', celda: (row: NotaDebitoVenta) => `${row.factura.secuencial}`},
     { nombreColumna: 'total', cabecera: 'Total', celda: (row: NotaDebitoVenta) => `$${row.totalConDescuento}`},
+    { nombreColumna: 'proceso', cabecera: 'Proceso', celda: (row: NotaDebitoVenta) => `${row.estadoInterno}`},
     { nombreColumna: 'estado', cabecera: 'Estado', celda: (row: NotaDebitoVenta) => `${row.estado}`},
-    { nombreColumna: 'estadoInterno', cabecera: 'Estado Interno', celda: (row: NotaDebitoVenta) => `${row.estadoInterno}`},
     { nombreColumna: 'estadoSri', cabecera: 'Estado SRI', celda: (row: NotaDebitoVenta) => `${row.estadoSri}`}
   ];
   cabecera: string[]  = this.columnas.map(titulo => titulo.nombreColumna);
@@ -393,7 +392,7 @@ export class NotaDebitoVentaComponent implements OnInit {
         this.notaDebitoVenta.factura.cliente = res.resultado as Cliente;
         this.controlIdentificacionCliente.patchValue(this.notaDebitoVenta.factura.cliente);
         this.controlRazonSocialCliente.patchValue(this.notaDebitoVenta.factura.cliente);
-        this.facturaService.consultarPorClienteYEstadoYEstadoInterno(this.notaDebitoVenta.factura.cliente.id, this.estadoActivo, this.estadoInternoRecaudada).subscribe(
+        this.facturaService.consultarPorEmpresaYClienteYEstado(this.empresa.id, this.notaDebitoVenta.factura.cliente.id, this.estadoActivo).subscribe(
           res => {
             this.facturas = res.resultado as Factura[]
           },

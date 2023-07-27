@@ -41,7 +41,6 @@ export class NotaCreditoCompraComponent implements OnInit {
   abrirPanelAdmin: boolean = true;
   deshabilitarDescuento = true;
 
-
   si: string = valores.si;
   no: string = valores.no;
   estadoActivo: string = valores.estadoActivo;
@@ -63,14 +62,13 @@ export class NotaCreditoCompraComponent implements OnInit {
   proveedorSeleccionado: Proveedor = new Proveedor();
   facturaCompraSeleccionado: FacturaCompra = new FacturaCompra();
 
+  proveedores: Proveedor[] = [];
+  facturasCompras: FacturaCompra[] = [];
+  notasCreditosCompras: NotaCreditoCompra[] = [];
+
   filtroIdentificaciones: Proveedor[] = [];
   filtroProveedores: Proveedor[] = [];
   filtroFacturaCompras: FacturaCompra[] = [];
-
-  proveedores: Proveedor[] = [];
-  notasCreditosCompras: NotaCreditoCompra[] = [];
-  facturasCompras: FacturaCompra[] = [];
-
 
   columnas: any[] = [
     { nombreColumna: 'codigo', cabecera: 'Código', celda: (row: NotaCreditoCompra) => `${row.codigo}` },
@@ -78,8 +76,8 @@ export class NotaCreditoCompraComponent implements OnInit {
     { nombreColumna: 'comprobante', cabecera: 'Comprobante', celda: (row: NotaCreditoCompra) => `${row.numeroComprobante}` },
     { nombreColumna: 'proveedor', cabecera: 'Proveedor', celda: (row: NotaCreditoCompra) => `${row.facturaCompra.proveedor.nombreComercial}` },
     { nombreColumna: 'total', cabecera: 'Total', celda: (row: NotaCreditoCompra) => `$${row.total}` },
-    { nombreColumna: 'estado', cabecera: 'Estado', celda: (row: NotaCreditoCompra) => `${row.estado}` },
-    { nombreColumna: 'estadoInterno', cabecera: 'Estado Interno', celda: (row: NotaCreditoCompra) => `${row.estadoInterno}` }
+    { nombreColumna: 'proceso', cabecera: 'Proceso', celda: (row: NotaCreditoCompra) => `${row.estadoInterno}` },
+    { nombreColumna: 'estado', cabecera: 'Estado', celda: (row: NotaCreditoCompra) => `${row.estado}` }
   ];
   cabecera: string[] = this.columnas.map(titulo => titulo.nombreColumna);
   dataSource: MatTableDataSource<NotaCreditoCompra>;
@@ -95,7 +93,7 @@ export class NotaCreditoCompraComponent implements OnInit {
     { nombreColumna: 'impuesto', cabecera: 'IVA %', celda: (row: NotaCreditoCompraLinea) => `${row.impuesto.porcentaje} %` },
     { nombreColumna: 'subtotal', cabecera: 'Subtotal', celda: (row: NotaCreditoCompraLinea) => `${row.subtotalLinea}` },
     { nombreColumna: 'importe', cabecera: 'Importe', celda: (row: NotaCreditoCompraLinea) => `${row.importeIvaLinea}` },
-    { nombreColumna: 'total', cabecera: 'Total', celda: (row: NotaCreditoCompraLinea) => `${row.totalLinea}` },
+    { nombreColumna: 'totalLinea', cabecera: 'Total', celda: (row: NotaCreditoCompraLinea) => `${row.totalLinea}` },
     { nombreColumna: 'acciones', cabecera: 'Acciones' }
   ];
   cabeceraLinea: string[] = this.columnasLinea.map(titulo => titulo.nombreColumna);
@@ -176,14 +174,17 @@ export class NotaCreditoCompraComponent implements OnInit {
       event.preventDefault();
     if (!this.validarFormulario())
       return; 
+    this.spinnerService.show();   
     this.notaCreditoCompraService.actualizar(this.notaCreditoCompra).subscribe({
       next: res => {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
         this.consultar();
         this.nuevo(null);
+        this.spinnerService.hide(); 
       },
       error: err => {
         Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+        this.spinnerService.hide(); 
       }
     });
   }
@@ -237,13 +238,13 @@ export class NotaCreditoCompraComponent implements OnInit {
     if (!this.clickedRows.has(notaCreditoCompra)) {
       this.clickedRows.clear();
       this.clickedRows.add(notaCreditoCompra);
-      this.obtenerNotaCredito(notaCreditoCompra);
+      this.obtenerNotaCreditoCompra(notaCreditoCompra);
     } else {
       this.nuevo(null);
     }
   }
  
-  obtenerNotaCredito(notaCreditoCompra: NotaCreditoCompra){
+  obtenerNotaCreditoCompra(notaCreditoCompra: NotaCreditoCompra){
     this.notaCreditoCompraService.obtener(notaCreditoCompra.id).subscribe({
       next: res => {
         this.notaCreditoCompra = res.resultado as NotaCreditoCompra;
@@ -319,11 +320,13 @@ export class NotaCreditoCompraComponent implements OnInit {
   borrarProveedor(){
     this.proveedorSeleccionado = new Proveedor();
     this.filtroProveedores = [];
+    this.facturaCompraSeleccionado = new FacturaCompra();
+    this.filtroFacturaCompras = [];
   }
 
   consultarFacturasCompras(proveedorId: number) {
     this.facturaCompraSeleccionado = new FacturaCompra();
-    this.facturaCompraService.consultarPorProveedorYEmpresaYEstadoInternoYEstado(proveedorId, this.empresa.id, valores.estadoInternoPagada, valores.estadoActivo).subscribe({
+    this.facturaCompraService.consultarPorEmpresaYProveedorYEstado(this.empresa.id, proveedorId, valores.estadoActivo).subscribe({
       next: res => {
         this.facturasCompras = res.resultado as FacturaCompra[]
         this.filtroFacturaCompras = this.facturasCompras;

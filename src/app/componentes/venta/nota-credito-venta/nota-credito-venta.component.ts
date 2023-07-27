@@ -2,7 +2,7 @@ import { Component, HostListener, OnInit, ViewChild, ElementRef, Renderer2 } fro
 import { UntypedFormControl } from '@angular/forms';
 import { valores, mensajes, validarSesion, exito, exito_swal, error, error_swal } from '../../../constantes';
 import { Router } from '@angular/router';
-import { map, startWith, Observable } from 'rxjs';
+import { NgxSpinnerService } from 'ngx-spinner';
 import Swal from 'sweetalert2';
 
 import { DatePipe } from '@angular/common';
@@ -24,7 +24,6 @@ import { NotaCreditoElectronicaService } from 'src/app/servicios/venta/nota-cred
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
   selector: 'app-nota-credito-venta',
@@ -37,54 +36,54 @@ import { NgxSpinnerService } from 'ngx-spinner';
 })
 export class NotaCreditoVentaComponent implements OnInit {
 
-  estadoActivo = valores.estadoActivo;
-  estadoInactivo = valores.estadoInactivo;
-  estadoInternoEmitida = valores.estadoInternoEmitida;
-  estadoInternoRecaudada = valores.estadoInternoRecaudada;
-  estadoInternoAnulada = valores.estadoInternoAnulada
-  estadoSriPendiente = valores.estadoSriPendiente;
-  estadoSriAutorizada = valores.estadoSriAutorizada;
-  estadoSriAnulada = valores.estadoSriAnulada;
-  si = valores.si;
-  no = valores.no;
-  devolucion = valores.devolucion;
-  descuento = valores.descuento;
-  conjunta = valores.conjunta;
-
-  panelOpenState = false;
-  cargar = false;
-  deshabilitarDevolucion = true;
+  abrirPanelNuevoNC: boolean = true;
+  abrirPanelNCLinea: boolean = false;
+  abrirPanelAdmin: boolean = true;
   deshabilitarDescuento = true;
-  abrirPanelAdmin = false;
+  deshabilitarDevolucion = true;
+
+  si: string = valores.si;
+  no: string = valores.no;
+  estadoActivo: string = valores.estadoActivo;
+  estadoInactivo: string = valores.estadoInactivo;
+  estadoInternoEmitida: string = valores.estadoInternoEmitida;
+  estadoInternoRecaudada: string = valores.estadoInternoRecaudada;
+  estadoInternoAnulada: string = valores.estadoInternoAnulada
+  estadoSriPendiente: string = valores.estadoSriPendiente;
+  estadoSriAutorizada: string = valores.estadoSriAutorizada;
+  estadoSriAnulada: string = valores.estadoSriAnulada;
+  devolucion: string = valores.devolucion;
+  descuento: string = valores.descuento;
+  conjunta: string = valores.conjunta;
 
   hoy = new Date();
  
   sesion: Sesion = null;
   empresa: Empresa = new Empresa();
+  factura: Factura = new Factura();
   notaCreditoVenta: NotaCreditoVenta = new NotaCreditoVenta();
   notaCreditoVentaLinea: NotaCreditoVentaLinea = new NotaCreditoVentaLinea();
+
+  clienteSeleccionado: Cliente = new Cliente();
+  facturaSeleccionado: Factura = new Factura();
 
   clientes: Cliente[] = [];
   facturas: Factura[] = [];
   notasCreditosVentas: NotaCreditoVenta[] = [];
 
-
-  seleccionCliente = new UntypedFormControl();
-  filtroClientes: Observable<Cliente[]> = new Observable<Cliente[]>();
-
-  seleccionFactura = new UntypedFormControl();
-  filtroFacturas: Observable<Factura[]> = new Observable<Factura[]>();
+  filtroIdentificaciones: Cliente[] = [];
+  filtroClientes: Cliente[] = [];
+  filtroFacturas: Factura[] = [];
 
   columnas: any[] = [
     { nombreColumna: 'codigo', cabecera: 'Código', celda: (row: NotaCreditoVenta) => `${row.codigo}`},
-    { nombreColumna: 'serie', cabecera: 'Serie', celda: (row: NotaCreditoVenta) => `${row.serie}`},
-    { nombreColumna: 'secuencial', cabecera: 'Secuencial', celda: (row: NotaCreditoVenta) => `${row.secuencial}`},
+    { nombreColumna: 'comprobante', cabecera: 'Comprobante', celda: (row: NotaCreditoVenta) => `${row.numeroComprobante}`},
     { nombreColumna: 'fecha', cabecera: 'Fecha', celda: (row: NotaCreditoVenta) => `${this.datepipe.transform(row.fecha, "dd-MM-yyyy")}`},
     { nombreColumna: 'cliente', cabecera: 'Cliente', celda: (row: NotaCreditoVenta) => `${row.factura.cliente.razonSocial}`},
-    { nombreColumna: 'factura', cabecera: 'Factura', celda: (row: NotaCreditoVenta) => `${row.factura.secuencial}`},
+    { nombreColumna: 'factura', cabecera: 'Factura', celda: (row: NotaCreditoVenta) => `${row.factura.numeroComprobante}`},
     { nombreColumna: 'total', cabecera: 'Total', celda: (row: NotaCreditoVenta) => `$ ${row.totalConDescuento}`},
+    { nombreColumna: 'proceso', cabecera: 'Proceso', celda: (row: NotaCreditoVenta) => `${row.estadoInterno}`},
     { nombreColumna: 'estado', cabecera: 'Estado', celda: (row: NotaCreditoVenta) => `${row.estado}`},
-    { nombreColumna: 'estadoInterno', cabecera: 'Estado Interno', celda: (row: NotaCreditoVenta) => `${row.estadoInterno}`},
     { nombreColumna: 'estadoSri', cabecera: 'Estado SRI', celda: (row: NotaCreditoVenta) => `${row.estadoSri}`}
   ];
   cabecera: string[]  = this.columnas.map(titulo => titulo.nombreColumna);
@@ -100,7 +99,7 @@ export class NotaCreditoVentaComponent implements OnInit {
     { nombreColumna: 'descuento', cabecera: 'Descuento', celda: (row: NotaCreditoVentaLinea) => `${row.valorDescuentoLinea}`},
     { nombreColumna: 'porcdescuento', cabecera: 'Descuento %', celda: (row: NotaCreditoVentaLinea) => `${row.porcentajeDescuentoLinea}`},
     { nombreColumna: 'impuesto', cabecera: 'IVA', celda: (row: NotaCreditoVentaLinea) => `$ ${row.producto.impuesto.porcentaje}`},
-    { nombreColumna: 'bodega', cabecera: 'Bodega', celda: (row: NotaCreditoVentaLinea) => `${row.bodega.nombre}`},
+    { nombreColumna: 'bodega', cabecera: 'Bodega', celda: (row: NotaCreditoVentaLinea) => `${row.bodega.abreviatura}`},
     { nombreColumna: 'total', cabecera: 'Total', celda: (row: NotaCreditoVentaLinea) => `$ ${row.totalSinDescuentoLinea}`}
   ];
   cabeceraLinea: string[]  = this.columnasLinea.map(titulo => titulo.nombreColumna);
@@ -129,7 +128,6 @@ export class NotaCreditoVentaComponent implements OnInit {
     this.empresa = this.sesion.empresa;
     this.consultar();
     this.consultarClientes();
-    this.inicializarFiltros();
   }
 
   consultarClientes(){
@@ -145,15 +143,19 @@ export class NotaCreditoVentaComponent implements OnInit {
     if (event!=null)
       event.preventDefault();
     this.notaCreditoVenta = new NotaCreditoVenta();
-    this.seleccionCliente.patchValue(valores.vacio);
-    this.seleccionFactura.patchValue(valores.vacio);
+    this.clienteSeleccionado = new Cliente();
+    this.facturaSeleccionado = new Factura();
     this.dataSourceLinea = new MatTableDataSource<NotaCreditoVentaLinea>([]);
+    this.deshabilitarDescuento = true;
     this.clickedRows.clear();
   }
 
   crear(event) {
     if (event!=null)
       event.preventDefault();
+    if (!this.validarFormulario())
+      return;   
+    this.spinnerService.show();
     this.notaCreditoVenta.sesion = this.sesion;
     this.notaCreditoVenta.empresa = this.empresa;
     this.notaCreditoVentaService.crear(this.notaCreditoVenta).subscribe(
@@ -161,39 +163,52 @@ export class NotaCreditoVentaComponent implements OnInit {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
         this.consultar();
         this.nuevo(null);
+        this.spinnerService.hide();
       },
-      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+      err => {
+        Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+        this.spinnerService.hide();   
+      }
     );
   }
 
   crearNotaCreditoElectronica(event){
-    this.cargar = true;
     if (event != null)
       event.preventDefault();
-    this.notaCreditoElectronicaService.enviar(this.notaCreditoVenta.id).subscribe(
-      res => {
+    if (!this.validarFormulario())
+      return;   
+    this.spinnerService.show();   
+    this.notaCreditoElectronicaService.enviar(this.notaCreditoVenta.id).subscribe({
+      next: res => {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
         this.consultar();
         this.nuevo(null);
-        this.cargar = false;
+        this.spinnerService.hide();   
       },
-      err => {
+      error: err => {
         Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
-        this.cargar = false;
+        this.spinnerService.hide();   
       }
-    );
+    });
   }
 
   actualizar(event){
     if (event!=null)
       event.preventDefault();
+    if (!this.validarFormulario())
+      return;     
+    this.spinnerService.show();     
     this.notaCreditoVentaService.actualizar(this.notaCreditoVenta).subscribe(
       res => {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
         this.consultar();
-        this.nuevo(null);        
+        this.nuevo(null);
+        this.spinnerService.hide();     
       },
-      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+      err => {
+        Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+        this.spinnerService.hide();   
+      }
     );
   }
 
@@ -236,7 +251,7 @@ export class NotaCreditoVentaComponent implements OnInit {
   llenarTablaNotaCreditoVenta(notasCreditosVentas: NotaCreditoVenta[]) {
     this.dataSource = new MatTableDataSource(notasCreditosVentas);
     this.dataSource.filterPredicate = (data: NotaCreditoVenta, filter: string): boolean =>
-      this.datepipe.transform(data.fecha, "dd-MM-yyyy").includes(filter) || data.serie.includes(filter) || 
+      this.datepipe.transform(data.fecha, "dd-MM-yyyy").includes(filter) || data.numeroComprobante.includes(filter) || 
       data.secuencial.includes(filter) || data.factura.cliente.razonSocial.includes(filter) || data.estado.includes(filter);
       this.dataSource.paginator = this.paginator;
   }
@@ -261,13 +276,22 @@ export class NotaCreditoVentaComponent implements OnInit {
     });
   }
 
+  eliminarNotaCreditoVentaLinea(i: number){
+    this.notaCreditoVenta.notaCreditoVentaLineas.splice(i, 1);
+    this.calcular();
+  }
+
   construir() {
+    this.clienteSeleccionado = this.notaCreditoVenta.factura.cliente;
+    this.formatearFecha();
+    this.facturaSeleccionado = this.notaCreditoVenta.factura;
+    this.llenarTablaNotaCreditoVentaLineas(this.notaCreditoVenta.notaCreditoVentaLineas);
+    this.seleccionarOperacion();
+  }
+
+  formatearFecha(){
     let fecha = new Date(this.notaCreditoVenta.fecha);
     this.notaCreditoVenta.fecha = fecha;
-    this.seleccionCliente.patchValue(this.notaCreditoVenta.factura.cliente);
-    this.seleccionFactura.patchValue(this.notaCreditoVenta.factura);
-    this.dataSourceLinea = new MatTableDataSource<NotaCreditoVentaLinea>(this.notaCreditoVenta.notaCreditoVentaLineas);
-    this.dataSourceLinea.paginator = this.paginatorLinea;
   }
   
   filtroNotaCreditoVenta(event: Event) {
@@ -282,51 +306,102 @@ export class NotaCreditoVentaComponent implements OnInit {
     this.dataSource.filter = '';
   }
 
-  seleccionarCliente() {
-    let clienteId = this.seleccionCliente.value.id;
-    this.clienteService.obtener(clienteId).subscribe(
-      res => {
-        this.notaCreditoVenta.factura.cliente = res.resultado as Cliente;
-        this.seleccionCliente.patchValue(this.notaCreditoVenta.factura.cliente);
-        this.facturaService.consultarPorClienteYEstadoYEstadoInterno(this.notaCreditoVenta.factura.cliente.id, this.estadoActivo, this.estadoInternoRecaudada).subscribe(
-          res => {
-            this.facturas = res.resultado as Factura[]
-          },
-          err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
-        );
+  seleccionarIdentificacion(event) {
+    let clienteId = event.option.value.id;
+    this.clienteService.obtener(clienteId).subscribe({
+      next: res => {
+        this.factura.cliente = res.resultado as Cliente;
+        this.consultarFacturas(clienteId);
       },
-      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
-    );
+      error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+    });
+  }
+  verIdentificacion(cliente: Cliente): string {
+    return cliente && cliente.identificacion ? cliente.identificacion : valores.vacio;
+  }
+  filtrarIdentificaciones(event: any){
+    this.filtroIdentificaciones = this.clientes.filter(cliente => cliente.identificacion.toUpperCase().includes(event));
   }
 
-  obtenerPorFactura() {
-    let facturaId = this.seleccionFactura.value.id;
+  seleccionarCliente(event) {
+    let clienteId = event.option.value.id;
+    this.clienteService.obtener(clienteId).subscribe({
+      next: res => {
+        this.notaCreditoVenta.factura.cliente = res.resultado as Cliente;
+        this.consultarFacturas(clienteId);
+      },
+      error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+    });
+  }
+  verCliente(cliente: Cliente): string {
+    return cliente && cliente.razonSocial ? cliente.razonSocial : valores.vacio;
+  }
+  filtrarClientes(event: any){
+    this.filtroClientes = this.clientes.filter(cliente => cliente.razonSocial.toUpperCase().includes(event));
+  }
+  borrarCliente(){
+    this.clienteSeleccionado = new Cliente();
+    this.filtroClientes = [];
+    this.facturaSeleccionado = new Factura();
+    this.filtroFacturas = [];
+  }
+
+  consultarFacturas(clienteId: number) {
+    this.facturaSeleccionado = new Factura();
+    this.facturaService.consultarPorEmpresaYClienteYEstado(this.empresa.id, clienteId, valores.estadoActivo).subscribe({
+      next: res => {
+        this.facturas = res.resultado as Factura[]
+        this.filtroFacturas = this.facturas;
+      },
+      error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+    });
+  }
+  verFactura(factura: Factura): string {
+    return factura && factura.numeroComprobante ? factura.numeroComprobante : valores.vacio;
+  }
+  filtrarFacturas(event: any){
+    this.filtroFacturas = this.facturas.filter(factura => factura.numeroComprobante.toUpperCase().includes(event));
+  }
+
+  seleccionarFactura(event) {
+    let facturaId = event.option.value.id;
     this.notaCreditoVentaService.obtenerPorFactura(facturaId).subscribe({
       next: res => {
-        this.notaCreditoVenta = res.resultado as NotaCreditoVenta;
-        this.construir();
+        this.notaCreditoVenta= res.resultado as NotaCreditoVenta;
+        this.formatearFecha();
+        this.llenarTablaNotaCreditoVentaLineas(this.notaCreditoVenta.notaCreditoVentaLineas);
       },
       error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     });
   }
 
+  llenarTablaNotaCreditoVentaLineas(notasCreditoVentaLineas: NotaCreditoVentaLinea[]) {
+    this.dataSourceLinea = new MatTableDataSource(notasCreditoVentaLineas);
+    this.dataSourceLinea.filterPredicate = (data: NotaCreditoVentaLinea, filter: string): boolean =>
+      data.producto.nombre.includes(filter) || data.producto.medida.abreviatura.includes(filter) || 
+      data.producto.impuesto.abreviatura.includes(filter) || data.bodega.abreviatura.includes(filter);
+      this.dataSourceLinea.paginator = this.paginatorLinea;
+    this.dataSourceLinea.sort = this.sortLinea;
+  }
+
+
   seleccionarOperacion(){
-    for(let notaCreditoVentaLinea of this.notaCreditoVenta.notaCreditoVentaLineas){
-      notaCreditoVentaLinea.devolucion = valores.cero;
-      notaCreditoVentaLinea.porcentajeDescuentoLinea = valores.cero;
-      notaCreditoVentaLinea.valorDescuentoLinea = valores.cero;
-    }
-    if(this.notaCreditoVenta.operacion == valores.devolucion){
-      this.deshabilitarDevolucion = false;
+    if (this.notaCreditoVenta.operacion == valores.devolucion) {
+      this.notaCreditoVenta.descuento = valores.cero;
       this.deshabilitarDescuento = true;
+      if (this.notaCreditoVenta.id == valores.cero){
+        for (let i=0; i < this.notaCreditoVenta.notaCreditoVentaLineas.length; i++){
+          this.notaCreditoVenta.notaCreditoVentaLineas[i].cantidad = valores.cero;
+        }
+      }
     }
-    if(this.notaCreditoVenta.operacion == valores.descuento){
-      this.deshabilitarDevolucion = true;
+    if (this.notaCreditoVenta.operacion == valores.descuento) {
       this.deshabilitarDescuento = false;
-    }
-    if(this.notaCreditoVenta.operacion == valores.conjunta){
-      this.deshabilitarDevolucion = false;
-      this.deshabilitarDescuento = false;
+      if (this.notaCreditoVenta.id == valores.cero){
+        for (let i=0; i < this.notaCreditoVenta.notaCreditoVentaLineas.length; i++){
+          //this.notaCreditoVenta.notaCreditoVentaLineas[i].cantidad = this.notaCreditoVenta.notaCreditoVentaLineas[i].cantidadVenta;
+        }
+      }
     }
   }
 
@@ -385,41 +460,20 @@ export class NotaCreditoVentaComponent implements OnInit {
     return a && b && a.id == b.id;
   }
 
-  //FILTROS AUTOCOMPLETE
-  inicializarFiltros(){
-    this.filtroClientes = this.seleccionCliente.valueChanges
-    .pipe(
-      startWith(valores.vacio),
-      map(value => typeof value === 'string' || value==null ? value : value.id),
-      map(cliente => typeof cliente === 'string' ? this.filtroCliente(cliente) : this.clientes.slice())
-    );
-    this.filtroFacturas = this.seleccionFactura.valueChanges
-      .pipe(
-        startWith(valores.vacio),
-        map(value => typeof value === 'string' || value==null ? value : value.id),
-        map(factura => typeof factura === 'string' ? this.filtroFactura(factura) : this.facturas.slice())
-      );
-  }
-
-  private filtroCliente(value: string): Cliente[] {
-    if(this.clientes.length > valores.cero) {
-      const filterValue = value.toLowerCase();
-      return this.clientes.filter(cliente => cliente.razonSocial.toLowerCase().includes(filterValue));
+  //VALIDACIONES
+  validarFormulario(): boolean {
+    if (this.notaCreditoVenta.fecha == null ){ //|| this.notaCreditoCompra.fecha > this.hoy
+      Swal.fire({ icon: error_swal, title: error, text: mensajes.error_falta_datos });
+      return false;
     }
-    return [];
-  }
-  verCliente(cliente: Cliente): string {
-    return cliente && cliente.razonSocial ? cliente.razonSocial : valores.vacio;
-  }
-
-  private filtroFactura(value: string): Factura[] {
-    if(this.facturas.length > valores.cero) {
-      const filterValue = value.toLowerCase();
-      return this.facturas.filter(factura => factura.secuencial.toLowerCase().includes(filterValue));
+    if (this.notaCreditoVenta.factura.id == valores.cero){
+      Swal.fire({ icon: error_swal, title: error, text: mensajes.error_falta_datos });
+      return false;
     }
-    return [];
-  }
-  verFactura(factura: Factura): string {
-    return factura && factura.secuencial ? factura.secuencial : valores.vacio;
-  }
+    if (this.notaCreditoVenta.operacion == valores.vacio){
+      Swal.fire({ icon: error_swal, title: error, text: mensajes.error_falta_datos });
+      return false;
+    }
+    return true;
+  }  
 }

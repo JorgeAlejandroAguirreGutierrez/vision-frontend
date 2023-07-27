@@ -7,7 +7,7 @@
   text-transform: lowercase;
 }
 
-::ng-deep td > mat-form-field > .mat-form-field-wrapper {
+:host ::ng-deep td > mat-form-field > .mat-form-field-wrapper {
   padding-bottom: 0.1em !important;
   .mat-form-field-flex > .mat-form-field-infix {
     width: 0px!important;
@@ -19,7 +19,7 @@
   }
 }
 
-::ng-deep .centrarCabecera .mat-sort-header-container {
+:host ::ng-deep .centrarCabecera .mat-sort-header-container {
   display: flex;
   justify-content: center;
 }
