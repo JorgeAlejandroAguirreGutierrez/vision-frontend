@@ -174,7 +174,7 @@
             [expanded]="abrirPanelNCLinea">
             <mat-expansion-panel-header>
                 <mat-panel-title>
-                    <i><u>ITEMS NOTA DE CRÉDITO</u></i>
+                    <i><u>ITEMS NOTA DE CRÉDITO VENTA</u></i>
                 </mat-panel-title>
                 <mat-panel-description>
                     {{abrirPanelNCLinea ? 'Ocultar sección' : 'Productos de la nota de crédito'}}
@@ -188,8 +188,8 @@
                         <!-- Columnas Dinamicas -->
                         <ng-container *ngFor="let columna of columnasLinea"
                             [matColumnDef]="columna.nombreColumna">
-                            <th mat-header-cell *matHeaderCellDef mat-sort-header class="centrarCabecera"> {{ columna.cabecera }} </th>
-                            <td mat-cell *matCellDef="let row; let i=index">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header class="centrar-cabecera"> {{ columna.cabecera }} </th>
+                            <td mat-cell *matCellDef="let row; let i=index" class="centrar-celda">
                                 <ng-container *ngIf="columna.nombreColumna!='devolucion' && columna.nombreColumna!='descuento' && 
                                     columna.nombreColumna!='porcdescuento'">
                                     {{ columna.celda(row) }}
@@ -246,7 +246,7 @@
                                 </div>
                                 <div class="col-5">
                                     <mat-form-field appearance="standard">
-                                        <input matInput type="text" [(ngModel)]="notaCreditoVenta.subtotalSinDescuento"
+                                        <input matInput type="text" [(ngModel)]="notaCreditoVenta.subtotal"
                                             class="form-control-sm" [disabled]="true">
                                     </mat-form-field>
                                 </div>
@@ -265,7 +265,7 @@
                                 <div class="col-5">
                                     <mat-form-field appearance="standard">
                                         <input matInput type="text "
-                                            [(ngModel)]="notaCreditoVenta.subtotalBase12SinDescuento"
+                                            [(ngModel)]="notaCreditoVenta.subtotalGravado"
                                             class="form-control-sm" [disabled]="true">
                                     </mat-form-field>
                                 </div>
@@ -275,7 +275,7 @@
                                 <div class="col-5">
                                     <mat-form-field appearance="standard">
                                         <input matInput type="text "
-                                            [(ngModel)]="notaCreditoVenta.subtotalBase0SinDescuento"
+                                            [(ngModel)]="notaCreditoVenta.subtotalNoGravado"
                                             class="form-control-sm " [disabled]="true">
                                     </mat-form-field>
                                 </div>
@@ -284,7 +284,7 @@
                                 </div>
                                 <div class="col-5">
                                     <mat-form-field appearance="standard">
-                                        <input matInput type="text " [(ngModel)]="notaCreditoVenta.ivaSinDescuento"
+                                        <input matInput type="text " [(ngModel)]="notaCreditoVenta.importeIva"
                                             class="form-control-sm " [disabled]="true">
                                     </mat-form-field>
                                 </div>

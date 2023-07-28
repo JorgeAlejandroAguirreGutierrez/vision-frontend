@@ -74,8 +74,8 @@ export class ProductoComponent implements OnInit {
     { nombreColumna: 'costo', cabecera: 'Costo', celda: (row: Precio) => `${row.costo}` },
     { nombreColumna: 'margenGanancia', cabecera: 'MG %', celda: (row: Precio) => `${row.margenGanancia}` },
     { nombreColumna: 'precioSinIva', cabecera: 'Precio', celda: (row: Precio) => `${row.precioSinIva}` },
-    { nombreColumna: 'precioVentaPublico', cabecera: 'PVP', celda: (row: Precio) => `${row.precioVentaPublico}` },
-    { nombreColumna: 'precioVentaPublicoManual', cabecera: 'PVP Manual', celda: (row: Precio) => `${row.precioVentaPublicoManual}` },
+    { nombreColumna: 'precioVentaPublico', cabecera: 'PVP Sug.', celda: (row: Precio) => `${row.precioVentaPublico}` },
+    { nombreColumna: 'precioVentaPublicoManual', cabecera: 'PVP Real', celda: (row: Precio) => `${row.precioVentaPublicoManual}` },
     { nombreColumna: 'utilidad', cabecera: 'Utilidad', celda: (row: Precio) => `${row.utilidad}` },
     { nombreColumna: 'utilidadPorcentaje', cabecera: 'Util. %', celda: (row: Precio) => `${row.utilidadPorcentaje} %` }
   ];

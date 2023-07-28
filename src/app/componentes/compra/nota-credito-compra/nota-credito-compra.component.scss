@@ -1,8 +1,8 @@
-.resultados{
-    border: 2px solid #5b6582 !important;
-    border-radius: 10px !important;
-    padding: 0 8px !important;
-    margin: 5px;
+/**** SCS Especifico para tabla Linea NC-compra  ****/
+.mat-icon-button{
+  width: 25px;
+  height: 25px;
+  line-height: 0px;
 }
 
 :host ::ng-deep td > mat-form-field > .mat-form-field-wrapper {
@@ -16,13 +16,7 @@
       }
     }
   }
-
-.mat-icon-button{
-    width: 30px;
-    height: 30px;
-    line-height: 0px
-}
-  
+ 
 .mat-column-cantidad,
 .mat-column-costounitario {
     width: 100px;
@@ -30,24 +24,19 @@
     word-wrap: break-word;
 }
 
-.mat-column-medida,
-.mat-column-cantidadcompra,
-.mat-column-cunitariocompra,
-.mat-column-impuesto,
-.mat-column-subtotal,
-.mat-column-importe,
-.mat-column-totalLinea {
-    text-align: center;
+.centrar-celda{
+  text-align: center;
 }
 
-:host ::ng-deep .mat-column-medida>.mat-sort-header-container,
-:host ::ng-deep .mat-column-cantidadcompra>.mat-sort-header-container,
-:host ::ng-deep .mat-column-cunitariocompra>.mat-sort-header-container,
-:host ::ng-deep .mat-column-cantidad>.mat-sort-header-container,
-:host ::ng-deep .mat-column-costounitario>.mat-sort-header-container,
-:host ::ng-deep .mat-column-impuesto>.mat-sort-header-container,
-:host ::ng-deep .mat-column-subtotal>.mat-sort-header-container,
-:host ::ng-deep .mat-column-importe>.mat-sort-header-container,
-:host ::ng-deep .mat-column-totalLinea>.mat-sort-header-container {
-    justify-content: center;
+.mat-column-producto {
+  text-align: left!important;
+}
+
+:host ::ng-deep .centrar-cabecera .mat-sort-header-container {
+  //display: flex;
+  justify-content: center;
+}
+
+:host ::ng-deep .mat-column-producto>.mat-sort-header-container {
+  justify-content: left!important;
 }

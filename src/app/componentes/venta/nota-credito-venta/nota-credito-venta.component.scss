@@ -1,8 +1,9 @@
-.resultados{
-  border: 2px solid #5b6582 !important;
-  border-radius: 10px !important;
-  padding: 0 8px !important;
-  margin: 5px;
+
+/**** SCS Especifico para tabla Linea NC-venta  ****/
+.mat-icon-button{
+  width: 25px;
+  height: 25px;
+  line-height: 0px;
 }
 
 :host ::ng-deep td > mat-form-field > .mat-form-field-wrapper {
@@ -16,3 +17,27 @@
       }
     }
   }
+ 
+.mat-column-cantidad,
+.mat-column-costounitario {
+    width: 100px;
+    max-width: 100px;
+    word-wrap: break-word;
+}
+
+.centrar-celda{
+  text-align: center;
+}
+
+.mat-column-producto {
+  text-align: left!important;
+}
+
+:host ::ng-deep .centrar-cabecera .mat-sort-header-container {
+  //display: flex;
+  justify-content: center;
+}
+
+:host ::ng-deep .mat-column-producto>.mat-sort-header-container {
+  justify-content: left!important;
+}

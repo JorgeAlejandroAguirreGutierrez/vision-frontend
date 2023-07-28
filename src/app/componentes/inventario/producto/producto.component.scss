@@ -19,7 +19,26 @@
   }
 }
 
-:host ::ng-deep .centrarCabecera .mat-sort-header-container {
-  display: flex;
+.mat-column-margenGanancia,
+.mat-column-precioVentaPublicoManual {
+    width: 100px;
+    max-width: 100px;
+    word-wrap: break-word;
+}
+
+.centrar-celda{
+  text-align: center;
+}
+
+.mat-column-segmento {
+  text-align: left!important;
+}
+
+:host ::ng-deep .centrar-cabecera .mat-sort-header-container {
+  //display: flex;
   justify-content: center;
+}
+
+:host ::ng-deep .mat-column-segmento>.mat-sort-header-container {
+  justify-content: left!important;
 }
