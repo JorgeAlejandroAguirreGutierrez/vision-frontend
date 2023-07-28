@@ -10,11 +10,14 @@ import { NotaDebitoVentaTarjetaDebito } from '../recaudacion/nota-debito-venta-t
 import { NotaDebitoVentaTarjetaCredito } from '../recaudacion/nota-debito-venta-tarjeta-credito';
 import { NotaDebitoVentaCredito } from '../recaudacion/nota-debito-venta-credito';
 import { Empresa } from '../usuario/empresa';
+
 export class NotaDebitoVenta {
     id: number;
     codigo: string;
-    serie: string;
+    establecimiento: string;
+    puntoVenta: string;
     secuencial: string;
+    numeroComprobante: string;
     fecha: Date;
     estado: string;
     estadoInterno: string;
@@ -53,7 +56,10 @@ export class NotaDebitoVenta {
     constructor() {
         this.id = valores.cero;
         this.codigo = valores.vacio;
+        this.establecimiento = valores.vacio;
+        this.puntoVenta = valores.vacio;
         this.secuencial = valores.vacio;
+        this.numeroComprobante = valores.vacio;
         this.fecha = new Date();
         this.estado = valores.estadoActivo;
         this.estadoInterno = valores.vacio;

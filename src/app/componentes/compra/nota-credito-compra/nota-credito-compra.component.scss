@@ -5,6 +5,24 @@
     margin: 5px;
 }
 
+:host ::ng-deep td > mat-form-field > .mat-form-field-wrapper {
+    padding-bottom: 0.1em !important;
+    .mat-form-field-flex > .mat-form-field-infix {
+      width: 0px!important;
+      border-top: 0.1em !important;
+      .mat-input-element {
+        font-size: 12px !important;
+        height: 12px;
+      }
+    }
+  }
+
+.mat-icon-button{
+    width: 30px;
+    height: 30px;
+    line-height: 0px
+}
+  
 .mat-column-cantidad,
 .mat-column-costounitario {
     width: 100px;
@@ -18,42 +36,18 @@
 .mat-column-impuesto,
 .mat-column-subtotal,
 .mat-column-importe,
-.mat-column-total {
+.mat-column-totalLinea {
     text-align: center;
 }
 
-::ng-deep .mat-column-medida>.mat-sort-header-container {
-    justify-content: center;
-}
-
-::ng-deep .mat-column-cantidadcompra>.mat-sort-header-container {
-    justify-content: center;
-}
-
-::ng-deep .mat-column-cunitariocompra>.mat-sort-header-container {
-    justify-content: center;
-}
-
-::ng-deep .mat-column-cantidad>.mat-sort-header-container {
-    justify-content: center;
-}
-
-::ng-deep .mat-column-costounitario>.mat-sort-header-container {
-    justify-content: center;
-}
-
-::ng-deep .mat-column-impuesto>.mat-sort-header-container {
-    justify-content: center;
-}
-
-::ng-deep .mat-column-subtotal>.mat-sort-header-container {
-    justify-content: center;
-}
-
-::ng-deep .mat-column-importe>.mat-sort-header-container {
-    justify-content: center;
-}
-
-::ng-deep .mat-column-total>.mat-sort-header-container {
+:host ::ng-deep .mat-column-medida>.mat-sort-header-container,
+:host ::ng-deep .mat-column-cantidadcompra>.mat-sort-header-container,
+:host ::ng-deep .mat-column-cunitariocompra>.mat-sort-header-container,
+:host ::ng-deep .mat-column-cantidad>.mat-sort-header-container,
+:host ::ng-deep .mat-column-costounitario>.mat-sort-header-container,
+:host ::ng-deep .mat-column-impuesto>.mat-sort-header-container,
+:host ::ng-deep .mat-column-subtotal>.mat-sort-header-container,
+:host ::ng-deep .mat-column-importe>.mat-sort-header-container,
+:host ::ng-deep .mat-column-totalLinea>.mat-sort-header-container {
     justify-content: center;
 }

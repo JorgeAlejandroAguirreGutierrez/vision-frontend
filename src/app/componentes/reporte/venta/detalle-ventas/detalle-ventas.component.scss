@@ -6,7 +6,7 @@
   margin-right: 8px;
 }
 
-::ng-deep .centrarCabecera .mat-sort-header-container {
+:host ::ng-deep .centrarCabecera .mat-sort-header-container {
   display: flex;
   justify-content: center;
 }

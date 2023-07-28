@@ -32,6 +32,7 @@ export class EmpresaComponent implements OnInit {
 
   abrirPanelNuevo: boolean = true;
   abrirPanelAdmin: boolean = true;
+  ocultarContrasena: boolean = true;
   deshabilitarIdentificacion: boolean = false;
 
   sesion: Sesion = null;

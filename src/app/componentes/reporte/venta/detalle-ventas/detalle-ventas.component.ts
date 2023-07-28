@@ -70,8 +70,8 @@ export class DetalleVentasComponent implements OnInit {
   cabeceraComprobantes: string[] = this.columnasComprobantes.map(titulo => titulo.nombreColumna);
 
   columnasResumen: any[] = [
-    { nombreColumna: 'grabado', cabecera: 'V. Grabadas', celda: (row: ReporteVenta) => `${row.total12}` },
-    { nombreColumna: 'nograbado', cabecera: 'V. No Grabadas', celda: (row: ReporteVenta) => `${row.total0}` },
+    { nombreColumna: 'gravado', cabecera: 'V. Gravadas', celda: (row: ReporteVenta) => `${row.total12}` },
+    { nombreColumna: 'nogravado', cabecera: 'V. No Gravadas', celda: (row: ReporteVenta) => `${row.total0}` },
     { nombreColumna: 'importe', cabecera: 'Importe', celda: (row: ReporteVenta) => `${row.totalIva}` },
     { nombreColumna: 'total', cabecera: 'Total', celda: (row: ReporteVenta) => `${row.total}` }
   ];

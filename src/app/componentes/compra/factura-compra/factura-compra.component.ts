@@ -82,12 +82,12 @@ export class FacturaCompraComponent implements OnInit {
     { nombreColumna: 'codigo', cabecera: 'Código', celda: (row: FacturaCompra) => `${row.codigo}`},
     { nombreColumna: 'fecha', cabecera: 'Fecha', celda: (row: FacturaCompra) => `${this.datepipe.transform(row.fecha, "dd-MM-yyyy")}`},
     { nombreColumna: 'factura', cabecera: 'Factura', celda: (row: FacturaCompra) => `${row.numeroComprobante}`},
-    { nombreColumna: 'proveedor', cabecera: 'Proveedor', celda: (row: FacturaCompra) => `${row.proveedor.razonSocial}`},
+    { nombreColumna: 'proveedor', cabecera: 'Proveedor', celda: (row: FacturaCompra) => `${row.proveedor.nombreComercial}`},
     { nombreColumna: 'subtotal', cabecera: 'Subtotal', celda: (row: FacturaCompra) => `$${row.subtotalSinDescuento}`},
     { nombreColumna: 'descuento', cabecera: 'Descuento', celda: (row: FacturaCompra) => `$${row.valorTotal}`},
     { nombreColumna: 'total', cabecera: 'Total', celda: (row: FacturaCompra) => `$${row.valorTotal}`},
-    { nombreColumna: 'estado', cabecera: 'Estado', celda: (row: FacturaCompra) => `${row.estado}`},
-    { nombreColumna: 'estadoInterno', cabecera: 'Estado Interno', celda: (row: FacturaCompra) => `${row.estadoInterno}`}
+    { nombreColumna: 'proceso', cabecera: 'Proceso', celda: (row: FacturaCompra) => `${row.estadoInterno}`},
+    { nombreColumna: 'estado', cabecera: 'Estado', celda: (row: FacturaCompra) => `${row.estado}`}
   ];
   cabeceraFacturaCompra: string[]  = this.columnasFacturaCompra.map(titulo => titulo.nombreColumna);
   dataSourceFacturaCompra: MatTableDataSource<FacturaCompra>;
@@ -97,12 +97,12 @@ export class FacturaCompraComponent implements OnInit {
     { nombreColumna: 'nombre', cabecera: 'Producto', celda: (row: FacturaCompraLinea) => `${row.producto.nombre}` },
     { nombreColumna: 'medida', cabecera: 'Medida', celda: (row: FacturaCompraLinea) => `${row.producto.medida.abreviatura}` },
     { nombreColumna: 'cantidad', cabecera: 'Cant.', celda: (row: FacturaCompraLinea) => `${row.cantidad}` },
-    { nombreColumna: 'valor', cabecera: 'P. Unit', celda: (row: FacturaCompraLinea) => `$${row.costoPromedio}` },
-    { nombreColumna: 'descuento', cabecera: 'Desc. $', celda: (row: FacturaCompraLinea) => `$${row.valorDescuentoLinea}` },
+    { nombreColumna: 'valor', cabecera: 'P. Unit', celda: (row: FacturaCompraLinea) => `$ ${row.costoPromedio}` },
+    { nombreColumna: 'descuento', cabecera: 'Desc. $', celda: (row: FacturaCompraLinea) => `$ ${row.valorDescuentoLinea}` },
     { nombreColumna: 'descuentoPorcentaje', cabecera: 'Desc. %', celda: (row: FacturaCompraLinea) => `${row.porcentajeDescuentoLinea} %` },
-    { nombreColumna: 'subtotal', cabecera: 'Subtotal', celda: (row: FacturaCompraLinea) => `$${row.subtotalConDescuentoLinea}` },
-    { nombreColumna: 'impuesto', cabecera: 'IVA', celda: (row: FacturaCompraLinea) => `$${row.importeIvaLinea}` },
-    { nombreColumna: 'total', cabecera: 'Total', celda: (row: FacturaCompraLinea) => `$${row.totalLinea}` },
+    { nombreColumna: 'subtotal', cabecera: 'Subtotal', celda: (row: FacturaCompraLinea) => `$ ${row.subtotalConDescuentoLinea}` },
+    { nombreColumna: 'impuesto', cabecera: 'IVA', celda: (row: FacturaCompraLinea) => `$ ${row.importeIvaLinea}` },
+    { nombreColumna: 'total', cabecera: 'Total', celda: (row: FacturaCompraLinea) => `$ ${row.totalLinea}` },
     { nombreColumna: 'bodega', cabecera: 'bodega', celda: (row: FacturaCompraLinea) => `${row.bodega.abreviatura}` },
     { nombreColumna: 'acciones', cabecera: 'Acciones' }
   ];

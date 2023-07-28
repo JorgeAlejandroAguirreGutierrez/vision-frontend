@@ -13,8 +13,10 @@ import { Empresa } from '../usuario/empresa';
 export class Factura {
   id: number;
   codigo: string;
-  serie: string;
+  establecimiento: string;
+  puntoVenta: string;
   secuencial: string;
+  numeroComprobante: string;
   codigoNumerico: String;
   fecha: Date;
   claveAcceso: String;
@@ -25,8 +27,8 @@ export class Factura {
   subtotalSinDescuento: number;
   subtotalConDescuento: number;
   descuentoTotal: number;
-  subtotalGrabadoConDescuento: number;
-  subtotalNoGrabadoConDescuento: number;
+  subtotalGravadoConDescuento: number;
+  subtotalNoGravadoConDescuento: number;
   importeIvaTotal: number;
   valorTotal: number;
 
@@ -66,8 +68,10 @@ export class Factura {
   constructor() {
     this.id = valores.cero;
     this.codigo = valores.vacio;
-    this.serie = valores.vacio;
+    this.establecimiento = valores.vacio;
+    this.puntoVenta = valores.vacio;
     this.secuencial = valores.vacio;
+    this.numeroComprobante = valores.vacio;
     this.codigoNumerico = valores.vacio;
     this.claveAcceso = valores.vacio;
     this.fecha = new Date();
@@ -83,8 +87,8 @@ export class Factura {
     this.subtotalSinDescuento = valores.cero;
     this.subtotalConDescuento = valores.cero;
     this.descuentoTotal = valores.cero;
-    this.subtotalGrabadoConDescuento = valores.cero;
-    this.subtotalNoGrabadoConDescuento = valores.cero;
+    this.subtotalGravadoConDescuento = valores.cero;
+    this.subtotalNoGravadoConDescuento = valores.cero;
     this.importeIvaTotal = valores.cero;
     this.valorTotal = valores.cero;
 

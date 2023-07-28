@@ -75,8 +75,8 @@ export class NotaDebitoCompraComponent implements OnInit {
     { nombreColumna: 'comprobante', cabecera: 'Comprobante', celda: (row: NotaDebitoCompra) => `${row.numeroComprobante}`},
     { nombreColumna: 'proveedor', cabecera: 'Proveedor', celda: (row: NotaDebitoCompra) => `${row.facturaCompra.proveedor.razonSocial}`},
     { nombreColumna: 'total', cabecera: 'Total', celda: (row: NotaDebitoCompra) => `$${row.total}`},
-    { nombreColumna: 'estado', cabecera: 'Estado', celda: (row: NotaDebitoCompra) => `${row.estado}`},
-    { nombreColumna: 'estadoInterno', cabecera: 'Estado Interno', celda: (row: NotaDebitoCompra) => `${row.estadoInterno}`}
+    { nombreColumna: 'proceso', cabecera: 'Proceso', celda: (row: NotaDebitoCompra) => `${row.estadoInterno}`},
+    { nombreColumna: 'estado', cabecera: 'Estado', celda: (row: NotaDebitoCompra) => `${row.estado}`}
   ];
   cabecera: string[]  = this.columnas.map(titulo => titulo.nombreColumna);
   dataSource: MatTableDataSource<NotaDebitoCompra>;
@@ -232,7 +232,7 @@ export class NotaDebitoCompraComponent implements OnInit {
   }
 
   consultarFacturasCompras(){
-    this.facturaCompraService.consultarPorProveedorYEmpresaYEstadoInternoYEstado(this.notaDebitoCompra.facturaCompra.proveedor.id, this.empresa.id, valores.estadoInternoPagada, valores.estadoActivo).subscribe(
+    this.facturaCompraService.consultarPorEmpresaYProveedorYEstado(this.empresa.id, this.notaDebitoCompra.facturaCompra.proveedor.id, valores.estadoActivo).subscribe(
       res => {
         this.facturasCompras = res.resultado as FacturaCompra[]
       },

@@ -85,8 +85,8 @@ export class FacturaService {
       }));
   }
 
-  consultarPorClienteYEstadoYEstadoInterno(clienteId: number, estado: string, estadoInterno: string): Observable<Respuesta> {
-    return this.http.get(environment.host + urn.ruta + urn.factura + urn.consultarPorClienteYEstadoYEstadoInterno + urn.slash + clienteId + urn.slash + estado + urn.slash + estadoInterno, options).pipe(
+  consultarPorEmpresaYClienteYEstado(empresaId: number,clienteId: number, estado: string): Observable<Respuesta> {
+    return this.http.get(environment.host + urn.ruta + urn.factura + urn.consultarPorEmpresaYClienteYEstado + urn.slash + empresaId + urn.slash + clienteId + urn.slash + estado, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(() => err);

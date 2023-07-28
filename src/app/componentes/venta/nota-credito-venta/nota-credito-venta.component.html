@@ -43,19 +43,16 @@
             </li>
         </ul>
     </nav>
-    <div *ngIf="cargar">
-        <mat-progress-bar mode="indeterminate"></mat-progress-bar>
-    </div>
-    <ng-template matStepLabel>Nota Credito de Venta</ng-template>
     <mat-divider></mat-divider>
     <mat-accordion class="headers-align">
-        <mat-expansion-panel (opened)="panelOpenState = true" (closed)="panelOpenState = false" [expanded]="true">
+        <mat-expansion-panel (opened)="abrirPanelNuevoNC = true" (closed)="abrirPanelNuevoNC = false" 
+            [expanded]="abrirPanelNuevoNC">
             <mat-expansion-panel-header>
                 <mat-panel-title>
-                    <i><u>DATOS PARA NOTA CREDITO</u></i>
+                    <i><u>NOTA DE CRÉDITO</u></i>
                 </mat-panel-title>
                 <mat-panel-description>
-                    {{panelOpenState ? 'Ocultar sección' : 'Información del cliente para nota credito'}}
+                    {{abrirPanelNuevoNC ? 'Ocultar sección' : 'Información del cliente para nota credito'}}
                     <mat-icon>account_circle</mat-icon>
                 </mat-panel-description>
             </mat-expansion-panel-header>
@@ -65,21 +62,33 @@
                     <div class="col-3">
                         <mat-form-field appearance="standard">
                             <mat-label>Ruc</mat-label>
-                            <input matInput type="text" [(ngModel)]="notaCreditoVenta.factura.cliente.identificacion"
-                                class="form-control-sm" [disabled]="true">
+                            <input matInput type="text" class="form-control-sm" placeholder="RUC" 
+                                [(ngModel)]="clienteSeleccionado" (ngModelChange)="filtrarIdentificaciones($event)" 
+                                [matAutocomplete]="autoIdentificacion" oninput="this.value = this.value.toUpperCase()">
+                            <mat-autocomplete #autoIdentificacion="matAutocomplete"  [displayWith]="verIdentificacion"
+                                (optionSelected)="seleccionarIdentificacion($event)" (opened)="consultarClientes()">
+                                <mat-option *ngFor="let cliente of filtroIdentificaciones" [value]="cliente">
+                                    {{ cliente.identificacion }}
+                                </mat-option>
+                            </mat-autocomplete>    
                         </mat-form-field>
                     </div>
                     <div class="col-9">
                         <mat-form-field appearance="standard">
                             <mat-label>Cliente</mat-label>
-                            <mat-autocomplete #cliente="matAutocomplete" [displayWith]="verCliente"
-                                (optionSelected)="seleccionarCliente()">
-                                <mat-option *ngFor="let cliente of filtroClientes | async" [value]="cliente">
-                                    {{cliente.razonSocial}}
+                            <input matInput type="text" class="form-control-sm" placeholder="Razon social" 
+                                [(ngModel)]="clienteSeleccionado" (ngModelChange)="filtrarClientes($event)" 
+                                [matAutocomplete]="autoCliente" oninput="this.value = this.value.toUpperCase()">
+                                <button mat-button *ngIf="clienteSeleccionado" matSuffix mat-icon-button
+                                    (click)="borrarCliente()">
+                                    <mat-icon>close</mat-icon>
+                                </button>    
+                            <mat-autocomplete #autoCliente="matAutocomplete"  [displayWith]="verCliente"
+                                (optionSelected)="seleccionarCliente($event)" (opened)="consultarClientes()">
+                                <mat-option *ngFor="let cliente of filtroClientes" [value]="cliente">
+                                    {{ cliente.razonSocial }}
                                 </mat-option>
                             </mat-autocomplete>
-                            <input matInput type="text" class="form-control-sm" placeholder="Razon Social"
-                                [formControl]="seleccionCliente" [matAutocomplete]="cliente">
                         </mat-form-field>
                     </div>
                     <div class="col-3">
@@ -90,42 +99,35 @@
                             <mat-datepicker #picker></mat-datepicker>
                         </mat-form-field>
                     </div>
-                    <div class="col-9">
-                        <mat-form-field appearance="standard">
-                            <mat-label>Direccion</mat-label>
-                            <input matInput type="text" [(ngModel)]="notaCreditoVenta.factura.cliente.direccion"
-                                class="form-control-sm" [disabled]="true">
-                        </mat-form-field>
-                    </div>
-                    <div class="col-2">
-                        <mat-form-field appearance="standard">
-                            <mat-label>Serie</mat-label>
-                            <input matInput type="text" class="form-control-sm" [(ngModel)]="notaCreditoVenta.factura.serie"
-                                [disabled]="true">
-                        </mat-form-field>
-                    </div>
-                    <div class="col-5">
+                    <div class="col-4">
                         <mat-form-field appearance="standard">
                             <mat-label>Factura</mat-label>
-                            <mat-autocomplete #factura="matAutocomplete" [displayWith]="verFactura"
-                                (optionSelected)="obtenerPorFactura()">
-                                <mat-option *ngFor="let factura of filtroFacturas | async" [value]="factura">
-                                    {{factura.secuencial}}
+                            <input matInput type="text" class="form-control-sm" placeholder="No. Factura" 
+                                [(ngModel)]="facturaSeleccionado" (ngModelChange)="filtrarFacturas($event)" 
+                                [matAutocomplete]="autoFactura" oninput="this.value = this.value.toUpperCase()">
+                            <mat-autocomplete #autoFactura="matAutocomplete"  [displayWith]="verFactura"
+                                (optionSelected)="seleccionarFactura($event)">
+                                <mat-option *ngFor="let factura of filtroFacturas" [value]="factura">
+                                    {{ factura.numeroComprobante }}
                                 </mat-option>
                             </mat-autocomplete>
-                            <input matInput type="text" class="form-control-sm" placeholder="Secuencial Factura"
-                                [formControl]="seleccionFactura" [matAutocomplete]="factura">
                         </mat-form-field>
                     </div>
-                    <div class="col-5">
+                    <div class="col-3">
                         <mat-form-field appearance="standard">
                             <mat-label>Operacion</mat-label>
                             <mat-select class="form-control-sm" [(ngModel)]="notaCreditoVenta.operacion"
                                 (selectionChange)="seleccionarOperacion()">
                                 <mat-option [value]="devolucion">{{devolucion}}</mat-option>
                                 <mat-option [value]="descuento">{{descuento}}</mat-option>
-                                <mat-option [value]="conjunta">{{conjunta}}</mat-option>
                             </mat-select>
+                        </mat-form-field>
+                    </div>
+                    <div class="col-2">
+                        <mat-form-field appearance="standard">
+                            <mat-label>V. Descuento</mat-label>
+                            <input matInput type="text" [(ngModel)]="notaCreditoVenta.descuento" class="form-control-sm"
+                                (change)="calcular()" [disabled]="deshabilitarDescuento">
                         </mat-form-field>
                     </div>
                 </div>
@@ -154,7 +156,7 @@
                     <div class="col-6">
                         <mat-form-field appearance="standard">
                             <mat-label>Usuario</mat-label>
-                            <input matInput type="text" class="form-control-sm" [(ngModel)]="sesion.usuario.nombre"
+                            <input matInput type="text" class="form-control-sm" [(ngModel)]="sesion.usuario.apodo"
                                 [disabled]="true">
                         </mat-form-field>
                     </div>
@@ -168,19 +170,20 @@
                 </div>   
             </div>
         </mat-expansion-panel>
-        <mat-expansion-panel (opened)="panelOpenState = true" (closed)="panelOpenState = false">
+        <mat-expansion-panel (opened)="abrirPanelNCLinea = true" (closed)="abrirPanelNCLinea = false"
+            [expanded]="abrirPanelNCLinea">
             <mat-expansion-panel-header>
                 <mat-panel-title>
-                    <i><u>LINEA NOTA CREDITO</u></i>
+                    <i><u>ITEMS NOTA DE CRÉDITO</u></i>
                 </mat-panel-title>
                 <mat-panel-description>
-                    {{panelOpenState ? 'Ocultar sección' : 'Productos de la nota credito'}}
+                    {{abrirPanelNCLinea ? 'Ocultar sección' : 'Productos de la nota de crédito'}}
                     <mat-icon>playlist_add_check</mat-icon>
                 </mat-panel-description>
             </mat-expansion-panel-header>
             <mat-divider></mat-divider>
             <div class="form-group form-row">
-                <div class="col-12 mat-elevation-z8 centrar">
+                <div class="col-12 mat-elevation-z8">
                     <table mat-table [dataSource]="dataSourceLinea"  matSort #MatSort2="matSort">
                         <!-- Columnas Dinamicas -->
                         <ng-container *ngFor="let columna of columnasLinea"
@@ -236,7 +239,7 @@
                         </div>
                     </div>
                     <div class="col-4">
-                        <mat-card>
+                        <mat-card class="resultados">
                             <div class="form-group form-row">
                                 <div class="col-7 negrita centrar-vertical-izq">
                                     <mat-label>Subtotal :</mat-label>
@@ -252,7 +255,7 @@
                                 </div>
                                 <div class="col-5">
                                     <mat-form-field appearance="standard">
-                                        <input matInput type="text" [(ngModel)]="notaCreditoVenta.descuentoTotal"
+                                        <input matInput type="text" [(ngModel)]="notaCreditoVenta.descuento"
                                             class="form-control-sm" [disabled]="true">
                                     </mat-form-field>
                                 </div>
@@ -349,4 +352,7 @@
             </div>
         </mat-expansion-panel>
     </mat-accordion>
+    <ngx-spinner size="medium" type="line-spin-fade-rotating" [fullScreen] = "true" [zIndex]="1000">
+        <p style="font-size: 20px; color: white">Cargando...</p>
+    </ngx-spinner>
 </div>
