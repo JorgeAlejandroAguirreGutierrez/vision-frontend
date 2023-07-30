@@ -84,6 +84,7 @@
                                 [(ngModel)]="notaCreditoCompra.fecha" required [max]="hoy" datePickerFormat="DD-MM-YYYY">
                             <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
                             <mat-datepicker #picker1></mat-datepicker>
+                            <mat-error *ngIf="inputFecha.hasError('matDatepickerMax')">Debe ser menor al día de hoy</mat-error>
                             <mat-error *ngIf="inputFecha.hasError('required')">Fecha requerida o no existe</mat-error>
                         </mat-form-field>
                     </div>

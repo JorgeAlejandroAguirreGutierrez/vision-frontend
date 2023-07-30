@@ -133,6 +133,8 @@ export class NotaCreditoCompraComponent implements OnInit {
     if (event != null)
       event.preventDefault();
     this.notaCreditoCompra = new NotaCreditoCompra();
+    this.hoy = new Date();
+    this.notaCreditoCompra.fecha = this.hoy;
     this.proveedorSeleccionado = new Proveedor();
     this.facturaCompraSeleccionado = new FacturaCompra();
     this.dataSourceLinea = new MatTableDataSource<NotaCreditoCompraLinea>([]);

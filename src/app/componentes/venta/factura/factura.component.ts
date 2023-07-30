@@ -217,6 +217,8 @@ export class FacturaComponent implements OnInit {
 
   nuevo() {
     this.factura = new Factura();
+    this.hoy = new Date();
+    this.factura.fecha = this.hoy;
     this.factura.establecimiento = this.sesion.usuario.estacion.establecimiento.codigoSRI;
     this.factura.puntoVenta = this.sesion.usuario.estacion.codigoSRI;
     this.controlIdentificacionCliente.patchValue(valores.vacio);
@@ -363,7 +365,7 @@ export class FacturaComponent implements OnInit {
     this.dataSourceFactura = new MatTableDataSource(facturas);
     this.dataSourceFactura.filterPredicate = (data: Factura, filter: string): boolean =>
       this.datepipe.transform(data.fecha, "dd-MM-yyyy").includes(filter) || data.numeroComprobante.includes(filter) || data.secuencial.includes(filter) || 
-      data.cliente.razonSocial.includes(filter) || data.estado.includes(filter);
+      data.cliente.razonSocial.includes(filter) || data.estadoInterno.includes(filter) || data.estado.includes(filter) || data.estadoSri.includes(filter);
     this.dataSourceFactura.paginator = this.paginator;
     this.dataSourceFactura.sort = this.sort;
   }
@@ -579,7 +581,7 @@ export class FacturaComponent implements OnInit {
   }
 
   obtenerUltimoKardex(){
-    this.kardexService.obtenerUltimoPorBodega(this.facturaLinea.bodega.id, this.facturaLinea.producto.id).subscribe({
+    this.kardexService.obtenerUltimoPorProductoYBodega(this.facturaLinea.producto.id, this.facturaLinea.bodega.id).subscribe({
       next: res => {
         if (res.resultado == null) {
           Swal.fire({ icon: error_swal, title: error, text: mensajes.error_kardex_vacio });

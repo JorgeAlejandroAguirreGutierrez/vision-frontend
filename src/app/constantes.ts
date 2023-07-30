@@ -114,7 +114,7 @@ export const urn =
     medidaPrecio: "/medidaPrecio",
     precio: "/precio",
     tipoGasto: "/tipoGasto",
-    obtenerUltimoPorBodega: "/obtenerUltimoPorBodega",
+    obtenerUltimoPorProductoYBodega: "/obtenerUltimoPorProductoYBodega",
     consultarIvaBien: "/consultarIvaBien",
     consultarIvaServicio: "/consultarIvaServicio",
     consultarRentaBien: "/consultarRentaBien",

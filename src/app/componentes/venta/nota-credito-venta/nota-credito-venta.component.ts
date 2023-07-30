@@ -256,8 +256,10 @@ export class NotaCreditoVentaComponent implements OnInit {
     this.dataSource = new MatTableDataSource(notasCreditosVentas);
     this.dataSource.filterPredicate = (data: NotaCreditoVenta, filter: string): boolean =>
       this.datepipe.transform(data.fecha, "dd-MM-yyyy").includes(filter) || data.numeroComprobante.includes(filter) || 
-      data.secuencial.includes(filter) || data.factura.cliente.razonSocial.includes(filter) || data.estado.includes(filter);
-      this.dataSource.paginator = this.paginator;
+      data.secuencial.includes(filter) || data.factura.cliente.razonSocial.includes(filter) || 
+      data.estadoInterno.includes(filter) || data.estado.includes(filter) || data.estadoSri.includes(filter);
+    this.dataSource.paginator = this.paginator;
+    this.dataSource.sort = this.sort;
   }
 
   seleccion(notaCreditoVenta: any) {
