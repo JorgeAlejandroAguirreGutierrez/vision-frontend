@@ -72,7 +72,8 @@ export class FacturaComponent implements OnInit {
   verIconoEditarLinea: boolean = false;
   esBien: boolean = true;
 
-  hoy = new Date();
+  hoy: Date = new Date();
+  fechaMinima: Date = new Date();
 
   sesion: Sesion = null;
   empresa: Empresa = new Empresa();
@@ -157,6 +158,7 @@ export class FacturaComponent implements OnInit {
   ngOnInit() {
     this.sesion = validarSesion(this.sesionService, this.router);
     this.empresa = this.sesion.empresa;
+    this.fechaMinima = new Date(this.fechaMinima.setDate(this.hoy.getDate() - 3))
     this.factura.establecimiento = this.sesion.usuario.estacion.establecimiento.codigoSRI;
     this.factura.puntoVenta = this.sesion.usuario.estacion.codigoSRI;
     this.consultar();
@@ -227,6 +229,8 @@ export class FacturaComponent implements OnInit {
   crear(event) {
     if (event != null)
       event.preventDefault();
+    if (!this.validarFormulario())
+      return;  
     this.spinnerService.show();    
     this.factura.sesion = this.sesion;
     this.factura.empresa = this.empresa;
@@ -247,6 +251,8 @@ export class FacturaComponent implements OnInit {
   crearFacturaElectronica(event) {
     if (event != null)
       event.preventDefault();
+    if (!this.validarFormulario())
+      return;  
     this.spinnerService.show();
     this.facturaElectronicaService.enviar(this.factura.id).subscribe({
       next: res => {
@@ -703,6 +709,23 @@ export class FacturaComponent implements OnInit {
   }
 
   //VALIDACIONES
+  validarFormulario(): boolean {
+    if (this.factura.fecha == null || this.factura.fecha > this.hoy ||
+      this.datepipe.transform(this.factura.fecha, "yyyyMMdd") < this.datepipe.transform(this.fechaMinima, "yyyyMMdd")){
+      Swal.fire({ icon: error_swal, title: error, text: mensajes.error_fecha });
+      return false;
+    }
+    if (this.factura.cliente.id == valores.cero){
+      Swal.fire({ icon: error_swal, title: error, text: mensajes.error_falta_datos });
+      return false;
+    }
+    if (this.factura.valorTotal <= valores.cero){
+      Swal.fire({ icon: error_swal, title: error, text: mensajes.error_falta_datos });
+      return false;
+    }
+    return true;
+  }  
+
   validarFormularioLinea(): boolean {
     if (this.facturaLinea.cantidad <= valores.cero) {
       return false;

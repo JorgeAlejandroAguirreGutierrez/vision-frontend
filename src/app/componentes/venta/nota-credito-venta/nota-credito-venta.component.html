@@ -94,10 +94,13 @@
                     <div class="col-3">
                         <mat-form-field appearance="standard">
                             <mat-label>Fecha</mat-label>
-                            <input matInput [matDatepicker]="picker" [(ngModel)]="notaCreditoVenta.fecha" 
-                                [max]="hoy" datePickerFormat="DD-MM-YYYY">
+                            <input matInput #inputFecha="ngModel" [matDatepicker]="picker" [(ngModel)]="notaCreditoVenta.fecha" 
+                                required [min]="fechaMinima" [max]="hoy" datePickerFormat="DD-MM-YYYY">
                             <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
                             <mat-datepicker #picker></mat-datepicker>
+                            <mat-error *ngIf="inputFecha.hasError('matDatepickerMin')">No puede ser menor a 72 horas</mat-error>
+                            <mat-error *ngIf="inputFecha.hasError('matDatepickerMax')">Debe ser menor al día de hoy</mat-error>
+                            <mat-error *ngIf="inputFecha.hasError('required')">Fecha requerida o no existe</mat-error>
                         </mat-form-field>
                     </div>
                     <div class="col-4">
