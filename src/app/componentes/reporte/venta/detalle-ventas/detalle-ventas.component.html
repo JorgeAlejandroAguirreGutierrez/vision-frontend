@@ -32,7 +32,7 @@
                     <mat-form-field appearance="standard">
                         <mat-label>Fecha Inicio</mat-label>
                         <input matInput [matDatepicker]="picker1" class="form-control-sm" [(ngModel)]="fechaInicio"
-                            [max]="hoy" datePickerFormat="DD/MM/YYYY">
+                            [max]="hoy" datePickerFormat="DD-MM-YYYY">
                         <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
                         <mat-datepicker #picker1></mat-datepicker>
                     </mat-form-field>
@@ -41,7 +41,7 @@
                     <mat-form-field appearance="standard">
                         <mat-label>Fecha Final</mat-label>
                         <input matInput [matDatepicker]="picker2" class="form-control-sm" [(ngModel)]="fechaFinal"
-                            [max]="hoy" datePickerFormat="DD/MM/YYYY">
+                            [max]="hoy" datePickerFormat="DD-MM-YYYY">
                         <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
                         <mat-datepicker #picker2></mat-datepicker>
                     </mat-form-field>

@@ -1,17 +1,15 @@
 import { Component, OnInit, ViewChild, HostListener } from '@angular/core';
+import { valores, mensajes, validarSesion, exito, exito_swal, error, error_swal } from '../../../constantes';
 import { DatePipe } from '@angular/common';
-import { DateAdapter, MAT_DATE_FORMATS } from '@angular/material/core';
-import { AppDateAdapter, APP_DATE_FORMATS } from '../../comun/formato/format-date-picker';
 import { UntypedFormControl } from '@angular/forms';
-import { MatTableDataSource } from '@angular/material/table';
-import { MatPaginator } from '@angular/material/paginator';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import Swal from 'sweetalert2';
 import { startWith, map } from 'rxjs/operators';
-import { SesionService } from '../../../servicios/usuario/sesion.service';
+
 import { Sesion } from '../../../modelos/usuario/sesion';
-import { valores, mensajes, validarSesion, exito, exito_swal, error, error_swal } from '../../../constantes';
+import { SesionService } from '../../../servicios/usuario/sesion.service';
+import { Empresa } from 'src/app/modelos/usuario/empresa';
 import { ProveedorService } from 'src/app/servicios/compra/proveedor.service';
 import { Proveedor } from 'src/app/modelos/compra/proveedor';
 import { NotaDebitoCompraService } from 'src/app/servicios/compra/nota-debito-compra.service';
@@ -28,17 +26,16 @@ import { Bodega } from 'src/app/modelos/inventario/bodega';
 import { BodegaService } from 'src/app/servicios/inventario/bodega.service';
 import { ProductoService } from 'src/app/servicios/inventario/producto.service';
 import { FacturaCompraLinea } from 'src/app/modelos/compra/factura-compra-linea';
-import { Empresa } from 'src/app/modelos/usuario/empresa';
+
+import { MatTableDataSource } from '@angular/material/table';
+import { MatPaginator } from '@angular/material/paginator';
 
 @Component({
   selector: 'app-nota-debito-compra',
   templateUrl: './nota-debito-compra.component.html',
-  styleUrls: ['./nota-debito-compra.component.scss'],
-  providers: [
-    {provide: DateAdapter, useClass: AppDateAdapter},
-    {provide: MAT_DATE_FORMATS, useValue: APP_DATE_FORMATS}
-  ]
+  styleUrls: ['./nota-debito-compra.component.scss']
 })
+
 export class NotaDebitoCompraComponent implements OnInit {
 
   panelOpenState = false;

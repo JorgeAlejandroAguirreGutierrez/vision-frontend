@@ -387,6 +387,7 @@ export class ProductoComponent implements OnInit {
   }
 
   inicializarOpciones(){
+    this.producto.medida = this.medidas[0];
     this.producto.impuesto = this.impuestos[1];
     this.producto.tipoGasto = this.tiposGastos[0];
     this.producto.consignacion = valores.no;

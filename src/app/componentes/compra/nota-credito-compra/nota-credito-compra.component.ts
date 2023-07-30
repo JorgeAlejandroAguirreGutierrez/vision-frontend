@@ -5,8 +5,6 @@ import { NgxSpinnerService } from 'ngx-spinner';
 import Swal from 'sweetalert2';
 
 import { DatePipe } from '@angular/common';
-import { DateAdapter, MAT_DATE_FORMATS } from '@angular/material/core';
-import { AppDateAdapter, APP_DATE_FORMATS } from '../../comun/formato/format-date-picker';
 
 import { Sesion } from '../../../modelos/usuario/sesion';
 import { SesionService } from '../../../servicios/usuario/sesion.service';
@@ -27,11 +25,7 @@ import { MatTableDataSource } from '@angular/material/table';
 @Component({
   selector: 'app-nota-credito-compra',
   templateUrl: './nota-credito-compra.component.html',
-  styleUrls: ['./nota-credito-compra.component.scss'],
-  providers: [
-    { provide: DateAdapter, useClass: AppDateAdapter },
-    { provide: MAT_DATE_FORMATS, useValue: APP_DATE_FORMATS }
-  ]
+  styleUrls: ['./nota-credito-compra.component.scss']
 })
 
 export class NotaCreditoCompraComponent implements OnInit {

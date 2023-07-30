@@ -7,8 +7,6 @@ import { NgxSpinnerService } from 'ngx-spinner';
 import Swal from 'sweetalert2';
 
 import { DatePipe } from '@angular/common';
-import { DateAdapter, MAT_DATE_FORMATS } from '@angular/material/core';
-import { AppDateAdapter, APP_DATE_FORMATS } from '../../comun/formato/format-date-picker';
 
 import { SesionService } from '../../../servicios/usuario/sesion.service';
 import { Sesion } from '../../../modelos/usuario/sesion';
@@ -41,12 +39,9 @@ import { MatTableDataSource } from '@angular/material/table';
 @Component({
   selector: 'app-nota-debito-venta',
   templateUrl: './nota-debito-venta.component.html',
-  styleUrls: ['./nota-debito-venta.component.scss'],
-  providers: [
-    {provide: DateAdapter, useClass: AppDateAdapter},
-    {provide: MAT_DATE_FORMATS, useValue: APP_DATE_FORMATS}
-  ]
+  styleUrls: ['./nota-debito-venta.component.scss']
 })
+
 export class NotaDebitoVentaComponent implements OnInit {
 
   @ViewChild('stepper') stepper: MatStepper;
@@ -160,9 +155,9 @@ export class NotaDebitoVentaComponent implements OnInit {
   si = valores.si;
   no = valores.no;
 
-  constructor(private renderer: Renderer2, private clienteService: ClienteService, private sesionService: SesionService, private impuestoService: ImpuestoService, private bodegaService: BodegaService, private dateAdapter: DateAdapter<Date>,
+  constructor(private renderer: Renderer2, private clienteService: ClienteService, private sesionService: SesionService, private impuestoService: ImpuestoService, private bodegaService: BodegaService, 
     private router: Router, private notaDebitoVentaService: NotaDebitoVentaService, private facturaService: FacturaService, private productoService: ProductoService, private notaDebitoElectronicaService: NotaDebitoElectronicaService,
-    private categoriaProductoService: CategoriaProductoService, private kardexService: KardexService, private datepipe: DatePipe, private _formBuilder: UntypedFormBuilder, private spinnerService: NgxSpinnerService) { this.dateAdapter.setLocale('en-GB') }
+    private categoriaProductoService: CategoriaProductoService, private kardexService: KardexService, private datepipe: DatePipe, private _formBuilder: UntypedFormBuilder, private spinnerService: NgxSpinnerService) { }
 
   @HostListener('window:keypress', ['$event'])
   keyEvent($event: KeyboardEvent) {
