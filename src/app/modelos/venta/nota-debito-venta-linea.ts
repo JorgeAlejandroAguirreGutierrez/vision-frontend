@@ -3,6 +3,7 @@ import { Bodega } from "../inventario/bodega";
 import { Impuesto } from "../inventario/impuesto";
 import { Precio } from "../inventario/precio";
 import { Producto } from "../inventario/producto";
+
 export class NotaDebitoVentaLinea {
     id: number;
     codigo: string;

@@ -6,8 +6,6 @@ import { NgxSpinnerService } from 'ngx-spinner';
 import Swal from 'sweetalert2';
 
 import { DatePipe } from '@angular/common';
-import { DateAdapter, MAT_DATE_FORMATS } from '@angular/material/core';
-import { AppDateAdapter, APP_DATE_FORMATS } from '../../comun/formato/format-date-picker';
 
 import { Sesion } from '../../../modelos/usuario/sesion';
 import { SesionService } from '../../../servicios/usuario/sesion.service';
@@ -28,12 +26,9 @@ import { MatTableDataSource } from '@angular/material/table';
 @Component({
   selector: 'app-nota-credito-venta',
   templateUrl: './nota-credito-venta.component.html',
-  styleUrls: ['./nota-credito-venta.component.scss'],
-  providers: [
-    {provide: DateAdapter, useClass: AppDateAdapter},
-    {provide: MAT_DATE_FORMATS, useValue: APP_DATE_FORMATS}
-  ]
+  styleUrls: ['./nota-credito-venta.component.scss']
 })
+
 export class NotaCreditoVentaComponent implements OnInit {
 
   abrirPanelNuevoNC: boolean = true;
@@ -81,7 +76,7 @@ export class NotaCreditoVentaComponent implements OnInit {
     { nombreColumna: 'fecha', cabecera: 'Fecha', celda: (row: NotaCreditoVenta) => `${this.datepipe.transform(row.fecha, "dd-MM-yyyy")}`},
     { nombreColumna: 'cliente', cabecera: 'Cliente', celda: (row: NotaCreditoVenta) => `${row.factura.cliente.razonSocial}`},
     { nombreColumna: 'factura', cabecera: 'Factura', celda: (row: NotaCreditoVenta) => `${row.factura.numeroComprobante}`},
-    { nombreColumna: 'total', cabecera: 'Total', celda: (row: NotaCreditoVenta) => `$ ${row.totalConDescuento}`},
+    { nombreColumna: 'total', cabecera: 'Total', celda: (row: NotaCreditoVenta) => `$ ${row.total}`},
     { nombreColumna: 'proceso', cabecera: 'Proceso', celda: (row: NotaCreditoVenta) => `${row.estadoInterno}`},
     { nombreColumna: 'estado', cabecera: 'Estado', celda: (row: NotaCreditoVenta) => `${row.estado}`},
     { nombreColumna: 'estadoSri', cabecera: 'Estado SRI', celda: (row: NotaCreditoVenta) => `${row.estadoSri}`}
@@ -91,16 +86,17 @@ export class NotaCreditoVentaComponent implements OnInit {
   clickedRows = new Set<NotaCreditoVenta>();
 
   columnasLinea: any[] = [
-    { nombreColumna: 'producto', cabecera: 'Producto', celda: (row: NotaCreditoVentaLinea) => `${row.producto.nombre}`},
-    { nombreColumna: 'medida', cabecera: 'Medida', celda: (row: NotaCreditoVentaLinea) => `${row.producto.medida.abreviatura}`},
-    { nombreColumna: 'cantidad', cabecera: 'Cantidad', celda: (row: NotaCreditoVentaLinea) => `${row.cantidad}`},
-    { nombreColumna: 'devolucion', cabecera: 'Devolución', celda: (row: NotaCreditoVentaLinea) => `${row.devolucion}`},
-    { nombreColumna: 'unitario', cabecera: 'Costo U.', celda: (row: NotaCreditoVentaLinea) => `$ ${row.costoUnitario}`},
-    { nombreColumna: 'descuento', cabecera: 'Descuento', celda: (row: NotaCreditoVentaLinea) => `${row.valorDescuentoLinea}`},
-    { nombreColumna: 'porcdescuento', cabecera: 'Descuento %', celda: (row: NotaCreditoVentaLinea) => `${row.porcentajeDescuentoLinea}`},
-    { nombreColumna: 'impuesto', cabecera: 'IVA', celda: (row: NotaCreditoVentaLinea) => `$ ${row.producto.impuesto.porcentaje}`},
-    { nombreColumna: 'bodega', cabecera: 'Bodega', celda: (row: NotaCreditoVentaLinea) => `${row.bodega.abreviatura}`},
-    { nombreColumna: 'total', cabecera: 'Total', celda: (row: NotaCreditoVentaLinea) => `$ ${row.totalSinDescuentoLinea}`}
+    { nombreColumna: 'producto', cabecera: 'Producto', celda: (row: NotaCreditoVentaLinea) => `${row.producto.nombre}` },
+    { nombreColumna: 'medida', cabecera: 'Medida', celda: (row: NotaCreditoVentaLinea) => `${row.producto.medida.abreviatura}` },
+    { nombreColumna: 'cantidadventa', cabecera: 'Cant Vent', celda: (row: NotaCreditoVentaLinea) => `${row.cantidadVenta}` },
+    { nombreColumna: 'cunitarioventa', cabecera: 'C.U. Vent', celda: (row: NotaCreditoVentaLinea) => `${row.costoUnitarioVenta}` },
+    { nombreColumna: 'cantidad', cabecera: 'Cant NC', celda: (row: NotaCreditoVentaLinea) => `${row.cantidad}` },
+    { nombreColumna: 'costounitario', cabecera: 'C.U NC', celda: (row: NotaCreditoVentaLinea) => `${row.costoUnitario}` },
+    { nombreColumna: 'impuesto', cabecera: 'IVA %', celda: (row: NotaCreditoVentaLinea) => `${row.impuesto.porcentaje} %` },
+    { nombreColumna: 'subtotal', cabecera: 'Subtotal', celda: (row: NotaCreditoVentaLinea) => `${row.subtotalLinea}` },
+    { nombreColumna: 'importe', cabecera: 'Importe', celda: (row: NotaCreditoVentaLinea) => `${row.importeIvaLinea}` },
+    { nombreColumna: 'totalLinea', cabecera: 'Total', celda: (row: NotaCreditoVentaLinea) => `${row.totalLinea}` },
+    { nombreColumna: 'acciones', cabecera: 'Acciones' }
   ];
   cabeceraLinea: string[]  = this.columnasLinea.map(titulo => titulo.nombreColumna);
   dataSourceLinea: MatTableDataSource<NotaCreditoVentaLinea>;
@@ -114,18 +110,20 @@ export class NotaCreditoVentaComponent implements OnInit {
 
   @HostListener('window:keypress', ['$event'])
   keyEvent($event: KeyboardEvent) {
-    if (($event.shiftKey || $event.metaKey) && $event.key == "G") //SHIFT + G
+    if (($event.shiftKey || $event.metaKey)  && $event.key == "G") //SHIFT + G
       this.crear(null);
     if (($event.shiftKey || $event.metaKey) && $event.key == "N") //ASHIFT + N
       this.nuevo(null);
   }
 
-  constructor(private renderer: Renderer2, private clienteService: ClienteService, private sesionService: SesionService, private notaCreditoElectronicaService: NotaCreditoElectronicaService, private dateAdapter: DateAdapter<Date>,
-    private router: Router, private notaCreditoVentaService: NotaCreditoVentaService, private facturaService: FacturaService, private spinnerService: NgxSpinnerService, private datepipe: DatePipe) { this.dateAdapter.setLocale('en-GB') }
+  constructor(private renderer: Renderer2, private clienteService: ClienteService, private sesionService: SesionService, private notaCreditoElectronicaService: NotaCreditoElectronicaService, 
+    private router: Router, private notaCreditoVentaService: NotaCreditoVentaService, private facturaService: FacturaService, private spinnerService: NgxSpinnerService, private datepipe: DatePipe) { }
 
   ngOnInit() {
     this.sesion = validarSesion(this.sesionService, this.router);
     this.empresa = this.sesion.empresa;
+    this.notaCreditoVenta.establecimiento = this.sesion.usuario.estacion.establecimiento.codigoSRI;
+    this.notaCreditoVenta.puntoVenta = this.sesion.usuario.estacion.codigoSRI;
     this.consultar();
     this.consultarClientes();
   }
@@ -143,8 +141,12 @@ export class NotaCreditoVentaComponent implements OnInit {
     if (event!=null)
       event.preventDefault();
     this.notaCreditoVenta = new NotaCreditoVenta();
+    this.notaCreditoVenta.establecimiento = this.sesion.usuario.estacion.establecimiento.codigoSRI;
+    this.notaCreditoVenta.puntoVenta = this.sesion.usuario.estacion.codigoSRI;
     this.clienteSeleccionado = new Cliente();
+    this.filtroClientes = [];
     this.facturaSeleccionado = new Factura();
+    this.filtroFacturas = [];
     this.dataSourceLinea = new MatTableDataSource<NotaCreditoVentaLinea>([]);
     this.deshabilitarDescuento = true;
     this.clickedRows.clear();
@@ -162,7 +164,7 @@ export class NotaCreditoVentaComponent implements OnInit {
       res => {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
         this.consultar();
-        this.nuevo(null);
+        //this.nuevo(null);
         this.spinnerService.hide();
       },
       err => {
@@ -339,12 +341,6 @@ export class NotaCreditoVentaComponent implements OnInit {
   filtrarClientes(event: any){
     this.filtroClientes = this.clientes.filter(cliente => cliente.razonSocial.toUpperCase().includes(event));
   }
-  borrarCliente(){
-    this.clienteSeleccionado = new Cliente();
-    this.filtroClientes = [];
-    this.facturaSeleccionado = new Factura();
-    this.filtroFacturas = [];
-  }
 
   consultarFacturas(clienteId: number) {
     this.facturaSeleccionado = new Factura();
@@ -368,6 +364,8 @@ export class NotaCreditoVentaComponent implements OnInit {
     this.notaCreditoVentaService.obtenerPorFactura(facturaId).subscribe({
       next: res => {
         this.notaCreditoVenta= res.resultado as NotaCreditoVenta;
+        this.notaCreditoVenta.establecimiento = this.sesion.usuario.estacion.establecimiento.codigoSRI;
+        this.notaCreditoVenta.puntoVenta = this.sesion.usuario.estacion.codigoSRI;
         this.formatearFecha();
         this.llenarTablaNotaCreditoVentaLineas(this.notaCreditoVenta.notaCreditoVentaLineas);
       },
@@ -418,12 +416,18 @@ export class NotaCreditoVentaComponent implements OnInit {
   }
 
   calcular(){
+    this.spinnerService.show();  
     this.notaCreditoVentaService.calcular(this.notaCreditoVenta).subscribe({
       next: res => {
         this.notaCreditoVenta = res.resultado as NotaCreditoVenta;
-        this.construir();
+        this.formatearFecha();
+        this.llenarTablaNotaCreditoVentaLineas(this.notaCreditoVenta.notaCreditoVentaLineas);
+        this.spinnerService.hide();
       },
-      error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+      error: err => {
+        Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+        this.spinnerService.hide();
+      }
     });
   }
 

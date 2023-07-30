@@ -81,7 +81,7 @@
                         <mat-form-field appearance="standard">
                             <mat-label>Fecha</mat-label>
                             <input matInput [matDatepicker]="picker1" class="form-control-sm"
-                                [(ngModel)]="notaCreditoCompra.fecha" [max]="hoy" >
+                                [(ngModel)]="notaCreditoCompra.fecha" [max]="hoy" datePickerFormat="DD-MM-YYYY">
                             <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
                             <mat-datepicker #picker1></mat-datepicker>
                         </mat-form-field>
@@ -166,7 +166,7 @@
             [expanded]="abrirPanelNCLinea">
             <mat-expansion-panel-header>
                 <mat-panel-title>
-                    <i><u>LINEA NOTA CREDITO</u></i>
+                    <i><u>ITEMS NOTA CRÉDITO COMPRA</u></i>
                 </mat-panel-title>
                 <mat-panel-description>
                     {{abrirPanelNCLinea ? 'Ocultar sección' : 'Productos de la nota credito'}}
@@ -175,12 +175,12 @@
             </mat-expansion-panel-header>
             <mat-divider></mat-divider>
             <div class="form-group form-row">
-                <div class="mat-elevation-z8 col-12">
+                <div class="mat-elevation-z8 col-12 ">
                     <table mat-table [dataSource]="dataSourceLinea" matSort #MatSortLinea="matSort">
                         <ng-container *ngFor="let columna of columnasLinea"
                             [matColumnDef]="columna.nombreColumna">
-                            <th mat-header-cell *matHeaderCellDef mat-sort-header> {{ columna.cabecera }} </th>
-                            <td mat-cell *matCellDef="let row; let i=index" >
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header class="centrar-cabecera"> {{ columna.cabecera }} </th>
+                            <td mat-cell *matCellDef="let row; let i=index" class="centrar-celda">
                                 <ng-container *ngIf="columna.nombreColumna!='cantidad' && columna.nombreColumna!='costounitario' &&
                                     columna.nombreColumna!='acciones'">
                                     {{ columna.celda(row) }}
@@ -199,7 +199,7 @@
                                 </ng-container>
                                 <ng-container *ngIf="columna.nombreColumna=='acciones'">
                                     <button mat-icon-button color="warn" (click)="eliminarNotaCreditoCompraLinea(i)">
-                                        <i class="fa fa-times mat-icon"></i>
+                                        <i class="fa fa-times mat-icon"></i> 
                                     </button>
                                 </ng-container>
                             </td>

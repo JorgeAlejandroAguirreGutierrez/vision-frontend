@@ -8,8 +8,6 @@ import { NgxSpinnerService } from 'ngx-spinner';
 import Swal from 'sweetalert2';
 
 import { DatePipe } from '@angular/common';
-import { DateAdapter, MAT_DATE_FORMATS } from '@angular/material/core';
-import { AppDateAdapter, APP_DATE_FORMATS } from '../../comun/formato/format-date-picker';
 
 import { Sesion } from '../../../modelos/usuario/sesion';
 import { SesionService } from '../../../servicios/usuario/sesion.service';
@@ -35,11 +33,7 @@ import { MatTableDataSource } from '@angular/material/table';
 @Component({
   selector: 'app-factura-compra',
   templateUrl: './factura-compra.component.html',
-  styleUrls: ['./factura-compra.component.scss'],
-  providers: [
-    {provide: DateAdapter, useClass: AppDateAdapter},
-    {provide: MAT_DATE_FORMATS, useValue: APP_DATE_FORMATS}
-  ]
+  styleUrls: ['./factura-compra.component.scss']
 })
 export class FacturaCompraComponent implements OnInit {
 
@@ -72,11 +66,11 @@ export class FacturaCompraComponent implements OnInit {
 
   controlProducto = new UntypedFormControl();
   controlIdentificacionProveedor = new UntypedFormControl();
-  controlNombreComercialProveedor = new UntypedFormControl();
+  controlProveedor = new UntypedFormControl();
 
   filtroProductos: Observable<Producto[]> = new Observable<Producto[]>();
   filtroIdentificacionProveedores: Observable<Proveedor[]> = new Observable<Proveedor[]>();
-  filtroNombreComercialProveedores: Observable<Proveedor[]> = new Observable<Proveedor[]>();
+  filtroProveedores: Observable<Proveedor[]> = new Observable<Proveedor[]>();
 
   columnasFacturaCompra: any[] = [
     { nombreColumna: 'codigo', cabecera: 'Código', celda: (row: FacturaCompra) => `${row.codigo}`},
@@ -182,7 +176,7 @@ export class FacturaCompraComponent implements OnInit {
   nuevo(){
     this.facturaCompra = new FacturaCompra();
     this.controlIdentificacionProveedor.patchValue(valores.vacio);
-    this.controlNombreComercialProveedor.patchValue(valores.vacio);
+    this.controlProveedor.patchValue(valores.vacio);
     this.controlProducto.patchValue(valores.vacio);
     this.dataSourceLinea = new MatTableDataSource<FacturaCompraLinea>([]);
     this.clickedRowsFacturaCompra.clear();
@@ -303,7 +297,7 @@ export class FacturaCompraComponent implements OnInit {
     let fecha = new Date(this.facturaCompra.fecha);
     this.facturaCompra.fecha = fecha;
     this.controlIdentificacionProveedor.patchValue(this.facturaCompra.proveedor);
-    this.controlNombreComercialProveedor.patchValue(this.facturaCompra.proveedor);
+    this.controlProveedor.patchValue(this.facturaCompra.proveedor);
     this.llenarTablaFacturaCompraLinea(this.facturaCompra.facturaCompraLineas);
   }
 
@@ -319,13 +313,13 @@ export class FacturaCompraComponent implements OnInit {
     this.dataSourceFacturaCompra.filter = '';
   }
 
-  seleccionarNombreComercialProveedor() {
-    let proveedorId = this.controlNombreComercialProveedor.value.id;
+  seleccionarProveedor() {
+    let proveedorId = this.controlProveedor.value.id;
     this.proveedorService.obtener(proveedorId).subscribe({
       next: res => {
         this.facturaCompra.proveedor = res.resultado as Proveedor;
         this.controlIdentificacionProveedor.patchValue(this.facturaCompra.proveedor);
-        this.controlNombreComercialProveedor.patchValue(this.facturaCompra.proveedor);
+        this.controlProveedor.patchValue(this.facturaCompra.proveedor);
       },
       error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     });
@@ -337,7 +331,7 @@ export class FacturaCompraComponent implements OnInit {
       next: res => {
         Object.assign(this.facturaCompra.proveedor, res.resultado as Proveedor);
         this.controlIdentificacionProveedor.patchValue(this.facturaCompra.proveedor);
-        this.controlNombreComercialProveedor.patchValue(this.facturaCompra.proveedor);
+        this.controlProveedor.patchValue(this.facturaCompra.proveedor);
       },
       error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     });
@@ -535,11 +529,11 @@ export class FacturaCompraComponent implements OnInit {
         map(value => typeof value === 'string' || value == null ? value : value.id),
         map(identificacion => typeof identificacion === 'string' ? this.filtroIdentificacionProveedor(identificacion) : this.proveedores.slice())
     );
-    this.filtroNombreComercialProveedores = this.controlNombreComercialProveedor.valueChanges
+    this.filtroProveedores = this.controlProveedor.valueChanges
       .pipe(
         startWith(valores.vacio),
         map(value => typeof value === 'string' || value==null ? value : value.id),
-        map(proveedor => typeof proveedor === 'string' ? this.filtroNombreComercialProveedor(proveedor) : this.proveedores.slice())
+        map(proveedor => typeof proveedor === 'string' ? this.filtroProveedor(proveedor) : this.proveedores.slice())
       );
   }
 
@@ -565,19 +559,23 @@ export class FacturaCompraComponent implements OnInit {
     return proveedor && proveedor.identificacion ? proveedor.identificacion : valores.vacio;
   }
 
-  private filtroNombreComercialProveedor(value: string): Proveedor[] {
+  private filtroProveedor(value: string): Proveedor[] {
     if(this.proveedores.length > valores.cero) {
       const filterValue = value.toLowerCase();
       return this.proveedores.filter(proveedor => proveedor.razonSocial.toLowerCase().includes(filterValue));
     }
     return [];
   }
-  verNombreComercialProveedor(proveedor: Proveedor): string {
-    return proveedor && proveedor.nombreComercial ? proveedor.nombreComercial : valores.vacio;
+  verProveedor(proveedor: Proveedor): string {
+    return proveedor && proveedor.razonSocial ? proveedor.razonSocial : valores.vacio;
   }
 
   //VALIDACIONES
   validarFormulario(): boolean {
+    if (this.facturaCompra.fecha == null || this.facturaCompra.fecha > this.hoy){
+      Swal.fire({ icon: error_swal, title: error, text: mensajes.error_fecha });
+      return false;
+    }
     if (this.facturaCompra.proveedor.id == valores.cero){
       Swal.fire({ icon: error_swal, title: error, text: mensajes.error_falta_datos });
       return false;

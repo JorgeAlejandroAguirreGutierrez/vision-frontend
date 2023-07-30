@@ -107,6 +107,10 @@
                                     <input type="text" class="form-control-sm" placeholder="Clientes" matInput
                                         [formControl]="controlRazonSocialCliente" [matAutocomplete]="razonSocialCliente"
                                         oninput="this.value = this.value.toUpperCase()">
+                                        <button mat-button *ngIf="controlRazonSocialCliente.value!=''" matSuffix mat-icon-button
+                                            (click)="borrarRazonSocial()">
+                                            <mat-icon>close</mat-icon>
+                                        </button>      
                                     <mat-autocomplete #razonSocialCliente="matAutocomplete"
                                         [displayWith]="verRazonSocialCliente"
                                         (optionSelected)="seleccionarRazonSocialCliente()"
@@ -122,7 +126,7 @@
                                 <mat-form-field appearance="standard">
                                     <mat-label>Fecha</mat-label>
                                     <input matInput [matDatepicker]="picker1" class="form-control-sm"
-                                        [(ngModel)]="factura.fecha" [max]="hoy">
+                                        [(ngModel)]="factura.fecha" [max]="hoy" datePickerFormat="DD-MM-YYYY">
                                     <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
                                     <mat-datepicker #picker1></mat-datepicker>
                                 </mat-form-field>

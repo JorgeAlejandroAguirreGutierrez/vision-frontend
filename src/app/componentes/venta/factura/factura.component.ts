@@ -7,8 +7,6 @@ import { NgxSpinnerService } from 'ngx-spinner';
 import Swal from 'sweetalert2';
 
 import { DatePipe } from '@angular/common';
-import { DateAdapter, MAT_DATE_FORMATS } from '@angular/material/core';
-import { AppDateAdapter, APP_DATE_FORMATS } from '../../comun/formato/format-date-picker';
 
 import { TabService } from '../../../servicios/comun/tab/tab.service';
 import { FooterComponent } from "../../comun/footer/footer.component";
@@ -43,11 +41,7 @@ import { MatTableDataSource } from '@angular/material/table';
 @Component({
   selector: 'app-factura',
   templateUrl: './factura.component.html',
-  styleUrls: ['./factura.component.scss'],
-  providers: [
-    { provide: DateAdapter, useClass: AppDateAdapter },
-    { provide: MAT_DATE_FORMATS, useValue: APP_DATE_FORMATS }
-  ]
+  styleUrls: ['./factura.component.scss']
 })
 
 export class FacturaComponent implements OnInit {
@@ -155,7 +149,7 @@ export class FacturaComponent implements OnInit {
     }
 
   constructor(private renderer: Renderer2, private clienteService: ClienteService, private sesionService: SesionService,
-    private impuestoService: ImpuestoService, private router: Router, private datepipe: DatePipe, private dateAdapter: DateAdapter<Date>,
+    private impuestoService: ImpuestoService, private router: Router, private datepipe: DatePipe, 
     private facturaService: FacturaService, private facturaElectronicaService: FacturaElectronicaService,
     private productoService: ProductoService, private bodegaService: BodegaService, private kardexService: KardexService,
     private tabService: TabService, private _formBuilder: UntypedFormBuilder, private spinnerService: NgxSpinnerService) { }
@@ -221,6 +215,8 @@ export class FacturaComponent implements OnInit {
 
   nuevo() {
     this.factura = new Factura();
+    this.factura.establecimiento = this.sesion.usuario.estacion.establecimiento.codigoSRI;
+    this.factura.puntoVenta = this.sesion.usuario.estacion.codigoSRI;
     this.controlIdentificacionCliente.patchValue(valores.vacio);
     this.controlRazonSocialCliente.patchValue(valores.vacio);
     this.dataSourceLinea = new MatTableDataSource<FacturaLinea>([]);
@@ -420,6 +416,10 @@ export class FacturaComponent implements OnInit {
       },
       error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     });
+  }
+  borrarRazonSocial(){
+    this.controlIdentificacionCliente.patchValue(valores.vacio);
+    this.controlRazonSocialCliente.patchValue(valores.vacio);
   }
 
   seleccionarIdentificacionCliente() {

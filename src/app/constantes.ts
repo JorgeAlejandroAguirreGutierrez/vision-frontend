@@ -262,6 +262,7 @@ export const mensajes = {
     advertencia_precio_venta_publico_manual: "EL PVP MANUAL ES MENOR QUE EL PVP CALCULADO",
     mensaje_kardex_inicial: "INICIALIZAR KARDEX CON SALDO 0",
     // Mensajes de Error
+    error_fecha: "ERROR EN LA FECHA",
     error_usuario: "INGRESE UN USUARIO",
     error_estacion_permiso: "NO TIENE PERMISOS PARA INGRESAR DESDE ESTE DISPOSITIVO",
     error_usuario_no_existe: "USUARIO NO EXISTE",
