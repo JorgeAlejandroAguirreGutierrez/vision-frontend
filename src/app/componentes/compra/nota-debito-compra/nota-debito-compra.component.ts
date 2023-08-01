@@ -425,7 +425,7 @@ export class NotaDebitoCompraComponent implements OnInit {
     if(this.notaDebitoCompraLinea.producto.id == valores.cero || this.notaDebitoCompraLinea.bodega.id == valores.cero || this.notaDebitoCompra.facturaCompra.proveedor.id == valores.cero){
       return;
     }
-    this.kardexService.obtenerUltimoPorBodega(this.notaDebitoCompraLinea.bodega.id, this.notaDebitoCompraLinea.producto.id).subscribe(
+    this.kardexService.obtenerUltimoPorProductoYBodega(this.notaDebitoCompraLinea.producto.id, this.notaDebitoCompraLinea.bodega.id).subscribe(
       res => {
         if (res.resultado == null){
           Swal.fire({ icon: error_swal, title: error, text: mensajes.error_kardex_vacio });
@@ -445,7 +445,7 @@ export class NotaDebitoCompraComponent implements OnInit {
     if(this.notaDebitoCompraLinea.producto.id == valores.cero || this.notaDebitoCompraLinea.bodega.id == valores.cero || this.notaDebitoCompra.facturaCompra.proveedor.id == valores.cero){
       return;
     }
-    this.kardexService.obtenerUltimoPorBodega(this.notaDebitoCompraLinea.bodega.id, this.notaDebitoCompraLinea.producto.id).subscribe(
+    this.kardexService.obtenerUltimoPorProductoYBodega(this.notaDebitoCompraLinea.producto.id, this.notaDebitoCompraLinea.bodega.id).subscribe(
       res => {
         if (res.resultado == null){
           Swal.fire({ icon: error_swal, title: error, text: mensajes.error_kardex_vacio });

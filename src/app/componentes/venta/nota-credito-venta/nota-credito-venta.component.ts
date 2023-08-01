@@ -51,7 +51,8 @@ export class NotaCreditoVentaComponent implements OnInit {
   descuento: string = valores.descuento;
   conjunta: string = valores.conjunta;
 
-  hoy = new Date();
+  hoy: Date = new Date();
+  fechaMinima: Date = new Date();
  
   sesion: Sesion = null;
   empresa: Empresa = new Empresa();
@@ -122,6 +123,7 @@ export class NotaCreditoVentaComponent implements OnInit {
   ngOnInit() {
     this.sesion = validarSesion(this.sesionService, this.router);
     this.empresa = this.sesion.empresa;
+    this.fechaMinima = new Date(this.fechaMinima.setDate(this.hoy.getDate() - 3))
     this.notaCreditoVenta.establecimiento = this.sesion.usuario.estacion.establecimiento.codigoSRI;
     this.notaCreditoVenta.puntoVenta = this.sesion.usuario.estacion.codigoSRI;
     this.consultar();
@@ -254,8 +256,10 @@ export class NotaCreditoVentaComponent implements OnInit {
     this.dataSource = new MatTableDataSource(notasCreditosVentas);
     this.dataSource.filterPredicate = (data: NotaCreditoVenta, filter: string): boolean =>
       this.datepipe.transform(data.fecha, "dd-MM-yyyy").includes(filter) || data.numeroComprobante.includes(filter) || 
-      data.secuencial.includes(filter) || data.factura.cliente.razonSocial.includes(filter) || data.estado.includes(filter);
-      this.dataSource.paginator = this.paginator;
+      data.secuencial.includes(filter) || data.factura.cliente.razonSocial.includes(filter) || 
+      data.estadoInterno.includes(filter) || data.estado.includes(filter) || data.estadoSri.includes(filter);
+    this.dataSource.paginator = this.paginator;
+    this.dataSource.sort = this.sort;
   }
 
   seleccion(notaCreditoVenta: any) {
@@ -466,8 +470,9 @@ export class NotaCreditoVentaComponent implements OnInit {
 
   //VALIDACIONES
   validarFormulario(): boolean {
-    if (this.notaCreditoVenta.fecha == null ){ //|| this.notaCreditoCompra.fecha > this.hoy
-      Swal.fire({ icon: error_swal, title: error, text: mensajes.error_falta_datos });
+    if (this.notaCreditoVenta.fecha == null || this.notaCreditoVenta.fecha > this.hoy ||
+      this.datepipe.transform(this.notaCreditoVenta.fecha, "yyyyMMdd") < this.datepipe.transform(this.fechaMinima, "yyyyMMdd")){
+      Swal.fire({ icon: error_swal, title: error, text: mensajes.error_fecha });
       return false;
     }
     if (this.notaCreditoVenta.factura.id == valores.cero){

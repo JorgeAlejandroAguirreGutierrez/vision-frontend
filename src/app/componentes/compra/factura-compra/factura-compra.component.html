@@ -82,10 +82,12 @@
                     <div class="col-3">
                         <mat-form-field appearance="standard">
                             <mat-label>Fecha</mat-label>
-                            <input matInput [matDatepicker]="picker1" class="form-control-sm"
-                                [(ngModel)]="facturaCompra.fecha" [max]="hoy" datePickerFormat="DD-MM-YYYY">
+                            <input matInput #inputFecha="ngModel" [matDatepicker]="picker1" class="form-control-sm"
+                                [(ngModel)]="facturaCompra.fecha" required [max]="hoy" datePickerFormat="DD-MM-YYYY">
                             <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
                             <mat-datepicker #picker1></mat-datepicker>
+                            <mat-error *ngIf="inputFecha.hasError('matDatepickerMax')">Debe ser menor al día de hoy</mat-error>
+                            <mat-error *ngIf="inputFecha.hasError('required')">Fecha requerida o no existe</mat-error>
                         </mat-form-field>
                     </div>
                     <div class="col-9">
@@ -273,9 +275,9 @@
                             </div>
                             <div class="col-4">
                                 <mat-form-field appearance="standard">
-                                    <mat-label>Ult. Costo</mat-label>
+                                    <mat-label>Ult. Compra</mat-label>
                                     <input matInput type="text"
-                                        [(ngModel)]="facturaCompraLinea.costoUnitario"
+                                        [(ngModel)]="ultimoCostoCompra"
                                         class="form-control-sm" [disabled]="true">
                                 </mat-form-field>
                             </div>

@@ -1,6 +1,6 @@
 import { Component, HostListener, OnInit, ViewChild, ElementRef, Renderer2 } from '@angular/core';
 import { UntypedFormControl } from '@angular/forms';
-import { valores, mensajes, validarSesion, exito, exito_swal, error, error_swal } from '../../../constantes';
+import { valores, mensajes, tablas, validarSesion, exito, exito_swal, error, error_swal } from '../../../constantes';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
@@ -41,6 +41,7 @@ export class FacturaCompraComponent implements OnInit {
   no: string = valores.no;
   activo: string = valores.estadoActivo;
   inactivo: string = valores.estadoInactivo;
+  ultimoCostoCompra: number = valores.cero;
 
   indiceLinea: number;
 
@@ -57,6 +58,7 @@ export class FacturaCompraComponent implements OnInit {
   facturaCompra: FacturaCompra = new FacturaCompra();
   facturaCompraLinea: FacturaCompraLinea = new FacturaCompraLinea();
   kardex: Kardex = new Kardex();
+  kardexUltimaCompra: Kardex = new Kardex();
 
   facturasCompras: FacturaCompra[];
   proveedores: Proveedor[]=[];
@@ -175,6 +177,8 @@ export class FacturaCompraComponent implements OnInit {
 
   nuevo(){
     this.facturaCompra = new FacturaCompra();
+    this.hoy = new Date();
+    this.facturaCompra.fecha = this.hoy;
     this.controlIdentificacionProveedor.patchValue(valores.vacio);
     this.controlProveedor.patchValue(valores.vacio);
     this.controlProducto.patchValue(valores.vacio);
@@ -268,7 +272,7 @@ export class FacturaCompraComponent implements OnInit {
     this.dataSourceFacturaCompra = new MatTableDataSource(facturasCompras);
     this.dataSourceFacturaCompra.filterPredicate = (data: FacturaCompra, filter: string): boolean =>
       this.datepipe.transform(data.fecha, valores.fechaCorta).includes(filter) || data.numeroComprobante.includes(filter) || 
-      data.proveedor.razonSocial.includes(filter) || data.estado.includes(filter);
+      data.proveedor.nombreComercial.includes(filter) || data.estadoInterno.includes(filter) || data.estado.includes(filter);
       this.dataSourceFacturaCompra.paginator = this.paginatorFacturaCompra;
     this.dataSourceFacturaCompra.sort = this.sort;
   }
@@ -448,11 +452,12 @@ export class FacturaCompraComponent implements OnInit {
     this.inicializarOpciones();
     if (this.esBien){
       this.obtenerUltimoKardex();
+      this.obtenerUltimaCompra();
     }
   }
 
   obtenerUltimoKardex(){
-    this.kardexService.obtenerUltimoPorBodega(this.facturaCompraLinea.bodega.id, this.facturaCompraLinea.producto.id).subscribe({
+    this.kardexService.obtenerUltimoPorProductoYBodega(this.facturaCompraLinea.producto.id, this.facturaCompraLinea.bodega.id).subscribe({
       next: res => {
         if (res.resultado == null) {
           Swal.fire({ icon: error_swal, title: error, text: mensajes.error_kardex_vacio });
@@ -461,6 +466,20 @@ export class FacturaCompraComponent implements OnInit {
         this.kardex = res.resultado as Kardex;
         this.facturaCompraLinea.costoUnitario = this.kardex.costoPromedio;
         this.calcularFacturaCompraLinea();
+      },
+      error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+    });
+  }
+
+  obtenerUltimaCompra(){
+    this.kardexService.obtenerUltimoPorProductoYBodegaYTablaTipoComprobante(this.facturaCompraLinea.producto.id, this.facturaCompraLinea.bodega.id, tablas.facturaCompra).subscribe({
+      next: res => {
+        if (res.resultado == null) {
+          this.ultimoCostoCompra = valores.cero;
+          return;
+        }
+        this.kardexUltimaCompra = res.resultado as Kardex;
+        this.ultimoCostoCompra = this.kardexUltimaCompra.debe;
       },
       error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     });

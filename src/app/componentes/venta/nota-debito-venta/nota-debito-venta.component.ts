@@ -505,7 +505,7 @@ export class NotaDebitoVentaComponent implements OnInit {
         this.notaDebitoVentaLinea.precio = precio;
       }
     }
-    this.kardexService.obtenerUltimoPorBodega(this.notaDebitoVentaLinea.bodega.id, this.notaDebitoVentaLinea.producto.id).subscribe(
+    this.kardexService.obtenerUltimoPorProductoYBodega(this.notaDebitoVentaLinea.producto.id, this.notaDebitoVentaLinea.bodega.id).subscribe(
       res => {
         if (res.resultado == null){
           Swal.fire({ icon: error_swal, title: error, text: mensajes.error_kardex_vacio });
