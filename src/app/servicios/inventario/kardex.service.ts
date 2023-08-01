@@ -41,6 +41,15 @@ export class KardexService {
     );
   }
 
+  obtenerUltimoPorProductoYBodegaYTablaTipoComprobante(productoId: number, bodegaId: number, tablaTipoComprobante: string): Observable<Respuesta> {
+    return this.http.get<Respuesta>(environment.host + urn.ruta + urn.kardex + urn.obtenerUltimoPorProductoYBodegaYTablaTipoComprobante + urn.slash + productoId + urn.slash + bodegaId + urn.slash + tablaTipoComprobante, options).pipe(
+      map(response => response as Respuesta),
+      catchError(err => {
+        return throwError(()=>err);
+      })
+    );
+  }
+
   consultar(): Observable<Respuesta> {
     return this.http.get(environment.host + urn.ruta + urn.kardex, options).pipe(
       map(response => response as Respuesta),

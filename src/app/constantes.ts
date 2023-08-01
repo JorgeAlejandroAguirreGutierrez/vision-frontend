@@ -115,6 +115,7 @@ export const urn =
     precio: "/precio",
     tipoGasto: "/tipoGasto",
     obtenerUltimoPorProductoYBodega: "/obtenerUltimoPorProductoYBodega",
+    obtenerUltimoPorProductoYBodegaYTablaTipoComprobante: "/obtenerUltimoPorProductoYBodegaYTablaTipoComprobante",
     consultarIvaBien: "/consultarIvaBien",
     consultarIvaServicio: "/consultarIvaServicio",
     consultarRentaBien: "/consultarRentaBien",
@@ -367,6 +368,19 @@ export const codigos = {
     error_codigo_datos_invalidos: "4005",
     error_codigo_generico: "4000"
 }
+
+export const tablas = {
+    /**
+     * NOMBRES DE TABLAS
+     */
+    facturaCompra: "factura_compra",
+    notaCreditoCompra: "nota_credito_compra",
+    notaDebitoCompra: "nota_debito_compra",
+    facturaVenta: "factura",
+    notaCreditoVenta: "nota_credito_venta",
+    notaDebitoVenta: "nota_debito_venta"
+}   
+
 export const modulos = {
     /**
      * MODULOS

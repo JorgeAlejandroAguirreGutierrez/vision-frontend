@@ -1,6 +1,6 @@
 import { Component, HostListener, OnInit, ViewChild, ElementRef, Renderer2 } from '@angular/core';
 import { UntypedFormControl } from '@angular/forms';
-import { valores, mensajes, validarSesion, exito, exito_swal, error, error_swal } from '../../../constantes';
+import { valores, mensajes, tablas, validarSesion, exito, exito_swal, error, error_swal } from '../../../constantes';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
@@ -41,6 +41,7 @@ export class FacturaCompraComponent implements OnInit {
   no: string = valores.no;
   activo: string = valores.estadoActivo;
   inactivo: string = valores.estadoInactivo;
+  ultimoCostoCompra: number = valores.cero;
 
   indiceLinea: number;
 
@@ -57,6 +58,7 @@ export class FacturaCompraComponent implements OnInit {
   facturaCompra: FacturaCompra = new FacturaCompra();
   facturaCompraLinea: FacturaCompraLinea = new FacturaCompraLinea();
   kardex: Kardex = new Kardex();
+  kardexUltimaCompra: Kardex = new Kardex();
 
   facturasCompras: FacturaCompra[];
   proveedores: Proveedor[]=[];
@@ -450,6 +452,7 @@ export class FacturaCompraComponent implements OnInit {
     this.inicializarOpciones();
     if (this.esBien){
       this.obtenerUltimoKardex();
+      this.obtenerUltimaCompra();
     }
   }
 
@@ -463,6 +466,20 @@ export class FacturaCompraComponent implements OnInit {
         this.kardex = res.resultado as Kardex;
         this.facturaCompraLinea.costoUnitario = this.kardex.costoPromedio;
         this.calcularFacturaCompraLinea();
+      },
+      error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+    });
+  }
+
+  obtenerUltimaCompra(){
+    this.kardexService.obtenerUltimoPorProductoYBodegaYTablaTipoComprobante(this.facturaCompraLinea.producto.id, this.facturaCompraLinea.bodega.id, tablas.facturaCompra).subscribe({
+      next: res => {
+        if (res.resultado == null) {
+          this.ultimoCostoCompra = valores.cero;
+          return;
+        }
+        this.kardexUltimaCompra = res.resultado as Kardex;
+        this.ultimoCostoCompra = this.kardexUltimaCompra.debe;
       },
       error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     });
