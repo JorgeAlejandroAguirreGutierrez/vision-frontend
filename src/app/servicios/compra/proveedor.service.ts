@@ -100,14 +100,6 @@ export class ProveedorService {
     );
   }
 
-  obtenerIdentificacion(identificacion: string): Observable<Respuesta> {
-    return this.http.get<Respuesta>(environment.host + urn.ruta + urn.proveedor + urn.identificacion + urn.slash + identificacion, options).pipe(
-      map(response => response as Respuesta),
-      catchError(err => {
-        return throwError(()=>err);
-      }));
-  }
-
   validarIdentificacionPorEmpresa(empresaId: number, identificacion: string): Observable<Respuesta> {
     return this.http.get(environment.host + urn.ruta + urn.proveedor + urn.validarIdentificacionPorEmpresa + urn.slash + empresaId + urn.slash + identificacion, options).pipe(
       map(response => response as Respuesta),

@@ -67,8 +67,16 @@ export class ClienteService {
       }));
   }
 
-  obtenerIdentificacion(identificacion: string): Observable<Respuesta> {
-    return this.http.get<Respuesta>(environment.host + urn.ruta + urn.cliente + urn.identificacion + urn.slash + identificacion, options).pipe(
+  obtenerIdentificacionYEmpresaYEstado(identificacion: string, empresaId: number, estado: string): Observable<Respuesta> {
+    return this.http.get<Respuesta>(environment.host + urn.ruta + urn.cliente + urn.obtenerIdentificacionYEmpresaYEstado + urn.slash + identificacion + urn.slash + empresaId + urn.slash + estado, options).pipe(
+      map(response => response as Respuesta),
+      catchError(err => {
+        return throwError(()=>err);
+      }));
+  }
+
+  obtenerRazonSocialYEmpresaYEstado(razonSocial: string, empresaId: number, estado: string): Observable<Respuesta> {
+    return this.http.get<Respuesta>(environment.host + urn.ruta + urn.cliente + urn.obtenerRazonSocialYEmpresaYEstado + urn.slash + razonSocial + urn.slash + empresaId + urn.slash + estado, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);
