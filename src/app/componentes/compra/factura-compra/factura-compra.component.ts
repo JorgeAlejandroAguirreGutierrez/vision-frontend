@@ -79,7 +79,7 @@ export class FacturaCompraComponent implements OnInit {
     { nombreColumna: 'fecha', cabecera: 'Fecha', celda: (row: FacturaCompra) => `${this.datepipe.transform(row.fecha, "dd-MM-yyyy")}`},
     { nombreColumna: 'factura', cabecera: 'Factura', celda: (row: FacturaCompra) => `${row.numeroComprobante}`},
     { nombreColumna: 'proveedor', cabecera: 'Proveedor', celda: (row: FacturaCompra) => `${row.proveedor.nombreComercial}`},
-    { nombreColumna: 'subtotal', cabecera: 'Subtotal', celda: (row: FacturaCompra) => `$${row.subtotalSinDescuento}`},
+    { nombreColumna: 'subtotal', cabecera: 'Subtotal', celda: (row: FacturaCompra) => `$${row.subtotalConDescuento}`},
     { nombreColumna: 'descuento', cabecera: 'Descuento', celda: (row: FacturaCompra) => `$${row.valorTotal}`},
     { nombreColumna: 'total', cabecera: 'Total', celda: (row: FacturaCompra) => `$${row.valorTotal}`},
     { nombreColumna: 'proceso', cabecera: 'Proceso', celda: (row: FacturaCompra) => `${row.estadoInterno}`},
@@ -333,7 +333,7 @@ export class FacturaCompraComponent implements OnInit {
     let proveedorId = this.controlIdentificacionProveedor.value.id;
     this.proveedorService.obtener(proveedorId).subscribe({
       next: res => {
-        Object.assign(this.facturaCompra.proveedor, res.resultado as Proveedor);
+        this.facturaCompra.proveedor, res.resultado as Proveedor;
         this.controlIdentificacionProveedor.patchValue(this.facturaCompra.proveedor);
         this.controlProveedor.patchValue(this.facturaCompra.proveedor);
       },
@@ -581,12 +581,12 @@ export class FacturaCompraComponent implements OnInit {
   private filtroProveedor(value: string): Proveedor[] {
     if(this.proveedores.length > valores.cero) {
       const filterValue = value.toLowerCase();
-      return this.proveedores.filter(proveedor => proveedor.razonSocial.toLowerCase().includes(filterValue));
+      return this.proveedores.filter(proveedor => proveedor.nombreComercial.toLowerCase().includes(filterValue));
     }
     return [];
   }
   verProveedor(proveedor: Proveedor): string {
-    return proveedor && proveedor.razonSocial ? proveedor.razonSocial : valores.vacio;
+    return proveedor && proveedor.nombreComercial ? proveedor.nombreComercial : valores.vacio;
   }
 
   //VALIDACIONES
