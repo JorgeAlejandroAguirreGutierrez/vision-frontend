@@ -798,8 +798,9 @@ export class ClienteComponent implements OnInit {
     }
   }
   validarCorreo() {
-    let arroba = this.correo.email.includes("@");
-    if (!arroba) {
+    const expression: RegExp = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i;
+    let validacion = expression.test(this.correo.email);
+    if (!validacion) {
       this.correo.email = valores.vacio;
       Swal.fire({ icon: error_swal, title: error, text: mensajes.error_correo_invalido });
     }
@@ -855,8 +856,9 @@ export class ClienteComponent implements OnInit {
     }
   }
   validarCorreoDependiente() {
-    let arroba = this.correoDependiente.email.includes("@");
-    if (!arroba) {
+    const expression: RegExp = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i;
+    let validacion = expression.test(this.correo.email);
+    if (!validacion) {
       this.correoDependiente.email = valores.vacio;
       Swal.fire({ icon: error_swal, title: error, text: mensajes.error_correo_invalido });
     }
