@@ -79,7 +79,7 @@ export class FacturaCompraComponent implements OnInit {
     { nombreColumna: 'fecha', cabecera: 'Fecha', celda: (row: FacturaCompra) => `${this.datepipe.transform(row.fecha, "dd-MM-yyyy")}`},
     { nombreColumna: 'factura', cabecera: 'Factura', celda: (row: FacturaCompra) => `${row.numeroComprobante}`},
     { nombreColumna: 'proveedor', cabecera: 'Proveedor', celda: (row: FacturaCompra) => `${row.proveedor.nombreComercial}`},
-    { nombreColumna: 'subtotal', cabecera: 'Subtotal', celda: (row: FacturaCompra) => `$${row.subtotalSinDescuento}`},
+    { nombreColumna: 'subtotal', cabecera: 'Subtotal', celda: (row: FacturaCompra) => `$${row.subtotalConDescuento}`},
     { nombreColumna: 'descuento', cabecera: 'Descuento', celda: (row: FacturaCompra) => `$${row.valorTotal}`},
     { nombreColumna: 'total', cabecera: 'Total', celda: (row: FacturaCompra) => `$${row.valorTotal}`},
     { nombreColumna: 'proceso', cabecera: 'Proceso', celda: (row: FacturaCompra) => `${row.estadoInterno}`},
