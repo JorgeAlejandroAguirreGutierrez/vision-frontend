@@ -333,7 +333,7 @@ export class FacturaCompraComponent implements OnInit {
     let proveedorId = this.controlIdentificacionProveedor.value.id;
     this.proveedorService.obtener(proveedorId).subscribe({
       next: res => {
-        Object.assign(this.facturaCompra.proveedor, res.resultado as Proveedor);
+        this.facturaCompra.proveedor, res.resultado as Proveedor;
         this.controlIdentificacionProveedor.patchValue(this.facturaCompra.proveedor);
         this.controlProveedor.patchValue(this.facturaCompra.proveedor);
       },
@@ -581,12 +581,12 @@ export class FacturaCompraComponent implements OnInit {
   private filtroProveedor(value: string): Proveedor[] {
     if(this.proveedores.length > valores.cero) {
       const filterValue = value.toLowerCase();
-      return this.proveedores.filter(proveedor => proveedor.razonSocial.toLowerCase().includes(filterValue));
+      return this.proveedores.filter(proveedor => proveedor.nombreComercial.toLowerCase().includes(filterValue));
     }
     return [];
   }
   verProveedor(proveedor: Proveedor): string {
-    return proveedor && proveedor.razonSocial ? proveedor.razonSocial : valores.vacio;
+    return proveedor && proveedor.nombreComercial ? proveedor.nombreComercial : valores.vacio;
   }
 
   //VALIDACIONES
