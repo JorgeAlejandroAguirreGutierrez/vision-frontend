@@ -39,7 +39,7 @@ export class GrupoProductoComponent implements OnInit {
   verInputSeccion: boolean = false;
 
   sesion: Sesion = null;
-  empresa: Empresa = new Empresa();
+  empresa: Empresa = null;
   grupoProducto = new GrupoProducto();
   gruposProductos: GrupoProducto[];
   categoriasProductos: CategoriaProducto[];
