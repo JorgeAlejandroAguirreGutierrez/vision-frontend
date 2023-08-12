@@ -704,9 +704,9 @@ export class ClienteComponent implements OnInit {
   }
 
   inicializarOpciones(){
-    this.cliente.segmento = this.segmentos[0];
-    this.cliente.grupoCliente = this.gruposClientes[0];
-    this.cliente.formaPago = this.formasPagos[0];
+    this.cliente.segmento = this.segmentos[this.segmentos.length - 1];
+    this.cliente.grupoCliente = this.gruposClientes[this.gruposClientes.length - 1];
+    this.cliente.formaPago = this.formasPagos[this.formasPagos.length - 1];
     this.cliente.etiqueta = valores.etiquetaCasa;
   }
 
