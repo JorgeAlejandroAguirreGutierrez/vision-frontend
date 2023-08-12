@@ -52,7 +52,8 @@ export class TablaGrupoProductoComponent implements OnInit {
     private grupoProductoService: GrupoProductoService) { }
 
   ngOnInit() {
-    this.sesion=validarSesion(this.sesionService, this.router);
+    this.sesion = validarSesion(this.sesionService, this.router);
+    this.empresa = this.sesion.empresa;
     this.consultar();
   }
 
