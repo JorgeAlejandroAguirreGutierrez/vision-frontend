@@ -9,6 +9,7 @@ import { TarjetaDebito } from '../recaudacion/tarjeta-debito';
 import { TarjetaCredito } from '../recaudacion/tarjeta-credito';
 import { Credito } from '../recaudacion/credito';
 import { Empresa } from '../usuario/empresa';
+import { TipoComprobante } from '../configuracion/tipo-comprobante';
 
 export class Factura {
   id: number;
@@ -20,30 +21,22 @@ export class Factura {
   codigoNumerico: String;
   fecha: Date;
   claveAcceso: String;
-  estado: string;
+  fechaAutorizacion: Date;
   estadoInterno: string;
+  estado: string;
   estadoSri: string;
 
-  subtotalSinDescuento: number;
-  subtotalConDescuento: number;
+  subtotal: number;
   descuentoTotal: number;
   subtotalGravadoConDescuento: number;
   subtotalNoGravadoConDescuento: number;
   importeIvaTotal: number;
   valorTotal: number;
 
-  //DESCUENTO_GENERAL
-  valorDescuentoSubtotal: number;
-  porcentajeDescuentoSubtotal: number;
-  valorPorcentajeDescuentoSubtotal: number;
-  valorDescuentoTotal: number;
-  porcentajeDescuentoTotal: number;
-  valorPorcentajeDescuentoTotal: number;
-  //FIN DESCUENTO_GENERAL
-
   comentario: string;
   cliente: Cliente;
   sesion: Sesion;
+  tipoComprobante: TipoComprobante;
   empresa: Empresa;
   facturaLineas: FacturaLinea[];
 
@@ -84,20 +77,12 @@ export class Factura {
     this.comentario = valores.vacio;
     this.sesion = new Sesion();
 
-    this.subtotalSinDescuento = valores.cero;
-    this.subtotalConDescuento = valores.cero;
+    this.subtotal = valores.cero;
     this.descuentoTotal = valores.cero;
     this.subtotalGravadoConDescuento = valores.cero;
     this.subtotalNoGravadoConDescuento = valores.cero;
     this.importeIvaTotal = valores.cero;
     this.valorTotal = valores.cero;
-
-    this.valorDescuentoSubtotal = valores.cero;
-    this.porcentajeDescuentoSubtotal = valores.cero;
-    this.valorPorcentajeDescuentoSubtotal = valores.cero;
-    this.valorDescuentoTotal = valores.cero;
-    this.porcentajeDescuentoTotal = valores.cero;
-    this.valorPorcentajeDescuentoTotal = valores.cero;
 
     //RECAUDACION
     this.efectivo = valores.cero;
