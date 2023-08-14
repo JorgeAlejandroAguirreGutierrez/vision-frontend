@@ -7,19 +7,17 @@ import { Bodega } from '../inventario/bodega';
 
 export class FacturaLinea {
   id: number;
+  codigo: string;
   posicion: number;
   comentario: string;
   entregado: string;
+  consignacion: string;
   cantidad: number;
   precioUnitario: number;
   valorDescuentoLinea: number;
   porcentajeDescuentoLinea: number;
   valorPorcentajeDescuentoLinea: number;
-  valorDescuentoTotalLinea: number;
-  porcentajeDescuentoTotalLinea: number;
-  valorPorcentajeDescuentoTotalLinea: number;
-  subtotalSinDescuentoLinea: number;
-  subtotalConDescuentoLinea: number;
+  subtotalLinea: number;
   importeIvaLinea: number;
   totalLinea: number;
   factura: Factura;
@@ -39,11 +37,7 @@ export class FacturaLinea {
     this.valorDescuentoLinea = valores.cero;
     this.porcentajeDescuentoLinea = valores.cero;
     this.valorPorcentajeDescuentoLinea = valores.cero;
-    this.valorDescuentoTotalLinea = valores.cero;
-    this.porcentajeDescuentoTotalLinea = valores.cero;
-    this.valorPorcentajeDescuentoTotalLinea = valores.cero;
-    this.subtotalSinDescuentoLinea = valores.cero;
-    this.subtotalConDescuentoLinea = valores.cero;
+    this.subtotalLinea = valores.cero;
     this.importeIvaLinea = valores.cero;
     this.totalLinea = valores.cero;
 
