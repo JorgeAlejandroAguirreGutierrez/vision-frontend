@@ -320,7 +320,8 @@ export class FacturaComponent implements OnInit {
   actualizarRecaudacion(event: Factura){
     if (event){
       this.factura = event;
-      this.llenarFecha();
+      let fecha = new Date(this.factura.fecha);
+      this.factura.fecha = fecha;
       this.factura.estado = event.estado;
     }
   }
@@ -390,15 +391,11 @@ export class FacturaComponent implements OnInit {
     });
   }
 
-  llenarFecha() {
-    let fecha = new Date(this.factura.fecha);
-    this.factura.fecha = fecha;
-  }
-
   construir() {
     this.controlIdentificacionCliente.patchValue(this.factura.cliente);
     this.controlRazonSocialCliente.patchValue(this.factura.cliente);
-    this.llenarFecha();
+    let fecha = new Date(this.factura.fecha);
+    this.factura.fecha = fecha;
     this.llenarTablaFacturaLinea(this.factura.facturaLineas);
   }
 
@@ -466,6 +463,7 @@ export class FacturaComponent implements OnInit {
         this.spinnerService.hide();
       },
       error: err => {
+        this.factura.facturaLineas.splice(this.factura.facturaLineas.length - 1, 1);
         Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
         this.spinnerService.hide();
       }  
