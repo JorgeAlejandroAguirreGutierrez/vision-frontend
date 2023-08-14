@@ -118,7 +118,7 @@ export class FacturaComponent implements OnInit {
     { nombreColumna: 'valor', cabecera: 'P. Unit', celda: (row: FacturaLinea) => `${row.precioUnitario}` },
     { nombreColumna: 'descuento', cabecera: 'Desc. $', celda: (row: FacturaLinea) => `${row.valorDescuentoLinea}` },
     { nombreColumna: 'descuentoPorcentaje', cabecera: 'Desc. %', celda: (row: FacturaLinea) => `${row.porcentajeDescuentoLinea} %` },
-    { nombreColumna: 'subtotal', cabecera: 'Subtotal', celda: (row: FacturaLinea) => `${row.subtotalConDescuentoLinea}` },
+    { nombreColumna: 'subtotal', cabecera: 'Subtotal', celda: (row: FacturaLinea) => `${row.subtotalLinea}` },
     { nombreColumna: 'iva', cabecera: 'IVA', celda: (row: FacturaLinea) => `${row.importeIvaLinea}` },
     { nombreColumna: 'total', cabecera: 'Total', celda: (row: FacturaLinea) => `${row.totalLinea}` },
     { nombreColumna: 'entregado', cabecera: 'Entreg.', celda: (row: FacturaLinea) => `${row.entregado}` },
@@ -321,7 +321,8 @@ export class FacturaComponent implements OnInit {
   actualizarRecaudacion(event: Factura){
     if (event){
       this.factura = event;
-      this.llenarFecha();
+      let fecha = new Date(this.factura.fecha);
+      this.factura.fecha = fecha;
       this.factura.estado = event.estado;
     }
   }
@@ -391,15 +392,11 @@ export class FacturaComponent implements OnInit {
     });
   }
 
-  llenarFecha() {
-    let fecha = new Date(this.factura.fecha);
-    this.factura.fecha = fecha;
-  }
-
   construir() {
     this.controlIdentificacionCliente.patchValue(this.factura.cliente);
     this.controlRazonSocialCliente.patchValue(this.factura.cliente);
-    this.llenarFecha();
+    let fecha = new Date(this.factura.fecha);
+    this.factura.fecha = fecha;
     this.llenarTablaFacturaLinea(this.factura.facturaLineas);
   }
 
@@ -467,6 +464,7 @@ export class FacturaComponent implements OnInit {
         this.spinnerService.hide();
       },
       error: err => {
+        this.factura.facturaLineas.splice(this.factura.facturaLineas.length - 1, 1);
         Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
         this.spinnerService.hide();
       }  
@@ -476,14 +474,14 @@ export class FacturaComponent implements OnInit {
   actualizarFacturaLinea() {
     this.factura.facturaLineas[this.indiceLinea] = this.facturaLinea;
     this.llenarTablaFacturaLinea(this.factura.facturaLineas);
-    this.calcularTotales();
+    this.calcular();
     this.nuevoFacturaLinea();
     this.verIconoEditarLinea = false;
   }
 
   eliminarFacturaLinea(i: number) {
     this.factura.facturaLineas.splice(i, 1);
-    this.calcularTotales();
+    this.calcular();
     this.nuevoFacturaLinea();
   }
 
@@ -491,7 +489,7 @@ export class FacturaComponent implements OnInit {
     this.dataSourceLinea = new MatTableDataSource(facturaLineas);
     this.dataSourceLinea.filterPredicate = (data: FacturaLinea, filter: string): boolean =>
       data.producto.nombre.includes(filter) || data.producto.medida.abreviatura.includes(filter) || String(data.cantidad).includes(filter) || 
-      String(data.precioUnitario).includes(filter) || String(data.subtotalConDescuentoLinea).includes(filter) || data.entregado.includes(filter);
+      String(data.precioUnitario).includes(filter) || String(data.subtotalLinea).includes(filter) || data.entregado.includes(filter);
     this.dataSourceLinea.paginator = this.paginatorLinea;
     this.dataSourceLinea.sort = this.sortLinea;
   }
@@ -526,7 +524,7 @@ export class FacturaComponent implements OnInit {
     this.dataSourceLinea.filter = '';
   }
 
-  calcularFacturaLinea() {
+  calcularLinea() {
     if (!this.validarFormularioLinea())
       return;
     this.facturaLinea.precioUnitario = Number((this.precioVentaPublicoManual * 100 / (100 + this.facturaLinea.impuesto.porcentaje)).toFixed(4));
@@ -538,7 +536,7 @@ export class FacturaComponent implements OnInit {
     });
   }
 
-  calcularTotales() {
+  calcular() {
     this.facturaService.calcular(this.factura).subscribe({
       next: res => {
         this.factura = res.resultado as Factura;
@@ -561,7 +559,7 @@ export class FacturaComponent implements OnInit {
       if (precio.segmento.id == this.factura.cliente.segmento.id) {
         this.facturaLinea.precio = precio; //Servira para la v2, cuando no se modifica el precio
         this.precioVentaPublicoManual = precio.precioVentaPublicoManual;
-        this.calcularFacturaLinea();
+        this.calcularLinea();
       }
     }
     if (this.esBien){

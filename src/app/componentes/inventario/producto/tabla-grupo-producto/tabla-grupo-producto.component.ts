@@ -11,6 +11,7 @@ import { Sesion } from '../../../../modelos/usuario/sesion';
 import { GrupoProducto } from 'src/app/modelos/inventario/grupo-producto';
 import { GrupoProductoService } from 'src/app/servicios/inventario/grupo-producto.service';
 import { CuentaContable } from 'src/app/modelos/contabilidad/cuenta-contable';
+import { Empresa } from 'src/app/modelos/usuario/empresa';
 
 
 @Component({
@@ -23,6 +24,7 @@ export class TablaGrupoProductoComponent implements OnInit {
   @Output() grupoProductoSeleccionado = new EventEmitter();
 
   sesion: Sesion = null;
+  empresa: Empresa = null;
   grupoProducto = new GrupoProducto();
 
   gruposProductos: GrupoProducto[];
@@ -50,7 +52,8 @@ export class TablaGrupoProductoComponent implements OnInit {
     private grupoProductoService: GrupoProductoService) { }
 
   ngOnInit() {
-    this.sesion=validarSesion(this.sesionService, this.router);
+    this.sesion = validarSesion(this.sesionService, this.router);
+    this.empresa = this.sesion.empresa;
     this.consultar();
   }
 
@@ -67,7 +70,7 @@ export class TablaGrupoProductoComponent implements OnInit {
   }
   
   consultar() {
-    this.grupoProductoService.consultarPorEstado(valores.estadoActivo).subscribe({
+    this.grupoProductoService.consultarPorEmpresaYEstado(this.empresa.id, valores.estadoActivo).subscribe({
       next: res => {
         this.gruposProductos = res.resultado as GrupoProducto[];
         this.llenarTabla(this.gruposProductos);

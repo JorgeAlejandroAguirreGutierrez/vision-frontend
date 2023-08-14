@@ -704,9 +704,9 @@ export class ClienteComponent implements OnInit {
   }
 
   inicializarOpciones(){
-    this.cliente.segmento = this.segmentos[0];
-    this.cliente.grupoCliente = this.gruposClientes[0];
-    this.cliente.formaPago = this.formasPagos[0];
+    this.cliente.segmento = this.segmentos[valores.cero];
+    this.cliente.grupoCliente = this.gruposClientes[valores.cero];
+    this.cliente.formaPago = this.formasPagos[valores.cero];
     this.cliente.etiqueta = valores.etiquetaCasa;
   }
 
@@ -719,19 +719,19 @@ export class ClienteComponent implements OnInit {
   }
 
   validarFormularioCliente(): boolean {
-    if (this.cliente.identificacion == '') {
+    if (this.cliente.identificacion == valores.vacio) {
       Swal.fire({ icon: error_swal, title: error, text: mensajes.error_falta_datos });
       return false;
     }
-    if (this.cliente.razonSocial == '') {
+    if (this.cliente.razonSocial == valores.vacio) {
       Swal.fire({ icon: error_swal, title: error, text: mensajes.error_falta_datos });
       return false;
     }
-    if (this.cliente.direccion == '') {
+    if (this.cliente.direccion == valores.vacio) {
       Swal.fire({ icon: error_swal, title: error, text: mensajes.error_falta_datos });
       return false;
     }
-    if (this.provinciaCliente == '' || this.cantonCliente == '' || this.parroquiaCliente == '') {
+    if (this.provinciaCliente == valores.vacio || this.cantonCliente == valores.vacio || this.parroquiaCliente == valores.vacio) {
       Swal.fire({ icon: error_swal, title: error, text: mensajes.error_falta_datos });
       return false;
     }
@@ -739,11 +739,11 @@ export class ClienteComponent implements OnInit {
   }
 
   validarFormularioDependiente(): boolean {
-    if (this.dependiente.direccion == '') {
+    if (this.dependiente.direccion == valores.vacio) {
       Swal.fire({ icon: error_swal, title: error, text: mensajes.error_falta_datos });
       return false;
     }
-    if (this.provinciaDependiente == '' || this.cantonDependiente == '' || this.parroquiaDependiente == '') {
+    if (this.provinciaDependiente == valores.vacio || this.cantonDependiente == valores.vacio || this.parroquiaDependiente == valores.vacio) {
       Swal.fire({ icon: error_swal, title: error, text: mensajes.error_falta_datos });
       return false;
     }

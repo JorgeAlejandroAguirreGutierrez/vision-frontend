@@ -11,6 +11,7 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { SesionService } from '../../../../servicios/usuario/sesion.service';
 import { Sesion } from '../../../../modelos/usuario/sesion';
+import { Empresa } from 'src/app/modelos/usuario/empresa';
 
 
 @Component({
@@ -20,7 +21,8 @@ import { Sesion } from '../../../../modelos/usuario/sesion';
 })
 export class TablaGrupoProductoCuentaContableComponent implements OnInit {
 
-  sesion: Sesion=null;
+  sesion: Sesion = null;
+  empresa: Empresa = null;
   @Output() cuentaContableSeleccionado = new EventEmitter();
   cuentasContables: CuentaContable[];
   cuentaContable= new CuentaContable();
@@ -43,7 +45,8 @@ export class TablaGrupoProductoCuentaContableComponent implements OnInit {
     private cuentaContableService: CuentaContableService) { }
 
   ngOnInit() {
-    this.sesion=validarSesion(this.sesionService, this.router);
+    this.sesion = validarSesion(this.sesionService, this.router);
+    this.empresa = this.sesion.empresa;
     this.consultar();
   }
 
@@ -53,7 +56,7 @@ export class TablaGrupoProductoCuentaContableComponent implements OnInit {
   }
 
   consultar() {
-    this.cuentaContableService.consultarPorEstado(valores.estadoActivo).subscribe({
+    this.cuentaContableService.consultarPorEmpresaYEstado(this.empresa.id, valores.estadoActivo).subscribe({
       next: res => {
         this.cuentasContables = res.resultado as CuentaContable[]
         this.dataSource = new MatTableDataSource(this.cuentasContables);

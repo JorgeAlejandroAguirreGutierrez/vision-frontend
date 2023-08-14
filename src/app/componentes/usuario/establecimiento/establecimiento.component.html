@@ -40,23 +40,13 @@
                     <div class="col-7">
                         <mat-form-field appearance="standard">
                             <mat-label>Razón Social de la Empresa</mat-label>
-                            <mat-select [(ngModel)]="establecimiento.empresa" [compareWith]="compareFn" class="form-control-sm"
-                                (selectionChange)="consultar()" [disabled]="deshabilitarEmpresa">
-                                <mat-option *ngFor="let empresa of empresas" [value]="empresa">
-                                    {{empresa.razonSocial}}
-                                </mat-option>
-                            </mat-select>
+                            <input matInput type="text" [(ngModel)]="establecimiento.empresa.razonSocial" class="form-control-sm" [disabled]="true">
                         </mat-form-field>
                     </div>
                     <div class="col-5">
                         <mat-form-field appearance="standard">
-                            <mat-label>Nombre comercial de la empresa</mat-label>
-                            <mat-select [(ngModel)]="establecimiento.empresa" [compareWith]="compareFn" class="form-control-sm"
-                                (selectionChange)="consultar()" [disabled]="deshabilitarEmpresa">
-                                <mat-option *ngFor="let empresa of empresas" [value]="empresa">
-                                    {{empresa.nombreComercial}}
-                                </mat-option>
-                            </mat-select>
+                            <mat-label>Nombre Comercial de la Empresa</mat-label>
+                            <input matInput type="text" [(ngModel)]="establecimiento.empresa.nombreComercial" class="form-control-sm" [disabled]="true">
                         </mat-form-field>
                     </div>
                 </div>
