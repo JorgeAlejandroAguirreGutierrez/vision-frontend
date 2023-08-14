@@ -287,8 +287,10 @@ export class UsuarioComponent implements OnInit {
   }
 
   validarCorreo() {
-    let arroba = this.usuario.correo.includes("@");
-    if (!arroba) {
+    const expression: RegExp = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i;
+    let validacion = expression.test(this.usuario.correo);
+    if (!validacion) {
+      this.usuario.correo = valores.vacio;
       Swal.fire({ icon: error_swal, title: error, text: mensajes.error_correo_invalido });
     }
   }

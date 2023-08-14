@@ -37,7 +37,7 @@ export class EstablecimientoComponent implements OnInit {
   activo: string = valores.estadoActivo;
   inactivo: string = valores.estadoInactivo;
 
-  sesion: Sesion=null;
+  sesion: Sesion = null;
   abrirPanelAdmin: boolean = true;
   abrirPanelNuevo: boolean = true;
   deshabilitarEmpresa: boolean = true;
@@ -90,22 +90,11 @@ export class EstablecimientoComponent implements OnInit {
   ngOnInit() {
     this.sesion = validarSesion(this.sesionService, this.router);
     this.establecimiento.empresa = this.sesion.empresa;
-    this.deshabilitarEmpresa = this.sesion.usuario.perfil.multiempresa == 'SI'? false : true;
-    this.consultarEmpresas();
     this.consultar();
     this.consultarRegimenes();
     this.consultarProvincias();
   }
 
-  consultarEmpresas() {
-    this.empresaService.consultarPorEstado(valores.estadoActivo).subscribe({
-      next: (res) => {
-        this.empresas = res.resultado as Empresa[]
-      },
-      error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
-      }
-    );
-  }
   consultarRegimenes(){
     this.regimenService.consultarPorEstado(valores.estadoActivo).subscribe({
       next: res => {
@@ -333,8 +322,10 @@ export class EstablecimientoComponent implements OnInit {
     }
   }
   validarCorreo() {
-    let arroba = this.correo.email.includes("@");
-    if (!arroba) {
+    const expression: RegExp = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i;
+    let validacion = expression.test(this.correo.email);
+    if (!validacion) {
+      this.correo.email = valores.vacio;
       Swal.fire({ icon: error_swal, title: error, text: mensajes.error_correo_invalido });
     }
   }

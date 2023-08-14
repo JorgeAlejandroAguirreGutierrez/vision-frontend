@@ -525,7 +525,7 @@ export class FacturaComponent implements OnInit {
     this.dataSourceLinea.filter = '';
   }
 
-  calcularFacturaLinea() {
+  calcularLinea() {
     if (!this.validarFormularioLinea())
       return;
     this.facturaLinea.precioUnitario = Number((this.precioVentaPublicoManual * 100 / (100 + this.facturaLinea.impuesto.porcentaje)).toFixed(4));
@@ -560,7 +560,7 @@ export class FacturaComponent implements OnInit {
       if (precio.segmento.id == this.factura.cliente.segmento.id) {
         this.facturaLinea.precio = precio; //Servira para la v2, cuando no se modifica el precio
         this.precioVentaPublicoManual = precio.precioVentaPublicoManual;
-        this.calcularFacturaLinea();
+        this.calcularLinea();
       }
     }
     if (this.esBien){
