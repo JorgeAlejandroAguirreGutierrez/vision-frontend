@@ -1,6 +1,6 @@
 import { Component, HostListener, OnInit, ViewChild, Type, ElementRef, Renderer2 } from '@angular/core';
 import { UntypedFormControl, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
-import { valores, mensajes, validarSesion, exito, exito_swal, error, error_swal } from '../../../constantes';
+import { valores, mensajes, otras, validarSesion, exito, exito_swal, error, error_swal } from '../../../constantes';
 import { Router } from '@angular/router';
 import { map, startWith, Observable } from 'rxjs';
 import { NgxSpinnerService } from 'ngx-spinner';
@@ -174,7 +174,8 @@ export class FacturaComponent implements OnInit {
     this.clienteService.consultarPorEmpresaYEstado(this.empresa.id, valores.estadoActivo).subscribe({
       next: res => {
         this.clientes = res.resultado as Cliente[]
-        this.factura.cliente = this.clientes[0];
+        //this.factura.cliente = this.clientes[0];
+        this.factura.cliente = this.clientes.find(cliente => cliente.identificacion.includes(otras.identificacion_consumidor_final));
         this.controlIdentificacionCliente.patchValue(this.factura.cliente);
         this.controlRazonSocialCliente.patchValue(this.factura.cliente);
       },
