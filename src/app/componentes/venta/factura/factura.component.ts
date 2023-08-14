@@ -475,14 +475,14 @@ export class FacturaComponent implements OnInit {
   actualizarFacturaLinea() {
     this.factura.facturaLineas[this.indiceLinea] = this.facturaLinea;
     this.llenarTablaFacturaLinea(this.factura.facturaLineas);
-    this.calcularTotales();
+    this.calcular();
     this.nuevoFacturaLinea();
     this.verIconoEditarLinea = false;
   }
 
   eliminarFacturaLinea(i: number) {
     this.factura.facturaLineas.splice(i, 1);
-    this.calcularTotales();
+    this.calcular();
     this.nuevoFacturaLinea();
   }
 
@@ -537,7 +537,7 @@ export class FacturaComponent implements OnInit {
     });
   }
 
-  calcularTotales() {
+  calcular() {
     this.facturaService.calcular(this.factura).subscribe({
       next: res => {
         this.factura = res.resultado as Factura;
