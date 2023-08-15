@@ -12,8 +12,11 @@ export class NotaCreditoVenta {
     puntoVenta: string;
     secuencial: string;
     numeroComprobante: string;
+    codigoNumerico: string;
+    claveAcceso: string;
     operacion: string;
     fecha: Date;
+    fechaAutorizacion: Date;
     estado: string;
     estadoInterno: string;
     estadoSri: string;

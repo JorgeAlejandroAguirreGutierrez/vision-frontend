@@ -9,7 +9,7 @@
                             <mat-icon>save</mat-icon>
                         </a>
                     </li>
-                    <li class="nav-item" *ngIf="factura.id != 0">
+                    <li class="nav-item" *ngIf="factura.id != 0 && factura.estadoSri == estadoSriPendiente">
                         <a class="nav-link" title="Actualizar" role="button" (click)="actualizar($event)">
                             <mat-icon>update</mat-icon>
                         </a>
@@ -494,7 +494,7 @@
                                         <div class="col-5">
                                             <mat-form-field appearance="standard">
                                                 <input matInput type="text"
-                                                    [value]="formateaNumero(factura.descuentoTotal)"
+                                                    [value]="formateaNumero(factura.descuento)"
                                                     class="form-control-sm" disabled>
                                             </mat-form-field>
                                         </div>
@@ -504,7 +504,7 @@
                                         <div class="col-5">
                                             <mat-form-field appearance="standard">
                                                 <input matInput type="text "
-                                                    [value]="formateaNumero(factura.subtotalGravadoConDescuento)"
+                                                    [value]="formateaNumero(factura.subtotalGravado)"
                                                     class="form-control-sm " disabled>
                                             </mat-form-field>
                                         </div>
@@ -514,7 +514,7 @@
                                         <div class="col-5">
                                             <mat-form-field appearance="standard">
                                                 <input matInput type="text "
-                                                    [value]="formateaNumero(factura.subtotalNoGravadoConDescuento)"
+                                                    [value]="formateaNumero(factura.subtotalNoGravado)"
                                                     class="form-control-sm " disabled>
                                             </mat-form-field>
                                         </div>
@@ -524,7 +524,7 @@
                                         <div class="col-5">
                                             <mat-form-field appearance="standard">
                                                 <input matInput type="text "
-                                                    [value]="formateaNumero(factura.importeIvaTotal)"
+                                                    [value]="formateaNumero(factura.importeIva)"
                                                     class="form-control-sm " disabled>
                                             </mat-form-field>
                                         </div>
@@ -533,7 +533,7 @@
                                         </div>
                                         <div class="col-5">
                                             <mat-form-field appearance="standard">
-                                                <input matInput type="text" [value]="formateaNumero(factura.valorTotal)"
+                                                <input matInput type="text" [value]="formateaNumero(factura.total)"
                                                     class="form-control-sm" disabled>
                                             </mat-form-field>
                                         </div>
