@@ -522,7 +522,7 @@
                                         <div class="col-5">
                                             <mat-form-field appearance="standard">
                                                 <input matInput type="text"
-                                                    [(ngModel)]="notaDebitoVenta.subtotal"
+                                                    [value]="formateaNumero(notaDebitoVenta.subtotal)"
                                                     class="form-control-sm" [disabled]="true">
                                             </mat-form-field>
                                         </div>
@@ -531,7 +531,7 @@
                                         </div>
                                         <div class="col-5">
                                             <mat-form-field appearance="standard">
-                                                <input matInput type="text" [(ngModel)]="notaDebitoVenta.descuento"
+                                                <input matInput type="text" [value]="formateaNumero(notaDebitoVenta.descuento)"
                                                     class="form-control-sm" [disabled]="true">
                                             </mat-form-field>
                                         </div>
@@ -541,7 +541,7 @@
                                         <div class="col-5">
                                             <mat-form-field appearance="standard">
                                                 <input matInput type="text"
-                                                    [(ngModel)]="notaDebitoVenta.subtotalGravado"
+                                                    [value]="formateaNumero(notaDebitoVenta.subtotalGravado)"
                                                     class="form-control-sm" [disabled]="true">
                                             </mat-form-field>
                                         </div>
@@ -551,7 +551,7 @@
                                         <div class="col-5">
                                             <mat-form-field appearance="standard">
                                                 <input matInput type="text"
-                                                    [(ngModel)]="notaDebitoVenta.subtotalNoGravado"
+                                                    [value]="formateaNumero(notaDebitoVenta.subtotalNoGravado)"
                                                     class="form-control-sm" [disabled]="true">
                                             </mat-form-field>
                                         </div>
@@ -561,7 +561,7 @@
                                         <div class="col-5">
                                             <mat-form-field appearance="standard">
                                                 <input matInput type="text"
-                                                    [(ngModel)]="notaDebitoVenta.importeIva"
+                                                    [value]="formateaNumero(notaDebitoVenta.importeIva)"
                                                     class="form-control-sm" [disabled]="true">
                                             </mat-form-field>
                                         </div>
@@ -571,7 +571,7 @@
                                         <div class="col-5">
                                             <mat-form-field appearance="standard">
                                                 <input matInput type="text "
-                                                    [(ngModel)]="notaDebitoVenta.total"
+                                                    [value]="formateaNumero(notaDebitoVenta.total)"
                                                     class="form-control-sm" [disabled]="true">
                                             </mat-form-field>
                                         </div>
