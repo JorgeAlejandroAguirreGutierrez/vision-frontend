@@ -398,29 +398,8 @@ export class RecaudacionNotaDebitoComponent implements OnInit {
     return banco_tarjeta_debito && banco_tarjeta_debito.abreviatura ? banco_tarjeta_debito.abreviatura : valores.vacio;
   }
 
-/*  habilitarSeccionPago(formaPago: string){
-    if (formaPago == otras.formasPagos[0]){
-      this.habilitarCheques = !this.habilitarCheques;
-    }
-    if (formaPago == otras.formasPagos[1]){
-      this.habilitarDepositos = !this.habilitarDepositos;
-    }
-    if (formaPago == otras.formasPagos[2]){
-      this.habilitarTransferencias = !this.habilitarTransferencias;
-    }
-    if (formaPago == otras.formasPagos[3]){
-      this.habilitarTarjetasCreditos = !this.habilitarTarjetasCreditos;
-      this.defectoTarjetaCredito();
-    }
-    if (formaPago == otras.formasPagos[4]){
-      this.habilitarTarjetasDebitos = !this.habilitarTarjetasDebitos;
-      this.defectoTarjetaDebito();
-    }
-    this.calcular();
-  }*/
-
   agregarCheque() {
-    if (this.notaDebitoVenta.totalRecaudacion + Number(this.cheque.valor)<=this.notaDebitoVenta.totalConDescuento && this.seleccionBancoCheque.value!=null && this.cheque.tipo!=null) {
+    if (this.notaDebitoVenta.totalRecaudacion + Number(this.cheque.valor)<=this.notaDebitoVenta.total && this.seleccionBancoCheque.value!=null && this.cheque.tipo!=null) {
       this.cheque.banco = this.seleccionBancoCheque.value;
       this.notaDebitoVenta.cheques.push(this.cheque);
       this.notaDebitoVenta.totalCheques;
@@ -468,7 +447,7 @@ export class RecaudacionNotaDebitoComponent implements OnInit {
   }
 
   agregarDeposito() {
-    if (this.notaDebitoVenta.totalRecaudacion + Number(this.deposito.valor) <= this.notaDebitoVenta.totalConDescuento){
+    if (this.notaDebitoVenta.totalRecaudacion + Number(this.deposito.valor) <= this.notaDebitoVenta.total){
       this.deposito.banco = this.seleccionBancoDeposito.value;
       this.notaDebitoVenta.depositos.push(this.deposito);
       this.deposito = new NotaDebitoVentaDeposito();
@@ -514,7 +493,7 @@ export class RecaudacionNotaDebitoComponent implements OnInit {
   }
 
   agregarTransferencia() {
-    if (this.notaDebitoVenta.totalRecaudacion + Number(this.transferencia.valor) <= this.notaDebitoVenta.totalConDescuento){
+    if (this.notaDebitoVenta.totalRecaudacion + Number(this.transferencia.valor) <= this.notaDebitoVenta.total){
       this.transferencia.banco = this.seleccionBancoTransferencia.value;
       this.notaDebitoVenta.transferencias.push(this.transferencia);
       this.transferencia = new NotaDebitoVentaTransferencia();
@@ -561,7 +540,7 @@ export class RecaudacionNotaDebitoComponent implements OnInit {
   }
 
   agregarTarjetaCredito() {
-    if (this.notaDebitoVenta.totalRecaudacion + Number(this.tarjetaCredito.valor) <= this.notaDebitoVenta.totalConDescuento){
+    if (this.notaDebitoVenta.totalRecaudacion + Number(this.tarjetaCredito.valor) <= this.notaDebitoVenta.total){
       this.tarjetaCredito.banco = this.seleccionBancoTarjetaCredito.value;
       this.notaDebitoVenta.tarjetasCreditos.push(this.tarjetaCredito);
       this.tarjetaCredito = new NotaDebitoVentaTarjetaCredito();
@@ -622,7 +601,7 @@ export class RecaudacionNotaDebitoComponent implements OnInit {
   }
 
   agregarTarjetaDebito() {
-    if (this.notaDebitoVenta.totalRecaudacion + Number(this.tarjetaDebito.valor) <= this.notaDebitoVenta.totalConDescuento){
+    if (this.notaDebitoVenta.totalRecaudacion + Number(this.tarjetaDebito.valor) <= this.notaDebitoVenta.total){
       this.tarjetaDebito.banco=this.seleccionBancoTarjetaDebito.value;
       this.notaDebitoVenta.tarjetasDebitos.push(this.tarjetaDebito);
       this.tarjetaDebito = new NotaDebitoVentaTarjetaDebito();

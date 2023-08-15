@@ -82,7 +82,7 @@ export class NotaDebitoVentaComponent implements OnInit {
     { nombreColumna: 'fecha', cabecera: 'Fecha', celda: (row: NotaDebitoVenta) => `${this.datepipe.transform(row.fecha, "dd/MM/yyyy")}`},
     { nombreColumna: 'cliente', cabecera: 'Cliente', celda: (row: NotaDebitoVenta) => `${row.factura.cliente.razonSocial}`},
     { nombreColumna: 'factura', cabecera: 'Factura', celda: (row: NotaDebitoVenta) => `${row.factura.secuencial}`},
-    { nombreColumna: 'total', cabecera: 'Total', celda: (row: NotaDebitoVenta) => `$${row.totalConDescuento}`},
+    { nombreColumna: 'total', cabecera: 'Total', celda: (row: NotaDebitoVenta) => `$${row.total}`},
     { nombreColumna: 'proceso', cabecera: 'Proceso', celda: (row: NotaDebitoVenta) => `${row.estadoInterno}`},
     { nombreColumna: 'estado', cabecera: 'Estado', celda: (row: NotaDebitoVenta) => `${row.estado}`},
     { nombreColumna: 'estadoSri', cabecera: 'Estado SRI', celda: (row: NotaDebitoVenta) => `${row.estadoSri}`}
@@ -112,12 +112,12 @@ export class NotaDebitoVentaComponent implements OnInit {
     { nombreColumna: 'nombre', cabecera: 'Producto', celda: (row: FacturaLinea) => `${row.producto.nombre}` },
     { nombreColumna: 'medida', cabecera: 'Medida', celda: (row: FacturaLinea) => `${row.producto.medida.abreviatura}` },
     { nombreColumna: 'cantidad', cabecera: 'Cant.', celda: (row: FacturaLinea) => `${row.cantidad}` },
-    { nombreColumna: 'valor', cabecera: 'P. Unit', celda: (row: FacturaLinea) => `$ ${row.precioUnitario}` },
-    { nombreColumna: 'descuento', cabecera: 'Desc. $', celda: (row: FacturaLinea) => `$ ${row.valorDescuentoLinea}` },
+    { nombreColumna: 'valor', cabecera: 'P. Unit', celda: (row: FacturaLinea) => `$${row.precioUnitario}` },
+    { nombreColumna: 'descuento', cabecera: 'Desc. $', celda: (row: FacturaLinea) => `$${row.valorDescuentoLinea}` },
     { nombreColumna: 'descuentoPorcentaje', cabecera: 'Desc. %', celda: (row: FacturaLinea) => `${row.porcentajeDescuentoLinea} %` },
-    { nombreColumna: 'subtotal', cabecera: 'Subtotal', celda: (row: FacturaLinea) => `$ ${row.subtotalLinea}` },
-    { nombreColumna: 'iva', cabecera: 'IVA', celda: (row: FacturaLinea) => `$ ${row.importeIvaLinea}` },
-    { nombreColumna: 'total', cabecera: 'Total', celda: (row: FacturaLinea) => `$ ${row.totalLinea}` },
+    { nombreColumna: 'subtotal', cabecera: 'Subtotal', celda: (row: FacturaLinea) => `$${row.subtotalLinea}` },
+    { nombreColumna: 'iva', cabecera: 'IVA', celda: (row: FacturaLinea) => `$${row.importeIvaLinea}` },
+    { nombreColumna: 'total', cabecera: 'Total', celda: (row: FacturaLinea) => `$${row.totalLinea}` },
     { nombreColumna: 'entregado', cabecera: 'Entreg.', celda: (row: FacturaLinea) => `${row.entregado}` }
   ];
   cabeceraFacturaLinea: string[] = this.columnasFacturaLinea.map(titulo => titulo.nombreColumna);
@@ -131,9 +131,9 @@ export class NotaDebitoVentaComponent implements OnInit {
     { nombreColumna: 'valor', cabecera: 'P. Unit', celda: (row: NotaDebitoVentaLinea) => `$ ${row.precioUnitario}` },
     { nombreColumna: 'descuento', cabecera: 'Desc. $', celda: (row: NotaDebitoVentaLinea) => `$ ${row.valorDescuentoLinea}` },
     { nombreColumna: 'descuentoPorcentaje', cabecera: 'Desc. %', celda: (row: NotaDebitoVentaLinea) => `${row.porcentajeDescuentoLinea} %` },
-    { nombreColumna: 'subtotal', cabecera: 'Subtotal', celda: (row: NotaDebitoVentaLinea) => `$ ${row.subtotalConDescuentoLinea}` },
-    { nombreColumna: 'iva', cabecera: 'IVA', celda: (row: NotaDebitoVentaLinea) => `$ ${row.ivaConDescuentoLinea}` },
-    { nombreColumna: 'total', cabecera: 'Total', celda: (row: NotaDebitoVentaLinea) => `$ ${row.totalConDescuentoLinea}` },
+    { nombreColumna: 'subtotal', cabecera: 'Subtotal', celda: (row: NotaDebitoVentaLinea) => `$ ${row.subtotalLinea}` },
+    { nombreColumna: 'iva', cabecera: 'IVA', celda: (row: NotaDebitoVentaLinea) => `$ ${row.importeIvaLinea}` },
+    { nombreColumna: 'total', cabecera: 'Total', celda: (row: NotaDebitoVentaLinea) => `$ ${row.totalLinea}` },
     { nombreColumna: 'entregado', cabecera: 'Entreg.', celda: (row: NotaDebitoVentaLinea) => `${row.entregado}` },
     { nombreColumna: 'acciones', cabecera: 'Acciones' }
   ];
@@ -294,12 +294,12 @@ export class NotaDebitoVentaComponent implements OnInit {
   private filtroFactura(value: string): Factura[] {
     if (this.facturas.length > valores.cero) {
       const filterValue = value.toUpperCase();
-      return this.facturas.filter(factura => factura.secuencial.toUpperCase().includes(filterValue));
+      return this.facturas.filter(factura => factura.numeroComprobante.toUpperCase().includes(filterValue));
     }
     return [];
   }
   verFactura(factura: Factura): string {
-    return factura && factura.secuencial ? factura.secuencial : valores.vacio;
+    return factura && factura.numeroComprobante ? factura.numeroComprobante : valores.vacio;
   }
 
   consultar() {
@@ -342,7 +342,6 @@ export class NotaDebitoVentaComponent implements OnInit {
       Swal.fire({ icon: error_swal, title: error, text: mensajes.error_factura })
       return;
     }
-    
     for(let precio of this.notaDebitoVentaLinea.producto.precios){
       if (precio.segmento.id == this.notaDebitoVenta.factura.cliente.segmento.id){
         this.notaDebitoVentaLinea.precio = precio;
@@ -534,6 +533,24 @@ export class NotaDebitoVentaComponent implements OnInit {
     this.calcularLinea();
   }
 
+  seleccionarLinea(notaDebitoVentaLinea: NotaDebitoVentaLinea, i:number) {
+    if (!this.clickedRowsLinea.has(notaDebitoVentaLinea)) {
+      this.clickedRowsLinea.clear();
+      this.clickedRowsLinea.add(notaDebitoVentaLinea);
+      this.notaDebitoVentaLinea = { ...notaDebitoVentaLinea };
+      this.indiceLinea = i;
+      this.construirLinea();
+      this.verIconoEditarLinea = true;
+    } else {
+      this.nuevoLinea();
+    }
+  }
+
+  construirLinea(){
+    this.controlProducto.patchValue(this.notaDebitoVentaLinea.producto);
+    this.precioVentaPublicoManual = parseFloat((this.notaDebitoVentaLinea.precioUnitario + (this.notaDebitoVentaLinea.precioUnitario * this.notaDebitoVentaLinea.impuesto.porcentaje/100)).toFixed(2));
+  }
+
   crear(event) {
     if (event!=null)
       event.preventDefault();
@@ -598,29 +615,11 @@ export class NotaDebitoVentaComponent implements OnInit {
     this.controlProducto.patchValue(valores.vacio);
   }
 
-  seleccionLinea(notaDebitoVentaLinea: any, i:number){
-    if (!this.clickedRowsLinea.has(notaDebitoVentaLinea)) {
-      this.clickedRowsLinea.clear();
-      this.clickedRowsLinea.add(notaDebitoVentaLinea);
-      this.notaDebitoVentaLinea = { ...notaDebitoVentaLinea };
-      this.indiceLinea = i;
-      this.construirLinea();
-      this.verIconoEditarLinea = true;
-    } else {
-      this.nuevoLinea();
-    }
-  }
-
-  construirLinea(){
-    this.controlProducto.patchValue(this.notaDebitoVentaLinea.producto);
-    this.precioVentaPublicoManual = parseFloat((this.notaDebitoVentaLinea.precioUnitario+(this.notaDebitoVentaLinea.precioUnitario*this.notaDebitoVentaLinea.impuesto.porcentaje/100)).toFixed(2));
-  }
-
   llenarTablaLinea(notaDebitoVentaLineas: NotaDebitoVentaLinea[]) {
     this.dataSourceLinea = new MatTableDataSource(notaDebitoVentaLineas);
     this.dataSourceLinea.filterPredicate = (data: NotaDebitoVentaLinea, filter: string): boolean =>
       data.producto.nombre.includes(filter) || data.producto.medida.abreviatura.includes(filter) || String(data.cantidad).includes(filter) || 
-      String(data.precioUnitario).includes(filter) || String(data.totalConDescuentoLinea).includes(filter) || data.entregado.includes(filter);
+      String(data.precioUnitario).includes(filter) || String(data.totalLinea).includes(filter) || data.entregado.includes(filter);
     this.dataSourceLinea.paginator = this.paginatorLinea;
     this.dataSourceLinea.sort = this.sortLinea;
   }
@@ -663,6 +662,7 @@ export class NotaDebitoVentaComponent implements OnInit {
       return;
     }
     this.notaDebitoVentaLinea.precioUnitario = Number((this.precioVentaPublicoManual * 100 / (100 + this.notaDebitoVentaLinea.impuesto.porcentaje)).toFixed(4));
+    console.log(this.notaDebitoVentaLinea.precioUnitario);
     this.notaDebitoVentaService.calcularLinea(this.notaDebitoVentaLinea).subscribe(
       res => {
         this.notaDebitoVentaLinea = res.resultado as NotaDebitoVentaLinea;
@@ -755,6 +755,11 @@ export class NotaDebitoVentaComponent implements OnInit {
     if (this.dataSourceFacturaLinea.paginator) {
       this.dataSourceFacturaLinea.paginator.firstPage();
     }
+  }
+
+  formateaNumero (valor) {
+    // si no es un número devuelve el valor, o lo convierte a número con 2 decimales
+    return isNaN (valor) ? valor : parseFloat (valor).toFixed (2);
   }
 
   compareFn(a: any, b: any) {

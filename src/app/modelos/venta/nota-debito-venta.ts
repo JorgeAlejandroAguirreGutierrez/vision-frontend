@@ -18,9 +18,12 @@ export class NotaDebitoVenta {
     puntoVenta: string;
     secuencial: string;
     numeroComprobante: string;
+    codigoNumerico: string;
+    claveAcceso: string;
     fecha: Date;
-    estado: string;
+    fechaAutorizacion: Date;
     estadoInterno: string;
+    estado: string;
     estadoSri: string;
     descuento: number;
     subtotal: number;
@@ -28,7 +31,6 @@ export class NotaDebitoVenta {
     subtotalNoGravado: number;
     importeIva: number;
     total: number;
-    totalConDescuento: number;
     comentario: string;
     factura: Factura;
     sesion: Sesion;
@@ -70,7 +72,6 @@ export class NotaDebitoVenta {
         this.subtotalNoGravado = valores.cero;
         this.importeIva = valores.cero;
         this.total = valores.cero;
-        this.totalConDescuento = valores.cero;
         this.comentario = valores.vacio;
         this.factura = new Factura();
         this.sesion = new Sesion();

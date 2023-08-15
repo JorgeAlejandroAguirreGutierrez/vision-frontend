@@ -14,11 +14,10 @@ export class NotaDebitoVentaLinea {
     precioUnitario: number;
     valorDescuentoLinea: number;
     porcentajeDescuentoLinea: number;
-    ivaSinDescuentoLinea: number;
-    ivaConDescuentoLinea: number;
-    subtotalSinDescuentoLinea: number;
-    subtotalConDescuentoLinea: number;
-    totalConDescuentoLinea: number;
+    valorPorcentajeDescuentoLinea: number;
+    subtotalLinea: number;
+    importeIvaLinea: number;
+    totalLinea: number;
     //IMPUESTO SELECCIONADO
     impuesto: Impuesto;
     //PRECIO SELECCIONADO
@@ -32,17 +31,16 @@ export class NotaDebitoVentaLinea {
     this.id = valores.cero;
     this.posicion = valores.cero;
     this.entregado = valores.no;
-    this.cantidad = valores.cero;
+    this.cantidad = valores.uno;
     this.valorDescuentoLinea = valores.cero;
     this.porcentajeDescuentoLinea = valores.cero;
-    this.ivaSinDescuentoLinea = valores.cero;
-    this.ivaConDescuentoLinea = valores.cero;
-    this.subtotalSinDescuentoLinea = valores.cero;
-    this.subtotalConDescuentoLinea = valores.cero;
-    this.totalConDescuentoLinea = valores.cero;
+    this.valorPorcentajeDescuentoLinea = valores.cero;
+    this.subtotalLinea = valores.cero;
+    this.importeIvaLinea = valores.cero;
+    this.totalLinea = valores.cero;
+    this.impuesto = new Impuesto();
     this.precio = new Precio();
     this.producto = new Producto();
-    this.impuesto = new Impuesto();
     this.bodega = new Bodega();
   }
 }
