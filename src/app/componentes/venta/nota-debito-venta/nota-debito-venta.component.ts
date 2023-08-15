@@ -757,6 +757,11 @@ export class NotaDebitoVentaComponent implements OnInit {
     }
   }
 
+  formateaNumero (valor) {
+    // si no es un número devuelve el valor, o lo convierte a número con 2 decimales
+    return isNaN (valor) ? valor : parseFloat (valor).toFixed (2);
+  }
+
   compareFn(a: any, b: any) {
     return a && b && a.id == b.id;
   }  
