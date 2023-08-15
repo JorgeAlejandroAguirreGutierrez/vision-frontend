@@ -294,12 +294,12 @@ export class NotaDebitoVentaComponent implements OnInit {
   private filtroFactura(value: string): Factura[] {
     if (this.facturas.length > valores.cero) {
       const filterValue = value.toUpperCase();
-      return this.facturas.filter(factura => factura.secuencial.toUpperCase().includes(filterValue));
+      return this.facturas.filter(factura => factura.numeroComprobante.toUpperCase().includes(filterValue));
     }
     return [];
   }
   verFactura(factura: Factura): string {
-    return factura && factura.secuencial ? factura.secuencial : valores.vacio;
+    return factura && factura.numeroComprobante ? factura.numeroComprobante : valores.vacio;
   }
 
   consultar() {
