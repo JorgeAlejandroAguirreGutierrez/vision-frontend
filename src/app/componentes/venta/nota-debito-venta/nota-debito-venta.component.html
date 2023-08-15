@@ -214,7 +214,7 @@
                                 <mat-autocomplete #factura="matAutocomplete" [displayWith]="verFactura"
                                     (optionSelected)="seleccionarFactura()">
                                     <mat-option *ngFor="let factura of filtroFacturas | async" [value]="factura">
-                                        {{factura.secuencial}}
+                                        {{factura.numeroComprobante}}
                                     </mat-option>
                                 </mat-autocomplete>
                             </mat-form-field>
