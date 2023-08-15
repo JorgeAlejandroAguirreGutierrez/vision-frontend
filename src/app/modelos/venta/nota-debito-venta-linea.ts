@@ -31,7 +31,7 @@ export class NotaDebitoVentaLinea {
     this.id = valores.cero;
     this.posicion = valores.cero;
     this.entregado = valores.no;
-    this.cantidad = valores.cero;
+    this.cantidad = valores.uno;
     this.valorDescuentoLinea = valores.cero;
     this.porcentajeDescuentoLinea = valores.cero;
     this.valorPorcentajeDescuentoLinea = valores.cero;

@@ -77,7 +77,7 @@ export class NotaCreditoVentaComponent implements OnInit {
     { nombreColumna: 'fecha', cabecera: 'Fecha', celda: (row: NotaCreditoVenta) => `${this.datepipe.transform(row.fecha, "dd-MM-yyyy")}`},
     { nombreColumna: 'cliente', cabecera: 'Cliente', celda: (row: NotaCreditoVenta) => `${row.factura.cliente.razonSocial}`},
     { nombreColumna: 'factura', cabecera: 'Factura', celda: (row: NotaCreditoVenta) => `${row.factura.numeroComprobante}`},
-    { nombreColumna: 'total', cabecera: 'Total', celda: (row: NotaCreditoVenta) => `$ ${row.total}`},
+    { nombreColumna: 'total', cabecera: 'Total', celda: (row: NotaCreditoVenta) => `$${row.total}`},
     { nombreColumna: 'proceso', cabecera: 'Proceso', celda: (row: NotaCreditoVenta) => `${row.estadoInterno}`},
     { nombreColumna: 'estado', cabecera: 'Estado', celda: (row: NotaCreditoVenta) => `${row.estado}`},
     { nombreColumna: 'estadoSri', cabecera: 'Estado SRI', celda: (row: NotaCreditoVenta) => `${row.estadoSri}`}
@@ -89,14 +89,14 @@ export class NotaCreditoVentaComponent implements OnInit {
   columnasLinea: any[] = [
     { nombreColumna: 'producto', cabecera: 'Producto', celda: (row: NotaCreditoVentaLinea) => `${row.producto.nombre}` },
     { nombreColumna: 'medida', cabecera: 'Medida', celda: (row: NotaCreditoVentaLinea) => `${row.producto.medida.abreviatura}` },
-    { nombreColumna: 'cantidadventa', cabecera: 'Cant Vent', celda: (row: NotaCreditoVentaLinea) => `${row.cantidadVenta}` },
+    { nombreColumna: 'cantidadventa', cabecera: 'Cant Vent', celda: (row: NotaCreditoVentaLinea) => `$${row.cantidadVenta}` },
     { nombreColumna: 'cunitarioventa', cabecera: 'C.U. Vent', celda: (row: NotaCreditoVentaLinea) => `${row.costoUnitarioVenta}` },
     { nombreColumna: 'cantidad', cabecera: 'Cant NC', celda: (row: NotaCreditoVentaLinea) => `${row.cantidad}` },
-    { nombreColumna: 'costounitario', cabecera: 'C.U NC', celda: (row: NotaCreditoVentaLinea) => `${row.costoUnitario}` },
+    { nombreColumna: 'costounitario', cabecera: 'C.U NC', celda: (row: NotaCreditoVentaLinea) => `$${row.costoUnitario}` },
     { nombreColumna: 'impuesto', cabecera: 'IVA %', celda: (row: NotaCreditoVentaLinea) => `${row.impuesto.porcentaje} %` },
-    { nombreColumna: 'subtotal', cabecera: 'Subtotal', celda: (row: NotaCreditoVentaLinea) => `${row.subtotalLinea}` },
-    { nombreColumna: 'importe', cabecera: 'Importe', celda: (row: NotaCreditoVentaLinea) => `${row.importeIvaLinea}` },
-    { nombreColumna: 'totalLinea', cabecera: 'Total', celda: (row: NotaCreditoVentaLinea) => `${row.totalLinea}` },
+    { nombreColumna: 'subtotal', cabecera: 'Subtotal', celda: (row: NotaCreditoVentaLinea) => `$${row.subtotalLinea}` },
+    { nombreColumna: 'importe', cabecera: 'Importe', celda: (row: NotaCreditoVentaLinea) => `$${row.importeIvaLinea}` },
+    { nombreColumna: 'totalLinea', cabecera: 'Total', celda: (row: NotaCreditoVentaLinea) => `$${row.totalLinea}` },
     { nombreColumna: 'acciones', cabecera: 'Acciones' }
   ];
   cabeceraLinea: string[]  = this.columnasLinea.map(titulo => titulo.nombreColumna);

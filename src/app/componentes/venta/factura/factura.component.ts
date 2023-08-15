@@ -115,12 +115,12 @@ export class FacturaComponent implements OnInit {
     { nombreColumna: 'nombre', cabecera: 'Producto', celda: (row: FacturaLinea) => `${row.producto.nombre}` },
     { nombreColumna: 'medida', cabecera: 'Medida', celda: (row: FacturaLinea) => `${row.producto.medida.abreviatura}` },
     { nombreColumna: 'cantidad', cabecera: 'Cant.', celda: (row: FacturaLinea) => `${row.cantidad}` },
-    { nombreColumna: 'valor', cabecera: 'P. Unit', celda: (row: FacturaLinea) => `${row.precioUnitario}` },
-    { nombreColumna: 'descuento', cabecera: 'Desc. $', celda: (row: FacturaLinea) => `${row.valorDescuentoLinea}` },
+    { nombreColumna: 'valor', cabecera: 'P. Unit', celda: (row: FacturaLinea) => `$${row.precioUnitario}` },
+    { nombreColumna: 'descuento', cabecera: 'Desc. $', celda: (row: FacturaLinea) => `$${row.valorDescuentoLinea}` },
     { nombreColumna: 'descuentoPorcentaje', cabecera: 'Desc. %', celda: (row: FacturaLinea) => `${row.porcentajeDescuentoLinea} %` },
-    { nombreColumna: 'subtotal', cabecera: 'Subtotal', celda: (row: FacturaLinea) => `${row.subtotalLinea}` },
-    { nombreColumna: 'iva', cabecera: 'IVA', celda: (row: FacturaLinea) => `${row.importeIvaLinea}` },
-    { nombreColumna: 'total', cabecera: 'Total', celda: (row: FacturaLinea) => `${row.totalLinea}` },
+    { nombreColumna: 'subtotal', cabecera: 'Subtotal', celda: (row: FacturaLinea) => `$${row.subtotalLinea}` },
+    { nombreColumna: 'iva', cabecera: 'IVA', celda: (row: FacturaLinea) => `$${row.importeIvaLinea}` },
+    { nombreColumna: 'total', cabecera: 'Total', celda: (row: FacturaLinea) => `$${row.totalLinea}` },
     { nombreColumna: 'entregado', cabecera: 'Entreg.', celda: (row: FacturaLinea) => `${row.entregado}` },
     { nombreColumna: 'acciones', cabecera: 'Acciones' }
   ];
@@ -493,7 +493,7 @@ export class FacturaComponent implements OnInit {
     this.dataSourceLinea.sort = this.sortLinea;
   }
 
-  seleccionFacturaLinea(facturaLinea: FacturaLinea, i:number) {
+  seleccionarFacturaLinea(facturaLinea: FacturaLinea, i:number) {
     if (!this.clickedRowsLinea.has(facturaLinea)) {
       this.clickedRowsLinea.clear();
       this.clickedRowsLinea.add(facturaLinea);
