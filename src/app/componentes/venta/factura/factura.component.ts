@@ -102,7 +102,7 @@ export class FacturaComponent implements OnInit {
     { nombreColumna: 'fecha', cabecera: 'Fecha', celda: (row: Factura) => `${this.datepipe.transform(row.fecha, "dd-MM-yyyy")}` },
     { nombreColumna: 'comprobante', cabecera: 'Comprobante', celda: (row: Factura) => `${row.numeroComprobante}` },
     { nombreColumna: 'cliente', cabecera: 'Cliente', celda: (row: Factura) => `${row.cliente.razonSocial}` },
-    { nombreColumna: 'total', cabecera: 'Total', celda: (row: Factura) => `$${row.valorTotal}` },
+    { nombreColumna: 'total', cabecera: 'Total', celda: (row: Factura) => `$${row.total}` },
     { nombreColumna: 'proceso', cabecera: 'Proceso', celda: (row: Factura) => `${row.estadoInterno}` },
     { nombreColumna: 'estado', cabecera: 'Estado', celda: (row: Factura) => `${row.estado}` },
     { nombreColumna: 'estadoSri', cabecera: 'Estado SRI', celda: (row: Factura) => `${row.estadoSri}` }
@@ -719,7 +719,7 @@ export class FacturaComponent implements OnInit {
       Swal.fire({ icon: error_swal, title: error, text: mensajes.error_falta_datos });
       return false;
     }
-    if (this.factura.valorTotal <= valores.cero){
+    if (this.factura.total <= valores.cero){
       Swal.fire({ icon: error_swal, title: error, text: mensajes.error_falta_datos });
       return false;
     }

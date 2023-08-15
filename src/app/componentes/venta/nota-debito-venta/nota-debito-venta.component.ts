@@ -82,7 +82,7 @@ export class NotaDebitoVentaComponent implements OnInit {
     { nombreColumna: 'fecha', cabecera: 'Fecha', celda: (row: NotaDebitoVenta) => `${this.datepipe.transform(row.fecha, "dd/MM/yyyy")}`},
     { nombreColumna: 'cliente', cabecera: 'Cliente', celda: (row: NotaDebitoVenta) => `${row.factura.cliente.razonSocial}`},
     { nombreColumna: 'factura', cabecera: 'Factura', celda: (row: NotaDebitoVenta) => `${row.factura.secuencial}`},
-    { nombreColumna: 'total', cabecera: 'Total', celda: (row: NotaDebitoVenta) => `$${row.totalConDescuento}`},
+    { nombreColumna: 'total', cabecera: 'Total', celda: (row: NotaDebitoVenta) => `$${row.total}`},
     { nombreColumna: 'proceso', cabecera: 'Proceso', celda: (row: NotaDebitoVenta) => `${row.estadoInterno}`},
     { nombreColumna: 'estado', cabecera: 'Estado', celda: (row: NotaDebitoVenta) => `${row.estado}`},
     { nombreColumna: 'estadoSri', cabecera: 'Estado SRI', celda: (row: NotaDebitoVenta) => `${row.estadoSri}`}
@@ -131,9 +131,9 @@ export class NotaDebitoVentaComponent implements OnInit {
     { nombreColumna: 'valor', cabecera: 'P. Unit', celda: (row: NotaDebitoVentaLinea) => `$ ${row.precioUnitario}` },
     { nombreColumna: 'descuento', cabecera: 'Desc. $', celda: (row: NotaDebitoVentaLinea) => `$ ${row.valorDescuentoLinea}` },
     { nombreColumna: 'descuentoPorcentaje', cabecera: 'Desc. %', celda: (row: NotaDebitoVentaLinea) => `${row.porcentajeDescuentoLinea} %` },
-    { nombreColumna: 'subtotal', cabecera: 'Subtotal', celda: (row: NotaDebitoVentaLinea) => `$ ${row.subtotalConDescuentoLinea}` },
-    { nombreColumna: 'iva', cabecera: 'IVA', celda: (row: NotaDebitoVentaLinea) => `$ ${row.ivaConDescuentoLinea}` },
-    { nombreColumna: 'total', cabecera: 'Total', celda: (row: NotaDebitoVentaLinea) => `$ ${row.totalConDescuentoLinea}` },
+    { nombreColumna: 'subtotal', cabecera: 'Subtotal', celda: (row: NotaDebitoVentaLinea) => `$ ${row.subtotalLinea}` },
+    { nombreColumna: 'iva', cabecera: 'IVA', celda: (row: NotaDebitoVentaLinea) => `$ ${row.importeIvaLinea}` },
+    { nombreColumna: 'total', cabecera: 'Total', celda: (row: NotaDebitoVentaLinea) => `$ ${row.totalLinea}` },
     { nombreColumna: 'entregado', cabecera: 'Entreg.', celda: (row: NotaDebitoVentaLinea) => `${row.entregado}` },
     { nombreColumna: 'acciones', cabecera: 'Acciones' }
   ];
@@ -620,7 +620,7 @@ export class NotaDebitoVentaComponent implements OnInit {
     this.dataSourceLinea = new MatTableDataSource(notaDebitoVentaLineas);
     this.dataSourceLinea.filterPredicate = (data: NotaDebitoVentaLinea, filter: string): boolean =>
       data.producto.nombre.includes(filter) || data.producto.medida.abreviatura.includes(filter) || String(data.cantidad).includes(filter) || 
-      String(data.precioUnitario).includes(filter) || String(data.totalConDescuentoLinea).includes(filter) || data.entregado.includes(filter);
+      String(data.precioUnitario).includes(filter) || String(data.totalLinea).includes(filter) || data.entregado.includes(filter);
     this.dataSourceLinea.paginator = this.paginatorLinea;
     this.dataSourceLinea.sort = this.sortLinea;
   }

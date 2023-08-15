@@ -14,18 +14,19 @@ export class FacturaLinea {
   consignacion: string;
   cantidad: number;
   precioUnitario: number;
+
   valorDescuentoLinea: number;
   porcentajeDescuentoLinea: number;
   valorPorcentajeDescuentoLinea: number;
   subtotalLinea: number;
   importeIvaLinea: number;
   totalLinea: number;
-  factura: Factura;
-
+  
   impuesto: Impuesto;
   producto: Producto;
   bodega: Bodega;
   precio: Precio;
+  factura: Factura;
 
   constructor() {
     this.id = valores.cero;

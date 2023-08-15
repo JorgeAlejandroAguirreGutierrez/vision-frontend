@@ -27,11 +27,11 @@ export class Factura {
   estadoSri: string;
 
   subtotal: number;
-  descuentoTotal: number;
-  subtotalGravadoConDescuento: number;
-  subtotalNoGravadoConDescuento: number;
-  importeIvaTotal: number;
-  valorTotal: number;
+  descuento: number;
+  subtotalGravado: number;
+  subtotalNoGravado: number;
+  importeIva: number;
+  total: number;
 
   comentario: string;
   cliente: Cliente;
@@ -78,11 +78,11 @@ export class Factura {
     this.sesion = new Sesion();
 
     this.subtotal = valores.cero;
-    this.descuentoTotal = valores.cero;
-    this.subtotalGravadoConDescuento = valores.cero;
-    this.subtotalNoGravadoConDescuento = valores.cero;
-    this.importeIvaTotal = valores.cero;
-    this.valorTotal = valores.cero;
+    this.descuento = valores.cero;
+    this.subtotalGravado = valores.cero;
+    this.subtotalNoGravado = valores.cero;
+    this.importeIva = valores.cero;
+    this.total = valores.cero;
 
     //RECAUDACION
     this.efectivo = valores.cero;
