@@ -600,7 +600,7 @@
                             </ng-container>
 
                             <tr mat-header-row *matHeaderRowDef="cabecera"></tr>
-                            <tr mat-row (click)="seleccion(row)" [class.selected-row]="clickedRows.has(row)"
+                            <tr mat-row (click)="seleccionar(row)" [class.selected-row]="clickedRows.has(row)"
                                 *matRowDef="let row; columns: cabecera;"></tr>
 
                             <tr class="mat-row" *matNoDataRow>

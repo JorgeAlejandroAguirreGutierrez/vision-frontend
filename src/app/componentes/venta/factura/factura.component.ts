@@ -373,7 +373,7 @@ export class FacturaComponent implements OnInit {
     this.dataSourceFactura.sort = this.sort;
   }
 
-  seleccion(factura: any) {
+  seleccionar(factura: any) {
     if (!this.clickedRowsFactura.has(factura)) {
       this.clickedRowsFactura.clear();
       this.clickedRowsFactura.add(factura);
