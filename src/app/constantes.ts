@@ -71,6 +71,7 @@ export const urn =
     consultarPorEmpresaYEstadoInternoYEstado: "/consultarPorEmpresaYEstadoInternoYEstado",
     consultarPorEmpresaYProveedorYEstado: "/consultarPorEmpresaYProveedorYEstado",
     consultarPorEmpresaYBanco: "/consultarPorEmpresaYBanco",
+    consultarPorProducto: "/consultarPorProducto",
     consultarGrupos: "/consultarGrupos",
     consultarSubgrupos: "/consultarSubgrupos",
     consultarSecciones: "/consultarSecciones",

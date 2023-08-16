@@ -21,7 +21,7 @@ export class FacturaCompra {
     subtotalGravadoConDescuento: number;
     subtotalNoGravadoConDescuento: number;
     importeIvaTotal: number;
-    valorTotal: number;
+    total: number;
 
     valorDistribuidoTotal: number;
     valorDescuentoTotal: number;
@@ -51,7 +51,7 @@ export class FacturaCompra {
         this.subtotalGravadoConDescuento = valores.cero;
         this.subtotalNoGravadoConDescuento = valores.cero;
         this.importeIvaTotal = valores.cero;
-        this.valorTotal = valores.cero;
+        this.total = valores.cero;
 
         this.valorDistribuidoTotal = valores.cero;
         this.valorDescuentoTotal = valores.cero;
