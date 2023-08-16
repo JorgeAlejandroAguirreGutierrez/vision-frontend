@@ -4,7 +4,7 @@ import { Producto } from "../inventario/producto";
 import { Bodega } from "../inventario/bodega";
 import { Precio } from "../inventario/precio";
 
-export class NotaCreditoVentaLinea {
+export class NotaCreditoLinea {
     id: number;
     codigo: string;
     cantidadVenta: number;

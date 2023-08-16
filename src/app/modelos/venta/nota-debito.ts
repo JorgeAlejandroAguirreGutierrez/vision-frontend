@@ -1,17 +1,17 @@
 import { Sesion } from '../usuario/sesion';
 import { valores } from "../../constantes";
 import { TipoComprobante } from '../configuracion/tipo-comprobante';
-import { NotaDebitoVentaLinea } from './nota-debito-venta-linea';
+import { NotaDebitoLinea } from './nota-debito-linea';
 import { Factura } from './factura';
-import { NotaDebitoVentaCheque } from '../recaudacion/nota-debito-venta-cheque';
-import { NotaDebitoVentaDeposito } from '../recaudacion/nota-debito-venta-deposito';
-import { NotaDebitoVentaTransferencia } from '../recaudacion/nota-debito-venta-transferencia';
-import { NotaDebitoVentaTarjetaDebito } from '../recaudacion/nota-debito-venta-tarjeta-debito';
-import { NotaDebitoVentaTarjetaCredito } from '../recaudacion/nota-debito-venta-tarjeta-credito';
-import { NotaDebitoVentaCredito } from '../recaudacion/nota-debito-venta-credito';
+import { NDCheque } from '../recaudacion/nd-cheque';
+import { NDDeposito } from '../recaudacion/nd-deposito';
+import { NDTransferencia } from '../recaudacion/nd-transferencia';
+import { NDTarjetaDebito } from '../recaudacion/nd-tarjeta-debito';
+import { NDTarjetaCredito } from '../recaudacion/nd-tarjeta-credito';
+import { NDCredito } from '../recaudacion/nd-credito';
 import { Empresa } from '../usuario/empresa';
 
-export class NotaDebitoVenta {
+export class NotaDebito {
     id: number;
     codigo: string;
     establecimiento: string;
@@ -36,7 +36,7 @@ export class NotaDebitoVenta {
     sesion: Sesion;
     tipoComprobante: TipoComprobante;
     empresa: Empresa;
-    notaDebitoVentaLineas: NotaDebitoVentaLinea[];
+    notaDebitoLineas: NotaDebitoLinea[];
     //RECAUDACION
     totalRecaudacion: number;
     porPagar: number;
@@ -48,12 +48,12 @@ export class NotaDebitoVenta {
     totalTarjetasDebitos: number;
     totalTarjetasCreditos: number;
     totalCredito: number;
-    cheques: NotaDebitoVentaCheque[];
-    depositos: NotaDebitoVentaDeposito[];
-    transferencias: NotaDebitoVentaTransferencia[];
-    tarjetasDebitos: NotaDebitoVentaTarjetaDebito[];
-    tarjetasCreditos: NotaDebitoVentaTarjetaCredito[];
-    credito: NotaDebitoVentaCredito;
+    cheques: NDCheque[];
+    depositos: NDDeposito[];
+    transferencias: NDTransferencia[];
+    tarjetasDebitos: NDTarjetaDebito[];
+    tarjetasCreditos: NDTarjetaCredito[];
+    credito: NDCredito;
 
     constructor() {
         this.id = valores.cero;
@@ -76,7 +76,7 @@ export class NotaDebitoVenta {
         this.factura = new Factura();
         this.sesion = new Sesion();
         this.tipoComprobante = new TipoComprobante();
-        this.notaDebitoVentaLineas = [];
+        this.notaDebitoLineas = [];
         //RECAUDACION
         this.totalRecaudacion = valores.cero;
         this.efectivo = valores.cero;
@@ -92,6 +92,6 @@ export class NotaDebitoVenta {
         this.transferencias = [];
         this.tarjetasDebitos = []
         this.tarjetasCreditos = []
-        this.credito = new NotaDebitoVentaCredito();
+        this.credito = new NDCredito();
     }
 }
