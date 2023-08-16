@@ -15,7 +15,7 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" title="Nuevo" role="button" (click)="nuevo()">
+                        <a class="nav-link" title="Nuevo" role="button" (click)="nuevo(null)">
                             <mat-icon>file_copy</mat-icon>
                         </a>
                     </li>
@@ -601,7 +601,7 @@
             (selectionChange)="cambiarStepper($event)">
             <ng-template matStepLabel>Recaudación</ng-template>
             <app-recaudacion [stepper]="stepper" [factura]="factura"
-                (facturaConRecaudacion)="actualizarRecaudacion($event)" (llamarNuevo)="nuevo()"></app-recaudacion>
+                (facturaConRecaudacion)="actualizarRecaudacion($event)" (llamarNuevo)="nuevo(null)"></app-recaudacion>
         </mat-step>
     </mat-stepper>
     <!--button type="button" class="btn btn-sm btn-primary" (click)="showSpinner()">Show Spinner</button-->

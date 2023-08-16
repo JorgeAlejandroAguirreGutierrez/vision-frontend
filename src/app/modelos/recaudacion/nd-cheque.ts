@@ -1,6 +1,6 @@
 import { Banco } from '../caja-banco/banco';
 import { valores } from "../../constantes";
-export class NotaDebitoVentaCheque {
+export class NDCheque {
   id:number;
   numero: string;
   tipo: string;
@@ -11,7 +11,7 @@ export class NotaDebitoVentaCheque {
 
   constructor(){
     this.numero = valores.vacio;
-    this.tipo = valores.vacio;
+    this.tipo = valores.chequeALaVista;
     this.fecha = new Date();
     this.fechaEfectivizacion = new Date();
     this.valor = valores.cero;

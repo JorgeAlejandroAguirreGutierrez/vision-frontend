@@ -14,9 +14,9 @@ import { Cliente } from 'src/app/modelos/cliente/cliente';
 import { ClienteService } from 'src/app/servicios/cliente/cliente.service';
 import { Factura } from 'src/app/modelos/venta/factura';
 import { FacturaService } from 'src/app/servicios/venta/factura.service';
-import { NotaCreditoVenta } from 'src/app/modelos/venta/nota-credito-venta';
-import { NotaCreditoVentaService } from 'src/app/servicios/venta/nota-credito-venta.service';
-import { NotaCreditoVentaLinea } from 'src/app/modelos/venta/nota-credito-venta-linea';
+import { NotaCredito } from 'src/app/modelos/venta/nota-credito';
+import { NotaCreditoService } from 'src/app/servicios/venta/nota-credito.service';
+import { NotaCreditoLinea } from 'src/app/modelos/venta/nota-credito-linea';
 import { NotaCreditoElectronicaService } from 'src/app/servicios/venta/nota-credito-eletronica.service';
 
 import { MatPaginator } from '@angular/material/paginator';
@@ -24,12 +24,12 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 
 @Component({
-  selector: 'app-nota-credito-venta',
-  templateUrl: './nota-credito-venta.component.html',
-  styleUrls: ['./nota-credito-venta.component.scss']
+  selector: 'app-nota-credito',
+  templateUrl: './nota-credito.component.html',
+  styleUrls: ['./nota-credito.component.scss']
 })
 
-export class NotaCreditoVentaComponent implements OnInit {
+export class NotaCreditoComponent implements OnInit {
 
   abrirPanelNuevoNC: boolean = true;
   abrirPanelNCLinea: boolean = false;
@@ -57,51 +57,51 @@ export class NotaCreditoVentaComponent implements OnInit {
   sesion: Sesion = null;
   empresa: Empresa = new Empresa();
   factura: Factura = new Factura();
-  notaCreditoVenta: NotaCreditoVenta = new NotaCreditoVenta();
-  notaCreditoVentaLinea: NotaCreditoVentaLinea = new NotaCreditoVentaLinea();
+  notaCredito: NotaCredito = new NotaCredito();
+  notaCreditoLinea: NotaCreditoLinea = new NotaCreditoLinea();
 
   clienteSeleccionado: Cliente = new Cliente();
   facturaSeleccionado: Factura = new Factura();
 
   clientes: Cliente[] = [];
   facturas: Factura[] = [];
-  notasCreditosVentas: NotaCreditoVenta[] = [];
+  notasCreditos: NotaCredito[] = [];
 
   filtroIdentificaciones: Cliente[] = [];
   filtroClientes: Cliente[] = [];
   filtroFacturas: Factura[] = [];
 
   columnas: any[] = [
-    { nombreColumna: 'codigo', cabecera: 'Código', celda: (row: NotaCreditoVenta) => `${row.codigo}`},
-    { nombreColumna: 'comprobante', cabecera: 'Comprobante', celda: (row: NotaCreditoVenta) => `${row.numeroComprobante}`},
-    { nombreColumna: 'fecha', cabecera: 'Fecha', celda: (row: NotaCreditoVenta) => `${this.datepipe.transform(row.fecha, "dd-MM-yyyy")}`},
-    { nombreColumna: 'cliente', cabecera: 'Cliente', celda: (row: NotaCreditoVenta) => `${row.factura.cliente.razonSocial}`},
-    { nombreColumna: 'factura', cabecera: 'Factura', celda: (row: NotaCreditoVenta) => `${row.factura.numeroComprobante}`},
-    { nombreColumna: 'total', cabecera: 'Total', celda: (row: NotaCreditoVenta) => `$${row.total}`},
-    { nombreColumna: 'proceso', cabecera: 'Proceso', celda: (row: NotaCreditoVenta) => `${row.estadoInterno}`},
-    { nombreColumna: 'estado', cabecera: 'Estado', celda: (row: NotaCreditoVenta) => `${row.estado}`},
-    { nombreColumna: 'estadoSri', cabecera: 'Estado SRI', celda: (row: NotaCreditoVenta) => `${row.estadoSri}`}
+    { nombreColumna: 'codigo', cabecera: 'Código', celda: (row: NotaCredito) => `${row.codigo}`},
+    { nombreColumna: 'comprobante', cabecera: 'Comprobante', celda: (row: NotaCredito) => `${row.numeroComprobante}`},
+    { nombreColumna: 'fecha', cabecera: 'Fecha', celda: (row: NotaCredito) => `${this.datepipe.transform(row.fecha, "dd-MM-yyyy")}`},
+    { nombreColumna: 'cliente', cabecera: 'Cliente', celda: (row: NotaCredito) => `${row.factura.cliente.razonSocial}`},
+    { nombreColumna: 'factura', cabecera: 'Factura', celda: (row: NotaCredito) => `${row.factura.numeroComprobante}`},
+    { nombreColumna: 'total', cabecera: 'Total', celda: (row: NotaCredito) => `$${row.total}`},
+    { nombreColumna: 'proceso', cabecera: 'Proceso', celda: (row: NotaCredito) => `${row.estadoInterno}`},
+    { nombreColumna: 'estado', cabecera: 'Estado', celda: (row: NotaCredito) => `${row.estado}`},
+    { nombreColumna: 'estadoSri', cabecera: 'Estado SRI', celda: (row: NotaCredito) => `${row.estadoSri}`}
   ];
   cabecera: string[]  = this.columnas.map(titulo => titulo.nombreColumna);
-  dataSource: MatTableDataSource<NotaCreditoVenta>;
-  clickedRows = new Set<NotaCreditoVenta>();
+  dataSource: MatTableDataSource<NotaCredito>;
+  clickedRows = new Set<NotaCredito>();
 
   columnasLinea: any[] = [
-    { nombreColumna: 'producto', cabecera: 'Producto', celda: (row: NotaCreditoVentaLinea) => `${row.producto.nombre}` },
-    { nombreColumna: 'medida', cabecera: 'Medida', celda: (row: NotaCreditoVentaLinea) => `${row.producto.medida.abreviatura}` },
-    { nombreColumna: 'cantidadventa', cabecera: 'Cant Vent', celda: (row: NotaCreditoVentaLinea) => `$${row.cantidadVenta}` },
-    { nombreColumna: 'cunitarioventa', cabecera: 'C.U. Vent', celda: (row: NotaCreditoVentaLinea) => `${row.costoUnitarioVenta}` },
-    { nombreColumna: 'cantidad', cabecera: 'Cant NC', celda: (row: NotaCreditoVentaLinea) => `${row.cantidad}` },
-    { nombreColumna: 'costounitario', cabecera: 'C.U NC', celda: (row: NotaCreditoVentaLinea) => `$${row.costoUnitario}` },
-    { nombreColumna: 'impuesto', cabecera: 'IVA %', celda: (row: NotaCreditoVentaLinea) => `${row.impuesto.porcentaje} %` },
-    { nombreColumna: 'subtotal', cabecera: 'Subtotal', celda: (row: NotaCreditoVentaLinea) => `$${row.subtotalLinea}` },
-    { nombreColumna: 'importe', cabecera: 'Importe', celda: (row: NotaCreditoVentaLinea) => `$${row.importeIvaLinea}` },
-    { nombreColumna: 'totalLinea', cabecera: 'Total', celda: (row: NotaCreditoVentaLinea) => `$${row.totalLinea}` },
+    { nombreColumna: 'producto', cabecera: 'Producto', celda: (row: NotaCreditoLinea) => `${row.producto.nombre}` },
+    { nombreColumna: 'medida', cabecera: 'Medida', celda: (row: NotaCreditoLinea) => `${row.producto.medida.abreviatura}` },
+    { nombreColumna: 'cantidadventa', cabecera: 'Cant Vent', celda: (row: NotaCreditoLinea) => `$${row.cantidadVenta}` },
+    { nombreColumna: 'cunitarioventa', cabecera: 'C.U. Vent', celda: (row: NotaCreditoLinea) => `${row.costoUnitarioVenta}` },
+    { nombreColumna: 'cantidad', cabecera: 'Cant NC', celda: (row: NotaCreditoLinea) => `${row.cantidad}` },
+    { nombreColumna: 'costounitario', cabecera: 'C.U NC', celda: (row: NotaCreditoLinea) => `$${row.costoUnitario}` },
+    { nombreColumna: 'impuesto', cabecera: 'IVA %', celda: (row: NotaCreditoLinea) => `${row.impuesto.porcentaje} %` },
+    { nombreColumna: 'subtotal', cabecera: 'Subtotal', celda: (row: NotaCreditoLinea) => `$${row.subtotalLinea}` },
+    { nombreColumna: 'importe', cabecera: 'Importe', celda: (row: NotaCreditoLinea) => `$${row.importeIvaLinea}` },
+    { nombreColumna: 'totalLinea', cabecera: 'Total', celda: (row: NotaCreditoLinea) => `$${row.totalLinea}` },
     { nombreColumna: 'acciones', cabecera: 'Acciones' }
   ];
   cabeceraLinea: string[]  = this.columnasLinea.map(titulo => titulo.nombreColumna);
-  dataSourceLinea: MatTableDataSource<NotaCreditoVentaLinea>;
-  clickedRowsLinea = new Set<NotaCreditoVentaLinea>();
+  dataSourceLinea: MatTableDataSource<NotaCreditoLinea>;
+  clickedRowsLinea = new Set<NotaCreditoLinea>();
   
   @ViewChild("paginator") paginator: MatPaginator;
   @ViewChild("paginatorLinea") paginatorLinea: MatPaginator;
@@ -118,14 +118,14 @@ export class NotaCreditoVentaComponent implements OnInit {
   }
 
   constructor(private renderer: Renderer2, private clienteService: ClienteService, private sesionService: SesionService, private notaCreditoElectronicaService: NotaCreditoElectronicaService, 
-    private router: Router, private notaCreditoVentaService: NotaCreditoVentaService, private facturaService: FacturaService, private spinnerService: NgxSpinnerService, private datepipe: DatePipe) { }
+    private router: Router, private notaCreditoService: NotaCreditoService, private facturaService: FacturaService, private spinnerService: NgxSpinnerService, private datepipe: DatePipe) { }
 
   ngOnInit() {
     this.sesion = validarSesion(this.sesionService, this.router);
     this.empresa = this.sesion.empresa;
     this.fechaMinima = new Date(this.fechaMinima.setDate(this.hoy.getDate() - 3))
-    this.notaCreditoVenta.establecimiento = this.sesion.usuario.estacion.establecimiento.codigoSRI;
-    this.notaCreditoVenta.puntoVenta = this.sesion.usuario.estacion.codigoSRI;
+    this.notaCredito.establecimiento = this.sesion.usuario.estacion.establecimiento.codigoSRI;
+    this.notaCredito.puntoVenta = this.sesion.usuario.estacion.codigoSRI;
     this.consultar();
     this.consultarClientes();
   }
@@ -142,14 +142,14 @@ export class NotaCreditoVentaComponent implements OnInit {
   nuevo(event){
     if (event!=null)
       event.preventDefault();
-    this.notaCreditoVenta = new NotaCreditoVenta();
-    this.notaCreditoVenta.establecimiento = this.sesion.usuario.estacion.establecimiento.codigoSRI;
-    this.notaCreditoVenta.puntoVenta = this.sesion.usuario.estacion.codigoSRI;
+    this.notaCredito = new NotaCredito();
+    this.notaCredito.establecimiento = this.sesion.usuario.estacion.establecimiento.codigoSRI;
+    this.notaCredito.puntoVenta = this.sesion.usuario.estacion.codigoSRI;
     this.clienteSeleccionado = new Cliente();
     this.filtroClientes = [];
     this.facturaSeleccionado = new Factura();
     this.filtroFacturas = [];
-    this.dataSourceLinea = new MatTableDataSource<NotaCreditoVentaLinea>([]);
+    this.dataSourceLinea = new MatTableDataSource<NotaCreditoLinea>([]);
     this.deshabilitarDescuento = true;
     this.clickedRows.clear();
   }
@@ -160,9 +160,9 @@ export class NotaCreditoVentaComponent implements OnInit {
     if (!this.validarFormulario())
       return;   
     this.spinnerService.show();
-    this.notaCreditoVenta.sesion = this.sesion;
-    this.notaCreditoVenta.empresa = this.empresa;
-    this.notaCreditoVentaService.crear(this.notaCreditoVenta).subscribe(
+    this.notaCredito.sesion = this.sesion;
+    this.notaCredito.empresa = this.empresa;
+    this.notaCreditoService.crear(this.notaCredito).subscribe(
       res => {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
         this.consultar();
@@ -182,7 +182,7 @@ export class NotaCreditoVentaComponent implements OnInit {
     if (!this.validarFormulario())
       return;   
     this.spinnerService.show();   
-    this.notaCreditoElectronicaService.enviar(this.notaCreditoVenta.id).subscribe({
+    this.notaCreditoElectronicaService.enviar(this.notaCredito.id).subscribe({
       next: res => {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
         this.consultar();
@@ -202,7 +202,7 @@ export class NotaCreditoVentaComponent implements OnInit {
     if (!this.validarFormulario())
       return;     
     this.spinnerService.show();     
-    this.notaCreditoVentaService.actualizar(this.notaCreditoVenta).subscribe(
+    this.notaCreditoService.actualizar(this.notaCredito).subscribe(
       res => {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
         this.consultar();
@@ -219,7 +219,7 @@ export class NotaCreditoVentaComponent implements OnInit {
   activar(event) {
     if (event != null)
       event.preventDefault();
-    this.notaCreditoVentaService.activar(this.notaCreditoVenta).subscribe({
+    this.notaCreditoService.activar(this.notaCredito).subscribe({
       next: res => {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
         this.consultar();
@@ -232,7 +232,7 @@ export class NotaCreditoVentaComponent implements OnInit {
   inactivar(event) {
     if (event != null)
       event.preventDefault();
-    this.notaCreditoVentaService.inactivar(this.notaCreditoVenta).subscribe({
+    this.notaCreditoService.inactivar(this.notaCredito).subscribe({
       next: res => {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
         this.consultar();
@@ -243,18 +243,18 @@ export class NotaCreditoVentaComponent implements OnInit {
   }
 
   consultar() {
-    this.notaCreditoVentaService.consultarPorEmpresa(this.empresa.id).subscribe({
+    this.notaCreditoService.consultarPorEmpresa(this.empresa.id).subscribe({
       next: res => {
-        this.notasCreditosVentas = res.resultado as NotaCreditoVenta[]
-        this.llenarTablaNotaCreditoVenta(this.notasCreditosVentas);
+        this.notasCreditos = res.resultado as NotaCredito[]
+        this.llenarTablaNotaCreditoVenta(this.notasCreditos);
       },
       error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     });
   }
 
-  llenarTablaNotaCreditoVenta(notasCreditosVentas: NotaCreditoVenta[]) {
-    this.dataSource = new MatTableDataSource(notasCreditosVentas);
-    this.dataSource.filterPredicate = (data: NotaCreditoVenta, filter: string): boolean =>
+  llenarTablaNotaCreditoVenta(notasCreditos: NotaCredito[]) {
+    this.dataSource = new MatTableDataSource(notasCreditos);
+    this.dataSource.filterPredicate = (data: NotaCredito, filter: string): boolean =>
       this.datepipe.transform(data.fecha, "dd-MM-yyyy").includes(filter) || data.numeroComprobante.includes(filter) || 
       data.secuencial.includes(filter) || data.factura.cliente.razonSocial.includes(filter) || 
       data.estadoInterno.includes(filter) || data.estado.includes(filter) || data.estadoSri.includes(filter);
@@ -273,9 +273,9 @@ export class NotaCreditoVentaComponent implements OnInit {
   }
 
   obtenerNotaCreditoVenta(id: number){
-    this.notaCreditoVentaService.obtener(id).subscribe({
+    this.notaCreditoService.obtener(id).subscribe({
       next: res => {
-        this.notaCreditoVenta = res.resultado as NotaCreditoVenta;
+        this.notaCredito = res.resultado as NotaCredito;
         this.construir();
       },
       error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
@@ -283,21 +283,21 @@ export class NotaCreditoVentaComponent implements OnInit {
   }
 
   eliminarNotaCreditoVentaLinea(i: number){
-    this.notaCreditoVenta.notaCreditoVentaLineas.splice(i, 1);
+    this.notaCredito.notaCreditoVentaLineas.splice(i, 1);
     this.calcular();
   }
 
   construir() {
-    this.clienteSeleccionado = this.notaCreditoVenta.factura.cliente;
+    this.clienteSeleccionado = this.notaCredito.factura.cliente;
     this.formatearFecha();
-    this.facturaSeleccionado = this.notaCreditoVenta.factura;
-    this.llenarTablaNotaCreditoVentaLineas(this.notaCreditoVenta.notaCreditoVentaLineas);
+    this.facturaSeleccionado = this.notaCredito.factura;
+    this.llenarTablaNotaCreditoVentaLineas(this.notaCredito.notaCreditoVentaLineas);
     this.seleccionarOperacion();
   }
 
   formatearFecha(){
-    let fecha = new Date(this.notaCreditoVenta.fecha);
-    this.notaCreditoVenta.fecha = fecha;
+    let fecha = new Date(this.notaCredito.fecha);
+    this.notaCredito.fecha = fecha;
   }
   
   filtroNotaCreditoVenta(event: Event) {
@@ -333,7 +333,7 @@ export class NotaCreditoVentaComponent implements OnInit {
     let clienteId = event.option.value.id;
     this.clienteService.obtener(clienteId).subscribe({
       next: res => {
-        this.notaCreditoVenta.factura.cliente = res.resultado as Cliente;
+        this.notaCredito.factura.cliente = res.resultado as Cliente;
         this.consultarFacturas(clienteId);
       },
       error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
@@ -365,21 +365,21 @@ export class NotaCreditoVentaComponent implements OnInit {
 
   seleccionarFactura(event) {
     let facturaId = event.option.value.id;
-    this.notaCreditoVentaService.obtenerPorFactura(facturaId).subscribe({
+    this.notaCreditoService.obtenerPorFactura(facturaId).subscribe({
       next: res => {
-        this.notaCreditoVenta= res.resultado as NotaCreditoVenta;
-        this.notaCreditoVenta.establecimiento = this.sesion.usuario.estacion.establecimiento.codigoSRI;
-        this.notaCreditoVenta.puntoVenta = this.sesion.usuario.estacion.codigoSRI;
+        this.notaCredito = res.resultado as NotaCredito;
+        this.notaCredito.establecimiento = this.sesion.usuario.estacion.establecimiento.codigoSRI;
+        this.notaCredito.puntoVenta = this.sesion.usuario.estacion.codigoSRI;
         this.formatearFecha();
-        this.llenarTablaNotaCreditoVentaLineas(this.notaCreditoVenta.notaCreditoVentaLineas);
+        this.llenarTablaNotaCreditoVentaLineas(this.notaCredito.notaCreditoVentaLineas);
       },
       error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     });
   }
 
-  llenarTablaNotaCreditoVentaLineas(notasCreditoVentaLineas: NotaCreditoVentaLinea[]) {
-    this.dataSourceLinea = new MatTableDataSource(notasCreditoVentaLineas);
-    this.dataSourceLinea.filterPredicate = (data: NotaCreditoVentaLinea, filter: string): boolean =>
+  llenarTablaNotaCreditoVentaLineas(notasCreditoLineas: NotaCreditoLinea[]) {
+    this.dataSourceLinea = new MatTableDataSource(notasCreditoLineas);
+    this.dataSourceLinea.filterPredicate = (data: NotaCreditoLinea, filter: string): boolean =>
       data.producto.nombre.includes(filter) || data.producto.medida.abreviatura.includes(filter) || 
       data.producto.impuesto.abreviatura.includes(filter) || data.bodega.abreviatura.includes(filter);
       this.dataSourceLinea.paginator = this.paginatorLinea;
@@ -388,22 +388,17 @@ export class NotaCreditoVentaComponent implements OnInit {
 
 
   seleccionarOperacion(){
-    if (this.notaCreditoVenta.operacion == valores.devolucion) {
-      this.notaCreditoVenta.descuento = valores.cero;
+    if (this.notaCredito.operacion == valores.devolucion) {
+      this.notaCredito.descuento = valores.cero;
       this.deshabilitarDescuento = true;
-      if (this.notaCreditoVenta.id == valores.cero){
-        for (let i=0; i < this.notaCreditoVenta.notaCreditoVentaLineas.length; i++){
-          this.notaCreditoVenta.notaCreditoVentaLineas[i].cantidad = valores.cero;
+      if (this.notaCredito.id == valores.cero){
+        for (let i=0; i < this.notaCredito.notaCreditoVentaLineas.length; i++){
+          this.notaCredito.notaCreditoVentaLineas[i].cantidad = valores.cero;
         }
       }
     }
-    if (this.notaCreditoVenta.operacion == valores.descuento) {
+    if (this.notaCredito.operacion == valores.descuento) {
       this.deshabilitarDescuento = false;
-      if (this.notaCreditoVenta.id == valores.cero){
-        for (let i=0; i < this.notaCreditoVenta.notaCreditoVentaLineas.length; i++){
-          //this.notaCreditoVenta.notaCreditoVentaLineas[i].cantidad = this.notaCreditoVenta.notaCreditoVentaLineas[i].cantidadVenta;
-        }
-      }
     }
   }
 
@@ -421,11 +416,11 @@ export class NotaCreditoVentaComponent implements OnInit {
 
   calcular(){
     this.spinnerService.show();  
-    this.notaCreditoVentaService.calcular(this.notaCreditoVenta).subscribe({
+    this.notaCreditoService.calcular(this.notaCredito).subscribe({
       next: res => {
-        this.notaCreditoVenta = res.resultado as NotaCreditoVenta;
+        this.notaCredito = res.resultado as NotaCredito;
         this.formatearFecha();
-        this.llenarTablaNotaCreditoVentaLineas(this.notaCreditoVenta.notaCreditoVentaLineas);
+        this.llenarTablaNotaCreditoVentaLineas(this.notaCredito.notaCreditoVentaLineas);
         this.spinnerService.hide();
       },
       error: err => {
@@ -445,14 +440,14 @@ export class NotaCreditoVentaComponent implements OnInit {
   obtenerPDF(event){
     if (event != null)
       event.preventDefault();
-    this.notaCreditoElectronicaService.obtenerPDF(this.notaCreditoVenta.id);
+    this.notaCreditoElectronicaService.obtenerPDF(this.notaCredito.id);
   }
   
   enviarPDFYXML(event){
     if (event != null)
       event.preventDefault();
     this.spinnerService.show();
-    this.notaCreditoElectronicaService.enviarPDFYXML(this.notaCreditoVenta.id).subscribe({
+    this.notaCreditoElectronicaService.enviarPDFYXML(this.notaCredito.id).subscribe({
       next: res => {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
         this.spinnerService.hide();  
@@ -470,16 +465,16 @@ export class NotaCreditoVentaComponent implements OnInit {
 
   //VALIDACIONES
   validarFormulario(): boolean {
-    if (this.notaCreditoVenta.fecha == null || this.notaCreditoVenta.fecha > this.hoy ||
-      this.datepipe.transform(this.notaCreditoVenta.fecha, "yyyyMMdd") < this.datepipe.transform(this.fechaMinima, "yyyyMMdd")){
+    if (this.notaCredito.fecha == null || this.notaCredito.fecha > this.hoy ||
+      this.datepipe.transform(this.notaCredito.fecha, "yyyyMMdd") < this.datepipe.transform(this.fechaMinima, "yyyyMMdd")){
       Swal.fire({ icon: error_swal, title: error, text: mensajes.error_fecha });
       return false;
     }
-    if (this.notaCreditoVenta.factura.id == valores.cero){
+    if (this.notaCredito.factura.id == valores.cero){
       Swal.fire({ icon: error_swal, title: error, text: mensajes.error_falta_datos });
       return false;
     }
-    if (this.notaCreditoVenta.operacion == valores.vacio){
+    if (this.notaCredito.operacion == valores.vacio){
       Swal.fire({ icon: error_swal, title: error, text: mensajes.error_falta_datos });
       return false;
     }

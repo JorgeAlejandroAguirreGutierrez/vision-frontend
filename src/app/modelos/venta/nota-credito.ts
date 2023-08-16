@@ -1,11 +1,11 @@
 import { Sesion } from '../usuario/sesion';
 import { valores } from "../../constantes";
 import { TipoComprobante } from '../configuracion/tipo-comprobante';
-import { NotaCreditoVentaLinea } from './nota-credito-venta-linea';
+import { NotaCreditoLinea } from './nota-credito-linea';
 import { Factura } from './factura';
 import { Empresa } from '../usuario/empresa';
 
-export class NotaCreditoVenta {
+export class NotaCredito {
     id: number;
     codigo: string;
     establecimiento: string;
@@ -31,7 +31,7 @@ export class NotaCreditoVenta {
     sesion: Sesion;
     tipoComprobante: TipoComprobante;
     empresa: Empresa;
-    notaCreditoVentaLineas: NotaCreditoVentaLinea[];
+    notaCreditoVentaLineas: NotaCreditoLinea[];
 
     constructor() {
         this.id = valores.cero;

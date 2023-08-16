@@ -1,5 +1,5 @@
 import { valores } from "../../constantes";
-export class NotaDebitoVentaCredito {
+export class NDCredito {
   id: number;
   codigo: string;
   saldo: number;
@@ -10,7 +10,7 @@ export class NotaDebitoVentaCredito {
     this.id = valores.cero;
     this.saldo = valores.cero;
     this.unidadTiempo = valores.mensual;
-    this.plazo = valores.uno;
+    this.plazo = valores.cero;
   }
 
 }

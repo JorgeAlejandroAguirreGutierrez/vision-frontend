@@ -37,13 +37,13 @@ import { NotaDebitoCompraComponent } from './componentes/compra/nota-debito-comp
 
 // Módulo de Ventas
 import { FacturaComponent } from './componentes/venta/factura/factura.component';
-import { NotaCreditoVentaComponent } from './componentes/venta/nota-credito-venta/nota-credito-venta.component';
-import { NotaDebitoVentaComponent } from './componentes/venta/nota-debito-venta/nota-debito-venta.component';
+import { NotaCreditoComponent } from './componentes/venta/nota-credito/nota-credito.component';
+import { NotaDebitoComponent } from './componentes/venta/nota-debito/nota-debito.component';
 import { CierreCajaComponent } from './componentes/venta/cierre-caja/cierre-caja.component';
 
 //Módulo de Recaudaciones
 import { RecaudacionComponent } from './componentes/recaudacion/recaudacion/recaudacion.component';
-import { RecaudacionNotaDebitoComponent } from './componentes/recaudacion/recaudacion-nota-debito/recaudacion-nota-debito.component';
+import { RecaudacionNDComponent } from './componentes/recaudacion/recaudacion-nd/recaudacion-nd.component';
 
 //Módulo de Entregas
 import { GuiaRemisionComponent } from './componentes/entrega/guia-remision/guia-remision.component';
@@ -81,10 +81,10 @@ import { TablaMovimientoContableComponent } from './componentes/contabilidad/mov
 import { ReporteClienteComponent } from './componentes/reporte/cliente/reporte-cliente/reporte-cliente.component';
 import { ReporteCompraComponent } from './componentes/reporte/compra/reporte-compra/reporte-compra.component';
 import { ReporteVentaComponent } from './componentes/reporte/venta/reporte-venta/reporte-venta.component';
-  import { DetalleVentasComponent } from './componentes/reporte/venta/detalle-ventas/detalle-ventas.component';
-  import { CajaComponent } from './componentes/reporte/venta/caja/caja.component';
+import { DetalleVentasComponent } from './componentes/reporte/venta/detalle-ventas/detalle-ventas.component';
+import { CajaComponent } from './componentes/reporte/venta/caja/caja.component';
 import { ReporteInventarioComponent } from './componentes/reporte/inventario/reporte-inventario/reporte-inventario.component';
-  import { KardexMercaderiaComponent } from './componentes/reporte/inventario/kardex-mercaderia/kardex-mercaderia.component';
+import { KardexMercaderiaComponent } from './componentes/reporte/inventario/kardex-mercaderia/kardex-mercaderia.component';
 import { ReporteCajaBancoComponent } from './componentes/reporte/caja-banco/reporte-caja-banco/reporte-caja-banco.component';
 import { ReporteCuentaCobrarComponent } from './componentes/reporte/cuenta-cobrar/reporte-cuenta-cobrar/reporte-cuenta-cobrar.component';
 import { ReporteCuentaPagarComponent } from './componentes/reporte/cuenta-pagar/reporte-cuenta-pagar/reporte-cuenta-pagar.component';
@@ -193,14 +193,14 @@ export const RoutingComponents = [
   VehiculoComponent,
   // Recaudación
   RecaudacionComponent,
-  RecaudacionNotaDebitoComponent,
+  RecaudacionNDComponent,
   //Caja Bancos
   CuentaPropiaComponent,
   BancoComponent,
   //Ventas
   FacturaComponent,
-  NotaCreditoVentaComponent,
-  NotaDebitoVentaComponent,
+  NotaCreditoComponent,
+  NotaDebitoComponent,
   CierreCajaComponent,
   // Compras
   ProveedorComponent,

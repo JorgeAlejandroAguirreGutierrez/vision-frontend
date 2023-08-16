@@ -1,14 +1,12 @@
 import { CuentaPropia } from '../caja-banco/cuenta-propia';
-import { Banco } from '../caja-banco/banco';
 import { valores } from "../../constantes";
-export class NotaDebitoVentaDeposito {
-    id: number;
+export class NDDeposito {
+    id:number;
     codigo: string;
     fecha: Date;
     comprobante: string;
     valor: number;
     cuentaPropia: CuentaPropia;
-    banco: Banco;
 
     constructor(){
         this.id = valores.cero;
@@ -17,7 +15,6 @@ export class NotaDebitoVentaDeposito {
         this.comprobante = valores.vacio;
         this.valor = valores.cero;
         this.cuentaPropia = new CuentaPropia();
-        this.banco = new Banco();
     }
 
 }
