@@ -108,15 +108,26 @@ export class KardexComponent implements OnInit {
     this.productoService.obtener(productoId).subscribe({
       next: res => {
         this.producto = res.resultado as Producto;
-        this.llenarTablaKardex(this.producto.kardexs);
+        this.consultarKardex(this.producto.id);
         this.productoSeleccionado = true;
       },
       error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     });
   }
 
+  consultarKardex(productoId: number){
+    this.kardexService.consultarPorProducto(productoId).subscribe({
+      next: res => {
+        this.kardexs = res.resultado as Kardex[];
+        this.llenarTablaKardex(this.kardexs);
+      },
+      error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+    });
+
+  }
+
   llenarTablaKardex(kardexs: Kardex[]) {
-    this.ordenarAsc(kardexs, 'id');
+    //this.ordenarAsc(kardexs, 'fecha');
     this.dataSource = new MatTableDataSource(kardexs);
     this.dataSource.filterPredicate = (data: Kardex, filter: string): boolean =>
     this.datepipe.transform(data.fecha, valores.fechaCorta).includes(filter) || data.tipoComprobante.abreviatura.includes(filter) || data.referencia.includes(filter) || 

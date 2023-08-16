@@ -80,8 +80,8 @@ export class FacturaCompraComponent implements OnInit {
     { nombreColumna: 'factura', cabecera: 'Factura', celda: (row: FacturaCompra) => `${row.numeroComprobante}`},
     { nombreColumna: 'proveedor', cabecera: 'Proveedor', celda: (row: FacturaCompra) => `${row.proveedor.nombreComercial}`},
     { nombreColumna: 'subtotal', cabecera: 'Subtotal', celda: (row: FacturaCompra) => `$${row.subtotal}`},
-    { nombreColumna: 'descuento', cabecera: 'Descuento', celda: (row: FacturaCompra) => `$${row.valorTotal}`},
-    { nombreColumna: 'total', cabecera: 'Total', celda: (row: FacturaCompra) => `$${row.valorTotal}`},
+    { nombreColumna: 'descuento', cabecera: 'Descuento', celda: (row: FacturaCompra) => `$${row.descuentoTotal}`},
+    { nombreColumna: 'total', cabecera: 'Total', celda: (row: FacturaCompra) => `$${row.total}`},
     { nombreColumna: 'proceso', cabecera: 'Proceso', celda: (row: FacturaCompra) => `${row.estadoInterno}`},
     { nombreColumna: 'estado', cabecera: 'Estado', celda: (row: FacturaCompra) => `${row.estado}`}
   ];
@@ -93,7 +93,7 @@ export class FacturaCompraComponent implements OnInit {
     { nombreColumna: 'nombre', cabecera: 'Producto', celda: (row: FacturaCompraLinea) => `${row.producto.nombre}` },
     { nombreColumna: 'medida', cabecera: 'Medida', celda: (row: FacturaCompraLinea) => `${row.producto.medida.abreviatura}` },
     { nombreColumna: 'cantidad', cabecera: 'Cant.', celda: (row: FacturaCompraLinea) => `${row.cantidad}` },
-    { nombreColumna: 'valor', cabecera: 'P. Unit', celda: (row: FacturaCompraLinea) => `$ ${row.costoPromedio}` },
+    { nombreColumna: 'valor', cabecera: 'C. Unit', celda: (row: FacturaCompraLinea) => `$ ${row.costoUnitario}` },
     { nombreColumna: 'descuento', cabecera: 'Desc. $', celda: (row: FacturaCompraLinea) => `$ ${row.valorDescuentoLinea}` },
     { nombreColumna: 'descuentoPorcentaje', cabecera: 'Desc. %', celda: (row: FacturaCompraLinea) => `${row.porcentajeDescuentoLinea} %` },
     { nombreColumna: 'subtotal', cabecera: 'Subtotal', celda: (row: FacturaCompraLinea) => `$ ${row.subtotalLinea}` },
@@ -604,7 +604,7 @@ export class FacturaCompraComponent implements OnInit {
       Swal.fire({ icon: error_swal, title: error, text: mensajes.error_falta_datos });
       return false;
     }
-    if (this.facturaCompra.valorTotal <= valores.cero){
+    if (this.facturaCompra.total <= valores.cero){
       Swal.fire({ icon: error_swal, title: error, text: mensajes.error_falta_datos });
       return false;
     }

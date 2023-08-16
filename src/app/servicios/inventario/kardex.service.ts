@@ -58,8 +58,8 @@ export class KardexService {
       }));
   }
 
-  consultarPorEmpresa(empresaId: number): Observable<Respuesta> {
-    return this.http.get(environment.host + urn.ruta + urn.kardex + urn.consultar + urn.slash + empresaId, options).pipe(
+  consultarPorProducto(productoId: number): Observable<Respuesta> {
+    return this.http.get(environment.host + urn.ruta + urn.kardex + urn.consultarPorProducto + urn.slash + productoId, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);
