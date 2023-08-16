@@ -1,15 +1,15 @@
 <div class="contenedor">
-    <mat-stepper (selectionChange)="enviarEvento()" [linear]="isLinear" #stepper>
+    <mat-stepper (selectionChange)="cambiarStepper($event)" [linear]="steeperLinear" #stepper>
         <!-- Paso Facturación -->
         <mat-step [stepControl]="facturacionSteeperFormGroup" [editable]="isEditable">
             <nav class="navbar-light nav-fijo">
                 <ul class="navbar-nav">
-                    <li class="nav-item" *ngIf="notaDebitoVenta.id == 0">
+                    <li class="nav-item" *ngIf="notaDebito.id == 0">
                         <a class="nav-link" title="Guardar" role="button" (click)="crear($event)">
                             <mat-icon>save</mat-icon>
                         </a>
                     </li>
-                    <li class="nav-item" *ngIf="notaDebitoVenta.id != 0">
+                    <li class="nav-item" *ngIf="notaDebito.id != 0">
                         <a class="nav-link" title="Actualizar" role="button" (click)="actualizar($event)">
                             <mat-icon>update</mat-icon>
                         </a>
@@ -19,46 +19,43 @@
                             <mat-icon>file_copy</mat-icon>
                         </a>
                     </li>
-                    <li class="nav-item" *ngIf="notaDebitoVenta.id != 0">
+                    <li class="nav-item" *ngIf="notaDebito.id != 0">
                         <a class="nav-link" title="Activar" role="button" (click)="activar($event)">
                             <mat-icon>check</mat-icon>
                         </a>
                     </li>
-                    <li class="nav-item" *ngIf="notaDebitoVenta.id != 0">
+                    <li class="nav-item" *ngIf="notaDebito.id != 0">
                         <a class="nav-link" title="Inactivar" role="button" (click)="inactivar($event)">
                             <mat-icon>delete</mat-icon>
                         </a>
                     </li>
                     <li class="nav-item"
-                        *ngIf="notaDebitoVenta.id != 0 && notaDebitoVenta.estado == 'RECAUDADA' && notaDebitoVenta.factura.estado == 'FACTURADA'">
+                        *ngIf="notaDebito.id != 0 && notaDebito.estado == 'RECAUDADA' && notaDebito.factura.estado == 'FACTURADA'">
                         <a class="nav-link" title="Crear Nota Debito Electronica" href="#" role="button"
                             (click)="crearNotaDebitoElectronica($event)">
                             <mat-icon>point_of_sale</mat-icon>
                         </a>
                     </li>
-                    <li class="nav-item" *ngIf="notaDebitoVenta.id != 0 && notaDebitoVenta.estado == estadoActivo && notaDebitoVenta.estadoInterno == estadoInternoEmitida">
+                    <li class="nav-item" *ngIf="notaDebito.id != 0 && notaDebito.estado == estadoActivo && notaDebito.estadoInterno == estadoInternoEmitida">
                         <a class="nav-link" title="Obtener PDF" href="#" role="button" (click)="obtenerPDF($event)">
                             <mat-icon>picture_as_pdf</mat-icon>
                         </a>
                     </li>
-                    <li class="nav-item" *ngIf="notaDebitoVenta.id != 0 && notaDebitoVenta.estado == estadoActivo && notaDebitoVenta.estadoInterno == estadoInternoRecaudada && notaDebitoVenta.estadoSri == estadoSriAutorizada">
+                    <li class="nav-item" *ngIf="notaDebito.id != 0 && notaDebito.estado == estadoActivo && notaDebito.estadoInterno == estadoInternoRecaudada && notaDebito.estadoSri == estadoSriAutorizada">
                         <a class="nav-link" title="Enviar PDF Y XML" href="#" role="button" (click)="enviarPDFYXML($event)">
                             <mat-icon>forward_to_inbox</mat-icon>
                         </a>
                     </li>
                 </ul>
             </nav>
-            <div *ngIf="cargar">
-                <mat-progress-bar mode="indeterminate"></mat-progress-bar>
-            </div>
-            <ng-template matStepLabel>Nota Debito de Venta</ng-template>
+            <ng-template matStepLabel>Nota Debito</ng-template>
             <mat-divider></mat-divider>
             <mat-accordion class="headers-align">
                 <mat-expansion-panel (opened)="panelOpenState = true" (closed)="panelOpenState = false"
                     [expanded]="true">
                     <mat-expansion-panel-header>
                         <mat-panel-title>
-                            <i><u>DATOS PARA NOTA DEBITO DE VENTA</u></i>
+                            <i><u>DATOS PARA NOTA DEBITO</u></i>
                         </mat-panel-title>
                         <mat-panel-description>
                             {{panelOpenState ? 'Ocultar sección' : 'Información del cliente para nota debito de venta'}}
@@ -102,13 +99,13 @@
                         <div class="col-12">
                             <mat-form-field appearance="standard">
                                 <mat-label>Direccion</mat-label>
-                                <input matInput type="text" [(ngModel)]="notaDebitoVenta.factura.cliente.direccion"
+                                <input matInput type="text" [(ngModel)]="notaDebito.factura.cliente.direccion"
                                     class="form-control-sm" [disabled]="true">
                             </mat-form-field>
                         </div>
                         <div class="form-row col-4">
                             <ng-container
-                                *ngFor="let telefono of notaDebitoVenta.factura.cliente.telefonos; let i=index ">
+                                *ngFor="let telefono of notaDebito.factura.cliente.telefonos; let i=index ">
                                 <div class="col-9">
                                     <mat-form-field appearance="standard">
                                         <mat-label>Teléfono</mat-label>
@@ -126,7 +123,7 @@
                         </div>
                         <div class="form-row col-4">
                             <ng-container
-                                *ngFor="let celular of notaDebitoVenta.factura.cliente.celulares; let i=index ">
+                                *ngFor="let celular of notaDebito.factura.cliente.celulares; let i=index ">
                                 <div class="col-9">
                                     <mat-form-field appearance="standard">
                                         <mat-label>Celular</mat-label>
@@ -143,7 +140,7 @@
                             </ng-container>
                         </div>
                         <div class="form-row col-4">
-                            <ng-container *ngFor="let correo of notaDebitoVenta.factura.cliente.correos; let i=index ">
+                            <ng-container *ngFor="let correo of notaDebito.factura.cliente.correos; let i=index ">
                                 <div class="col-9">
                                     <mat-form-field appearance="standard">
                                         <mat-label>Correo electrónico</mat-label>
@@ -182,7 +179,7 @@
                         <div class="col-2">
                             <mat-form-field appearance="standard">
                                 <mat-label>Fecha</mat-label>
-                                <input matInput [matDatepicker]="picker" [(ngModel)]="notaDebitoVenta.fecha" [max]="hoy"
+                                <input matInput [matDatepicker]="picker" [(ngModel)]="notaDebito.fecha" [max]="hoy"
                                     placeholder="Escoja una fecha" datePickerFormat="DD-MM-YYYY">
                                 <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
                                 <mat-datepicker #picker></mat-datepicker>
@@ -192,13 +189,13 @@
                             <mat-form-field appearance="standard">
                                 <mat-label>Secuencial</mat-label>
                                 <input matInput type="text" class="form-control-sm"
-                                    [(ngModel)]="notaDebitoVenta.secuencial" [disabled]="true">
+                                    [(ngModel)]="notaDebito.secuencial" [disabled]="true">
                             </mat-form-field>
                         </div>
                         <div class="col-2">
                             <mat-form-field appearance="standard">
                                 <mat-label>Estado</mat-label>
-                                <mat-select class="form-control-sm" [(ngModel)]="notaDebitoVenta.estado"
+                                <mat-select class="form-control-sm" [(ngModel)]="notaDebito.estado"
                                     [disabled]="true">
                                     <mat-option [value]="estadoActivo">{{estadoActivo}}</mat-option>
                                     <mat-option [value]="estadoInactivo">{{estadoInactivo}}</mat-option>
@@ -309,34 +306,26 @@
                                         <mat-form-field appearance="standard">
                                             <mat-label>Medida</mat-label>
                                             <input matInput type="text"
-                                                [(ngModel)]="notaDebitoVentaLinea.producto.medida.descripcion"
+                                                [(ngModel)]="notaDebitoLinea.producto.medida.descripcion"
                                                 class="form-control-sm" [disabled]="true">
                                         </mat-form-field>
                                     </div>
                                     <div class="col-2">
                                         <mat-form-field appearance="standard">
                                             <mat-label>Bodega</mat-label>
-                                            <mat-select [(ngModel)]="notaDebitoVentaLinea.bodega"
-                                                (selectionChange)="seleccionarBodega()" [compareWith]="compareFn"
-                                                class="form-control-sm" [disabled]="true">
-                                                <mat-option *ngFor="let bodega of bodegas; let i=index"
-                                                    [value]="bodega">
-                                                    {{bodega.abreviatura}}
-                                                </mat-option>
-                                            </mat-select>
+                                            <input matInput type="text" class="form-control-sm" [disabled]="true">
                                         </mat-form-field>
                                     </div>
                                     <div class="col-1">
                                         <mat-form-field appearance="standard">
                                             <mat-label>Saldo Bod</mat-label>
-                                            <input matInput type="text" class="form-control-sm"
-                                                [(ngModel)]="kardex.saldo" [disabled]="true">
+                                            <input matInput type="text" class="form-control-sm" [disabled]="true">
                                         </mat-form-field>
                                     </div>
                                     <div class="col-1">
                                         <mat-form-field appearance="standard">
                                             <mat-label>Cantidad</mat-label>
-                                            <input matInput type="text" [(ngModel)]="notaDebitoVentaLinea.cantidad"
+                                            <input matInput type="text" [(ngModel)]="notaDebitoLinea.cantidad"
                                                 (change)="calcularLinea()" class="form-control-sm">
                                         </mat-form-field>
                                     </div>
@@ -344,13 +333,13 @@
                                         <mat-form-field appearance="standard">
                                             <mat-label>Precio Unit.</mat-label>
                                             <input matInput type="text" class="form-control-sm"
-                                                [(ngModel)]="notaDebitoVentaLinea.precioUnitario" [disabled]="true">
+                                                [(ngModel)]="notaDebitoLinea.precioUnitario" [disabled]="true">
                                         </mat-form-field>
                                     </div>
                                     <div class="col-1">
                                         <mat-form-field appearance="standard">
                                             <mat-label>IVA</mat-label>
-                                            <mat-select [(ngModel)]="notaDebitoVentaLinea.impuesto" [compareWith]="compareFn"
+                                            <mat-select [(ngModel)]="notaDebitoLinea.impuesto" [compareWith]="compareFn"
                                                 (selectionChange)="calcularLinea()" class="form-control-sm">
                                                 <mat-option *ngFor="let impuesto of impuestos" [value]="impuesto">
                                                     {{impuesto.porcentaje}}
@@ -370,7 +359,7 @@
                                         <mat-form-field appearance="standard">
                                             <mat-label>Desc. $</mat-label>
                                             <input matInput type="text" step="0.01"
-                                                [(ngModel)]="notaDebitoVentaLinea.valorDescuentoLinea"
+                                                [(ngModel)]="notaDebitoLinea.valorDescuentoLinea"
                                                 (change)="calcularLinea()" class="form-control-sm">
                                         </mat-form-field>
                                     </div>
@@ -378,7 +367,7 @@
                                         <mat-form-field appearance="standard">
                                             <mat-label>Desc. %</mat-label>
                                             <input matInput type="text" min="0" max="100" step="0.01"
-                                                [(ngModel)]="notaDebitoVentaLinea.porcentajeDescuentoLinea"
+                                                [(ngModel)]="notaDebitoLinea.porcentajeDescuentoLinea"
                                                 (change)="calcularLinea()"
                                                 class="form-control-sm">
                                         </mat-form-field>
@@ -387,14 +376,14 @@
                                         <mat-form-field appearance="standard">
                                             <mat-label>Subtotal</mat-label>
                                             <input matInput type="text"
-                                                [(ngModel)]="notaDebitoVentaLinea.subtotalLinea"
+                                                [(ngModel)]="notaDebitoLinea.subtotalLinea"
                                                 class="form-control-sm" disabled>
                                         </mat-form-field>
                                     </div>
                                     <div class="col-1">
                                         <mat-form-field appearance="standard">
                                             <mat-label>Entregado</mat-label>
-                                            <mat-select class="form-control-sm" [(ngModel)]="notaDebitoVentaLinea.entregado" [disabled]="true">
+                                            <mat-select class="form-control-sm" [(ngModel)]="notaDebitoLinea.entregado" [disabled]="true">
                                                 <mat-option [value]="no">{{no}}</mat-option>
                                                 <mat-option [value]="si">{{si}}</mat-option>
                                             </mat-select>
@@ -420,25 +409,25 @@
                             <mat-divider></mat-divider>
                             <mat-card class="mat-elevation-z8">
                                 <div class="form-row">
-                                    <div class="col-3">
+                                    <div class="col-6">
                                         <mat-form-field appearance="standard">
                                             <mat-label>Consig.</mat-label>
-                                            <input matInput type="text" [(ngModel)]="notaDebitoVentaLinea.producto.consignacion"
+                                            <input matInput type="text" [(ngModel)]="notaDebitoLinea.producto.consignacion"
                                                 [disabled]="true" class="form-control-sm">
                                         </mat-form-field>
                                     </div>
-                                    <div class="col-9">
+                                    <div class="col-6">
                                         <mat-form-field appearance="standard">
                                             <mat-label>Código</mat-label>
                                             <input matInput type="text" class="form-control-sm"
-                                                [(ngModel)]="notaDebitoVentaLinea.producto.codigo" disabled>
+                                                [(ngModel)]="notaDebitoLinea.producto.codigo" disabled>
                                         </mat-form-field>
                                     </div>
                                     <div class="col-6">
                                         <mat-form-field appearance="standard">
                                             <mat-label>Categoría</mat-label>
                                             <input matInput type="text" class="form-control-sm"
-                                                [(ngModel)]="notaDebitoVentaLinea.producto.categoriaProducto.descripcion"
+                                                [(ngModel)]="notaDebitoLinea.producto.categoriaProducto.descripcion"
                                                 [disabled]="true">
                                         </mat-form-field>
                                     </div>
@@ -446,7 +435,7 @@
                                         <mat-form-field appearance="standard">
                                             <mat-label>Tipo de Gasto</mat-label>
                                             <input matInput type="text" class="form-control-sm"
-                                                [(ngModel)]="notaDebitoVentaLinea.producto.tipoGasto.descripcion"
+                                                [(ngModel)]="notaDebitoLinea.producto.tipoGasto.descripcion"
                                                 [disabled]="true">
                                         </mat-form-field>
                                     </div>
@@ -507,7 +496,7 @@
                                 <div class="col-12">
                                     <mat-form-field appearance="outline">
                                         <mat-label>Comentario</mat-label>
-                                        <textarea matInput [(ngModel)]="notaDebitoVenta.comentario"
+                                        <textarea matInput [(ngModel)]="notaDebito.comentario"
                                             placeholder="Referente a la nota de credito..." class="form-control"
                                             rows="3"></textarea>
                                     </mat-form-field>
@@ -522,7 +511,7 @@
                                         <div class="col-5">
                                             <mat-form-field appearance="standard">
                                                 <input matInput type="text"
-                                                    [value]="formateaNumero(notaDebitoVenta.subtotal)"
+                                                    [value]="formateaNumero(notaDebito.subtotal)"
                                                     class="form-control-sm" [disabled]="true">
                                             </mat-form-field>
                                         </div>
@@ -531,7 +520,7 @@
                                         </div>
                                         <div class="col-5">
                                             <mat-form-field appearance="standard">
-                                                <input matInput type="text" [value]="formateaNumero(notaDebitoVenta.descuento)"
+                                                <input matInput type="text" [value]="formateaNumero(notaDebito.descuento)"
                                                     class="form-control-sm" [disabled]="true">
                                             </mat-form-field>
                                         </div>
@@ -541,7 +530,7 @@
                                         <div class="col-5">
                                             <mat-form-field appearance="standard">
                                                 <input matInput type="text"
-                                                    [value]="formateaNumero(notaDebitoVenta.subtotalGravado)"
+                                                    [value]="formateaNumero(notaDebito.subtotalGravado)"
                                                     class="form-control-sm" [disabled]="true">
                                             </mat-form-field>
                                         </div>
@@ -551,7 +540,7 @@
                                         <div class="col-5">
                                             <mat-form-field appearance="standard">
                                                 <input matInput type="text"
-                                                    [value]="formateaNumero(notaDebitoVenta.subtotalNoGravado)"
+                                                    [value]="formateaNumero(notaDebito.subtotalNoGravado)"
                                                     class="form-control-sm" [disabled]="true">
                                             </mat-form-field>
                                         </div>
@@ -561,7 +550,7 @@
                                         <div class="col-5">
                                             <mat-form-field appearance="standard">
                                                 <input matInput type="text"
-                                                    [value]="formateaNumero(notaDebitoVenta.importeIva)"
+                                                    [value]="formateaNumero(notaDebito.importeIva)"
                                                     class="form-control-sm" [disabled]="true">
                                             </mat-form-field>
                                         </div>
@@ -571,7 +560,7 @@
                                         <div class="col-5">
                                             <mat-form-field appearance="standard">
                                                 <input matInput type="text "
-                                                    [value]="formateaNumero(notaDebitoVenta.total)"
+                                                    [value]="formateaNumero(notaDebito.total)"
                                                     class="form-control-sm" [disabled]="true">
                                             </mat-form-field>
                                         </div>
@@ -632,14 +621,15 @@
             </mat-accordion>
         </mat-step>
         <!-- Paso Recaudación -->
-        <mat-step [stepControl]="recaudacionSteeperFormGroup" [editable]="isEditable">
+        <mat-step [stepControl]="recaudacionSteeperFormGroup" [editable]="steeperEditable"
+            (selectionChange)="cambiarStepper($event)">
             <ng-template matStepLabel>Recaudación</ng-template>
-            <app-recaudacion-nota-debito [stepper]="stepper"></app-recaudacion-nota-debito>
-            <mat-divider></mat-divider>
-            <div>
-                <button mat-button matStepperPrevious>Atras</button>
-                <button mat-button matStepperNext>Siguiente</button>
-            </div>
+            <app-recaudacion-nd [stepper]="stepper" [notaDebito]="notaDebito"
+                (notaDebitoConRecaudacion)="actualizarRecaudacion($event)" (llamarNuevo)="nuevo(null)"></app-recaudacion-nd>
         </mat-step>
     </mat-stepper>
+    <!--button type="button" class="btn btn-sm btn-primary" (click)="showSpinner()">Show Spinner</button-->
+    <ngx-spinner size="medium" type="line-spin-fade-rotating" [fullScreen]="true" [zIndex]="1000">
+        <p style="font-size: 20px; color: white">Cargando...</p>
+    </ngx-spinner>
 </div>

@@ -144,7 +144,7 @@ export class FacturaComponent implements OnInit {
       if (($event.shiftKey || $event.metaKey) && $event.key == "G") //SHIFT + G
         this.crear(null);
       if (($event.shiftKey || $event.metaKey) && $event.key == "N") //ASHIFT + N
-        this.nuevo();
+        this.nuevo(null);
       if (($event.shiftKey || $event.metaKey) && $event.key == "A") // SHIFT + A
         this.crearFacturaLinea();
     }
@@ -216,7 +216,9 @@ export class FacturaComponent implements OnInit {
     });
   }
 
-  nuevo() {
+  nuevo(event) {
+    if (event!=null)
+      event.preventDefault();
     this.factura = new Factura();
     this.hoy = new Date();
     this.factura.fecha = this.hoy;
@@ -262,7 +264,7 @@ export class FacturaComponent implements OnInit {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
         this.factura = res.resultado as Factura;
         this.consultar();
-        this.nuevo();
+        this.nuevo(null);
         this.spinnerService.hide();  
       },
       error: err => {
@@ -378,7 +380,7 @@ export class FacturaComponent implements OnInit {
       this.clickedRowsFactura.add(factura);
       this.obtenerFactura(factura.id)
     } else {
-      this.nuevo();
+      this.nuevo(null);
     }
   }
 
@@ -711,8 +713,7 @@ export class FacturaComponent implements OnInit {
 
   //VALIDACIONES
   validarFormulario(): boolean {
-    if (this.factura.fecha == null || this.factura.fecha > this.hoy ||
-      this.datepipe.transform(this.factura.fecha, "yyyyMMdd") < this.datepipe.transform(this.fechaMinima, "yyyyMMdd")){
+    if (this.factura.fecha == null || this.factura.fecha > this.hoy || this.factura.fecha < this.fechaMinima){
       Swal.fire({ icon: error_swal, title: error, text: mensajes.error_fecha });
       return false;
     }

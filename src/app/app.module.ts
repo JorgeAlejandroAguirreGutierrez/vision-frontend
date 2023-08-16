@@ -41,8 +41,8 @@ import { FacturaCompraService } from './servicios/compra/factura-compra.service'
 import { NotaCreditoCompraService } from './servicios/compra/nota-credito-compra.service';
 import { NotaDebitoCompraService } from './servicios/compra/nota-debito-compra.service';
 import { FacturaService } from './servicios/venta/factura.service';
-import { NotaCreditoVentaService } from './servicios/venta/nota-credito-venta.service';
-import { NotaDebitoVentaService } from './servicios/venta/nota-debito-venta.service';
+import { NotaCreditoService } from './servicios/venta/nota-credito.service';
+import { NotaDebitoService } from './servicios/venta/nota-debito.service';
 
 // Importar las Rutas
 import { AppRoutingModule } from './app-routing.module';
@@ -74,7 +74,7 @@ import { RoutingComponents } from './app-routing.module';
         AppRoutingModule
     ],
     providers: [ModeloService, TabService, UbicacionService, EmpresaService, DatePipe,
-        ClienteService, FacturaService, NotaCreditoVentaService, NotaDebitoVentaService, 
+        ClienteService, FacturaService, NotaCreditoService, NotaDebitoService, 
         FacturaCompraService, NotaCreditoCompraService, NotaDebitoCompraService, 
         {
             provide: LocationStrategy,

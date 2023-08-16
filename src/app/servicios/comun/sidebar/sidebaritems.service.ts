@@ -20,8 +20,8 @@ import { FacturaCompraComponent } from '../../../componentes/compra/factura-comp
 import { NotaDebitoCompraComponent } from '../../../componentes/compra/nota-debito-compra/nota-debito-compra.component';
 //VENTAS
 import { FacturaComponent } from "../../../componentes/venta/factura/factura.component";
-import { NotaCreditoVentaComponent } from '../../../componentes/venta/nota-credito-venta/nota-credito-venta.component';
-import { NotaDebitoVentaComponent } from '../../../componentes/venta/nota-debito-venta/nota-debito-venta.component';
+import { NotaCreditoComponent } from '../../../componentes/venta/nota-credito/nota-credito.component';
+import { NotaDebitoComponent } from '../../../componentes/venta/nota-debito/nota-debito.component';
 import { CierreCajaComponent } from '../../../componentes/venta/cierre-caja/cierre-caja.component';
 //ENTREGA
 import { GuiaRemisionComponent } from '../../../componentes/entrega/guia-remision/guia-remision.component';
@@ -118,8 +118,8 @@ export class SidebarItemsService {
 
     if (tabNombre == modulos.modulo_ventas) {
       this.llenarOpciones(FacturaComponent, tabs.tab_factura, items.item_factura, icos.ico_factura);
-      this.llenarOpciones(NotaCreditoVentaComponent, tabs.tab_nota_credito_venta, items.item_nota_credito_venta, icos.ico_nota_credito_venta);
-      this.llenarOpciones(NotaDebitoVentaComponent, tabs.tab_nota_debito_venta, items.item_nota_debito_venta, icos.ico_nota_debito_venta);
+      this.llenarOpciones(NotaCreditoComponent, tabs.tab_nota_credito, items.item_nota_credito, icos.ico_nota_credito);
+      this.llenarOpciones(NotaDebitoComponent, tabs.tab_nota_debito, items.item_nota_debito, icos.ico_nota_debito);
       this.llenarOpciones(GuiaRemisionComponent, tabs.tab_guia_remision, items.item_guia_remision, icos.ico_guia_remision);
       this.llenarOpciones(CierreCajaComponent, tabs.tab_cierre_caja, items.item_cierre_caja, icos.ico_cierre_caja);
       this.llenarOpciones(TransportistaComponent, tabs.tab_transportista, items.item_transportista, icos.ico_transportista);
