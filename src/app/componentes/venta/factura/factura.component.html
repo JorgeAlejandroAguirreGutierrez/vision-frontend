@@ -383,14 +383,14 @@
                             </div>
                             <mat-card class="mat-elevation-z8">
                                 <div class="form-row">
-                                    <div class="col-3">
+                                    <div class="col-6">
                                         <mat-form-field appearance="standard">
                                             <mat-label>Consig.</mat-label>
                                             <input matInput type="text" [(ngModel)]="facturaLinea.producto.consignacion"
                                                 [disabled]="true" class="form-control-sm">
                                         </mat-form-field>
                                     </div>
-                                    <div class="col-9">
+                                    <div class="col-6">
                                         <mat-form-field appearance="standard">
                                             <mat-label>Código</mat-label>
                                             <input matInput type="text" class="form-control-sm"
@@ -576,7 +576,7 @@
                                 <td mat-cell *matCellDef="let row"> {{ columna.celda(row) }} </td>
                             </ng-container>
                             <tr mat-header-row *matHeaderRowDef="cabeceraFactura"></tr>
-                            <tr mat-row (click)="seleccion(row)" [class.selected-row]="clickedRowsFactura.has(row)"
+                            <tr mat-row (click)="seleccionar(row)" [class.selected-row]="clickedRowsFactura.has(row)"
                                 *matRowDef="let row; columns: cabeceraFactura;"></tr>
 
                             <tr class="mat-row" *matNoDataRow>
