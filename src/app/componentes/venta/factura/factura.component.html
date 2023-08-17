@@ -9,7 +9,7 @@
                             <mat-icon>save</mat-icon>
                         </a>
                     </li>
-                    <li class="nav-item" *ngIf="factura.id != 0 && factura.estadoSri == estadoSriPendiente">
+                    <li class="nav-item" *ngIf="factura.id != 0 && factura.estado == estadoActivo && factura.estadoSri == estadoSriPendiente">
                         <a class="nav-link" title="Actualizar" role="button" (click)="actualizar($event)">
                             <mat-icon>update</mat-icon>
                         </a>
