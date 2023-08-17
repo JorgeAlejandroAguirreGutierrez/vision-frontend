@@ -113,7 +113,7 @@ export class NotaDebitoComponent implements OnInit {
     { nombreColumna: 'cantidad', cabecera: 'Cant.', celda: (row: FacturaLinea) => `${row.cantidad}` },
     { nombreColumna: 'valor', cabecera: 'P. Unit', celda: (row: FacturaLinea) => `$${row.precioUnitario}` },
     { nombreColumna: 'descuento', cabecera: 'Desc. $', celda: (row: FacturaLinea) => `$${row.valorDescuentoLinea}` },
-    { nombreColumna: 'descuentoPorcentaje', cabecera: 'Desc. %', celda: (row: FacturaLinea) => `${row.porcentajeDescuentoLinea} %` },
+    { nombreColumna: 'descuentoPorcentaje', cabecera: 'Desc. %', celda: (row: FacturaLinea) => `${row.porcentajeDescuentoLinea}%` },
     { nombreColumna: 'subtotal', cabecera: 'Subtotal', celda: (row: FacturaLinea) => `$${row.subtotalLinea}` },
     { nombreColumna: 'iva', cabecera: 'IVA', celda: (row: FacturaLinea) => `$${row.importeIvaLinea}` },
     { nombreColumna: 'total', cabecera: 'Total', celda: (row: FacturaLinea) => `$${row.totalLinea}` },
@@ -644,12 +644,17 @@ export class NotaDebitoComponent implements OnInit {
     if (!this.clickedRows.has(notaDebito)){
       this.clickedRows.clear();
       this.clickedRows.add(notaDebito);
+      this.spinnerService.show();
       this.notaDebitoService.obtener(notaDebito.id).subscribe({
         next: res => {
+          this.spinnerService.hide();
           this.notaDebito = res.resultado as NotaDebito;
           this.construir();
         },
-        error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+        error: err => {
+          this.spinnerService.hide();
+          Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+        }
       });
     } else {
       this.clickedRows.clear();

@@ -377,20 +377,21 @@ export class FacturaComponent implements OnInit {
     if (!this.clickedRowsFactura.has(factura)) {
       this.clickedRowsFactura.clear();
       this.clickedRowsFactura.add(factura);
-      this.obtenerFactura(factura.id)
+      this.spinnerService.show();
+      this.facturaService.obtener(factura.id).subscribe({
+        next: res => {
+          this.spinnerService.hide();
+          this.factura = res.resultado as Factura;
+          this.construir();
+        },
+        error: err => {
+          this.spinnerService.hide();
+          Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+        }
+      });
     } else {
       this.nuevo(null);
     }
-  }
-
-  obtenerFactura(id: number) {
-    this.facturaService.obtener(id).subscribe({
-      next: res => {
-        this.factura = res.resultado as Factura;
-        this.construir();
-      },
-      error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
-    });
   }
 
   construir() {
@@ -510,7 +511,7 @@ export class FacturaComponent implements OnInit {
 
   construirFacturaLinea(){
     this.controlProducto.patchValue(this.facturaLinea.producto);
-    this.precioVentaPublicoManual = parseFloat((this.facturaLinea.precioUnitario+(this.facturaLinea.precioUnitario*this.facturaLinea.impuesto.porcentaje/100)).toFixed(2));
+    this.precioVentaPublicoManual = parseFloat((this.facturaLinea.precioUnitario + (this.facturaLinea.precioUnitario * this.facturaLinea.impuesto.porcentaje / 100)).toFixed(2));
   }
 
   filtroFacturaLinea(event: Event) {
@@ -712,9 +713,6 @@ export class FacturaComponent implements OnInit {
 
   //VALIDACIONES
   validarFormulario(): boolean {
-    console.log(this.factura.fecha);
-    console.log(this.hoy);
-    console.log(this.fechaMinima);
     if (this.factura.fecha == null || this.factura.fecha > this.hoy || this.factura.fecha < this.fechaMinima){
       Swal.fire({ icon: error_swal, title: error, text: mensajes.error_fecha });
       return false;
