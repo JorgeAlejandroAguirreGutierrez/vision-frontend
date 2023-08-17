@@ -117,7 +117,7 @@ export class FacturaComponent implements OnInit {
     { nombreColumna: 'cantidad', cabecera: 'Cant.', celda: (row: FacturaLinea) => `${row.cantidad}` },
     { nombreColumna: 'valor', cabecera: 'P. Unit', celda: (row: FacturaLinea) => `$${row.precioUnitario}` },
     { nombreColumna: 'descuento', cabecera: 'Desc. $', celda: (row: FacturaLinea) => `$${row.valorDescuentoLinea}` },
-    { nombreColumna: 'descuentoPorcentaje', cabecera: 'Desc. %', celda: (row: FacturaLinea) => `${row.porcentajeDescuentoLinea} %` },
+    { nombreColumna: 'descuentoPorcentaje', cabecera: 'Desc. %', celda: (row: FacturaLinea) => `${row.porcentajeDescuentoLinea}%` },
     { nombreColumna: 'subtotal', cabecera: 'Subtotal', celda: (row: FacturaLinea) => `$${row.subtotalLinea}` },
     { nombreColumna: 'iva', cabecera: 'IVA', celda: (row: FacturaLinea) => `$${row.importeIvaLinea}` },
     { nombreColumna: 'total', cabecera: 'Total', celda: (row: FacturaLinea) => `$${row.totalLinea}` },
@@ -173,8 +173,7 @@ export class FacturaComponent implements OnInit {
   consultarClientes() {
     this.clienteService.consultarPorEmpresaYEstado(this.empresa.id, valores.estadoActivo).subscribe({
       next: res => {
-        this.clientes = res.resultado as Cliente[]
-        //this.factura.cliente = this.clientes[0];
+        this.clientes = res.resultado as Cliente[];
         this.factura.cliente = this.clientes.find(cliente => cliente.identificacion.includes(otras.identificacion_consumidor_final));
         this.controlIdentificacionCliente.patchValue(this.factura.cliente);
         this.controlRazonSocialCliente.patchValue(this.factura.cliente);
@@ -713,6 +712,9 @@ export class FacturaComponent implements OnInit {
 
   //VALIDACIONES
   validarFormulario(): boolean {
+    console.log(this.factura.fecha);
+    console.log(this.hoy);
+    console.log(this.fechaMinima);
     if (this.factura.fecha == null || this.factura.fecha > this.hoy || this.factura.fecha < this.fechaMinima){
       Swal.fire({ icon: error_swal, title: error, text: mensajes.error_fecha });
       return false;
