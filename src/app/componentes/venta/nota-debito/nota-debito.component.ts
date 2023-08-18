@@ -78,7 +78,7 @@ export class NotaDebitoComponent implements OnInit {
   columnas: any[] = [
     { nombreColumna: 'codigo', cabecera: 'Código', celda: (row: NotaDebito) => `${row.codigo}`},
     { nombreColumna: 'comprobante', cabecera: 'Comprobante', celda: (row: NotaDebito) => `${row.numeroComprobante}`},
-    { nombreColumna: 'fecha', cabecera: 'Fecha', celda: (row: NotaDebito) => `${this.datepipe.transform(row.fecha, "dd/MM/yyyy")}`},
+    { nombreColumna: 'fecha', cabecera: 'Fecha', celda: (row: NotaDebito) => `${this.datepipe.transform(row.fecha, "dd-MM-yyyy")}`},
     { nombreColumna: 'cliente', cabecera: 'Cliente', celda: (row: NotaDebito) => `${row.factura.cliente.razonSocial}`},
     { nombreColumna: 'factura', cabecera: 'Factura', celda: (row: NotaDebito) => `${row.factura.numeroComprobante}`},
     { nombreColumna: 'total', cabecera: 'Total', celda: (row: NotaDebito) => `$${row.total}`},

@@ -7,6 +7,8 @@ import { Vehiculo } from './vehiculo';
 export class GuiaRemision {
     id: number;
     codigo: string;
+    establecimiento: string;
+    puntoVenta: string;
     secuencial: string;
     fecha: Date;
     fechaInicioTransporte: Date;
