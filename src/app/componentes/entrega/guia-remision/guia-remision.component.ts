@@ -1,4 +1,4 @@
-import { Component, HostListener, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, HostListener, OnInit, Renderer2, ViewChild } from '@angular/core';
 import { valores, mensajes, otras, validarSesion, exito, exito_swal, error, error_swal } from '../../../constantes';
 import { UntypedFormControl } from '@angular/forms';
 import { DatePipe } from '@angular/common';
@@ -35,8 +35,6 @@ import { NgxSpinnerService } from 'ngx-spinner';
 export class GuiaRemisionComponent implements OnInit {
 
   panelOpenState = false;
-
-  cargar = false;
   hoy = new Date();
 
   estadoActivo: string = valores.estadoActivo;
@@ -61,11 +59,13 @@ export class GuiaRemisionComponent implements OnInit {
   guiaRemision: GuiaRemision = new GuiaRemision();
   guiasRemisiones: GuiaRemision[] = [];
 
-  seleccionCliente = new UntypedFormControl();
-  filtroClientes: Observable<Cliente[]> = new Observable<Cliente[]>();
-  clientes: Cliente[] = [];
-  seleccionFactura = new UntypedFormControl();
+  controlIdentificacionCliente = new UntypedFormControl();
+  controlRazonSocialCliente = new UntypedFormControl();
+  controlFactura = new UntypedFormControl();
+  filtroIdentificacionClientes: Observable<Cliente[]> = new Observable<Cliente[]>();
+  filtroRazonSocialClientes: Observable<Cliente[]> = new Observable<Cliente[]>();
   filtroFacturas: Observable<Factura[]> = new Observable<Factura[]>();
+  clientes: Cliente[] = [];
   facturas: Factura[] = [];
   transportistas: Transportista[] = [];
   vehiculos: Vehiculo[] = [];
@@ -85,14 +85,28 @@ export class GuiaRemisionComponent implements OnInit {
   clickedRows = new Set<GuiaRemision>();
 
   @ViewChild("paginator") paginator: MatPaginator;
-  @ViewChild("paginatorLinea") paginatorLinea: MatPaginator;
+  @ViewChild("paginatorFacturaLinea") paginatorFacturaLinea: MatPaginator;
+  @ViewChild('inputFiltroFacturaLinea') inputFiltroFacturaLinea: ElementRef;
 
 
-  columnasLinea: string[] = ["codigo", "bodega", "nombre", "medida", "cantidad", "precio", "descuento", "descuentoPorcentaje", "impuesto", "total"];
-  dataSourceLinea = new MatTableDataSource<FacturaLinea>(this.guiaRemision.factura.facturaLineas);
+  columnasFacturaLinea: any[] = [
+    { nombreColumna: 'nombre', cabecera: 'Producto', celda: (row: FacturaLinea) => `${row.producto.nombre}` },
+    { nombreColumna: 'medida', cabecera: 'Medida', celda: (row: FacturaLinea) => `${row.producto.medida.abreviatura}` },
+    { nombreColumna: 'cantidad', cabecera: 'Cant.', celda: (row: FacturaLinea) => `${row.cantidad}` },
+    { nombreColumna: 'valor', cabecera: 'P. Unit', celda: (row: FacturaLinea) => `$${row.precioUnitario}` },
+    { nombreColumna: 'descuento', cabecera: 'Desc. $', celda: (row: FacturaLinea) => `$${row.valorDescuentoLinea}` },
+    { nombreColumna: 'descuentoPorcentaje', cabecera: 'Desc. %', celda: (row: FacturaLinea) => `${row.porcentajeDescuentoLinea}%` },
+    { nombreColumna: 'subtotal', cabecera: 'Subtotal', celda: (row: FacturaLinea) => `$${row.subtotalLinea}` },
+    { nombreColumna: 'iva', cabecera: 'IVA', celda: (row: FacturaLinea) => `$${row.importeIvaLinea}` },
+    { nombreColumna: 'total', cabecera: 'Total', celda: (row: FacturaLinea) => `$${row.totalLinea}` },
+    { nombreColumna: 'entregado', cabecera: 'Entreg.', celda: (row: FacturaLinea) => `${row.entregado}` }
+  ];
+  cabeceraFacturaLinea: string[] = this.columnasFacturaLinea.map(titulo => titulo.nombreColumna);
+  dataSourceFacturaLinea: MatTableDataSource<FacturaLinea> = new MatTableDataSource<FacturaLinea>(this.guiaRemision.factura.facturaLineas);
+  clickedRowsFacturaLinea = new Set<FacturaLinea>();
 
   constructor(private clienteService: ClienteService, private sesionService: SesionService, private guiaRemisionElectronicaService: GuiaRemisionElectronicaService, 
-    private vehiculoService: VehiculoService, private spinnerService: NgxSpinnerService, private datepipe: DatePipe,
+    private vehiculoService: VehiculoService, private spinnerService: NgxSpinnerService, private datepipe: DatePipe, private renderer: Renderer2,
     private router: Router, private guiaRemisionService: GuiaRemisionService, private facturaService: FacturaService, private transportistaService: TransportistaService, private dateAdapter: DateAdapter<Date>) { this.dateAdapter.setLocale('en-GB') }
 
   @HostListener('window:keypress', ['$event'])
@@ -138,13 +152,19 @@ export class GuiaRemisionComponent implements OnInit {
     );
   }
 
-  nuevo(event) {
-    if (event != null)
+  nuevo(event){
+    if (event!=null)
       event.preventDefault();
     this.guiaRemision = new GuiaRemision();
-    this.seleccionCliente.patchValue(valores.vacio);
-    this.seleccionFactura.patchValue(valores.vacio);
-    this.dataSourceLinea = new MatTableDataSource<FacturaLinea>([]);
+    this.hoy = new Date();
+    this.guiaRemision.fecha = this.hoy;
+    this.guiaRemision.fechaInicioTransporte = this.hoy;
+    this.guiaRemision.fechaFinTransporte = this.hoy;
+    this.guiaRemision.establecimiento = this.sesion.usuario.estacion.establecimiento.codigoSRI;
+    this.guiaRemision.puntoVenta = this.sesion.usuario.estacion.codigoSRI;
+    this.controlIdentificacionCliente.patchValue(valores.vacio);
+    this.controlRazonSocialCliente.patchValue(valores.vacio);
+    this.dataSourceFacturaLinea = new MatTableDataSource<FacturaLinea>([]);
     this.clickedRows.clear();
   }
 
@@ -165,18 +185,15 @@ export class GuiaRemisionComponent implements OnInit {
   crearGuiaRemisionElectronica(event) {
     if (event != null)
       event.preventDefault();
-    this.cargar = true;
     this.guiaRemisionElectronicaService.enviar(this.guiaRemision.id).subscribe(
       res => {
         let respuesta = res.resultado as String;
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
         this.consultar();
         this.nuevo(null);
-        this.cargar = false;
       },
       err => {
         Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
-        this.cargar = false;
       }
     );
   }
@@ -264,43 +281,86 @@ export class GuiaRemisionComponent implements OnInit {
     );
   }
 
-  seleccionarCliente() {
-    let clienteId = this.seleccionCliente.value.id;
-    this.clienteService.obtener(clienteId).subscribe(
-      res => {
+  seleccionarIdentificacionCliente() {
+    this.spinnerService.show();
+    let clienteId = this.controlIdentificacionCliente.value.id;
+    this.clienteService.obtener(clienteId).subscribe({
+      next: res => {
         this.guiaRemision.factura.cliente = res.resultado as Cliente;
-        this.seleccionCliente.patchValue(this.guiaRemision.factura.cliente);
+        this.controlIdentificacionCliente.patchValue(this.guiaRemision.factura.cliente);
+        this.controlRazonSocialCliente.patchValue(this.guiaRemision.factura.cliente);
         this.facturaService.consultarPorCliente(this.guiaRemision.factura.cliente.id).subscribe(
           res => {
             this.facturas = res.resultado as Factura[]
+            this.spinnerService.show();
           },
-          err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+          err => {
+            this.spinnerService.hide();
+            Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+          }
         );
       },
-      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
-    );
+      error: err => { 
+        this.spinnerService.hide();
+        Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+       }
+    });
+  }
+
+  seleccionarRazonSocialCliente() {
+    this.spinnerService.show();
+    let clienteId = this.controlRazonSocialCliente.value.id;
+    this.clienteService.obtener(clienteId).subscribe({
+      next: res => {
+        this.guiaRemision.factura.cliente = res.resultado as Cliente;
+        this.controlIdentificacionCliente.patchValue(this.guiaRemision.factura.cliente);
+        this.controlRazonSocialCliente.patchValue(this.guiaRemision.factura.cliente);
+        this.facturaService.consultarPorEmpresaYClienteYEstado(this.empresa.id, this.guiaRemision.factura.cliente.id, this.estadoActivo).subscribe(
+          res => {
+            this.facturas = res.resultado as Factura[];
+            this.spinnerService.hide();
+          },
+          err => {
+            this.spinnerService.hide();
+            Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+          }
+        );
+      },
+      error: err => {
+        this.spinnerService.hide();
+        Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje });
+      }
+    });
   }
 
   seleccionarFactura() {
-    let facturaId = this.seleccionFactura.value.id;
-    this.facturaService.obtener(facturaId).subscribe(
+    this.spinnerService.show();
+    let facturaId = this.controlFactura.value.id;
+    this.guiaRemisionService.obtenerPorFactura(facturaId).subscribe(
       res => {
-        this.guiaRemision.factura = res.resultado as Factura;
-        this.seleccionFactura.patchValue(this.guiaRemision.factura);
-        this.dataSourceLinea = new MatTableDataSource(this.guiaRemision.factura.facturaLineas);
+        this.guiaRemision = res.resultado as GuiaRemision;
+        this.construir();
+        this.spinnerService.hide();
       },
-      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+      err => {
+        Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+        this.spinnerService.hide();
+      }
     );
   }
 
-  construir(){
-    if (this.guiaRemision.id != valores.cero) {
-      let fecha = new Date(this.guiaRemision.fecha);
-      this.guiaRemision.fecha = fecha;
-      this.seleccionCliente.patchValue(this.guiaRemision.factura.cliente);
-      this.seleccionFactura.patchValue(this.guiaRemision.factura);
-      this.dataSourceLinea = new MatTableDataSource<FacturaLinea>(this.guiaRemision.factura.facturaLineas);
-    }
+  construir() {
+    let fecha = new Date(this.guiaRemision.fecha);
+    this.guiaRemision.fecha = fecha;
+    let fechaInicioTransporte = new Date(this.guiaRemision.fechaInicioTransporte);
+    this.guiaRemision.fechaInicioTransporte = fechaInicioTransporte;
+    let fechaFinTransporte = new Date(this.guiaRemision.fechaFinTransporte);
+    this.guiaRemision.fechaFinTransporte = fechaFinTransporte;
+    this.controlIdentificacionCliente.patchValue(this.guiaRemision.factura.cliente);
+    this.controlRazonSocialCliente.patchValue(this.guiaRemision.factura.cliente);
+    this.controlFactura.patchValue(this.guiaRemision.factura);
+    this.dataSourceFacturaLinea = new MatTableDataSource<FacturaLinea>(this.guiaRemision.factura.facturaLineas);
+    this.dataSourceFacturaLinea.paginator = this.paginatorFacturaLinea;
   }
 
   filtro(event: Event) {
@@ -311,46 +371,75 @@ export class GuiaRemisionComponent implements OnInit {
     }
   }
 
+  filtroFacturaLinea(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.dataSourceFacturaLinea.filter = filterValue.trim().toUpperCase();
+    if (this.dataSourceFacturaLinea.paginator) {
+      this.dataSourceFacturaLinea.paginator.firstPage();
+    }
+  }
+
+  borrarFiltroFacturaLinea() {
+    this.renderer.setProperty(this.inputFiltroFacturaLinea.nativeElement, 'value', '');
+    this.dataSourceFacturaLinea.filter = '';
+  }
+
   compareFn(a: any, b: any) {
     return a && b && a.id == b.id;
   }
 
   //FILTROS AUTOCOMPLETE
   inicializarFiltros(){
-    this.filtroClientes = this.seleccionCliente.valueChanges
-    .pipe(
-      startWith(valores.vacio),
-      map(value => typeof value === 'string' || value == null ? value : value.id),
-      map(cliente => typeof cliente === 'string' ? this.filtroCliente(cliente) : this.clientes.slice())
-    );
-  this.filtroFacturas = this.seleccionFactura.valueChanges
-    .pipe(
-      startWith(valores.vacio),
-      map(value => typeof value === 'string' || value == null ? value : value.id),
-      map(factura => typeof factura === 'string' ? this.filtroFactura(factura) : this.facturas.slice())
-    );
+    this.filtroIdentificacionClientes = this.controlIdentificacionCliente.valueChanges
+      .pipe(
+        startWith(valores.vacio),
+        map(value => typeof value === 'string' || value == null ? value : value.id),
+        map(identificacion => typeof identificacion === 'string' ? this.filtroIdentificacionCliente(identificacion) : this.clientes.slice())
+      );
+    this.filtroRazonSocialClientes = this.controlRazonSocialCliente.valueChanges
+      .pipe(
+        startWith(valores.vacio),
+        map(value => typeof value === 'string' || value == null ? value : value.id),
+        map(razon_social => typeof razon_social === 'string' ? this.filtroRazonSocialCliente(razon_social) : this.clientes.slice())
+      );
+    this.filtroFacturas = this.controlFactura.valueChanges
+      .pipe(
+        startWith(valores.vacio),
+        map(value => typeof value === 'string' || value == null ? value : value.id),
+        map(factura => typeof factura === 'string' ? this.filtroFactura(factura) : this.facturas.slice())
+      );
   }
 
-  private filtroCliente(value: string): Cliente[] {
+  private filtroIdentificacionCliente(value: string): Cliente[] {
     if (this.clientes.length > valores.cero) {
-      const filterValue = value.toLowerCase();
-      return this.clientes.filter(cliente => cliente.razonSocial.toLowerCase().includes(filterValue));
+      const filterValue = value.toUpperCase();
+      return this.clientes.filter(cliente => cliente.identificacion.toUpperCase().includes(filterValue));
     }
     return [];
   }
-  verCliente(cliente: Cliente): string {
+  verIdentificacionCliente(cliente: Cliente): string {
+    return cliente && cliente.identificacion ? cliente.identificacion : valores.vacio;
+  }
+  private filtroRazonSocialCliente(value: string): Cliente[] {
+    if (this.clientes.length > valores.cero) {
+      const filterValue = value.toUpperCase();
+      return this.clientes.filter(cliente => cliente.razonSocial.toUpperCase().includes(filterValue));
+    }
+    return [];
+  }
+  verRazonSocialCliente(cliente: Cliente): string {
     return cliente && cliente.razonSocial ? cliente.razonSocial : valores.vacio;
   }
 
   private filtroFactura(value: string): Factura[] {
     if (this.facturas.length > valores.cero) {
       const filterValue = value.toLowerCase();
-      return this.facturas.filter(factura => factura.secuencial.toLowerCase().includes(filterValue));
+      return this.facturas.filter(factura => factura.numeroComprobante.toLowerCase().includes(filterValue));
     }
     return [];
   }
   verFactura(factura: Factura): string {
-    return factura && factura.secuencial ? factura.secuencial : valores.vacio;
+    return factura && factura.numeroComprobante ? factura.numeroComprobante : valores.vacio;
   }
 
   obtenerPDF(event){
