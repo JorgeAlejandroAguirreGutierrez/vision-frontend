@@ -70,7 +70,7 @@
                             [formControl]="controlIdentificacionCliente" [matAutocomplete]="identificacionCliente">
                         <mat-autocomplete #identificacionCliente="matAutocomplete"
                             [displayWith]="verIdentificacionCliente"
-                            (optionSelected)="seleccionarIdentificacionCliente()" (opened)="consultarClientes()">
+                            (optionSelected)="seleccionarIdentificacionCliente()">
                             <mat-option *ngFor="let cliente of filtroIdentificacionClientes | async"
                                 [value]="cliente">{{cliente.identificacion}}
                             </mat-option>
@@ -84,7 +84,7 @@
                             [formControl]="controlRazonSocialCliente" [matAutocomplete]="razonSocialCliente"
                             oninput="this.value = this.value.toUpperCase()">
                         <mat-autocomplete #razonSocialCliente="matAutocomplete" [displayWith]="verRazonSocialCliente"
-                            (optionSelected)="seleccionarRazonSocialCliente()" (opened)="consultarClientes()">
+                            (optionSelected)="seleccionarRazonSocialCliente()">
                             <mat-option *ngFor="let cliente of filtroRazonSocialClientes | async" [value]="cliente">
                                 {{cliente.razonSocial}}
                             </mat-option>
