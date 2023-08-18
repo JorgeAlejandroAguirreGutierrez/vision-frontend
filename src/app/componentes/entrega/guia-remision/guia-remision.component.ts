@@ -121,14 +121,14 @@ export class GuiaRemisionComponent implements OnInit {
     this.sesion = validarSesion(this.sesionService, this.router);
     this.empresa = this.sesion.empresa;
     this.consultar();
-    this.consultarClientes();
+    this.consultarPorEmpresaYEstado();
     this.consultarTransportistas();
     this.consultarVehiculos();
     this.inicializarFiltros();
   }
 
-  consultarClientes() {
-    this.clienteService.consultar().subscribe(
+  consultarPorEmpresaYEstado() {
+    this.clienteService.consultarPorEmpresaYEstado(this.empresa.id, valores.estadoActivo).subscribe(
       res => {
         this.clientes = res.resultado as Cliente[]
       },
