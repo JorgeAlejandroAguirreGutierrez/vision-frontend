@@ -90,6 +90,7 @@ export class FacturaCompraComponent implements OnInit {
   clickedRowsFacturaCompra = new Set<FacturaCompra>();
 
   columnasLinea: any[] = [
+    { nombreColumna: 'posicion', cabecera: 'No.', celda: (row: FacturaCompraLinea) => `${row.posicion}` },
     { nombreColumna: 'nombre', cabecera: 'Producto', celda: (row: FacturaCompraLinea) => `${row.producto.nombre}` },
     { nombreColumna: 'medida', cabecera: 'Medida', celda: (row: FacturaCompraLinea) => `${row.producto.medida.abreviatura}` },
     { nombreColumna: 'cantidad', cabecera: 'Cant.', celda: (row: FacturaCompraLinea) => `${row.cantidad}` },
@@ -216,7 +217,7 @@ export class FacturaCompraComponent implements OnInit {
       event.preventDefault();
     if (!this.validarFormulario())
       return;  
-    console.log(this.facturaCompra);  
+    //console.log(this.facturaCompra);  
     this.spinnerService.show();
     this.facturaCompraService.actualizar(this.facturaCompra).subscribe({
       next: res => {
@@ -356,6 +357,8 @@ export class FacturaCompraComponent implements OnInit {
     this.spinnerService.show();
     this.facturaCompra.sesion = this.sesion;
     this.facturaCompra.facturaCompraLineas.push(this.facturaCompraLinea);
+    this.llenarPosicion(this.facturaCompra);
+    //console.log(this.facturaCompra);
     this.facturaCompraService.calcular(this.facturaCompra).subscribe({
       next: res => {
         this.facturaCompra = res.resultado as FacturaCompra;
@@ -370,6 +373,12 @@ export class FacturaCompraComponent implements OnInit {
     });
   }
 
+  llenarPosicion(facturaCompra: FacturaCompra){
+    for (let i = 0; i < facturaCompra.facturaCompraLineas.length; i++) {
+      this.facturaCompra.facturaCompraLineas[i].posicion = i+1;
+    }
+  }
+
   actualizarFacturaCompraLinea() {
     this.facturaCompra.facturaCompraLineas[this.indiceLinea] = this.facturaCompraLinea;
     this.llenarTablaFacturaCompraLinea(this.facturaCompra.facturaCompraLineas);
@@ -380,6 +389,7 @@ export class FacturaCompraComponent implements OnInit {
 
   eliminarFacturaCompraLinea(i: number){
     this.facturaCompra.facturaCompraLineas.splice(i, 1);
+    //this.llenarPosicion(this.facturaCompra);
     this.calcularTotales();
     this.nuevoFacturaCompraLinea();
   }

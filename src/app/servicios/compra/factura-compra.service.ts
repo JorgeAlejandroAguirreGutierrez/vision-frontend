@@ -105,7 +105,7 @@ export class FacturaCompraService {
     return this.http.post(environment.host + urn.ruta + urn.facturaCompra + urn.calcular, facturaCompra, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
-        return throwError(err);
+        return throwError(()=>err);
       })
     );
   }
@@ -114,7 +114,7 @@ export class FacturaCompraService {
     return this.http.post(environment.host + urn.ruta + urn.facturaCompra + urn.calcularLinea, facturaCompraLinea, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
-        return throwError(err);
+        return throwError(()=>err);
       })
     );
   }
