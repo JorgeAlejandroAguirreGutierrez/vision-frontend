@@ -221,7 +221,7 @@
                     <mat-form-field appearance="standard">
                         <mat-label>Fecha Fin de Transporte</mat-label>
                         <input matInput [matDatepicker]="picker3" [(ngModel)]="guiaRemision.fechaFinTransporte"
-                            [max]="hoy" placeholder="Escoja una fecha" datePickerFormat="DD-MM-YYYY">
+                            [min]="hoy" placeholder="Escoja una fecha" datePickerFormat="DD-MM-YYYY">
                         <mat-datepicker-toggle matSuffix [for]="picker3"></mat-datepicker-toggle>
                         <mat-datepicker #picker3></mat-datepicker>
                     </mat-form-field>

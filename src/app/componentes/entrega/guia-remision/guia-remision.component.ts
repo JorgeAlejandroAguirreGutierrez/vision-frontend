@@ -239,10 +239,10 @@ export class GuiaRemisionComponent implements OnInit {
 
   seleccionarOpcionGuia() {
     if (this.guiaRemision.opcionGuia == valores.clienteDireccion) {
-      this.habilitarNuevaDireccion = true;
+      this.habilitarNuevaDireccion = false;
     }
     if (this.guiaRemision.opcionGuia == valores.nuevaDireccion) {
-      this.habilitarNuevaDireccion = false;
+      this.habilitarNuevaDireccion = true;
     }
     this.guiaRemision.identificacionDestinatario = valores.vacio;
     this.guiaRemision.razonSocialDestinatario = valores.vacio;
