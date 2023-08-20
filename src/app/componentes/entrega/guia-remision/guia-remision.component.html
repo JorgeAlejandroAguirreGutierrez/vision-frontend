@@ -259,7 +259,7 @@
                         <mat-form-field appearance="standard">
                             <mat-label>Teléfono</mat-label>
                             <b matPrefix>+593 &nbsp;</b>
-                            <input matInput type="tel" [(ngModel)]="guiaRemision.telefonoDestinatario"
+                            <input matInput type="tel" [(ngModel)]="guiaRemision.telefonoDestinatario" (change)="validarTelefono()"
                                 class="form-control-sm">
                         </mat-form-field>
                     </div>
@@ -267,14 +267,14 @@
                         <mat-form-field appearance="standard">
                             <mat-label>Celular</mat-label>
                             <b matPrefix>+593 &nbsp;</b>
-                            <input matInput type="tel" [(ngModel)]="guiaRemision.celularDestinatario"
+                            <input matInput type="tel" [(ngModel)]="guiaRemision.celularDestinatario" (change)="validarCelular()"
                                 class="form-control-sm">
                         </mat-form-field>
                     </div>
                     <div class="col-4">
                         <mat-form-field appearance="standard">
                             <mat-label>Correo electrónico</mat-label>
-                            <input matInput type="text" [(ngModel)]="guiaRemision.correoDestinatario"
+                            <input matInput type="text" [(ngModel)]="guiaRemision.correoDestinatario" (change)="validarCorreo()"
                                 class="form-control-sm ">
                         </mat-form-field>
                     </div>
