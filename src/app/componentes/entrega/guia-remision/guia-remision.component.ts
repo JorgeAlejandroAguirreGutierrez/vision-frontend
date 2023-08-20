@@ -334,19 +334,9 @@ export class GuiaRemisionComponent implements OnInit {
   }
 
   seleccionarFactura() {
-    this.spinnerService.show();
-    let facturaId = this.controlFactura.value.id;
-    this.guiaRemisionService.obtenerPorFactura(facturaId).subscribe(
-      res => {
-        this.guiaRemision = res.resultado as GuiaRemision;
-        this.construir();
-        this.spinnerService.hide();
-      },
-      err => {
-        Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
-        this.spinnerService.hide();
-      }
-    );
+    this.guiaRemision.factura = this.controlFactura.value;
+    this.dataSourceFacturaLinea = new MatTableDataSource(this.guiaRemision.factura.facturaLineas);
+    this.dataSourceFacturaLinea.paginator = this.paginatorFacturaLinea;
   }
 
   construir() {
