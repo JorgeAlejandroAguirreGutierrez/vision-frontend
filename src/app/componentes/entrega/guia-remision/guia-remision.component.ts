@@ -239,10 +239,10 @@ export class GuiaRemisionComponent implements OnInit {
 
   seleccionarOpcionGuia() {
     if (this.guiaRemision.opcionGuia == valores.clienteDireccion) {
-      this.habilitarNuevaDireccion = true;
+      this.habilitarNuevaDireccion = false;
     }
     if (this.guiaRemision.opcionGuia == valores.nuevaDireccion) {
-      this.habilitarNuevaDireccion = false;
+      this.habilitarNuevaDireccion = true;
     }
     this.guiaRemision.identificacionDestinatario = valores.vacio;
     this.guiaRemision.razonSocialDestinatario = valores.vacio;
@@ -462,5 +462,30 @@ export class GuiaRemisionComponent implements OnInit {
         this.spinnerService.hide();  
       }
     });
+  }
+
+  validarTelefono() {
+    let digito = this.guiaRemision.telefonoDestinatario.substring(0, 1);
+    if (this.guiaRemision.telefonoDestinatario.length != 11 || digito != "0") {
+      this.guiaRemision.telefonoDestinatario = valores.vacio;
+      Swal.fire({ icon: error_swal, title: error, text: mensajes.error_telefono_invalido });
+    }
+  }
+
+  validarCelular() {
+    let digito = this.guiaRemision.celularDestinatario.substring(0, 2);
+    if (this.guiaRemision.celularDestinatario.length != 12 || digito != "09") {
+      this.guiaRemision.celularDestinatario = valores.vacio;
+      Swal.fire({ icon: error_swal, title: error, text: mensajes.error_celular_invalido });
+    }
+  }
+
+  validarCorreo() {
+    const expression: RegExp = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i;
+    let validacion = expression.test(this.guiaRemision.correoDestinatario);
+    if (!validacion) {
+      this.guiaRemision.correoDestinatario = valores.vacio;
+      Swal.fire({ icon: error_swal, title: error, text: mensajes.error_correo_invalido });
+    }
   }
 }
