@@ -121,13 +121,13 @@ export class GuiaRemisionComponent implements OnInit {
     this.sesion = validarSesion(this.sesionService, this.router);
     this.empresa = this.sesion.empresa;
     this.consultar();
-    this.consultarPorEmpresaYEstado();
+    this.consultarClientePorEmpresaYEstado();
     this.consultarTransportistas();
     this.consultarVehiculos();
     this.inicializarFiltros();
   }
 
-  consultarPorEmpresaYEstado() {
+  consultarClientePorEmpresaYEstado() {
     this.clienteService.consultarPorEmpresaYEstado(this.empresa.id, valores.estadoActivo).subscribe(
       res => {
         this.clientes = res.resultado as Cliente[]
@@ -171,28 +171,36 @@ export class GuiaRemisionComponent implements OnInit {
   crear(event) {
     if (event != null)
       event.preventDefault();
+    this.spinnerService.show();
     this.guiaRemision.sesion = this.sesion;
     this.guiaRemisionService.crear(this.guiaRemision).subscribe(
       res => {
+        this.spinnerService.hide();
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
         this.consultar();
         this.nuevo(null);
       },
-      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+      err => {
+        this.spinnerService.hide();
+        Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+      }
     );
   }
 
   crearGuiaRemisionElectronica(event) {
     if (event != null)
       event.preventDefault();
+    this.spinnerService.show();
     this.guiaRemisionElectronicaService.enviar(this.guiaRemision.id).subscribe(
       res => {
+        this.spinnerService.hide();
         let respuesta = res.resultado as String;
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
         this.consultar();
         this.nuevo(null);
       },
       err => {
+        this.spinnerService.hide();
         Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
       }
     );
@@ -201,13 +209,18 @@ export class GuiaRemisionComponent implements OnInit {
   actualizar(event) {
     if (event != null)
       event.preventDefault();
+    this.spinnerService.show();
     this.guiaRemisionService.actualizar(this.guiaRemision).subscribe(
       res => {
+        this.spinnerService.hide();
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
         this.consultar();
         this.nuevo(null);
       },
-      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+      err => {
+        this.spinnerService.hide();
+        Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+      }
     );
   }
 
@@ -252,17 +265,22 @@ export class GuiaRemisionComponent implements OnInit {
     this.guiaRemision.correoDestinatario = valores.vacio;
   }
 
-  seleccion(guiaRemision: any) {
+  seleccionar(guiaRemision: any) {
     if (!this.clickedRows.has(guiaRemision)) {
       this.clickedRows.clear();
       this.clickedRows.add(guiaRemision);
+      this.spinnerService.show();
       this.guiaRemisionService.obtener(guiaRemision.id).subscribe({
         next: res => {
+          this.spinnerService.hide();
           this.guiaRemision = res.resultado as GuiaRemision;
           this.construir();
           this.seleccionarOpcionGuia();
         },
-        error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+        error: err => {
+          this.spinnerService.hide();
+          Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+        }
       });
     } else {
       this.clickedRows.clear();
@@ -271,7 +289,7 @@ export class GuiaRemisionComponent implements OnInit {
   }
 
   consultar() {
-    this.guiaRemisionService.consultar().subscribe(
+    this.guiaRemisionService.consultarPorEmpresa(this.empresa.id).subscribe(
       res => {
         this.guiasRemisiones = res.resultado as GuiaRemision[]
         this.dataSource = new MatTableDataSource(this.guiasRemisiones);
@@ -292,7 +310,7 @@ export class GuiaRemisionComponent implements OnInit {
         this.facturaService.consultarPorCliente(this.guiaRemision.factura.cliente.id).subscribe(
           res => {
             this.facturas = res.resultado as Factura[]
-            this.spinnerService.show();
+            this.spinnerService.hide();
           },
           err => {
             this.spinnerService.hide();
