@@ -3,6 +3,8 @@ import { Factura } from '../venta/factura';
 import { valores } from "../../constantes";
 import { Sesion } from '../usuario/sesion';
 import { Vehiculo } from './vehiculo';
+import { TipoComprobante } from '../configuracion/tipo-comprobante';
+import { Empresa } from '../usuario/empresa';
 
 export class GuiaRemision {
     id: number;
@@ -10,7 +12,11 @@ export class GuiaRemision {
     establecimiento: string;
     puntoVenta: string;
     secuencial: string;
+    numeroComprobante: string;
+    codigoNumerico: string;
+    claveAcceso: string;
     fecha: Date;
+    fechaAutorizacion: Date;
     fechaInicioTransporte: Date;
     fechaFinTransporte: Date;
     motivoTraslado: string;
@@ -25,10 +31,12 @@ export class GuiaRemision {
     estado: string;
     estadoInterno: string;
     estadoSri: string;
+    tipoComprobante: TipoComprobante;
     sesion: Sesion;
     transportista: Transportista;
     vehiculo: Vehiculo;
     factura: Factura;
+    empresa: Empresa;
 
     constructor(){
         this.id = valores.cero;
@@ -47,9 +55,11 @@ export class GuiaRemision {
         this.estado = valores.estadoActivo;
         this.estadoInterno = valores.vacio;
         this.estadoSri = valores.vacio;
+        this.tipoComprobante = new TipoComprobante();
         this.sesion = new Sesion();
         this.transportista = new Transportista();
         this.vehiculo = new Vehiculo();
         this.factura = new Factura();
+        this.empresa = null;
     }
 }
