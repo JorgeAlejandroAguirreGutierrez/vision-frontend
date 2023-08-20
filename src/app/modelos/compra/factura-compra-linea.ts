@@ -6,6 +6,7 @@ import { Bodega } from "../inventario/bodega";
 export class FacturaCompraLinea {
     id: number;
     codigo: string;
+    posicion: number;
     cantidad: number;
     costoUnitario: number;
     costoDistribuido: number;
@@ -15,6 +16,7 @@ export class FacturaCompraLinea {
     valorPorcentajeDescuentoLinea: number;
     valorDescuentoTotalLinea: number;
     valorPorcentajeDescuentoTotalLinea: number;
+    subtotalLineaSinDescuento: number;
     subtotalLinea: number;
     importeIvaLinea: number;
     totalLinea: number;
@@ -24,6 +26,7 @@ export class FacturaCompraLinea {
 
     constructor() {
         this.id = valores.cero;
+        this.posicion = valores.cero;
         this.codigo = valores.vacio;
         this.cantidad = valores.uno;
         this.costoUnitario = valores.cero;
@@ -34,6 +37,7 @@ export class FacturaCompraLinea {
         this.valorPorcentajeDescuentoLinea = valores.cero;
         this.valorDescuentoTotalLinea = valores.cero;
         this.valorPorcentajeDescuentoTotalLinea = valores.cero;
+        this.subtotalLineaSinDescuento = valores.cero;
         this.subtotalLinea = valores.cero;
         this.importeIvaLinea = valores.cero;
         this.totalLinea = valores.cero;
