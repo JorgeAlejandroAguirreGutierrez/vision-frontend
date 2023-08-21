@@ -162,7 +162,7 @@ export class FacturaComponent implements OnInit {
     this.factura.establecimiento = this.sesion.usuario.estacion.establecimiento.codigoSRI;
     this.factura.puntoVenta = this.sesion.usuario.estacion.codigoSRI;
     this.consultar();
-    this.consultarClientes();
+    this.consultarClientesInit();
     this.consultarProductos();
     this.consultarImpuestos();
     this.consultarBodegas();
@@ -170,31 +170,37 @@ export class FacturaComponent implements OnInit {
     this.inicializarFiltros();
   }
 
-  consultarClientes() {
-    this.spinnerService.show(); 
+  consultarClientesInit(){
     this.clienteService.consultarPorEmpresaYEstado(this.empresa.id, valores.estadoActivo).subscribe({
       next: res => {
         this.clientes = res.resultado as Cliente[];
         this.factura.cliente = this.clientes.find(cliente => cliente.identificacion.includes(otras.identificacion_consumidor_final));
         this.controlIdentificacionCliente.patchValue(this.factura.cliente);
         this.controlRazonSocialCliente.patchValue(this.factura.cliente);
-        this.spinnerService.hide();
       },
       error: err => {
-        this.spinnerService.hide(); 
         Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
       }
     });
   }
+
+  consultarClientes() {
+    this.clienteService.consultarPorEmpresaYEstado(this.empresa.id, valores.estadoActivo).subscribe({
+      next: res => {
+        this.clientes = res.resultado as Cliente[];
+      },
+      error: err => {
+        Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+      }
+    });
+  }
+
   consultarProductos() {
-    this.spinnerService.show();
     this.productoService.consultarPorEmpresaYEstado(this.empresa.id, valores.estadoActivo).subscribe({
       next: res => {
         this.productos = res.resultado as Producto[];
-        this.spinnerService.hide(); 
       },
       error: err => {
-        this.spinnerService.hide(); 
         Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
       }
     })
