@@ -498,4 +498,9 @@ export class GuiaRemisionComponent implements OnInit {
       Swal.fire({ icon: error_swal, title: error, text: mensajes.error_correo_invalido });
     }
   }
+
+  formateaNumero (valor) {
+    // si no es un número devuelve el valor, o lo convierte a número con 2 decimales
+    return isNaN (valor) ? valor : parseFloat (valor).toFixed (2);
+  }
 }
