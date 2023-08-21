@@ -262,7 +262,7 @@ export class NotaCreditoComponent implements OnInit {
     this.dataSource.sort = this.sort;
   }
 
-  seleccion(notaCreditoVenta: any) {
+  seleccionar(notaCreditoVenta: any) {
     if (!this.clickedRows.has(notaCreditoVenta)){
       this.clickedRows.clear();
       this.clickedRows.add(notaCreditoVenta);

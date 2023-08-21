@@ -1,4 +1,4 @@
-import { Component, HostListener, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, HostListener, OnInit, Renderer2, ViewChild } from '@angular/core';
 import { valores, mensajes, otras, validarSesion, exito, exito_swal, error, error_swal } from '../../../constantes';
 import { UntypedFormControl } from '@angular/forms';
 import { DatePipe } from '@angular/common';
@@ -35,8 +35,6 @@ import { NgxSpinnerService } from 'ngx-spinner';
 export class GuiaRemisionComponent implements OnInit {
 
   panelOpenState = false;
-
-  cargar = false;
   hoy = new Date();
 
   estadoActivo: string = valores.estadoActivo;
@@ -61,38 +59,56 @@ export class GuiaRemisionComponent implements OnInit {
   guiaRemision: GuiaRemision = new GuiaRemision();
   guiasRemisiones: GuiaRemision[] = [];
 
-  seleccionCliente = new UntypedFormControl();
-  filtroClientes: Observable<Cliente[]> = new Observable<Cliente[]>();
-  clientes: Cliente[] = [];
-  seleccionFactura = new UntypedFormControl();
+  controlIdentificacionCliente = new UntypedFormControl();
+  controlRazonSocialCliente = new UntypedFormControl();
+  controlFactura = new UntypedFormControl();
+  filtroIdentificacionClientes: Observable<Cliente[]> = new Observable<Cliente[]>();
+  filtroRazonSocialClientes: Observable<Cliente[]> = new Observable<Cliente[]>();
   filtroFacturas: Observable<Factura[]> = new Observable<Factura[]>();
+  clientes: Cliente[] = [];
   facturas: Factura[] = [];
   transportistas: Transportista[] = [];
   vehiculos: Vehiculo[] = [];
 
   columnas: any[] = [
     { nombreColumna: 'codigo', cabecera: 'Código', celda: (row: GuiaRemision) => `${row.codigo}` },
-    { nombreColumna: 'fecha', cabecera: 'Fecha', celda: (row: GuiaRemision) => `${this.datepipe.transform(row.fecha, "dd/MM/yyyy")}` },
+    { nombreColumna: 'fecha', cabecera: 'Fecha', celda: (row: GuiaRemision) => `${this.datepipe.transform(row.fecha, "dd-MM-yyyy")}` },
     { nombreColumna: 'cliente', cabecera: 'Cliente', celda: (row: GuiaRemision) => `${row.factura.cliente.razonSocial}` },
-    { nombreColumna: 'factura', cabecera: 'Factura', celda: (row: GuiaRemision) => `${row.factura.secuencial}` },
+    { nombreColumna: 'factura', cabecera: 'Factura', celda: (row: GuiaRemision) => `${row.factura.numeroComprobante}` },
     { nombreColumna: 'direccion', cabecera: 'Direccion', celda: (row: GuiaRemision) => row.opcionGuia == valores.clienteDireccion ? `${row.factura.cliente.direccion}` : `${row.direccionDestinatario}` },
     { nombreColumna: 'transportista', cabecera: 'Transportista', celda: (row: GuiaRemision) => `${row.transportista.nombre}` },
     { nombreColumna: 'placa', cabecera: 'Placa', celda: (row: GuiaRemision) => `${row.vehiculo.placa}` },
-    { nombreColumna: 'estado', cabecera: 'Estado', celda: (row: GuiaRemision) => `${row.estado}` }
+    { nombreColumna: 'proceso', cabecera: 'Proceso', celda: (row: GuiaRemision) => `${row.estadoInterno}`},
+    { nombreColumna: 'estado', cabecera: 'Estado', celda: (row: GuiaRemision) => `${row.estado}`},
+    { nombreColumna: 'estadoSri', cabecera: 'Estado SRI', celda: (row: GuiaRemision) => `${row.estadoSri}`}
   ];
   cabecera: string[] = this.columnas.map(titulo => titulo.nombreColumna);
   dataSource: MatTableDataSource<GuiaRemision>;
   clickedRows = new Set<GuiaRemision>();
 
   @ViewChild("paginator") paginator: MatPaginator;
-  @ViewChild("paginatorLinea") paginatorLinea: MatPaginator;
+  @ViewChild("paginatorFacturaLinea") paginatorFacturaLinea: MatPaginator;
+  @ViewChild('inputFiltroFacturaLinea') inputFiltroFacturaLinea: ElementRef;
 
 
-  columnasLinea: string[] = ["codigo", "bodega", "nombre", "medida", "cantidad", "precio", "descuento", "descuentoPorcentaje", "impuesto", "total"];
-  dataSourceLinea = new MatTableDataSource<FacturaLinea>(this.guiaRemision.factura.facturaLineas);
+  columnasFacturaLinea: any[] = [
+    { nombreColumna: 'nombre', cabecera: 'Producto', celda: (row: FacturaLinea) => `${row.producto.nombre}` },
+    { nombreColumna: 'medida', cabecera: 'Medida', celda: (row: FacturaLinea) => `${row.producto.medida.abreviatura}` },
+    { nombreColumna: 'cantidad', cabecera: 'Cant.', celda: (row: FacturaLinea) => `${row.cantidad}` },
+    { nombreColumna: 'valor', cabecera: 'P. Unit', celda: (row: FacturaLinea) => `$${row.precioUnitario}` },
+    { nombreColumna: 'descuento', cabecera: 'Desc. $', celda: (row: FacturaLinea) => `$${row.valorDescuentoLinea}` },
+    { nombreColumna: 'descuentoPorcentaje', cabecera: 'Desc. %', celda: (row: FacturaLinea) => `${row.porcentajeDescuentoLinea}%` },
+    { nombreColumna: 'subtotal', cabecera: 'Subtotal', celda: (row: FacturaLinea) => `$${row.subtotalLinea}` },
+    { nombreColumna: 'iva', cabecera: 'IVA', celda: (row: FacturaLinea) => `$${row.importeIvaLinea}` },
+    { nombreColumna: 'total', cabecera: 'Total', celda: (row: FacturaLinea) => `$${row.totalLinea}` },
+    { nombreColumna: 'entregado', cabecera: 'Entreg.', celda: (row: FacturaLinea) => `${row.entregado}` }
+  ];
+  cabeceraFacturaLinea: string[] = this.columnasFacturaLinea.map(titulo => titulo.nombreColumna);
+  dataSourceFacturaLinea: MatTableDataSource<FacturaLinea> = new MatTableDataSource<FacturaLinea>(this.guiaRemision.factura.facturaLineas);
+  clickedRowsFacturaLinea = new Set<FacturaLinea>();
 
   constructor(private clienteService: ClienteService, private sesionService: SesionService, private guiaRemisionElectronicaService: GuiaRemisionElectronicaService, 
-    private vehiculoService: VehiculoService, private spinnerService: NgxSpinnerService, private datepipe: DatePipe,
+    private vehiculoService: VehiculoService, private spinnerService: NgxSpinnerService, private datepipe: DatePipe, private renderer: Renderer2,
     private router: Router, private guiaRemisionService: GuiaRemisionService, private facturaService: FacturaService, private transportistaService: TransportistaService, private dateAdapter: DateAdapter<Date>) { this.dateAdapter.setLocale('en-GB') }
 
   @HostListener('window:keypress', ['$event'])
@@ -107,14 +123,14 @@ export class GuiaRemisionComponent implements OnInit {
     this.sesion = validarSesion(this.sesionService, this.router);
     this.empresa = this.sesion.empresa;
     this.consultar();
-    this.consultarClientes();
+    this.consultarClientePorEmpresaYEstado();
     this.consultarTransportistas();
     this.consultarVehiculos();
     this.inicializarFiltros();
   }
 
-  consultarClientes() {
-    this.clienteService.consultar().subscribe(
+  consultarClientePorEmpresaYEstado() {
+    this.clienteService.consultarPorEmpresaYEstado(this.empresa.id, valores.estadoActivo).subscribe(
       res => {
         this.clientes = res.resultado as Cliente[]
       },
@@ -138,45 +154,56 @@ export class GuiaRemisionComponent implements OnInit {
     );
   }
 
-  nuevo(event) {
-    if (event != null)
+  nuevo(event){
+    if (event!=null)
       event.preventDefault();
     this.guiaRemision = new GuiaRemision();
-    this.seleccionCliente.patchValue(valores.vacio);
-    this.seleccionFactura.patchValue(valores.vacio);
-    this.dataSourceLinea = new MatTableDataSource<FacturaLinea>([]);
+    this.hoy = new Date();
+    this.guiaRemision.fecha = this.hoy;
+    this.guiaRemision.fechaInicioTransporte = this.hoy;
+    this.guiaRemision.fechaFinTransporte = this.hoy;
+    this.guiaRemision.establecimiento = this.sesion.usuario.estacion.establecimiento.codigoSRI;
+    this.guiaRemision.puntoVenta = this.sesion.usuario.estacion.codigoSRI;
+    this.controlIdentificacionCliente.patchValue(valores.vacio);
+    this.controlRazonSocialCliente.patchValue(valores.vacio);
+    this.dataSourceFacturaLinea = new MatTableDataSource<FacturaLinea>([]);
     this.clickedRows.clear();
   }
 
   crear(event) {
     if (event != null)
       event.preventDefault();
+    this.spinnerService.show();
     this.guiaRemision.sesion = this.sesion;
     this.guiaRemisionService.crear(this.guiaRemision).subscribe(
       res => {
+        this.spinnerService.hide();
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
         this.consultar();
         this.nuevo(null);
       },
-      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+      err => {
+        this.spinnerService.hide();
+        Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+      }
     );
   }
 
   crearGuiaRemisionElectronica(event) {
     if (event != null)
       event.preventDefault();
-    this.cargar = true;
+    this.spinnerService.show();
     this.guiaRemisionElectronicaService.enviar(this.guiaRemision.id).subscribe(
       res => {
+        this.spinnerService.hide();
         let respuesta = res.resultado as String;
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
         this.consultar();
         this.nuevo(null);
-        this.cargar = false;
       },
       err => {
+        this.spinnerService.hide();
         Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
-        this.cargar = false;
       }
     );
   }
@@ -184,13 +211,18 @@ export class GuiaRemisionComponent implements OnInit {
   actualizar(event) {
     if (event != null)
       event.preventDefault();
+    this.spinnerService.show();
     this.guiaRemisionService.actualizar(this.guiaRemision).subscribe(
       res => {
+        this.spinnerService.hide();
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
         this.consultar();
         this.nuevo(null);
       },
-      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+      err => {
+        this.spinnerService.hide();
+        Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+      }
     );
   }
 
@@ -222,10 +254,10 @@ export class GuiaRemisionComponent implements OnInit {
 
   seleccionarOpcionGuia() {
     if (this.guiaRemision.opcionGuia == valores.clienteDireccion) {
-      this.habilitarNuevaDireccion = true;
+      this.habilitarNuevaDireccion = false;
     }
     if (this.guiaRemision.opcionGuia == valores.nuevaDireccion) {
-      this.habilitarNuevaDireccion = false;
+      this.habilitarNuevaDireccion = true;
     }
     this.guiaRemision.identificacionDestinatario = valores.vacio;
     this.guiaRemision.razonSocialDestinatario = valores.vacio;
@@ -235,17 +267,22 @@ export class GuiaRemisionComponent implements OnInit {
     this.guiaRemision.correoDestinatario = valores.vacio;
   }
 
-  seleccion(guiaRemision: any) {
+  seleccionar(guiaRemision: any) {
     if (!this.clickedRows.has(guiaRemision)) {
       this.clickedRows.clear();
       this.clickedRows.add(guiaRemision);
+      this.spinnerService.show();
       this.guiaRemisionService.obtener(guiaRemision.id).subscribe({
         next: res => {
+          this.spinnerService.hide();
           this.guiaRemision = res.resultado as GuiaRemision;
           this.construir();
           this.seleccionarOpcionGuia();
         },
-        error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+        error: err => {
+          this.spinnerService.hide();
+          Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+        }
       });
     } else {
       this.clickedRows.clear();
@@ -254,7 +291,7 @@ export class GuiaRemisionComponent implements OnInit {
   }
 
   consultar() {
-    this.guiaRemisionService.consultar().subscribe(
+    this.guiaRemisionService.consultarPorEmpresa(this.empresa.id).subscribe(
       res => {
         this.guiasRemisiones = res.resultado as GuiaRemision[]
         this.dataSource = new MatTableDataSource(this.guiasRemisiones);
@@ -264,43 +301,76 @@ export class GuiaRemisionComponent implements OnInit {
     );
   }
 
-  seleccionarCliente() {
-    let clienteId = this.seleccionCliente.value.id;
-    this.clienteService.obtener(clienteId).subscribe(
-      res => {
+  seleccionarIdentificacionCliente() {
+    this.spinnerService.show();
+    let clienteId = this.controlIdentificacionCliente.value.id;
+    this.clienteService.obtener(clienteId).subscribe({
+      next: res => {
         this.guiaRemision.factura.cliente = res.resultado as Cliente;
-        this.seleccionCliente.patchValue(this.guiaRemision.factura.cliente);
+        this.controlIdentificacionCliente.patchValue(this.guiaRemision.factura.cliente);
+        this.controlRazonSocialCliente.patchValue(this.guiaRemision.factura.cliente);
         this.facturaService.consultarPorCliente(this.guiaRemision.factura.cliente.id).subscribe(
           res => {
             this.facturas = res.resultado as Factura[]
+            this.spinnerService.hide();
           },
-          err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+          err => {
+            this.spinnerService.hide();
+            Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+          }
         );
       },
-      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
-    );
+      error: err => { 
+        this.spinnerService.hide();
+        Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+       }
+    });
+  }
+
+  seleccionarRazonSocialCliente() {
+    this.spinnerService.show();
+    let clienteId = this.controlRazonSocialCliente.value.id;
+    this.clienteService.obtener(clienteId).subscribe({
+      next: res => {
+        this.guiaRemision.factura.cliente = res.resultado as Cliente;
+        this.controlIdentificacionCliente.patchValue(this.guiaRemision.factura.cliente);
+        this.controlRazonSocialCliente.patchValue(this.guiaRemision.factura.cliente);
+        this.facturaService.consultarPorEmpresaYClienteYEstado(this.empresa.id, this.guiaRemision.factura.cliente.id, this.estadoActivo).subscribe(
+          res => {
+            this.facturas = res.resultado as Factura[];
+            this.spinnerService.hide();
+          },
+          err => {
+            this.spinnerService.hide();
+            Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+          }
+        );
+      },
+      error: err => {
+        this.spinnerService.hide();
+        Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje });
+      }
+    });
   }
 
   seleccionarFactura() {
-    let facturaId = this.seleccionFactura.value.id;
-    this.facturaService.obtener(facturaId).subscribe(
-      res => {
-        this.guiaRemision.factura = res.resultado as Factura;
-        this.seleccionFactura.patchValue(this.guiaRemision.factura);
-        this.dataSourceLinea = new MatTableDataSource(this.guiaRemision.factura.facturaLineas);
-      },
-      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
-    );
+    this.guiaRemision.factura = this.controlFactura.value;
+    this.dataSourceFacturaLinea = new MatTableDataSource(this.guiaRemision.factura.facturaLineas);
+    this.dataSourceFacturaLinea.paginator = this.paginatorFacturaLinea;
   }
 
-  construir(){
-    if (this.guiaRemision.id != valores.cero) {
-      let fecha = new Date(this.guiaRemision.fecha);
-      this.guiaRemision.fecha = fecha;
-      this.seleccionCliente.patchValue(this.guiaRemision.factura.cliente);
-      this.seleccionFactura.patchValue(this.guiaRemision.factura);
-      this.dataSourceLinea = new MatTableDataSource<FacturaLinea>(this.guiaRemision.factura.facturaLineas);
-    }
+  construir() {
+    let fecha = new Date(this.guiaRemision.fecha);
+    this.guiaRemision.fecha = fecha;
+    let fechaInicioTransporte = new Date(this.guiaRemision.fechaInicioTransporte);
+    this.guiaRemision.fechaInicioTransporte = fechaInicioTransporte;
+    let fechaFinTransporte = new Date(this.guiaRemision.fechaFinTransporte);
+    this.guiaRemision.fechaFinTransporte = fechaFinTransporte;
+    this.controlIdentificacionCliente.patchValue(this.guiaRemision.factura.cliente);
+    this.controlRazonSocialCliente.patchValue(this.guiaRemision.factura.cliente);
+    this.controlFactura.patchValue(this.guiaRemision.factura);
+    this.dataSourceFacturaLinea = new MatTableDataSource<FacturaLinea>(this.guiaRemision.factura.facturaLineas);
+    this.dataSourceFacturaLinea.paginator = this.paginatorFacturaLinea;
   }
 
   filtro(event: Event) {
@@ -311,46 +381,75 @@ export class GuiaRemisionComponent implements OnInit {
     }
   }
 
+  filtroFacturaLinea(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.dataSourceFacturaLinea.filter = filterValue.trim().toUpperCase();
+    if (this.dataSourceFacturaLinea.paginator) {
+      this.dataSourceFacturaLinea.paginator.firstPage();
+    }
+  }
+
+  borrarFiltroFacturaLinea() {
+    this.renderer.setProperty(this.inputFiltroFacturaLinea.nativeElement, 'value', '');
+    this.dataSourceFacturaLinea.filter = '';
+  }
+
   compareFn(a: any, b: any) {
     return a && b && a.id == b.id;
   }
 
   //FILTROS AUTOCOMPLETE
   inicializarFiltros(){
-    this.filtroClientes = this.seleccionCliente.valueChanges
-    .pipe(
-      startWith(valores.vacio),
-      map(value => typeof value === 'string' || value == null ? value : value.id),
-      map(cliente => typeof cliente === 'string' ? this.filtroCliente(cliente) : this.clientes.slice())
-    );
-  this.filtroFacturas = this.seleccionFactura.valueChanges
-    .pipe(
-      startWith(valores.vacio),
-      map(value => typeof value === 'string' || value == null ? value : value.id),
-      map(factura => typeof factura === 'string' ? this.filtroFactura(factura) : this.facturas.slice())
-    );
+    this.filtroIdentificacionClientes = this.controlIdentificacionCliente.valueChanges
+      .pipe(
+        startWith(valores.vacio),
+        map(value => typeof value === 'string' || value == null ? value : value.id),
+        map(identificacion => typeof identificacion === 'string' ? this.filtroIdentificacionCliente(identificacion) : this.clientes.slice())
+      );
+    this.filtroRazonSocialClientes = this.controlRazonSocialCliente.valueChanges
+      .pipe(
+        startWith(valores.vacio),
+        map(value => typeof value === 'string' || value == null ? value : value.id),
+        map(razon_social => typeof razon_social === 'string' ? this.filtroRazonSocialCliente(razon_social) : this.clientes.slice())
+      );
+    this.filtroFacturas = this.controlFactura.valueChanges
+      .pipe(
+        startWith(valores.vacio),
+        map(value => typeof value === 'string' || value == null ? value : value.id),
+        map(factura => typeof factura === 'string' ? this.filtroFactura(factura) : this.facturas.slice())
+      );
   }
 
-  private filtroCliente(value: string): Cliente[] {
+  private filtroIdentificacionCliente(value: string): Cliente[] {
     if (this.clientes.length > valores.cero) {
-      const filterValue = value.toLowerCase();
-      return this.clientes.filter(cliente => cliente.razonSocial.toLowerCase().includes(filterValue));
+      const filterValue = value.toUpperCase();
+      return this.clientes.filter(cliente => cliente.identificacion.toUpperCase().includes(filterValue));
     }
     return [];
   }
-  verCliente(cliente: Cliente): string {
+  verIdentificacionCliente(cliente: Cliente): string {
+    return cliente && cliente.identificacion ? cliente.identificacion : valores.vacio;
+  }
+  private filtroRazonSocialCliente(value: string): Cliente[] {
+    if (this.clientes.length > valores.cero) {
+      const filterValue = value.toUpperCase();
+      return this.clientes.filter(cliente => cliente.razonSocial.toUpperCase().includes(filterValue));
+    }
+    return [];
+  }
+  verRazonSocialCliente(cliente: Cliente): string {
     return cliente && cliente.razonSocial ? cliente.razonSocial : valores.vacio;
   }
 
   private filtroFactura(value: string): Factura[] {
     if (this.facturas.length > valores.cero) {
       const filterValue = value.toLowerCase();
-      return this.facturas.filter(factura => factura.secuencial.toLowerCase().includes(filterValue));
+      return this.facturas.filter(factura => factura.numeroComprobante.toLowerCase().includes(filterValue));
     }
     return [];
   }
   verFactura(factura: Factura): string {
-    return factura && factura.secuencial ? factura.secuencial : valores.vacio;
+    return factura && factura.numeroComprobante ? factura.numeroComprobante : valores.vacio;
   }
 
   obtenerPDF(event){
@@ -373,5 +472,35 @@ export class GuiaRemisionComponent implements OnInit {
         this.spinnerService.hide();  
       }
     });
+  }
+
+  validarTelefono() {
+    let digito = this.guiaRemision.telefonoDestinatario.substring(0, 1);
+    if (this.guiaRemision.telefonoDestinatario.length != 11 || digito != "0") {
+      this.guiaRemision.telefonoDestinatario = valores.vacio;
+      Swal.fire({ icon: error_swal, title: error, text: mensajes.error_telefono_invalido });
+    }
+  }
+
+  validarCelular() {
+    let digito = this.guiaRemision.celularDestinatario.substring(0, 2);
+    if (this.guiaRemision.celularDestinatario.length != 12 || digito != "09") {
+      this.guiaRemision.celularDestinatario = valores.vacio;
+      Swal.fire({ icon: error_swal, title: error, text: mensajes.error_celular_invalido });
+    }
+  }
+
+  validarCorreo() {
+    const expression: RegExp = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i;
+    let validacion = expression.test(this.guiaRemision.correoDestinatario);
+    if (!validacion) {
+      this.guiaRemision.correoDestinatario = valores.vacio;
+      Swal.fire({ icon: error_swal, title: error, text: mensajes.error_correo_invalido });
+    }
+  }
+
+  formateaNumero (valor) {
+    // si no es un número devuelve el valor, o lo convierte a número con 2 decimales
+    return isNaN (valor) ? valor : parseFloat (valor).toFixed (2);
   }
 }

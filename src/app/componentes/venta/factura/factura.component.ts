@@ -118,7 +118,7 @@ export class FacturaComponent implements OnInit {
     { nombreColumna: 'cantidad', cabecera: 'Cant.', celda: (row: FacturaLinea) => `${row.cantidad}` },
     { nombreColumna: 'valor', cabecera: 'P. Unit', celda: (row: FacturaLinea) => `$${row.precioUnitario}` },
     { nombreColumna: 'descuento', cabecera: 'Desc. $', celda: (row: FacturaLinea) => `$${row.valorDescuentoLinea}` },
-    { nombreColumna: 'descuentoPorcentaje', cabecera: 'Desc. %', celda: (row: FacturaLinea) => `${row.porcentajeDescuentoLinea} %` },
+    { nombreColumna: 'descuentoPorcentaje', cabecera: 'Desc. %', celda: (row: FacturaLinea) => `${row.porcentajeDescuentoLinea}%` },
     { nombreColumna: 'subtotal', cabecera: 'Subtotal', celda: (row: FacturaLinea) => `$${row.subtotalLinea}` },
     { nombreColumna: 'iva', cabecera: 'IVA', celda: (row: FacturaLinea) => `$${row.importeIvaLinea}` },
     { nombreColumna: 'total', cabecera: 'Total', celda: (row: FacturaLinea) => `$${row.totalLinea}` },
@@ -173,8 +173,7 @@ export class FacturaComponent implements OnInit {
   consultarClientes() {
     this.clienteService.consultarPorEmpresaYEstado(this.empresa.id, valores.estadoActivo).subscribe({
       next: res => {
-        this.clientes = res.resultado as Cliente[]
-        //this.factura.cliente = this.clientes[0];
+        this.clientes = res.resultado as Cliente[];
         this.factura.cliente = this.clientes.find(cliente => cliente.identificacion.includes(otras.identificacion_consumidor_final));
         this.controlIdentificacionCliente.patchValue(this.factura.cliente);
         this.controlRazonSocialCliente.patchValue(this.factura.cliente);
@@ -374,24 +373,25 @@ export class FacturaComponent implements OnInit {
     this.dataSourceFactura.sort = this.sort;
   }
 
-  seleccion(factura: any) {
+  seleccionar(factura: any) {
     if (!this.clickedRowsFactura.has(factura)) {
       this.clickedRowsFactura.clear();
       this.clickedRowsFactura.add(factura);
-      this.obtenerFactura(factura.id)
+      this.spinnerService.show();
+      this.facturaService.obtener(factura.id).subscribe({
+        next: res => {
+          this.spinnerService.hide();
+          this.factura = res.resultado as Factura;
+          this.construir();
+        },
+        error: err => {
+          this.spinnerService.hide();
+          Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+        }
+      });
     } else {
       this.nuevo(null);
     }
-  }
-
-  obtenerFactura(id: number) {
-    this.facturaService.obtener(id).subscribe({
-      next: res => {
-        this.factura = res.resultado as Factura;
-        this.construir();
-      },
-      error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
-    });
   }
 
   construir() {
@@ -518,7 +518,7 @@ export class FacturaComponent implements OnInit {
 
   construirFacturaLinea(){
     this.controlProducto.patchValue(this.facturaLinea.producto);
-    this.precioVentaPublicoManual = parseFloat((this.facturaLinea.precioUnitario+(this.facturaLinea.precioUnitario*this.facturaLinea.impuesto.porcentaje/100)).toFixed(2));
+    this.precioVentaPublicoManual = parseFloat((this.facturaLinea.precioUnitario + (this.facturaLinea.precioUnitario * this.facturaLinea.impuesto.porcentaje / 100)).toFixed(2));
   }
 
   filtroFacturaLinea(event: Event) {

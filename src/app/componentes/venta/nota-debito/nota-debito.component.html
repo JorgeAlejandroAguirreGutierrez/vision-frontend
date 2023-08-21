@@ -9,7 +9,7 @@
                             <mat-icon>save</mat-icon>
                         </a>
                     </li>
-                    <li class="nav-item" *ngIf="notaDebito.id != 0">
+                    <li class="nav-item" *ngIf="notaDebito.id != 0 && notaDebito.estado == estadoActivo && notaDebito.estadoSri == estadoSriPendiente">
                         <a class="nav-link" title="Actualizar" role="button" (click)="actualizar($event)">
                             <mat-icon>update</mat-icon>
                         </a>
@@ -19,24 +19,24 @@
                             <mat-icon>file_copy</mat-icon>
                         </a>
                     </li>
-                    <li class="nav-item" *ngIf="notaDebito.id != 0">
+                    <li class="nav-item" *ngIf="notaDebito.id != 0 && notaDebito.estado == estadoInactivo">
                         <a class="nav-link" title="Activar" role="button" (click)="activar($event)">
                             <mat-icon>check</mat-icon>
                         </a>
                     </li>
-                    <li class="nav-item" *ngIf="notaDebito.id != 0">
+                    <li class="nav-item" *ngIf="notaDebito.id != 0 && notaDebito.estado == estadoActivo">
                         <a class="nav-link" title="Inactivar" role="button" (click)="inactivar($event)">
                             <mat-icon>delete</mat-icon>
                         </a>
                     </li>
                     <li class="nav-item"
-                        *ngIf="notaDebito.id != 0 && notaDebito.estado == 'RECAUDADA' && notaDebito.factura.estado == 'FACTURADA'">
+                        *ngIf="notaDebito.id != 0 && notaDebito.estado == estadoActivo  && notaDebito.estadoInterno == estadoInternoRecaudada && notaDebito.estadoSri == estadoSriPendiente && notaDebito.factura.estado == estadoActivo && notaDebito.factura.estadoSri == estadoSriAutorizada">
                         <a class="nav-link" title="Crear Nota Debito Electronica" href="#" role="button"
                             (click)="crearNotaDebitoElectronica($event)">
                             <mat-icon>point_of_sale</mat-icon>
                         </a>
                     </li>
-                    <li class="nav-item" *ngIf="notaDebito.id != 0 && notaDebito.estado == estadoActivo && notaDebito.estadoInterno == estadoInternoEmitida">
+                    <li class="nav-item" *ngIf="notaDebito.id != 0 && notaDebito.estado == estadoActivo && notaDebito.estadoInterno == estadoInternoRecaudada">
                         <a class="nav-link" title="Obtener PDF" href="#" role="button" (click)="obtenerPDF($event)">
                             <mat-icon>picture_as_pdf</mat-icon>
                         </a>
@@ -261,11 +261,11 @@
                             <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" showFirstLastButtons
                                 #paginatorFacturaLinea></mat-paginator>
                         </div>
-                        <div class="azul" *ngIf="!clickedRowsLinea.size">
+                        <div class="azul" *ngIf="!clickedRowsFacturaLinea.size">
                             Seleccione una fila para editar
                         </div>
-                        <div class="azul" *ngFor="let clickedRowLinea of clickedRowsLinea">
-                            Código: {{clickedRowLinea.cantidad}} seleccionado
+                        <div class="azul" *ngFor="let clickedRowFacturaLinea of clickedRowsFacturaLinea">
+                            Código: {{clickedRowFacturaLinea.cantidad}} seleccionado
                         </div>
                     </div>
                 </mat-expansion-panel>
@@ -600,7 +600,7 @@
                             </ng-container>
 
                             <tr mat-header-row *matHeaderRowDef="cabecera"></tr>
-                            <tr mat-row (click)="seleccion(row)" [class.selected-row]="clickedRows.has(row)"
+                            <tr mat-row (click)="seleccionar(row)" [class.selected-row]="clickedRows.has(row)"
                                 *matRowDef="let row; columns: cabecera;"></tr>
 
                             <tr class="mat-row" *matNoDataRow>

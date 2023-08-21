@@ -48,6 +48,22 @@ export class GuiaRemisionService {
       }));
   }
 
+  consultarPorEmpresa(empresaId: number): Observable<Respuesta> {
+    return this.http.get(environment.host + urn.ruta + urn.guiaRemision + urn.consultarPorEmpresa + urn.slash + empresaId, options).pipe(
+      map(response => response as Respuesta),
+      catchError(err => {
+        return throwError(()=>err);
+      }));
+  }
+
+  consultarPorEmpresaYEstado(empresaId: number, estado: string): Observable<Respuesta> {
+    return this.http.get(environment.host + urn.ruta + urn.guiaRemision + urn.consultarPorEmpresaYEstado + urn.slash + empresaId + urn.slash + estado, options).pipe(
+      map(response => response as Respuesta),
+      catchError(err => {
+        return throwError(()=>err);
+      }));
+  }
+
   actualizar(guiaRemision: GuiaRemision): Observable<Respuesta> {
     return this.http.put(environment.host + urn.ruta + urn.guiaRemision, guiaRemision, options).pipe(
       map(response => response as Respuesta),
