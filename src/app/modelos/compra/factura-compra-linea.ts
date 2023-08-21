@@ -11,6 +11,7 @@ export class FacturaCompraLinea {
     costoUnitario: number;
     costoDistribuido: number;
     costoPromedio: number;
+
     valorDescuentoLinea: number;
     porcentajeDescuentoLinea: number;
     valorPorcentajeDescuentoLinea: number;
@@ -20,6 +21,7 @@ export class FacturaCompraLinea {
     subtotalLinea: number;
     importeIvaLinea: number;
     totalLinea: number;
+
     impuesto: Impuesto;
     producto: Producto;
     bodega: Bodega;
@@ -32,6 +34,7 @@ export class FacturaCompraLinea {
         this.costoUnitario = valores.cero;
         this.costoDistribuido = valores.cero;
         this.costoPromedio = valores.cero;
+        
         this.valorDescuentoLinea = valores.cero;
         this.porcentajeDescuentoLinea = valores.cero;
         this.valorPorcentajeDescuentoLinea = valores.cero;
@@ -41,6 +44,7 @@ export class FacturaCompraLinea {
         this.subtotalLinea = valores.cero;
         this.importeIvaLinea = valores.cero;
         this.totalLinea = valores.cero;
+
         this.impuesto = new Impuesto();
         this.producto = new Producto();
         this.bodega = new Bodega();
