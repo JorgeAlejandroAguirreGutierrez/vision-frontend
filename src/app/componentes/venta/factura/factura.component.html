@@ -93,8 +93,7 @@
                                         [matAutocomplete]="identificacionCliente">
                                     <mat-autocomplete #identificacionCliente="matAutocomplete"
                                         [displayWith]="verIdentificacionCliente"
-                                        (optionSelected)="seleccionarIdentificacionCliente()"
-                                        (opened)="consultarClientes()">
+                                        (optionSelected)="seleccionarIdentificacionCliente()">
                                         <mat-option *ngFor="let cliente of filtroIdentificacionClientes | async"
                                             [value]="cliente">{{cliente.identificacion}}
                                         </mat-option>
@@ -107,14 +106,13 @@
                                     <input type="text" class="form-control-sm" placeholder="Clientes" matInput
                                         [formControl]="controlRazonSocialCliente" [matAutocomplete]="razonSocialCliente"
                                         oninput="this.value = this.value.toUpperCase()">
-                                        <button mat-button *ngIf="controlRazonSocialCliente.value!=''" matSuffix mat-icon-button
+                                        <button mat-button *ngIf="controlRazonSocialCliente.value != '' " matSuffix mat-icon-button
                                             (click)="borrarRazonSocial()">
                                             <mat-icon>close</mat-icon>
                                         </button>      
                                     <mat-autocomplete #razonSocialCliente="matAutocomplete"
                                         [displayWith]="verRazonSocialCliente"
-                                        (optionSelected)="seleccionarRazonSocialCliente()"
-                                        (opened)="consultarClientes()">
+                                        (optionSelected)="seleccionarRazonSocialCliente()">
                                         <mat-option *ngFor="let cliente of filtroRazonSocialClientes | async"
                                             [value]="cliente">
                                             {{cliente.razonSocial}}
