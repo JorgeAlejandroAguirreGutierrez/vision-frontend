@@ -184,7 +184,7 @@
                                 <mat-form-field appearance="standard">
                                     <mat-label>Bodega</mat-label>
                                     <mat-select [(ngModel)]="facturaCompraLinea.bodega" [compareWith]="compareFn"
-                                        (selectionChange)="calcularFacturaCompraLinea()" class="form-control-sm">
+                                        (selectionChange)="calcularFacturaCompraLinea()" class="form-control-sm" disabled>
                                         <mat-option *ngFor="let bodega of bodegas" [value]="bodega">
                                             {{bodega.abreviatura}}</mat-option>
                                     </mat-select>
@@ -325,7 +325,7 @@
                                 [class.selected-row]="clickedRowsLinea.has(row)"></tr>
                             <!-- Row shown when there is no matching data. -->
                             <tr class="mat-row" *matNoDataRow>
-                                <td class="mat-cell" colspan="10">No hay productos agregados o filtrados
+                                <td class="mat-cell" colspan="11">No hay productos agregados o filtrados
                                 </td>
                             </tr>
                         </table>
@@ -380,7 +380,7 @@
                                             <input matInput type="text" appFormatoDecimal
                                                 [(ngModel)]="facturaCompra.valorDistribuidoTotal"
                                                 (change)="formateaValor($event)"
-                                                class="form-control-sm">
+                                                class="form-control-sm" disabled>
                                         </mat-form-field>
                                     </div>
                                     <div class="col-6">
@@ -389,7 +389,7 @@
                                             <input matInput type="text" appFormatoDecimal
                                                 [(ngModel)]="facturaCompra.valorDistribuidoTotal"
                                                 (change)="formateaValor($event)"
-                                                class="form-control-sm">
+                                                class="form-control-sm" disabled>
                                         </mat-form-field>
                                     </div>
                                 </div>
@@ -423,7 +423,7 @@
                                 </div>
                                 <div class="col-5">
                                     <mat-form-field appearance="standard">
-                                        <input matInput type="text" [value]="formateaNumero(facturaCompra.descuentoTotal)"
+                                        <input matInput type="text" [value]="formateaNumero(facturaCompra.descuento)"
                                             class="form-control-sm" [disabled]="true">
                                     </mat-form-field>
                                 </div>

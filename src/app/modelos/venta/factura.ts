@@ -26,6 +26,13 @@ export class Factura {
   estado: string;
   estadoSri: string;
 
+  valorDescuentoTotal: number;
+  porcentajeDescuentoTotal: number;
+  valorPorcentajeDescuentoTotal: number;
+  valorDescuentoSubtotal: number;
+  porcentajeDescuentoSubtotal: number;
+  valorPorcentajeDescuentoSubtotal: number;
+
   subtotal: number;
   descuento: number;
   subtotalGravado: number;
@@ -72,10 +79,12 @@ export class Factura {
     this.estadoInterno = valores.vacio;
     this.estadoSri = valores.vacio;
 
-    this.cliente = new Cliente();
-    this.facturaLineas = [];
-    this.comentario = valores.vacio;
-    this.sesion = new Sesion();
+    this.valorDescuentoTotal = valores.cero;
+    this.porcentajeDescuentoTotal = valores.cero;
+    this.valorPorcentajeDescuentoTotal = valores.cero;
+    this.valorDescuentoSubtotal = valores.cero;
+    this.porcentajeDescuentoSubtotal = valores.cero;
+    this.valorPorcentajeDescuentoSubtotal = valores.cero;
 
     this.subtotal = valores.cero;
     this.descuento = valores.cero;
@@ -83,6 +92,12 @@ export class Factura {
     this.subtotalNoGravado = valores.cero;
     this.importeIva = valores.cero;
     this.total = valores.cero;
+
+    this.comentario = valores.vacio;
+
+    this.cliente = new Cliente();
+    this.sesion = new Sesion();
+    this.facturaLineas = [];
 
     //RECAUDACION
     this.efectivo = valores.cero;

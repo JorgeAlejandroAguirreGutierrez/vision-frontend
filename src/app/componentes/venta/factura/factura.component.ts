@@ -46,22 +46,23 @@ import { MatTableDataSource } from '@angular/material/table';
 
 export class FacturaComponent implements OnInit {
 
-  estadoActivo = valores.estadoActivo;
-  estadoInactivo = valores.estadoInactivo;
-  estadoInternoEmitida = valores.estadoInternoEmitida;
-  estadoInternoRecaudada = valores.estadoInternoRecaudada;
-  estadoInternoAnulada = valores.estadoInternoAnulada
-  estadoSriPendiente = valores.estadoSriPendiente;
-  estadoSriAutorizada = valores.estadoSriAutorizada;
-  estadoSriAnulada = valores.estadoSriAnulada;
-  si = valores.si;
-  no = valores.no;
-  categoriaProducto = valores.bien;
-  saldo = valores.cero;
-  saldoTotal = valores.cero;
-  costoUnitario = valores.cero;
-  costoPromedio = valores.cero;
-  precioVentaPublicoManual = valores.cero;
+  si: string = valores.si;
+  no: string = valores.no;
+  estadoActivo: string = valores.estadoActivo;
+  estadoInactivo: string = valores.estadoInactivo;
+  estadoInternoEmitida: string = valores.estadoInternoEmitida;
+  estadoInternoRecaudada: string = valores.estadoInternoRecaudada;
+  estadoInternoAnulada: string = valores.estadoInternoAnulada
+  estadoSriPendiente: string = valores.estadoSriPendiente;
+  estadoSriAutorizada: string = valores.estadoSriAutorizada;
+  estadoSriAnulada: string = valores.estadoSriAnulada;
+  categoriaProducto: string = valores.bien;
+
+  saldo: number = valores.cero;
+  saldoTotal: number = valores.cero;
+  costoUnitario: number = valores.cero;
+  costoPromedio: number = valores.cero;
+  precioVentaPublicoManual: number = valores.cero;
   indiceLinea: number;
 
   steeperLinear: boolean = false;
@@ -73,7 +74,6 @@ export class FacturaComponent implements OnInit {
   esBien: boolean = true;
 
   hoy: Date = new Date();
-  fechaMinima: Date = new Date();
 
   sesion: Sesion = null;
   empresa: Empresa = new Empresa();
@@ -112,6 +112,7 @@ export class FacturaComponent implements OnInit {
   clickedRowsFactura = new Set<Factura>();
 
   columnasLinea: any[] = [
+    { nombreColumna: 'posicion', cabecera: 'No.', celda: (row: FacturaLinea) => `${row.posicion}` },
     { nombreColumna: 'nombre', cabecera: 'Producto', celda: (row: FacturaLinea) => `${row.producto.nombre}` },
     { nombreColumna: 'medida', cabecera: 'Medida', celda: (row: FacturaLinea) => `${row.producto.medida.abreviatura}` },
     { nombreColumna: 'cantidad', cabecera: 'Cant.', celda: (row: FacturaLinea) => `${row.cantidad}` },
@@ -158,7 +159,6 @@ export class FacturaComponent implements OnInit {
   ngOnInit() {
     this.sesion = validarSesion(this.sesionService, this.router);
     this.empresa = this.sesion.empresa;
-    this.fechaMinima = new Date(this.fechaMinima.setDate(this.hoy.getDate() - 3))
     this.factura.establecimiento = this.sesion.usuario.estacion.establecimiento.codigoSRI;
     this.factura.puntoVenta = this.sesion.usuario.estacion.codigoSRI;
     this.consultar();
@@ -458,6 +458,7 @@ export class FacturaComponent implements OnInit {
     this.spinnerService.show();  
     this.factura.sesion = this.sesion;
     this.factura.facturaLineas.push(this.facturaLinea);
+    this.llenarPosicion(this.factura);
     this.facturaService.calcular(this.factura).subscribe({
       next: res => {
         this.factura = res.resultado as Factura;
@@ -471,6 +472,12 @@ export class FacturaComponent implements OnInit {
         this.spinnerService.hide();
       }  
     });
+  }
+
+  llenarPosicion(factura: Factura){
+    for (let i = 0; i < factura.facturaLineas.length; i++) {
+      this.factura.facturaLineas[i].posicion = i+1;
+    }
   }
 
   actualizarFacturaLinea() {
@@ -713,7 +720,7 @@ export class FacturaComponent implements OnInit {
 
   //VALIDACIONES
   validarFormulario(): boolean {
-    if (this.factura.fecha == null || this.factura.fecha > this.hoy || this.factura.fecha < this.fechaMinima){
+    if (this.factura.fecha == null || this.factura.fecha > this.hoy){
       Swal.fire({ icon: error_swal, title: error, text: mensajes.error_fecha });
       return false;
     }

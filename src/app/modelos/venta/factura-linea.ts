@@ -18,6 +18,9 @@ export class FacturaLinea {
   valorDescuentoLinea: number;
   porcentajeDescuentoLinea: number;
   valorPorcentajeDescuentoLinea: number;
+  valorDescuentoTotalLinea: number;
+  valorPorcentajeDescuentoTotalLinea: number;
+  subtotalLineaSinDescuento: number;
   subtotalLinea: number;
   importeIvaLinea: number;
   totalLinea: number;
@@ -38,6 +41,9 @@ export class FacturaLinea {
     this.valorDescuentoLinea = valores.cero;
     this.porcentajeDescuentoLinea = valores.cero;
     this.valorPorcentajeDescuentoLinea = valores.cero;
+    this.valorDescuentoTotalLinea = valores.cero;
+    this.valorPorcentajeDescuentoTotalLinea = valores.cero;
+    this.subtotalLineaSinDescuento = valores.cero;
     this.subtotalLinea = valores.cero;
     this.importeIvaLinea = valores.cero;
     this.totalLinea = valores.cero;
