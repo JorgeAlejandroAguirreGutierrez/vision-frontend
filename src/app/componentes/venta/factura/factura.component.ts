@@ -159,6 +159,8 @@ export class FacturaComponent implements OnInit {
   ngOnInit() {
     this.sesion = validarSesion(this.sesionService, this.router);
     this.empresa = this.sesion.empresa;
+    this.factura.sesion = this.sesion;
+    this.factura.empresa = this.empresa;
     this.factura.establecimiento = this.sesion.usuario.estacion.establecimiento.codigoSRI;
     this.factura.puntoVenta = this.sesion.usuario.estacion.codigoSRI;
     this.consultar();
@@ -247,9 +249,7 @@ export class FacturaComponent implements OnInit {
       event.preventDefault();
     if (!this.validarFormulario())
       return;  
-    this.spinnerService.show();    
-    this.factura.sesion = this.sesion;
-    this.factura.empresa = this.empresa;
+    this.spinnerService.show();
     this.facturaService.crear(this.factura).subscribe({
       next: res => {
         this.factura = res.resultado as Factura;
@@ -427,14 +427,19 @@ export class FacturaComponent implements OnInit {
   }
 
   seleccionarRazonSocialCliente() {
+    this.spinnerService.show();
     let clienteId = this.controlRazonSocialCliente.value.id;
     this.clienteService.obtener(clienteId).subscribe({
       next: res => {
+        this.spinnerService.hide();
         Object.assign(this.factura.cliente, res.resultado as Cliente);
         this.controlIdentificacionCliente.patchValue(this.factura.cliente);
         this.controlRazonSocialCliente.patchValue(this.factura.cliente);
       },
-      error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+      error: err => {
+        this.spinnerService.hide();
+        Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+      }
     });
   }
   borrarRazonSocial(){
@@ -443,14 +448,19 @@ export class FacturaComponent implements OnInit {
   }
 
   seleccionarIdentificacionCliente() {
+    this.spinnerService.show();
     let clienteId = this.controlIdentificacionCliente.value.id;
     this.clienteService.obtener(clienteId).subscribe({
       next: res => {
+        this.spinnerService.hide();
         Object.assign(this.factura.cliente, res.resultado as Cliente);
         this.controlIdentificacionCliente.patchValue(this.factura.cliente);
         this.controlRazonSocialCliente.patchValue(this.factura.cliente);
       },
-      error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+      error: err => {
+        this.spinnerService.hide();
+        Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+      }
     });
   }
 
@@ -549,21 +559,31 @@ export class FacturaComponent implements OnInit {
     if (!this.validarFormularioLinea())
       return;
     this.facturaLinea.precioUnitario = Number((this.precioVentaPublicoManual * 100 / (100 + this.facturaLinea.impuesto.porcentaje)).toFixed(4));
+    this.spinnerService.show();
     this.facturaService.calcularLinea(this.facturaLinea).subscribe({
       next: res => {
+        this.spinnerService.hide();
         this.facturaLinea = res.resultado as FacturaLinea;
       },
-      error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+      error: err => {
+        this.spinnerService.hide();
+        Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+      }
     });
   }
 
   calcular() {
+    this.spinnerService.show();
     this.facturaService.calcular(this.factura).subscribe({
       next: res => {
+        this.spinnerService.hide();
         this.factura = res.resultado as Factura;
         this.llenarTablaFacturaLinea(this.factura.facturaLineas);
       },
-      error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+      error: err => {
+        this.spinnerService.hide();
+        Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+      }
     });
   }
 
@@ -601,15 +621,20 @@ export class FacturaComponent implements OnInit {
   }
 
   obtenerUltimoKardex(){
+    this.spinnerService.show();
     this.kardexService.obtenerUltimoPorProductoYBodega(this.facturaLinea.producto.id, this.facturaLinea.bodega.id).subscribe({
       next: res => {
+        this.spinnerService.hide();
         if (res.resultado == null) {
           Swal.fire({ icon: error_swal, title: error, text: mensajes.error_kardex_vacio });
           return;
         }
         this.kardex = res.resultado as Kardex;
       },
-      error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+      error: err => {
+        this.spinnerService.hide();
+        Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+      }
     });
   }
 

@@ -97,7 +97,9 @@ export class Factura {
 
     this.cliente = new Cliente();
     this.sesion = new Sesion();
+    this.empresa = new Empresa();
     this.facturaLineas = [];
+    
 
     //RECAUDACION
     this.efectivo = valores.cero;
