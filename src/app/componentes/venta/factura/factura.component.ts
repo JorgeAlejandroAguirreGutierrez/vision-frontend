@@ -171,24 +171,30 @@ export class FacturaComponent implements OnInit {
   }
 
   consultarClientes() {
+    this.spinnerService.show(); 
     this.clienteService.consultarPorEmpresaYEstado(this.empresa.id, valores.estadoActivo).subscribe({
       next: res => {
         this.clientes = res.resultado as Cliente[];
         this.factura.cliente = this.clientes.find(cliente => cliente.identificacion.includes(otras.identificacion_consumidor_final));
         this.controlIdentificacionCliente.patchValue(this.factura.cliente);
         this.controlRazonSocialCliente.patchValue(this.factura.cliente);
+        this.spinnerService.hide();
       },
       error: err => {
+        this.spinnerService.hide(); 
         Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
       }
     });
   }
   consultarProductos() {
+    this.spinnerService.show();
     this.productoService.consultarPorEmpresaYEstado(this.empresa.id, valores.estadoActivo).subscribe({
       next: res => {
         this.productos = res.resultado as Producto[];
+        this.spinnerService.hide(); 
       },
       error: err => {
+        this.spinnerService.hide(); 
         Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
       }
     })

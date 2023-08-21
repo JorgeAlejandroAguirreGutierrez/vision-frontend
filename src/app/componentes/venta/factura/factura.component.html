@@ -93,7 +93,8 @@
                                         [matAutocomplete]="identificacionCliente">
                                     <mat-autocomplete #identificacionCliente="matAutocomplete"
                                         [displayWith]="verIdentificacionCliente"
-                                        (optionSelected)="seleccionarIdentificacionCliente()">
+                                        (optionSelected)="seleccionarIdentificacionCliente()"
+                                        (opened)="consultarClientes()">
                                         <mat-option *ngFor="let cliente of filtroIdentificacionClientes | async"
                                             [value]="cliente">{{cliente.identificacion}}
                                         </mat-option>
@@ -112,7 +113,8 @@
                                         </button>      
                                     <mat-autocomplete #razonSocialCliente="matAutocomplete"
                                         [displayWith]="verRazonSocialCliente"
-                                        (optionSelected)="seleccionarRazonSocialCliente()">
+                                        (optionSelected)="seleccionarRazonSocialCliente()"
+                                        (opened)="consultarClientes()">
                                         <mat-option *ngFor="let cliente of filtroRazonSocialClientes | async"
                                             [value]="cliente">
                                             {{cliente.razonSocial}}
