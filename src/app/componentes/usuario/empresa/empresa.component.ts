@@ -78,7 +78,7 @@ export class EmpresaComponent implements OnInit {
   nuevo(event) {
     if (event != null)
       event.preventDefault();
-    this.empresa= new Empresa();
+    this.empresa = new Empresa();
     this.empresa.logo64 = imagenes.logo_empresa;
     this.deshabilitarIdentificacion = false;
     this.clickedRows.clear();
@@ -93,7 +93,6 @@ export class EmpresaComponent implements OnInit {
       next: res => {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
         this.empresa = res.resultado as Empresa;
-        //this.empresa.logo64 = imagenes.logo_empresa;
         this.subirCertificado();
         this.consultar();
         this.nuevo(null);
@@ -111,7 +110,6 @@ export class EmpresaComponent implements OnInit {
       next: res => {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
         this.empresa = res.resultado as Empresa;
-        //this.empresa.logo64 = imagenes.logo_empresa;
         this.subirCertificado();
         this.consultar();
         this.nuevo(null);
@@ -209,11 +207,9 @@ export class EmpresaComponent implements OnInit {
 
   subirCertificado() : any{
     if (this.certificado != null){
-      console.log(this.certificado.name);
       this.empresaService.subirCertificado(this.empresa.id, this.certificado).subscribe({
         next: (res) => {
           this.empresa = res.resultado as Empresa;
-          //this.empresa.logo64 = imagenes.logo_empresa;
         },
         error: (err) => {
           Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje });
