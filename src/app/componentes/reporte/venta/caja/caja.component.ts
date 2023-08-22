@@ -21,20 +21,6 @@ export class CajaComponent implements OnInit {
   abrirPanelDetalle: boolean = true;
   abrirPanelResumen: boolean = true;
 
-  billete100: number = valores.cero;
-  billete50: number = valores.cero;
-  billete20: number = valores.cero;
-  billete10: number = valores.cero;
-  billete5: number = valores.cero;
-  billete2: number = valores.cero;
-  billete1: number = valores.cero;
-  moneda1: number = valores.cero;
-  moneda050: number = valores.cero;
-  moneda025: number = valores.cero;
-  moneda010: number = valores.cero;
-  moneda005: number = valores.cero;
-  moneda001: number = valores.cero;
-
   hoy = new Date();
   fechaInicio: Date = new Date();
   fechaFinal: Date = new Date();
@@ -54,9 +40,7 @@ export class CajaComponent implements OnInit {
   obtener(){
     let fechaInicio = this.datepipe.transform(this.fechaInicio, "dd-MM-yyyy");
     let fechaFinal = this.datepipe.transform(this.fechaFinal, "dd-MM-yyyy");
-    this.reporteCajaService.obtener(this.sesion.usuario.apodo, fechaInicio, fechaFinal, this.empresa.id,
-      this.billete100, this.billete50, this.billete20, this.billete10, this.billete5, this.billete2, this.billete1,
-      this.moneda1, this.moneda050, this.moneda025, this.moneda010, this.moneda005, this.moneda001).subscribe({
+    this.reporteCajaService.obtener(this.sesion.usuario.apodo, fechaInicio, fechaFinal, this.empresa.id).subscribe({
       next: res => {
         this.reporteCaja = res.resultado as ReporteCaja;
       },
@@ -67,16 +51,12 @@ export class CajaComponent implements OnInit {
   pdf(event){
     let fechaInicio = this.datepipe.transform(this.fechaInicio, "dd-MM-yyyy");
     let fechaFinal = this.datepipe.transform(this.fechaFinal, "dd-MM-yyyy");
-    this.reporteCajaService.pdf(this.sesion.usuario.apodo, fechaInicio, fechaFinal, this.empresa.id,
-      this.billete100, this.billete50, this.billete20, this.billete10, this.billete5, this.billete2, this.billete1,
-      this.moneda1, this.moneda050, this.moneda025, this.moneda010, this.moneda005, this.moneda001);
+    this.reporteCajaService.pdf(this.sesion.usuario.apodo, fechaInicio, fechaFinal, this.empresa.id);
   }
 
   excel(event){
     let fechaInicio = this.datepipe.transform(this.fechaInicio, "dd-MM-yyyy");
     let fechaFinal = this.datepipe.transform(this.fechaFinal, "dd-MM-yyyy");
-    this.reporteCajaService.excel(this.sesion.usuario.apodo, fechaInicio, fechaFinal, this.empresa.id,
-      this.billete100, this.billete50, this.billete20, this.billete10, this.billete5, this.billete2, this.billete1,
-      this.moneda1, this.moneda050, this.moneda025, this.moneda010, this.moneda005, this.moneda001);
+    this.reporteCajaService.excel(this.sesion.usuario.apodo, fechaInicio, fechaFinal, this.empresa.id);
   }
 }

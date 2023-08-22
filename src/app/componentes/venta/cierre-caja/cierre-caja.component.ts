@@ -164,7 +164,7 @@ export class CierreCajaComponent implements OnInit {
     this.dataSource.sort = this.sort;
   }
 
-  seleccion(cierreCaja: CierreCaja) {
+  seleccionar(cierreCaja: CierreCaja) {
     if (!this.clickedRows.has(cierreCaja)){
       this.clickedRows.clear();
       this.clickedRows.add(cierreCaja);
@@ -193,22 +193,6 @@ export class CierreCajaComponent implements OnInit {
     this.cierreCaja.totalMonedas = (this.cierreCaja.moneda100 * 1) + (this.cierreCaja.moneda50 * 0.50) + (this.cierreCaja.moneda25 * 0.25) +
       (this.cierreCaja.moneda10 * 0.10) + (this.cierreCaja.moneda5 * 0.05) + (this.cierreCaja.moneda1 * 0.01);
     this.cierreCaja.totalCaja = this.cierreCaja.totalBilletes + this.cierreCaja.totalMonedas;          
-  }
-
-  pdf(event){
-    let fechaInicio = this.datepipe.transform(this.cierreCaja.fecha, "dd-MM-yyyy");
-    let fechaFinal = this.datepipe.transform(this.cierreCaja.fecha, "dd-MM-yyyy");
-    this.reporteCajaService.pdf(this.sesion.usuario.apodo, fechaInicio, fechaFinal, this.empresa.id,
-      this.cierreCaja.billete100, this.cierreCaja.billete50, this.cierreCaja.billete20, this.cierreCaja.billete10, this.cierreCaja.billete5, 0, this.cierreCaja.billete1,
-      this.cierreCaja.moneda100, this.cierreCaja.moneda50, this.cierreCaja.moneda25, this.cierreCaja.moneda10, this.cierreCaja.moneda5, this.cierreCaja.moneda1);
-  }
-
-  excel(event){
-    let fechaInicio = this.datepipe.transform(this.cierreCaja.fecha, "dd-MM-yyyy");
-    let fechaFinal = this.datepipe.transform(this.cierreCaja.fecha, "dd-MM-yyyy");
-    this.reporteCajaService.excel(this.sesion.usuario.apodo, fechaInicio, fechaFinal, this.empresa.id,
-      this.cierreCaja.billete100, this.cierreCaja.billete50, this.cierreCaja.billete20, this.cierreCaja.billete10, this.cierreCaja.billete5, 0, this.cierreCaja.billete1,
-      this.cierreCaja.moneda100, this.cierreCaja.moneda50, this.cierreCaja.moneda25, this.cierreCaja.moneda10, this.cierreCaja.moneda5, this.cierreCaja.moneda1);
   }
 
   validarFormulario(): boolean {

@@ -95,8 +95,6 @@ import { ReporteTalentoHumanoComponent } from './componentes/reporte/talento-hum
 import { ReporteFinancieroComponent } from './componentes/reporte/financiero/reporte-financiero/reporte-financiero.component';
 import { ReporteImportacionComponent } from './componentes/reporte/importacion/reporte-importacion/reporte-importacion.component';
 
-import { ReporteCajaComponent } from './componentes/reporte/reporte-caja/reporte-caja.component';
-
 // Módulo de Accesos
 import { UsuarioComponent } from './componentes/usuario/usuario/usuario.component';
 import { EmpresaComponent } from './componentes/usuario/empresa/empresa.component';
@@ -233,8 +231,6 @@ export const RoutingComponents = [
   ReporteTalentoHumanoComponent,
   ReporteFinancieroComponent,
   ReporteImportacionComponent,
-
-  ReporteCajaComponent,
 
   //Usuarios
   UsuarioComponent,
