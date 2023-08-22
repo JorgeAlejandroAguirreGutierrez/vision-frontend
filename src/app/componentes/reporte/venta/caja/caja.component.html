@@ -54,106 +54,6 @@
         </mat-expansion-panel>
     </mat-accordion>
     <mat-accordion class="headers-align">
-        <mat-expansion-panel (opened)="abrirPanelDetalle = true" (closed)="abrirPanelDetalle = false"
-            [expanded]="abrirPanelDetalle">
-            <mat-expansion-panel-header>
-                <mat-panel-title>
-                    <i><u>DETALLE DE BILLETES Y MONEDAS</u></i>
-                </mat-panel-title>
-                <mat-panel-description>
-                    {{abrirPanelDetalle ? 'Ocultar detalle de ventas' : 'Ver detalle de ventas'}}
-                    <mat-icon>playlist_add_check</mat-icon>
-                </mat-panel-description>
-            </mat-expansion-panel-header>
-            <mat-divider></mat-divider>
-            <div class="form-row">
-                <div class="col-2">
-                    <mat-form-field appearance="standard">
-                        <mat-label>Billetes de 100</mat-label>
-                        <input matInput type="text" [(ngModel)]="billete100" class="form-control-sm">
-                    </mat-form-field>
-                </div>
-                <div class="col-2">
-                    <mat-form-field appearance="standard">
-                        <mat-label>Billetes de 50</mat-label>
-                        <input matInput type="text" [(ngModel)]="billete50" class="form-control-sm">
-                    </mat-form-field>
-                </div>
-                <div class="col-2">
-                    <mat-form-field appearance="standard">
-                        <mat-label>Billetes de 20</mat-label>
-                        <input matInput type="text" [(ngModel)]="billete20" class="form-control-sm">
-                    </mat-form-field>
-                </div>
-                <div class="col-2">
-                    <mat-form-field appearance="standard">
-                        <mat-label>Billetes de 10</mat-label>
-                        <input matInput type="text" [(ngModel)]="billete10" class="form-control-sm">
-                    </mat-form-field>
-                </div>
-                <div class="col-2">
-                    <mat-form-field appearance="standard">
-                        <mat-label>Billetes de 5</mat-label>
-                        <input matInput type="text" [(ngModel)]="billete5" class="form-control-sm">
-                    </mat-form-field>
-                </div>
-                <div class="col-2">
-                    <mat-form-field appearance="standard">
-                        <mat-label>Billetes de 2</mat-label>
-                        <input matInput type="text" [(ngModel)]="billete2" class="form-control-sm">
-                    </mat-form-field>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-12">
-                    <mat-form-field appearance="standard">
-                        <mat-label>Billetes de 1</mat-label>
-                        <input matInput type="text" [(ngModel)]="billete1" class="form-control-sm">
-                    </mat-form-field>
-                </div>
-            </div>
-            <div class="form-row">
-                <div class="col-2">
-                    <mat-form-field appearance="standard">
-                        <mat-label>Monedas de 1</mat-label>
-                        <input matInput type="text" [(ngModel)]="moneda1" class="form-control-sm">
-                    </mat-form-field>
-                </div>
-                <div class="col-2">
-                    <mat-form-field appearance="standard">
-                        <mat-label>Monedas de 0,50</mat-label>
-                        <input matInput type="text" [(ngModel)]="moneda050" class="form-control-sm">
-                    </mat-form-field>
-                </div>
-                <div class="col-2">
-                    <mat-form-field appearance="standard">
-                        <mat-label>Monedas de 0,25</mat-label>
-                        <input matInput type="text" [(ngModel)]="moneda025" class="form-control-sm">
-                    </mat-form-field>
-                </div>
-                <div class="col-2">
-                    <mat-form-field appearance="standard">
-                        <mat-label>Monedas de 0,10</mat-label>
-                        <input matInput type="text" [(ngModel)]="moneda010" class="form-control-sm">
-                    </mat-form-field>
-                </div>
-                <div class="col-2">
-                    <mat-form-field appearance="standard">
-                        <mat-label>Monedas de 0,05</mat-label>
-                        <input matInput type="text" [(ngModel)]="moneda005" class="form-control-sm">
-                    </mat-form-field>
-                </div>
-                <div class="col-2">
-                    <mat-form-field appearance="standard">
-                        <mat-label>Monedas de 0,01</mat-label>
-                        <input matInput type="text" [(ngModel)]="moneda001" class="form-control-sm">
-                    </mat-form-field>
-                </div>
-            </div>
-        </mat-expansion-panel>
-    </mat-accordion>
-
-    <mat-accordion class="headers-align">
         <mat-expansion-panel (opened)="abrirPanelResumen = true" (closed)="abrirPanelResumen = false"
             [expanded]="abrirPanelResumen">
             <mat-expansion-panel-header>
@@ -426,34 +326,34 @@
                         </thead>
                         <tbody>
                             <tr>
+                                <td>${{reporteCaja.cantidadMoneda100}}</td>
+                                <td>${{reporteCaja.denominacionMoneda100}}</td>
+                                <td>${{reporteCaja.totalMoneda100}}</td>
+                            </tr>
+                            <tr>
+                                <td>${{reporteCaja.cantidadMoneda50}}</td>
+                                <td>${{reporteCaja.denominacionMoneda50}}</td>
+                                <td>${{reporteCaja.totalMoneda50}}</td>
+                            </tr>
+                            <tr>
+                                <td>${{reporteCaja.cantidadMoneda25}}</td>
+                                <td>${{reporteCaja.denominacionMoneda25}}</td>
+                                <td>${{reporteCaja.totalMoneda25}}</td>
+                            </tr>
+                            <tr>
+                                <td>${{reporteCaja.cantidadMoneda10}}</td>
+                                <td>${{reporteCaja.denominacionMoneda10}}</td>
+                                <td>${{reporteCaja.totalMoneda10}}</td>
+                            </tr>
+                            <tr>
+                                <td>${{reporteCaja.cantidadMoneda5}}</td>
+                                <td>${{reporteCaja.denominacionMoneda5}}</td>
+                                <td>${{reporteCaja.totalMoneda5}}</td>
+                            </tr>
+                            <tr>
                                 <td>${{reporteCaja.cantidadMoneda1}}</td>
                                 <td>${{reporteCaja.denominacionMoneda1}}</td>
                                 <td>${{reporteCaja.totalMoneda1}}</td>
-                            </tr>
-                            <tr>
-                                <td>${{reporteCaja.cantidadMoneda050}}</td>
-                                <td>${{reporteCaja.denominacionMoneda050}}</td>
-                                <td>${{reporteCaja.totalMoneda050}}</td>
-                            </tr>
-                            <tr>
-                                <td>${{reporteCaja.cantidadMoneda025}}</td>
-                                <td>${{reporteCaja.denominacionMoneda025}}</td>
-                                <td>${{reporteCaja.totalMoneda025}}</td>
-                            </tr>
-                            <tr>
-                                <td>${{reporteCaja.cantidadMoneda010}}</td>
-                                <td>${{reporteCaja.denominacionMoneda010}}</td>
-                                <td>${{reporteCaja.totalMoneda010}}</td>
-                            </tr>
-                            <tr>
-                                <td>${{reporteCaja.cantidadMoneda005}}</td>
-                                <td>${{reporteCaja.denominacionMoneda005}}</td>
-                                <td>${{reporteCaja.totalMoneda005}}</td>
-                            </tr>
-                            <tr>
-                                <td>${{reporteCaja.cantidadMoneda001}}</td>
-                                <td>${{reporteCaja.denominacionMoneda001}}</td>
-                                <td>${{reporteCaja.totalMoneda001}}</td>
                             </tr>
                         </tbody>
                     </table>
