@@ -83,17 +83,8 @@ export class FacturaCompraService {
     );
   }
 
-  activar(facturaCompra: FacturaCompra): Observable<Respuesta> {
-    return this.http.patch(environment.host + urn.ruta + urn.facturaCompra + urn.activar, facturaCompra, options).pipe(
-      map(response => response as Respuesta),
-      catchError(err => {
-        return throwError(()=>err);
-      })
-    );
-  }
-
-  inactivar(facturaCompra: FacturaCompra): Observable<Respuesta> {
-    return this.http.patch(environment.host + urn.ruta + urn.facturaCompra + urn.inactivar, facturaCompra, options).pipe(
+  anular(facturaCompra: FacturaCompra): Observable<Respuesta> {
+    return this.http.patch(environment.host + urn.ruta + urn.facturaCompra + urn.anular, facturaCompra, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);

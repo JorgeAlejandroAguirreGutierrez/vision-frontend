@@ -47,10 +47,9 @@ export class NotaDebitoCompraComponent implements OnInit {
   
   si = valores.si;
   no = valores.no;
-  estadoActivo: string = valores.estadoActivo;
-  estadoInactivo: string = valores.estadoInactivo;
-  estadoInternoPorPagar: string = valores.estadoInternoPorPagar;
-  estadoInternoPagada: string = valores.estadoInternoPagada;
+  procesoPorPagar: string = valores.procesoPorPagar;
+  procesoPagada: string = valores.procesoPagada;
+  procesoAnulada: string = valores.procesoAnulada;
   
   controlIdentificacionProveedor = new UntypedFormControl();
   controlNombreComercialProveedor = new UntypedFormControl();
@@ -72,8 +71,7 @@ export class NotaDebitoCompraComponent implements OnInit {
     { nombreColumna: 'comprobante', cabecera: 'Comprobante', celda: (row: NotaDebitoCompra) => `${row.numeroComprobante}`},
     { nombreColumna: 'proveedor', cabecera: 'Proveedor', celda: (row: NotaDebitoCompra) => `${row.facturaCompra.proveedor.razonSocial}`},
     { nombreColumna: 'total', cabecera: 'Total', celda: (row: NotaDebitoCompra) => `$${row.total}`},
-    { nombreColumna: 'proceso', cabecera: 'Proceso', celda: (row: NotaDebitoCompra) => `${row.estadoInterno}`},
-    { nombreColumna: 'estado', cabecera: 'Estado', celda: (row: NotaDebitoCompra) => `${row.estado}`}
+    { nombreColumna: 'proceso', cabecera: 'Proceso', celda: (row: NotaDebitoCompra) => `${row.proceso}`}
   ];
   cabecera: string[]  = this.columnas.map(titulo => titulo.nombreColumna);
   dataSource: MatTableDataSource<NotaDebitoCompra>;
@@ -350,23 +348,10 @@ export class NotaDebitoCompraComponent implements OnInit {
     );
   }
 
-  activar(event) {
+  anular(event) {
     if (event != null)
       event.preventDefault();
-    this.notaDebitoCompraService.activar(this.notaDebitoCompra).subscribe({
-      next: res => {
-        Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
-        this.consultar();
-        this.nuevo(null);
-      },
-      error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
-    });
-  }
-
-  inactivar(event) {
-    if (event != null)
-      event.preventDefault();
-    this.notaDebitoCompraService.inactivar(this.notaDebitoCompra).subscribe({
+    this.notaDebitoCompraService.anular(this.notaDebitoCompra).subscribe({
       next: res => {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
         this.consultar();

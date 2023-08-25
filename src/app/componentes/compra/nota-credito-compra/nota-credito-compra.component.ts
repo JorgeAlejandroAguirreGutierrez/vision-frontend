@@ -37,10 +37,9 @@ export class NotaCreditoCompraComponent implements OnInit {
 
   si: string = valores.si;
   no: string = valores.no;
-  estadoActivo: string = valores.estadoActivo;
-  estadoInactivo: string = valores.estadoInactivo;
-  estadoInternoPorPagar: string = valores.estadoInternoPorPagar;
-  estadoInternoPagada: string = valores.estadoInternoPagada;
+  procesoPorPagar: string = valores.procesoPorPagar;
+  procesoPagada: string = valores.procesoPagada;
+  procesoAnulada: string = valores.procesoAnulada;
   devolucion: string = valores.devolucion;
   descuento: string = valores.descuento;
   conjunta: string = valores.conjunta;
@@ -49,7 +48,6 @@ export class NotaCreditoCompraComponent implements OnInit {
 
   sesion: Sesion = null;
   empresa: Empresa = new Empresa();
-  facturaCompra: FacturaCompra = new FacturaCompra();
   notaCreditoCompra: NotaCreditoCompra = new NotaCreditoCompra();
   notaCreditoCompraLinea: NotaCreditoCompraLinea = new NotaCreditoCompraLinea();
 
@@ -70,8 +68,7 @@ export class NotaCreditoCompraComponent implements OnInit {
     { nombreColumna: 'comprobante', cabecera: 'Comprobante', celda: (row: NotaCreditoCompra) => `${row.numeroComprobante}` },
     { nombreColumna: 'proveedor', cabecera: 'Proveedor', celda: (row: NotaCreditoCompra) => `${row.facturaCompra.proveedor.nombreComercial}` },
     { nombreColumna: 'total', cabecera: 'Total', celda: (row: NotaCreditoCompra) => `$${row.total}` },
-    { nombreColumna: 'proceso', cabecera: 'Proceso', celda: (row: NotaCreditoCompra) => `${row.estadoInterno}` },
-    { nombreColumna: 'estado', cabecera: 'Estado', celda: (row: NotaCreditoCompra) => `${row.estado}` }
+    { nombreColumna: 'proceso', cabecera: 'Proceso', celda: (row: NotaCreditoCompra) => `${row.proceso}` }
   ];
   cabecera: string[] = this.columnas.map(titulo => titulo.nombreColumna);
   dataSource: MatTableDataSource<NotaCreditoCompra>;
@@ -185,23 +182,10 @@ export class NotaCreditoCompraComponent implements OnInit {
     });
   }
 
-  activar(event) {
+  anular(event) {
     if (event != null)
       event.preventDefault();
-    this.notaCreditoCompraService.activar(this.notaCreditoCompra).subscribe({
-      next: res => {
-        Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
-        this.consultar();
-        this.nuevo(null);
-      },
-      error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
-    });
-  }
-
-  inactivar(event) {
-    if (event != null)
-      event.preventDefault();
-    this.notaCreditoCompraService.inactivar(this.notaCreditoCompra).subscribe({
+    this.notaCreditoCompraService.anular(this.notaCreditoCompra).subscribe({
       next: res => {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
         this.consultar();
@@ -225,7 +209,7 @@ export class NotaCreditoCompraComponent implements OnInit {
     this.dataSource = new MatTableDataSource(notasCreditosCompras);
     this.dataSource.filterPredicate = (data: NotaCreditoCompra, filter: string): boolean =>
       this.datepipe.transform(data.fecha, valores.fechaCorta).includes(filter) || data.numeroComprobante.includes(filter) || data.secuencial.includes(filter) || 
-      data.facturaCompra.proveedor.razonSocial.includes(filter) || data.estado.includes(filter);
+      data.facturaCompra.proveedor.razonSocial.includes(filter) || data.proceso.includes(filter);
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
   }
@@ -284,7 +268,7 @@ export class NotaCreditoCompraComponent implements OnInit {
     let proveedorId = event.option.value.id;
     this.proveedorService.obtener(proveedorId).subscribe({
       next: res => {
-        this.facturaCompra.proveedor = res.resultado as Proveedor;
+        this.notaCreditoCompra.facturaCompra.proveedor = res.resultado as Proveedor;
         this.consultarFacturasCompras(proveedorId);
       },
       error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
@@ -301,7 +285,7 @@ export class NotaCreditoCompraComponent implements OnInit {
     let proveedorId = event.option.value.id;
     this.proveedorService.obtener(proveedorId).subscribe({
       next: res => {
-        this.facturaCompra.proveedor = res.resultado as Proveedor;
+        this.notaCreditoCompra.facturaCompra.proveedor = res.resultado as Proveedor;
         this.consultarFacturasCompras(proveedorId);
       },
       error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })

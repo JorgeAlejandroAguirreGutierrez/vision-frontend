@@ -39,10 +39,12 @@ export class FacturaCompraComponent implements OnInit {
 
   si: string = valores.si;
   no: string = valores.no;
-  activo: string = valores.estadoActivo;
-  inactivo: string = valores.estadoInactivo;
-  ultimoCostoCompra: number = valores.cero;
+  
+  procesoPorPagar: string = valores.procesoPorPagar;
+  procesoPagada: string = valores.procesoPagada;
+  procesoAnulada: string = valores.procesoAnulada;
 
+  ultimoCostoCompra: number = valores.cero;
   indiceLinea: number;
 
   abrirPanelFacturaCompra: boolean = true;
@@ -83,8 +85,7 @@ export class FacturaCompraComponent implements OnInit {
     { nombreColumna: 'descuento', cabecera: 'Desc.', celda: (row: FacturaCompra) => `$${row.descuento}`},
     { nombreColumna: 'impuesto', cabecera: 'IVA', celda: (row: FacturaCompra) => `$${row.importeIvaTotal}`},
     { nombreColumna: 'total', cabecera: 'Total', celda: (row: FacturaCompra) => `$${row.total}`},
-    { nombreColumna: 'proceso', cabecera: 'Proceso', celda: (row: FacturaCompra) => `${row.estadoInterno}`},
-    { nombreColumna: 'estado', cabecera: 'Estado', celda: (row: FacturaCompra) => `${row.estado}`}
+    { nombreColumna: 'proceso', cabecera: 'Proceso', celda: (row: FacturaCompra) => `${row.proceso}`}
   ];
   cabeceraFacturaCompra: string[]  = this.columnasFacturaCompra.map(titulo => titulo.nombreColumna);
   dataSourceFacturaCompra: MatTableDataSource<FacturaCompra>;
@@ -234,23 +235,10 @@ export class FacturaCompraComponent implements OnInit {
     });
   }
 
-  activar(event) {
+  anular(event) {
     if (event != null)
       event.preventDefault();
-    this.facturaCompraService.activar(this.facturaCompra).subscribe({
-      next: res => {
-        Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
-        this.consultar();
-        this.nuevo();
-      },
-      error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
-    });
-  }
-
-  inactivar(event) {
-    if (event != null)
-      event.preventDefault();
-    this.facturaCompraService.inactivar(this.facturaCompra).subscribe({
+    this.facturaCompraService.anular(this.facturaCompra).subscribe({
       next: res => {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
         this.consultar();
@@ -274,7 +262,7 @@ export class FacturaCompraComponent implements OnInit {
     this.dataSourceFacturaCompra = new MatTableDataSource(facturasCompras);
     this.dataSourceFacturaCompra.filterPredicate = (data: FacturaCompra, filter: string): boolean =>
       this.datepipe.transform(data.fecha, valores.fechaCorta).includes(filter) || data.numeroComprobante.includes(filter) || 
-      data.proveedor.nombreComercial.includes(filter) || data.estadoInterno.includes(filter) || data.estado.includes(filter);
+      data.proveedor.nombreComercial.includes(filter) || data.proceso.includes(filter);
       this.dataSourceFacturaCompra.paginator = this.paginatorFacturaCompra;
     this.dataSourceFacturaCompra.sort = this.sort;
   }

@@ -82,9 +82,8 @@ export class NotaDebitoComponent implements OnInit {
     { nombreColumna: 'cliente', cabecera: 'Cliente', celda: (row: NotaDebito) => `${row.factura.cliente.razonSocial}`},
     { nombreColumna: 'factura', cabecera: 'Factura', celda: (row: NotaDebito) => `${row.factura.numeroComprobante}`},
     { nombreColumna: 'total', cabecera: 'Total', celda: (row: NotaDebito) => `$${row.total}`},
-    { nombreColumna: 'proceso', cabecera: 'Proceso', celda: (row: NotaDebito) => `${row.estadoInterno}`},
-    { nombreColumna: 'estado', cabecera: 'Estado', celda: (row: NotaDebito) => `${row.estado}`},
-    { nombreColumna: 'estadoSri', cabecera: 'Estado SRI', celda: (row: NotaDebito) => `${row.estadoSri}`}
+    { nombreColumna: 'proceso', cabecera: 'Proceso', celda: (row: NotaDebito) => `${row.proceso}`},
+    { nombreColumna: 'estadoSRI', cabecera: 'Estado SRI', celda: (row: NotaDebito) => `${row.estadoSRI}`}
   ];
   cabecera: string[]  = this.columnas.map(titulo => titulo.nombreColumna);
   dataSource: MatTableDataSource<NotaDebito>;
@@ -143,14 +142,12 @@ export class NotaDebitoComponent implements OnInit {
   sesion: Sesion = null;
   empresa: Empresa = null;
   
-  estadoActivo: string = valores.estadoActivo;
-  estadoInactivo: string = valores.estadoInactivo;
-  estadoInternoEmitida: string = valores.estadoInternoEmitida;
-  estadoInternoRecaudada: string = valores.estadoInternoRecaudada;
-  estadoInternoAnulada: string = valores.estadoInternoAnulada
-  estadoSriPendiente: string = valores.estadoSriPendiente;
-  estadoSriAutorizada: string = valores.estadoSriAutorizada;
-  estadoSriAnulada: string = valores.estadoSriAnulada;
+  procesoEmitida: string = valores.procesoEmitida;
+  procesoRecaudada: string = valores.procesoRecaudada;
+  procesoAnulada: string = valores.procesoAnulada
+  estadoSRIPendiente: string = valores.estadoSRIPendiente;
+  estadoSRIAutorizada: string = valores.estadoSRIAutorizada;
+  estadoSRIAnulada: string = valores.estadoSRIAnulada;
   si = valores.si;
   no = valores.no;
 
@@ -386,7 +383,7 @@ export class NotaDebitoComponent implements OnInit {
         this.notaDebito.factura.cliente = res.resultado as Cliente;
         this.controlIdentificacionCliente.patchValue(this.notaDebito.factura.cliente);
         this.controlRazonSocialCliente.patchValue(this.notaDebito.factura.cliente);
-        this.facturaService.consultarPorEmpresaYClienteYEstado(this.empresa.id, this.notaDebito.factura.cliente.id, this.estadoActivo).subscribe(
+        this.facturaService.consultarPorEmpresaYClienteYEstado(this.empresa.id, this.notaDebito.factura.cliente.id, valores.estadoActivo).subscribe(
           res => {
             this.facturas = res.resultado as Factura[];
             this.spinnerService.hide();
@@ -600,23 +597,10 @@ export class NotaDebitoComponent implements OnInit {
     );
   }
 
-  activar(event) {
+  anular(event) {
     if (event != null)
       event.preventDefault();
-    this.notaDebitoService.activar(this.notaDebito).subscribe({
-      next: res => {
-        Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
-        this.consultar();
-        this.nuevo(null);
-      },
-      error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
-    });
-  }
-
-  inactivar(event) {
-    if (event != null)
-      event.preventDefault();
-    this.notaDebitoService.inactivar(this.notaDebito).subscribe({
+    this.notaDebitoService.anular(this.notaDebito).subscribe({
       next: res => {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
         this.consultar();
@@ -788,7 +772,6 @@ export class NotaDebitoComponent implements OnInit {
       this.notaDebito = event;
       let fecha = new Date(this.notaDebito.fecha);
       this.notaDebito.fecha = fecha;
-      this.notaDebito.estado = event.estado;
     }
   }
 

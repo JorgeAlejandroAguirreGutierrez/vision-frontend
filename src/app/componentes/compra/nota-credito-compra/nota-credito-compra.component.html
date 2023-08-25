@@ -1,11 +1,11 @@
 <nav class="navbar-light nav-fijo">
     <ul class="navbar-nav">
-        <li class="nav-item" *ngIf="notaCreditoCompra.id==0">
+        <li class="nav-item" *ngIf="notaCreditoCompra.id == 0">
             <a class="nav-link" title="Guardar" role="button" (click)="crear($event)">
                 <mat-icon>save</mat-icon>
             </a>
         </li>
-        <li class="nav-item" *ngIf="notaCreditoCompra.id!=0">
+        <li class="nav-item" *ngIf="notaCreditoCompra.id != 0 && notaCreditoCompra.proceso != procesoAnulada">
             <a class="nav-link" title="Actualizar" role="button" (click)="actualizar($event)">
                 <mat-icon>update</mat-icon>
             </a>
@@ -15,18 +15,11 @@
                 <mat-icon>file_copy</mat-icon>
             </a>
         </li>
-        <ng-container *ngIf="notaCreditoCompra.id!=0">
-            <li class="nav-item" *ngIf="notaCreditoCompra.estado!=estadoActivo">
-                <a class="nav-link" title="Activar" role="button" (click)="activar($event)">
-                    <mat-icon>assignment_turned_in</mat-icon>
-                </a>
-            </li>
-            <li class="nav-item" *ngIf="notaCreditoCompra.estado==estadoActivo">
-                <a class="nav-link" title="Inactivar" role="button" (click)="inactivar($event)">
-                    <mat-icon>delete_forever</mat-icon>
-                </a>
-            </li>
-        </ng-container>
+        <li class="nav-item" *ngIf="notaCreditoCompra.id != 0 && notaCreditoCompra.proceso != procesoAnulada">
+            <a class="nav-link" title="Anular" role="button" (click)="anular($event)">
+                <mat-icon>assignment_turned_in</mat-icon>
+            </a>
+        </li>
     </ul>
 </nav>
 <div class="contenedor">
@@ -154,11 +147,8 @@
                     </div>
                     <div class="col-7">
                         <mat-form-field appearance="standard">
-                            <mat-label>Estado</mat-label>
-                            <mat-select class="form-control-sm" [(ngModel)]="notaCreditoCompra.facturaCompra.estado" [disabled]="true">
-                                <mat-option [value]="estadoActivo">{{estadoActivo}}</mat-option>
-                                <mat-option [value]="estadoInactivo">{{estadoInactivo}}</mat-option>
-                            </mat-select>
+                            <mat-label>Proceso</mat-label>
+                            <input matInput type="text" class="form-control-sm" [(ngModel)]="notaCreditoCompra.proceso" [disabled]="true">
                         </mat-form-field>
                     </div>
                 </div>
