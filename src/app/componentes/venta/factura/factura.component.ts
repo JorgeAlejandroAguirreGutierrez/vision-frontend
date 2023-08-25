@@ -742,6 +742,8 @@ export class FacturaComponent implements OnInit {
 
   //VALIDACIONES
   validarFormulario(): boolean {
+    console.log(this.factura.fecha);
+    console.log(this.hoy);
     if (this.factura.fecha == null || this.factura.fecha > this.hoy){
       Swal.fire({ icon: error_swal, title: error, text: mensajes.error_fecha });
       return false;
