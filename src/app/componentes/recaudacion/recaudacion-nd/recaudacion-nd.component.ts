@@ -60,14 +60,13 @@ export class RecaudacionNDComponent implements OnInit {
 
   menosUno: number = valores.menosUno;
 
-  estadoActivo: string = valores.estadoActivo;
-  estadoInactivo: string = valores.estadoInactivo;
-  estadoInternoEmitida: string = valores.estadoInternoEmitida;
-  estadoInternoRecaudada: string = valores.estadoInternoRecaudada;
-  estadoInternoAnulada: string = valores.estadoInternoAnulada
-  estadoSriPendiente: string = valores.estadoSriPendiente;
-  estadoSriAutorizada: string = valores.estadoSriAutorizada;
-  estadoSriAnulada: string = valores.estadoSriAnulada;
+  procesoEmitida: string = valores.procesoEmitida;
+  procesoRecaudada: string = valores.procesoRecaudada;
+  procesoAnulada: string = valores.procesoAnulada
+  estadoSRIPendiente: string = valores.estadoSRIPendiente;
+  estadoSRIAutorizada: string = valores.estadoSRIAutorizada;
+  estadoSRIAnulada: string = valores.estadoSRIAnulada;
+  
   si: string = valores.si;
   no: string = valores.no;
   chequeALaVista: string = valores.chequeALaVista;

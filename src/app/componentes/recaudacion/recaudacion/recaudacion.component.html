@@ -1,77 +1,76 @@
 <div class="container">
     <nav class="navbar-light nav-fijo">
         <ul class="navbar-nav">
-            <li class="nav-item" *ngIf="factura.id != 0 && factura.estado == estadoActivo && factura.estadoSri == estadoSriPendiente">
+            <li class="nav-item" *ngIf="factura.id != 0 && factura.proceso != procesoAnulada && factura.estadoSRI == estadoSRIAnulada">
                 <a class="nav-link" title="Guardar" href="#" role="button" (click)="crearRecaudacion($event)">
                     <mat-icon>save</mat-icon>
                 </a>
             </li>
-            <li class="nav-item" *ngIf="!verPanelCheques && factura.estado == estadoActivo && factura.estadoSri == estadoSriPendiente">
+            <li class="nav-item" *ngIf="!verPanelCheques && factura.id != 0 && factura.proceso != procesoAnulada && factura.estadoSRI != estadoSRIAnulada">
                 <a class="nav-link" title="ver Cheques" role="button" (click)="verPanelCheques = true">
                     <mat-icon>payments</mat-icon>
                 </a>
             </li>
-            <li class="nav-item" *ngIf="verPanelCheques && factura.estado == estadoActivo && factura.estadoSri == estadoSriPendiente">
+            <li class="nav-item" *ngIf="verPanelCheques && factura.id != 0 && factura.proceso == procesoAnulada && factura.estadoSRI != estadoSRIAnulada">
                 <a class="nav-link" title="Ocultar Cheques" role="button" (click)="verPanelCheques = false">
                     <mat-icon>subtitles_off</mat-icon>
                 </a>
             </li>
-            <li class="nav-item" *ngIf="!verPanelDepositos && factura.estado == estadoActivo && factura.estadoSri == estadoSriPendiente">
+            <li class="nav-item" *ngIf="!verPanelDepositos && factura.id != 0 && factura.proceso == procesoAnulada && factura.estadoSRI != estadoSRIAnulada">
                 <a class="nav-link" title="ver Depósitos" role="button" (click)="verPanelDepositos = true">
                     <mat-icon>receipt_long</mat-icon>
                 </a>
             </li>
-            <li class="nav-item" *ngIf="verPanelDepositos && factura.estado == estadoActivo && factura.estadoSri == estadoSriPendiente">
+            <li class="nav-item" *ngIf="verPanelDepositos && factura.id != 0 && factura.proceso == procesoAnulada && factura.estadoSRI != estadoSRIAnulada">
                 <a class="nav-link" title="Ocultar Depósitos" role="button" (click)="verPanelDepositos = false">
                     <mat-icon>signal_cellular_no_sim</mat-icon>
                 </a>
             </li>
-            <li class="nav-item" *ngIf="!verPanelTransferencias && factura.estado == estadoActivo && factura.estadoSri == estadoSriPendiente">
+            <li class="nav-item" *ngIf="!verPanelTransferencias && factura.id != 0 && factura.proceso == procesoAnulada && factura.estadoSRI != estadoSRIAnulada">
                 <a class="nav-link" title="ver Transferencias" role="button" (click)="verPanelTransferencias = true">
                     <mat-icon>move_down</mat-icon>
                 </a>
             </li>
-            <li class="nav-item" *ngIf="verPanelTransferencias && factura.estado == estadoActivo && factura.estadoSri == estadoSriPendiente">
+            <li class="nav-item" *ngIf="verPanelTransferencias && factura.id != 0 && factura.proceso == procesoAnulada && factura.estadoSRI != estadoSRIAnulada">
                 <a class="nav-link" title="Ocultar Transferencias" role="button"
                     (click)="verPanelTransferencias = false">
                     <mat-icon>move_up</mat-icon>
                 </a>
             </li>
-            <li class="nav-item" *ngIf="!verPanelTarjetasCredito && factura.estado == estadoActivo && factura.estadoSri == estadoSriPendiente">
+            <li class="nav-item" *ngIf="!verPanelTarjetasCredito && factura.id != 0 && factura.proceso == procesoAnulada && factura.estadoSRI != estadoSRIAnulada">
                 <a class="nav-link" title="ver T. Crédito" role="button" (click)="verPanelTarjetasCredito = true">
                     <mat-icon>add_card</mat-icon>
                 </a>
             </li>
-            <li class="nav-item" *ngIf="verPanelTarjetasCredito && factura.estado == estadoActivo && factura.estadoSri == estadoSriPendiente">
+            <li class="nav-item" *ngIf="verPanelTarjetasCredito && factura.id != 0 && factura.proceso == procesoAnulada && factura.estadoSRI != estadoSRIAnulada">
                 <a class="nav-link" title="Ocultar T. Crédito" role="button" (click)="verPanelTarjetasCredito = false">
                     <mat-icon>credit_card_off</mat-icon>
                 </a>
             </li>
-            <li class="nav-item" *ngIf="!verPanelTarjetasDebito && factura.estado == estadoActivo && factura.estadoSri == estadoSriPendiente">
+            <li class="nav-item" *ngIf="!verPanelTarjetasDebito && factura.id != 0 && factura.proceso == procesoAnulada && factura.estadoSRI != estadoSRIAnulada">
                 <a class="nav-link" title="ver T. Débito" role="button" (click)="verPanelTarjetasDebito = true">
                     <mat-icon>local_atm</mat-icon>
                 </a>
             </li>
-            <li class="nav-item" *ngIf="verPanelTarjetasDebito && factura.estado == estadoActivo && factura.estadoSri == estadoSriPendiente">
+            <li class="nav-item" *ngIf="verPanelTarjetasDebito && factura.id != 0 && factura.proceso == procesoAnulada && factura.estadoSRI != estadoSRIAnulada">
                 <a class="nav-link" title="Ocultar T. Débito" role="button" (click)="verPanelTarjetasDebito = false">
                     <mat-icon>money_off_csred</mat-icon>
                 </a>
             </li>
-            <li class="nav-item"
-                *ngIf="factura.id != 0 && factura.estado == estadoActivo && factura.estadoInterno == estadoInternoRecaudada && factura.estadoSri == estadoSriPendiente">
+            <li class="nav-item" *ngIf="factura.id != 0 && factura.proceso != procesoEmitida && factura.proceso != procesoAnulada && factura.estadoSRI != estadoSRIAnulada && factura.estadoSRI != estadoSRIPendiente">
                 <a class="nav-link" title="Crear Factura Electronica" href="#" role="button"
                     (click)="crearFacturaElectronica($event)">
                     <mat-icon>point_of_sale</mat-icon>
                 </a>
             </li>
             <li class="nav-item"
-                *ngIf="factura.id != 0 && factura.estado == estadoActivo && factura.estadoInterno == estadoInternoRecaudada">
+                *ngIf="factura.id != 0 && factura.proceso != procesoEmitida && factura.proceso != procesoAnulada && factura.estadoSRI != estadoSRIAnulada">
                 <a class="nav-link" title="Obtener PDF" href="#" role="button" (click)="obtenerPDF($event)">
                     <mat-icon>picture_as_pdf</mat-icon>
                 </a>
             </li>
             <li class="nav-item"
-                *ngIf="factura.id != 0 && factura.estado == estadoActivo && factura.estadoInterno == estadoInternoRecaudada && factura.estadoSri == estadoSriAutorizada">
+                *ngIf="factura.id != 0 && factura.proceso != procesoEmitida && factura.proceso != procesoAnulada && factura.estadoSRI != estadoSRIAnulada && factura.estadoSRI != estadoSRIPendiente">
                 <a class="nav-link" title="Enviar PDF Y XML" href="#" role="button" (click)="enviarPDFYXML($event)">
                     <mat-icon>forward_to_inbox</mat-icon>
                 </a>
@@ -196,11 +195,8 @@
                             </div>
                             <div class="col-6">
                                 <mat-form-field appearance="standard">
-                                    <mat-label>Estado</mat-label>
-                                    <mat-select [(ngModel)]="factura.estado" [disabled]="true" class="form-control-sm">
-                                        <mat-option [value]="estadoActivo">{{estadoActivo}}</mat-option>
-                                        <mat-option [value]="estadoInactivo">{{estadoInactivo}}</mat-option>
-                                    </mat-select>
+                                    <mat-label>Proceso</mat-label>
+                                    <input matInput type="text" [(ngModel)]="factura.proceso" [disabled]="true" class="form-control-sm">
                                 </mat-form-field>
                             </div>
                         </div>

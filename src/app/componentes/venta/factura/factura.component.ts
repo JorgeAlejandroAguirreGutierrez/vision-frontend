@@ -48,16 +48,15 @@ export class FacturaComponent implements OnInit {
 
   si: string = valores.si;
   no: string = valores.no;
-  estadoActivo: string = valores.estadoActivo;
-  estadoInactivo: string = valores.estadoInactivo;
-  estadoInternoEmitida: string = valores.estadoInternoEmitida;
-  estadoInternoRecaudada: string = valores.estadoInternoRecaudada;
-  estadoInternoAnulada: string = valores.estadoInternoAnulada
-  estadoSriPendiente: string = valores.estadoSriPendiente;
-  estadoSriAutorizada: string = valores.estadoSriAutorizada;
-  estadoSriAnulada: string = valores.estadoSriAnulada;
-  categoriaProducto: string = valores.bien;
+  
+  procesoEmitida: string = valores.procesoEmitida;
+  procesoRecaudada: string = valores.procesoRecaudada;
+  procesoAnulada: string = valores.procesoAnulada
+  estadoSRIPendiente: string = valores.estadoSRIPendiente;
+  estadoSRIAutorizada: string = valores.estadoSRIAutorizada;
+  estadoSRIAnulada: string = valores.estadoSRIAnulada;
 
+  categoriaProducto: string = valores.bien;
   saldo: number = valores.cero;
   saldoTotal: number = valores.cero;
   costoUnitario: number = valores.cero;
@@ -103,9 +102,8 @@ export class FacturaComponent implements OnInit {
     { nombreColumna: 'comprobante', cabecera: 'Comprobante', celda: (row: Factura) => `${row.numeroComprobante}` },
     { nombreColumna: 'cliente', cabecera: 'Cliente', celda: (row: Factura) => `${row.cliente.razonSocial}` },
     { nombreColumna: 'total', cabecera: 'Total', celda: (row: Factura) => `$${row.total}` },
-    { nombreColumna: 'proceso', cabecera: 'Proceso', celda: (row: Factura) => `${row.estadoInterno}` },
-    { nombreColumna: 'estado', cabecera: 'Estado', celda: (row: Factura) => `${row.estado}` },
-    { nombreColumna: 'estadoSri', cabecera: 'Estado SRI', celda: (row: Factura) => `${row.estadoSri}` }
+    { nombreColumna: 'proceso', cabecera: 'Proceso', celda: (row: Factura) => `${row.proceso}` },
+    { nombreColumna: 'estadoSri', cabecera: 'Estado SRI', celda: (row: Factura) => `${row.estadoSRI}` }
   ];
   cabeceraFactura: string[] = this.columnasFactura.map(titulo => titulo.nombreColumna);
   dataSourceFactura: MatTableDataSource<Factura>;
@@ -336,26 +334,13 @@ export class FacturaComponent implements OnInit {
       this.factura = event;
       let fecha = new Date(this.factura.fecha);
       this.factura.fecha = fecha;
-      this.factura.estado = event.estado;
     }
   }
 
-  activar(event) {
+  anular(event) {
     if (event != null)
       event.preventDefault();
-    this.facturaService.activar(this.factura).subscribe({
-      next: res => {
-        Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
-        this.consultar();
-      },
-      error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
-    });
-  }
-
-  inactivar(event) {
-    if (event != null)
-      event.preventDefault();
-    this.facturaService.inactivar(this.factura).subscribe({
+    this.facturaService.anular(this.factura).subscribe({
       next: res => {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
         this.consultar();
@@ -380,7 +365,7 @@ export class FacturaComponent implements OnInit {
     this.dataSourceFactura = new MatTableDataSource(facturas);
     this.dataSourceFactura.filterPredicate = (data: Factura, filter: string): boolean =>
       this.datepipe.transform(data.fecha, "dd-MM-yyyy").includes(filter) || data.numeroComprobante.includes(filter) || data.secuencial.includes(filter) || 
-      data.cliente.razonSocial.includes(filter) || data.estadoInterno.includes(filter) || data.estado.includes(filter) || data.estadoSri.includes(filter);
+      data.cliente.razonSocial.includes(filter) || data.proceso.includes(filter) || data.estadoSRI.includes(filter);
     this.dataSourceFactura.paginator = this.paginator;
     this.dataSourceFactura.sort = this.sort;
   }

@@ -75,17 +75,8 @@ export class NotaDebitoCompraService {
     );
   }
 
-  activar(notaDebitoCompra: NotaDebitoCompra): Observable<Respuesta> {
-    return this.http.patch(environment.host + urn.ruta + urn.notaDebitoCompra + urn.activar, notaDebitoCompra, options).pipe(
-      map(response => response as Respuesta),
-      catchError(err => {
-        return throwError(()=>err);
-      })
-    );
-  }
-
-  inactivar(notaDebitoCompra: NotaDebitoCompra): Observable<Respuesta> {
-    return this.http.patch(environment.host + urn.ruta + urn.notaDebitoCompra + urn.inactivar, notaDebitoCompra, options).pipe(
+  anular(notaDebitoCompra: NotaDebitoCompra): Observable<Respuesta> {
+    return this.http.patch(environment.host + urn.ruta + urn.notaDebitoCompra + urn.anular, notaDebitoCompra, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);

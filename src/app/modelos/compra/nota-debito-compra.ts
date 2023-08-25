@@ -13,8 +13,7 @@ export class NotaDebitoCompra {
     numeroComprobante: string;
     operacion: string;
     fecha: Date;
-    estadoInterno: string;
-    estado: string;    
+    proceso: string;
     descuento: number;
     subtotal: number;
     subtotalGravado: number;
@@ -37,8 +36,7 @@ export class NotaDebitoCompra {
         this.numeroComprobante = valores.vacio;
         this.operacion = valores.vacio;
         this.fecha = new Date();
-        this.estadoInterno = valores.estadoInternoPorPagar;
-        this.estado = valores.estadoActivo;    
+        this.proceso = valores.vacio;    
         this.descuento = valores.cero;
         this.subtotal = valores.cero;
         this.subtotalGravado = valores.cero;

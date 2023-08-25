@@ -1,5 +1,4 @@
 import { Component, HostListener, OnInit, ViewChild, ElementRef, Renderer2 } from '@angular/core';
-import { UntypedFormControl } from '@angular/forms';
 import { valores, mensajes, validarSesion, exito, exito_swal, error, error_swal } from '../../../constantes';
 import { Router } from '@angular/router';
 import { NgxSpinnerService } from 'ngx-spinner';
@@ -41,12 +40,12 @@ export class NotaCreditoComponent implements OnInit {
   no: string = valores.no;
   estadoActivo: string = valores.estadoActivo;
   estadoInactivo: string = valores.estadoInactivo;
-  estadoInternoEmitida: string = valores.estadoInternoEmitida;
-  estadoInternoRecaudada: string = valores.estadoInternoRecaudada;
-  estadoInternoAnulada: string = valores.estadoInternoAnulada
-  estadoSriPendiente: string = valores.estadoSriPendiente;
-  estadoSriAutorizada: string = valores.estadoSriAutorizada;
-  estadoSriAnulada: string = valores.estadoSriAnulada;
+  procesoEmitida: string = valores.procesoEmitida;
+  procesoRecaudada: string = valores.procesoRecaudada;
+  procesoAnulada: string = valores.procesoAnulada
+  estadoSRIPendiente: string = valores.estadoSRIPendiente;
+  estadoSRIAutorizada: string = valores.estadoSRIAutorizada;
+  estadoSRIAnulada: string = valores.estadoSRIAnulada;
   devolucion: string = valores.devolucion;
   descuento: string = valores.descuento;
   conjunta: string = valores.conjunta;
@@ -78,9 +77,8 @@ export class NotaCreditoComponent implements OnInit {
     { nombreColumna: 'cliente', cabecera: 'Cliente', celda: (row: NotaCredito) => `${row.factura.cliente.razonSocial}`},
     { nombreColumna: 'factura', cabecera: 'Factura', celda: (row: NotaCredito) => `${row.factura.numeroComprobante}`},
     { nombreColumna: 'total', cabecera: 'Total', celda: (row: NotaCredito) => `$${row.total}`},
-    { nombreColumna: 'proceso', cabecera: 'Proceso', celda: (row: NotaCredito) => `${row.estadoInterno}`},
-    { nombreColumna: 'estado', cabecera: 'Estado', celda: (row: NotaCredito) => `${row.estado}`},
-    { nombreColumna: 'estadoSri', cabecera: 'Estado SRI', celda: (row: NotaCredito) => `${row.estadoSri}`}
+    { nombreColumna: 'proceso', cabecera: 'Proceso', celda: (row: NotaCredito) => `${row.proceso}`},
+    { nombreColumna: 'estadoSRI', cabecera: 'Estado SRI', celda: (row: NotaCredito) => `${row.estadoSRI}`}
   ];
   cabecera: string[]  = this.columnas.map(titulo => titulo.nombreColumna);
   dataSource: MatTableDataSource<NotaCredito>;
@@ -216,23 +214,10 @@ export class NotaCreditoComponent implements OnInit {
     );
   }
 
-  activar(event) {
+  anular(event) {
     if (event != null)
       event.preventDefault();
-    this.notaCreditoService.activar(this.notaCredito).subscribe({
-      next: res => {
-        Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
-        this.consultar();
-        this.nuevo(null);
-      },
-      error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
-    });
-  }
-
-  inactivar(event) {
-    if (event != null)
-      event.preventDefault();
-    this.notaCreditoService.inactivar(this.notaCredito).subscribe({
+    this.notaCreditoService.anular(this.notaCredito).subscribe({
       next: res => {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
         this.consultar();
@@ -257,7 +242,7 @@ export class NotaCreditoComponent implements OnInit {
     this.dataSource.filterPredicate = (data: NotaCredito, filter: string): boolean =>
       this.datepipe.transform(data.fecha, "dd-MM-yyyy").includes(filter) || data.numeroComprobante.includes(filter) || 
       data.secuencial.includes(filter) || data.factura.cliente.razonSocial.includes(filter) || 
-      data.estadoInterno.includes(filter) || data.estado.includes(filter) || data.estadoSri.includes(filter);
+      data.proceso.includes(filter) || data.estadoSRI.includes(filter);
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
   }

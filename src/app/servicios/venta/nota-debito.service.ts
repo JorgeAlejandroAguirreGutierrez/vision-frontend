@@ -129,17 +129,8 @@ export class NotaDebitoService {
     );
   }
 
-  activar(notaDebito: NotaDebito): Observable<Respuesta> {
-    return this.http.patch(environment.host + urn.ruta + urn.notaDebito + urn.activar, notaDebito, options).pipe(
-      map(response => response as Respuesta),
-      catchError(err => {
-        return throwError(()=>err);
-      })
-    );
-  }
-
-  inactivar(notaDebito: NotaDebito): Observable<Respuesta> {
-    return this.http.patch(environment.host + urn.ruta + urn.notaDebito + urn.inactivar, notaDebito, options).pipe(
+  anular(notaDebito: NotaDebito): Observable<Respuesta> {
+    return this.http.patch(environment.host + urn.ruta + urn.notaDebito + urn.anular, notaDebito, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);

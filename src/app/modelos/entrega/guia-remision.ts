@@ -28,9 +28,8 @@ export class GuiaRemision {
     celularDestinatario: string;
     correoDestinatario: string;
     opcionGuia: string;
-    estado: string;
-    estadoInterno: string;
-    estadoSri: string;
+    proceso: string;
+    estadoSRI: string;
     tipoComprobante: TipoComprobante;
     sesion: Sesion;
     transportista: Transportista;
@@ -52,9 +51,8 @@ export class GuiaRemision {
         this.celularDestinatario = valores.vacio;
         this.correoDestinatario = valores.vacio;
         this.opcionGuia = valores.clienteDireccion;
-        this.estado = valores.estadoActivo;
-        this.estadoInterno = valores.vacio;
-        this.estadoSri = valores.vacio;
+        this.proceso = valores.vacio;
+        this.estadoSRI = valores.vacio;
         this.tipoComprobante = new TipoComprobante();
         this.sesion = new Sesion();
         this.transportista = new Transportista();

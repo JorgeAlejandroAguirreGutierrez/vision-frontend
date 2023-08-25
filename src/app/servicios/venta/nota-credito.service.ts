@@ -75,17 +75,8 @@ export class NotaCreditoService {
     );
   }
 
-  activar(notaCredito: NotaCredito): Observable<Respuesta> {
-    return this.http.patch(environment.host + urn.ruta + urn.notaCredito + urn.activar, notaCredito, options).pipe(
-      map(response => response as Respuesta),
-      catchError(err => {
-        return throwError(()=>err);
-      })
-    );
-  }
-
-  inactivar(notaCredito: NotaCredito): Observable<Respuesta> {
-    return this.http.patch(environment.host + urn.ruta + urn.notaCredito + urn.inactivar, notaCredito, options).pipe(
+  anular(notaCredito: NotaCredito): Observable<Respuesta> {
+    return this.http.patch(environment.host + urn.ruta + urn.notaCredito + urn.anular, notaCredito, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);

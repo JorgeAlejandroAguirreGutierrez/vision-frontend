@@ -73,17 +73,8 @@ export class GuiaRemisionService {
     );
   }
   
-  activar(guiaRemision: GuiaRemision): Observable<Respuesta> {
-    return this.http.patch(environment.host + urn.ruta + urn.guiaRemision + urn.activar, guiaRemision, options).pipe(
-      map(response => response as Respuesta),
-      catchError(err => {
-        return throwError(()=>err);
-      })
-    );
-  }
-
-  inactivar(guiaRemision: GuiaRemision): Observable<Respuesta> {
-    return this.http.patch(environment.host + urn.ruta + urn.guiaRemision + urn.inactivar, guiaRemision, options).pipe(
+  anular(guiaRemision: GuiaRemision): Observable<Respuesta> {
+    return this.http.patch(environment.host + urn.ruta + urn.guiaRemision + urn.anular, guiaRemision, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);

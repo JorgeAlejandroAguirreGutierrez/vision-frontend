@@ -9,7 +9,7 @@
                             <mat-icon>save</mat-icon>
                         </a>
                     </li>
-                    <li class="nav-item" *ngIf="notaDebito.id != 0 && notaDebito.estado == estadoActivo && notaDebito.estadoSri == estadoSriPendiente">
+                    <li class="nav-item" *ngIf="notaDebito.id != 0 && notaDebito.proceso != procesoAnulada && notaDebito.estadoSRI != estadoSRIAutorizada">
                         <a class="nav-link" title="Actualizar" role="button" (click)="actualizar($event)">
                             <mat-icon>update</mat-icon>
                         </a>
@@ -19,29 +19,24 @@
                             <mat-icon>file_copy</mat-icon>
                         </a>
                     </li>
-                    <li class="nav-item" *ngIf="notaDebito.id != 0 && notaDebito.estado == estadoInactivo">
-                        <a class="nav-link" title="Activar" role="button" (click)="activar($event)">
+                    <li class="nav-item" *ngIf="notaDebito.id != 0 && notaDebito.proceso != procesoAnulada">
+                        <a class="nav-link" title="Activar" role="button" (click)="anular($event)">
                             <mat-icon>check</mat-icon>
                         </a>
                     </li>
-                    <li class="nav-item" *ngIf="notaDebito.id != 0 && notaDebito.estado == estadoActivo">
-                        <a class="nav-link" title="Inactivar" role="button" (click)="inactivar($event)">
-                            <mat-icon>delete</mat-icon>
-                        </a>
-                    </li>
                     <li class="nav-item"
-                        *ngIf="notaDebito.id != 0 && notaDebito.estado == estadoActivo  && notaDebito.estadoInterno == estadoInternoRecaudada && notaDebito.estadoSri == estadoSriPendiente && notaDebito.factura.estado == estadoActivo && notaDebito.factura.estadoSri == estadoSriAutorizada">
+                        *ngIf="notaDebito.id != 0  && notaDebito.proceso != procesoAnulada && notaDebito.proceso != procesoEmitida && notaDebito.estadoSRI != estadoSRIAutorizada && notaDebito.estadoSRI != estadoSRIAnulada">
                         <a class="nav-link" title="Crear Nota Debito Electronica" href="#" role="button"
                             (click)="crearNotaDebitoElectronica($event)">
                             <mat-icon>point_of_sale</mat-icon>
                         </a>
                     </li>
-                    <li class="nav-item" *ngIf="notaDebito.id != 0 && notaDebito.estado == estadoActivo && notaDebito.estadoInterno == estadoInternoRecaudada">
+                    <li class="nav-item" *ngIf="notaDebito.id != 0 && notaDebito.proceso != procesoEmitida && notaDebito.proceso != procesoAnulada && notaDebito.estadoSRI != estadoSRIAnulada">
                         <a class="nav-link" title="Obtener PDF" href="#" role="button" (click)="obtenerPDF($event)">
                             <mat-icon>picture_as_pdf</mat-icon>
                         </a>
                     </li>
-                    <li class="nav-item" *ngIf="notaDebito.id != 0 && notaDebito.estado == estadoActivo && notaDebito.estadoInterno == estadoInternoRecaudada && notaDebito.estadoSri == estadoSriAutorizada">
+                    <li class="nav-item" *ngIf="notaDebito.id != 0 && notaDebito.proceso != procesoEmitida && notaDebito.proceso != procesoAnulada && notaDebito.estadoSRI != estadoSRIPendiente && notaDebito.estadoSRI != estadoSRIAnulada">
                         <a class="nav-link" title="Enviar PDF Y XML" href="#" role="button" (click)="enviarPDFYXML($event)">
                             <mat-icon>forward_to_inbox</mat-icon>
                         </a>
@@ -194,12 +189,9 @@
                         </div>
                         <div class="col-2">
                             <mat-form-field appearance="standard">
-                                <mat-label>Estado</mat-label>
-                                <mat-select class="form-control-sm" [(ngModel)]="notaDebito.estado"
+                                <mat-label>Proceso</mat-label>
+                                <input matInput type="text" class="form-control-sm" [(ngModel)]="notaDebito.proceso"
                                     [disabled]="true">
-                                    <mat-option [value]="estadoActivo">{{estadoActivo}}</mat-option>
-                                    <mat-option [value]="estadoInactivo">{{estadoInactivo}}</mat-option>
-                                </mat-select>
                             </mat-form-field>
                         </div>
                         <div class="col-6">
