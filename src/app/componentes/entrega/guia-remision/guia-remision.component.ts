@@ -37,14 +37,12 @@ export class GuiaRemisionComponent implements OnInit {
   panelOpenState = false;
   hoy = new Date();
 
-  estadoActivo: string = valores.estadoActivo;
-  estadoInactivo: string = valores.estadoInactivo;
-  estadoInternoEmitida: string = valores.estadoInternoEmitida;
-  estadoInternoRecaudada: string = valores.estadoInternoRecaudada;
-  estadoInternoAnulada: string = valores.estadoInternoAnulada
-  estadoSriPendiente: string = valores.estadoSriPendiente;
-  estadoSriAutorizada: string = valores.estadoSriAutorizada;
-  estadoSriAnulada: string = valores.estadoSriAnulada;
+  procesoEmitida: string = valores.procesoEmitida;
+  procesoRecaudada: string = valores.procesoRecaudada;
+  procesoAnulada: string = valores.procesoAnulada
+  estadoSRIPendiente: string = valores.estadoSRIPendiente;
+  estadoSRIAutorizada: string = valores.estadoSRIAutorizada;
+  estadoSRIAnulada: string = valores.estadoSRIAnulada;
   
   si = valores.si;
   no = valores.no;
@@ -78,9 +76,8 @@ export class GuiaRemisionComponent implements OnInit {
     { nombreColumna: 'direccion', cabecera: 'Direccion', celda: (row: GuiaRemision) => row.opcionGuia == valores.clienteDireccion ? `${row.factura.cliente.direccion}` : `${row.direccionDestinatario}` },
     { nombreColumna: 'transportista', cabecera: 'Transportista', celda: (row: GuiaRemision) => `${row.transportista.nombre}` },
     { nombreColumna: 'placa', cabecera: 'Placa', celda: (row: GuiaRemision) => `${row.vehiculo.placa}` },
-    { nombreColumna: 'proceso', cabecera: 'Proceso', celda: (row: GuiaRemision) => `${row.estadoInterno}`},
-    { nombreColumna: 'estado', cabecera: 'Estado', celda: (row: GuiaRemision) => `${row.estado}`},
-    { nombreColumna: 'estadoSri', cabecera: 'Estado SRI', celda: (row: GuiaRemision) => `${row.estadoSri}`}
+    { nombreColumna: 'proceso', cabecera: 'Proceso', celda: (row: GuiaRemision) => `${row.proceso}`},
+    { nombreColumna: 'estadoSRI', cabecera: 'Estado SRI', celda: (row: GuiaRemision) => `${row.estadoSRI}`},
   ];
   cabecera: string[] = this.columnas.map(titulo => titulo.nombreColumna);
   dataSource: MatTableDataSource<GuiaRemision>;
@@ -226,23 +223,10 @@ export class GuiaRemisionComponent implements OnInit {
     );
   }
 
-  activar(event) {
+  anular(event) {
     if (event != null)
       event.preventDefault();
-    this.guiaRemisionService.activar(this.guiaRemision).subscribe({
-      next: res => {
-        Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
-        this.consultar();
-        this.nuevo(null);
-      },
-      error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
-    });
-  }
-
-  inactivar(event) {
-    if (event != null)
-      event.preventDefault();
-    this.guiaRemisionService.inactivar(this.guiaRemision).subscribe({
+    this.guiaRemisionService.anular(this.guiaRemision).subscribe({
       next: res => {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
         this.consultar();
@@ -335,7 +319,7 @@ export class GuiaRemisionComponent implements OnInit {
         this.guiaRemision.factura.cliente = res.resultado as Cliente;
         this.controlIdentificacionCliente.patchValue(this.guiaRemision.factura.cliente);
         this.controlRazonSocialCliente.patchValue(this.guiaRemision.factura.cliente);
-        this.facturaService.consultarPorEmpresaYClienteYEstado(this.empresa.id, this.guiaRemision.factura.cliente.id, this.estadoActivo).subscribe(
+        this.facturaService.consultarPorEmpresaYClienteYEstado(this.empresa.id, this.guiaRemision.factura.cliente.id, valores.estadoActivo).subscribe(
           res => {
             this.facturas = res.resultado as Factura[];
             this.spinnerService.hide();

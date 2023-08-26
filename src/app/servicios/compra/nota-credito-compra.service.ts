@@ -75,17 +75,8 @@ export class NotaCreditoCompraService {
     );
   }
 
-  activar(notaCreditoCompra: NotaCreditoCompra): Observable<Respuesta> {
-    return this.http.patch(environment.host + urn.ruta + urn.notaCreditoCompra + urn.activar, notaCreditoCompra, options).pipe(
-      map(response => response as Respuesta),
-      catchError(err => {
-        return throwError(()=>err);
-      })
-    );
-  }
-
-  inactivar(notaCreditoCompra: NotaCreditoCompra): Observable<Respuesta> {
-    return this.http.patch(environment.host + urn.ruta + urn.notaCreditoCompra + urn.inactivar, notaCreditoCompra, options).pipe(
+  anular(notaCreditoCompra: NotaCreditoCompra): Observable<Respuesta> {
+    return this.http.patch(environment.host + urn.ruta + urn.notaCreditoCompra + urn.anular, notaCreditoCompra, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);
