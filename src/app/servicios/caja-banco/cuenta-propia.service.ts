@@ -72,8 +72,8 @@ export class CuentaPropiaService {
       }));
   }
 
-  consultarPorEmpresaYBanco(empresaId: number, banco: string): Observable<Respuesta> {
-    return this.http.patch(environment.host + urn.ruta + urn.cuentaPropia + urn.consultarPorEmpresaYBanco + urn.slash + empresaId, banco, options).pipe(
+  consultarPorBancoYEmpresa(banco: string, empresaId: number): Observable<Respuesta> {
+    return this.http.patch(environment.host + urn.ruta + urn.cuentaPropia + urn.consultarPorBancoYEmpresa + urn.slash + banco + urn.slash + empresaId, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);

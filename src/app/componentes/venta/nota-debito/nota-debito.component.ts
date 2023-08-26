@@ -383,7 +383,7 @@ export class NotaDebitoComponent implements OnInit {
         this.notaDebito.factura.cliente = res.resultado as Cliente;
         this.controlIdentificacionCliente.patchValue(this.notaDebito.factura.cliente);
         this.controlRazonSocialCliente.patchValue(this.notaDebito.factura.cliente);
-        this.facturaService.consultarPorEmpresaYClienteYEstado(this.empresa.id, this.notaDebito.factura.cliente.id, valores.estadoActivo).subscribe(
+        this.facturaService.consultarPorClienteYEmpresaYEstadoSRI(this.notaDebito.factura.cliente.id, this.empresa.id, valores.estadoSRIPendiente).subscribe(
           res => {
             this.facturas = res.resultado as Factura[];
             this.spinnerService.hide();
@@ -409,7 +409,7 @@ export class NotaDebitoComponent implements OnInit {
         this.notaDebito.factura.cliente = res.resultado as Cliente;
         this.controlIdentificacionCliente.patchValue(this.notaDebito.factura.cliente);
         this.controlRazonSocialCliente.patchValue(this.notaDebito.factura.cliente);
-        this.facturaService.consultarPorCliente(this.notaDebito.factura.cliente.id).subscribe(
+        this.facturaService.consultarPorClienteYEmpresaYEstadoSRI(this.notaDebito.factura.cliente.id, this.empresa.id, valores.estadoSRIPendiente).subscribe(
           res => {
             this.facturas = res.resultado as Factura[]
             this.spinnerService.show();
@@ -773,6 +773,10 @@ export class NotaDebitoComponent implements OnInit {
       let fecha = new Date(this.notaDebito.fecha);
       this.notaDebito.fecha = fecha;
     }
+  }
+
+  stepperSiguiente(stepper: MatStepper){
+    stepper.next();
   }
 
   cambiarStepper(event){

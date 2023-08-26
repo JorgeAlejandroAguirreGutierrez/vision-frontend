@@ -306,7 +306,7 @@ export class NotaCreditoCompraComponent implements OnInit {
 
   consultarFacturasCompras(proveedorId: number) {
     this.facturaCompraSeleccionado = new FacturaCompra();
-    this.facturaCompraService.consultarPorEmpresaYProveedorYEstado(this.empresa.id, proveedorId, valores.estadoActivo).subscribe({
+    this.facturaCompraService.consultarPorProveedorYEmpresaYProceso(proveedorId, this.empresa.id, valores.procesoEmitida).subscribe({
       next: res => {
         this.facturasCompras = res.resultado as FacturaCompra[]
         this.filtroFacturaCompras = this.facturasCompras;
