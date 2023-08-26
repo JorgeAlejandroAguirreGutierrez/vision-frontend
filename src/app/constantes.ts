@@ -71,6 +71,7 @@ export const urn =
     consultarPorEmpresaYEstado: "/consultarPorEmpresaYEstado",
     consultarPorEmpresaYEstadoInternoYEstado: "/consultarPorEmpresaYEstadoInternoYEstado",
     consultarPorEmpresaYProveedorYEstado: "/consultarPorEmpresaYProveedorYEstado",
+    consultarPorEmpresaYProveedorYEstadoDiferente: "/consultarPorEmpresaYProveedorYEstadoDiferente",
     consultarPorEmpresaYBanco: "/consultarPorEmpresaYBanco",
     consultarPorProducto: "/consultarPorProducto",
     consultarGrupos: "/consultarGrupos",
@@ -203,6 +204,7 @@ export const valores = {
     //ESTADOS
     estadoActivo: "ACTIVO",
     estadoInactivo: "INACTIVO",
+    estadoAnulada: "ANULADA",
     //ESTADOS VENTAS
     procesoEmitida: "EMITIDA",
     procesoRecaudada: "RECAUDADA",

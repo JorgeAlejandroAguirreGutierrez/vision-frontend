@@ -77,8 +77,8 @@ export class NotaCreditoComponent implements OnInit {
     { nombreColumna: 'cliente', cabecera: 'Cliente', celda: (row: NotaCredito) => `${row.factura.cliente.razonSocial}`},
     { nombreColumna: 'factura', cabecera: 'Factura', celda: (row: NotaCredito) => `${row.factura.numeroComprobante}`},
     { nombreColumna: 'total', cabecera: 'Total', celda: (row: NotaCredito) => `$${row.total}`},
-    { nombreColumna: 'proceso', cabecera: 'Proceso', celda: (row: NotaCredito) => `${row.proceso}`},
-    { nombreColumna: 'estadoSRI', cabecera: 'Estado SRI', celda: (row: NotaCredito) => `${row.estadoSRI}`}
+    { nombreColumna: 'estado', cabecera: 'Estado', celda: (row: NotaCredito) => `${row.estado}`},
+    { nombreColumna: 'estadosri', cabecera: 'Proceso SRI', celda: (row: NotaCredito) => `${row.estadoSRI}`}
   ];
   cabecera: string[]  = this.columnas.map(titulo => titulo.nombreColumna);
   dataSource: MatTableDataSource<NotaCredito>;
@@ -242,7 +242,7 @@ export class NotaCreditoComponent implements OnInit {
     this.dataSource.filterPredicate = (data: NotaCredito, filter: string): boolean =>
       this.datepipe.transform(data.fecha, "dd-MM-yyyy").includes(filter) || data.numeroComprobante.includes(filter) || 
       data.secuencial.includes(filter) || data.factura.cliente.razonSocial.includes(filter) || 
-      data.proceso.includes(filter) || data.estadoSRI.includes(filter);
+      data.estado.includes(filter) || data.estadoSRI.includes(filter);
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
   }

@@ -76,7 +76,7 @@ export class GuiaRemisionComponent implements OnInit {
     { nombreColumna: 'direccion', cabecera: 'Direccion', celda: (row: GuiaRemision) => row.opcionGuia == valores.clienteDireccion ? `${row.factura.cliente.direccion}` : `${row.direccionDestinatario}` },
     { nombreColumna: 'transportista', cabecera: 'Transportista', celda: (row: GuiaRemision) => `${row.transportista.nombre}` },
     { nombreColumna: 'placa', cabecera: 'Placa', celda: (row: GuiaRemision) => `${row.vehiculo.placa}` },
-    { nombreColumna: 'proceso', cabecera: 'Proceso', celda: (row: GuiaRemision) => `${row.proceso}`},
+    { nombreColumna: 'estado', cabecera: 'Estado', celda: (row: GuiaRemision) => `${row.estado}`},
     { nombreColumna: 'estadoSRI', cabecera: 'Estado SRI', celda: (row: GuiaRemision) => `${row.estadoSRI}`},
   ];
   cabecera: string[] = this.columnas.map(titulo => titulo.nombreColumna);

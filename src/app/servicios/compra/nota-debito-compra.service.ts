@@ -88,23 +88,25 @@ export class NotaDebitoCompraService {
     return this.http.post(environment.host + urn.ruta + urn.notaDebitoCompra + urn.calcular, notaDebitoCompra, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
-        return throwError(err);
+        return throwError(()=>err);
       })
     );
   }
+
   calcularLinea(notaDebitoCompraLinea: NotaDebitoCompraLinea): Observable<Respuesta> {
     return this.http.post(environment.host + urn.ruta + urn.notaDebitoCompra + urn.calcularLinea, notaDebitoCompraLinea, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
-        return throwError(err);
+        return throwError(()=>err);
       })
     );
   }
+
   obtenerPorFacturaCompra(facturaCompraId: number): Observable<Respuesta> {
     return this.http.get(environment.host + urn.ruta + urn.notaDebitoCompra + urn.obtenerPorFacturaCompra + urn.slash + facturaCompraId, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
-        return throwError(err);
+        return throwError(()=>err);
       })
     );
   }

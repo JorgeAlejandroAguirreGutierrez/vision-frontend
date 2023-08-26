@@ -22,7 +22,7 @@ export class NotaDebito {
     claveAcceso: string;
     fecha: Date;
     fechaAutorizacion: Date;
-    proceso: string;
+    estado: string;
     estadoSRI: string;
     descuento: number;
     subtotal: number;
@@ -62,7 +62,7 @@ export class NotaDebito {
         this.secuencial = valores.vacio;
         this.numeroComprobante = valores.vacio;
         this.fecha = new Date();
-        this.proceso = valores.vacio;
+        this.estado = valores.vacio;
         this.estadoSRI = valores.vacio;
         this.descuento = valores.cero;
         this.subtotal = valores.cero;

@@ -85,7 +85,7 @@ export class FacturaCompraComponent implements OnInit {
     { nombreColumna: 'descuento', cabecera: 'Desc.', celda: (row: FacturaCompra) => `$${row.descuento}`},
     { nombreColumna: 'impuesto', cabecera: 'IVA', celda: (row: FacturaCompra) => `$${row.importeIvaTotal}`},
     { nombreColumna: 'total', cabecera: 'Total', celda: (row: FacturaCompra) => `$${row.total}`},
-    { nombreColumna: 'proceso', cabecera: 'Proceso', celda: (row: FacturaCompra) => `${row.proceso}`}
+    { nombreColumna: 'estado', cabecera: 'Estado', celda: (row: FacturaCompra) => `${row.estado}`}
   ];
   cabeceraFacturaCompra: string[]  = this.columnasFacturaCompra.map(titulo => titulo.nombreColumna);
   dataSourceFacturaCompra: MatTableDataSource<FacturaCompra>;
@@ -262,7 +262,7 @@ export class FacturaCompraComponent implements OnInit {
     this.dataSourceFacturaCompra = new MatTableDataSource(facturasCompras);
     this.dataSourceFacturaCompra.filterPredicate = (data: FacturaCompra, filter: string): boolean =>
       this.datepipe.transform(data.fecha, valores.fechaCorta).includes(filter) || data.numeroComprobante.includes(filter) || 
-      data.proveedor.nombreComercial.includes(filter) || data.proceso.includes(filter);
+      data.proveedor.nombreComercial.includes(filter) || data.estado.includes(filter);
       this.dataSourceFacturaCompra.paginator = this.paginatorFacturaCompra;
     this.dataSourceFacturaCompra.sort = this.sort;
   }

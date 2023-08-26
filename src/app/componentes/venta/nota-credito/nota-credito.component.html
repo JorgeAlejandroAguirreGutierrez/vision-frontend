@@ -6,7 +6,7 @@
                     <mat-icon>save</mat-icon>
                 </a>
             </li>
-            <li class="nav-item" *ngIf="notaCredito.id != 0 && notaCredito.proceso != procesoAnulada && notaCredito.estadoSRI != estadoSRIAnulada && notaCredito.estadoSRI != estadoSRIAutorizada">
+            <li class="nav-item" *ngIf="notaCredito.id != 0 && notaCredito.estado != procesoAnulada && notaCredito.estadoSRI != estadoSRIAnulada && notaCredito.estadoSRI != estadoSRIAutorizada">
                 <a class="nav-link" title="Actualizar" role="button" (click)="actualizar($event)">
                     <mat-icon>update</mat-icon>
                 </a>
@@ -16,23 +16,23 @@
                     <mat-icon>file_copy</mat-icon>
                 </a>
             </li>
-            <li class="nav-item" *ngIf="notaCredito.id != 0 && notaCredito.proceso != procesoAnulada && notaCredito.estadoSRI != estadoSRIAnulada">
+            <li class="nav-item" *ngIf="notaCredito.id != 0 && notaCredito.estado != procesoAnulada && notaCredito.estadoSRI != estadoSRIAnulada">
                 <a class="nav-link" title="Anular" role="button" (click)="anular($event)">
                     <mat-icon>check</mat-icon>
                 </a>
             </li>
-            <li class="nav-item" *ngIf="notaCredito.id != 0 && notaCredito.factura.proceso != procesoEmitida && notaCredito.factura.proceso != procesoAnulada && notaCredito.factura.estadoSRI != estadoSRIAnulada && notaCredito.factura.estadoSRI != estadoSRIPendiente
-            && notaCredito.proceso != procesoEmitida && notaCredito.proceso != procesoAnulada && notaCredito.estadoSRI != estadoSRIPendiente && notaCredito.estadoSRI != estadoSRIAnulada">
+            <li class="nav-item" *ngIf="notaCredito.id != 0 && notaCredito.factura.estado != procesoEmitida && notaCredito.factura.estado != procesoAnulada && notaCredito.factura.estadoSRI != estadoSRIAnulada && notaCredito.factura.estadoSRI != estadoSRIPendiente
+            && notaCredito.estado != procesoEmitida && notaCredito.estado != procesoAnulada && notaCredito.estadoSRI != estadoSRIPendiente && notaCredito.estadoSRI != estadoSRIAnulada">
                 <a class="nav-link" title="Crear Nota Credito Electronica" href="#" role="button" (click)="crearNotaCreditoElectronica($event)">
                     <mat-icon>point_of_sale</mat-icon>
                 </a>
             </li>
-            <li class="nav-item" *ngIf="notaCredito.id != 0 && notaCredito.proceso != procesoEmitida && notaCredito.proceso != procesoAnulada && notaCredito.estadoSRI != estadoSRIAnulada">
+            <li class="nav-item" *ngIf="notaCredito.id != 0 && notaCredito.estado != procesoEmitida && notaCredito.estado != procesoAnulada && notaCredito.estadoSRI != estadoSRIAnulada">
                 <a class="nav-link" title="Obtener PDF" href="#" role="button" (click)="obtenerPDF($event)">
                     <mat-icon>picture_as_pdf</mat-icon>
                 </a>
             </li>
-            <li class="nav-item" *ngIf="notaCredito.id != 0 && notaCredito.proceso != procesoEmitida && notaCredito.proceso != procesoAnulada && notaCredito.estadoSRI != estadoSRIAnulada && notaCredito.estadoSRI != estadoSRIPendiente">
+            <li class="nav-item" *ngIf="notaCredito.id != 0 && notaCredito.estado != procesoEmitida && notaCredito.estado != procesoAnulada && notaCredito.estadoSRI != estadoSRIAnulada && notaCredito.estadoSRI != estadoSRIPendiente">
                 <a class="nav-link" title="Enviar PDF Y XML" href="#" role="button" (click)="enviarPDFYXML($event)">
                     <mat-icon>forward_to_inbox</mat-icon>
                 </a>
@@ -162,8 +162,8 @@
                     </div>
                     <div class="col-6">
                         <mat-form-field appearance="standard">
-                            <mat-label>Proceso</mat-label>
-                            <input matInput type="text" class="form-control-sm" [(ngModel)]="notaCredito.proceso"
+                            <mat-label>Estado</mat-label>
+                            <input matInput type="text" class="form-control-sm" [(ngModel)]="notaCredito.estado"
                                 [disabled]="true">
                         </mat-form-field>
                     </div>
