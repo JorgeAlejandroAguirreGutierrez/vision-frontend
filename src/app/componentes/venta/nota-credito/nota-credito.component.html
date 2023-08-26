@@ -18,7 +18,7 @@
             </li>
             <li class="nav-item" *ngIf="notaCredito.id != 0 && notaCredito.proceso != procesoAnulada && notaCredito.estadoSRI != estadoSRIAnulada">
                 <a class="nav-link" title="Anular" role="button" (click)="anular($event)">
-                    <mat-icon>check</mat-icon>
+                    <mat-icon>delete_forever</mat-icon>
                 </a>
             </li>
             <li class="nav-item" *ngIf="notaCredito.id != 0 && notaCredito.factura.proceso != procesoEmitida && notaCredito.factura.proceso != procesoAnulada && notaCredito.factura.estadoSRI != estadoSRIAnulada && notaCredito.factura.estadoSRI != estadoSRIPendiente
@@ -57,32 +57,32 @@
                 <div class="form-row col-9">
                     <div class="col-3">
                         <mat-form-field appearance="standard">
-                            <mat-label>Ruc</mat-label>
-                            <input matInput type="text" class="form-control-sm" placeholder="RUC" 
-                                [(ngModel)]="clienteSeleccionado" (ngModelChange)="filtrarIdentificaciones($event)" 
-                                [matAutocomplete]="autoIdentificacion" oninput="this.value = this.value.toUpperCase()">
-                            <mat-autocomplete #autoIdentificacion="matAutocomplete"  [displayWith]="verIdentificacion"
-                                (optionSelected)="seleccionarIdentificacion($event)" (opened)="consultarClientes()">
-                                <mat-option *ngFor="let cliente of filtroIdentificaciones" [value]="cliente">
-                                    {{ cliente.identificacion }}
+                            <mat-label>Identificación</mat-label>
+                            <input matInput type="text" class="form-control-sm" placeholder="Cédula/RUC"
+                                [formControl]="controlIdentificacionCliente"
+                                [matAutocomplete]="identificacionCliente">
+                            <mat-autocomplete #identificacionCliente="matAutocomplete"
+                                [displayWith]="verIdentificacionCliente"
+                                (optionSelected)="seleccionarIdentificacionCliente()"
+                                (opened)="consultarClientes()">
+                                <mat-option *ngFor="let cliente of filtroIdentificacionClientes | async"
+                                    [value]="cliente">{{cliente.identificacion}}
                                 </mat-option>
-                            </mat-autocomplete>    
+                            </mat-autocomplete>
                         </mat-form-field>
                     </div>
                     <div class="col-9">
                         <mat-form-field appearance="standard">
-                            <mat-label>Cliente</mat-label>
-                            <input matInput type="text" class="form-control-sm" placeholder="Razon social" 
-                                [(ngModel)]="clienteSeleccionado" (ngModelChange)="filtrarClientes($event)" 
-                                [matAutocomplete]="autoCliente" oninput="this.value = this.value.toUpperCase()">
-                                <button mat-button *ngIf="clienteSeleccionado" matSuffix mat-icon-button
-                                    (click)="nuevo($event)">
-                                    <mat-icon>close</mat-icon>
-                                </button>    
-                            <mat-autocomplete #autoCliente="matAutocomplete"  [displayWith]="verCliente"
-                                (optionSelected)="seleccionarCliente($event)" (opened)="consultarClientes()">
-                                <mat-option *ngFor="let cliente of filtroClientes" [value]="cliente">
-                                    {{ cliente.razonSocial }}
+                            <mat-label>Razón Social</mat-label>
+                            <input type="text" class="form-control-sm" placeholder="Clientes" matInput
+                                [formControl]="controlRazonSocialCliente" [matAutocomplete]="razonSocialCliente"
+                                oninput="this.value = this.value.toUpperCase()">
+                            <mat-autocomplete #razonSocialCliente="matAutocomplete"
+                                [displayWith]="verRazonSocialCliente"
+                                (optionSelected)="seleccionarRazonSocialCliente()" (opened)="consultarClientes()">
+                                <mat-option *ngFor="let cliente of filtroRazonSocialClientes | async"
+                                    [value]="cliente">
+                                    {{cliente.razonSocial}}
                                 </mat-option>
                             </mat-autocomplete>
                         </mat-form-field>
@@ -102,13 +102,13 @@
                     <div class="col-4">
                         <mat-form-field appearance="standard">
                             <mat-label>Factura</mat-label>
-                            <input matInput type="text" class="form-control-sm" placeholder="No. Factura" 
-                                [(ngModel)]="facturaSeleccionado" (ngModelChange)="filtrarFacturas($event)" 
-                                [matAutocomplete]="autoFactura" oninput="this.value = this.value.toUpperCase()">
-                            <mat-autocomplete #autoFactura="matAutocomplete"  [displayWith]="verFactura"
-                                (optionSelected)="seleccionarFactura($event)">
-                                <mat-option *ngFor="let factura of filtroFacturas" [value]="factura">
-                                    {{ factura.numeroComprobante }}
+                            <input matInput type="text" class="form-control-sm" placeholder="Factura"
+                                [formControl]="controlFactura" [matAutocomplete]="factura"
+                                oninput="this.value = this.value.toUpperCase()">
+                            <mat-autocomplete #factura="matAutocomplete" [displayWith]="verFactura"
+                                (optionSelected)="seleccionarFactura()">
+                                <mat-option *ngFor="let factura of filtroFacturas | async" [value]="factura">
+                                    {{factura.numeroComprobante}}
                                 </mat-option>
                             </mat-autocomplete>
                         </mat-form-field>

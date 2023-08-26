@@ -20,12 +20,12 @@
                         </a>
                     </li>
                     <li class="nav-item" *ngIf="notaDebito.id != 0 && notaDebito.proceso != procesoAnulada">
-                        <a class="nav-link" title="Activar" role="button" (click)="anular($event)">
-                            <mat-icon>check</mat-icon>
+                        <a class="nav-link" title="Anular" role="button" (click)="anular($event)">
+                            <mat-icon>delete_forever</mat-icon>
                         </a>
                     </li>
                     <li class="nav-item"
-                        *ngIf="notaDebito.id != 0  && notaDebito.proceso != procesoAnulada && notaDebito.proceso != procesoEmitida && notaDebito.estadoSRI != estadoSRIAutorizada && notaDebito.estadoSRI != estadoSRIAnulada">
+                        *ngIf="notaDebito.id != 0 && notaDebito.factura.estadoSRI != estadoSRIPendiente && notaDebito.factura.estadoSRI != estadoSRIAnulada && notaDebito.proceso != procesoAnulada && notaDebito.proceso != procesoEmitida && notaDebito.estadoSRI != estadoSRIAutorizada && notaDebito.estadoSRI != estadoSRIAnulada">
                         <a class="nav-link" title="Crear Nota Debito Electronica" href="#" role="button"
                             (click)="crearNotaDebitoElectronica($event)">
                             <mat-icon>point_of_sale</mat-icon>
@@ -39,6 +39,11 @@
                     <li class="nav-item" *ngIf="notaDebito.id != 0 && notaDebito.proceso != procesoEmitida && notaDebito.proceso != procesoAnulada && notaDebito.estadoSRI != estadoSRIPendiente && notaDebito.estadoSRI != estadoSRIAnulada">
                         <a class="nav-link" title="Enviar PDF Y XML" href="#" role="button" (click)="enviarPDFYXML($event)">
                             <mat-icon>forward_to_inbox</mat-icon>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" title="Recaudación" role="button" (click)="stepperSiguiente(stepper)">
+                            <mat-icon>redo</mat-icon>
                         </a>
                     </li>
                 </ul>

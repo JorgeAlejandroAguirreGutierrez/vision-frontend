@@ -227,7 +227,7 @@ export class NotaDebitoCompraComponent implements OnInit {
   }
 
   consultarFacturasCompras(){
-    this.facturaCompraService.consultarPorEmpresaYProveedorYEstado(this.empresa.id, this.notaDebitoCompra.facturaCompra.proveedor.id, valores.estadoActivo).subscribe(
+    this.facturaCompraService.consultarPorProveedorYEmpresaYProceso(this.notaDebitoCompra.facturaCompra.proveedor.id, this.empresa.id, valores.procesoEmitida).subscribe(
       res => {
         this.facturasCompras = res.resultado as FacturaCompra[]
       },
