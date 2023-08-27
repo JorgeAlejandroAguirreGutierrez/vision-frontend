@@ -197,6 +197,7 @@ export class EmpresaComponent implements OnInit {
     const archivoCapturado = event.target.files[0];
     this.imagenService.convertirBase64(archivoCapturado).then((imagen: any) => {
       this.empresa.logo64 = imagen.base64;
+      //console.log(this.empresa.logo64);
     });
   }
 

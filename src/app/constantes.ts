@@ -208,6 +208,7 @@ export const valores = {
     //ESTADOS
     estadoActivo: "ACTIVO",
     estadoInactivo: "INACTIVO",
+    estadoAnulada: "ANULADA",
     //ESTADOS VENTAS
     procesoEmitida: "EMITIDA",
     procesoRecaudada: "RECAUDADA",
