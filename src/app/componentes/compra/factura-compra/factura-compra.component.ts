@@ -96,12 +96,12 @@ export class FacturaCompraComponent implements OnInit {
     { nombreColumna: 'nombre', cabecera: 'Producto', celda: (row: FacturaCompraLinea) => `${row.producto.nombre}` },
     { nombreColumna: 'medida', cabecera: 'Medida', celda: (row: FacturaCompraLinea) => `${row.producto.medida.abreviatura}` },
     { nombreColumna: 'cantidad', cabecera: 'Cant.', celda: (row: FacturaCompraLinea) => `${row.cantidad}` },
-    { nombreColumna: 'valor', cabecera: 'C. Unit', celda: (row: FacturaCompraLinea) => `$ ${row.costoUnitario}` },
-    { nombreColumna: 'descuento', cabecera: 'Desc. $', celda: (row: FacturaCompraLinea) => `$ ${row.valorDescuentoLinea}` },
-    { nombreColumna: 'descuentoPorcentaje', cabecera: 'Desc. %', celda: (row: FacturaCompraLinea) => `${row.porcentajeDescuentoLinea} %` },
-    { nombreColumna: 'subtotal', cabecera: 'Subtotal', celda: (row: FacturaCompraLinea) => `$ ${row.subtotalLinea}` },
-    { nombreColumna: 'impuesto', cabecera: 'IVA', celda: (row: FacturaCompraLinea) => `$ ${row.importeIvaLinea}` },
-    { nombreColumna: 'total', cabecera: 'Total', celda: (row: FacturaCompraLinea) => `$ ${row.totalLinea}` },
+    { nombreColumna: 'valor', cabecera: 'C. Unit', celda: (row: FacturaCompraLinea) => `$${row.costoUnitario}` },
+    { nombreColumna: 'descuento', cabecera: 'Desc. $', celda: (row: FacturaCompraLinea) => `$${row.valorDescuentoLinea}` },
+    { nombreColumna: 'descuentoPorcentaje', cabecera: 'Desc. %', celda: (row: FacturaCompraLinea) => `${row.porcentajeDescuentoLinea}%` },
+    { nombreColumna: 'subtotal', cabecera: 'Subtotal', celda: (row: FacturaCompraLinea) => `$${row.subtotalLinea}` },
+    { nombreColumna: 'impuesto', cabecera: 'IVA', celda: (row: FacturaCompraLinea) => `$${row.importeIvaLinea}` },
+    { nombreColumna: 'total', cabecera: 'Total', celda: (row: FacturaCompraLinea) => `$${row.totalLinea}` },
     { nombreColumna: 'bodega', cabecera: 'bodega', celda: (row: FacturaCompraLinea) => `${row.bodega.abreviatura}` },
     { nombreColumna: 'acciones', cabecera: 'Acciones' }
   ];
@@ -347,7 +347,6 @@ export class FacturaCompraComponent implements OnInit {
     this.facturaCompra.sesion = this.sesion;
     this.facturaCompra.facturaCompraLineas.push(this.facturaCompraLinea);
     this.llenarPosicion(this.facturaCompra);
-    //console.log(this.facturaCompra);
     this.facturaCompraService.calcular(this.facturaCompra).subscribe({
       next: res => {
         this.facturaCompra = res.resultado as FacturaCompra;
@@ -422,14 +421,18 @@ export class FacturaCompraComponent implements OnInit {
     this.dataSourceLinea.filter = '';
   }
 
-  calcularFacturaCompraLinea(){
-    if (!this.validarFormularioLinea())
-    return;
+  calcularLinea(){
+    if (!this.validarFormularioLinea()) return;
+    this.spinnerService.show();
     this.facturaCompraService.calcularLinea(this.facturaCompraLinea).subscribe({
       next: res => {
+        this.spinnerService.hide(); 
         this.facturaCompraLinea = res.resultado as FacturaCompraLinea;
       },
-      error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+      error: err => {
+        this.spinnerService.hide();
+        Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+      }
     });
   }
 
@@ -464,7 +467,7 @@ export class FacturaCompraComponent implements OnInit {
         }
         this.kardex = res.resultado as Kardex;
         this.facturaCompraLinea.costoUnitario = this.kardex.costoPromedio;
-        this.calcularFacturaCompraLinea();
+        this.calcularLinea();
       },
       error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     });
