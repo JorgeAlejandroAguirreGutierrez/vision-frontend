@@ -103,7 +103,7 @@ export class FacturaComponent implements OnInit {
     { nombreColumna: 'cliente', cabecera: 'Cliente', celda: (row: Factura) => `${row.cliente.razonSocial}` },
     { nombreColumna: 'total', cabecera: 'Total', celda: (row: Factura) => `$${row.total}` },
     { nombreColumna: 'estado', cabecera: 'Estado', celda: (row: Factura) => `${row.estado}` },
-    { nombreColumna: 'estadosri', cabecera: 'Proceso SRI', celda: (row: Factura) => `${row.estadoSRI}` }
+    { nombreColumna: 'estadoSri', cabecera: 'Estado SRI', celda: (row: Factura) => `${row.estadoSRI}` }
   ];
   cabeceraFactura: string[] = this.columnasFactura.map(titulo => titulo.nombreColumna);
   dataSourceFactura: MatTableDataSource<Factura>;

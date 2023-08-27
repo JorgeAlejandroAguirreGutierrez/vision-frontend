@@ -53,7 +53,7 @@ export class GuiaRemisionComponent implements OnInit {
   abrirPanelAdmin = false;
 
   sesion: Sesion;
-  empresa: Empresa = new Empresa();
+  empresa: Empresa = null;
   guiaRemision: GuiaRemision = new GuiaRemision();
   guiasRemisiones: GuiaRemision[] = [];
 
@@ -76,7 +76,7 @@ export class GuiaRemisionComponent implements OnInit {
     { nombreColumna: 'direccion', cabecera: 'Direccion', celda: (row: GuiaRemision) => row.opcionGuia == valores.clienteDireccion ? `${row.factura.cliente.direccion}` : `${row.direccionDestinatario}` },
     { nombreColumna: 'transportista', cabecera: 'Transportista', celda: (row: GuiaRemision) => `${row.transportista.nombre}` },
     { nombreColumna: 'placa', cabecera: 'Placa', celda: (row: GuiaRemision) => `${row.vehiculo.placa}` },
-    { nombreColumna: 'estado', cabecera: 'Estado', celda: (row: GuiaRemision) => `${row.estado}`},
+    { nombreColumna: 'proceso', cabecera: 'Proceso', celda: (row: GuiaRemision) => `${row.estado}`},
     { nombreColumna: 'estadoSRI', cabecera: 'Estado SRI', celda: (row: GuiaRemision) => `${row.estadoSRI}`},
   ];
   cabecera: string[] = this.columnas.map(titulo => titulo.nombreColumna);
@@ -119,6 +119,8 @@ export class GuiaRemisionComponent implements OnInit {
   ngOnInit() {
     this.sesion = validarSesion(this.sesionService, this.router);
     this.empresa = this.sesion.empresa;
+    this.guiaRemision.sesion = this.sesion;
+    this.guiaRemision.empresa = this.empresa;
     this.consultar();
     this.consultarClientePorEmpresaYEstado();
     this.consultarTransportistas();
@@ -171,7 +173,6 @@ export class GuiaRemisionComponent implements OnInit {
     if (event != null)
       event.preventDefault();
     this.spinnerService.show();
-    this.guiaRemision.sesion = this.sesion;
     this.guiaRemisionService.crear(this.guiaRemision).subscribe(
       res => {
         this.spinnerService.hide();
@@ -226,14 +227,24 @@ export class GuiaRemisionComponent implements OnInit {
   anular(event) {
     if (event != null)
       event.preventDefault();
-    this.guiaRemisionService.anular(this.guiaRemision).subscribe({
-      next: res => {
-        Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
-        this.consultar();
-        this.nuevo(null);
-      },
-      error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
-    });
+    Swal.fire({
+      title: 'Advertencia',
+      text: "Recuerda anular el comprobante ante el SRI",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Ok'
+      }).then((result) => {
+          if (result.value) {
+            this.guiaRemisionService.anular(this.guiaRemision).subscribe({
+              next: res => {
+                Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
+                this.consultar();
+                this.nuevo(null);
+              },
+              error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+            });
+          }
+      });  
   }
 
   seleccionarOpcionGuia() {
@@ -293,8 +304,9 @@ export class GuiaRemisionComponent implements OnInit {
         this.guiaRemision.factura.cliente = res.resultado as Cliente;
         this.controlIdentificacionCliente.patchValue(this.guiaRemision.factura.cliente);
         this.controlRazonSocialCliente.patchValue(this.guiaRemision.factura.cliente);
-        this.facturaService.consultarPorCliente(this.guiaRemision.factura.cliente.id).subscribe(
+        this.facturaService.consultarPorClienteYEmpresaYEstado(this.guiaRemision.factura.cliente.id, this.empresa.id, valores.estadoRecaudada).subscribe(
           res => {
+            console.log(res);
             this.facturas = res.resultado as Factura[]
             this.spinnerService.hide();
           },
@@ -319,8 +331,12 @@ export class GuiaRemisionComponent implements OnInit {
         this.guiaRemision.factura.cliente = res.resultado as Cliente;
         this.controlIdentificacionCliente.patchValue(this.guiaRemision.factura.cliente);
         this.controlRazonSocialCliente.patchValue(this.guiaRemision.factura.cliente);
-        this.facturaService.consultarPorEmpresaYClienteYEstado(this.empresa.id, this.guiaRemision.factura.cliente.id, valores.estadoActivo).subscribe(
+        console.log(this.guiaRemision.factura.cliente.id);
+        console.log(this.empresa.id);
+        console.log(valores.estadoRecaudada);
+        this.facturaService.consultarPorClienteYEmpresaYEstado(this.guiaRemision.factura.cliente.id, this.empresa.id, valores.estadoRecaudada).subscribe(
           res => {
+            console.log(res);
             this.facturas = res.resultado as Factura[];
             this.spinnerService.hide();
           },

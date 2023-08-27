@@ -30,7 +30,7 @@ export class NotaCredito {
     sesion: Sesion;
     tipoComprobante: TipoComprobante;
     empresa: Empresa;
-    notaCreditoVentaLineas: NotaCreditoLinea[];
+    notaCreditoLineas: NotaCreditoLinea[];
 
     constructor() {
         this.id = valores.cero;
@@ -53,6 +53,6 @@ export class NotaCredito {
         this.factura = new Factura();
         this.sesion = new Sesion();
         this.tipoComprobante = new TipoComprobante();
-        this.notaCreditoVentaLineas = [];
+        this.notaCreditoLineas = [];
     }
 }

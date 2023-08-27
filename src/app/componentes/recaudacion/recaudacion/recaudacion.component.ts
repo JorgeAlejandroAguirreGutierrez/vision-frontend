@@ -380,7 +380,7 @@ export class RecaudacionComponent implements OnInit, OnChanges {
   }
 
   consultarCuentasPropias(banco: string, formaPago: string) {
-    this.cuentaPropiaService.consultarPorEmpresaYBanco(this.empresa.id, banco).subscribe({
+    this.cuentaPropiaService.consultarPorBancoYEmpresa(banco, this.empresa.id).subscribe({
       next: res => {
         this.cuentasPropias = res.resultado as CuentaPropia[];
         this.inicializarCuentasPropias(this.cuentasPropias, formaPago);

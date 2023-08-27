@@ -51,7 +51,7 @@ export class GuiaRemision {
         this.celularDestinatario = valores.vacio;
         this.correoDestinatario = valores.vacio;
         this.opcionGuia = valores.clienteDireccion;
-        this.estado = valores.vacio;
+        this.estado = valores.estadoEmitida;
         this.estadoSRI = valores.vacio;
         this.tipoComprobante = new TipoComprobante();
         this.sesion = new Sesion();

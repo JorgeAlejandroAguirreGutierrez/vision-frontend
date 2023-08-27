@@ -38,7 +38,12 @@
                     </li>
                     <li class="nav-item" *ngIf="notaDebito.id != 0 && notaDebito.estado != estadoEmitida && notaDebito.estado != estadoAnulada && notaDebito.estadoSRI != estadoSRIPendiente && notaDebito.estadoSRI != estadoSRIAnulada">
                         <a class="nav-link" title="Enviar PDF Y XML" href="#" role="button" (click)="enviarPDFYXML($event)">
-                            <mat-icon>forward_to_inbox</mat-icon>
+                            <mat-icon>picture_as_pdf</mat-icon>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" title="Recaudación" role="button" (click)="stepperSiguiente(stepper)">
+                            <mat-icon>redo</mat-icon>
                         </a>
                     </li>
                 </ul>
@@ -189,7 +194,7 @@
                         </div>
                         <div class="col-2">
                             <mat-form-field appearance="standard">
-                                <mat-label>Estado</mat-label>
+                                <mat-label>Proceso</mat-label>
                                 <input matInput type="text" class="form-control-sm" [(ngModel)]="notaDebito.estado"
                                     [disabled]="true">
                             </mat-form-field>

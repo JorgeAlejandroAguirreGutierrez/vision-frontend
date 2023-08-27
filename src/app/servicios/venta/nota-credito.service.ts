@@ -42,8 +42,8 @@ export class NotaCreditoService {
       }));
   }
 
-  consultarPorEstado(estado: string): Observable<Respuesta> {
-    return this.http.get(environment.host + urn.ruta + urn.notaCredito + urn.consultarPorEstado + urn.slash + estado, options).pipe(
+  consultarPorEstadoSRI(estadoSRI: string): Observable<Respuesta> {
+    return this.http.get(environment.host + urn.ruta + urn.notaCredito + urn.consultarPorEstadoSRI + urn.slash + estadoSRI, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);
@@ -58,8 +58,8 @@ export class NotaCreditoService {
       }));
   }
 
-  consultarPorEmpresaYEstadoInternoYEstado(empresaId: number, estadoInterno: string, estado: string): Observable<Respuesta> {
-    return this.http.get(environment.host + urn.ruta + urn.notaCredito + urn.consultarPorEmpresaYEstadoInternoYEstado + urn.slash + empresaId + urn.slash + estadoInterno + urn.slash + estado, options).pipe(
+  consultarPorEmpresaYEstadoYEstadoSRI(empresaId: number, estado: string, estadoSRI: string): Observable<Respuesta> {
+    return this.http.get(environment.host + urn.ruta + urn.notaCredito + urn.consultarPorEmpresaYEstadoYEstadoSRI + urn.slash + empresaId + urn.slash + estado + urn.slash + estadoSRI, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);
@@ -92,6 +92,7 @@ export class NotaCreditoService {
       })
     );
   }
+
   calcularLinea(notaCreditoLinea: NotaCreditoLinea): Observable<Respuesta> {
     return this.http.post(environment.host + urn.ruta + urn.notaCredito + urn.calcularLinea, notaCreditoLinea, options).pipe(
       map(response => response as Respuesta),
@@ -100,6 +101,7 @@ export class NotaCreditoService {
       })
     );
   }
+  
   obtenerPorFactura(facturaId: number): Observable<Respuesta> {
     return this.http.get(environment.host + urn.ruta + urn.notaCredito + urn.obtenerPorFactura + urn.slash + facturaId, options).pipe(
       map(response => response as Respuesta),
