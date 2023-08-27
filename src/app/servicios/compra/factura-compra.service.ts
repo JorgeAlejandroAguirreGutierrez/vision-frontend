@@ -74,14 +74,6 @@ export class FacturaCompraService {
       }));
   }
 
-  consultarPorEmpresaYProveedorYEstadoDiferente(empresaId: number, proveedorId: number, estado: string): Observable<Respuesta> {
-    return this.http.get(environment.host + urn.ruta + urn.facturaCompra + urn.consultarPorEmpresaYProveedorYEstadoDiferente + urn.slash + empresaId + urn.slash + proveedorId  + urn.slash + estado, options).pipe(
-      map(response => response as Respuesta),
-      catchError(err => {
-        return throwError(()=>err);
-      }));
-  }
-
   actualizar(facturaCompra: FacturaCompra): Observable<Respuesta> {
     return this.http.put(environment.host + urn.ruta + urn.facturaCompra, facturaCompra, options).pipe(
       map(response => response as Respuesta),

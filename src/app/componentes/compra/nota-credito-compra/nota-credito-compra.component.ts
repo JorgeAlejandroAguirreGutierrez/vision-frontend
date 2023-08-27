@@ -68,7 +68,7 @@ export class NotaCreditoCompraComponent implements OnInit {
     { nombreColumna: 'comprobante', cabecera: 'Comprobante', celda: (row: NotaCreditoCompra) => `${row.numeroComprobante}` },
     { nombreColumna: 'proveedor', cabecera: 'Proveedor', celda: (row: NotaCreditoCompra) => `${row.facturaCompra.proveedor.nombreComercial}` },
     { nombreColumna: 'total', cabecera: 'Total', celda: (row: NotaCreditoCompra) => `$${row.total}` },
-    { nombreColumna: 'estado', cabecera: 'Estado', celda: (row: NotaCreditoCompra) => `${row.estado}` }
+    { nombreColumna: 'proceso', cabecera: 'Proceso', celda: (row: NotaCreditoCompra) => `${row.proceso}` }
   ];
   cabecera: string[] = this.columnas.map(titulo => titulo.nombreColumna);
   dataSource: MatTableDataSource<NotaCreditoCompra>;
@@ -209,7 +209,7 @@ export class NotaCreditoCompraComponent implements OnInit {
     this.dataSource = new MatTableDataSource(notasCreditosCompras);
     this.dataSource.filterPredicate = (data: NotaCreditoCompra, filter: string): boolean =>
       this.datepipe.transform(data.fecha, valores.fechaCorta).includes(filter) || data.numeroComprobante.includes(filter) || data.secuencial.includes(filter) || 
-      data.facturaCompra.proveedor.razonSocial.includes(filter) || data.estado.includes(filter);
+      data.facturaCompra.proveedor.razonSocial.includes(filter) || data.proceso.includes(filter);
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
   }
