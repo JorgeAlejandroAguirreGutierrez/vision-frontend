@@ -31,7 +31,7 @@
                     </li>
                     <li class="nav-item" *ngIf="factura.id != 0 && factura.estado != procesoAnulada && factura.estadoSRI != estadoSRIAnulada">
                         <a class="nav-link" title="Anular" role="button" (click)="anular($event)">
-                            <mat-icon>assignment_turned_in</mat-icon>
+                            <mat-icon>delete_forever</mat-icon>
                         </a>
                     </li>
                     <li class="nav-item" *ngIf="factura.id != 0 && factura.estado != procesoEmitida && factura.estado != procesoAnulada && factura.estadoSRI != estadoSRIAnulada && factura.estadoSRI != estadoSRIPendiente">

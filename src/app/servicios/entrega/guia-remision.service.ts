@@ -56,8 +56,8 @@ export class GuiaRemisionService {
       }));
   }
 
-  consultarPorEmpresaYEstado(empresaId: number, estado: string): Observable<Respuesta> {
-    return this.http.get(environment.host + urn.ruta + urn.guiaRemision + urn.consultarPorEmpresaYEstado + urn.slash + empresaId + urn.slash + estado, options).pipe(
+  consultarPorEmpresaYEstadoSRI(empresaId: number, estadoSRI: string): Observable<Respuesta> {
+    return this.http.get(environment.host + urn.ruta + urn.guiaRemision + urn.consultarPorEmpresaYEstadoSRI + urn.slash + empresaId + urn.slash + estadoSRI, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);

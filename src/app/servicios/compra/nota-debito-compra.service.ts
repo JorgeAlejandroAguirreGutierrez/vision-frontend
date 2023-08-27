@@ -42,8 +42,8 @@ export class NotaDebitoCompraService {
       }));
   }
 
-  consultarPorEstado(estado: string): Observable<Respuesta> {
-    return this.http.get(environment.host + urn.ruta + urn.notaDebitoCompra + urn.consultarPorEstado + urn.slash + estado, options).pipe(
+  consultarPorProceso(proceso: string): Observable<Respuesta> {
+    return this.http.get(environment.host + urn.ruta + urn.notaDebitoCompra + urn.consultarPorProceso + urn.slash + proceso, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);
@@ -58,8 +58,8 @@ export class NotaDebitoCompraService {
       }));
   }
 
-  consultarPorEmpresaYEstado(empresaId: number, estado: string): Observable<Respuesta> {
-    return this.http.get(environment.host + urn.ruta + urn.notaDebitoCompra + urn.consultarPorEmpresaYEstado + urn.slash + empresaId + urn.slash + estado, options).pipe(
+  consultarPorEmpresaYProceso(empresaId: number, proceso: string): Observable<Respuesta> {
+    return this.http.get(environment.host + urn.ruta + urn.notaDebitoCompra + urn.consultarPorEmpresaYProceso + urn.slash + empresaId + urn.slash + proceso, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);
@@ -101,7 +101,7 @@ export class NotaDebitoCompraService {
       })
     );
   }
-
+  
   obtenerPorFacturaCompra(facturaCompraId: number): Observable<Respuesta> {
     return this.http.get(environment.host + urn.ruta + urn.notaDebitoCompra + urn.obtenerPorFacturaCompra + urn.slash + facturaCompraId, options).pipe(
       map(response => response as Respuesta),

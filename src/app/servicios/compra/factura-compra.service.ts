@@ -42,8 +42,8 @@ export class FacturaCompraService {
       }));
   }
 
-  consultarPorEstado(estado: string): Observable<Respuesta> {
-    return this.http.get(environment.host + urn.ruta + urn.facturaCompra + urn.consultarPorEstado + urn.slash + estado, options).pipe(
+  consultarPorProceso(proceso: string): Observable<Respuesta> {
+    return this.http.get(environment.host + urn.ruta + urn.facturaCompra + urn.consultarPorProceso + urn.slash + proceso, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);
@@ -58,16 +58,16 @@ export class FacturaCompraService {
       }));
   }
 
-  consultarPorEmpresaYEstadoInternoYEstado(empresaId: number, estadoInterno: string, estado: string): Observable<Respuesta> {
-    return this.http.get(environment.host + urn.ruta + urn.facturaCompra + urn.consultarPorEmpresaYEstadoInternoYEstado + urn.slash + empresaId + urn.slash + estadoInterno + urn.slash + estado, options).pipe(
+  consultarPorEmpresaYProceso(empresaId: number, proceso: string): Observable<Respuesta> {
+    return this.http.get(environment.host + urn.ruta + urn.facturaCompra + urn.consultarPorEmpresaYProceso + urn.slash + empresaId + urn.slash + proceso, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);
       }));
   }
 
-  consultarPorEmpresaYProveedorYEstado(empresaId: number, proveedorId: number, estado: string): Observable<Respuesta> {
-    return this.http.get(environment.host + urn.ruta + urn.facturaCompra + urn.consultarPorEmpresaYProveedorYEstado + urn.slash + empresaId + urn.slash + proveedorId  + urn.slash + estado, options).pipe(
+  consultarPorProveedorYEmpresaYProceso(empresaId: number, proveedorId: number, proceso: string): Observable<Respuesta> {
+    return this.http.get(environment.host + urn.ruta + urn.facturaCompra + urn.consultarPorProveedorYEmpresaYProceso + urn.slash + empresaId + urn.slash + proveedorId  + urn.slash + proceso, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);
