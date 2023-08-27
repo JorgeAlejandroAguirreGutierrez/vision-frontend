@@ -47,9 +47,9 @@ export class NotaDebitoCompraComponent implements OnInit {
   
   si = valores.si;
   no = valores.no;
-  procesoPorPagar: string = valores.procesoPorPagar;
-  procesoPagada: string = valores.procesoPagada;
-  procesoAnulada: string = valores.procesoAnulada;
+  estadoPorPagar: string = valores.estadoPorPagar;
+  estadoPagada: string = valores.estadoPagada;
+  estadoAnulada: string = valores.estadoAnulada;
   
   controlIdentificacionProveedor = new UntypedFormControl();
   controlNombreComercialProveedor = new UntypedFormControl();

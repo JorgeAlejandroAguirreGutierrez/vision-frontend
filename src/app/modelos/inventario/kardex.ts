@@ -8,8 +8,8 @@ export class Kardex {
     id: number;
     codigo: string;
     fecha: Date;
-    //operacion: string;
     referencia: string;
+    idLinea: number;
     entrada: number;
     salida: number;
     saldo: number;
@@ -25,9 +25,8 @@ export class Kardex {
         this.id = valores.cero;
         this.codigo = valores.vacio;
         this.fecha = new Date();
-        //this.documento = valores.vacio;
-        //this.operacion = valores.vacio;
         this.referencia = valores.vacio;
+        this.idLinea = valores.cero;
         this.entrada = valores.cero;
         this.salida = valores.cero;
         this.saldo = valores.cero;

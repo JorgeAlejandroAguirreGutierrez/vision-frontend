@@ -204,17 +204,16 @@ export const valores = {
     //ESTADOS
     estadoActivo: "ACTIVO",
     estadoInactivo: "INACTIVO",
-    estadoAnulada: "ANULADA",
     //ESTADOS VENTAS
-    procesoEmitida: "EMITIDA",
-    procesoRecaudada: "RECAUDADA",
-    procesoAnulada: "ANULADA",
+    estadoEmitida: "EMITIDA",
+    estadoRecaudada: "RECAUDADA",
+    estadoAnulada: "ANULADA",
     estadoSRIPendiente: "PENDIENTE",
     estadoSRIAutorizada: "AUTORIZADA",
     estadoSRIAnulada: "ANULADA",
     //ESTADOS COMPRAS
-    procesoPagada: "PAGADA",
-    procesoPorPagar: "POR PAGAR",
+    estadoPagada: "PAGADA",
+    estadoPorPagar: "POR PAGAR",
 
     fechaCorta: "dd-MM-yyyy",
     suspendido: "SUSPENDIDO",

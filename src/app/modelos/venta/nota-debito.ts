@@ -62,7 +62,7 @@ export class NotaDebito {
         this.secuencial = valores.vacio;
         this.numeroComprobante = valores.vacio;
         this.fecha = new Date();
-        this.estado = valores.vacio;
+        this.estado = valores.estadoEmitida;
         this.estadoSRI = valores.vacio;
         this.descuento = valores.cero;
         this.subtotal = valores.cero;

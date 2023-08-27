@@ -41,9 +41,11 @@ export class UsuarioComponent implements OnInit {
   ocultarContrasena: boolean = true;
   ocultarContrasena2: boolean = true;
   cambiarContrasena: boolean = true;
+  perfilAdministrador: boolean = false;
 
   sesion: Sesion = null;
   usuario: Usuario = new Usuario();
+  empresa: Empresa = new Empresa();
 
   usuarios: Usuario[];
   perfiles: Perfil[] = [];
@@ -77,6 +79,9 @@ export class UsuarioComponent implements OnInit {
   ngOnInit() {
     this.sesion = validarSesion(this.sesionService, this.router);
     this.usuario.avatar64 = imagenes.avatar_usuario;
+    this.empresa = this.sesion.empresa;
+    this.usuario.estacion.establecimiento.empresa = this.empresa;
+    this.validarPerfil();
     this.consultar();
     this.consultarPerfiles();
     this.consultarEmpresas();
@@ -181,13 +186,23 @@ export class UsuarioComponent implements OnInit {
   }
 
   consultar() {
-    this.usuarioService.consultar().subscribe({
-      next: res => {
-        this.usuarios = res.resultado as Usuario[]
-        this.llenarTabla(this.usuarios);
-      },
-      error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
-    });
+    if (this.perfilAdministrador){
+      this.usuarioService.consultar().subscribe({
+        next: res => {
+          this.usuarios = res.resultado as Usuario[]
+          this.llenarTabla(this.usuarios);
+        },
+        error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+      });
+    }else{
+      this.usuarioService.consultarPorEmpresa(this.empresa.id).subscribe({
+        next: res => {
+          this.usuarios = res.resultado as Usuario[]
+          this.llenarTabla(this.usuarios);
+        },
+        error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+      });
+    }
   }
 
   llenarTabla(usuarios: Usuario[]){
@@ -292,6 +307,13 @@ export class UsuarioComponent implements OnInit {
     if (!validacion) {
       this.usuario.correo = valores.vacio;
       Swal.fire({ icon: error_swal, title: error, text: mensajes.error_correo_invalido });
+    }
+  }
+
+  // VALIDACIONES
+  validarPerfil() {
+    if (this.sesion.usuario.perfil.abreviatura == 'ADM'){
+      this.perfilAdministrador = true;
     }
   }
 

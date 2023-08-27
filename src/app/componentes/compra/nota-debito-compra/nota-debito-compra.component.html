@@ -6,7 +6,7 @@
                     <mat-icon>save</mat-icon>
                 </a>
             </li>
-            <li class="nav-item" *ngIf="notaDebitoCompra.id != 0 && notaDebitoCompra.estado != procesoAnulada">
+            <li class="nav-item" *ngIf="notaDebitoCompra.id != 0 && notaDebitoCompra.estado != estadoAnulada">
                 <a class="nav-link" title="Actualizar" role="button" (click)="actualizar($event)">
                     <mat-icon>update</mat-icon>
                 </a>
@@ -16,7 +16,7 @@
                     <mat-icon>file_copy</mat-icon>
                 </a>
             </li>
-            <li class="nav-item" *ngIf="notaDebitoCompra.id != 0 && notaDebitoCompra.estado != procesoAnulada">
+            <li class="nav-item" *ngIf="notaDebitoCompra.id != 0 && notaDebitoCompra.estado != estadoAnulada">
                 <a class="nav-link" title="Anular" role="button" (click)="anular($event)">
                     <mat-icon>delete_forever</mat-icon>
                 </a>

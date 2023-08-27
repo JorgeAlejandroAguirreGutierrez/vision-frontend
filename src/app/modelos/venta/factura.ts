@@ -74,7 +74,7 @@ export class Factura {
     this.codigoNumerico = valores.vacio;
     this.claveAcceso = valores.vacio;
     this.fecha = new Date();
-    this.estado = valores.vacio;
+    this.estado = valores.estadoEmitida;
     this.estadoSRI = valores.vacio;
 
     this.valorDescuentoTotal = valores.cero;

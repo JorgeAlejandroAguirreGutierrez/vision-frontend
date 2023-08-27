@@ -40,9 +40,9 @@ export class NotaCreditoComponent implements OnInit {
   no: string = valores.no;
   estadoActivo: string = valores.estadoActivo;
   estadoInactivo: string = valores.estadoInactivo;
-  procesoEmitida: string = valores.procesoEmitida;
-  procesoRecaudada: string = valores.procesoRecaudada;
-  procesoAnulada: string = valores.procesoAnulada
+  estadoEmitida: string = valores.estadoEmitida;
+  estadoRecaudada: string = valores.estadoRecaudada;
+  estadoAnulada: string = valores.estadoAnulada
   estadoSRIPendiente: string = valores.estadoSRIPendiente;
   estadoSRIAutorizada: string = valores.estadoSRIAutorizada;
   estadoSRIAnulada: string = valores.estadoSRIAnulada;

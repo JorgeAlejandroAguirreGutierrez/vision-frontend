@@ -37,9 +37,9 @@ export class NotaCreditoCompraComponent implements OnInit {
 
   si: string = valores.si;
   no: string = valores.no;
-  procesoPorPagar: string = valores.procesoPorPagar;
-  procesoPagada: string = valores.procesoPagada;
-  procesoAnulada: string = valores.procesoAnulada;
+  estadoPorPagar: string = valores.estadoPorPagar;
+  estadoPagada: string = valores.estadoPagada;
+  estadoAnulada: string = valores.estadoAnulada;
   devolucion: string = valores.devolucion;
   descuento: string = valores.descuento;
   conjunta: string = valores.conjunta;

@@ -40,9 +40,9 @@ export class FacturaCompraComponent implements OnInit {
   si: string = valores.si;
   no: string = valores.no;
   
-  procesoPorPagar: string = valores.procesoPorPagar;
-  procesoPagada: string = valores.procesoPagada;
-  procesoAnulada: string = valores.procesoAnulada;
+  estadoPorPagar: string = valores.estadoPorPagar;
+  estadoPagada: string = valores.estadoPagada;
+  estadoAnulada: string = valores.estadoAnulada;
 
   ultimoCostoCompra: number = valores.cero;
   indiceLinea: number;

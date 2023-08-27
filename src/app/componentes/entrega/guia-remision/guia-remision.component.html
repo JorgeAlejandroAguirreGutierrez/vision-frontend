@@ -7,7 +7,7 @@
                 </a>
             </li>
             <li class="nav-item"
-                *ngIf="guiaRemision.id != 0 && guiaRemision.estado != procesoAnulada && guiaRemision.estadoSRI != estadoSRIAutorizada">
+                *ngIf="guiaRemision.id != 0 && guiaRemision.estado != estadoAnulada && guiaRemision.estadoSRI != estadoSRIAutorizada">
                 <a class="nav-link" title="Actualizar" role="button" (click)="actualizar($event)">
                     <mat-icon>update</mat-icon>
                 </a>
@@ -17,24 +17,24 @@
                     <mat-icon>file_copy</mat-icon>
                 </a>
             </li>
-            <li class="nav-item" *ngIf="guiaRemision.id != 0 && guiaRemision.estado != procesoAnulada">
+            <li class="nav-item" *ngIf="guiaRemision.id != 0 && guiaRemision.estado != estadoAnulada">
                 <a class="nav-link" title="Anular" role="button" (click)="anular($event)">
                     <mat-icon>check</mat-icon>
                 </a>
             </li>
             <li class="nav-item"
-                *ngIf="guiaRemision.id != 0 && guiaRemision.estado != procesoAnulada && guiaRemision.estado != procesoEmitida && guiaRemision.estadoSRI != estadoSRIAutorizada && guiaRemision.estadoSRI != estadoSRIAnulada">
+                *ngIf="guiaRemision.id != 0 && guiaRemision.estado != estadoAnulada && guiaRemision.estado != estadoEmitida && guiaRemision.estadoSRI != estadoSRIAutorizada && guiaRemision.estadoSRI != estadoSRIAnulada">
                 <a class="nav-link" title="Crear Guia Remision Electronica" href="#" role="button"
                     (click)="crearGuiaRemisionElectronica($event)">
                     <mat-icon>point_of_sale</mat-icon>
                 </a>
             </li>
-            <li class="nav-item" *ngIf="guiaRemision.id != 0 && guiaRemision.estado != procesoEmitida && guiaRemision.estado != procesoAnulada && guiaRemision.estadoSRI != estadoSRIAutorizada && guiaRemision.estadoSRI != estadoSRIAnulada">
+            <li class="nav-item" *ngIf="guiaRemision.id != 0 && guiaRemision.estado != estadoEmitida && guiaRemision.estado != estadoAnulada && guiaRemision.estadoSRI != estadoSRIAutorizada && guiaRemision.estadoSRI != estadoSRIAnulada">
                 <a class="nav-link" title="Obtener PDF" href="#" role="button" (click)="obtenerPDF($event)">
                     <mat-icon>picture_as_pdf</mat-icon>
                 </a>
             </li>
-            <li class="nav-item" *ngIf="guiaRemision.id != 0 && guiaRemision.estado != procesoEmitida && guiaRemision.estado != procesoAnulada && guiaRemision.estadoSRI != estadoSRIPendiente && guiaRemision.estadoSRI != estadoSRIAnulada">
+            <li class="nav-item" *ngIf="guiaRemision.id != 0 && guiaRemision.estado != estadoEmitida && guiaRemision.estado != estadoAnulada && guiaRemision.estadoSRI != estadoSRIPendiente && guiaRemision.estadoSRI != estadoSRIAnulada">
                 <a class="nav-link" title="Enviar PDF Y XML" href="#" role="button" (click)="enviarPDFYXML($event)">
                     <mat-icon>forward_to_inbox</mat-icon>
                 </a>

@@ -34,6 +34,14 @@ export class UsuarioService {
     );
   }
 
+  consultar(): Observable<Respuesta> {
+    return this.http.get(environment.host + urn.ruta + urn.usuario, options).pipe(
+      map(response => response as Respuesta),
+      catchError(err => {
+        return throwError(()=>err);
+      }));
+  }
+
   consultarPorEstado(estado: string): Observable<Respuesta> {
     return this.http.get(environment.host + urn.ruta + urn.usuario + urn.consultarPorEstado + urn.slash + estado, options).pipe(
       map(response => response as Respuesta),
@@ -42,8 +50,8 @@ export class UsuarioService {
       }));
   }
 
-  consultar(): Observable<Respuesta> {
-    return this.http.get(environment.host + urn.ruta + urn.usuario, options).pipe(
+  consultarPorEmpresa(empresaId: number): Observable<Respuesta> {
+    return this.http.get(environment.host + urn.ruta + urn.usuario + urn.consultarPorEmpresa + urn.slash + empresaId, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);

@@ -156,7 +156,7 @@
                             <mat-form-field appearance="standard">
                                 <mat-label>Empresa</mat-label>
                                 <mat-select [(ngModel)]="usuario.estacion.establecimiento.empresa" [compareWith]="compareFn"
-                                    (selectionChange)="consultarEstablecimientos()" class="form-control-sm">
+                                    (selectionChange)="consultarEstablecimientos()" class="form-control-sm" [disabled]="!perfilAdministrador">
                                     <mat-option *ngFor="let empresa of empresas" [value]="empresa">
                                         {{empresa.nombreComercial}}
                                     </mat-option>
