@@ -88,7 +88,7 @@ export class NotaCreditoCompraService {
     return this.http.post(environment.host + urn.ruta + urn.notaCreditoCompra + urn.calcular, notaCreditoCompra, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
-        return throwError(()=>err);
+        return throwError(err);
       })
     );
   }
@@ -97,7 +97,7 @@ export class NotaCreditoCompraService {
     return this.http.post(environment.host + urn.ruta + urn.notaCreditoCompra + urn.calcularLinea, notaCreditoCompraLinea, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
-        return throwError(()=>err);
+        return throwError(err);
       })
     );
   }
@@ -106,7 +106,7 @@ export class NotaCreditoCompraService {
     return this.http.get(environment.host + urn.ruta + urn.notaCreditoCompra + urn.obtenerPorFacturaCompra + urn.slash + facturaCompraId, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
-        return throwError(()=>err);
+        return throwError(err);
       })
     );
   }

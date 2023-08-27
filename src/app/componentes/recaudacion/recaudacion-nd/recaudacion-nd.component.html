@@ -6,72 +6,72 @@
                     <mat-icon>save</mat-icon>
                 </a>
             </li>
-            <li class="nav-item" *ngIf="!verPanelCheques && notaDebito.id != 0 && notaDebito.estado != procesoAnulada && notaDebito.estadoSRI != estadoSRIAnulada">
+            <li class="nav-item" *ngIf="!verPanelCheques && notaDebito.id != 0 && notaDebito.proceso != procesoAnulada && notaDebito.estadoSRI != estadoSRIAnulada">
                 <a class="nav-link" title="ver Cheques" role="button" (click)="verPanelCheques = true">
                     <mat-icon>payments</mat-icon>
                 </a>
             </li>
-            <li class="nav-item" *ngIf="verPanelCheques && notaDebito.id != 0 && notaDebito.estado != procesoAnulada && notaDebito.estadoSRI != estadoSRIAnulada">
+            <li class="nav-item" *ngIf="verPanelCheques && notaDebito.id != 0 && notaDebito.proceso != procesoAnulada && notaDebito.estadoSRI != estadoSRIAnulada">
                 <a class="nav-link" title="Ocultar Cheques" role="button" (click)="verPanelCheques = false">
                     <mat-icon>subtitles_off</mat-icon>
                 </a>
             </li>
-            <li class="nav-item" *ngIf="!verPanelDepositos && notaDebito.id != 0 && notaDebito.estado != procesoAnulada && notaDebito.estadoSRI != estadoSRIAnulada">
+            <li class="nav-item" *ngIf="!verPanelDepositos && notaDebito.id != 0 && notaDebito.proceso != procesoAnulada && notaDebito.estadoSRI != estadoSRIAnulada">
                 <a class="nav-link" title="ver Depósitos" role="button" (click)="verPanelDepositos = true">
                     <mat-icon>receipt_long</mat-icon>
                 </a>
             </li>
-            <li class="nav-item" *ngIf="verPanelDepositos && notaDebito.id != 0 && notaDebito.estado != procesoAnulada && notaDebito.estadoSRI != estadoSRIAnulada">
+            <li class="nav-item" *ngIf="verPanelDepositos && notaDebito.id != 0 && notaDebito.proceso != procesoAnulada && notaDebito.estadoSRI != estadoSRIAnulada">
                 <a class="nav-link" title="Ocultar Depósitos" role="button" (click)="verPanelDepositos = false">
                     <mat-icon>signal_cellular_no_sim</mat-icon>
                 </a>
             </li>
-            <li class="nav-item" *ngIf="!verPanelTransferencias && notaDebito.id != 0 && notaDebito.estado != procesoAnulada && notaDebito.estadoSRI != estadoSRIAnulada">
+            <li class="nav-item" *ngIf="!verPanelTransferencias && notaDebito.id != 0 && notaDebito.proceso != procesoAnulada && notaDebito.estadoSRI != estadoSRIAnulada">
                 <a class="nav-link" title="ver Transferencias" role="button" (click)="verPanelTransferencias = true">
                     <mat-icon>move_down</mat-icon>
                 </a>
             </li>
-            <li class="nav-item" *ngIf="verPanelTransferencias && notaDebito.id != 0 && notaDebito.estado != procesoAnulada && notaDebito.estadoSRI != estadoSRIAnulada">
+            <li class="nav-item" *ngIf="verPanelTransferencias && notaDebito.id != 0 && notaDebito.proceso != procesoAnulada && notaDebito.estadoSRI != estadoSRIAnulada">
                 <a class="nav-link" title="Ocultar Transferencias" role="button"
                     (click)="verPanelTransferencias = false">
                     <mat-icon>move_up</mat-icon>
                 </a>
             </li>
-            <li class="nav-item" *ngIf="!verPanelTarjetasCredito && notaDebito.id != 0 && notaDebito.estado != procesoAnulada && notaDebito.estadoSRI != estadoSRIAnulada">
+            <li class="nav-item" *ngIf="!verPanelTarjetasCredito && notaDebito.id != 0 && notaDebito.proceso != procesoAnulada && notaDebito.estadoSRI != estadoSRIAnulada">
                 <a class="nav-link" title="ver T. Crédito" role="button" (click)="verPanelTarjetasCredito = true">
                     <mat-icon>add_card</mat-icon>
                 </a>
             </li>
-            <li class="nav-item" *ngIf="verPanelTarjetasCredito && notaDebito.id != 0 && notaDebito.estado != procesoAnulada && notaDebito.estadoSRI != estadoSRIAnulada">
+            <li class="nav-item" *ngIf="verPanelTarjetasCredito && notaDebito.id != 0 && notaDebito.proceso != procesoAnulada && notaDebito.estadoSRI != estadoSRIAnulada">
                 <a class="nav-link" title="Ocultar T. Crédito" role="button" (click)="verPanelTarjetasCredito = false">
                     <mat-icon>credit_card_off</mat-icon>
                 </a>
             </li>
-            <li class="nav-item" *ngIf="!verPanelTarjetasDebito && notaDebito.id != 0 && notaDebito.estado != procesoAnulada && notaDebito.estadoSRI != estadoSRIAnulada">
+            <li class="nav-item" *ngIf="!verPanelTarjetasDebito && notaDebito.id != 0 && notaDebito.proceso != procesoAnulada && notaDebito.estadoSRI != estadoSRIAnulada">
                 <a class="nav-link" title="ver T. Débito" role="button" (click)="verPanelTarjetasDebito = true">
                     <mat-icon>local_atm</mat-icon>
                 </a>
             </li>
-            <li class="nav-item" *ngIf="verPanelTarjetasDebito && notaDebito.id != 0 && notaDebito.estado != procesoAnulada && notaDebito.estadoSRI != estadoSRIAnulada">
+            <li class="nav-item" *ngIf="verPanelTarjetasDebito && notaDebito.id != 0 && notaDebito.proceso != procesoAnulada && notaDebito.estadoSRI != estadoSRIAnulada">
                 <a class="nav-link" title="Ocultar T. Débito" role="button" (click)="verPanelTarjetasDebito = false">
                     <mat-icon>money_off_csred</mat-icon>
                 </a>
             </li>
             <li class="nav-item"
-                *ngIf="notaDebito.id != 0 && notaDebito.estado != procesoEmitida && notaDebito.estado != procesoAnulada && notaDebito.estadoSRI != estadoSRIAnulada && notaDebito.estadoSRI != estadoSRIPendiente">
+                *ngIf="notaDebito.id != 0 && notaDebito.proceso != procesoEmitida && notaDebito.proceso != procesoAnulada && notaDebito.estadoSRI != estadoSRIAnulada && notaDebito.estadoSRI != estadoSRIPendiente">
                 <a class="nav-link" title="Crear Nota Debito Electronica" href="#" role="button"
                     (click)="crearNotaDebitoElectronica($event)">
                     <mat-icon>point_of_sale</mat-icon>
                 </a>
             </li>
             <li class="nav-item"
-                *ngIf="notaDebito.id != 0 && notaDebito.estado != procesoEmitida && notaDebito.estado != procesoAnulada && notaDebito.estadoSRI != estadoSRIAnulada">
+                *ngIf="notaDebito.id != 0 && notaDebito.proceso != procesoEmitida && notaDebito.proceso != procesoAnulada && notaDebito.estadoSRI != estadoSRIAnulada">
                 <a class="nav-link" title="Obtener PDF" href="#" role="button" (click)="obtenerPDF($event)">
                     <mat-icon>picture_as_pdf</mat-icon>
                 </a>
             </li>
             <li class="nav-item"
-                *ngIf="notaDebito.id != 0 && notaDebito.estado != procesoEmitida && notaDebito.estado != procesoAnulada && notaDebito.estadoSRI != estadoSRIAnulada && notaDebito.estadoSRI != estadoSRIPendiente">
+                *ngIf="notaDebito.id != 0 && notaDebito.proceso != procesoEmitida && notaDebito.proceso != procesoAnulada && notaDebito.estadoSRI != estadoSRIAnulada && notaDebito.estadoSRI != estadoSRIPendiente">
                 <a class="nav-link" title="Enviar PDF Y XML" href="#" role="button" (click)="enviarPDFYXML($event)">
                     <mat-icon>forward_to_inbox</mat-icon>
                 </a>
@@ -197,7 +197,7 @@
                             <div class="col-6">
                                 <mat-form-field appearance="standard">
                                     <mat-label>Proceso</mat-label>
-                                    <input matInput type="text" [(ngModel)]="notaDebito.estado" [disabled]="true" class="form-control-sm">
+                                    <input matInput type="text" [(ngModel)]="notaDebito.proceso" [disabled]="true" class="form-control-sm">
                                 </mat-form-field>
                             </div>
                         </div>

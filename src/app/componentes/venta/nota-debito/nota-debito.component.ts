@@ -82,8 +82,8 @@ export class NotaDebitoComponent implements OnInit {
     { nombreColumna: 'cliente', cabecera: 'Cliente', celda: (row: NotaDebito) => `${row.factura.cliente.razonSocial}`},
     { nombreColumna: 'factura', cabecera: 'Factura', celda: (row: NotaDebito) => `${row.factura.numeroComprobante}`},
     { nombreColumna: 'total', cabecera: 'Total', celda: (row: NotaDebito) => `$${row.total}`},
-    { nombreColumna: 'estado', cabecera: 'Estado', celda: (row: NotaDebito) => `${row.estado}`},
-    { nombreColumna: 'estadosri', cabecera: 'Proceso SRI', celda: (row: NotaDebito) => `${row.estadoSRI}`}
+    { nombreColumna: 'proceso', cabecera: 'Proceso', celda: (row: NotaDebito) => `${row.proceso}`},
+    { nombreColumna: 'estadoSRI', cabecera: 'Estado SRI', celda: (row: NotaDebito) => `${row.estadoSRI}`}
   ];
   cabecera: string[]  = this.columnas.map(titulo => titulo.nombreColumna);
   dataSource: MatTableDataSource<NotaDebito>;

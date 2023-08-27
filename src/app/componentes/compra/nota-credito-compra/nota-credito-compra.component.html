@@ -5,7 +5,7 @@
                 <mat-icon>save</mat-icon>
             </a>
         </li>
-        <li class="nav-item" *ngIf="notaCreditoCompra.id != 0 && notaCreditoCompra.estado != procesoAnulada">
+        <li class="nav-item" *ngIf="notaCreditoCompra.id != 0 && notaCreditoCompra.proceso != procesoAnulada">
             <a class="nav-link" title="Actualizar" role="button" (click)="actualizar($event)">
                 <mat-icon>update</mat-icon>
             </a>
@@ -15,9 +15,9 @@
                 <mat-icon>file_copy</mat-icon>
             </a>
         </li>
-        <li class="nav-item" *ngIf="notaCreditoCompra.id != 0 && notaCreditoCompra.estado != procesoAnulada">
+        <li class="nav-item" *ngIf="notaCreditoCompra.id != 0 && notaCreditoCompra.proceso != procesoAnulada">
             <a class="nav-link" title="Anular" role="button" (click)="anular($event)">
-                <mat-icon>delete_forever</mat-icon>
+                <mat-icon>assignment_turned_in</mat-icon>
             </a>
         </li>
     </ul>
@@ -147,8 +147,8 @@
                     </div>
                     <div class="col-7">
                         <mat-form-field appearance="standard">
-                            <mat-label>Estado</mat-label>
-                            <input matInput type="text" class="form-control-sm" [(ngModel)]="notaCreditoCompra.estado" [disabled]="true">
+                            <mat-label>Proceso</mat-label>
+                            <input matInput type="text" class="form-control-sm" [(ngModel)]="notaCreditoCompra.proceso" [disabled]="true">
                         </mat-form-field>
                     </div>
                 </div>
