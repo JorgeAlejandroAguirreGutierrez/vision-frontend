@@ -42,7 +42,7 @@ export class FacturaCompra {
         this.secuencial = valores.vacio;
         this.numeroComprobante = valores.vacio;
         this.fecha = new Date();
-        this.estado = valores.estadoPorPagar;
+        this.estado = valores.vacio;
 
         this.subtotal = valores.cero;
         this.descuento = valores.cero;
