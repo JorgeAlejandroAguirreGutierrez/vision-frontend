@@ -82,7 +82,7 @@ export class NotaDebitoComponent implements OnInit {
     { nombreColumna: 'cliente', cabecera: 'Cliente', celda: (row: NotaDebito) => `${row.factura.cliente.razonSocial}`},
     { nombreColumna: 'factura', cabecera: 'Factura', celda: (row: NotaDebito) => `${row.factura.numeroComprobante}`},
     { nombreColumna: 'total', cabecera: 'Total', celda: (row: NotaDebito) => `$${row.total}`},
-    { nombreColumna: 'proceso', cabecera: 'Proceso', celda: (row: NotaDebito) => `${row.proceso}`},
+    { nombreColumna: 'proceso', cabecera: 'Proceso', celda: (row: NotaDebito) => `${row.estado}`},
     { nombreColumna: 'estadoSRI', cabecera: 'Estado SRI', celda: (row: NotaDebito) => `${row.estadoSRI}`}
   ];
   cabecera: string[]  = this.columnas.map(titulo => titulo.nombreColumna);
@@ -142,9 +142,9 @@ export class NotaDebitoComponent implements OnInit {
   sesion: Sesion = null;
   empresa: Empresa = null;
   
-  procesoEmitida: string = valores.procesoEmitida;
-  procesoRecaudada: string = valores.procesoRecaudada;
-  procesoAnulada: string = valores.procesoAnulada
+  estadoEmitida: string = valores.estadoEmitida;
+  estadoRecaudada: string = valores.estadoRecaudada;
+  estadoAnulada: string = valores.estadoAnulada
   estadoSRIPendiente: string = valores.estadoSRIPendiente;
   estadoSRIAutorizada: string = valores.estadoSRIAutorizada;
   estadoSRIAnulada: string = valores.estadoSRIAnulada;

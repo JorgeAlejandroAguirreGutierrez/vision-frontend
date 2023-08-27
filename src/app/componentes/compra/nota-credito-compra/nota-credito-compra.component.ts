@@ -37,9 +37,9 @@ export class NotaCreditoCompraComponent implements OnInit {
 
   si: string = valores.si;
   no: string = valores.no;
-  procesoPorPagar: string = valores.procesoPorPagar;
-  procesoPagada: string = valores.procesoPagada;
-  procesoAnulada: string = valores.procesoAnulada;
+  estadoPorPagar: string = valores.estadoPorPagar;
+  estadoPagada: string = valores.estadoPagada;
+  estadoAnulada: string = valores.estadoAnulada;
   devolucion: string = valores.devolucion;
   descuento: string = valores.descuento;
   conjunta: string = valores.conjunta;
@@ -68,7 +68,7 @@ export class NotaCreditoCompraComponent implements OnInit {
     { nombreColumna: 'comprobante', cabecera: 'Comprobante', celda: (row: NotaCreditoCompra) => `${row.numeroComprobante}` },
     { nombreColumna: 'proveedor', cabecera: 'Proveedor', celda: (row: NotaCreditoCompra) => `${row.facturaCompra.proveedor.nombreComercial}` },
     { nombreColumna: 'total', cabecera: 'Total', celda: (row: NotaCreditoCompra) => `$${row.total}` },
-    { nombreColumna: 'proceso', cabecera: 'Proceso', celda: (row: NotaCreditoCompra) => `${row.proceso}` }
+    { nombreColumna: 'estado', cabecera: 'Estado', celda: (row: NotaCreditoCompra) => `${row.estado}` }
   ];
   cabecera: string[] = this.columnas.map(titulo => titulo.nombreColumna);
   dataSource: MatTableDataSource<NotaCreditoCompra>;
@@ -209,7 +209,7 @@ export class NotaCreditoCompraComponent implements OnInit {
     this.dataSource = new MatTableDataSource(notasCreditosCompras);
     this.dataSource.filterPredicate = (data: NotaCreditoCompra, filter: string): boolean =>
       this.datepipe.transform(data.fecha, valores.fechaCorta).includes(filter) || data.numeroComprobante.includes(filter) || data.secuencial.includes(filter) || 
-      data.facturaCompra.proveedor.razonSocial.includes(filter) || data.proceso.includes(filter);
+      data.facturaCompra.proveedor.razonSocial.includes(filter) || data.estado.includes(filter);
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
   }
@@ -306,7 +306,7 @@ export class NotaCreditoCompraComponent implements OnInit {
 
   consultarFacturasCompras(proveedorId: number) {
     this.facturaCompraSeleccionado = new FacturaCompra();
-    this.facturaCompraService.consultarPorProveedorYEmpresaYProceso(proveedorId, this.empresa.id, valores.procesoEmitida).subscribe({
+    this.facturaCompraService.consultarPorEmpresaYProveedorYEstadoDiferente(this.empresa.id, proveedorId, valores.estadoAnulada).subscribe({
       next: res => {
         this.facturasCompras = res.resultado as FacturaCompra[]
         this.filtroFacturaCompras = this.facturasCompras;

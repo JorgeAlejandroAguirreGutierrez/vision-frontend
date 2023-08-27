@@ -42,9 +42,9 @@ export class NotaCreditoComponent implements OnInit {
   no: string = valores.no;
   estadoActivo: string = valores.estadoActivo;
   estadoInactivo: string = valores.estadoInactivo;
-  procesoEmitida: string = valores.procesoEmitida;
-  procesoRecaudada: string = valores.procesoRecaudada;
-  procesoAnulada: string = valores.procesoAnulada
+  estadoEmitida: string = valores.estadoEmitida;
+  estadoRecaudada: string = valores.estadoRecaudada;
+  estadoAnulada: string = valores.estadoAnulada
   estadoSRIPendiente: string = valores.estadoSRIPendiente;
   estadoSRIAutorizada: string = valores.estadoSRIAutorizada;
   estadoSRIAnulada: string = valores.estadoSRIAnulada;
@@ -82,7 +82,7 @@ export class NotaCreditoComponent implements OnInit {
     { nombreColumna: 'cliente', cabecera: 'Cliente', celda: (row: NotaCredito) => `${row.factura.cliente.razonSocial}`},
     { nombreColumna: 'factura', cabecera: 'Factura', celda: (row: NotaCredito) => `${row.factura.numeroComprobante}`},
     { nombreColumna: 'total', cabecera: 'Total', celda: (row: NotaCredito) => `$${row.total}`},
-    { nombreColumna: 'proceso', cabecera: 'Proceso', celda: (row: NotaCredito) => `${row.proceso}`},
+    { nombreColumna: 'proceso', cabecera: 'Proceso', celda: (row: NotaCredito) => `${row.estado}`},
     { nombreColumna: 'estadoSRI', cabecera: 'Estado SRI', celda: (row: NotaCredito) => `${row.estadoSRI}`}
   ];
   cabecera: string[]  = this.columnas.map(titulo => titulo.nombreColumna);
@@ -302,7 +302,7 @@ export class NotaCreditoComponent implements OnInit {
     this.dataSource.filterPredicate = (data: NotaCredito, filter: string): boolean =>
       this.datepipe.transform(data.fecha, "dd-MM-yyyy").includes(filter) || data.numeroComprobante.includes(filter) || 
       data.secuencial.includes(filter) || data.factura.cliente.razonSocial.includes(filter) || 
-      data.proceso.includes(filter) || data.estadoSRI.includes(filter);
+      data.estado.includes(filter) || data.estadoSRI.includes(filter);
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
   }
@@ -366,7 +366,7 @@ export class NotaCreditoComponent implements OnInit {
         this.notaCredito.factura.cliente = res.resultado as Cliente;
         this.controlIdentificacionCliente.patchValue(this.notaCredito.factura.cliente);
         this.controlRazonSocialCliente.patchValue(this.notaCredito.factura.cliente);
-        this.facturaService.consultarPorClienteYEmpresaYProceso(this.notaCredito.factura.cliente.id, this.empresa.id, valores.procesoRecaudada).subscribe(
+        this.facturaService.consultarPorClienteYEmpresaYEstado(this.notaCredito.factura.cliente.id, this.empresa.id, valores.estadoRecaudada).subscribe(
           res => {
             this.facturas = res.resultado as Factura[];
             this.spinnerService.hide();
@@ -392,7 +392,7 @@ export class NotaCreditoComponent implements OnInit {
         this.notaCredito.factura.cliente = res.resultado as Cliente;
         this.controlIdentificacionCliente.patchValue(this.notaCredito.factura.cliente);
         this.controlRazonSocialCliente.patchValue(this.notaCredito.factura.cliente);
-        this.facturaService.consultarPorClienteYEmpresaYProceso(this.notaCredito.factura.cliente.id, this.empresa.id, valores.procesoRecaudada).subscribe(
+        this.facturaService.consultarPorClienteYEmpresaYEstado(this.notaCredito.factura.cliente.id, this.empresa.id, valores.estadoRecaudada).subscribe(
           res => {
             this.facturas = res.resultado as Factura[];
             this.spinnerService.hide();
@@ -412,7 +412,7 @@ export class NotaCreditoComponent implements OnInit {
 
   consultarFacturas(clienteId: number) {
     this.facturaSeleccionado = new Factura();
-    this.facturaService.consultarPorClienteYEmpresaYProceso(clienteId, this.empresa.id, valores.procesoRecaudada).subscribe({
+    this.facturaService.consultarPorClienteYEmpresaYEstado(clienteId, this.empresa.id, valores.estadoRecaudada).subscribe({
       next: res => {
         this.facturas = res.resultado as Factura[];
       },

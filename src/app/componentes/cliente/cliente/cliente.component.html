@@ -320,7 +320,7 @@
                             <div class="col-9">
                                 <mat-form-field appearance="standard">
                                     <mat-label>Correo electrónico</mat-label>
-                                    <input matInput type="text " [(ngModel)]="correo.email" [disabled]="deshabilitarDireccion"
+                                    <input matInput type="text " appFormatoDecimal [(ngModel)]="correo.email" [disabled]="deshabilitarDireccion"
                                         oninput="this.value = this.value.toLowerCase()" class="form-control-sm "
                                         (change)="validarCorreo()" placeholder="ejemplo@evoluciontic.com">
                                 </mat-form-field>
@@ -503,7 +503,7 @@
                             <div class="col-9">
                                 <mat-form-field appearance="standard">
                                     <mat-label>Correo electrónico</mat-label>
-                                    <input matInput type="text" [(ngModel)]="correoDependiente.email" [disabled]="deshabilitarDependiente"
+                                    <input matInput type="text" appFormatoDecimal [(ngModel)]="correoDependiente.email" [disabled]="deshabilitarDependiente"
                                         (change)="validarCorreoDependiente()" class="form-control-sm" placeholder="ejemplo@evoluciontic.com"
                                         oninput="this.value = this.value.toLowerCase()" >
                                 </mat-form-field>

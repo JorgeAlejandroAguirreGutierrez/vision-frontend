@@ -41,7 +41,9 @@ export class EstablecimientoComponent implements OnInit {
   abrirPanelAdmin: boolean = true;
   abrirPanelNuevo: boolean = true;
   deshabilitarEmpresa: boolean = true;
+  perfilAdministrador: boolean = false;
 
+  empresaSeleccionada: Empresa = new Empresa();
   establecimiento: Establecimiento = new Establecimiento();
   telefono = new TelefonoEstablecimiento();
   celular = new CelularEstablecimiento();
@@ -53,6 +55,9 @@ export class EstablecimientoComponent implements OnInit {
   provincias: Ubicacion[];
   cantones: Ubicacion[];
   parroquias: Ubicacion[];
+
+  filtroRazonSociales: Empresa[] = [];
+  filtroNombreComerciales: Empresa[] = [];
 
   //Mapa
   latInicial: number = valores.latCiudad;
@@ -90,11 +95,23 @@ export class EstablecimientoComponent implements OnInit {
   ngOnInit() {
     this.sesion = validarSesion(this.sesionService, this.router);
     this.establecimiento.empresa = this.sesion.empresa;
+    this.empresaSeleccionada = this.sesion.empresa;
+    this.validarPerfil();
     this.consultar();
+    this.consultarEmpresas();
     this.consultarRegimenes();
     this.consultarProvincias();
   }
 
+  consultarEmpresas() {
+    this.empresaService.consultar().subscribe({
+      next: (res) => {
+        this.empresas = res.resultado as Empresa[]
+      },
+      error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+      }
+    );
+  }
   consultarRegimenes(){
     this.regimenService.consultarPorEstado(valores.estadoActivo).subscribe({
       next: res => {
@@ -226,6 +243,7 @@ export class EstablecimientoComponent implements OnInit {
       this.inicializarMapa();
       this.clickedRows.add(establecimiento);
       this.establecimiento = { ... establecimiento};
+      this.empresaSeleccionada = this.establecimiento.empresa;
       this.recuperarCoordenadas();
       this.seleccionarProvincia();
       this.seleccionarCanton();
@@ -244,6 +262,47 @@ export class EstablecimientoComponent implements OnInit {
   borrarFiltro() {
     this.renderer.setProperty(this.inputFiltro.nativeElement, 'value', valores.vacio);
     this.dataSource.filter = valores.vacio;
+  }
+
+  seleccionarRazonSocial(event) {
+    let empresaId = event.option.value.id;
+    this.empresaService.obtener(empresaId).subscribe({
+      next: res => {
+        this.empresaSeleccionada = res.resultado as Empresa;
+        this.establecimiento.empresa = this.empresaSeleccionada;
+        this.consultar();
+      },
+      error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+    });
+  }
+  verRazonSocial(empresa: Empresa): string {
+    return empresa && empresa.razonSocial ? empresa.razonSocial : valores.vacio;
+  }
+  filtrarRazonSociales(event: any){
+    this.filtroRazonSociales = this.empresas.filter(empresa => empresa.razonSocial.toUpperCase().includes(event));
+  }
+  borrarRazonSocial(){
+    this.empresaSeleccionada = new Empresa();
+    this.filtroRazonSociales = [];
+    this.filtroNombreComerciales = [];
+  }
+
+  seleccionarNombreComercial(event) {
+    let empresaId = event.option.value.id;
+    this.empresaService.obtener(empresaId).subscribe({
+      next: res => {
+        this.empresaSeleccionada = res.resultado as Empresa;
+        this.establecimiento.empresa = this.empresaSeleccionada;
+        this.consultar();
+      },
+      error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+    });
+  }
+  verNombreComercial(empresa: Empresa): string {
+    return empresa && empresa.nombreComercial ? empresa.nombreComercial : valores.vacio;
+  }
+  filtrarNombresComerciales(event: any){
+    this.filtroNombreComerciales = this.empresas.filter(empresa => empresa.nombreComercial.toUpperCase().includes(event));
   }
 
   seleccionarProvincia() {
@@ -356,6 +415,22 @@ export class EstablecimientoComponent implements OnInit {
 
   compareFn(a: any, b: any) {
     return a && b && a.id == b.id;
+  }
+
+  rellenarNumeroEstablecimiento() {
+    this.establecimiento.codigoSRI = this.pad(this.establecimiento.codigoSRI, 3);
+  }
+
+  pad(numero: string, size: number): string {
+    while (numero.length < size) numero = "0" + numero;
+    return numero;
+  }
+
+  // VALIDACIONES
+  validarPerfil() {
+    if (this.sesion.usuario.perfil.abreviatura == 'ADM'){
+      this.perfilAdministrador = true;
+    }
   }
 
   validarFormulario(): boolean {

@@ -87,8 +87,8 @@ export class NotaDebitoService {
       }));
   }
 
-  consultarPorClienteYProcesoEstadoSRI(clienteId: number, proceso: string, estadoSRI: string): Observable<Respuesta> {
-    return this.http.get(environment.host + urn.ruta + urn.notaDebito + urn.consultarPorClienteYProcesoYEstadoSRI + urn.slash + clienteId + urn.slash + proceso + urn.slash + estadoSRI, options).pipe(
+  consultarPorClienteYEstadoEstadoSRI(clienteId: number, estado: string, estadoSRI: string): Observable<Respuesta> {
+    return this.http.get(environment.host + urn.ruta + urn.notaDebito + urn.consultarPorClienteYEstadoYEstadoSRI + urn.slash + clienteId + urn.slash + estado + urn.slash + estadoSRI, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(() => err);

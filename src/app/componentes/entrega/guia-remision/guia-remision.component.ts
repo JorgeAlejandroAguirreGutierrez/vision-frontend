@@ -37,9 +37,9 @@ export class GuiaRemisionComponent implements OnInit {
   panelOpenState = false;
   hoy = new Date();
 
-  procesoEmitida: string = valores.procesoEmitida;
-  procesoRecaudada: string = valores.procesoRecaudada;
-  procesoAnulada: string = valores.procesoAnulada
+  estadoEmitida: string = valores.estadoEmitida;
+  estadoRecaudada: string = valores.estadoRecaudada;
+  estadoAnulada: string = valores.estadoAnulada
   estadoSRIPendiente: string = valores.estadoSRIPendiente;
   estadoSRIAutorizada: string = valores.estadoSRIAutorizada;
   estadoSRIAnulada: string = valores.estadoSRIAnulada;
@@ -76,7 +76,7 @@ export class GuiaRemisionComponent implements OnInit {
     { nombreColumna: 'direccion', cabecera: 'Direccion', celda: (row: GuiaRemision) => row.opcionGuia == valores.clienteDireccion ? `${row.factura.cliente.direccion}` : `${row.direccionDestinatario}` },
     { nombreColumna: 'transportista', cabecera: 'Transportista', celda: (row: GuiaRemision) => `${row.transportista.nombre}` },
     { nombreColumna: 'placa', cabecera: 'Placa', celda: (row: GuiaRemision) => `${row.vehiculo.placa}` },
-    { nombreColumna: 'proceso', cabecera: 'Proceso', celda: (row: GuiaRemision) => `${row.proceso}`},
+    { nombreColumna: 'proceso', cabecera: 'Proceso', celda: (row: GuiaRemision) => `${row.estado}`},
     { nombreColumna: 'estadoSRI', cabecera: 'Estado SRI', celda: (row: GuiaRemision) => `${row.estadoSRI}`},
   ];
   cabecera: string[] = this.columnas.map(titulo => titulo.nombreColumna);
@@ -304,7 +304,7 @@ export class GuiaRemisionComponent implements OnInit {
         this.guiaRemision.factura.cliente = res.resultado as Cliente;
         this.controlIdentificacionCliente.patchValue(this.guiaRemision.factura.cliente);
         this.controlRazonSocialCliente.patchValue(this.guiaRemision.factura.cliente);
-        this.facturaService.consultarPorClienteYEmpresaYProceso(this.guiaRemision.factura.cliente.id, this.empresa.id, valores.procesoRecaudada).subscribe(
+        this.facturaService.consultarPorClienteYEmpresaYEstado(this.guiaRemision.factura.cliente.id, this.empresa.id, valores.estadoRecaudada).subscribe(
           res => {
             console.log(res);
             this.facturas = res.resultado as Factura[]
@@ -333,8 +333,8 @@ export class GuiaRemisionComponent implements OnInit {
         this.controlRazonSocialCliente.patchValue(this.guiaRemision.factura.cliente);
         console.log(this.guiaRemision.factura.cliente.id);
         console.log(this.empresa.id);
-        console.log(valores.procesoRecaudada);
-        this.facturaService.consultarPorClienteYEmpresaYProceso(this.guiaRemision.factura.cliente.id, this.empresa.id, valores.procesoRecaudada).subscribe(
+        console.log(valores.estadoRecaudada);
+        this.facturaService.consultarPorClienteYEmpresaYEstado(this.guiaRemision.factura.cliente.id, this.empresa.id, valores.estadoRecaudada).subscribe(
           res => {
             console.log(res);
             this.facturas = res.resultado as Factura[];

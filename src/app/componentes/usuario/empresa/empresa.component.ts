@@ -23,10 +23,10 @@ import { MatTableDataSource } from '@angular/material/table';
 
 export class EmpresaComponent implements OnInit {
 
-  activo: string = valores.estadoActivo;
-  inactivo: string = valores.estadoInactivo;
   si: string = valores.si;
   no: string = valores.no;
+  activo: string = valores.estadoActivo;
+  inactivo: string = valores.estadoInactivo;
 
   certificado = null;
 
@@ -34,6 +34,7 @@ export class EmpresaComponent implements OnInit {
   abrirPanelAdmin: boolean = true;
   ocultarContrasena: boolean = true;
   deshabilitarIdentificacion: boolean = false;
+  perfilAdministrador: boolean = false;
 
   sesion: Sesion = null;
   empresa: Empresa = new Empresa();
@@ -53,7 +54,7 @@ export class EmpresaComponent implements OnInit {
   cabecera: string[] = this.columnas.map(titulo => titulo.nombreColumna);
   dataSource: MatTableDataSource<Empresa>;
   clickedRows = new Set<Empresa>();
-  
+
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
   @ViewChild("inputFiltro") inputFiltro: ElementRef;
@@ -62,11 +63,12 @@ export class EmpresaComponent implements OnInit {
     private sesionService: SesionService, private empresaService: EmpresaService) { }
 
   ngOnInit() {
-    this.sesion=validarSesion(this.sesionService, this.router);
+    this.sesion = validarSesion(this.sesionService, this.router);
     this.empresa.logo64 = imagenes.logo_empresa;
+    this.validarPerfil();
     this.consultar();
   }
-  
+
   @HostListener('window:keypress', ['$event'])
   keyEvent($event: KeyboardEvent) {
     if (($event.shiftKey || $event.metaKey) && ($event.ctrlKey || $event.metaKey) && $event.key == 'G') //SHIFT + G
@@ -88,7 +90,7 @@ export class EmpresaComponent implements OnInit {
     if (event != null)
       event.preventDefault();
     if (!this.validarFormulario())
-      return;      
+      return;
     this.empresaService.crear(this.empresa).subscribe({
       next: res => {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
@@ -105,7 +107,7 @@ export class EmpresaComponent implements OnInit {
     if (event != null)
       event.preventDefault();
     if (!this.validarFormulario())
-      return;      
+      return;
     this.empresaService.actualizar(this.empresa).subscribe({
       next: res => {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
@@ -148,33 +150,30 @@ export class EmpresaComponent implements OnInit {
     this.empresaService.consultar().subscribe({
       next: res => {
         this.empresas = res.resultado as Empresa[];
+        if (!this.perfilAdministrador) {
+          this.empresas = this.empresas.filter(empresa => empresa.identificacion.includes(this.sesion.empresa.identificacion));
+        }
         this.llenarTabla(this.empresas);
       },
       error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     });
   }
 
-  llenarTabla(empresas: Empresa[]){
-    this.ordenarAsc(empresas, 'id');
+  llenarTabla(empresas: Empresa[]) {
     this.dataSource = new MatTableDataSource(empresas);
     this.dataSource.filterPredicate = (data: Empresa, filter: string): boolean =>
-      data.identificacion.includes(filter) || data.razonSocial.includes(filter) || data.nombreComercial.includes(filter) || 
+      data.identificacion.includes(filter) || data.razonSocial.includes(filter) || data.nombreComercial.includes(filter) ||
       data.obligadoContabilidad.includes(filter) || data.estado.includes(filter);
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
   }
 
-  ordenarAsc(arrayJson: any, pKey: any) {
-    arrayJson.sort(function (a: any, b: any) {
-      return a[pKey] > b[pKey];
-    });
-  }
 
   seleccion(empresa: Empresa) {
-    if (!this.clickedRows.has(empresa)){
+    if (!this.clickedRows.has(empresa)) {
       this.clickedRows.clear();
       this.clickedRows.add(empresa);
-      this.empresa = { ... empresa};
+      this.empresa = { ...empresa };
       this.deshabilitarIdentificacion = true;
     } else {
       this.nuevo(null);
@@ -193,7 +192,7 @@ export class EmpresaComponent implements OnInit {
     this.dataSource.filter = '';
   }
 
-  capturarLogo(event : any) : any{
+  capturarLogo(event: any): any {
     const archivoCapturado = event.target.files[0];
     this.imagenService.convertirBase64(archivoCapturado).then((imagen: any) => {
       this.empresa.logo64 = imagen.base64;
@@ -201,13 +200,13 @@ export class EmpresaComponent implements OnInit {
     });
   }
 
-  capturarCertificado(event : any) : any{
+  capturarCertificado(event: any): any {
     this.certificado = event.target.files[0];
     this.empresa.certificado = this.certificado.name;
   }
 
-  subirCertificado() : any{
-    if (this.certificado != null){
+  subirCertificado(): any {
+    if (this.certificado != null) {
       this.empresaService.subirCertificado(this.empresa.id, this.certificado).subscribe({
         next: (res) => {
           this.empresa = res.resultado as Empresa;
@@ -220,6 +219,12 @@ export class EmpresaComponent implements OnInit {
   }
 
   //VALIDACIONES
+  validarPerfil() {
+    if (this.sesion.usuario.perfil.abreviatura == 'ADM') {
+      this.perfilAdministrador = true;
+    }
+  }
+
   validarIdentificacion() {
     this.empresaService.validarIdentificacion(this.empresa.identificacion).subscribe({
       next: (res) => {

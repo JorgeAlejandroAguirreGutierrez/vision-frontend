@@ -38,15 +38,35 @@
             <div class="card-body">
                 <div class="form-group form-row">
                     <div class="col-7">
-                        <mat-form-field appearance="standard">
+                        <mat-form-field>
                             <mat-label>Razón Social de la Empresa</mat-label>
-                            <input matInput type="text" [(ngModel)]="establecimiento.empresa.razonSocial" class="form-control-sm" [disabled]="true">
+                            <input matInput type="text" class="form-control-sm" placeholder="Razón Social" 
+                                [(ngModel)]="empresaSeleccionada" (ngModelChange)="filtrarRazonSociales($event)" 
+                                [matAutocomplete]="autoRazonSocial" oninput="this.value = this.value.toUpperCase()" [disabled]="!perfilAdministrador">
+                                <button mat-button *ngIf="empresaSeleccionada" matSuffix mat-icon-button
+                                    (click)="borrarRazonSocial()" [disabled]="!perfilAdministrador">
+                                    <mat-icon>close</mat-icon>
+                                </button>  
+                            <mat-autocomplete #autoRazonSocial="matAutocomplete"  [displayWith]="verRazonSocial"
+                                (optionSelected)="seleccionarRazonSocial($event)" (opened)="consultarEmpresas()">
+                                <mat-option *ngFor="let empresa of filtroRazonSociales" [value]="empresa">
+                                    {{ empresa.razonSocial }}
+                                </mat-option>
+                            </mat-autocomplete>
                         </mat-form-field>
                     </div>
                     <div class="col-5">
-                        <mat-form-field appearance="standard">
+                        <mat-form-field>
                             <mat-label>Nombre Comercial de la Empresa</mat-label>
-                            <input matInput type="text" [(ngModel)]="establecimiento.empresa.nombreComercial" class="form-control-sm" [disabled]="true">
+                            <input matInput type="text" class="form-control-sm" placeholder="Nombre Comercial" 
+                                [(ngModel)]="empresaSeleccionada" (ngModelChange)="filtrarNombresComerciales($event)" 
+                                [matAutocomplete]="autoNombreComercial" oninput="this.value = this.value.toUpperCase()" [disabled]="!perfilAdministrador"> 
+                            <mat-autocomplete #autoNombreComercial="matAutocomplete"  [displayWith]="verNombreComercial"
+                                (optionSelected)="seleccionarNombreComercial($event)" (opened)="consultarEmpresas()">
+                                <mat-option *ngFor="let empresa of filtroNombreComerciales" [value]="empresa">
+                                    {{ empresa.nombreComercial }}
+                                </mat-option>
+                            </mat-autocomplete>
                         </mat-form-field>
                     </div>
                 </div>
@@ -100,7 +120,8 @@
                     <div class="col-2">
                         <mat-form-field appearance="standard">
                             <mat-label># Establecimiento</mat-label>
-                            <input matInput type="text" [(ngModel)]="establecimiento.codigoSRI" class="form-control-sm">
+                            <input matInput type="text" [(ngModel)]="establecimiento.codigoSRI" 
+                                (blur)="rellenarNumeroEstablecimiento()" class="form-control-sm">
                         </mat-form-field>
                     </div>
                     <div class="col-10">
@@ -223,7 +244,7 @@
                         <div class="col-9">
                             <mat-form-field appearance="standard">
                                 <mat-label>Correo electrónico</mat-label>
-                                <input matInput type="text" [(ngModel)]="correo.email" 
+                                <input matInput type="text" appFormatoDecimal [(ngModel)]="correo.email" 
                                 oninput="this.value = this.value.toLowerCase()" class="form-control-sm">
                             </mat-form-field>
                         </div>
