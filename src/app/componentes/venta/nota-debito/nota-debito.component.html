@@ -9,7 +9,7 @@
                             <mat-icon>save</mat-icon>
                         </a>
                     </li>
-                    <li class="nav-item" *ngIf="notaDebito.id != 0 && notaDebito.estado != estadoAnulada && notaDebito.estadoSRI != estadoSRIAutorizada">
+                    <li class="nav-item" *ngIf="notaDebito.id != 0 && notaDebito.estado != estadoAnulada && notaDebito.procesoSRI != procesoSRIAutorizada">
                         <a class="nav-link" title="Actualizar" role="button" (click)="actualizar($event)">
                             <mat-icon>update</mat-icon>
                         </a>
@@ -25,23 +25,23 @@
                         </a>
                     </li>
                     <li class="nav-item"
-                        *ngIf="notaDebito.id != 0  && notaDebito.estado != estadoAnulada && notaDebito.estado != estadoEmitida && notaDebito.estadoSRI != estadoSRIAutorizada && notaDebito.estadoSRI != estadoSRIAnulada">
+                        *ngIf="notaDebito.id != 0  && notaDebito.estado != estadoAnulada && notaDebito.estado != estadoEmitida && notaDebito.procesoSRI != procesoSRIAutorizada && notaDebito.procesoSRI != procesoSRIAnulada">
                         <a class="nav-link" title="Crear Nota Debito Electronica" href="#" role="button"
                             (click)="crearNotaDebitoElectronica($event)">
                             <mat-icon>point_of_sale</mat-icon>
                         </a>
                     </li>
-                    <li class="nav-item" *ngIf="notaDebito.id != 0 && notaDebito.estado != estadoEmitida && notaDebito.estado != estadoAnulada && notaDebito.estadoSRI != estadoSRIAnulada">
+                    <li class="nav-item" *ngIf="notaDebito.id != 0 && notaDebito.estado != estadoEmitida && notaDebito.estado != estadoAnulada && notaDebito.procesoSRI != procesoSRIAnulada">
                         <a class="nav-link" title="Obtener PDF" href="#" role="button" (click)="obtenerPDF($event)">
                             <mat-icon>picture_as_pdf</mat-icon>
                         </a>
                     </li>
-                    <li class="nav-item" *ngIf="notaDebito.id != 0 && notaDebito.estado != estadoEmitida && notaDebito.estado != estadoAnulada && notaDebito.estadoSRI != estadoSRIPendiente && notaDebito.estadoSRI != estadoSRIAnulada">
+                    <li class="nav-item" *ngIf="notaDebito.id != 0 && notaDebito.estado != estadoEmitida && notaDebito.estado != estadoAnulada && notaDebito.procesoSRI != procesoSRIPendiente && notaDebito.procesoSRI != procesoSRIAnulada">
                         <a class="nav-link" title="Enviar PDF Y XML" href="#" role="button" (click)="enviarPDFYXML($event)">
                             <mat-icon>picture_as_pdf</mat-icon>
                         </a>
                     </li>
-                    <li class="nav-item">
+                    <li class="nav-item" *ngIf="notaDebito.id != 0">
                         <a class="nav-link" title="Recaudación" role="button" (click)="stepperSiguiente(stepper)">
                             <mat-icon>redo</mat-icon>
                         </a>
@@ -194,7 +194,7 @@
                         </div>
                         <div class="col-2">
                             <mat-form-field appearance="standard">
-                                <mat-label>Proceso</mat-label>
+                                <mat-label>Estado</mat-label>
                                 <input matInput type="text" class="form-control-sm" [(ngModel)]="notaDebito.estado"
                                     [disabled]="true">
                             </mat-form-field>

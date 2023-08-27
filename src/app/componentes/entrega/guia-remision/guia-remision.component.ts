@@ -40,9 +40,9 @@ export class GuiaRemisionComponent implements OnInit {
   estadoEmitida: string = valores.estadoEmitida;
   estadoRecaudada: string = valores.estadoRecaudada;
   estadoAnulada: string = valores.estadoAnulada
-  estadoSRIPendiente: string = valores.estadoSRIPendiente;
-  estadoSRIAutorizada: string = valores.estadoSRIAutorizada;
-  estadoSRIAnulada: string = valores.estadoSRIAnulada;
+  procesoSRIPendiente: string = valores.procesoSRIPendiente;
+  procesoSRIAutorizada: string = valores.procesoSRIAutorizada;
+  procesoSRIAnulada: string = valores.procesoSRIAnulada;
   
   si = valores.si;
   no = valores.no;
@@ -76,8 +76,8 @@ export class GuiaRemisionComponent implements OnInit {
     { nombreColumna: 'direccion', cabecera: 'Direccion', celda: (row: GuiaRemision) => row.opcionGuia == valores.clienteDireccion ? `${row.factura.cliente.direccion}` : `${row.direccionDestinatario}` },
     { nombreColumna: 'transportista', cabecera: 'Transportista', celda: (row: GuiaRemision) => `${row.transportista.nombre}` },
     { nombreColumna: 'placa', cabecera: 'Placa', celda: (row: GuiaRemision) => `${row.vehiculo.placa}` },
-    { nombreColumna: 'proceso', cabecera: 'Proceso', celda: (row: GuiaRemision) => `${row.estado}`},
-    { nombreColumna: 'estadoSRI', cabecera: 'Estado SRI', celda: (row: GuiaRemision) => `${row.estadoSRI}`},
+    { nombreColumna: 'estado', cabecera: 'Estado', celda: (row: GuiaRemision) => `${row.estado}`},
+    { nombreColumna: 'procesoSRI', cabecera: 'Proceso SRI', celda: (row: GuiaRemision) => `${row.procesoSRI}`},
   ];
   cabecera: string[] = this.columnas.map(titulo => titulo.nombreColumna);
   dataSource: MatTableDataSource<GuiaRemision>;

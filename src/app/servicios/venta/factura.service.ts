@@ -45,8 +45,8 @@ export class FacturaService {
     );
   }
 
-  consultarPorEstadoSRI(estadoSRI: string): Observable<Respuesta> {
-    return this.http.get(environment.host + urn.ruta + urn.factura + urn.consultarPorEstadoSRI + urn.slash + estadoSRI, options).pipe(
+  consultarPorProcesoSRI(procesoSRI: string): Observable<Respuesta> {
+    return this.http.get(environment.host + urn.ruta + urn.factura + urn.consultarPorProcesoSRI + urn.slash + procesoSRI, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);
@@ -61,8 +61,8 @@ export class FacturaService {
       }));
   }
 
-  consultarPorEmpresaYEstadoSRI(empresaId: number, estadoSRI: string): Observable<Respuesta> {
-    return this.http.get(environment.host + urn.ruta + urn.factura + urn.consultarPorEmpresaYEstadoSRI + urn.slash + empresaId + urn.slash + estadoSRI, options).pipe(
+  consultarPorEmpresaYProcesoSRI(empresaId: number, procesoSRI: string): Observable<Respuesta> {
+    return this.http.get(environment.host + urn.ruta + urn.factura + urn.consultarPorEmpresaYProcesoSRI + urn.slash + empresaId + urn.slash + procesoSRI, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);
@@ -77,8 +77,8 @@ export class FacturaService {
       }));
   }
 
-  consultarPorClienteYEstadoSRI(clienteId: number, estadoSRI: string): Observable<Respuesta> {
-    return this.http.get(environment.host + urn.ruta + urn.factura + urn.consultarPorClienteYEstadoSRI + urn.slash + clienteId + urn.slash + estadoSRI, options).pipe(
+  consultarPorClienteYProcesoSRI(clienteId: number, procesoSRI: string): Observable<Respuesta> {
+    return this.http.get(environment.host + urn.ruta + urn.factura + urn.consultarPorClienteYProcesoSRI + urn.slash + clienteId + urn.slash + procesoSRI, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(() => err);
@@ -93,16 +93,16 @@ export class FacturaService {
       }));
   }
 
-  consultarPorClienteYEmpresaYEstadoSRI(clienteId: number, empresaId: number, estadoSRI: string): Observable<Respuesta> {
-    return this.http.get(environment.host + urn.ruta + urn.factura + urn.consultarPorClienteYEmpresaYEstadoSRI + urn.slash + clienteId + urn.slash + empresaId + urn.slash + estadoSRI, options).pipe(
+  consultarPorClienteYEmpresaYProcesoSRI(clienteId: number, empresaId: number, procesoSRI: string): Observable<Respuesta> {
+    return this.http.get(environment.host + urn.ruta + urn.factura + urn.consultarPorClienteYEmpresaYProcesoSRI + urn.slash + clienteId + urn.slash + empresaId + urn.slash + procesoSRI, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(() => err);
       }));
   }
 
-  consultarPorClienteYEstadoYEstadoSRI(clienteId: number, estado: string, estadoSRI: string): Observable<Respuesta> {
-    return this.http.get(environment.host + urn.ruta + urn.factura + urn.consultarPorClienteYEstadoYEstadoSRI + urn.slash + clienteId + urn.slash + estado + urn.slash + estadoSRI, options).pipe(
+  consultarPorClienteYEstadoYProcesoSRI(clienteId: number, estado: string, procesoSRI: string): Observable<Respuesta> {
+    return this.http.get(environment.host + urn.ruta + urn.factura + urn.consultarPorClienteYEstadoYProcesoSRI + urn.slash + clienteId + urn.slash + estado + urn.slash + procesoSRI, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(() => err);

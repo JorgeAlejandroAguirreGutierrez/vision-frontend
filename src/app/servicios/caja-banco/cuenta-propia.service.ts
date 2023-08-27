@@ -73,7 +73,7 @@ export class CuentaPropiaService {
   }
 
   consultarPorBancoYEmpresa(banco: string, empresaId: number): Observable<Respuesta> {
-    return this.http.patch(environment.host + urn.ruta + urn.cuentaPropia + urn.consultarPorBancoYEmpresa + urn.slash + banco + urn.slash + empresaId, options).pipe(
+    return this.http.get(environment.host + urn.ruta + urn.cuentaPropia + urn.consultarPorBancoYEmpresa + urn.slash + banco + urn.slash + empresaId, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);

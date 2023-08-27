@@ -82,8 +82,8 @@ export class NotaDebitoComponent implements OnInit {
     { nombreColumna: 'cliente', cabecera: 'Cliente', celda: (row: NotaDebito) => `${row.factura.cliente.razonSocial}`},
     { nombreColumna: 'factura', cabecera: 'Factura', celda: (row: NotaDebito) => `${row.factura.numeroComprobante}`},
     { nombreColumna: 'total', cabecera: 'Total', celda: (row: NotaDebito) => `$${row.total}`},
-    { nombreColumna: 'proceso', cabecera: 'Proceso', celda: (row: NotaDebito) => `${row.estado}`},
-    { nombreColumna: 'estadoSRI', cabecera: 'Estado SRI', celda: (row: NotaDebito) => `${row.estadoSRI}`}
+    { nombreColumna: 'estado', cabecera: 'Estado', celda: (row: NotaDebito) => `${row.estado}`},
+    { nombreColumna: 'procesoSRI', cabecera: 'Proceso SRI', celda: (row: NotaDebito) => `${row.procesoSRI}`}
   ];
   cabecera: string[]  = this.columnas.map(titulo => titulo.nombreColumna);
   dataSource: MatTableDataSource<NotaDebito>;
@@ -145,9 +145,9 @@ export class NotaDebitoComponent implements OnInit {
   estadoEmitida: string = valores.estadoEmitida;
   estadoRecaudada: string = valores.estadoRecaudada;
   estadoAnulada: string = valores.estadoAnulada
-  estadoSRIPendiente: string = valores.estadoSRIPendiente;
-  estadoSRIAutorizada: string = valores.estadoSRIAutorizada;
-  estadoSRIAnulada: string = valores.estadoSRIAnulada;
+  procesoSRIPendiente: string = valores.procesoSRIPendiente;
+  procesoSRIAutorizada: string = valores.procesoSRIAutorizada;
+  procesoSRIAnulada: string = valores.procesoSRIAnulada;
   si = valores.si;
   no = valores.no;
 
@@ -383,7 +383,7 @@ export class NotaDebitoComponent implements OnInit {
         this.notaDebito.factura.cliente = res.resultado as Cliente;
         this.controlIdentificacionCliente.patchValue(this.notaDebito.factura.cliente);
         this.controlRazonSocialCliente.patchValue(this.notaDebito.factura.cliente);
-        this.facturaService.consultarPorClienteYEmpresaYEstadoSRI(this.notaDebito.factura.cliente.id, this.empresa.id, valores.estadoSRIPendiente).subscribe(
+        this.facturaService.consultarPorClienteYEmpresaYEstado(this.notaDebito.factura.cliente.id, this.empresa.id, valores.estadoRecaudada).subscribe(
           res => {
             this.facturas = res.resultado as Factura[];
             this.spinnerService.hide();
@@ -409,7 +409,7 @@ export class NotaDebitoComponent implements OnInit {
         this.notaDebito.factura.cliente = res.resultado as Cliente;
         this.controlIdentificacionCliente.patchValue(this.notaDebito.factura.cliente);
         this.controlRazonSocialCliente.patchValue(this.notaDebito.factura.cliente);
-        this.facturaService.consultarPorClienteYEmpresaYEstadoSRI(this.notaDebito.factura.cliente.id, this.empresa.id, valores.estadoSRIPendiente).subscribe(
+        this.facturaService.consultarPorClienteYEmpresaYEstado(this.notaDebito.factura.cliente.id, this.empresa.id, valores.estadoRecaudada).subscribe(
           res => {
             this.facturas = res.resultado as Factura[]
             this.spinnerService.show();

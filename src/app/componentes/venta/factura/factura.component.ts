@@ -52,9 +52,9 @@ export class FacturaComponent implements OnInit {
   estadoEmitida: string = valores.estadoEmitida;
   estadoRecaudada: string = valores.estadoRecaudada;
   estadoAnulada: string = valores.estadoAnulada
-  estadoSRIPendiente: string = valores.estadoSRIPendiente;
-  estadoSRIAutorizada: string = valores.estadoSRIAutorizada;
-  estadoSRIAnulada: string = valores.estadoSRIAnulada;
+  procesoSRIPendiente: string = valores.procesoSRIPendiente;
+  procesoSRIAutorizada: string = valores.procesoSRIAutorizada;
+  procesoSRIAnulada: string = valores.procesoSRIAnulada;
 
   categoriaProducto: string = valores.bien;
   saldo: number = valores.cero;
@@ -103,7 +103,7 @@ export class FacturaComponent implements OnInit {
     { nombreColumna: 'cliente', cabecera: 'Cliente', celda: (row: Factura) => `${row.cliente.razonSocial}` },
     { nombreColumna: 'total', cabecera: 'Total', celda: (row: Factura) => `$${row.total}` },
     { nombreColumna: 'estado', cabecera: 'Estado', celda: (row: Factura) => `${row.estado}` },
-    { nombreColumna: 'estadoSri', cabecera: 'Estado SRI', celda: (row: Factura) => `${row.estadoSRI}` }
+    { nombreColumna: 'procesoSRI', cabecera: 'Proceso SRI', celda: (row: Factura) => `${row.procesoSRI}` }
   ];
   cabeceraFactura: string[] = this.columnasFactura.map(titulo => titulo.nombreColumna);
   dataSourceFactura: MatTableDataSource<Factura>;
@@ -365,7 +365,7 @@ export class FacturaComponent implements OnInit {
     this.dataSourceFactura = new MatTableDataSource(facturas);
     this.dataSourceFactura.filterPredicate = (data: Factura, filter: string): boolean =>
       this.datepipe.transform(data.fecha, "dd-MM-yyyy").includes(filter) || data.numeroComprobante.includes(filter) || data.secuencial.includes(filter) || 
-      data.cliente.razonSocial.includes(filter) || data.estado.includes(filter) || data.estadoSRI.includes(filter);
+      data.cliente.razonSocial.includes(filter) || data.estado.includes(filter) || data.procesoSRI.includes(filter);
     this.dataSourceFactura.paginator = this.paginator;
     this.dataSourceFactura.sort = this.sort;
   }
