@@ -42,8 +42,8 @@ export class NotaCreditoService {
       }));
   }
 
-  consultarPorEstadoSRI(estadoSRI: string): Observable<Respuesta> {
-    return this.http.get(environment.host + urn.ruta + urn.notaCredito + urn.consultarPorEstadoSRI + urn.slash + estadoSRI, options).pipe(
+  consultarPorProcesoSRI(procesoSRI: string): Observable<Respuesta> {
+    return this.http.get(environment.host + urn.ruta + urn.notaCredito + urn.consultarPorProcesoSRI + urn.slash + procesoSRI, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);
@@ -58,8 +58,8 @@ export class NotaCreditoService {
       }));
   }
 
-  consultarPorEmpresaYEstadoYEstadoSRI(empresaId: number, estado: string, estadoSRI: string): Observable<Respuesta> {
-    return this.http.get(environment.host + urn.ruta + urn.notaCredito + urn.consultarPorEmpresaYEstadoYEstadoSRI + urn.slash + empresaId + urn.slash + estado + urn.slash + estadoSRI, options).pipe(
+  consultarPorEmpresaYEstadoYProcesoSRI(empresaId: number, estado: string, procesoSRI: string): Observable<Respuesta> {
+    return this.http.get(environment.host + urn.ruta + urn.notaCredito + urn.consultarPorEmpresaYEstadoYProcesoSRI + urn.slash + empresaId + urn.slash + estado + urn.slash + procesoSRI, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);

@@ -23,7 +23,7 @@ export class Factura {
   claveAcceso: String;
   fechaAutorizacion: Date;
   estado: string;
-  estadoSRI: string;
+  procesoSRI: string;
 
   valorDescuentoTotal: number;
   porcentajeDescuentoTotal: number;
@@ -75,7 +75,7 @@ export class Factura {
     this.claveAcceso = valores.vacio;
     this.fecha = new Date();
     this.estado = valores.estadoEmitida;
-    this.estadoSRI = valores.vacio;
+    this.procesoSRI = valores.vacio;
 
     this.valorDescuentoTotal = valores.cero;
     this.porcentajeDescuentoTotal = valores.cero;

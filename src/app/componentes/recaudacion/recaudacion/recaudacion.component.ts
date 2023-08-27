@@ -62,9 +62,9 @@ export class RecaudacionComponent implements OnInit, OnChanges {
   estadoEmitida: string = valores.estadoEmitida;
   estadoRecaudada: string = valores.estadoRecaudada;
   estadoAnulada: string = valores.estadoAnulada
-  estadoSRIPendiente: string = valores.estadoSRIPendiente;
-  estadoSRIAutorizada: string = valores.estadoSRIAutorizada;
-  estadoSRIAnulada: string = valores.estadoSRIAnulada;
+  procesoSRIPendiente: string = valores.procesoSRIPendiente;
+  procesoSRIAutorizada: string = valores.procesoSRIAutorizada;
+  procesoSRIAnulada: string = valores.procesoSRIAnulada;
 
   si: string = valores.si;
   no: string = valores.no;
