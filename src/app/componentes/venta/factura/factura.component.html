@@ -9,7 +9,7 @@
                             <mat-icon>save</mat-icon>
                         </a>
                     </li>
-                    <li class="nav-item" *ngIf="factura.id != 0 && factura.estado != estadoAnulada && factura.estadoSRI != estadoSRIAnulada && factura.estadoSRI != estadoSRIAutorizada">
+                    <li class="nav-item" *ngIf="factura.id != 0 && factura.estado != estadoAnulada && factura.procesoSRI != procesoSRIAnulada && factura.procesoSRI != procesoSRIAutorizada">
                         <a class="nav-link" title="Actualizar" role="button" (click)="actualizar($event)">
                             <mat-icon>update</mat-icon>
                         </a>
@@ -29,34 +29,34 @@
                             <mat-icon>shopping_basket</mat-icon>
                         </a>
                     </li>
-                    <li class="nav-item" *ngIf="factura.id != 0 && factura.estado != estadoAnulada && factura.estadoSRI != estadoSRIAnulada">
+                    <li class="nav-item" *ngIf="factura.id != 0 && factura.estado != estadoAnulada && factura.procesoSRI != procesoSRIAnulada">
                         <a class="nav-link" title="Anular" role="button" (click)="anular($event)">
                             <mat-icon>delete_forever</mat-icon>
                         </a>
                     </li>
-                    <li class="nav-item" *ngIf="factura.id != 0 && factura.estado == estadoRecaudada && factura.estadoSRI == estadoSRIPendiente">
+                    <li class="nav-item" *ngIf="factura.id != 0 && factura.estado == estadoRecaudada && factura.procesoSRI == procesoSRIPendiente">
                         <a class="nav-link" title="Crear Factura Electronica" href="#" role="button"
                             (click)="crearFacturaElectronica($event)">
                             <mat-icon>point_of_sale</mat-icon>
                         </a>
                     </li>
-                    <li class="nav-item" *ngIf="factura.id != 0  && factura.estado != estadoEmitida && factura.estado != estadoAnulada && factura.estadoSRI != estadoSRIAnulada">
+                    <li class="nav-item" *ngIf="factura.id != 0  && factura.estado != estadoEmitida && factura.estado != estadoAnulada && factura.procesoSRI != procesoSRIAnulada">
                         <a class="nav-link" title="Obtener PDF" href="#" role="button" (click)="obtenerPDF($event)">
                             <mat-icon>picture_as_pdf</mat-icon>
                         </a>
                     </li>
-                    <li class="nav-item" *ngIf="factura.id != 0 && factura.estado != estadoEmitida && factura.estado != estadoAnulada && factura.estadoSRI != estadoSRIAnulada && factura.estadoSRI != estadoSRIPendiente">
+                    <li class="nav-item" *ngIf="factura.id != 0 && factura.estado != estadoEmitida && factura.estado != estadoAnulada && factura.procesoSRI != procesoSRIAnulada && factura.procesoSRI != procesoSRIPendiente">
                         <a class="nav-link" title="Enviar PDF Y XML" href="#" role="button"
                             (click)="enviarPDFYXML($event)">
                             <mat-icon>forward_to_inbox</mat-icon>
                         </a>
                     </li>
-                    <li class="nav-item" *ngIf="factura.id != 0  && factura.estado != estadoEmitida && factura.estado != estadoAnulada && factura.estadoSRI != estadoSRIAnulada">
+                    <li class="nav-item" *ngIf="factura.id != 0  && factura.estado != estadoEmitida && factura.estado != estadoAnulada && factura.procesoSRI != procesoSRIAnulada">
                         <a class="nav-link" title="Obtener TICKET" href="#" role="button" (click)="obtenerTicket($event)">
                             <mat-icon>format_align_justify</mat-icon>
                         </a>
                     </li>
-                    <li class="nav-item">
+                    <li class="nav-item" *ngIf="factura.id != 0">
                         <a class="nav-link" title="Recaudación" role="button" (click)="stepperSiguiente(stepper)">
                             <mat-icon>redo</mat-icon>
                         </a>
@@ -219,7 +219,7 @@
                             </div>
                             <div class="col-7">
                                 <mat-form-field appearance="standard">
-                                    <mat-label>Proceso</mat-label>
+                                    <mat-label>Estado</mat-label>
                                     <input matInput type="text" [(ngModel)]="factura.estado" [disabled]="true">
                                 </mat-form-field>
                             </div>

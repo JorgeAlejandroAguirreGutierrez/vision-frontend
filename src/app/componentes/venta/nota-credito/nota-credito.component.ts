@@ -45,9 +45,9 @@ export class NotaCreditoComponent implements OnInit {
   estadoEmitida: string = valores.estadoEmitida;
   estadoRecaudada: string = valores.estadoRecaudada;
   estadoAnulada: string = valores.estadoAnulada
-  estadoSRIPendiente: string = valores.estadoSRIPendiente;
-  estadoSRIAutorizada: string = valores.estadoSRIAutorizada;
-  estadoSRIAnulada: string = valores.estadoSRIAnulada;
+  procesoSRIPendiente: string = valores.procesoSRIPendiente;
+  procesoSRIAutorizada: string = valores.procesoSRIAutorizada;
+  procesoSRIAnulada: string = valores.procesoSRIAnulada;
   devolucion: string = valores.devolucion;
   descuento: string = valores.descuento;
   conjunta: string = valores.conjunta;
@@ -83,7 +83,7 @@ export class NotaCreditoComponent implements OnInit {
     { nombreColumna: 'factura', cabecera: 'Factura', celda: (row: NotaCredito) => `${row.factura.numeroComprobante}`},
     { nombreColumna: 'total', cabecera: 'Total', celda: (row: NotaCredito) => `$${row.total}`},
     { nombreColumna: 'proceso', cabecera: 'Proceso', celda: (row: NotaCredito) => `${row.estado}`},
-    { nombreColumna: 'estadoSRI', cabecera: 'Estado SRI', celda: (row: NotaCredito) => `${row.estadoSRI}`}
+    { nombreColumna: 'procesoSRI', cabecera: 'Proceso SRI', celda: (row: NotaCredito) => `${row.procesoSRI}`}
   ];
   cabecera: string[]  = this.columnas.map(titulo => titulo.nombreColumna);
   dataSource: MatTableDataSource<NotaCredito>;
@@ -302,7 +302,7 @@ export class NotaCreditoComponent implements OnInit {
     this.dataSource.filterPredicate = (data: NotaCredito, filter: string): boolean =>
       this.datepipe.transform(data.fecha, "dd-MM-yyyy").includes(filter) || data.numeroComprobante.includes(filter) || 
       data.secuencial.includes(filter) || data.factura.cliente.razonSocial.includes(filter) || 
-      data.estado.includes(filter) || data.estadoSRI.includes(filter);
+      data.estado.includes(filter) || data.procesoSRI.includes(filter);
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
   }
