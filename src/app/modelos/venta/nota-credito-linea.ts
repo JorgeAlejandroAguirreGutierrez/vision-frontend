@@ -9,7 +9,7 @@ export class NotaCreditoLinea {
     codigo: string;
     cantidadVenta: number;
     costoUnitarioVenta: number;
-    cantidadCredito: number;
+    cantidad: number;
     costoUnitario: number;
     subtotalLinea: number;
     importeIvaLinea: number;
@@ -27,7 +27,7 @@ export class NotaCreditoLinea {
         this.id = valores.cero;
         this.cantidadVenta = valores.cero;
         this.costoUnitarioVenta = valores.cero;
-        this.cantidadCredito = valores.cero;
+        this.cantidad = valores.cero;
         this.costoUnitario = valores.cero;
         this.subtotalLinea = valores.cero;
         this.importeIvaLinea = valores.cero;

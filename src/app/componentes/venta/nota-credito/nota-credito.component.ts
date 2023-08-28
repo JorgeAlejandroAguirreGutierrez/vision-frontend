@@ -91,7 +91,7 @@ export class NotaCreditoComponent implements OnInit {
     { nombreColumna: 'medida', cabecera: 'Medida', celda: (row: NotaCreditoLinea) => `${row.producto.medida.abreviatura}` },
     { nombreColumna: 'cantidadventa', cabecera: 'Cant Vent', celda: (row: NotaCreditoLinea) => `${row.cantidadVenta}` },
     { nombreColumna: 'cunitarioventa', cabecera: 'C.U. Vent', celda: (row: NotaCreditoLinea) => `${row.costoUnitarioVenta}` },
-    { nombreColumna: 'cantidadCredito', cabecera: 'Cant NC', celda: (row: NotaCreditoLinea) => `${row.cantidadCredito}` },
+    { nombreColumna: 'cantidad', cabecera: 'Cant NC', celda: (row: NotaCreditoLinea) => `${row.cantidad}` },
     { nombreColumna: 'costounitario', cabecera: 'C.U NC', celda: (row: NotaCreditoLinea) => `$${row.costoUnitario}` },
     { nombreColumna: 'impuesto', cabecera: 'IVA %', celda: (row: NotaCreditoLinea) => `${row.impuesto.porcentaje}%` },
     { nombreColumna: 'subtotal', cabecera: 'Subtotal', celda: (row: NotaCreditoLinea) => `$${row.subtotalLinea}` },
@@ -341,7 +341,6 @@ export class NotaCreditoComponent implements OnInit {
       data.producto.impuesto.abreviatura.includes(filter) || data.bodega.abreviatura.includes(filter);
       this.dataSourceLinea.paginator = this.paginatorLinea;
     this.dataSourceLinea.sort = this.sortLinea;
-    this.seleccionarOperacion();
   }
   
   filtroNotaCreditoVenta(event: Event) {
@@ -432,7 +431,7 @@ export class NotaCreditoComponent implements OnInit {
       this.deshabilitarDescuento = true;
       if (this.notaCredito.id == valores.cero){
         for (let i=0; i < this.notaCredito.notaCreditoLineas.length; i++){
-          this.notaCredito.notaCreditoLineas[i].cantidadCredito = valores.cero;
+          this.notaCredito.notaCreditoLineas[i].cantidad = valores.cero;
         }
       }
     }
@@ -443,14 +442,11 @@ export class NotaCreditoComponent implements OnInit {
 
   calcular(){
     this.spinnerService.show();
-    console.log(this.notaCredito);
     this.notaCreditoService.calcular(this.notaCredito).subscribe({
       next: res => {
         this.spinnerService.hide();
-        
         this.notaCredito = res.resultado as NotaCredito;
         this.construir();
-        
       },
       error: err => {
         Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
