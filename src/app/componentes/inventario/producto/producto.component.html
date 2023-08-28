@@ -90,7 +90,7 @@
                                 <mat-label>Nombre Servicio / Activo Fijo</mat-label>
                                 <input matInput type="text" oninput="this.value = this.value.toUpperCase()"
                                     [(ngModel)]="producto.nombre" class="form-control-sm">
-                                <button mat-button matSuffix mat-icon-button>
+                                <button mat-button *ngIf="producto.nombre" matSuffix mat-icon-button (click)="producto.nombre=''">
                                     <mat-icon>close</mat-icon>
                                 </button>
                             </mat-form-field>

@@ -306,13 +306,13 @@ export class ProductoComponent implements OnInit {
   inicializarKardex(){
     if (!this.validarKardex())
       return;
+    this.producto.kardexs[0].tipoComprobante.id = 1;
     this.producto.kardexs[0].tipoOperacion.id = 1;
     this.producto.kardexs[0].entrada = this.saldoInicialKardex;
     this.producto.kardexs[0].saldo = this.saldoInicialKardex;
     this.producto.kardexs[0].debe = this.costoUnitarioKardex;
     this.producto.kardexs[0].costoPromedio = this.costoUnitarioKardex;
     this.producto.kardexs[0].costoTotal = this.costoTotalKardex;
-    this.producto.kardexs[0].tipoComprobante.id = 1;
   }
   
   calcularCostoTotalKardex(){

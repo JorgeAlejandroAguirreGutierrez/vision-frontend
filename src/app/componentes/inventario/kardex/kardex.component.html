@@ -24,7 +24,11 @@
                         <mat-form-field appearance="standard">
                             <mat-label>Producto</mat-label>
                             <input matInput type="text" [formControl]="controlProducto" [matAutocomplete]="producto"
-                                class="form-control-sm">
+                                class="form-control-sm" oninput="this.value = this.value.toUpperCase()">
+                                <button mat-button *ngIf="controlProducto.value" matSuffix mat-icon-button 
+                                    (click)="controlProducto.patchValue('')">
+                                    <mat-icon>close</mat-icon>
+                                </button>
                             <mat-autocomplete #producto="matAutocomplete" [displayWith]="verProducto" 
                                 (optionSelected)="seleccionarProducto()">
                                 <mat-option *ngFor="let producto of filtroProductos | async" [value]="producto">
