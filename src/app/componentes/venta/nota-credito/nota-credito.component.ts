@@ -61,9 +61,6 @@ export class NotaCreditoComponent implements OnInit {
   notaCredito: NotaCredito = new NotaCredito();
   notaCreditoLinea: NotaCreditoLinea = new NotaCreditoLinea();
 
-  clienteSeleccionado: Cliente = new Cliente();
-  facturaSeleccionado: Factura = new Factura();
-
   clientes: Cliente[] = [];
   facturas: Factura[] = [];
   notasCreditos: NotaCredito[] = [];
@@ -82,7 +79,7 @@ export class NotaCreditoComponent implements OnInit {
     { nombreColumna: 'cliente', cabecera: 'Cliente', celda: (row: NotaCredito) => `${row.factura.cliente.razonSocial}`},
     { nombreColumna: 'factura', cabecera: 'Factura', celda: (row: NotaCredito) => `${row.factura.numeroComprobante}`},
     { nombreColumna: 'total', cabecera: 'Total', celda: (row: NotaCredito) => `$${row.total}`},
-    { nombreColumna: 'proceso', cabecera: 'Proceso', celda: (row: NotaCredito) => `${row.estado}`},
+    { nombreColumna: 'estado', cabecera: 'Estado', celda: (row: NotaCredito) => `${row.estado}`},
     { nombreColumna: 'procesoSRI', cabecera: 'Proceso SRI', celda: (row: NotaCredito) => `${row.procesoSRI}`}
   ];
   cabecera: string[]  = this.columnas.map(titulo => titulo.nombreColumna);
@@ -92,11 +89,11 @@ export class NotaCreditoComponent implements OnInit {
   columnasLinea: any[] = [
     { nombreColumna: 'producto', cabecera: 'Producto', celda: (row: NotaCreditoLinea) => `${row.producto.nombre}` },
     { nombreColumna: 'medida', cabecera: 'Medida', celda: (row: NotaCreditoLinea) => `${row.producto.medida.abreviatura}` },
-    { nombreColumna: 'cantidadventa', cabecera: 'Cant Vent', celda: (row: NotaCreditoLinea) => `$${row.cantidadVenta}` },
+    { nombreColumna: 'cantidadventa', cabecera: 'Cant Vent', celda: (row: NotaCreditoLinea) => `${row.cantidadVenta}` },
     { nombreColumna: 'cunitarioventa', cabecera: 'C.U. Vent', celda: (row: NotaCreditoLinea) => `${row.costoUnitarioVenta}` },
-    { nombreColumna: 'cantidad', cabecera: 'Cant NC', celda: (row: NotaCreditoLinea) => `${row.cantidad}` },
+    { nombreColumna: 'cantidadCredito', cabecera: 'Cant NC', celda: (row: NotaCreditoLinea) => `${row.cantidadCredito}` },
     { nombreColumna: 'costounitario', cabecera: 'C.U NC', celda: (row: NotaCreditoLinea) => `$${row.costoUnitario}` },
-    { nombreColumna: 'impuesto', cabecera: 'IVA %', celda: (row: NotaCreditoLinea) => `${row.impuesto.porcentaje} %` },
+    { nombreColumna: 'impuesto', cabecera: 'IVA %', celda: (row: NotaCreditoLinea) => `${row.impuesto.porcentaje}%` },
     { nombreColumna: 'subtotal', cabecera: 'Subtotal', celda: (row: NotaCreditoLinea) => `$${row.subtotalLinea}` },
     { nombreColumna: 'importe', cabecera: 'Importe', celda: (row: NotaCreditoLinea) => `$${row.importeIvaLinea}` },
     { nombreColumna: 'totalLinea', cabecera: 'Total', celda: (row: NotaCreditoLinea) => `$${row.totalLinea}` },
@@ -333,10 +330,11 @@ export class NotaCreditoComponent implements OnInit {
   }
 
   construir() {
-    this.clienteSeleccionado = this.notaCredito.factura.cliente;
+    this.controlIdentificacionCliente.patchValue(this.notaCredito.factura.cliente);
+    this.controlRazonSocialCliente.patchValue(this.notaCredito.factura.cliente);
+    this.controlFactura.patchValue(this.notaCredito.factura);
     let fecha = new Date(this.notaCredito.fecha);
     this.notaCredito.fecha = fecha;
-    this.facturaSeleccionado = this.notaCredito.factura;
     this.dataSourceLinea = new MatTableDataSource(this.notaCredito.notaCreditoLineas);
     this.dataSourceLinea.filterPredicate = (data: NotaCreditoLinea, filter: string): boolean =>
       data.producto.nombre.includes(filter) || data.producto.medida.abreviatura.includes(filter) || 
@@ -410,22 +408,14 @@ export class NotaCreditoComponent implements OnInit {
     });
   }
 
-  consultarFacturas(clienteId: number) {
-    this.facturaSeleccionado = new Factura();
-    this.facturaService.consultarPorClienteYEmpresaYEstado(clienteId, this.empresa.id, valores.estadoRecaudada).subscribe({
-      next: res => {
-        this.facturas = res.resultado as Factura[];
-      },
-      error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
-    });
-  }
-
   seleccionarFactura() {
     this.spinnerService.show();
     let facturaId = this.controlFactura.value.id;
     this.notaCreditoService.obtenerPorFactura(facturaId).subscribe(
       res => {
         this.notaCredito = res.resultado as NotaCredito;
+        this.notaCredito.establecimiento = this.sesion.usuario.estacion.establecimiento.codigoSRI;
+        this.notaCredito.puntoVenta = this.sesion.usuario.estacion.codigoSRI;
         this.construir();
         this.spinnerService.hide();
       },
@@ -436,14 +426,13 @@ export class NotaCreditoComponent implements OnInit {
     );
   }
 
-
   seleccionarOperacion(){
     if (this.notaCredito.operacion == valores.devolucion) {
       this.notaCredito.descuento = valores.cero;
       this.deshabilitarDescuento = true;
       if (this.notaCredito.id == valores.cero){
         for (let i=0; i < this.notaCredito.notaCreditoLineas.length; i++){
-          this.notaCredito.notaCreditoLineas[i].cantidad = valores.cero;
+          this.notaCredito.notaCreditoLineas[i].cantidadCredito = valores.cero;
         }
       }
     }
@@ -452,25 +441,16 @@ export class NotaCreditoComponent implements OnInit {
     }
   }
 
-  seleccionarDevolucion(i: number, devolucion: number) {
-    this.calcular();
-  }
-  
-  seleccionarValorDescuentoLinea(i: number, valorDescuentoLinea: number) {
-    this.calcular();
-  }
-
-  seleccionarPorcentajeDescuentoLinea(i: number, valorPorcentajeDescuentoLinea: number) {
-    this.calcular();
-  }
-
   calcular(){
-    this.spinnerService.show();  
+    this.spinnerService.show();
+    console.log(this.notaCredito);
     this.notaCreditoService.calcular(this.notaCredito).subscribe({
       next: res => {
+        this.spinnerService.hide();
+        
         this.notaCredito = res.resultado as NotaCredito;
         this.construir();
-        this.spinnerService.hide();
+        
       },
       error: err => {
         Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
