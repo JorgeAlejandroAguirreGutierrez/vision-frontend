@@ -161,7 +161,7 @@ export class KardexComponent implements OnInit {
   }
 
   consultarProductos() {
-    this.productoService.consultar().subscribe({
+    this.productoService.consultarPorEmpresa(this.empresa.id).subscribe({
       next: (res) => {
         this.productos = res.resultado as Producto[]
       },

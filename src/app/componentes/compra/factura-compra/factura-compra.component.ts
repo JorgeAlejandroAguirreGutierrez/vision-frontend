@@ -383,12 +383,19 @@ export class FacturaCompraComponent implements OnInit {
   }
 
   llenarTablaFacturaCompraLinea(facturaCompraLineas: FacturaCompraLinea[]) {
+    this.ordenarAsc(facturaCompraLineas, 'posicion');
     this.dataSourceLinea = new MatTableDataSource(facturaCompraLineas);
     this.dataSourceLinea.filterPredicate = (data: FacturaCompraLinea, filter: string): boolean =>
       data.producto.nombre.includes(filter) || data.producto.medida.abreviatura.includes(filter) || String(data.cantidad).includes(filter) || 
       String(data.costoPromedio).includes(filter) || String(data.totalLinea).includes(filter) || data.bodega.abreviatura.includes(filter);
     this.dataSourceLinea.paginator = this.paginatorLinea;
     this.dataSourceLinea.sort = this.sortLinea;
+  }
+
+  ordenarAsc(arrayJson: any, pKey: any) {
+    arrayJson.sort(function (a: any, b: any) {
+      return a[pKey] > b[pKey];
+    });
   }
 
   seleccionFacturaCompraLinea(facturaCompraLinea: FacturaCompraLinea, i:number) {
