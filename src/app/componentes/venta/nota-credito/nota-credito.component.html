@@ -203,7 +203,7 @@
                                         <input matInput type="text" [(ngModel)]="row.costoUnitario" (change)="calcular()" [disabled]="!deshabilitarDescuento">
                                     </mat-form-field>
                                 </ng-container>
-                                <ng-container *ngIf="columna.nombreColumna=='acciones'">
+                                <ng-container *ngIf="columna.nombreColumna == 'acciones'">
                                     <button mat-icon-button color="warn" (click)="eliminarNotaCreditoVentaLinea(i)">
                                         <i class="fa fa-times mat-icon"></i> 
                                     </button>
