@@ -36,7 +36,6 @@ export class NotaCreditoComponent implements OnInit {
   abrirPanelNCLinea: boolean = false;
   abrirPanelAdmin: boolean = true;
   deshabilitarDescuento = true;
-  deshabilitarDevolucion = true;
 
   si: string = valores.si;
   no: string = valores.no;
@@ -437,6 +436,11 @@ export class NotaCreditoComponent implements OnInit {
     }
     if (this.notaCredito.operacion == valores.descuento) {
       this.deshabilitarDescuento = false;
+      if (this.notaCredito.id == valores.cero){
+        for (let i=0; i < this.notaCredito.notaCreditoLineas.length; i++){
+          this.notaCredito.notaCreditoLineas[i].cantidad = this.notaCredito.notaCreditoLineas[i].cantidadVenta;
+        }
+      }
     }
   }
 
