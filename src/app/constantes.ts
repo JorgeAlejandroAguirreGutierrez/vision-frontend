@@ -212,6 +212,7 @@ export const valores = {
     estadoEmitida: "EMITIDA",
     estadoRecaudada: "RECAUDADA",
     estadoAnulada: "ANULADA",
+    estadoCerrada: "CERRADA",
     procesoSRIPendiente: "PENDIENTE",
     procesoSRIAutorizada: "AUTORIZADA",
     procesoSRIAnulada: "ANULADA",

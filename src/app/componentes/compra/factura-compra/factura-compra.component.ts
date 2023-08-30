@@ -323,7 +323,7 @@ export class FacturaCompraComponent implements OnInit {
     let proveedorId = this.controlIdentificacionProveedor.value.id;
     this.proveedorService.obtener(proveedorId).subscribe({
       next: res => {
-        this.facturaCompra.proveedor, res.resultado as Proveedor;
+        this.facturaCompra.proveedor = res.resultado as Proveedor;
         this.controlIdentificacionProveedor.patchValue(this.facturaCompra.proveedor);
         this.controlProveedor.patchValue(this.facturaCompra.proveedor);
       },
