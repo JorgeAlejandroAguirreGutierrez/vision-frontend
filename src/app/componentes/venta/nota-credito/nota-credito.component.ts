@@ -442,6 +442,7 @@ export class NotaCreditoComponent implements OnInit {
         }
       }
     }
+    this.calcular();
   }
 
   calcular(){

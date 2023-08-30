@@ -51,7 +51,8 @@ export class FacturaComponent implements OnInit {
   
   estadoEmitida: string = valores.estadoEmitida;
   estadoRecaudada: string = valores.estadoRecaudada;
-  estadoAnulada: string = valores.estadoAnulada
+  estadoAnulada: string = valores.estadoAnulada;
+  estadoCerrada: string = valores.estadoCerrada;
   procesoSRIPendiente: string = valores.procesoSRIPendiente;
   procesoSRIAutorizada: string = valores.procesoSRIAutorizada;
   procesoSRIAnulada: string = valores.procesoSRIAnulada;

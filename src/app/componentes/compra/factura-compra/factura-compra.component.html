@@ -65,7 +65,7 @@
                                 [formControl]="controlProveedor" [matAutocomplete]="proveedor"
                                 oninput="this.value = this.value.toUpperCase()">
                             <mat-autocomplete #proveedor="matAutocomplete" [displayWith]="verProveedor"
-                                (optionSelected)="seleccionarProveedor()">
+                                (optionSelected)="seleccionarProveedor()" (opened)="consultarProveedores()">
                                 <mat-option *ngFor="let proveedor of filtroProveedores | async" [value]="proveedor">
                                     {{ proveedor.nombreComercial }}
                                 </mat-option>

@@ -9,7 +9,7 @@
                             <mat-icon>save</mat-icon>
                         </a>
                     </li>
-                    <li class="nav-item" *ngIf="factura.id != 0 && factura.estado != estadoAnulada && factura.procesoSRI != procesoSRIAnulada && factura.procesoSRI != procesoSRIAutorizada">
+                    <li class="nav-item" *ngIf="factura.id != 0 && factura.estado != estadoAnulada && factura.estado != estadoCerrada && factura.procesoSRI != procesoSRIAnulada && factura.procesoSRI != procesoSRIAutorizada">
                         <a class="nav-link" title="Actualizar" role="button" (click)="actualizar($event)">
                             <mat-icon>update</mat-icon>
                         </a>
@@ -29,12 +29,12 @@
                             <mat-icon>shopping_basket</mat-icon>
                         </a>
                     </li>
-                    <li class="nav-item" *ngIf="factura.id != 0 && factura.estado != estadoAnulada && factura.procesoSRI != procesoSRIAnulada">
+                    <li class="nav-item" *ngIf="factura.id != 0 && factura.estado != estadoAnulada && factura.estado != estadoCerrada && factura.procesoSRI != procesoSRIAnulada">
                         <a class="nav-link" title="Anular" role="button" (click)="anular($event)">
                             <mat-icon>delete_forever</mat-icon>
                         </a>
                     </li>
-                    <li class="nav-item" *ngIf="factura.id != 0 && factura.estado == estadoRecaudada && factura.procesoSRI == procesoSRIPendiente">
+                    <li class="nav-item" *ngIf="factura.id != 0 && factura.estado != estadoAnulada && factura.estado != estadoCerrada && factura.estado != estadoEmitida && factura.procesoSRI != procesoSRIAutorizada">
                         <a class="nav-link" title="Crear Factura Electronica" href="#" role="button"
                             (click)="crearFacturaElectronica($event)">
                             <mat-icon>point_of_sale</mat-icon>
