@@ -1,5 +1,5 @@
 export const environment = {
   production: true,
-  host:'https://vision-backend-dev-bf81ee8d167d.herokuapp.com/api',
-  prefijoUrlImagenes: 'https://vision-backend-dev-bf81ee8d167d.herokuapp.com/storage/'
+  host:'https://vision-backend-prod-33143f95f976.herokuapp.com/api',
+  prefijoUrlImagenes: 'https://vision-backend-prod-33143f95f976.herokuapp.com/storage/'
 };
