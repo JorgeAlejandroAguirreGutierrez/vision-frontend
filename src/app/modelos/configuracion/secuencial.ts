@@ -6,6 +6,7 @@ export class Secuencial {
     id: number;
     codigo: string;
     numeroSiguiente: number;
+    maximo: Number;
     estado: string;
     tipoComprobante: TipoComprobante;
     estacion: Estacion;
@@ -14,6 +15,7 @@ export class Secuencial {
         this.id = valores.cero;
         this.codigo = valores.vacio;
         this.numeroSiguiente = valores.cero;
+        this.maximo = valores.diez;
         this.estado = valores.estadoActivo;
         this.tipoComprobante = new TipoComprobante();
         this.estacion = new Estacion();

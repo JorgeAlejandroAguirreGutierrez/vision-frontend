@@ -202,6 +202,7 @@ export const valores = {
     cero: 0,
     uno: 1,
     menosUno: -1,
+    diez: 10,
     vacio: "",
     espacio: " ",
     guion: "-",
