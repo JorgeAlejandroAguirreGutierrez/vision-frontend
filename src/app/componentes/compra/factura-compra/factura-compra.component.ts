@@ -70,11 +70,11 @@ export class FacturaCompraComponent implements OnInit {
 
   controlProducto = new UntypedFormControl();
   controlIdentificacionProveedor = new UntypedFormControl();
-  controlProveedor = new UntypedFormControl();
+  controlRazonSocialProveedor = new UntypedFormControl();
 
   filtroProductos: Observable<Producto[]> = new Observable<Producto[]>();
   filtroIdentificacionProveedores: Observable<Proveedor[]> = new Observable<Proveedor[]>();
-  filtroProveedores: Observable<Proveedor[]> = new Observable<Proveedor[]>();
+  filtroRazonSocialProveedores: Observable<Proveedor[]> = new Observable<Proveedor[]>();
 
   columnasFacturaCompra: any[] = [
     { nombreColumna: 'codigo', cabecera: 'Código', celda: (row: FacturaCompra) => `${row.codigo}`},
@@ -183,7 +183,7 @@ export class FacturaCompraComponent implements OnInit {
     this.hoy = new Date();
     this.facturaCompra.fecha = this.hoy;
     this.controlIdentificacionProveedor.patchValue(valores.vacio);
-    this.controlProveedor.patchValue(valores.vacio);
+    this.controlRazonSocialProveedor.patchValue(valores.vacio);
     this.controlProducto.patchValue(valores.vacio);
     this.dataSourceLinea = new MatTableDataSource<FacturaCompraLinea>([]);
     this.clickedRowsFacturaCompra.clear();
@@ -218,8 +218,7 @@ export class FacturaCompraComponent implements OnInit {
     if (event!=null)
       event.preventDefault();
     if (!this.validarFormulario())
-      return;  
-    //console.log(this.facturaCompra);  
+      return;
     this.spinnerService.show();
     this.facturaCompraService.actualizar(this.facturaCompra).subscribe({
       next: res => {
@@ -291,7 +290,7 @@ export class FacturaCompraComponent implements OnInit {
     let fecha = new Date(this.facturaCompra.fecha);
     this.facturaCompra.fecha = fecha;
     this.controlIdentificacionProveedor.patchValue(this.facturaCompra.proveedor);
-    this.controlProveedor.patchValue(this.facturaCompra.proveedor);
+    this.controlRazonSocialProveedor.patchValue(this.facturaCompra.proveedor);
     this.llenarTablaFacturaCompraLinea(this.facturaCompra.facturaCompraLineas);
   }
 
@@ -307,13 +306,13 @@ export class FacturaCompraComponent implements OnInit {
     this.dataSourceFacturaCompra.filter = '';
   }
 
-  seleccionarProveedor() {
-    let proveedorId = this.controlProveedor.value.id;
+  seleccionarRazonSocialProveedor() {
+    let proveedorId = this.controlRazonSocialProveedor.value.id;
     this.proveedorService.obtener(proveedorId).subscribe({
       next: res => {
         this.facturaCompra.proveedor = res.resultado as Proveedor;
         this.controlIdentificacionProveedor.patchValue(this.facturaCompra.proveedor);
-        this.controlProveedor.patchValue(this.facturaCompra.proveedor);
+        this.controlRazonSocialProveedor.patchValue(this.facturaCompra.proveedor);
       },
       error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     });
@@ -325,7 +324,7 @@ export class FacturaCompraComponent implements OnInit {
       next: res => {
         this.facturaCompra.proveedor = res.resultado as Proveedor;
         this.controlIdentificacionProveedor.patchValue(this.facturaCompra.proveedor);
-        this.controlProveedor.patchValue(this.facturaCompra.proveedor);
+        this.controlRazonSocialProveedor.patchValue(this.facturaCompra.proveedor);
       },
       error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     });
@@ -557,11 +556,11 @@ export class FacturaCompraComponent implements OnInit {
         map(value => typeof value === 'string' || value == null ? value : value.id),
         map(identificacion => typeof identificacion === 'string' ? this.filtroIdentificacionProveedor(identificacion) : this.proveedores.slice())
     );
-    this.filtroProveedores = this.controlProveedor.valueChanges
+    this.filtroRazonSocialProveedores = this.controlRazonSocialProveedor.valueChanges
       .pipe(
         startWith(valores.vacio),
         map(value => typeof value === 'string' || value==null ? value : value.id),
-        map(proveedor => typeof proveedor === 'string' ? this.filtroProveedor(proveedor) : this.proveedores.slice())
+        map(razonSocial => typeof razonSocial === 'string' ? this.filtroRazonSocialProveedor(razonSocial) : this.proveedores.slice())
       );
   }
 
@@ -587,15 +586,15 @@ export class FacturaCompraComponent implements OnInit {
     return proveedor && proveedor.identificacion ? proveedor.identificacion : valores.vacio;
   }
 
-  private filtroProveedor(value: string): Proveedor[] {
+  private filtroRazonSocialProveedor(value: string): Proveedor[] {
     if(this.proveedores.length > valores.cero) {
       const filterValue = value.toLowerCase();
-      return this.proveedores.filter(proveedor => proveedor.nombreComercial.toLowerCase().includes(filterValue));
+      return this.proveedores.filter(proveedor => proveedor.razonSocial.toLowerCase().includes(filterValue));
     }
     return [];
   }
-  verProveedor(proveedor: Proveedor): string {
-    return proveedor && proveedor.nombreComercial ? proveedor.nombreComercial : valores.vacio;
+  verRazonSocialProveedor(proveedor: Proveedor): string {
+    return proveedor && proveedor.razonSocial ? proveedor.razonSocial : valores.vacio;
   }
 
   //VALIDACIONES
