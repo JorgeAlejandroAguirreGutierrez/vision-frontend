@@ -58,7 +58,7 @@
                 </a>
             </li>
             <li class="nav-item"
-                *ngIf="notaDebito.id != 0 && notaDebito.estado != estadoEmitida && notaDebito.estado != estadoAnulada && notaDebito.procesoSRI != procesoSRIAnulada && notaDebito.procesoSRI != procesoSRIPendiente">
+                *ngIf="notaDebito.id != 0 && notaDebito.estado != estadoEmitida && notaDebito.estado != estadoAnulada && notaDebito.procesoSRI != procesoSRIAnulada && notaDebito.procesoSRI != procesoSRIAutorizada">
                 <a class="nav-link" title="Crear Nota Debito Electronica" href="#" role="button"
                     (click)="crearNotaDebitoElectronica($event)">
                     <mat-icon>point_of_sale</mat-icon>
