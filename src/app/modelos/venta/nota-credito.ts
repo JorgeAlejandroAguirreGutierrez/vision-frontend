@@ -40,7 +40,7 @@ export class NotaCredito {
         this.secuencial = valores.vacio;
         this.numeroComprobante = valores.vacio;
         this.operacion = valores.vacio;
-        this.fecha = new Date();
+        this.fecha = null;
         this.estado = valores.vacio;
         this.procesoSRI = valores.vacio;
         this.descuento = valores.cero;

@@ -125,6 +125,7 @@ export class NotaCreditoComponent implements OnInit {
     this.fechaMinima = new Date(this.fechaMinima.setDate(this.hoy.getDate() - 3))
     this.notaCredito.establecimiento = this.sesion.usuario.estacion.establecimiento.codigoSRI;
     this.notaCredito.puntoVenta = this.sesion.usuario.estacion.codigoSRI;
+    this.notaCredito.fecha = this.hoy;
     this.consultar();
     this.consultarClientes();
     this.inicializarFiltros();
@@ -332,8 +333,13 @@ export class NotaCreditoComponent implements OnInit {
     this.controlIdentificacionCliente.patchValue(this.notaCredito.factura.cliente);
     this.controlRazonSocialCliente.patchValue(this.notaCredito.factura.cliente);
     this.controlFactura.patchValue(this.notaCredito.factura);
-    let fecha = new Date(this.notaCredito.fecha);
-    this.notaCredito.fecha = fecha;
+    if(this.notaCredito.id != valores.cero){
+      let fecha = new Date(this.notaCredito.fecha);
+      this.notaCredito.fecha = fecha;
+    }
+    if(this.notaCredito.id == valores.cero){
+      this.notaCredito.fecha = this.hoy;
+    }
     this.dataSourceLinea = new MatTableDataSource(this.notaCredito.notaCreditoLineas);
     this.dataSourceLinea.filterPredicate = (data: NotaCreditoLinea, filter: string): boolean =>
       data.producto.nombre.includes(filter) || data.producto.medida.abreviatura.includes(filter) || 
@@ -495,8 +501,7 @@ export class NotaCreditoComponent implements OnInit {
 
   //VALIDACIONES
   validarFormulario(): boolean {
-    if (this.notaCredito.fecha == null || this.notaCredito.fecha > this.hoy ||
-      this.datepipe.transform(this.notaCredito.fecha, "yyyyMMdd") < this.datepipe.transform(this.fechaMinima, "yyyyMMdd")){
+    if (this.notaCredito.fecha == null || this.notaCredito.fecha > this.hoy){
       Swal.fire({ icon: error_swal, title: error, text: mensajes.error_fecha });
       return false;
     }

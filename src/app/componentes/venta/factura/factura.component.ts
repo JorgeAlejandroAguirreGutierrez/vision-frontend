@@ -162,6 +162,7 @@ export class FacturaComponent implements OnInit {
     this.factura.empresa = this.empresa;
     this.factura.establecimiento = this.sesion.usuario.estacion.establecimiento.codigoSRI;
     this.factura.puntoVenta = this.sesion.usuario.estacion.codigoSRI;
+    this.factura.fecha = this.hoy;
     this.consultar();
     this.consultarClientesInit();
     this.consultarProductos();
@@ -395,8 +396,13 @@ export class FacturaComponent implements OnInit {
   construir() {
     this.controlIdentificacionCliente.patchValue(this.factura.cliente);
     this.controlRazonSocialCliente.patchValue(this.factura.cliente);
-    let fecha = new Date(this.factura.fecha);
-    this.factura.fecha = fecha;
+    if(this.factura.id != valores.cero){
+      let fecha = new Date(this.factura.fecha);
+      this.factura.fecha = fecha;
+    }
+    if(this.factura.id == valores.cero){
+      this.factura.fecha = this.hoy;
+    }
     this.llenarTablaFacturaLinea(this.factura.facturaLineas);
   }
 
