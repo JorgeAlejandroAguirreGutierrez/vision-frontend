@@ -206,7 +206,6 @@ export class ProductoComponent implements OnInit {
       event.preventDefault();
     if (!this.validarFormulario())
       return;
-    console.log(this.producto);  
     this.productoService.actualizar(this.producto).subscribe({
       next: (res) => {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });

@@ -117,7 +117,6 @@ export class PermisoComponent implements OnInit {
 
   nuevoPermiso(){
     this.permiso = new Permiso();
-    //this.menuOpciones = [];
     this.clickedRows.clear();
     this.indexPermiso = valores.menosUno;
   }
@@ -125,7 +124,6 @@ export class PermisoComponent implements OnInit {
   actualizar(event) {
     if (event != null)
       event.preventDefault();
-    //console.log(this.perfil);
     this.perfilService.actualizar(this.perfil).subscribe({
       next: res => {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
@@ -137,7 +135,6 @@ export class PermisoComponent implements OnInit {
   }
 
   consultar() {
-      //console.log(this.permisos);
       this.permisoService.consultarPorPerfil(this.perfil.id).subscribe({
         next: res => {
           this.permisos = res.resultado as Permiso[];
@@ -188,7 +185,6 @@ export class PermisoComponent implements OnInit {
   inactivar(event){
     if (event != null)
       event.preventDefault();
-    console.log(this.permiso);  
     this.permisoService.inactivar(this.permiso).subscribe({
       next: res => {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });

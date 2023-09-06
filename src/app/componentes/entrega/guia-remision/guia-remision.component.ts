@@ -306,7 +306,6 @@ export class GuiaRemisionComponent implements OnInit {
         this.controlRazonSocialCliente.patchValue(this.guiaRemision.factura.cliente);
         this.facturaService.consultarPorClienteYEmpresaYEstado(this.guiaRemision.factura.cliente.id, this.empresa.id, valores.estadoRecaudada).subscribe(
           res => {
-            console.log(res);
             this.facturas = res.resultado as Factura[]
             this.spinnerService.hide();
           },
@@ -331,12 +330,8 @@ export class GuiaRemisionComponent implements OnInit {
         this.guiaRemision.factura.cliente = res.resultado as Cliente;
         this.controlIdentificacionCliente.patchValue(this.guiaRemision.factura.cliente);
         this.controlRazonSocialCliente.patchValue(this.guiaRemision.factura.cliente);
-        console.log(this.guiaRemision.factura.cliente.id);
-        console.log(this.empresa.id);
-        console.log(valores.estadoRecaudada);
         this.facturaService.consultarPorClienteYEmpresaYEstado(this.guiaRemision.factura.cliente.id, this.empresa.id, valores.estadoRecaudada).subscribe(
           res => {
-            console.log(res);
             this.facturas = res.resultado as Factura[];
             this.spinnerService.hide();
           },
