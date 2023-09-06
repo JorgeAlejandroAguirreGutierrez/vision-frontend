@@ -179,7 +179,6 @@ export class EstablecimientoComponent implements OnInit {
     if (!this.validarFormulario())
       return;    
     this.agregarTelefonoCorreo();
-    console.log(this.establecimiento);
     this.establecimientoService.actualizar(this.establecimiento).subscribe({
       next: res => {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
