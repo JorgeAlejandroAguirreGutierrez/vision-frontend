@@ -1,5 +1,4 @@
 import { valores } from "../../constantes";
-import { Bodega } from "../inventario/bodega";
 import { Impuesto } from "../inventario/impuesto";
 import { Producto } from "../inventario/producto";
 export class NotaDebitoCompraLinea {
@@ -16,8 +15,6 @@ export class NotaDebitoCompraLinea {
     impuesto: Impuesto;
     //PRODUCTO SELECCIONADO
     producto: Producto;
-    //BODEGA SELECCIONADO
-    bodega: Bodega;
 
     constructor() {
         this.id = valores.cero;
@@ -31,6 +28,5 @@ export class NotaDebitoCompraLinea {
         this.entregado = valores.no;
         this.impuesto = new Impuesto();
         this.producto = new Producto();
-        this.bodega = new Bodega();
     }
 }

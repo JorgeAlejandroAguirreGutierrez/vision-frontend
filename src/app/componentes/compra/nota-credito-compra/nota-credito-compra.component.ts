@@ -150,7 +150,6 @@ export class NotaCreditoCompraComponent implements OnInit {
     this.spinnerService.show();   
     this.notaCreditoCompra.sesion = this.sesion;
     this.notaCreditoCompra.empresa = this.empresa;
-    this.notaCreditoCompra.numeroComprobante = this.notaCreditoCompra.establecimiento + valores.guion + this.notaCreditoCompra.puntoVenta + valores.guion + this.notaCreditoCompra.secuencial;
     this.notaCreditoCompraService.crear(this.notaCreditoCompra).subscribe({
       next: res => {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });

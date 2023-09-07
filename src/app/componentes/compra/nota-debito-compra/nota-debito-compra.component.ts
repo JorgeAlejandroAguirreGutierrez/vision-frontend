@@ -338,6 +338,22 @@ export class NotaDebitoCompraComponent implements OnInit {
     this.calcularLinea();
   }
 
+  validarFormulario(): boolean {
+    if (this.notaDebitoCompra.fecha == null ){
+      Swal.fire({ icon: error_swal, title: error, text: mensajes.error_falta_datos });
+      return false;
+    }
+    if (this.notaDebitoCompra.facturaCompra.id == valores.cero){
+      Swal.fire({ icon: error_swal, title: error, text: mensajes.error_falta_datos });
+      return false;
+    }
+    if (this.notaDebitoCompra.establecimiento == valores.vacio || this.notaDebitoCompra.puntoVenta == valores.vacio || this.notaDebitoCompra.secuencial == valores.vacio){
+      Swal.fire({ icon: error_swal, title: error, text: mensajes.error_falta_datos });
+      return false;
+    }
+    return true;
+  } 
+
   validarFormularioLinea(): boolean {
     if (this.notaDebitoCompraLinea.cantidad <= valores.cero) {
       return false;
@@ -375,6 +391,8 @@ export class NotaDebitoCompraComponent implements OnInit {
   crear(event) {
     if (event!=null)
       event.preventDefault();
+    if (!this.validarFormulario())
+    return; 
     this.spinnerService.show();  
     this.notaDebitoCompra.sesion = this.sesion;
     this.notaDebitoCompra.empresa = this.empresa;
