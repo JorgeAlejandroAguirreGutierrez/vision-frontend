@@ -39,33 +39,28 @@
             <div class="form-group form-row">
                 <div class="form-row col-9">
                     <div class="col-3">
-                        <mat-form-field>
+                        <mat-form-field appearance="standard">
                             <mat-label>Ruc</mat-label>
-                            <input matInput type="text" class="form-control-sm" placeholder="RUC" 
-                                [(ngModel)]="proveedorSeleccionado" (ngModelChange)="filtrarIdentificaciones($event)" 
-                                [matAutocomplete]="autoIdentificacion" oninput="this.value = this.value.toUpperCase()">
-                            <mat-autocomplete #autoIdentificacion="matAutocomplete"  [displayWith]="verIdentificacion"
-                                (optionSelected)="seleccionarIdentificacion($event)" (opened)="consultarProveedores()">
-                                <mat-option *ngFor="let proveedor of filtroIdentificaciones" [value]="proveedor">
-                                    {{ proveedor.identificacion }}
+                            <input matInput type="text" class="form-control-sm" placeholder="Cédula/RUC"
+                                [formControl]="controlIdentificacionProveedor" [matAutocomplete]="identificacionProveedor">
+                            <mat-autocomplete #identificacionProveedor="matAutocomplete" [displayWith]="verIdentificacionProveedor"
+                                (optionSelected)="seleccionarIdentificacionProveedor()" (opened)="consultarProveedores()">
+                                <mat-option *ngFor="let proveedor of filtroIdentificacionProveedores | async" [value]="proveedor">
+                                    {{proveedor.identificacion}}
                                 </mat-option>
                             </mat-autocomplete>
                         </mat-form-field>
                     </div>
                     <div class="col-9">
-                        <mat-form-field>
+                        <mat-form-field appearance="standard">  
                             <mat-label>Proveedor</mat-label>
-                            <input matInput type="text" class="form-control-sm" placeholder="Nombre Comercial" 
-                                [(ngModel)]="proveedorSeleccionado" (ngModelChange)="filtrarProveedores($event)" 
-                                [matAutocomplete]="autoProveedor" oninput="this.value = this.value.toUpperCase()">
-                                <button mat-button *ngIf="proveedorSeleccionado" matSuffix mat-icon-button
-                                    (click)="borrarProveedor()">
-                                    <mat-icon>close</mat-icon>
-                                </button>    
-                            <mat-autocomplete #autoProveedor="matAutocomplete"  [displayWith]="verProveedor"
-                                (optionSelected)="seleccionarProveedor($event)" (opened)="consultarProveedores()">
-                                <mat-option *ngFor="let proveedor of filtroProveedores" [value]="proveedor">
-                                    {{ proveedor.nombreComercial }}
+                            <input matInput type="text" class="form-control-sm" placeholder="Razon Social"
+                                [formControl]="controlRazonSocialProveedor" [matAutocomplete]="razonSocialproveedor"
+                                oninput="this.value = this.value.toUpperCase()">
+                            <mat-autocomplete #razonSocialproveedor="matAutocomplete" [displayWith]="verRazonSocialProveedor"
+                                (optionSelected)="seleccionarRazonSocialProveedor()" (opened)="consultarProveedores()">
+                                <mat-option *ngFor="let proveedor of filtroRazonSocialProveedores | async" [value]="proveedor">
+                                    {{ proveedor.razonSocial }}
                                 </mat-option>
                             </mat-autocomplete>
                         </mat-form-field>
@@ -82,15 +77,15 @@
                         </mat-form-field>
                     </div>
                     <div class="col-4">
-                        <mat-form-field>
-                            <mat-label>Factura de Compra</mat-label>
-                            <input matInput type="text" class="form-control-sm" placeholder="No. Factura" 
-                                [(ngModel)]="facturaCompraSeleccionado" (ngModelChange)="filtrarFacturasCompras($event)" 
-                                [matAutocomplete]="autoFacturaCompra" oninput="this.value = this.value.toUpperCase()">
-                            <mat-autocomplete #autoFacturaCompra="matAutocomplete"  [displayWith]="verFacturaCompra"
-                                (optionSelected)="seleccionarFacturaCompra($event)">
-                                <mat-option *ngFor="let facturaCompra of filtroFacturaCompras" [value]="facturaCompra">
-                                    {{ facturaCompra.numeroComprobante }}
+                        <mat-form-field appearance="standard">
+                            <mat-label>Factura Compra</mat-label>
+                            <input matInput type="text" class="form-control-sm" placeholder="Factura Compra"
+                                [formControl]="controlFacturaCompra" [matAutocomplete]="facturaCompra"
+                                oninput="this.value = this.value.toUpperCase()">
+                            <mat-autocomplete #facturaCompra="matAutocomplete" [displayWith]="verFacturaCompra"
+                                (optionSelected)="seleccionarFacturaCompra()">
+                                <mat-option *ngFor="let facturaCompra of filtroFacturasCompras | async" [value]="facturaCompra">
+                                    {{facturaCompra.numeroComprobante}}
                                 </mat-option>
                             </mat-autocomplete>
                         </mat-form-field>

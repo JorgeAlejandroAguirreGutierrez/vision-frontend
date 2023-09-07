@@ -19,16 +19,14 @@ import { NotaDebitoCompra } from 'src/app/modelos/compra/nota-debito-compra';
 import { NotaDebitoCompraLinea } from 'src/app/modelos/compra/nota-debito-compra-linea';
 import { Producto } from 'src/app/modelos/inventario/producto';
 import { KardexService } from 'src/app/servicios/inventario/kardex.service';
-import { Kardex } from 'src/app/modelos/inventario/kardex';
 import { Impuesto } from 'src/app/modelos/inventario/impuesto';
 import { ImpuestoService } from 'src/app/servicios/inventario/impuesto.service';
-import { Bodega } from 'src/app/modelos/inventario/bodega';
-import { BodegaService } from 'src/app/servicios/inventario/bodega.service';
 import { ProductoService } from 'src/app/servicios/inventario/producto.service';
 import { FacturaCompraLinea } from 'src/app/modelos/compra/factura-compra-linea';
 
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
   selector: 'app-nota-debito-compra',
@@ -39,9 +37,11 @@ import { MatPaginator } from '@angular/material/paginator';
 export class NotaDebitoCompraComponent implements OnInit {
 
   panelOpenState = false;
+  abrirPanelAdmin = false;
 
+  sesion: Sesion = null;
+  empresa: Empresa = null;
   hoy = new Date();
-
   deshabilitarDevolucion = true;
   deshabilitarDescuento = true;
   
@@ -50,20 +50,22 @@ export class NotaDebitoCompraComponent implements OnInit {
   estadoPorPagar: string = valores.estadoPorPagar;
   estadoPagada: string = valores.estadoPagada;
   estadoAnulada: string = valores.estadoAnulada;
-  
+
+  notaDebitoCompra: NotaDebitoCompra = new NotaDebitoCompra();
+  notaDebitoCompraLinea: NotaDebitoCompraLinea = new NotaDebitoCompraLinea();
+  notasDebitosCompras: NotaDebitoCompra[] = [];  
   controlIdentificacionProveedor = new UntypedFormControl();
-  controlNombreComercialProveedor = new UntypedFormControl();
+  controlRazonSocialProveedor = new UntypedFormControl();
   controlFacturaCompra = new UntypedFormControl();
   controlProducto = new UntypedFormControl();
   filtroIdentificacionProveedores: Observable<Proveedor[]> = new Observable<Proveedor[]>();
-  filtroNombreComercialProveedores: Observable<Proveedor[]> = new Observable<Proveedor[]>();
+  filtroRazonSocialProveedores: Observable<Proveedor[]> = new Observable<Proveedor[]>();
   filtroFacturasCompras: Observable<FacturaCompra[]> = new Observable<FacturaCompra[]>();
+  filtroProductos: Observable<Producto[]> = new Observable<Producto[]>();
   proveedores: Proveedor[] = [];  
   facturasCompras: FacturaCompra[] = [];
-  filtroProductos: Observable<Producto[]> = new Observable<Producto[]>();
   productos: Producto[] = [];
   impuestos: Impuesto[] = [];
-  bodegas: Bodega[] = [];
 
   columnas: any[] = [
     { nombreColumna: 'codigo', cabecera: 'Código', celda: (row: NotaDebitoCompra) => `${row.codigo}`},
@@ -76,26 +78,44 @@ export class NotaDebitoCompraComponent implements OnInit {
   cabecera: string[]  = this.columnas.map(titulo => titulo.nombreColumna);
   dataSource: MatTableDataSource<NotaDebitoCompra>;
   clickedRows = new Set<NotaDebitoCompra>();
-  abrirPanelAdmin = false;
-  notasDebitosCompras: NotaDebitoCompra[] = [];
+
+  columnasFacturaCompraLinea: any[] = [
+    { nombreColumna: 'nombre', cabecera: 'Producto', celda: (row: FacturaCompraLinea) => `${row.producto.nombre}` },
+    { nombreColumna: 'medida', cabecera: 'Medida', celda: (row: FacturaCompraLinea) => `${row.producto.medida.abreviatura}` },
+    { nombreColumna: 'cantidad', cabecera: 'Cant.', celda: (row: FacturaCompraLinea) => `${row.cantidad}` },
+    { nombreColumna: 'costoUnitario', cabecera: 'Costo. Unit', celda: (row: FacturaCompraLinea) => `$${row.costoUnitario}` },
+    { nombreColumna: 'valorDescuento', cabecera: 'Desc. $', celda: (row: FacturaCompraLinea) => `$${row.valorDescuentoLinea}` },
+    { nombreColumna: 'porcentajeDescuento', cabecera: 'Desc. %', celda: (row: FacturaCompraLinea) => `${row.porcentajeDescuentoLinea}%` },
+    { nombreColumna: 'impuesto', cabecera: 'Impuesto', celda: (row: FacturaCompraLinea) => `${row.porcentajeDescuentoLinea}%` },
+    { nombreColumna: 'subtotal', cabecera: 'Subtotal', celda: (row: FacturaCompraLinea) => `$${row.subtotalLinea}` },
+    { nombreColumna: 'iva', cabecera: 'IVA', celda: (row: FacturaCompraLinea) => `$${row.importeIvaLinea}` },
+    { nombreColumna: 'total', cabecera: 'Total', celda: (row: FacturaCompraLinea) => `$${row.totalLinea}` }
+  ];
+  cabeceraFacturaCompraLinea: string[] = this.columnasFacturaCompraLinea.map(titulo => titulo.nombreColumna);
+  dataSourceFacturaCompraLinea: MatTableDataSource<FacturaCompraLinea> = new MatTableDataSource<FacturaCompraLinea>(this.notaDebitoCompra.facturaCompra.facturaCompraLineas);
   
+  columnasLinea: any[] = [
+    { nombreColumna: 'nombre', cabecera: 'Producto', celda: (row: NotaDebitoCompraLinea) => `${row.producto.nombre}` },
+    { nombreColumna: 'medida', cabecera: 'Medida', celda: (row: NotaDebitoCompraLinea) => `${row.producto.medida.abreviatura}` },
+    { nombreColumna: 'cantidad', cabecera: 'Cant.', celda: (row: NotaDebitoCompraLinea) => `${row.cantidad}` },
+    { nombreColumna: 'costoUnitario', cabecera: 'P. Unit', celda: (row: NotaDebitoCompraLinea) => `$${row.costoUnitario}` },
+    { nombreColumna: 'valorDescuentoLinea', cabecera: 'Desc. $', celda: (row: NotaDebitoCompraLinea) => `$${row.valorDescuentoLinea}` },
+    { nombreColumna: 'porcentajeDescuentoLinea', cabecera: 'Desc. %', celda: (row: NotaDebitoCompraLinea) => `${row.porcentajeDescuentoLinea}%` },
+    { nombreColumna: 'subtotalLinea', cabecera: 'Subtotal', celda: (row: NotaDebitoCompraLinea) => `$${row.subtotalLinea}` },
+    { nombreColumna: 'importeIvaLinea', cabecera: 'IVA', celda: (row: NotaDebitoCompraLinea) => `$${row.importeIvaLinea}` },
+    { nombreColumna: 'totalLinea', cabecera: 'Total', celda: (row: NotaDebitoCompraLinea) => `$${row.totalLinea}` },
+    { nombreColumna: 'entregado', cabecera: 'Entreg.', celda: (row: NotaDebitoCompraLinea) => `${row.entregado}` }
+  ];
+  cabeceraLinea: string[] = this.columnasLinea.map(titulo => titulo.nombreColumna);
+  dataSourceLinea: MatTableDataSource<NotaDebitoCompraLinea> = new MatTableDataSource<NotaDebitoCompraLinea>(this.notaDebitoCompra.notaDebitoCompraLineas);
+  clickedRowsLinea = new Set<NotaDebitoCompraLinea>();
+
   @ViewChild("paginator") paginator: MatPaginator;
   @ViewChild("paginatorLinea") paginatorLinea: MatPaginator;
   @ViewChild("paginatorFacturaCompraLinea") paginatorFacturaCompraLinea: MatPaginator;
 
-  notaDebitoCompra: NotaDebitoCompra = new NotaDebitoCompra();
-  notaDebitoCompraLinea: NotaDebitoCompraLinea = new NotaDebitoCompraLinea();
-  kardex: Kardex = new Kardex();
-
-  columnasLinea: string[] = ["codigo", 'nombre', 'medida', 'cantidad', 'costoUnitario', 'descuento', 'impuesto', 'bodega', 'total'];
-  dataSourceLinea = new MatTableDataSource<NotaDebitoCompraLinea>(this.notaDebitoCompra.notaDebitoCompraLineas);
-  columnasFacturaCompraLinea: string[] = ["codigo", 'nombre', 'medida', 'cantidad', 'costoUnitario', 'valorDescuento', 'porcentajeDescuento', 'impuesto', 'bodega', 'total'];
-  dataSourceFacturaCompraLinea = new MatTableDataSource<FacturaCompraLinea>(this.notaDebitoCompra.facturaCompra.facturaCompraLineas);
-  sesion: Sesion = null;
-  empresa: Empresa = null;
-
-  constructor(private proveedorService: ProveedorService, private sesionService: SesionService, private kardexService: KardexService, private impuestoService: ImpuestoService, private productoService: ProductoService, private datepipe: DatePipe,
-    private router: Router, private notaDebitoCompraService: NotaDebitoCompraService, private facturaCompraService: FacturaCompraService, private bodegaService: BodegaService) { }
+  constructor(private proveedorService: ProveedorService, private sesionService: SesionService, private impuestoService: ImpuestoService, private productoService: ProductoService, private datepipe: DatePipe,
+    private router: Router, private notaDebitoCompraService: NotaDebitoCompraService, private facturaCompraService: FacturaCompraService, private spinnerService: NgxSpinnerService) { }
 
   @HostListener('window:keypress', ['$event'])
   keyEvent($event: KeyboardEvent) {
@@ -110,19 +130,23 @@ export class NotaDebitoCompraComponent implements OnInit {
     this.empresa = this.sesion.usuario.estacion.establecimiento.empresa;
     this.consultar();
     this.consultarProveedores();
+    this.consultarProductos();
     this.consultarImpuestos();
-    this.consultarBodegas();
+    this.inicializarFiltros();
+  }
+
+  inicializarFiltros(){
     this.filtroIdentificacionProveedores = this.controlIdentificacionProveedor.valueChanges
       .pipe(
         startWith(valores.vacio),
         map(value => typeof value === 'string' || value==null ? value : value.id),
         map(proveedor => typeof proveedor === 'string' ? this.filtroIdentificacionProveedor(proveedor) : this.proveedores.slice())
       );  
-    this.filtroNombreComercialProveedores = this.controlNombreComercialProveedor.valueChanges
+    this.filtroRazonSocialProveedores = this.controlRazonSocialProveedor.valueChanges
       .pipe(
         startWith(valores.vacio),
         map(value => typeof value === 'string' || value==null ? value : value.id),
-        map(proveedor => typeof proveedor === 'string' ? this.filtroNombreComercialProveedor(proveedor) : this.proveedores.slice())
+        map(proveedor => typeof proveedor === 'string' ? this.filtroRazonSocialProveedor(proveedor) : this.proveedores.slice())
       );
     this.filtroFacturasCompras = this.controlFacturaCompra.valueChanges
       .pipe(
@@ -149,15 +173,15 @@ export class NotaDebitoCompraComponent implements OnInit {
     return proveedor && proveedor.identificacion ? proveedor.identificacion : valores.vacio;
   }
 
-  private filtroNombreComercialProveedor(value: string): Proveedor[] {
+  private filtroRazonSocialProveedor(value: string): Proveedor[] {
     if(this.proveedores.length > valores.cero) {
       const filterValue = value.toLowerCase();
-      return this.proveedores.filter(proveedor => proveedor.nombreComercial.toLowerCase().includes(filterValue));
+      return this.proveedores.filter(proveedor => proveedor.razonSocial.toLowerCase().includes(filterValue));
     }
     return [];
   }
-  verNombreComercialProveedor(proveedor: Proveedor): string {
-    return proveedor && proveedor.nombreComercial ? proveedor.nombreComercial : valores.vacio;
+  verRazonSocialProveedor(proveedor: Proveedor): string {
+    return proveedor && proveedor.razonSocial ? proveedor.razonSocial : valores.vacio;
   }
 
   private filtroFacturaCompra(value: string): FacturaCompra[] {
@@ -187,18 +211,23 @@ export class NotaDebitoCompraComponent implements OnInit {
       event.preventDefault();
     this.notaDebitoCompra = new NotaDebitoCompra();
     this.controlIdentificacionProveedor.patchValue(valores.vacio);
-    this.controlNombreComercialProveedor.patchValue(valores.vacio);
+    this.controlRazonSocialProveedor.patchValue(valores.vacio);
     this.controlFacturaCompra.patchValue(valores.vacio);
     this.dataSourceLinea = new MatTableDataSource<NotaDebitoCompraLinea>([]);
     this.dataSourceFacturaCompraLinea = new MatTableDataSource<FacturaCompraLinea>([]);
     this.clickedRows.clear();
   }
 
+  nuevoLinea(){
+    this.notaDebitoCompraLinea = new NotaDebitoCompraLinea();
+    this.controlProducto.patchValue(valores.vacio);
+  }
+
   construir() {
     let fecha = new Date(this.notaDebitoCompra.fecha);
     this.notaDebitoCompra.fecha = fecha;
     this.controlIdentificacionProveedor.patchValue(this.notaDebitoCompra.facturaCompra.proveedor);
-    this.controlNombreComercialProveedor.patchValue(this.notaDebitoCompra.facturaCompra.proveedor);
+    this.controlRazonSocialProveedor.patchValue(this.notaDebitoCompra.facturaCompra.proveedor);
     this.controlFacturaCompra.patchValue(this.notaDebitoCompra.facturaCompra);
     this.dataSourceLinea = new MatTableDataSource<NotaDebitoCompraLinea>(this.notaDebitoCompra.notaDebitoCompraLineas);
     this.dataSourceLinea.paginator = this.paginatorLinea;
@@ -227,7 +256,7 @@ export class NotaDebitoCompraComponent implements OnInit {
   }
 
   consultarFacturasCompras(){
-    this.facturaCompraService.consultarPorEmpresaYProveedorYEstado(this.empresa.id, this.notaDebitoCompra.facturaCompra.proveedor.id, valores.estadoEmitida).subscribe(
+    this.facturaCompraService.consultarPorProveedorYEmpresaYEstadoDiferente(this.notaDebitoCompra.facturaCompra.proveedor.id, this.empresa.id, valores.estadoAnulada).subscribe(
       res => {
         this.facturasCompras = res.resultado as FacturaCompra[]
       },
@@ -244,17 +273,8 @@ export class NotaDebitoCompraComponent implements OnInit {
     );
   }
 
-  consultarBodegas(){
-    this.bodegaService.consultarPorEmpresaYEstado(this.empresa.id, valores.estadoActivo).subscribe(
-      res => {
-        this.bodegas = res.resultado as Bodega[]
-      },
-      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
-    );
-  }
-
   consultarProductos(){
-    this.productoService.consultarPorCategoriaProductoYProveedorYEmpresaYEstado(valores.bien, this.notaDebitoCompra.facturaCompra.proveedor.id, this.empresa.id, valores.estadoActivo).subscribe(
+    this.productoService.consultarPorCategoriaProductoYEmpresaYEstado(valores.servicio, this.empresa.id, valores.estadoActivo).subscribe(
       res => {
         this.productos = res.resultado as Producto[]
       },
@@ -270,7 +290,7 @@ export class NotaDebitoCompraComponent implements OnInit {
       res => {
         this.notaDebitoCompra.facturaCompra.proveedor = res.resultado as Proveedor;
         this.controlIdentificacionProveedor.patchValue(this.notaDebitoCompra.facturaCompra.proveedor);
-        this.controlNombreComercialProveedor.patchValue(this.notaDebitoCompra.facturaCompra.proveedor);
+        this.controlRazonSocialProveedor.patchValue(this.notaDebitoCompra.facturaCompra.proveedor);
         this.consultarFacturasCompras();
         this.consultarProductos();
       },
@@ -278,14 +298,13 @@ export class NotaDebitoCompraComponent implements OnInit {
     );
   }
 
-
-  seleccionarNombreComercialProveedor() {
-    let proveedorId = this.controlNombreComercialProveedor.value.id;
+  seleccionarRazonSocialProveedor() {
+    let proveedorId = this.controlRazonSocialProveedor.value.id;
     this.proveedorService.obtener(proveedorId).subscribe(
       res => {
         this.notaDebitoCompra.facturaCompra.proveedor = res.resultado as Proveedor;
         this.controlIdentificacionProveedor.patchValue(this.notaDebitoCompra.facturaCompra.proveedor);
-        this.controlNombreComercialProveedor.patchValue(this.notaDebitoCompra.facturaCompra.proveedor);
+        this.controlRazonSocialProveedor.patchValue(this.notaDebitoCompra.facturaCompra.proveedor);
         this.consultarFacturasCompras();
         this.consultarProductos();
       },
@@ -320,9 +339,44 @@ export class NotaDebitoCompraComponent implements OnInit {
     this.calcularLinea();
   }
 
+  validarFormularioLinea(): boolean {
+    if (this.notaDebitoCompraLinea.cantidad <= valores.cero) {
+      return false;
+    }
+    if (this.notaDebitoCompraLinea.costoUnitario <= valores.cero) {
+      return false;
+    }
+    if (this.notaDebitoCompraLinea.impuesto.id == valores.cero) {
+      return false;
+    }
+    return true;
+  }
+
+  crearLinea() {
+    if (!this.validarFormularioLinea())
+      return;
+    this.spinnerService.show();  
+    this.notaDebitoCompra.sesion = this.sesion;
+    this.notaDebitoCompra.empresa = this.empresa;
+    this.notaDebitoCompra.notaDebitoCompraLineas.push(this.notaDebitoCompraLinea);
+    this.notaDebitoCompraService.calcular(this.notaDebitoCompra).subscribe({
+      next: res => {
+        this.notaDebitoCompra = res.resultado as NotaDebitoCompra;
+        this.construir();
+        this.nuevoLinea();
+        this.spinnerService.hide();
+      },
+      error: err => {
+        this.spinnerService.hide();
+        Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje });
+      }
+    });
+  }
+
   crear(event) {
     if (event!=null)
       event.preventDefault();
+    this.spinnerService.show();  
     this.notaDebitoCompra.sesion = this.sesion;
     this.notaDebitoCompra.empresa = this.empresa;
     this.notaDebitoCompraService.crear(this.notaDebitoCompra).subscribe(
@@ -330,8 +384,12 @@ export class NotaDebitoCompraComponent implements OnInit {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
         this.consultar();
         this.nuevo(null);
+        this.spinnerService.hide();
       },
-      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+      err => {
+        this.spinnerService.hide();
+        Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+      }
     );
   }
 
@@ -361,7 +419,7 @@ export class NotaDebitoCompraComponent implements OnInit {
     });
   }
 
-  seleccion(notaDebitoCompra: any) {
+  seleccionar(notaDebitoCompra: any) {
     if (!this.clickedRows.has(notaDebitoCompra)){
       this.clickedRows.clear();
       this.clickedRows.add(notaDebitoCompra);
@@ -406,46 +464,29 @@ export class NotaDebitoCompraComponent implements OnInit {
     );
   }
 
-  seleccionarBodega(){
-    if(this.notaDebitoCompraLinea.producto.id == valores.cero || this.notaDebitoCompraLinea.bodega.id == valores.cero || this.notaDebitoCompra.facturaCompra.proveedor.id == valores.cero){
-      return;
+  filtroFacturaCompraLinea(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.dataSourceFacturaCompraLinea.filter = filterValue.trim().toUpperCase();
+    if (this.dataSourceFacturaCompraLinea.paginator) {
+      this.dataSourceFacturaCompraLinea.paginator.firstPage();
     }
-    this.kardexService.obtenerUltimoPorProductoYBodega(this.notaDebitoCompraLinea.producto.id, this.notaDebitoCompraLinea.bodega.id).subscribe(
-      res => {
-        if (res.resultado == null){
-          Swal.fire({ icon: error_swal, title: error, text: mensajes.error_kardex_vacio });
-          return;
-        }
-        this.kardex = res.resultado as Kardex;
-        this.notaDebitoCompraLinea.costoUnitario = this.kardex.costoPromedio;
-      },
-      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
-    );
-    this.calcularLinea();
+  }
+
+  filtroLinea(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.dataSourceLinea.filter = filterValue.trim().toUpperCase();
+    if (this.dataSourceLinea.paginator) {
+      this.dataSourceLinea.paginator.firstPage();
+    }
   }
 
   seleccionarProducto() {
     this.notaDebitoCompraLinea.producto = this.controlProducto.value;
     this.notaDebitoCompraLinea.impuesto = this.notaDebitoCompraLinea.producto.impuesto;
-    if(this.notaDebitoCompraLinea.producto.id == valores.cero || this.notaDebitoCompraLinea.bodega.id == valores.cero || this.notaDebitoCompra.facturaCompra.proveedor.id == valores.cero){
-      return;
-    }
-    this.kardexService.obtenerUltimoPorProductoYBodega(this.notaDebitoCompraLinea.producto.id, this.notaDebitoCompraLinea.bodega.id).subscribe(
-      res => {
-        if (res.resultado == null){
-          Swal.fire({ icon: error_swal, title: error, text: mensajes.error_kardex_vacio });
-          return;
-        }
-        this.kardex = res.resultado as Kardex;
-        this.notaDebitoCompraLinea.costoUnitario = this.kardex.costoPromedio;
-      },
-      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
-    );
   }
 
   limpiarNotaDebitoCompraLinea(){
     this.notaDebitoCompraLinea = new NotaDebitoCompraLinea();
-    this.kardex = new Kardex();
     this.controlProducto.patchValue(valores.vacio);
   }
 
@@ -474,7 +515,7 @@ export class NotaDebitoCompraComponent implements OnInit {
     );
   }
 
-  eliminarNotaDebitoCompraLinea(i: number){
+  eliminarLinea(i: number){
     this.notaDebitoCompra.notaDebitoCompraLineas.splice(i, 1);
     this.calcular();
   }
@@ -502,6 +543,10 @@ export class NotaDebitoCompraComponent implements OnInit {
     if (this.dataSource.paginator) {
       this.dataSource.paginator.firstPage();
     }
+  }
+
+  formateaNumero (valor) {
+    return isNaN (valor) ? valor : parseFloat (valor).toFixed (2);
   }
 
   compareFn(a: any, b: any) {

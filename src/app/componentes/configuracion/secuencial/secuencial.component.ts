@@ -81,7 +81,7 @@ export class SecuencialComponent implements OnInit {
   }
 
   consultarTipoComprobante(){
-    this.tipoComprobanteService.consultarPorElectronica().subscribe({
+    this.tipoComprobanteService.consultar().subscribe({
       next: (res) => {
         this.tipoComprobantes = res.resultado as TipoComprobante[]
       },

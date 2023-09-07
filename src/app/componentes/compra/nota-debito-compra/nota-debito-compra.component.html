@@ -17,290 +17,223 @@
                 </a>
             </li>
             <li class="nav-item" *ngIf="notaDebitoCompra.id != 0 && notaDebitoCompra.estado != estadoAnulada">
-                <a class="nav-link" title="Anular" role="button" (click)="anular($event)">
+                <a class="nav-link" title="Activar" role="button" (click)="anular($event)">
                     <mat-icon>delete_forever</mat-icon>
                 </a>
             </li>
         </ul>
     </nav>
-    <ng-template matStepLabel>Nota Debito de Compra</ng-template>
+    <ng-template matStepLabel>Nota Debito Compra</ng-template>
     <mat-divider></mat-divider>
     <mat-accordion class="headers-align">
-        <mat-expansion-panel (opened)="panelOpenState = true" (closed)="panelOpenState = false" [expanded]="true">
+        <mat-expansion-panel (opened)="panelOpenState = true" (closed)="panelOpenState = false"
+            [expanded]="true">
             <mat-expansion-panel-header>
                 <mat-panel-title>
-                    <i><u>DATOS PARA NOTA DEBITO DE COMPRA</u></i>
+                    <i><u>DATOS PARA NOTA DEBITO COMPRA</u></i>
                 </mat-panel-title>
                 <mat-panel-description>
-                    {{panelOpenState ? 'Ocultar sección' : 'Información del cliente para nota debito de compra'}}
+                    {{panelOpenState ? 'Ocultar sección' : 'Información del proveedor para nota debito de compra'}}
                     <mat-icon>account_circle</mat-icon>
                 </mat-panel-description>
             </mat-expansion-panel-header>
             <mat-divider></mat-divider>
             <div class="form-group form-row">
-                <div class="form-row col-9">
-                    <div class="col-3">
-                        <mat-form-field appearance="standard">
-                            <mat-label>Ruc</mat-label>
-                            <input matInput type="text" class="form-control-sm" placeholder="Cédula/RUC"
-                                [formControl]="controlIdentificacionProveedor" [matAutocomplete]="identificacionProveedor">
-                            <mat-autocomplete #identificacionProveedor="matAutocomplete" [displayWith]="verIdentificacionProveedor"
-                                (optionSelected)="seleccionarIdentificacionProveedor()" (opened)="consultarProveedores()">
-                                <mat-option *ngFor="let proveedor of filtroIdentificacionProveedores | async" [value]="proveedor">
-                                    {{proveedor.identificacion}}
-                                </mat-option>
-                            </mat-autocomplete>
-                        </mat-form-field>
-                    </div>
-                    <div class="col-9">
-                        <mat-form-field appearance="standard">
-                            <mat-label>Proveedor</mat-label>
-                            <input matInput type="text" class="form-control-sm" placeholder="Nombre Comercial"
-                                [formControl]="controlNombreComercialProveedor" [matAutocomplete]="proveedor"
-                                oninput="this.value = this.value.toUpperCase()">
-                            <mat-autocomplete #proveedor="matAutocomplete" [displayWith]="verNombreComercialProveedor"
-                                (optionSelected)="seleccionarNombreComercialProveedor()">
-                                <mat-option *ngFor="let proveedor of filtroNombreComercialProveedores | async" [value]="proveedor">
-                                    {{ proveedor.nombreComercial }}
-                                </mat-option>
-                            </mat-autocomplete>
-                        </mat-form-field>
-                    </div>
-                    <div class="col-3">
-                        <mat-form-field appearance="standard">
-                            <mat-label>Fecha</mat-label>
-                            <input matInput #inputFecha="ngModel" [matDatepicker]="picker1" class="form-control-sm"
-                                [(ngModel)]="notaDebitoCompra.fecha" required [max]="hoy" datePickerFormat="DD-MM-YYYY">
-                            <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
-                            <mat-datepicker #picker1></mat-datepicker>
-                            <mat-error *ngIf="inputFecha.hasError('matDatepickerMax')">Debe ser menor al día de hoy</mat-error>
-                            <mat-error *ngIf="inputFecha.hasError('required')">Fecha requerida o no existe</mat-error>
-                        </mat-form-field>
-                    </div>
-                    <div class="col-9">
-                        <mat-form-field appearance="standard">
-                            <mat-label>Factura de Compra</mat-label>
-                            <mat-autocomplete #facturaCompra="matAutocomplete" [displayWith]="verFacturaCompra"
-                                (optionSelected)="seleccionarFacturaCompra()">
-                                <mat-option *ngFor="let facturaCompra of filtroFacturasCompras | async"
-                                    [value]="facturaCompra">
-                                    {{facturaCompra.numeroComprobante}}
-                                </mat-option>
-                            </mat-autocomplete>
-                            <input matInput type="text" class="form-control-sm" placeholder="Secuencial Factura de Compra"
-                                [formControl]="controlFacturaCompra" [matAutocomplete]="facturaCompra">
-                        </mat-form-field>
-                    </div>
+                <div class="col-6">
+                    <mat-form-field appearance="standard">
+                        <mat-label>Identificación</mat-label>
+                        <input matInput type="text" class="form-control-sm" placeholder="Cédula/RUC"
+                            [formControl]="controlIdentificacionProveedor"
+                            [matAutocomplete]="identificacionProveedor">
+                        <mat-autocomplete #identificacionProveedor="matAutocomplete"
+                            [displayWith]="verIdentificacionProveedor"
+                            (optionSelected)="seleccionarIdentificacionProveedor()"
+                            (opened)="consultarProveedores()">
+                            <mat-option *ngFor="let proveedor of filtroIdentificacionProveedores | async"
+                                [value]="proveedor">{{proveedor.identificacion}}
+                            </mat-option>
+                        </mat-autocomplete>
+                    </mat-form-field>
                 </div>
-                <div class="form-row col-3 linea-vertical ml-1">
-                    <div class="col-3">
-                        <mat-form-field appearance="standard">
-                            <mat-label>Estab.</mat-label>
-                            <input matInput type="text" class="form-control-sm"
-                                [(ngModel)]="notaDebitoCompra.establecimiento"
-                                (blur)="rellenarNumeroEstablecimiento()">
-                        </mat-form-field>
-                    </div>
-                    <div class="col-3">
-                        <mat-form-field appearance="standard">
-                            <mat-label>Punto V.</mat-label>
-                            <input matInput type="text" class="form-control-sm"
-                                [(ngModel)]="notaDebitoCompra.puntoVenta"
-                                (blur)="rellenarNumeroPuntoVenta()">
-                        </mat-form-field>
-                    </div>
-                    <div class="col-6">
-                        <mat-form-field appearance="standard">
-                            <mat-label>Secuencial</mat-label>
-                            <input matInput type="text" class="form-control-sm"
-                                [(ngModel)]="notaDebitoCompra.secuencial"
-                                (blur)="rellenarNumeroSecuencial()">
-                        </mat-form-field>
-                    </div>
-                    <div class="col-5">
-                        <mat-form-field appearance="standard">
-                            <mat-label>Usuario</mat-label>
-                            <input matInput type="text" class="form-control-sm" [(ngModel)]="sesion.usuario.apodo"
-                                [disabled]="true">
-                        </mat-form-field>
-                    </div>
-                    <div class="col-7">
-                        <mat-form-field appearance="standard">
-                            <mat-label>Estado</mat-label>
-                            <input matInput type="text" class="form-control-sm" [(ngModel)]="notaDebitoCompra.estado" [disabled]="true">
-                        </mat-form-field>
-                    </div>
+                <div class="col-6">
+                    <mat-form-field appearance="standard">
+                        <mat-label>Razón Social</mat-label>
+                        <input type="text" class="form-control-sm" placeholder="Razon Social Proveedor" matInput
+                            [formControl]="controlRazonSocialProveedor" [matAutocomplete]="razonSocialProveedor"
+                            oninput="this.value = this.value.toUpperCase()">
+                        <mat-autocomplete #razonSocialProveedor="matAutocomplete"
+                            [displayWith]="verRazonSocialProveedor"
+                            (optionSelected)="seleccionarRazonSocialProveedor()" (opened)="consultarProveedores()">
+                            <mat-option *ngFor="let proveedor of filtroRazonSocialProveedores | async"
+                                [value]="proveedor">
+                                {{proveedor.razonSocial}}
+                            </mat-option>
+                        </mat-autocomplete>
+                    </mat-form-field>
+                </div>
+                <div class="col-12">
+                    <mat-form-field appearance="standard">
+                        <mat-label>Direccion</mat-label>
+                        <input matInput type="text" [(ngModel)]="notaDebitoCompra.facturaCompra.proveedor.direccion"
+                            class="form-control-sm" [disabled]="true">
+                    </mat-form-field>
+                </div>
+                <div class="form-row col-4">
+                    <ng-container
+                        *ngFor="let telefonoProveedor of notaDebitoCompra.facturaCompra.proveedor.telefonosProveedor; let i=index ">
+                        <div class="col-9">
+                            <mat-form-field appearance="standard">
+                                <mat-label>Teléfono</mat-label>
+                                <b matPrefix>+593 &nbsp;</b>
+                                <input matInput type="tel" [value]="telefonoProveedor.numero" class="form-control-sm"
+                                    [disabled]="true">
+                            </mat-form-field>
+                        </div>
+                        <div class="col-3 iconos">
+                            <button mat-icon-button [disabled]="true">
+                                <mat-icon class="iconos-peque">close</mat-icon>
+                            </button>
+                        </div>
+                    </ng-container>
+                </div>
+                <div class="form-row col-4">
+                    <ng-container
+                        *ngFor="let celularProveedor of notaDebitoCompra.facturaCompra.proveedor.celularesProveedor; let i=index ">
+                        <div class="col-9">
+                            <mat-form-field appearance="standard">
+                                <mat-label>Celular</mat-label>
+                                <b matPrefix>+593 &nbsp;</b>
+                                <input matInput type="tel" [value]="celularProveedor.numero" class="form-control-sm"
+                                    [disabled]="true">
+                            </mat-form-field>
+                        </div>
+                        <div class="col-3 iconos">
+                            <button mat-icon-button [disabled]="true">
+                                <mat-icon class="iconos-peque">close</mat-icon>
+                            </button>
+                        </div>
+                    </ng-container>
+                </div>
+                <div class="form-row col-4">
+                    <ng-container *ngFor="let correoProveedor of notaDebitoCompra.facturaCompra.proveedor.correosProveedor; let i=index ">
+                        <div class="col-9">
+                            <mat-form-field appearance="standard">
+                                <mat-label>Correo electrónico</mat-label>
+                                <input matInput type="text " [(ngModel)]="correoProveedor.email" class="form-control-sm "
+                                    [disabled]="true">
+                            </mat-form-field>
+                        </div>
+                        <div class="col-3 iconos">
+                            <button mat-icon-button [disabled]="true">
+                                <mat-icon class="iconos-peque">close</mat-icon>
+                            </button>
+                        </div>
+                    </ng-container>
+                </div>
+                <div class="col-4">
+                    <mat-form-field appearance="standard">
+                        <mat-label>Estab.</mat-label>
+                        <input matInput type="text" class="form-control-sm"
+                            [(ngModel)]="sesion.usuario.estacion.establecimiento.codigo" disabled>
+                    </mat-form-field>
+                </div>
+                <div class="col-4">
+                    <mat-form-field appearance="standard">
+                        <mat-label>Punto V.</mat-label>
+                        <input matInput type="text" class="form-control-sm"
+                            [(ngModel)]="sesion.usuario.estacion.codigo" disabled>
+                    </mat-form-field>
+                </div>
+                <div class="col-4">
+                    <mat-form-field appearance="standard">
+                        <mat-label>Usuario</mat-label>
+                        <input matInput type="text" class="form-control-sm" [(ngModel)]="sesion.usuario.nombre"
+                            [disabled]="true">
+                    </mat-form-field>
+                </div>
+                <div class="col-2">
+                    <mat-form-field appearance="standard">
+                        <mat-label>Fecha</mat-label>
+                        <input matInput [matDatepicker]="picker" [(ngModel)]="notaDebitoCompra.fecha" [max]="hoy"
+                            placeholder="Escoja una fecha" datePickerFormat="DD-MM-YYYY">
+                        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                        <mat-datepicker #picker></mat-datepicker>
+                    </mat-form-field>
+                </div>
+                <div class="col-2">
+                    <mat-form-field appearance="standard">
+                        <mat-label>Secuencial</mat-label>
+                        <input matInput type="text" class="form-control-sm"
+                            [(ngModel)]="notaDebitoCompra.secuencial" [disabled]="true">
+                    </mat-form-field>
+                </div>
+                <div class="col-2">
+                    <mat-form-field appearance="standard">
+                        <mat-label>Estado</mat-label>
+                        <input matInput type="text" class="form-control-sm" [(ngModel)]="notaDebitoCompra.estado"
+                            [disabled]="true">
+                    </mat-form-field>
+                </div>
+                <div class="col-6">
+                    <mat-form-field appearance="standard">
+                        <mat-label>factura Compra</mat-label>
+                        <input matInput type="text" class="form-control-sm" placeholder="factura Compra"
+                            [formControl]="controlFacturaCompra" [matAutocomplete]="facturaCompra"
+                            oninput="this.value = this.value.toUpperCase()">
+                        <mat-autocomplete #facturaCompra="matAutocomplete" [displayWith]="verFacturaCompra"
+                            (optionSelected)="seleccionarFacturaCompra()">
+                            <mat-option *ngFor="let facturaCompra of filtroFacturasCompras | async" [value]="facturaCompra">
+                                {{facturaCompra.numeroComprobante}}
+                            </mat-option>
+                        </mat-autocomplete>
+                    </mat-form-field>
                 </div>
             </div>
         </mat-expansion-panel>
         <mat-expansion-panel (opened)="panelOpenState = true" (closed)="panelOpenState = false">
             <mat-expansion-panel-header>
                 <mat-panel-title>
-                    <i><u>LINEAS FACTURA DE COMPRA</u></i>
+                    <i><u>LINEAS DE LA FACTURA DE COMPRA</u></i>
                 </mat-panel-title>
                 <mat-panel-description>
-                    {{panelOpenState ? 'Ocultar sección' : 'Productos de la nota debito de compra'}}
+                    {{panelOpenState ? 'Ocultar sección' : 'Productos de la nota credito'}}
                     <mat-icon>playlist_add_check</mat-icon>
                 </mat-panel-description>
             </mat-expansion-panel-header>
             <mat-divider></mat-divider>
-            <div class="form-group form-row">
-                <div class="mat-elevation-z8 col-12">
-                    <table mat-table [dataSource]="dataSourceFacturaCompraLinea" matSort>
-                        <!-- Nombre Columna -->
-                        <ng-container matColumnDef="codigo">
-                            <th mat-header-cell *matHeaderCellDef mat-sort-header> Codigo </th>
-                            <td mat-cell *matCellDef="let facturaCompraLinea"> {{facturaCompraLinea.producto.codigo}}
+            <div class="col-12">
+                <mat-form-field appearance="standard">
+                    <mat-label>Buscar producto agregado</mat-label>
+                    <input matInput oninput="this.value = this.value.toUpperCase()"
+                        (keyup)="filtroFacturaCompraLinea($event)" #inputFiltroFacturaCompraLinea>
+                </mat-form-field>
+                <div class="mat-elevation-z8">
+                    <table mat-table [dataSource]="dataSourceFacturaCompraLinea" matSort #matSortLinea="matSort">
+                        <!-- Columnas Dinamicas -->
+                        <ng-container *ngFor="let columna of columnasFacturaCompraLinea"
+                            [matColumnDef]="columna.nombreColumna">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header> {{ columna.cabecera }} </th>
+                            <td mat-cell *matCellDef="let row; let i=index">
+                                <ng-container *ngIf="columna.nombreColumna != 'acciones'">
+                                    {{ columna.celda(row) }}
+                                </ng-container>
                             </td>
                         </ng-container>
-                        <ng-container matColumnDef="nombre">
-                            <th mat-header-cell *matHeaderCellDef mat-sort-header> Producto </th>
-                            <td mat-cell *matCellDef="let facturaCompraLinea"> 
-                                {{facturaCompraLinea.producto.nombre}}
-                            </td>
-                        </ng-container>
-                        <!-- Descripcion Columna -->
-                        <ng-container matColumnDef="medida">
-                            <th mat-header-cell *matHeaderCellDef mat-sort-header> Med </th>
-                            <td mat-cell *matCellDef="let facturaCompraLinea">
-                                {{facturaCompraLinea.producto.medida.abreviatura}} 
-                            </td>
-                        </ng-container>
-                        <!-- Cantidad Columna -->
-                        <ng-container matColumnDef="cantidad">
-                            <th mat-header-cell *matHeaderCellDef mat-sort-header>Cant </th>
-                            <td mat-cell *matCellDef="let facturaCompraLinea"> 
-                                {{facturaCompraLinea.cantidad}} 
-                            </td>
-                        </ng-container>
-                        <!-- Valor Columna -->
-                        <ng-container matColumnDef="costoUnitario">
-                            <th mat-header-cell *matHeaderCellDef mat-sort-header>Costo Unit </th>
-                            <td mat-cell *matCellDef="let facturaCompraLinea"> ${{facturaCompraLinea.costoUnitario }}
-                            </td>
-                        </ng-container>
-                        <!-- Descuento Columna -->
-                        <ng-container matColumnDef="valorDescuento">
-                            <th mat-header-cell *matHeaderCellDef mat-sort-header> Desc. </th>
-                            <td mat-cell *matCellDef="let facturaCompraLinea">${{facturaCompraLinea.valorDescuentoLinea}}</td>
-                        </ng-container>
-                        <!-- Descuento% Columna -->
-                        <ng-container matColumnDef="porcentajeDescuento">
-                            <th mat-header-cell *matHeaderCellDef mat-sort-header> Desc% </th>
-                            <td mat-cell *matCellDef="let facturaCompraLinea">
-                                ${{facturaCompraLinea.porcentajeDescuentoLinea }}</td>
-                        </ng-container>
-                        <!-- Impuesto Columna -->
-                        <ng-container matColumnDef="impuesto">
-                            <th mat-header-cell *matHeaderCellDef mat-sort-header> IVA </th>
-                            <td mat-cell *matCellDef="let facturaCompraLinea">
-                                {{facturaCompraLinea.impuesto.porcentaje}}% </td>
-                        </ng-container>
-                        <ng-container matColumnDef="bodega">
-                            <th mat-header-cell *matHeaderCellDef mat-sort-header> BOD </th>
-                            <td mat-cell *matCellDef="let facturaCompraLinea">
-                                {{facturaCompraLinea.bodega.nombre}} </td>
-                        </ng-container>
-                        <!-- Total Columna -->
-                        <ng-container matColumnDef="total">
-                            <th mat-header-cell *matHeaderCellDef mat-sort-header> Subtotal </th>
-                            <td mat-cell *matCellDef="let facturaCompraLinea">
-                                ${{facturaCompraLinea.subtotalConDescuentoLinea}} </td>
-                        </ng-container>
-                        <tr mat-header-row *matHeaderRowDef="columnasFacturaCompraLinea"></tr>
-                        <tr mat-row *matRowDef="let row; columns: columnasFacturaCompraLinea;"></tr>
+                        <tr mat-header-row *matHeaderRowDef="cabeceraFacturaCompraLinea"></tr>
+                        <tr mat-row *matRowDef="let row; let i=index; columns: cabeceraFacturaCompraLinea"></tr>
+                        <!-- Row shown when there is no matching data. -->
+                        <tr class="mat-row" *matNoDataRow>
+                            <td class="mat-cell" colspan="10">No hay productos agregados o filtrados</td>
+                        </tr>
                     </table>
-                    <ng-container>
-                        <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" showFirstLastButtons
-                            #paginatorFacturaCompraLinea></mat-paginator>
-                    </ng-container>
-                </div>
-                <mat-divider></mat-divider>
-                <div class="form-group form-row">
-                    <div class="col-8">
-                        <br>
-                        <div class="col-12">
-                            <mat-form-field appearance="outline">
-                                <mat-label>Comentario</mat-label>
-                                <textarea matInput [(ngModel)]="notaDebitoCompra.facturaCompra.comentario"
-                                    placeholder="Referente a la nota de debito..." class="form-control"
-                                    rows="3"></textarea>
-                            </mat-form-field>
-                        </div>
-                    </div>
-                    <div class="col-4">
-                        <mat-card>
-                            <div class="form-group form-row">
-                                <div class="col-7 negrita centrar-vertical-izq">
-                                    <mat-label>Subtotal :</mat-label>
-                                </div>
-                                <div class="col-5">
-                                    <mat-form-field appearance="standard">
-                                        <input matInput type="text"
-                                            [(ngModel)]="notaDebitoCompra.facturaCompra.subtotal"
-                                            class="form-control-sm" [disabled]="true">
-                                    </mat-form-field>
-                                </div>
-                                <div class="col-7 negrita centrar-vertical-izq">
-                                    <mat-label>Descuento :</mat-label>
-                                </div>
-                                <div class="col-5">
-                                    <mat-form-field appearance="standard">
-                                        <input matInput type="text"
-                                            [(ngModel)]="notaDebitoCompra.facturaCompra.descuento"
-                                            class="form-control-sm" [disabled]="true">
-                                    </mat-form-field>
-                                </div>
-                                <div class="col-7 negrita centrar-vertical-izq">
-                                    <mat-label>Subtotal Gravado :</mat-label>
-                                </div>
-                                <div class="col-5">
-                                    <mat-form-field appearance="standard">
-                                        <input matInput type="text "
-                                            [(ngModel)]="notaDebitoCompra.facturaCompra.subtotalGravadoConDescuento"
-                                            class="form-control-sm" [disabled]="true">
-                                    </mat-form-field>
-                                </div>
-                                <div class="col-7 negrita centrar-vertical-izq">
-                                    <mat-label>Subtotal No Gravado :</mat-label>
-                                </div>
-                                <div class="col-5">
-                                    <mat-form-field appearance="standard">
-                                        <input matInput type="text "
-                                            [(ngModel)]="notaDebitoCompra.facturaCompra.subtotalNoGravadoConDescuento"
-                                            class="form-control-sm " [disabled]="true">
-                                    </mat-form-field>
-                                </div>
-                                <div class="col-7 negrita centrar-vertical-izq">
-                                    <mat-label>Importe IVA :</mat-label>
-                                </div>
-                                <div class="col-5">
-                                    <mat-form-field appearance="standard">
-                                        <input matInput type="text "
-                                            [(ngModel)]="notaDebitoCompra.facturaCompra.importeIvaTotal"
-                                            class="form-control-sm " [disabled]="true">
-                                    </mat-form-field>
-                                </div>
-                                <div class="col-7 negrita centrar-vertical-izq">
-                                    <mat-label class="negrita">TOTAL :</mat-label>
-                                </div>
-                                <div class="col-5">
-                                    <mat-form-field appearance="standard">
-                                        <input matInput type="text "
-                                            [(ngModel)]="notaDebitoCompra.facturaCompra.total"
-                                            class="form-control-sm" [disabled]="true">
-                                    </mat-form-field>
-                                </div>
-                            </div>
-                        </mat-card>
-                    </div>
+                    <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" showFirstLastButtons #paginatorfacturaCompraLinea></mat-paginator>
                 </div>
             </div>
         </mat-expansion-panel>
         <mat-expansion-panel (opened)="panelOpenState = true" (closed)="panelOpenState = false">
             <mat-expansion-panel-header>
                 <mat-panel-title>
-                    <i><u>LINEA NOTA DEBITO DE COMPRA</u></i>
+                    <i><u>LINEA NOTA DEBITO</u></i>
                 </mat-panel-title>
                 <mat-panel-description>
                     {{panelOpenState ? 'Ocultar sección' : 'Productos de la nota debito'}}
@@ -309,207 +242,189 @@
             </mat-expansion-panel-header>
             <mat-divider></mat-divider>
             <div class="form-group form-row">
-                <div class="form-row col-3 pr-3">
-                    <div class="col-9">
-                        <mat-form-field appearance="standard">
-                            <mat-label>Código</mat-label>
-                            <input matInput type="text" class="form-control-sm"
-                                [(ngModel)]="notaDebitoCompraLinea.producto.codigo" disabled>
-                        </mat-form-field>
+                <div class="col-9">
+                    <div class="centrar-titulo fondo">
+                        <mat-label>PRODUCTO</mat-label>
                     </div>
-                    <div class="col-3">
-                        <mat-form-field appearance="standard">
-                            <mat-label>Consig.</mat-label>
-                            <input matInput type="text" [(ngModel)]="notaDebitoCompraLinea.producto.consignacion"
-                                [disabled]="true" class="form-control-sm">
-                        </mat-form-field>
-                    </div>
-                    <div class="col-6">
-                        <mat-form-field appearance="standard">
-                            <mat-label>Categoría</mat-label>
-                            <input matInput type="text"
-                                [(ngModel)]="notaDebitoCompraLinea.producto.categoriaProducto.descripcion"
-                                [disabled]="true" class="form-control-sm">
-                        </mat-form-field>
-                    </div>
-                    <div class="col-6">
-                        <mat-form-field appearance="standard">
-                            <mat-label>Tipo de Gasto</mat-label>
-                            <input matInput type="text"
-                                [(ngModel)]="notaDebitoCompraLinea.producto.tipoGasto.descripcion" [disabled]="true"
-                                class="form-control-sm">
-                        </mat-form-field>
-                    </div>
-                    <div class="col-2"></div>
-                    <div class="col-8">
-                        <mat-form-field appearance="standard">
-                            <mat-label>Saldo B.</mat-label>
-                            <input matInput type="text" [(ngModel)]="kardex.saldo" [disabled]="true"
-                                class="form-control-sm">
-                        </mat-form-field>
-                    </div>
-                </div>
-                <div class="form-row col-9 linea-vertical">
-                    <div class="col-9">
-                        <mat-form-field appearance="standard">
-                            <mat-label>Producto</mat-label>
-                            <mat-autocomplete #producto="matAutocomplete" [displayWith]="verProducto"
-                                (optionSelected)="seleccionarProducto()" (opened)="consultarProductos()">
-                                <mat-option *ngFor="let producto of filtroProductos | async" [value]="producto">
-                                    {{producto.nombre}}
-                                </mat-option>
-                            </mat-autocomplete>
-                            <input matInput type="text" class="form-control-sm" placeholder="Producto"
-                                [formControl]="controlProducto" [matAutocomplete]="producto">
-                        </mat-form-field>
-                    </div>
-                    <div class="col-3">
-                        <mat-form-field appearance="standard">
-                            <mat-label>Medida</mat-label>
-                            <input matInput type="text" [(ngModel)]="notaDebitoCompraLinea.producto.medida.descripcion"
-                                class="form-control-sm" [disabled]="true">
-                        </mat-form-field>
-                    </div>
-                    <div class="col-2">
-                        <mat-form-field appearance="standard">
-                            <mat-label>Bodega</mat-label>
-                            <mat-select [(ngModel)]="notaDebitoCompraLinea.bodega"
-                                (selectionChange)="seleccionarBodega()" [compareWith]="compareFn"
-                                class="form-control-sm">
-                                <mat-option *ngFor="let bodega of bodegas; let i=index" [value]="bodega">
-                                    {{bodega.nombre}}
-                                </mat-option>
-                            </mat-select>
-                        </mat-form-field>
-                    </div>
-                    <div class="col-1">
-                        <mat-form-field appearance="standard">
-                            <mat-label>Cantidad</mat-label>
-                            <input matInput type="text" [(ngModel)]="notaDebitoCompraLinea.cantidad"
-                                (change)="seleccionarCantidad()" class="form-control-sm">
-                        </mat-form-field>
-                    </div>
-                    <div class="col-2">
-                        <mat-form-field appearance="standard">
-                            <mat-label>Costo Unit.</mat-label>
-                            <input matInput type="text" [(ngModel)]="notaDebitoCompraLinea.costoUnitario"
-                                class="form-control-sm" [disabled]="true">
-                        </mat-form-field>
-                    </div>
-                    <div class="col-2">
-                        <mat-form-field appearance="standard">
-                            <mat-label>Descuento</mat-label>
-                            <input matInput type="text" step="0.01"
-                                [(ngModel)]="notaDebitoCompraLinea.descuento"
-                                (change)="seleccionarValorDescuentoLinea()" class="form-control-sm">
-                        </mat-form-field>
-                    </div>
-                    <div class="col-1">
-                        <mat-form-field appearance="standard">
-                            <mat-label>IVA</mat-label>
-                            <mat-select [(ngModel)]="notaDebitoCompraLinea.impuesto" [compareWith]="compareFn"
-                                (selectionChange)="seleccionarImpuesto()" class="form-control-sm" [disabled]="true">
-                                <mat-option *ngFor="let impuesto of impuestos" [value]="impuesto">
-                                    {{impuesto.porcentaje}}
-                                </mat-option>
-                            </mat-select>
-                        </mat-form-field>
-                    </div>
-                    <div class="col-2">
-                        <mat-form-field appearance="standard">
-                            <mat-label>Subtotal</mat-label>
-                            <input matInput type="text" [(ngModel)]="notaDebitoCompraLinea.subtotalLinea"
-                                class="form-control-sm" disabled>
-                        </mat-form-field>
-                    </div>
-                    <div class="col-1">
-                        <mat-form-field appearance="standard">
-                            <mat-label>Entregado</mat-label>
-                            <mat-select class="form-control-sm" [(ngModel)]="notaDebitoCompraLinea.entregado">
-                                <mat-option [value]="no">{{no}}</mat-option>
-                                <mat-option [value]="si">{{si}}</mat-option>
-                            </mat-select>
-                        </mat-form-field>
-                    </div>
-                    <div class="col-1 iconos">
-                        <button mat-icon-button mat-button (click)="agregarNotaDebitoCompraLinea(null)">
-                            <mat-icon>add_shopping_cart</mat-icon>
-                        </button>
-                    </div>
-                </div>
-                <div class="mat-elevation-z8 col-12">
-                    <table mat-table [dataSource]="dataSourceLinea" matSort>
-                        <!-- Nombre Columna -->
-                        <ng-container matColumnDef="codigo">
-                            <th mat-header-cell *matHeaderCellDef mat-sort-header> Codigo </th>
-                            <td mat-cell *matCellDef="let notaDebitoCompraLinea">
-                                {{notaDebitoCompraLinea.producto.codigo}}
-                            </td>
-                        </ng-container>
-                        <ng-container matColumnDef="nombre">
-                            <th mat-header-cell *matHeaderCellDef mat-sort-header> Producto </th>
-                            <td mat-cell *matCellDef="let notaDebitoCompraLinea">
-                                {{notaDebitoCompraLinea.producto.nombre}}
-                            </td>
-                        </ng-container>
-                        <!-- Descripcion Columna -->
-                        <ng-container matColumnDef="medida">
-                            <th mat-header-cell *matHeaderCellDef mat-sort-header> Med </th>
-                            <td mat-cell *matCellDef="let notaDebitoCompraLinea">
-                                {{notaDebitoCompraLinea.producto.medida.abreviatura}} </td>
-                        </ng-container>
-                        <!-- Cantidad Columna -->
-                        <ng-container matColumnDef="cantidad">
-                            <th mat-header-cell *matHeaderCellDef mat-sort-header>Cant </th>
-                            <td mat-cell *matCellDef="let notaDebitoCompraLinea">
-                                {{notaDebitoCompraLinea.cantidad}}
-                            </td>
-                        </ng-container>
-                        <!-- Valor Columna -->
-                        <ng-container matColumnDef="costoUnitario">
-                            <th mat-header-cell *matHeaderCellDef mat-sort-header>Costo Unit </th>
-                            <td mat-cell *matCellDef="let notaDebitoCompraLinea">
-                                ${{notaDebitoCompraLinea.costoUnitario }} </td>
-                        </ng-container>
-                        <!-- Descuento Columna -->
-                        <ng-container matColumnDef="descuento">
-                            <th mat-header-cell *matHeaderCellDef mat-sort-header> Desc. </th>
-                            <td mat-cell *matCellDef="let notaDebitoCompraLinea">
-                                ${{notaDebitoCompraLinea.descuento }} </td>
-                        </ng-container>
-                        <!-- Impuesto Columna -->
-                        <ng-container matColumnDef="impuesto">
-                            <th mat-header-cell *matHeaderCellDef mat-sort-header> IVA </th>
-                            <td mat-cell *matCellDef="let notaDebitoCompraLinea">
-                                {{notaDebitoCompraLinea.producto.impuesto.porcentaje}}% </td>
-                        </ng-container>
-                        <ng-container matColumnDef="bodega">
-                            <th mat-header-cell *matHeaderCellDef mat-sort-header> BOD </th>
-                            <td mat-cell *matCellDef="let notaDebitoCompraLinea">
-                                {{notaDebitoCompraLinea.bodega.nombre}} </td>
-                        </ng-container>
-                        <!-- Total Columna -->
-                        <ng-container matColumnDef="total">
-                            <th mat-header-cell *matHeaderCellDef mat-sort-header> Total </th>
-                            <td mat-cell *matCellDef="let notaDebitoCompraLinea">
-                                ${{notaDebitoCompraLinea.totalLinea}} </td>
-                        </ng-container>
-                        <ng-container matColumnDef="acciones">
-                            <th mat-header-cell *matHeaderCellDef mat-sort-header> Acciones </th>
-                            <td mat-cell *matCellDef="let i=index">
-                                <button mat-icon-button color="primary" focusable="false"
-                                    (click)="eliminarNotaDebitoCompraLinea(i)">
-                                    <i class="fa fa-times mat-icon"></i>
+                    <mat-divider></mat-divider>
+                    <mat-card class="mat-elevation-z8">
+                        <div class="form-row">
+                            <div class="col-8">
+                                <mat-form-field appearance="standard">
+                                    <mat-label>Producto</mat-label>
+                                    <input matInput type="text" class="form-control-sm" placeholder="Producto"
+                                        [formControl]="controlProducto" [matAutocomplete]="producto"
+                                        oninput="this.value = this.value.toUpperCase()">
+                                    <mat-autocomplete #producto="matAutocomplete" [displayWith]="verProducto"
+                                        (optionSelected)="seleccionarProducto()" (opened)="consultarProductos()">
+                                        <mat-option *ngFor="let producto of filtroProductos | async" [value]="producto">
+                                            {{producto.nombre}}
+                                        </mat-option>
+                                    </mat-autocomplete>
+                                </mat-form-field>
+                            </div>
+                            <div class="col-2">
+                                <mat-form-field appearance="standard">
+                                    <mat-label>Medida</mat-label>
+                                    <input matInput type="text"
+                                        [(ngModel)]="notaDebitoCompraLinea.producto.medida.descripcion"
+                                        class="form-control-sm" [disabled]="true">
+                                </mat-form-field>
+                            </div>
+                            <div class="col-2">
+                                <mat-form-field appearance="standard">
+                                    <mat-label>Bodega</mat-label>
+                                    <input matInput type="text" class="form-control-sm" [disabled]="true">
+                                </mat-form-field>
+                            </div>
+                            <div class="col-1">
+                                <mat-form-field appearance="standard">
+                                    <mat-label>Saldo Bod</mat-label>
+                                    <input matInput type="text" class="form-control-sm" [disabled]="true">
+                                </mat-form-field>
+                            </div>
+                            <div class="col-1">
+                                <mat-form-field appearance="standard">
+                                    <mat-label>Cantidad</mat-label>
+                                    <input matInput type="text" [(ngModel)]="notaDebitoCompraLinea.cantidad"
+                                        (change)="calcularLinea()" class="form-control-sm">
+                                </mat-form-field>
+                            </div>
+                            <div class="col-3">
+                                <mat-form-field appearance="standard">
+                                    <mat-label>Costo Unit.</mat-label>
+                                    <input matInput type="text" class="form-control-sm"
+                                        [(ngModel)]="notaDebitoCompraLinea.costoUnitario">
+                                </mat-form-field>
+                            </div>
+                            <div class="col-1">
+                                <mat-form-field appearance="standard">
+                                    <mat-label>IVA</mat-label>
+                                    <mat-select [(ngModel)]="notaDebitoCompraLinea.impuesto" [compareWith]="compareFn"
+                                        (selectionChange)="calcularLinea()" class="form-control-sm">
+                                        <mat-option *ngFor="let impuesto of impuestos" [value]="impuesto">
+                                            {{impuesto.porcentaje}}
+                                        </mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+                            <div class="col-1">
+                                <mat-form-field appearance="standard">
+                                    <mat-label>Desc. $</mat-label>
+                                    <input matInput type="text" step="0.01"
+                                        [(ngModel)]="notaDebitoCompraLinea.valorDescuentoLinea"
+                                        (change)="calcularLinea()" class="form-control-sm">
+                                </mat-form-field>
+                            </div>
+                            <div class="col-1">
+                                <mat-form-field appearance="standard">
+                                    <mat-label>Desc. %</mat-label>
+                                    <input matInput type="text" min="0" max="100" step="0.01"
+                                        [(ngModel)]="notaDebitoCompraLinea.porcentajeDescuentoLinea"
+                                        (change)="calcularLinea()"
+                                        class="form-control-sm">
+                                </mat-form-field>
+                            </div>
+                            <div class="col-2">
+                                <mat-form-field appearance="standard">
+                                    <mat-label>Subtotal</mat-label>
+                                    <input matInput type="text"
+                                        [(ngModel)]="notaDebitoCompraLinea.subtotalLinea"
+                                        class="form-control-sm" disabled>
+                                </mat-form-field>
+                            </div>
+                            <div class="col-1">
+                                <mat-form-field appearance="standard">
+                                    <mat-label>Entregado</mat-label>
+                                    <mat-select class="form-control-sm" [(ngModel)]="notaDebitoCompraLinea.entregado" [disabled]="true">
+                                        <mat-option [value]="no">{{no}}</mat-option>
+                                        <mat-option [value]="si">{{si}}</mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+                            <div class="col-1 iconos centrar">
+                                <button mat-icon-button mat-button (click)="crearLinea()">
+                                    <mat-icon>add_shopping_cart</mat-icon>
                                 </button>
-                            </td>
-                        </ng-container>
-                        <tr mat-header-row *matHeaderRowDef="columnasLinea"></tr>
-                        <tr mat-row *matRowDef="let row; columns: columnasLinea;"></tr>
-                    </table>
-                    <ng-container>
-                        <mat-paginator #paginatorLinea [pageSizeOptions]="[5, 10, 25, 100]">
-                        </mat-paginator>
-                    </ng-container>
+                            </div>
+                        </div>
+                    </mat-card>
+                </div>
+                <div class="col-3">
+                    <div class="centrar-titulo fondo">
+                        <mat-label>INFORMACIÓN</mat-label>
+                    </div>
+                    <mat-divider></mat-divider>
+                    <mat-card class="mat-elevation-z8">
+                        <div class="form-row">
+                            <div class="col-6">
+                                <mat-form-field appearance="standard">
+                                    <mat-label>Consig.</mat-label>
+                                    <input matInput type="text" [(ngModel)]="notaDebitoCompraLinea.producto.consignacion"
+                                        [disabled]="true" class="form-control-sm">
+                                </mat-form-field>
+                            </div>
+                            <div class="col-6">
+                                <mat-form-field appearance="standard">
+                                    <mat-label>Código</mat-label>
+                                    <input matInput type="text" class="form-control-sm"
+                                        [(ngModel)]="notaDebitoCompraLinea.producto.codigo" disabled>
+                                </mat-form-field>
+                            </div>
+                            <div class="col-6">
+                                <mat-form-field appearance="standard">
+                                    <mat-label>Categoría</mat-label>
+                                    <input matInput type="text" class="form-control-sm"
+                                        [(ngModel)]="notaDebitoCompraLinea.producto.categoriaProducto.descripcion"
+                                        [disabled]="true">
+                                </mat-form-field>
+                            </div>
+                            <div class="col-6">
+                                <mat-form-field appearance="standard">
+                                    <mat-label>Tipo de Gasto</mat-label>
+                                    <input matInput type="text" class="form-control-sm"
+                                        [(ngModel)]="notaDebitoCompraLinea.producto.tipoGasto.descripcion"
+                                        [disabled]="true">
+                                </mat-form-field>
+                            </div>
+                        </div>  
+                    </mat-card>
+                </div>
+                <div class="col-12">
+                    <mat-form-field appearance="standard">
+                        <mat-label>Buscar producto agregado</mat-label>
+                        <input matInput oninput="this.value = this.value.toUpperCase()"
+                            (keyup)="filtroLinea($event)" #inputFiltroLinea>
+                    </mat-form-field>
+                    <div class="mat-elevation-z8">
+                        <table mat-table [dataSource]="dataSourceLinea" matSort #matSortLinea="matSort">
+                            <!-- Columnas Dinamicas -->
+                            <ng-container *ngFor="let columna of columnasLinea"
+                                [matColumnDef]="columna.nombreColumna">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header> {{ columna.cabecera }}
+                                </th>
+                                <td mat-cell *matCellDef="let row; let i=index">
+                                    <ng-container *ngIf="columna.nombreColumna != 'acciones'">
+                                        {{ columna.celda(row) }}
+                                    </ng-container>
+                                    <ng-container *ngIf="columna.nombreColumna == 'acciones'">
+                                        <button mat-icon-button color="warn" (click)="eliminarLinea(i)">
+                                            <i class="fa fa-times mat-icon"></i>
+                                        </button>
+                                    </ng-container>
+                                </td>
+                            </ng-container>
+                            <tr mat-header-row *matHeaderRowDef="cabeceraLinea"></tr>
+                            <tr mat-row *matRowDef="let row; let i=index; columns: cabeceraLinea">
+                            </tr>
+                            <!-- Row shown when there is no matching data. -->
+                            <tr class="mat-row" *matNoDataRow>
+                                <td class="mat-cell" colspan="10">No hay productos agregados o filtrados
+                                </td>
+                            </tr>
+                        </table>
+                        <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" showFirstLastButtons #paginatorLinea></mat-paginator>
+                    </div>
                 </div>
                 <mat-divider></mat-divider>
                 <div class="form-group form-row">
@@ -532,7 +447,8 @@
                                 </div>
                                 <div class="col-5">
                                     <mat-form-field appearance="standard">
-                                        <input matInput type="text" [(ngModel)]="notaDebitoCompra.subtotal"
+                                        <input matInput type="text"
+                                            [value]="formateaNumero(notaDebitoCompra.subtotal)"
                                             class="form-control-sm" [disabled]="true">
                                     </mat-form-field>
                                 </div>
@@ -541,7 +457,7 @@
                                 </div>
                                 <div class="col-5">
                                     <mat-form-field appearance="standard">
-                                        <input matInput type="text" [(ngModel)]="notaDebitoCompra.descuento"
+                                        <input matInput type="text" [value]="formateaNumero(notaDebitoCompra.descuento)"
                                             class="form-control-sm" [disabled]="true">
                                     </mat-form-field>
                                 </div>
@@ -551,7 +467,7 @@
                                 <div class="col-5">
                                     <mat-form-field appearance="standard">
                                         <input matInput type="text"
-                                            [(ngModel)]="notaDebitoCompra.subtotalGravado"
+                                            [value]="formateaNumero(notaDebitoCompra.subtotalGravado)"
                                             class="form-control-sm" [disabled]="true">
                                     </mat-form-field>
                                 </div>
@@ -561,7 +477,7 @@
                                 <div class="col-5">
                                     <mat-form-field appearance="standard">
                                         <input matInput type="text"
-                                            [(ngModel)]="notaDebitoCompra.subtotalNoGravado"
+                                            [value]="formateaNumero(notaDebitoCompra.subtotalNoGravado)"
                                             class="form-control-sm" [disabled]="true">
                                     </mat-form-field>
                                 </div>
@@ -570,7 +486,8 @@
                                 </div>
                                 <div class="col-5">
                                     <mat-form-field appearance="standard">
-                                        <input matInput type="text" [(ngModel)]="notaDebitoCompra.importeIva"
+                                        <input matInput type="text"
+                                            [value]="formateaNumero(notaDebitoCompra.importeIva)"
                                             class="form-control-sm" [disabled]="true">
                                     </mat-form-field>
                                 </div>
@@ -579,7 +496,8 @@
                                 </div>
                                 <div class="col-5">
                                     <mat-form-field appearance="standard">
-                                        <input matInput type="text " [(ngModel)]="notaDebitoCompra.total"
+                                        <input matInput type="text "
+                                            [value]="formateaNumero(notaDebitoCompra.total)"
                                             class="form-control-sm" [disabled]="true">
                                     </mat-form-field>
                                 </div>
@@ -597,8 +515,7 @@
                     <i><u>GESTIONAR NOTAS DEBITO DE COMPRA</u></i>
                 </mat-panel-title>
                 <mat-panel-description>
-                    {{abrirPanelAdmin ? 'Ocultar administrador de nota debito de compras' : 'Editar nota debito de
-                    compras existentes'}}
+                    {{abrirPanelAdmin ? 'Ocultar administrador de nota debito de compras' : 'Editar nota debito de compras existentes'}}
                     <mat-icon>group</mat-icon>
                 </mat-panel-description>
             </mat-expansion-panel-header>
@@ -613,12 +530,16 @@
                     <ng-container *ngFor="let columna of columnas" [matColumnDef]="columna.nombreColumna">
                         <th mat-header-cell *matHeaderCellDef mat-sort-header> {{ columna.cabecera }} </th>
                         <td mat-cell *matCellDef="let row"> {{ columna.celda(row) }} </td>
+
                     </ng-container>
+
                     <tr mat-header-row *matHeaderRowDef="cabecera"></tr>
-                    <tr mat-row (click)="seleccion(row)" [class.selected-row]="clickedRows.has(row)"
+                    <tr mat-row (click)="seleccionar(row)" [class.selected-row]="clickedRows.has(row)"
                         *matRowDef="let row; columns: cabecera;"></tr>
                     <tr class="mat-row" *matNoDataRow>
-                        <td class="mat-cell" colspan="6">No hay datos que coincidan con el grupo "{{input.value}}"</td>
+                        <td class="mat-cell" colspan="6">No hay datos que coincidan con el grupo
+                            "{{input.value}}"
+                        </td>
                     </tr>
                 </table>
                 <mat-paginator #paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>

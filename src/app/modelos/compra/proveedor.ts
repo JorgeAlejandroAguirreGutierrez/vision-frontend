@@ -13,9 +13,9 @@ import { Empresa } from '../usuario/empresa';
 
 
 export class Proveedor {
-    id:number;
-    codigo:string;
-    identificacion:string;
+    id: number;
+    codigo: string;
+    identificacion: string;
     razonSocial: string;
     nombreComercial: string;
     direccion: string;

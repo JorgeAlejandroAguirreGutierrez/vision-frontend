@@ -152,14 +152,14 @@ export class FacturaCompraComponent implements OnInit {
     });
   }
   consultarProductos() {
-    this.productoService.consultarPorEmpresaYEstado(this.empresa.id, valores.estadoActivo).subscribe({
-      next: res => {
-        this.productos = res.resultado as Producto[];
+    this.productoService.consultarPorCategoriaProductoYEmpresaYEstado(valores.bien, this.empresa.id, valores.estadoActivo).subscribe(
+      res => {
+        this.productos = res.resultado as Producto[]
       },
-      error: err => {
+      err => {
         Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
-      }
-    })
+      } 
+    );
   }
   consultarImpuestos() {
     this.impuestoService.consultar().subscribe({
@@ -376,7 +376,6 @@ export class FacturaCompraComponent implements OnInit {
 
   eliminarFacturaCompraLinea(i: number){
     this.facturaCompra.facturaCompraLineas.splice(i, 1);
-    //this.llenarPosicion(this.facturaCompra);
     this.calcularTotales();
     this.nuevoFacturaCompraLinea();
   }
@@ -548,23 +547,23 @@ export class FacturaCompraComponent implements OnInit {
       .pipe(
         startWith(valores.vacio),
         map(value => typeof value === 'string' || value==null ? value : value.id),
-        map(nombre => typeof nombre === 'string' ? this.filtroProducto(nombre) : this.productos.slice())
+        map(nombre => typeof nombre === 'string' ? this.filtrarProducto(nombre) : this.productos.slice())
       );
     this.filtroIdentificacionProveedores = this.controlIdentificacionProveedor.valueChanges
       .pipe(
         startWith(''),
         map(value => typeof value === 'string' || value == null ? value : value.id),
-        map(identificacion => typeof identificacion === 'string' ? this.filtroIdentificacionProveedor(identificacion) : this.proveedores.slice())
+        map(identificacion => typeof identificacion === 'string' ? this.filtrarIdentificacionProveedor(identificacion) : this.proveedores.slice())
     );
     this.filtroRazonSocialProveedores = this.controlRazonSocialProveedor.valueChanges
       .pipe(
         startWith(valores.vacio),
         map(value => typeof value === 'string' || value==null ? value : value.id),
-        map(razonSocial => typeof razonSocial === 'string' ? this.filtroRazonSocialProveedor(razonSocial) : this.proveedores.slice())
+        map(razonSocial => typeof razonSocial === 'string' ? this.filtrarRazonSocialProveedor(razonSocial) : this.proveedores.slice())
       );
   }
 
-  private filtroProducto(value: string): Producto[] {
+  private filtrarProducto(value: string): Producto[] {
     if(this.productos.length > valores.cero) {
       const filterValue = value.toLowerCase();
       return this.productos.filter(producto => producto.nombre.toLowerCase().includes(filterValue));
@@ -575,7 +574,7 @@ export class FacturaCompraComponent implements OnInit {
     return producto && producto.nombre ? producto.nombre : valores.vacio;
   }
 
-  private filtroIdentificacionProveedor(value: string): Proveedor[] {
+  private filtrarIdentificacionProveedor(value: string): Proveedor[] {
     if (this.proveedores.length > 0) {
       const filterValue = value.toUpperCase();
       return this.proveedores.filter(proveedor => proveedor.identificacion.toUpperCase().includes(filterValue));
@@ -586,7 +585,7 @@ export class FacturaCompraComponent implements OnInit {
     return proveedor && proveedor.identificacion ? proveedor.identificacion : valores.vacio;
   }
 
-  private filtroRazonSocialProveedor(value: string): Proveedor[] {
+  private filtrarRazonSocialProveedor(value: string): Proveedor[] {
     if(this.proveedores.length > valores.cero) {
       const filterValue = value.toLowerCase();
       return this.proveedores.filter(proveedor => proveedor.razonSocial.toLowerCase().includes(filterValue));
