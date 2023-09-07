@@ -253,7 +253,7 @@ export class NotaDebitoComponent implements OnInit {
       .pipe(
         startWith(valores.vacio),
         map(value => typeof value === 'string' || value == null ? value : value.id),
-        map(secuencial => typeof secuencial === 'string' ? this.filtroFactura(secuencial) : this.facturas.slice())
+        map(numeroComprobante => typeof numeroComprobante === 'string' ? this.filtroFactura(numeroComprobante) : this.facturas.slice())
       );
   }
 
@@ -439,36 +439,6 @@ export class NotaDebitoComponent implements OnInit {
       err => {
         Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
         this.spinnerService.hide();
-      }
-    );
-  }
-
-  agregarNotaDebitoLinea(event){
-    if (event!=null)
-      event.preventDefault();
-    this.spinnerService.show();
-    if (this.notaDebitoLinea.cantidad == valores.cero){
-      return;
-    }
-    if (this.notaDebitoLinea.precio.id == valores.cero){
-      return;
-    }
-    if (this.notaDebitoLinea.impuesto.id == valores.cero){
-      return;
-    }
-    this.notaDebito.sesion = this.sesion;
-    this.notaDebito.notaDebitoLineas.push(this.notaDebitoLinea);
-    this.notaDebitoService.calcular(this.notaDebito).subscribe(
-      res => {
-        this.notaDebito = res.resultado as NotaDebito;
-        this.construir();
-        this.limpiarLinea();
-        this.spinnerService.hide();
-        Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
-      },
-      err => {
-        this.spinnerService.hide();
-        Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje });
       }
     );
   }

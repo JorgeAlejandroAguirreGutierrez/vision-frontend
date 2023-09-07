@@ -7,9 +7,9 @@ export class NotaDebitoCompraLinea {
     codigo: string;
     cantidad: number;
     costoUnitario: number;
-    descuento: number;
+    valorDescuentoLinea: number;
     subtotalLinea: number;
-    ivaLinea: number;
+    importeIvaLinea: number;
     totalLinea: number;
     entregado: string;
     //IMPUESTO SELECCIONADO
@@ -24,9 +24,9 @@ export class NotaDebitoCompraLinea {
         this.codigo = valores.vacio;
         this.cantidad = valores.cero;
         this.costoUnitario = valores.cero;
-        this.descuento = valores.cero;
+        this.valorDescuentoLinea = valores.cero;
         this.subtotalLinea = valores.cero;
-        this.ivaLinea = valores.cero;
+        this.importeIvaLinea = valores.cero;
         this.totalLinea = valores.cero;
         this.entregado = valores.no;
         this.impuesto = new Impuesto();
