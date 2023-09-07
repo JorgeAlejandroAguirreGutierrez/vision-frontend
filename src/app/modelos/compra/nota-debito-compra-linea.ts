@@ -8,7 +8,6 @@ export class NotaDebitoCompraLinea {
     cantidad: number;
     costoUnitario: number;
     valorDescuentoLinea: number;
-    porcentajeDescuentoLinea: number;
     subtotalLinea: number;
     importeIvaLinea: number;
     totalLinea: number;
@@ -26,7 +25,6 @@ export class NotaDebitoCompraLinea {
         this.cantidad = valores.cero;
         this.costoUnitario = valores.cero;
         this.valorDescuentoLinea = valores.cero;
-        this.porcentajeDescuentoLinea = valores.cero;
         this.subtotalLinea = valores.cero;
         this.importeIvaLinea = valores.cero;
         this.totalLinea = valores.cero;

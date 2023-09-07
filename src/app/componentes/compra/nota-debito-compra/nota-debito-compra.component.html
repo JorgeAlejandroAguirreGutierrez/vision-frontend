@@ -294,7 +294,7 @@
                                 <mat-form-field appearance="standard">
                                     <mat-label>Costo Unit.</mat-label>
                                     <input matInput type="text" class="form-control-sm"
-                                        [(ngModel)]="notaDebitoCompraLinea.costoUnitario">
+                                        [(ngModel)]="notaDebitoCompraLinea.costoUnitario" (change)="calcularLinea()">
                                 </mat-form-field>
                             </div>
                             <div class="col-1">
@@ -308,21 +308,12 @@
                                     </mat-select>
                                 </mat-form-field>
                             </div>
-                            <div class="col-1">
+                            <div class="col-2">
                                 <mat-form-field appearance="standard">
                                     <mat-label>Desc. $</mat-label>
                                     <input matInput type="text" step="0.01"
                                         [(ngModel)]="notaDebitoCompraLinea.valorDescuentoLinea"
                                         (change)="calcularLinea()" class="form-control-sm">
-                                </mat-form-field>
-                            </div>
-                            <div class="col-1">
-                                <mat-form-field appearance="standard">
-                                    <mat-label>Desc. %</mat-label>
-                                    <input matInput type="text" min="0" max="100" step="0.01"
-                                        [(ngModel)]="notaDebitoCompraLinea.porcentajeDescuentoLinea"
-                                        (change)="calcularLinea()"
-                                        class="form-control-sm">
                                 </mat-form-field>
                             </div>
                             <div class="col-2">

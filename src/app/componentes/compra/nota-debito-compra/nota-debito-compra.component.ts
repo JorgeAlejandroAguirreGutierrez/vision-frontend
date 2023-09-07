@@ -100,7 +100,6 @@ export class NotaDebitoCompraComponent implements OnInit {
     { nombreColumna: 'cantidad', cabecera: 'Cant.', celda: (row: NotaDebitoCompraLinea) => `${row.cantidad}` },
     { nombreColumna: 'costoUnitario', cabecera: 'P. Unit', celda: (row: NotaDebitoCompraLinea) => `$${row.costoUnitario}` },
     { nombreColumna: 'valorDescuentoLinea', cabecera: 'Desc. $', celda: (row: NotaDebitoCompraLinea) => `$${row.valorDescuentoLinea}` },
-    { nombreColumna: 'porcentajeDescuentoLinea', cabecera: 'Desc. %', celda: (row: NotaDebitoCompraLinea) => `${row.porcentajeDescuentoLinea}%` },
     { nombreColumna: 'subtotalLinea', cabecera: 'Subtotal', celda: (row: NotaDebitoCompraLinea) => `$${row.subtotalLinea}` },
     { nombreColumna: 'importeIvaLinea', cabecera: 'IVA', celda: (row: NotaDebitoCompraLinea) => `$${row.importeIvaLinea}` },
     { nombreColumna: 'totalLinea', cabecera: 'Total', celda: (row: NotaDebitoCompraLinea) => `$${row.totalLinea}` },
