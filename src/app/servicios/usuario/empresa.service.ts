@@ -86,14 +86,27 @@ export class EmpresaService {
 
   subirCertificado(empresaId: number, file: File): Observable<Respuesta> {
     // Create form data
-      const formData = new FormData(); 
-      // Store form name as "file" with file data
-      formData.append("file", file, file.name);
-      return this.http.post(environment.host + urn.ruta + urn.empresa + urn.subirCertificado + urn.slash + empresaId, formData, optionsCargarArchivo).pipe(
-        map(response => response as Respuesta),
-        catchError(err => {
-          return throwError(()=>err);
-        })
-      );
-    }
+    const formData = new FormData(); 
+    // Store form name as "file" with file data
+    formData.append("file", file, file.name);
+    return this.http.post(environment.host + urn.ruta + urn.empresa + urn.subirCertificado + urn.slash + empresaId, formData, optionsCargarArchivo).pipe(
+      map(response => response as Respuesta),
+      catchError(err => {
+        return throwError(()=>err);
+      })
+    );
+  }
+
+  subirLogo(empresaId: number, file: File): Observable<Respuesta> {
+    // Create form data
+    const formData = new FormData(); 
+    // Store form name as "file" with file data
+    formData.append("file", file, file.name);
+    return this.http.post(environment.host + urn.ruta + urn.empresa + urn.subirLogo + urn.slash + empresaId, formData, optionsCargarArchivo).pipe(
+      map(response => response as Respuesta),
+      catchError(err => {
+        return throwError(()=>err);
+      })
+    );
+  }
 }

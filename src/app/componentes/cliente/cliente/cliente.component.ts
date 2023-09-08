@@ -84,8 +84,6 @@ export class ClienteComponent implements OnInit {
   verIconoEditarDependiente: boolean = false;
   deshabilitarDatoAdicional: boolean = false;
 
-  urlLogo: string = valores.vacio; 
-  nombreEmpresa: string = valores.vacio;
   provinciaCliente: string = valores.vacio;
   cantonCliente: string = valores.vacio;
   parroquiaCliente: string = valores.vacio;

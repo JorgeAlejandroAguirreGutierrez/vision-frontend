@@ -6,7 +6,8 @@
   <div class="navbar-header pl-2 pr-2 ml-3">
     <a class="navbar-brand m-0 w-100">
       <!-- <i class="fa fa-flash mr-1"></i> -->
-      <img class="logo-emp" alt="Logo" [src]="'data:image/jpeg;base64,'+empresa.logo64"> 
+      <img *ngIf="empresa.id == 0" class="logo-emp" alt="Logo" src="assets/images/users/avatar.jpg"> 
+      <img *ngIf="empresa.id != 0" class="logo-emp" alt="Logo" [src]="imagenes + logos + empresa.logo"> 
       <span class="ml-2">{{empresa.nombreComercial}}</span>
     </a>
   </div>
@@ -68,8 +69,8 @@
       </li>
       <li class="nav-item">
         <a class="btn nav-link">
-          <!--i class="far fa-user" title="Usuario"></i-->
-          <img class="avatar-user" [src]="'data:image/jpeg;base64,'+usuario.avatar64">
+          <img *ngIf="usuario.id == 0" class="avatar-user" src="assets/images/users/avatar.jpg">
+          <img *ngIf="usuario.id != 0" class="avatar-user" [src]="imagenes + avatares + usuario.avatar">
           <span class="link-text">Perfil</span>
         </a>
       </li>

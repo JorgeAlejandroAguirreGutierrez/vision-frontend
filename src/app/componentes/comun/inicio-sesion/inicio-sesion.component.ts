@@ -26,6 +26,9 @@ import { Estacion } from '../../../modelos/usuario/estacion';
 })
 export class InicioSesionComponent implements OnInit {
 
+  imagenes = environment.imagenes;
+  avatares = valores.avatares;
+
   minContrasena: number = 8;
   ip: string;
   contrasena: string = valores.vacio;
@@ -71,7 +74,7 @@ export class InicioSesionComponent implements OnInit {
     this.parametroService.obtenerPorTipo(tipo).subscribe({
       next: res => {
         let parametro = res.resultado as Parametro;
-        this.urlLogo = environment.prefijoUrlImagenes + parametro.nombre;
+        this.urlLogo = environment.imagenes + valores.logos + parametro.nombre;
       },
       error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     });
