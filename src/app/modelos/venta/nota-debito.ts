@@ -1,4 +1,3 @@
-import { Sesion } from '../usuario/sesion';
 import { valores } from "../../constantes";
 import { TipoComprobante } from '../configuracion/tipo-comprobante';
 import { NotaDebitoLinea } from './nota-debito-linea';
@@ -10,6 +9,7 @@ import { NDTarjetaDebito } from '../recaudacion/nd-tarjeta-debito';
 import { NDTarjetaCredito } from '../recaudacion/nd-tarjeta-credito';
 import { NDCredito } from '../recaudacion/nd-credito';
 import { Empresa } from '../usuario/empresa';
+import { Usuario } from '../usuario/usuario';
 
 export class NotaDebito {
     id: number;
@@ -32,7 +32,7 @@ export class NotaDebito {
     total: number;
     comentario: string;
     factura: Factura;
-    sesion: Sesion;
+    usuario: Usuario;
     tipoComprobante: TipoComprobante;
     empresa: Empresa;
     notaDebitoLineas: NotaDebitoLinea[];
@@ -72,7 +72,7 @@ export class NotaDebito {
         this.total = valores.cero;
         this.comentario = valores.vacio;
         this.factura = new Factura();
-        this.sesion = new Sesion();
+        this.usuario = new Usuario();
         this.tipoComprobante = new TipoComprobante();
         this.notaDebitoLineas = [];
         //RECAUDACION

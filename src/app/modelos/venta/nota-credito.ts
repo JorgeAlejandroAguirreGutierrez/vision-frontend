@@ -1,9 +1,9 @@
-import { Sesion } from '../usuario/sesion';
 import { valores } from "../../constantes";
 import { TipoComprobante } from '../configuracion/tipo-comprobante';
 import { NotaCreditoLinea } from './nota-credito-linea';
 import { Factura } from './factura';
 import { Empresa } from '../usuario/empresa';
+import { Usuario } from '../usuario/usuario';
 
 export class NotaCredito {
     id: number;
@@ -27,7 +27,7 @@ export class NotaCredito {
     total: number;
     comentario: string;
     factura: Factura;
-    sesion: Sesion;
+    usuario: Usuario;
     tipoComprobante: TipoComprobante;
     empresa: Empresa;
     notaCreditoLineas: NotaCreditoLinea[];
@@ -51,7 +51,7 @@ export class NotaCredito {
         this.total = valores.cero;
         this.comentario = valores.vacio;
         this.factura = new Factura();
-        this.sesion = new Sesion();
+        this.usuario = new Usuario();
         this.tipoComprobante = new TipoComprobante();
         this.notaCreditoLineas = [];
     }

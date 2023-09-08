@@ -371,7 +371,7 @@ export class NotaDebitoCompraComponent implements OnInit {
     if (!this.validarFormularioLinea())
       return;
     this.spinnerService.show();  
-    this.notaDebitoCompra.sesion = this.sesion;
+    this.notaDebitoCompra.usuario = this.sesion.usuario;
     this.notaDebitoCompra.empresa = this.empresa;
     this.notaDebitoCompra.notaDebitoCompraLineas.push(this.notaDebitoCompraLinea);
     this.notaDebitoCompraService.calcular(this.notaDebitoCompra).subscribe({
@@ -394,7 +394,7 @@ export class NotaDebitoCompraComponent implements OnInit {
     if (!this.validarFormulario())
     return; 
     this.spinnerService.show();  
-    this.notaDebitoCompra.sesion = this.sesion;
+    this.notaDebitoCompra.usuario = this.sesion.usuario;
     this.notaDebitoCompra.empresa = this.empresa;
     this.notaDebitoCompraService.crear(this.notaDebitoCompra).subscribe(
       res => {
@@ -505,31 +505,6 @@ export class NotaDebitoCompraComponent implements OnInit {
   limpiarNotaDebitoCompraLinea(){
     this.notaDebitoCompraLinea = new NotaDebitoCompraLinea();
     this.controlProducto.patchValue(valores.vacio);
-  }
-
-  agregarNotaDebitoCompraLinea(event){
-    if (event != null)
-      event.preventDefault();
-    if (this.notaDebitoCompraLinea.cantidad == valores.cero){
-      return;
-    }
-    if (this.notaDebitoCompraLinea.costoUnitario == valores.cero){
-      return;
-    }
-    if (this.notaDebitoCompraLinea.impuesto.id == valores.cero){
-      return;
-    }
-    this.notaDebitoCompra.sesion = this.sesion;
-    this.notaDebitoCompra.notaDebitoCompraLineas.push(this.notaDebitoCompraLinea);
-    this.notaDebitoCompraService.calcular(this.notaDebitoCompra).subscribe(
-      res => {
-        Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
-        this.notaDebitoCompra = res.resultado as NotaDebitoCompra;
-        this.construir();
-        this.limpiarNotaDebitoCompraLinea();
-      },
-      err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
-    );
   }
 
   eliminarLinea(i: number){

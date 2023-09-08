@@ -215,7 +215,7 @@ export class NotaCreditoComponent implements OnInit {
     if (!this.validarFormulario())
       return;   
     this.spinnerService.show();
-    this.notaCredito.sesion = this.sesion;
+    this.notaCredito.usuario = this.sesion.usuario;
     this.notaCredito.empresa = this.empresa;
     this.notaCreditoService.crear(this.notaCredito).subscribe(
       res => {

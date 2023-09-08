@@ -198,7 +198,7 @@ export class FacturaCompraComponent implements OnInit {
       return;
     this.spinnerService.show();   
     this.facturaCompra.numeroComprobante = this.facturaCompra.establecimiento + valores.guion + this.facturaCompra.puntoVenta + valores.guion + this.facturaCompra.secuencial;
-    this.facturaCompra.sesion = this.sesion;
+    this.facturaCompra.usuario = this.sesion.usuario;
     this.facturaCompra.empresa = this.empresa;
     console.log(this.facturaCompra);
     this.facturaCompraService.crear(this.facturaCompra).subscribe({
@@ -344,7 +344,7 @@ export class FacturaCompraComponent implements OnInit {
     if (!this.validarFormularioLinea())
       return;
     this.spinnerService.show();
-    this.facturaCompra.sesion = this.sesion;
+    this.facturaCompra.usuario = this.sesion.usuario;
     this.facturaCompra.facturaCompraLineas.push(this.facturaCompraLinea);
     this.llenarPosicion(this.facturaCompra);
     this.facturaCompraService.calcular(this.facturaCompra).subscribe({

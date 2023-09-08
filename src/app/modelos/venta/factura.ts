@@ -1,6 +1,5 @@
 import { Cliente } from '../cliente/cliente';
 import { FacturaLinea } from './factura-linea';
-import { Sesion } from '../usuario/sesion';
 import { valores } from "../../constantes";
 import { Cheque } from '../recaudacion/cheque';
 import { Deposito } from '../recaudacion/deposito';
@@ -10,6 +9,7 @@ import { TarjetaCredito } from '../recaudacion/tarjeta-credito';
 import { Credito } from '../recaudacion/credito';
 import { Empresa } from '../usuario/empresa';
 import { TipoComprobante } from '../configuracion/tipo-comprobante';
+import { Usuario } from '../usuario/usuario';
 
 export class Factura {
   id: number;
@@ -41,7 +41,7 @@ export class Factura {
 
   comentario: string;
   cliente: Cliente;
-  sesion: Sesion;
+  usuario: Usuario;
   tipoComprobante: TipoComprobante;
   empresa: Empresa;
   facturaLineas: FacturaLinea[];
@@ -94,7 +94,7 @@ export class Factura {
     this.comentario = valores.vacio;
 
     this.cliente = new Cliente();
-    this.sesion = new Sesion();
+    this.usuario = new Usuario();
     this.empresa = new Empresa();
     this.facturaLineas = [];
     
