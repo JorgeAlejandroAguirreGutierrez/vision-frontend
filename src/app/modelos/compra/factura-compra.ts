@@ -1,9 +1,9 @@
 import { Proveedor } from './proveedor';
 import { FacturaCompraLinea } from './factura-compra-linea';
-import { Sesion } from '../usuario/sesion';
 import { valores } from "../../constantes";
 import { TipoComprobante } from '../configuracion/tipo-comprobante';
 import { Empresa } from '../usuario/empresa';
+import { Usuario } from '../usuario/usuario';
 
 export class FacturaCompra {
     id: number;
@@ -29,7 +29,7 @@ export class FacturaCompra {
 
     comentario: string;
     proveedor: Proveedor;
-    sesion: Sesion;
+    usuario: Usuario;
     tipoComprobante: TipoComprobante;
     empresa: Empresa;
     facturaCompraLineas: FacturaCompraLinea[];
@@ -58,7 +58,7 @@ export class FacturaCompra {
         
         this.comentario = valores.vacio;
         this.proveedor = new Proveedor();
-        this.sesion = new Sesion();
+        this.usuario = new Usuario();
         this.tipoComprobante = new TipoComprobante();
         this.facturaCompraLineas = [];
     }

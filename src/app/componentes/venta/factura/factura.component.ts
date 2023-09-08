@@ -158,7 +158,6 @@ export class FacturaComponent implements OnInit {
   ngOnInit() {
     this.sesion = validarSesion(this.sesionService, this.router);
     this.empresa = this.sesion.empresa;
-    this.factura.sesion = this.sesion;
     this.factura.empresa = this.empresa;
     this.factura.establecimiento = this.sesion.usuario.estacion.establecimiento.codigoSRI;
     this.factura.puntoVenta = this.sesion.usuario.estacion.codigoSRI;
@@ -248,7 +247,8 @@ export class FacturaComponent implements OnInit {
     if (event != null)
       event.preventDefault();
     if (!this.validarFormulario())
-      return;  
+      return;
+    this.factura.usuario = this.sesion.usuario;  
     this.spinnerService.show();
     this.facturaService.crear(this.factura).subscribe({
       next: res => {
@@ -470,7 +470,7 @@ export class FacturaComponent implements OnInit {
     if (!this.validarFormularioLinea())
       return;
     this.spinnerService.show();  
-    this.factura.sesion = this.sesion;
+    this.factura.usuario = this.sesion.usuario;
     this.factura.facturaLineas.push(this.facturaLinea);
     this.llenarPosicion(this.factura);
     this.facturaService.calcular(this.factura).subscribe({
