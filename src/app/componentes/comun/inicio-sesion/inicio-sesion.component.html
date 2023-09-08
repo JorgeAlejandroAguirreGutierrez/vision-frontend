@@ -140,11 +140,11 @@
                     </div>
                     <div class="form-row col-5 ml-1">
                         <div class="col-8">
-                            <mat-card class="foto" *ngIf="sesion.usuario.id==0">
+                            <mat-card class="foto" *ngIf="sesion.usuario.id == 0">
                                 <img width="100%" height="100%" src="assets/images/users/avatar.jpg">
                             </mat-card>
-                            <mat-card class="foto" *ngIf="sesion.usuario.id!=0">
-                                <img width="100%" height="100%" [src]="'data:image/jpeg;base64,'+sesion.usuario.avatar64">
+                            <mat-card class="foto" *ngIf="sesion.usuario.id != 0">
+                                <img width="100%" height="100%" [src]="imagenes + avatares + usuario.avatar">
                             </mat-card>
                         </div>
                         <div class="col-4"></div>

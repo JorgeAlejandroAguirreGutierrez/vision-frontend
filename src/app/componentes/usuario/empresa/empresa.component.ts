@@ -1,5 +1,5 @@
 import { Component, OnInit, HostListener, ElementRef, Renderer2 } from '@angular/core';
-import { valores, validarSesion, mensajes, imagenes, otras, exito, exito_swal, error, error_swal } from '../../../constantes';
+import { valores, validarSesion, mensajes, otras, exito, exito_swal, error, error_swal } from '../../../constantes';
 import Swal from 'sweetalert2';
 import { Router } from '@angular/router';
 import { Sesion } from '../../../modelos/usuario/sesion';
@@ -8,6 +8,7 @@ import { ImagenService } from '../../../servicios/administracion/imagen.service'
 
 import { Empresa } from '../../../modelos/usuario/empresa';
 import { EmpresaService } from '../../../servicios/usuario/empresa.service';
+import { environment } from 'src/environments/environment';
 
 import { ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
@@ -23,12 +24,16 @@ import { MatTableDataSource } from '@angular/material/table';
 
 export class EmpresaComponent implements OnInit {
 
+  imagenes = environment.imagenes;
+  logos = valores.logos;
+
   si: string = valores.si;
   no: string = valores.no;
   activo: string = valores.estadoActivo;
   inactivo: string = valores.estadoInactivo;
 
   certificado = null;
+  logo = null;
 
   abrirPanelNuevo: boolean = true;
   abrirPanelAdmin: boolean = true;
@@ -64,7 +69,6 @@ export class EmpresaComponent implements OnInit {
 
   ngOnInit() {
     this.sesion = validarSesion(this.sesionService, this.router);
-    this.empresa.logo64 = imagenes.logo_empresa;
     this.validarPerfil();
     this.consultar();
   }
@@ -81,7 +85,6 @@ export class EmpresaComponent implements OnInit {
     if (event != null)
       event.preventDefault();
     this.empresa = new Empresa();
-    this.empresa.logo64 = imagenes.logo_empresa;
     this.deshabilitarIdentificacion = false;
     this.clickedRows.clear();
   }
@@ -193,10 +196,21 @@ export class EmpresaComponent implements OnInit {
   }
 
   capturarLogo(event: any): any {
-    const archivoCapturado = event.target.files[0];
-    this.imagenService.convertirBase64(archivoCapturado).then((imagen: any) => {
-      this.empresa.logo64 = imagen.base64;
-    });
+    this.logo = event.target.files[0];
+    this.empresa.logo = this.certificado.name;
+  }
+
+  subirLogo(): any {
+    if (this.logo != null) {
+      this.empresaService.subirLogo(this.empresa.id, this.logo).subscribe({
+        next: (res) => {
+          this.empresa = res.resultado as Empresa;
+        },
+        error: (err) => {
+          Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje });
+        }
+      });
+    }
   }
 
   capturarCertificado(event: any): any {
@@ -228,7 +242,6 @@ export class EmpresaComponent implements OnInit {
     this.empresaService.validarIdentificacion(this.empresa.identificacion).subscribe({
       next: (res) => {
         this.empresa = res.resultado as Empresa;
-        this.empresa.logo64 = imagenes.logo_empresa;
       },
       error: (err) => {
         this.empresa = new Empresa();
@@ -256,10 +269,6 @@ export class EmpresaComponent implements OnInit {
     }
     if (this.empresa.direccion == valores.vacio) {
       Swal.fire({ icon: error_swal, title: error, text: mensajes.error_falta_datos });
-      return false;
-    }
-    if (this.empresa.logo64 == valores.vacio) {
-      Swal.fire({ icon: error_swal, title: error, text: mensajes.error_falta_imagen });
       return false;
     }
     return true;

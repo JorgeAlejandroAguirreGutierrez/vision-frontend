@@ -13,7 +13,6 @@ export class Usuario {
     telefono: string;
     celular: string;
     correo: string;
-    avatar64: string;
     avatar: string;
     cambiarContrasena: string;
     pregunta: string;
@@ -33,7 +32,6 @@ export class Usuario {
       this.telefono = valores.vacio;
       this.celular = valores.vacio;
       this.correo = valores.vacio;
-      this.avatar64 = valores.vacio;
       this.avatar = valores.vacio;
       this.cambiarContrasena = valores.si;
       this.pregunta = valores.vacio;

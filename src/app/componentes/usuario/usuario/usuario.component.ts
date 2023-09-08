@@ -1,5 +1,5 @@
 import { Component, OnInit, ElementRef, Renderer2  } from '@angular/core';
-import { valores, mensajes, preguntas, imagenes, validarSesion, exito_swal, error_swal, exito, error } from '../../../constantes';
+import { valores, mensajes, preguntas, validarSesion, exito_swal, error_swal, exito, error } from '../../../constantes';
 import Swal from 'sweetalert2';
 
 import { Router } from '@angular/router';
@@ -24,6 +24,7 @@ import { ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-usuario',
@@ -32,6 +33,9 @@ import { MatTableDataSource } from '@angular/material/table';
 })
 
 export class UsuarioComponent implements OnInit {
+
+  imagenes = environment.imagenes;
+  avatares = valores.avatares;
 
   activo: string = valores.estadoActivo;
   inactivo: string = valores.estadoInactivo;
@@ -78,7 +82,6 @@ export class UsuarioComponent implements OnInit {
 
   ngOnInit() {
     this.sesion = validarSesion(this.sesionService, this.router);
-    this.usuario.avatar64 = imagenes.avatar_usuario;
     this.empresa = this.sesion.empresa;
     this.usuario.estacion.establecimiento.empresa = this.empresa;
     this.validarPerfil();
@@ -252,13 +255,6 @@ export class UsuarioComponent implements OnInit {
     return a && b && a.id == b.id;
   }
 
-  capturarFile(event: any): void {
-    const archivoCapturado = event.target.files[0] ?? null;
-    this.imagenService.convertirBase64(archivoCapturado).then((imagen: any) => {
-      this.usuario.avatar64 = imagen.base64;
-    });
-  }
-
   encriptarContrasena(){
     this.usuario.contrasena = md5(this.usuario.contrasena);
     this.usuario.confirmarContrasena = md5(this.usuario.confirmarContrasena);
@@ -345,10 +341,6 @@ export class UsuarioComponent implements OnInit {
     }
     if (this.usuario.respuesta == valores.vacio) {
       Swal.fire({ icon: error_swal, title: error, text: mensajes.error_falta_datos });
-      return false;
-    }
-    if (this.usuario.avatar64 == valores.vacio) {
-      Swal.fire({ icon: error_swal, title: error, text: mensajes.error_falta_imagen });
       return false;
     }
     return true;

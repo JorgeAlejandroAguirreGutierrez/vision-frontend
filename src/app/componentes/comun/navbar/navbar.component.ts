@@ -9,6 +9,7 @@ import { Usuario } from '../../../modelos/usuario/usuario';
 import { UsuarioService } from '../../../servicios/usuario/usuario.service';
 import { EmpresaService } from '../../../servicios/usuario/empresa.service';
 import { Empresa } from '../../../modelos/usuario/empresa';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-navbar',
@@ -17,14 +18,17 @@ import { Empresa } from '../../../modelos/usuario/empresa';
 })
 export class NavbarComponent implements OnInit {
 
+  imagenes = environment.imagenes;
+  logos = valores.logos;
+  avatares = valores.avatares;
+
   @Input() istabMenu:boolean;
 
   isCollapsed: boolean = true;
 
   sesion: Sesion = null;
-  empresa: Empresa = null;
+  empresa: Empresa = new Empresa();
   usuario: Usuario = new Usuario();
-  
 
   constructor(private sesionService: SesionService, private sidebarService: SidebarService, private empresaService: EmpresaService,
             private usuarioService: UsuarioService, private router: Router) { }
@@ -32,13 +36,12 @@ export class NavbarComponent implements OnInit {
 
   ngOnInit() {
     this.sesion = validarSesion(this.sesionService, this.router);
-    this.empresa = this.sesion.empresa;
     this.obtenerEmpresa();
     this.obtenerUsuario();
   }
 
   obtenerEmpresa() {
-    this.empresaService.obtener(this.empresa.id).subscribe(
+    this.empresaService.obtener(this.sesion.empresa.id).subscribe(
       res => {
         this.empresa = res.resultado as Empresa;
       }
