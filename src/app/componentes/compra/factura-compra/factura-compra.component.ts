@@ -200,7 +200,6 @@ export class FacturaCompraComponent implements OnInit {
     this.facturaCompra.numeroComprobante = this.facturaCompra.establecimiento + valores.guion + this.facturaCompra.puntoVenta + valores.guion + this.facturaCompra.secuencial;
     this.facturaCompra.sesion = this.sesion;
     this.facturaCompra.empresa = this.empresa;
-    console.log(this.facturaCompra);
     this.facturaCompraService.crear(this.facturaCompra).subscribe({
       next: res => {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
