@@ -200,6 +200,7 @@ export class FacturaCompraComponent implements OnInit {
     this.facturaCompra.numeroComprobante = this.facturaCompra.establecimiento + valores.guion + this.facturaCompra.puntoVenta + valores.guion + this.facturaCompra.secuencial;
     this.facturaCompra.sesion = this.sesion;
     this.facturaCompra.empresa = this.empresa;
+    console.log(this.facturaCompra);
     this.facturaCompraService.crear(this.facturaCompra).subscribe({
       next: res => {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
@@ -466,12 +467,13 @@ export class FacturaCompraComponent implements OnInit {
   obtenerUltimoKardex(){
     this.kardexService.obtenerUltimoPorProductoYBodega(this.facturaCompraLinea.producto.id, this.facturaCompraLinea.bodega.id).subscribe({
       next: res => {
-        if (res.resultado == null) {
-          Swal.fire({ icon: error_swal, title: error, text: mensajes.error_kardex_vacio });
-          return;
+        if (res.resultado != null) {
+          this.kardex = res.resultado as Kardex;
+          this.facturaCompraLinea.costoUnitario = this.kardex.costoPromedio;
+        } else {
+          this.kardex = new Kardex();
+          this.facturaCompraLinea.costoUnitario = valores.cero;
         }
-        this.kardex = res.resultado as Kardex;
-        this.facturaCompraLinea.costoUnitario = this.kardex.costoPromedio;
         this.calcularLinea();
       },
       error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })

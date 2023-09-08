@@ -60,6 +60,7 @@ export class ProductoComponent implements OnInit {
   sesion: Sesion = null;
   empresa: Empresa = new Empresa();
   producto: Producto = new Producto();
+  bodega: Bodega = new Bodega();
 
   productos: Producto[];
   tiposGastos: TipoGasto[] = [];
@@ -156,6 +157,7 @@ export class ProductoComponent implements OnInit {
     this.bodegaService.consultarPorEmpresaYEstado(this.empresa.id, valores.estadoActivo).subscribe({
       next: res => {
         this.bodegas = res.resultado as Bodega[];
+        this.bodega = this.bodegas[0];
       },
       error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     });
@@ -296,6 +298,7 @@ export class ProductoComponent implements OnInit {
   }
 
   llenarKardex(){
+    console.log('HOLA MUNDO');
     this.deshabilitarIniciarKardex = true;
     this.saldoInicialKardex = this.producto.kardexs[0].saldo;
     this.costoUnitarioKardex = this.producto.kardexs[0].costoPromedio;
@@ -305,13 +308,18 @@ export class ProductoComponent implements OnInit {
   inicializarKardex(){
     if (!this.validarKardex())
       return;
-    this.producto.kardexs[0].tipoComprobante.id = 1;
-    this.producto.kardexs[0].tipoOperacion.id = 1;
-    this.producto.kardexs[0].entrada = this.saldoInicialKardex;
-    this.producto.kardexs[0].saldo = this.saldoInicialKardex;
-    this.producto.kardexs[0].debe = this.costoUnitarioKardex;
-    this.producto.kardexs[0].costoPromedio = this.costoUnitarioKardex;
-    this.producto.kardexs[0].costoTotal = this.costoTotalKardex;
+    if (this.saldoInicialKardex != valores.cero){
+      this.producto.kardexs[0].tipoComprobante.id = 1;
+      this.producto.kardexs[0].tipoOperacion.id = 1;
+      this.producto.kardexs[0].entrada = this.saldoInicialKardex;
+      this.producto.kardexs[0].saldo = this.saldoInicialKardex;
+      this.producto.kardexs[0].debe = this.costoUnitarioKardex;
+      this.producto.kardexs[0].costoPromedio = this.costoUnitarioKardex;
+      this.producto.kardexs[0].costoTotal = this.costoTotalKardex;
+      this.producto.kardexs[0].bodega = this.bodega;
+    } else {
+      this.producto.kardexs = [];
+    }
   }
   
   calcularCostoTotalKardex(){
