@@ -524,6 +524,22 @@ export class NotaDebitoCompraComponent implements OnInit {
     this.notaDebitoCompra.secuencial = this.pad(this.notaDebitoCompra.secuencial, 9);
   }
 
+  validarNumeroEstablecimiento(){
+    if (this.notaDebitoCompra.establecimiento.length > 3){
+      Swal.fire({ icon: error_swal, title: error, text: mensajes.error_establecimiento });
+    }
+  }
+  validarNumeroPuntoVenta(){
+    if (this.notaDebitoCompra.puntoVenta.length > 3){
+      Swal.fire({ icon: error_swal, title: error, text: mensajes.error_punto_venta });
+    }
+  }
+  validarNumeroSecuencial(){
+    if (this.notaDebitoCompra.secuencial.length > 9){
+      Swal.fire({ icon: error_swal, title: error, text: mensajes.error_secuencial });
+    }
+  }
+
   private pad(numero: string, size: number): string {
     while (numero.length < size) numero = "0" + numero;
     return numero;
