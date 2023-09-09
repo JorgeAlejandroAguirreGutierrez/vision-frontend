@@ -8,7 +8,7 @@ export class Empresa {
     razonSocial:string;
     nombreComercial: string;
     direccion: string;
-    logo64: string;
+    logo: string;
     obligadoContabilidad: string;
     especial: string;
     resolucionEspecial: string;
@@ -26,7 +26,7 @@ export class Empresa {
         this.razonSocial = valores.vacio;
         this.nombreComercial = valores.vacio;
         this.direccion = valores.vacio;
-        this.logo64 = valores.vacio;
+        this.logo = valores.vacio;
         this.obligadoContabilidad = valores.no;
         this.especial = valores.no;
         this.resolucionEspecial = valores.vacio;

@@ -1,10 +1,10 @@
 import { Transportista } from './transportista';
 import { Factura } from '../venta/factura';
 import { valores } from "../../constantes";
-import { Sesion } from '../usuario/sesion';
 import { Vehiculo } from './vehiculo';
 import { TipoComprobante } from '../configuracion/tipo-comprobante';
 import { Empresa } from '../usuario/empresa';
+import { Usuario } from '../usuario/usuario';
 
 export class GuiaRemision {
     id: number;
@@ -31,7 +31,7 @@ export class GuiaRemision {
     estado: string;
     procesoSRI: string;
     tipoComprobante: TipoComprobante;
-    sesion: Sesion;
+    usuario: Usuario;
     transportista: Transportista;
     vehiculo: Vehiculo;
     factura: Factura;
@@ -54,7 +54,7 @@ export class GuiaRemision {
         this.estado = valores.estadoEmitida;
         this.procesoSRI = valores.vacio;
         this.tipoComprobante = new TipoComprobante();
-        this.sesion = new Sesion();
+        this.usuario = new Usuario();
         this.transportista = new Transportista();
         this.vehiculo = new Vehiculo();
         this.factura = new Factura();

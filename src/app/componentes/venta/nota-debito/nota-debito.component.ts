@@ -460,7 +460,7 @@ export class NotaDebitoComponent implements OnInit {
     if (!this.validarFormularioLinea())
       return;
     this.spinnerService.show();  
-    this.notaDebito.sesion = this.sesion;
+    this.notaDebito.usuario = this.sesion.usuario;
     this.notaDebito.empresa = this.empresa;
     this.notaDebito.notaDebitoLineas.push(this.notaDebitoLinea);
     this.notaDebitoService.calcular(this.notaDebito).subscribe({
@@ -528,7 +528,7 @@ export class NotaDebitoComponent implements OnInit {
     if (event!=null)
       event.preventDefault();
     this.spinnerService.show();
-    this.notaDebito.sesion = this.sesion;
+    this.notaDebito.usuario = this.sesion.usuario;
     this.notaDebito.establecimiento = this.sesion.usuario.estacion.establecimiento.codigoSRI;
     this.notaDebito.puntoVenta = this.sesion.usuario.estacion.codigoSRI;
     this.notaDebitoService.crear(this.notaDebito).subscribe(
