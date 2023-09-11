@@ -537,6 +537,22 @@ export class FacturaCompraComponent implements OnInit {
     this.facturaCompra.secuencial = this.pad(this.facturaCompra.secuencial, 9);
   }
 
+  validarNumeroEstablecimiento(){
+    if (this.facturaCompra.establecimiento.length > 3){
+      Swal.fire({ icon: error_swal, title: error, text: mensajes.error_establecimiento });
+    }
+  }
+  validarNumeroPuntoVenta(){
+    if (this.facturaCompra.puntoVenta.length > 3){
+      Swal.fire({ icon: error_swal, title: error, text: mensajes.error_punto_venta });
+    }
+  }
+  validarNumeroSecuencial(){
+    if (this.facturaCompra.secuencial.length > 9){
+      Swal.fire({ icon: error_swal, title: error, text: mensajes.error_secuencial });
+    }
+  }
+
   pad(numero: string, size: number): string {
     while (numero.length < size) numero = "0" + numero;
     return numero;

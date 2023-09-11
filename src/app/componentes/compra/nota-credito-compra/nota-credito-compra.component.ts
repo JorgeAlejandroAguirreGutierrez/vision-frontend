@@ -479,5 +479,21 @@ export class NotaCreditoCompraComponent implements OnInit {
       return false;
     }
     return true;
-  }  
+  }
+  
+  validarNumeroEstablecimiento(){
+    if (this.notaCreditoCompra.establecimiento.length > 3){
+      Swal.fire({ icon: error_swal, title: error, text: mensajes.error_establecimiento });
+    }
+  }
+  validarNumeroPuntoVenta(){
+    if (this.notaCreditoCompra.puntoVenta.length > 3){
+      Swal.fire({ icon: error_swal, title: error, text: mensajes.error_punto_venta });
+    }
+  }
+  validarNumeroSecuencial(){
+    if (this.notaCreditoCompra.secuencial.length > 9){
+      Swal.fire({ icon: error_swal, title: error, text: mensajes.error_secuencial });
+    }
+  }
 }
