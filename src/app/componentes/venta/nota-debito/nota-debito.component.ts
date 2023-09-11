@@ -479,16 +479,37 @@ export class NotaDebitoComponent implements OnInit {
   }
 
   actualizarLinea() {
+    if (!this.validarFormularioLinea())
+      return;
+    this.spinnerService.show();  
+    this.notaDebito.usuario = this.sesion.usuario;
+    this.notaDebitoLinea.nombreProducto = this.controlProducto.getRawValue();
     this.notaDebito.notaDebitoLineas[this.indiceLinea] = this.notaDebitoLinea;
-    this.llenarTablaLinea(this.notaDebito.notaDebitoLineas);
-    this.calcular();
-    this.nuevaLinea();
+    this.llenarPosicion(this.notaDebito);
     this.verIconoEditarLinea = false;
+    this.notaDebitoService.calcular(this.notaDebito).subscribe({
+      next: res => {
+        this.notaDebito = res.resultado as NotaDebito;
+        this.construir();
+        this.nuevaLinea();
+        this.spinnerService.hide();
+      },
+      error: err => {
+        Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+        this.spinnerService.hide();
+      }  
+    });
   }
 
   eliminarLinea(i: number){
     this.notaDebito.notaDebitoLineas.splice(i, 1);
     this.calcular();
+  }
+
+  llenarPosicion(notaDebito: NotaDebito){
+    for (let i = 0; i < notaDebito.notaDebitoLineas.length; i++) {
+      this.notaDebito.notaDebitoLineas[i].posicion = i + 1;
+    }
   }
 
   seleccionarCantidad() {
@@ -522,7 +543,6 @@ export class NotaDebitoComponent implements OnInit {
 
   construirLinea(){
     this.controlProducto.patchValue(this.notaDebitoLinea.producto);
-    this.controlProducto.getRawValue.apply(this.notaDebitoLinea.nombreProducto);
     this.precioVentaPublicoManual = parseFloat((this.notaDebitoLinea.precioUnitario + (this.notaDebitoLinea.precioUnitario * this.notaDebitoLinea.impuesto.porcentaje/100)).toFixed(2));
   }
 
