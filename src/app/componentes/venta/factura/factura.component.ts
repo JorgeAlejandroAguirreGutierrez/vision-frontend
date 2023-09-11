@@ -549,6 +549,8 @@ export class FacturaComponent implements OnInit {
 
   calcularPVP() {
     this.precioVentaPublicoManual = Number((Number(this.facturaLinea.precioUnitario) + Number(this.facturaLinea.precioUnitario * this.facturaLinea.impuesto.porcentaje / 100)).toFixed(4));
+    console.log(this.precioVentaPublicoManual );
+    this.calcularLinea();
   }
 
   calcularLinea() {
@@ -770,9 +772,6 @@ export class FacturaComponent implements OnInit {
 
   validarFormularioLinea(): boolean {
     if (this.facturaLinea.cantidad <= valores.cero) {
-      return false;
-    }
-    if (this.facturaLinea.precioUnitario <= valores.cero) {
       return false;
     }
     if (this.precioVentaPublicoManual <= valores.cero) {
