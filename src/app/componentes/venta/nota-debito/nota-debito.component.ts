@@ -107,7 +107,7 @@ export class NotaDebitoComponent implements OnInit {
   categoriaProducto = valores.vacio;
 
   columnasFacturaLinea: any[] = [
-    { nombreColumna: 'nombre', cabecera: 'Producto', celda: (row: FacturaLinea) => `${row.producto.nombre}` },
+    { nombreColumna: 'nombre', cabecera: 'Producto', celda: (row: FacturaLinea) => `${row.nombreProducto}` },
     { nombreColumna: 'medida', cabecera: 'Medida', celda: (row: FacturaLinea) => `${row.producto.medida.abreviatura}` },
     { nombreColumna: 'cantidad', cabecera: 'Cant.', celda: (row: FacturaLinea) => `${row.cantidad}` },
     { nombreColumna: 'valor', cabecera: 'P. Unit', celda: (row: FacturaLinea) => `$${row.precioUnitario}` },
@@ -123,7 +123,7 @@ export class NotaDebitoComponent implements OnInit {
   clickedRowsFacturaLinea = new Set<FacturaLinea>();
 
   columnasLinea: any[] = [
-    { nombreColumna: 'nombre', cabecera: 'Producto', celda: (row: NotaDebitoLinea) => `${row.producto.nombre}` },
+    { nombreColumna: 'nombre', cabecera: 'Producto', celda: (row: NotaDebitoLinea) => `${row.nombreProducto}` },
     { nombreColumna: 'medida', cabecera: 'Medida', celda: (row: NotaDebitoLinea) => `${row.producto.medida.abreviatura}` },
     { nombreColumna: 'cantidad', cabecera: 'Cant.', celda: (row: NotaDebitoLinea) => `${row.cantidad}` },
     { nombreColumna: 'valor', cabecera: 'P. Unit', celda: (row: NotaDebitoLinea) => `$${row.precioUnitario}` },
@@ -186,12 +186,12 @@ export class NotaDebitoComponent implements OnInit {
     this.notaDebito.puntoVenta = this.sesion.usuario.estacion.codigoSRI;
     this.controlIdentificacionCliente.patchValue(valores.vacio);
     this.controlRazonSocialCliente.patchValue(valores.vacio);
-    this.dataSourceLinea = new MatTableDataSource<FacturaLinea>([]);
+    this.dataSourceLinea = new MatTableDataSource<NotaDebitoLinea>([]);
     this.clickedRows.clear();
-    this.nuevoLinea();
+    this.nuevaLinea();
   }
 
-  nuevoLinea(){
+  nuevaLinea(){
     this.notaDebitoLinea = new NotaDebitoLinea();
     this.precioVentaPublicoManual = valores.cero;
     this.controlProducto.patchValue(valores.vacio);
@@ -462,12 +462,13 @@ export class NotaDebitoComponent implements OnInit {
     this.spinnerService.show();  
     this.notaDebito.usuario = this.sesion.usuario;
     this.notaDebito.empresa = this.empresa;
+    this.notaDebitoLinea.nombreProducto = this.controlProducto.getRawValue();
     this.notaDebito.notaDebitoLineas.push(this.notaDebitoLinea);
     this.notaDebitoService.calcular(this.notaDebito).subscribe({
       next: res => {
         this.notaDebito = res.resultado as NotaDebito;
         this.construir();
-        this.nuevoLinea();
+        this.nuevaLinea();
         this.spinnerService.hide();
       },
       error: err => {
@@ -481,7 +482,7 @@ export class NotaDebitoComponent implements OnInit {
     this.notaDebito.notaDebitoLineas[this.indiceLinea] = this.notaDebitoLinea;
     this.llenarTablaLinea(this.notaDebito.notaDebitoLineas);
     this.calcular();
-    this.nuevoLinea();
+    this.nuevaLinea();
     this.verIconoEditarLinea = false;
   }
 
@@ -515,12 +516,13 @@ export class NotaDebitoComponent implements OnInit {
       this.construirLinea();
       this.verIconoEditarLinea = true;
     } else {
-      this.nuevoLinea();
+      this.nuevaLinea();
     }
   }
 
   construirLinea(){
     this.controlProducto.patchValue(this.notaDebitoLinea.producto);
+    this.controlProducto.getRawValue.apply(this.notaDebitoLinea.nombreProducto);
     this.precioVentaPublicoManual = parseFloat((this.notaDebitoLinea.precioUnitario + (this.notaDebitoLinea.precioUnitario * this.notaDebitoLinea.impuesto.porcentaje/100)).toFixed(2));
   }
 

@@ -7,6 +7,7 @@ export class NotaDebitoLinea {
     id: number;
     codigo: string;
     posicion: number;
+    nombreProducto: string;
     entregado: string;
     consignacion: string;
     cantidad: number;
