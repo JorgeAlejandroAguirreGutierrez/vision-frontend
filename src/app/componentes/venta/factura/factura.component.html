@@ -247,7 +247,7 @@
                                     <div class="col-8">
                                         <mat-form-field appearance="standard">
                                             <mat-label>Producto</mat-label>
-                                            <input matInput type="text" class="form-control-sm" placeholder="Producto"
+                                            <input matInput type="text" [value]="facturaLinea.nombreProducto" class="form-control-sm" placeholder="Producto"
                                                 [formControl]="controlProducto" [matAutocomplete]="producto"
                                                 oninput="this.value = this.value.toUpperCase()">
                                             <mat-autocomplete #producto="matAutocomplete" [displayWith]="verProducto"

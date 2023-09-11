@@ -71,7 +71,6 @@ export class FacturaComponent implements OnInit {
   abrirPanelFacturaLinea: boolean = false;
   abrirPanelAdminFactura: boolean = true;
   verIconoEditarLinea: boolean = false;
-  esBien: boolean = true;
 
   hoy: Date = new Date();
 
@@ -496,11 +495,26 @@ export class FacturaComponent implements OnInit {
   }
 
   actualizarLinea() {
+    if (!this.validarFormularioLinea())
+      return;
+    this.spinnerService.show();  
+    this.factura.usuario = this.sesion.usuario;
+    this.facturaLinea.nombreProducto = this.controlProducto.getRawValue();
     this.factura.facturaLineas[this.indiceLinea] = this.facturaLinea;
-    this.llenarTablaLinea(this.factura.facturaLineas);
-    this.calcular();
-    this.nuevaLinea();
+    this.llenarPosicion(this.factura);
     this.verIconoEditarLinea = false;
+    this.facturaService.calcular(this.factura).subscribe({
+      next: res => {
+        this.factura = res.resultado as Factura;
+        this.construir();
+        this.nuevaLinea();
+        this.spinnerService.hide();
+      },
+      error: err => {
+        Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+        this.spinnerService.hide();
+      }  
+    });
   }
 
   eliminarLinea(i: number) {
@@ -532,6 +546,9 @@ export class FacturaComponent implements OnInit {
   }
 
   construirLinea(){
+    if (this.facturaLinea.producto.categoriaProducto.abreviatura == valores.bien){
+      this.obtenerUltimoKardex();
+    }
     this.controlProducto.patchValue(this.facturaLinea.producto);
     this.precioVentaPublicoManual = parseFloat((this.facturaLinea.precioUnitario + (this.facturaLinea.precioUnitario * this.facturaLinea.impuesto.porcentaje / 100)).toFixed(2));
   }
@@ -589,21 +606,19 @@ export class FacturaComponent implements OnInit {
   seleccionarProducto() {
     this.facturaLinea.producto = this.controlProducto.value;
     this.facturaLinea.impuesto = this.facturaLinea.producto.impuesto;
-    if (this.facturaLinea.producto.categoriaProducto.id == 1){
-      this.esBien = true } else { this.esBien = false };
     if (this.facturaLinea.producto.id == valores.cero || this.factura.cliente.id == valores.cero) {
       return;
     }
-    this.inicializarOpciones(); // Error si no tiene bodega
+    if (this.facturaLinea.producto.categoriaProducto.abreviatura == valores.bien){
+      this.facturaLinea.bodega = this.bodegas[valores.cero];
+      this.obtenerUltimoKardex();
+    }
     for (let precio of this.facturaLinea.producto.precios) {
       if (precio.segmento.id == this.factura.cliente.segmento.id) {
         this.facturaLinea.precio = precio; //Servira para la v2, cuando no se modifica el precio
         this.precioVentaPublicoManual = precio.precioVentaPublicoManual;
         this.calcularLinea();
       }
-    }
-    if (this.esBien){
-      this.obtenerUltimoKardex();
     }
   }
 
@@ -635,10 +650,6 @@ export class FacturaComponent implements OnInit {
         Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
       }
     });
-  }
-
-  inicializarOpciones() {
-    this.facturaLinea.bodega = this.bodegas[0];
   }
 
   compareFn(a: any, b: any) {
