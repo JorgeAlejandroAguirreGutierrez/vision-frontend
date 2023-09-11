@@ -112,7 +112,7 @@ export class FacturaComponent implements OnInit {
 
   columnasLinea: any[] = [
     { nombreColumna: 'posicion', cabecera: 'No.', celda: (row: FacturaLinea) => `${row.posicion}` },
-    { nombreColumna: 'nombre', cabecera: 'Producto', celda: (row: FacturaLinea) => `${row.producto.nombre}` },
+    { nombreColumna: 'nombre', cabecera: 'Producto', celda: (row: FacturaLinea) => `${row.nombreProducto}` },
     { nombreColumna: 'medida', cabecera: 'Medida', celda: (row: FacturaLinea) => `${row.producto.medida.abreviatura}` },
     { nombreColumna: 'cantidad', cabecera: 'Cant.', celda: (row: FacturaLinea) => `${row.cantidad}` },
     { nombreColumna: 'valor', cabecera: 'P. Unit', celda: (row: FacturaLinea) => `$${row.precioUnitario}` },
@@ -146,7 +146,7 @@ export class FacturaComponent implements OnInit {
       if (($event.shiftKey || $event.metaKey) && $event.key == "N") //ASHIFT + N
         this.nuevo(null);
       if (($event.shiftKey || $event.metaKey) && $event.key == "A") // SHIFT + A
-        this.crearFacturaLinea();
+        this.crearLinea();
     }
 
   constructor(private renderer: Renderer2, private clienteService: ClienteService, private sesionService: SesionService,
@@ -240,7 +240,7 @@ export class FacturaComponent implements OnInit {
     this.controlRazonSocialCliente.patchValue(valores.vacio);
     this.dataSourceLinea = new MatTableDataSource<FacturaLinea>([]);
     this.clickedRowsFactura.clear();
-    this.nuevoFacturaLinea();
+    this.nuevaLinea();
   }
 
   crear(event) {
@@ -403,7 +403,7 @@ export class FacturaComponent implements OnInit {
     if(this.factura.id == valores.cero){
       this.factura.fecha = this.hoy;
     }
-    this.llenarTablaFacturaLinea(this.factura.facturaLineas);
+    this.llenarTablaLinea(this.factura.facturaLineas);
   }
 
   filtroFactura(event: Event) {
@@ -457,7 +457,7 @@ export class FacturaComponent implements OnInit {
   }
 
   //CRUD FACTURA LINEA
-  nuevoFacturaLinea() {
+  nuevaLinea() {
     this.facturaLinea = new FacturaLinea();
     this.kardex = new Kardex();
     this.precioVentaPublicoManual = valores.cero;
@@ -466,18 +466,19 @@ export class FacturaComponent implements OnInit {
     this.verIconoEditarLinea = false;
   }
 
-  crearFacturaLinea() {
+  crearLinea() {
     if (!this.validarFormularioLinea())
       return;
     this.spinnerService.show();  
     this.factura.usuario = this.sesion.usuario;
+    this.facturaLinea.nombreProducto = this.controlProducto.getRawValue();
     this.factura.facturaLineas.push(this.facturaLinea);
     this.llenarPosicion(this.factura);
     this.facturaService.calcular(this.factura).subscribe({
       next: res => {
         this.factura = res.resultado as Factura;
         this.construir();
-        this.nuevoFacturaLinea();
+        this.nuevaLinea();
         this.spinnerService.hide();
       },
       error: err => {
@@ -494,21 +495,21 @@ export class FacturaComponent implements OnInit {
     }
   }
 
-  actualizarFacturaLinea() {
+  actualizarLinea() {
     this.factura.facturaLineas[this.indiceLinea] = this.facturaLinea;
-    this.llenarTablaFacturaLinea(this.factura.facturaLineas);
+    this.llenarTablaLinea(this.factura.facturaLineas);
     this.calcular();
-    this.nuevoFacturaLinea();
+    this.nuevaLinea();
     this.verIconoEditarLinea = false;
   }
 
-  eliminarFacturaLinea(i: number) {
+  eliminarLinea(i: number) {
     this.factura.facturaLineas.splice(i, 1);
     this.calcular();
-    this.nuevoFacturaLinea();
+    this.nuevaLinea();
   }
 
-  llenarTablaFacturaLinea(facturaLineas: FacturaLinea[]) {
+  llenarTablaLinea(facturaLineas: FacturaLinea[]) {
     this.dataSourceLinea = new MatTableDataSource(facturaLineas);
     this.dataSourceLinea.filterPredicate = (data: FacturaLinea, filter: string): boolean =>
       data.producto.nombre.includes(filter) || data.producto.medida.abreviatura.includes(filter) || String(data.cantidad).includes(filter) || 
@@ -517,20 +518,20 @@ export class FacturaComponent implements OnInit {
     this.dataSourceLinea.sort = this.sortLinea;
   }
 
-  seleccionarFacturaLinea(facturaLinea: FacturaLinea, i:number) {
+  seleccionarLinea(facturaLinea: FacturaLinea, i:number) {
     if (!this.clickedRowsLinea.has(facturaLinea)) {
       this.clickedRowsLinea.clear();
       this.clickedRowsLinea.add(facturaLinea);
       this.facturaLinea = { ...facturaLinea };
       this.indiceLinea = i;
-      this.construirFacturaLinea();
+      this.construirLinea();
       this.verIconoEditarLinea = true;
     } else {
-      this.nuevoFacturaLinea();
+      this.nuevaLinea();
     }
   }
 
-  construirFacturaLinea(){
+  construirLinea(){
     this.controlProducto.patchValue(this.facturaLinea.producto);
     this.precioVentaPublicoManual = parseFloat((this.facturaLinea.precioUnitario + (this.facturaLinea.precioUnitario * this.facturaLinea.impuesto.porcentaje / 100)).toFixed(2));
   }
@@ -576,7 +577,7 @@ export class FacturaComponent implements OnInit {
       next: res => {
         this.spinnerService.hide();
         this.factura = res.resultado as Factura;
-        this.llenarTablaFacturaLinea(this.factura.facturaLineas);
+        this.llenarTablaLinea(this.factura.facturaLineas);
       },
       error: err => {
         this.spinnerService.hide();

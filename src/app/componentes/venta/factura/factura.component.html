@@ -356,11 +356,11 @@
                                     </div>
                                     <div class="col-1 iconos centrar">
                                         <button mat-icon-button mat-button *ngIf="!verIconoEditarLinea"
-                                            (click)="crearFacturaLinea()">
+                                            (click)="crearLinea()">
                                             <mat-icon>add_shopping_cart</mat-icon>
                                         </button>
                                         <button mat-icon-button *ngIf="verIconoEditarLinea"
-                                            (click)="actualizarFacturaLinea()">
+                                            (click)="actualizarLinea()">
                                             <mat-icon>update</mat-icon>
                                         </button>
                                     </div>
@@ -429,7 +429,7 @@
                                                 {{ columna.celda(row) }}
                                             </ng-container>
                                             <ng-container *ngIf="columna.nombreColumna=='acciones'">
-                                                <button mat-icon-button color="warn" (click)="eliminarFacturaLinea(i)">
+                                                <button mat-icon-button color="warn" (click)="eliminarLinea(i)">
                                                     <i class="fa fa-times mat-icon"></i>
                                                 </button>
                                             </ng-container>
@@ -437,7 +437,7 @@
                                     </ng-container>
                                     <tr mat-header-row *matHeaderRowDef="cabeceraLinea"></tr>
                                     <tr mat-row *matRowDef="let row; let i=index; columns: cabeceraLinea"
-                                        (click)="seleccionarFacturaLinea(row, i)"
+                                        (click)="seleccionarLinea(row, i)"
                                         [class.selected-row]="clickedRowsLinea.has(row)"></tr>
                                     <!-- Row shown when there is no matching data. -->
                                     <tr class="mat-row" *matNoDataRow>

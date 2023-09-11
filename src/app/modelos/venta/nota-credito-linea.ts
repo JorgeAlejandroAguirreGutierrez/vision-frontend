@@ -7,6 +7,7 @@ import { Precio } from "../inventario/precio";
 export class NotaCreditoLinea {
     id: number;
     codigo: string;
+    nombreProducto: string;
     cantidadVenta: number;
     costoUnitarioVenta: number;
     cantidad: number;

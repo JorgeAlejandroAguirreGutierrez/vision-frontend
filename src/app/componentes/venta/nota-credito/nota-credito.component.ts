@@ -86,7 +86,7 @@ export class NotaCreditoComponent implements OnInit {
   clickedRows = new Set<NotaCredito>();
 
   columnasLinea: any[] = [
-    { nombreColumna: 'producto', cabecera: 'Producto', celda: (row: NotaCreditoLinea) => `${row.producto.nombre}` },
+    { nombreColumna: 'producto', cabecera: 'Producto', celda: (row: NotaCreditoLinea) => `${row.nombreProducto}` },
     { nombreColumna: 'medida', cabecera: 'Medida', celda: (row: NotaCreditoLinea) => `${row.producto.medida.abreviatura}` },
     { nombreColumna: 'cantidadventa', cabecera: 'Cant Vent', celda: (row: NotaCreditoLinea) => `${row.cantidadVenta}` },
     { nombreColumna: 'cunitarioventa', cabecera: 'C.U. Vent', celda: (row: NotaCreditoLinea) => `${row.costoUnitarioVenta}` },

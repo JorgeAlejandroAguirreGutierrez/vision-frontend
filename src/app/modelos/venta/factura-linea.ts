@@ -9,6 +9,7 @@ export class FacturaLinea {
   id: number;
   codigo: string;
   posicion: number;
+  nombreProducto: string;
   comentario: string;
   entregado: string;
   consignacion: string;
@@ -34,6 +35,7 @@ export class FacturaLinea {
   constructor() {
     this.id = valores.cero;
     this.posicion = valores.cero;
+    this.nombreProducto = valores.vacio;
     this.entregado = valores.no;
     this.comentario = valores.vacio;
     this.cantidad = valores.uno;
