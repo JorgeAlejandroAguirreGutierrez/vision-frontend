@@ -434,7 +434,7 @@ export class ProductoComponent implements OnInit {
       Swal.fire(error, mensajes.error_medida_kardex, error_swal);
       return false;
     }
-    if (this.producto.proveedor.id == valores.cero) {
+    if (this.producto.categoriaProducto.abreviatura == valores.bien && this.producto.proveedor.id == valores.cero) {
       Swal.fire(error, mensajes.error_proveedor, error_swal);
       return;
     }
