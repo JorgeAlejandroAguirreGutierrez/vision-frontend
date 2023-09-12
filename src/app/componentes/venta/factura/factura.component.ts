@@ -470,14 +470,13 @@ export class FacturaComponent implements OnInit {
       return;
     this.spinnerService.show();  
     this.factura.usuario = this.sesion.usuario;
-    if(this.controlProducto.getRawValue() instanceof String){
-      this.facturaLinea.nombreProducto = this.controlProducto.getRawValue();
+    if(this.controlProducto.getRawValue() instanceof Object){
+      this.facturaLinea.nombreProducto = this.controlProducto.value.nombre;      
     } else {
-      this.facturaLinea.nombreProducto = this.controlProducto.value.nombre;
+      this.facturaLinea.nombreProducto = this.controlProducto.getRawValue();
     }
     this.factura.facturaLineas.push(this.facturaLinea);
     this.llenarPosicion(this.factura);
-    console.log(this.facturaLinea);
     this.facturaService.calcular(this.factura).subscribe({
       next: res => {
         this.factura = res.resultado as Factura;
@@ -504,10 +503,10 @@ export class FacturaComponent implements OnInit {
       return;
     this.spinnerService.show();  
     this.factura.usuario = this.sesion.usuario;
-    if(this.controlProducto.getRawValue() instanceof String){
-      this.facturaLinea.nombreProducto = this.controlProducto.getRawValue();
+    if(this.controlProducto.getRawValue() instanceof Object){
+      this.facturaLinea.nombreProducto = this.controlProducto.value.nombre;      
     } else {
-      this.facturaLinea.nombreProducto = this.controlProducto.value.nombre;
+      this.facturaLinea.nombreProducto = this.controlProducto.getRawValue();
     }
     this.factura.facturaLineas[this.indiceLinea] = this.facturaLinea;
     this.llenarPosicion(this.factura);
