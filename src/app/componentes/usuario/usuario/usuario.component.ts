@@ -39,6 +39,7 @@ export class UsuarioComponent implements OnInit {
 
   activo: string = valores.estadoActivo;
   inactivo: string = valores.estadoInactivo;
+  contrasenaEncriptada: string = valores.vacio;
 
   abrirPanelNuevo: boolean = true;
   abrirPanelAdmin: boolean = true;
@@ -151,7 +152,10 @@ export class UsuarioComponent implements OnInit {
     if (event != null)
       event.preventDefault();
     if (!this.validarFormulario())
-      return;  
+      return;
+    if (this.contrasenaEncriptada != this.usuario.contrasena){
+      this.encriptarContrasena();
+    }
     this.usuarioService.actualizar(this.usuario).subscribe({
       next: res => {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
@@ -223,6 +227,7 @@ export class UsuarioComponent implements OnInit {
       this.clickedRows.add(usuario);
       this.usuario = { ... usuario};
       this.cambiarContrasena = this.usuario.cambiarContrasena == valores.si? true : false;
+      this.contrasenaEncriptada = this.usuario.contrasena;
       this.consultarEstablecimientos();
       this.consultarEstaciones();
     } else {

@@ -4,6 +4,7 @@ import { environment } from '../../../../environments/environment';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { valores, mensajes, exito, exito_swal, error, error_swal } from '../../../constantes';
 import { Router } from '@angular/router';
+import { NgxSpinnerService } from 'ngx-spinner';
 import Swal from 'sweetalert2';
 
 import { Parametro } from '../../../modelos/configuracion/parametro';
@@ -61,12 +62,14 @@ export class InicioSesionComponent implements OnInit {
   );
 
   constructor(private parametroService: ParametroService, private sesionService: SesionService, private usuarioService: UsuarioService, 
-    private empresaService: EmpresaService, private router: Router, public dialog: MatDialog) { }
+    private empresaService: EmpresaService, private router: Router, public dialog: MatDialog, private spinnerService: NgxSpinnerService) { }
 
   ngOnInit() {
+    this.spinnerService.show();
     this.obtenerLogo();
     this.consultarEmpresas();
     this.obtenerEstacion();
+    this.spinnerService.hide();
   }
 
   obtenerLogo() {
@@ -128,6 +131,7 @@ export class InicioSesionComponent implements OnInit {
   }
 
   obtenerPorApodo() {
+    this.spinnerService.show();
     this.usuarioService.obtenerPorApodoYEstado(this.sesion.usuario.apodo, valores.estadoActivo).subscribe({
       next: res => {
         this.sesion.usuario = res.resultado as Usuario;
@@ -142,8 +146,12 @@ export class InicioSesionComponent implements OnInit {
         if (this.sesion.usuario.cambiarContrasena == valores.si) {
           this.cambiarContrasena = true;
         }
+        this.spinnerService.hide();
       },
-      error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+      error: err => {
+        Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje });
+        this.spinnerService.hide();
+      }
     });
   }
 
