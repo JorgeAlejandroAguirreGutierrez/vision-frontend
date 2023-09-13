@@ -64,11 +64,6 @@
       </li>
       <li class="nav-item">
         <a class="btn nav-link">
-          <span class="m-t-10">{{usuario.perfil.abreviatura}}</span>
-        </a>
-      </li>
-      <li class="nav-item">
-        <a class="btn nav-link">
           <img *ngIf="usuario.id == 0" class="avatar-user" src="assets/images/users/avatar.jpg">
           <img *ngIf="usuario.id != 0" class="avatar-user" [src]="imagenes + avatares + usuario.avatar">
           <span class="link-text">Perfil</span>
