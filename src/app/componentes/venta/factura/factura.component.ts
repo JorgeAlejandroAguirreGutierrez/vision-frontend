@@ -247,7 +247,8 @@ export class FacturaComponent implements OnInit {
       event.preventDefault();
     if (!this.validarFormulario())
       return;
-    this.factura.usuario = this.sesion.usuario;  
+    this.factura.usuario = this.sesion.usuario;
+    this.factura.empresa = this.empresa;  
     this.spinnerService.show();
     this.facturaService.crear(this.factura).subscribe({
       next: res => {
