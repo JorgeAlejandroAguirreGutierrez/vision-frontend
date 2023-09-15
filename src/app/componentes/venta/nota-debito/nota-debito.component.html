@@ -288,7 +288,7 @@
                                     <div class="col-8">
                                         <mat-form-field appearance="standard">
                                             <mat-label>Producto</mat-label>
-                                            <input matInput type="text" [value]="notaDebitoLinea.nombreProducto" class="form-control-sm" placeholder="Producto"
+                                            <input matInput type="text" #inputProducto [value]="notaDebitoLinea.nombreProducto" class="form-control-sm" placeholder="Producto"
                                                 [formControl]="controlProducto" [matAutocomplete]="producto"
                                                 oninput="this.value = this.value.toUpperCase()">
                                             <mat-autocomplete #producto="matAutocomplete" [displayWith]="verProducto"
@@ -388,7 +388,7 @@
                                     </div>
                                     <div class="col-1 iconos centrar">
                                         <button mat-icon-button mat-button *ngIf="!verIconoEditarLinea"
-                                            (click)="crearLinea()">
+                                        (focus)="crearLinea(); inputProducto.focus()">
                                             <mat-icon>add_shopping_cart</mat-icon>
                                         </button>
                                         <button mat-icon-button *ngIf="verIconoEditarLinea"
