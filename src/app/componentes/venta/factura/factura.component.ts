@@ -320,8 +320,8 @@ export class FacturaComponent implements OnInit {
       next: res => {
         this.factura = res.resultado as Factura;
         this.consultar();
-        this.spinnerService.hide();  
-        this.stepper.next();
+        this.spinnerService.hide();
+        this.crearFacturaElectronica(null);
       },
       error: err => {
         Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })

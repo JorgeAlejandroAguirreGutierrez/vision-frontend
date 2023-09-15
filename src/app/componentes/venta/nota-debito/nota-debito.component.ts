@@ -580,7 +580,7 @@ export class NotaDebitoComponent implements OnInit {
         this.construir();
         this.consultar();
         this.spinnerService.hide();
-        this.stepper.next();
+        this.crearNotaDebitoElectronica(null);
       },
       err => {
         this.spinnerService.hide();

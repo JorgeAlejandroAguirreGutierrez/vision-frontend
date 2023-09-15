@@ -283,7 +283,8 @@ export class RecaudacionNDComponent implements OnInit {
       next: res => {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
         this.notaDebito = res.resultado as NotaDebito;
-        this.spinnerService.hide();  
+        this.spinnerService.hide();
+        this.crearNotaDebitoElectronica(null);  
       },
       error: err => {
         Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
