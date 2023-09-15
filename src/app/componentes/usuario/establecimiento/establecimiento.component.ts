@@ -94,8 +94,7 @@ export class EstablecimientoComponent implements OnInit {
 
   ngOnInit() {
     this.sesion = validarSesion(this.sesionService, this.router);
-    this.establecimiento.empresa = this.sesion.empresa;
-    this.empresaSeleccionada = this.sesion.empresa;
+    this.establecimiento.empresa = this.sesion.usuario.estacion.establecimiento.empresa;
     this.validarPerfil();
     this.consultar();
     this.consultarEmpresas();

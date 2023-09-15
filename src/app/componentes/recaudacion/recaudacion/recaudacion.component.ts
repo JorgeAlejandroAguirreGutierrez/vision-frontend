@@ -15,7 +15,6 @@ import { SesionService } from '../../../servicios/usuario/sesion.service';
 import { Parametro } from '../../../modelos/configuracion/parametro';
 import { ParametroService } from '../../../servicios/configuracion/parametro.service';
 import { Empresa } from '../../../modelos/usuario/empresa';
-import { ClienteService } from '../../../servicios/cliente/cliente.service';
 import { FormaPago } from '../../../modelos/cliente/forma-pago';
 import { FormaPagoService } from '../../../servicios/cliente/forma-pago.service';
 import { Banco } from '../../../modelos/caja-banco/banco';
@@ -210,7 +209,7 @@ export class RecaudacionComponent implements OnInit, OnChanges {
 
   ngOnInit() {
     this.sesion = validarSesion(this.sesionService, this.router);
-    this.empresa = this.sesion.empresa;
+    this.empresa = this.sesion.usuario.estacion.establecimiento.empresa;
     this.consultarPeriodicidades();
     this.consultarBancos();
     this.consultarBancosPropios();

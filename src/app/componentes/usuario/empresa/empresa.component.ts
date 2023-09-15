@@ -154,7 +154,7 @@ export class EmpresaComponent implements OnInit {
       next: res => {
         this.empresas = res.resultado as Empresa[];
         if (!this.perfilAdministrador) {
-          this.empresas = this.empresas.filter(empresa => empresa.identificacion.includes(this.sesion.empresa.identificacion));
+          this.empresas = this.empresas.filter(empresa => empresa.identificacion.includes(this.sesion.usuario.estacion.establecimiento.empresa.identificacion));
         }
         this.llenarTabla(this.empresas);
       },

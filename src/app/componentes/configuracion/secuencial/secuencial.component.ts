@@ -8,7 +8,6 @@ import { SesionService } from '../../../servicios/usuario/sesion.service';
 import { TipoComprobante } from '../../../modelos/configuracion/tipo-comprobante';
 import { TipoComprobanteService } from '../../../servicios/configuracion/tipo-comprobante.service';
 import { Empresa } from '../../../modelos/usuario/empresa';
-import { EmpresaService } from '../../../servicios/usuario/empresa.service';
 import { Establecimiento } from '../../../modelos/usuario/establecimiento';
 import { EstablecimientoService } from '../../../servicios/usuario/establecimiento.service';
 import { Estacion } from '../../../modelos/usuario/estacion';
@@ -35,12 +34,12 @@ export class SecuencialComponent implements OnInit {
   abrirPanelAdmin: boolean = true;
 
   sesion: Sesion = null;
+  empresa: Empresa = new Empresa();
   secuencial: Secuencial = new Secuencial();
   estacion: Estacion = new Estacion();
 
   secuenciales: Secuencial[];
   tipoComprobantes: TipoComprobante[];
-  empresas: Empresa[];
   establecimientos: Establecimiento[]=[];
   estaciones: Estacion[];
 
@@ -69,15 +68,16 @@ export class SecuencialComponent implements OnInit {
       this.nuevo(null);
   }
 
-  constructor(private renderer: Renderer2, private sesionService: SesionService,private router: Router, private empresaService: EmpresaService, 
+  constructor(private renderer: Renderer2, private sesionService: SesionService,private router: Router, 
     private establecimientoService: EstablecimientoService, private estacionService: EstacionService, 
     private tipoComprobanteService: TipoComprobanteService, private secuencialService: SecuencialService) { }
 
   ngOnInit() {
     this.sesion = validarSesion(this.sesionService, this.router);
+    this.empresa = this.sesion.usuario.estacion.establecimiento.empresa;
     this.consultarTipoComprobante();
-    this.consultarEmpresas();
-    this.consultar();
+    this.consultarEstablecimientos();
+    this.consultarPorEmpresa();
   }
 
   consultarTipoComprobante(){
@@ -89,23 +89,16 @@ export class SecuencialComponent implements OnInit {
       }
     );
   }
-  consultarEmpresas() {
-    this.empresaService.consultar().subscribe({
-      next: (res) => {
-        this.empresas = res.resultado as Empresa[]
-      },
-      error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
-      }
-    );
-  }
+
   consultarEstablecimientos() {
-    this.establecimientoService.consultarPorEmpresa(this.secuencial.estacion.establecimiento.empresa.id).subscribe({
+    this.establecimientoService.consultarPorEmpresa(this.empresa.id).subscribe({
       next: res => {
         this.establecimientos = res.resultado as Establecimiento[];
       },
       error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     });
   }
+
   consultarPuntosVenta() {
     this.estacionService.consultarPuntosVentaPorEstablecimiento(this.secuencial.estacion.establecimiento.id).subscribe({
       next: res => {
@@ -131,7 +124,7 @@ export class SecuencialComponent implements OnInit {
     this.secuencialService.crear(this.secuencial).subscribe({
       next: res => {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
-        this.consultar();
+        this.consultarPorEmpresa();
         this.nuevo(null);
       },
       error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
@@ -147,7 +140,7 @@ export class SecuencialComponent implements OnInit {
       next: res => {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
         this.secuencial=res.resultado as Secuencial;
-        this.consultar();
+        this.consultarPorEmpresa();
         this.nuevo(null);
       },
       error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
@@ -160,7 +153,7 @@ export class SecuencialComponent implements OnInit {
     this.secuencialService.activar(this.secuencial).subscribe({
       next: res => {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
-        this.consultar();
+        this.consultarPorEmpresa();
         this.nuevo(null);
       },
       error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
@@ -173,15 +166,15 @@ export class SecuencialComponent implements OnInit {
     this.secuencialService.inactivar(this.secuencial).subscribe({
       next: res => {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
-        this.consultar();
+        this.consultarPorEmpresa();
         this.nuevo(null);
       },
       error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     });
   }
 
-  consultar() {
-    this.secuencialService.consultar().subscribe({
+  consultarPorEmpresa() {
+    this.secuencialService.consultarPorEmpresa(this.empresa.id).subscribe({
       next: res => {
         this.secuenciales = res.resultado as Secuencial[]
         this.llenarTabla(this.secuenciales);
@@ -229,7 +222,6 @@ export class SecuencialComponent implements OnInit {
   }
 
   validarFormulario(): boolean {
-    //validar que los campos esten llenos antes de guardar
     if (this.secuencial.tipoComprobante.id == valores.cero) {
       Swal.fire({ icon: error_swal, title: error, text: mensajes.error_falta_datos });
       return false;

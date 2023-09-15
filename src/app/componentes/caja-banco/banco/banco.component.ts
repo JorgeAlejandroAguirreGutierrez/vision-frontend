@@ -12,7 +12,6 @@ import { BancoService } from '../../../servicios/caja-banco/banco.service';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
-import { Empresa } from 'src/app/modelos/usuario/empresa';
 
 @Component({
   selector: 'app-banco',
@@ -29,7 +28,6 @@ export class BancoComponent implements OnInit {
   abrirPanelAdmin : boolean = true;
 
   sesion: Sesion = null;
-  empresa: Empresa = null;
   banco: Banco = new Banco();
 
   bancos: Banco[] = [];
@@ -81,7 +79,6 @@ export class BancoComponent implements OnInit {
   crear(event) {
     if (event!=null)
       event.preventDefault();
-    this.banco.empresa = this.empresa;
     this.bancoService.crear(this.banco).subscribe(
       res => {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });

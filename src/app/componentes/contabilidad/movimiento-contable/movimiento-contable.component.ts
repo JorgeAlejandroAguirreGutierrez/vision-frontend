@@ -30,7 +30,7 @@ export class MovimientoContableComponent implements OnInit {
   edicion: boolean = true;
 
   sesion: Sesion = null;
-  empresa: Empresa = null;
+  empresa: Empresa = new Empresa();
   movimientoContable = new MovimientoContable();
   movimientosContables: MovimientoContable[];
   afectacionesContables: AfectacionContable[];

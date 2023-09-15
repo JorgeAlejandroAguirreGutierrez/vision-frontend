@@ -156,8 +156,7 @@ export class FacturaComponent implements OnInit {
 
   ngOnInit() {
     this.sesion = validarSesion(this.sesionService, this.router);
-    this.empresa = this.sesion.empresa;
-    this.factura.empresa = this.empresa;
+    this.empresa = this.sesion.usuario.estacion.establecimiento.empresa;
     this.factura.establecimiento = this.sesion.usuario.estacion.establecimiento.codigoSRI;
     this.factura.puntoVenta = this.sesion.usuario.estacion.codigoSRI;
     this.factura.fecha = this.hoy;
@@ -471,6 +470,7 @@ export class FacturaComponent implements OnInit {
       return;
     this.spinnerService.show();  
     this.factura.usuario = this.sesion.usuario;
+    this.factura.empresa = this.empresa;
     if(this.controlProducto.getRawValue() instanceof Object){
       this.facturaLinea.nombreProducto = this.controlProducto.value.nombre;      
     } else {

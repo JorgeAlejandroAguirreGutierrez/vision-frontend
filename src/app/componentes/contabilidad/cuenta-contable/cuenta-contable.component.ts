@@ -31,7 +31,7 @@ export class CuentaContableComponent implements OnInit {
   edicion: boolean = true;
 
   sesion: Sesion = null;
-  empresa: Empresa = null;
+  empresa: Empresa = new Empresa();
   cuentaContable: CuentaContable = new CuentaContable();
   cuentasContables: CuentaContable[];
 
