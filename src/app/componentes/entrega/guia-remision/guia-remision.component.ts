@@ -118,8 +118,7 @@ export class GuiaRemisionComponent implements OnInit {
 
   ngOnInit() {
     this.sesion = validarSesion(this.sesionService, this.router);
-    this.empresa = this.sesion.empresa;
-    this.guiaRemision.empresa = this.empresa;
+    this.empresa = this.sesion.usuario.estacion.establecimiento.empresa;
     this.consultar();
     this.consultarClientePorEmpresaYEstado();
     this.consultarTransportistas();
@@ -173,6 +172,7 @@ export class GuiaRemisionComponent implements OnInit {
       event.preventDefault();
     this.spinnerService.show();
     this.guiaRemision.usuario = this.sesion.usuario;
+    this.guiaRemision.empresa = this.empresa;
     this.guiaRemisionService.crear(this.guiaRemision).subscribe(
       res => {
         this.spinnerService.hide();

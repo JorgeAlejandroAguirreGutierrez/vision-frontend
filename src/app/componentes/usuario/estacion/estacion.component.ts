@@ -76,7 +76,7 @@ export class EstacionComponent implements OnInit {
 
   ngOnInit() {
     this.sesion=validarSesion(this.sesionService, this.router);
-    this.estacion.establecimiento.empresa = this.sesion.empresa;
+    this.estacion.establecimiento.empresa = this.sesion.usuario.estacion.establecimiento.empresa;
     this.deshabilitarEmpresa = this.sesion.usuario.perfil.multiempresa == 'SI'? false : true;
     this.consultarEmpresas();
     this.consultarEstablecimientos();

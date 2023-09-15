@@ -82,8 +82,7 @@ export class UsuarioComponent implements OnInit {
 
   ngOnInit() {
     this.sesion = validarSesion(this.sesionService, this.router);
-    this.empresa = this.sesion.empresa;
-    this.usuario.estacion.establecimiento.empresa = this.empresa;
+    this.empresa = this.sesion.usuario.estacion.establecimiento.empresa;
     this.validarPerfil();
     this.consultar();
     this.consultarPerfiles();

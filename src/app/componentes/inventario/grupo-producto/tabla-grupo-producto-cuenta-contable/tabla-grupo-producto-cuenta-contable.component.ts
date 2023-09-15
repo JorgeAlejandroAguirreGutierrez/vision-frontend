@@ -22,7 +22,7 @@ import { Empresa } from 'src/app/modelos/usuario/empresa';
 export class TablaGrupoProductoCuentaContableComponent implements OnInit {
 
   sesion: Sesion = null;
-  empresa: Empresa = null;
+  empresa: Empresa = new Empresa();
   @Output() cuentaContableSeleccionado = new EventEmitter();
   cuentasContables: CuentaContable[];
   cuentaContable= new CuentaContable();
@@ -46,7 +46,7 @@ export class TablaGrupoProductoCuentaContableComponent implements OnInit {
 
   ngOnInit() {
     this.sesion = validarSesion(this.sesionService, this.router);
-    this.empresa = this.sesion.empresa;
+    this.empresa = this.sesion.usuario.estacion.establecimiento.empresa;
     this.consultar();
   }
 

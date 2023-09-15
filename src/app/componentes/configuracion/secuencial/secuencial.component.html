@@ -58,12 +58,8 @@
                 <div class="col-4">
                     <mat-form-field appearance="standard">
                         <mat-label>Empresa</mat-label>
-                        <mat-select [(ngModel)]="secuencial.estacion.establecimiento.empresa" [compareWith]="compareFn" 
-                            (selectionChange)="consultarEstablecimientos()" class="form-control-sm">
-                            <mat-option *ngFor="let empresa of empresas" [value]="empresa">
-                                {{empresa.nombreComercial}}
-                            </mat-option>
-                        </mat-select>
+                        <input matInput type="number" [(ngModel)]="empresa.razonSocial" [disabled]="true"
+                            class="form-control-sm">
                     </mat-form-field>
                 </div>
                 <div class="col-1">

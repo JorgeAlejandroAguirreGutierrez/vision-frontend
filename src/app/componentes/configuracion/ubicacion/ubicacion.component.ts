@@ -25,8 +25,8 @@ export class UbicacionComponent implements OnInit {
   abrirPanelNuevo = true;
   abrirPanelAdmin = true;
 
-  sesion: Sesion=null;
-  ubicacion= new Ubicacion();
+  sesion: Sesion = null;
+  ubicacion = new Ubicacion();
   ubicaciones: Ubicacion[];
 
   columnas: any[] = [

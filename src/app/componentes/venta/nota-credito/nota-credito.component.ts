@@ -121,7 +121,7 @@ export class NotaCreditoComponent implements OnInit {
 
   ngOnInit() {
     this.sesion = validarSesion(this.sesionService, this.router);
-    this.empresa = this.sesion.empresa;
+    this.empresa = this.sesion.usuario.estacion.establecimiento.empresa;
     this.fechaMinima = new Date(this.fechaMinima.setDate(this.hoy.getDate() - 3))
     this.notaCredito.establecimiento = this.sesion.usuario.estacion.establecimiento.codigoSRI;
     this.notaCredito.puntoVenta = this.sesion.usuario.estacion.codigoSRI;
