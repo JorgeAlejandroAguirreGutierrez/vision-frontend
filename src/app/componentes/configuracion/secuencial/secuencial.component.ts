@@ -8,7 +8,6 @@ import { SesionService } from '../../../servicios/usuario/sesion.service';
 import { TipoComprobante } from '../../../modelos/configuracion/tipo-comprobante';
 import { TipoComprobanteService } from '../../../servicios/configuracion/tipo-comprobante.service';
 import { Empresa } from '../../../modelos/usuario/empresa';
-import { EmpresaService } from '../../../servicios/usuario/empresa.service';
 import { Establecimiento } from '../../../modelos/usuario/establecimiento';
 import { EstablecimientoService } from '../../../servicios/usuario/establecimiento.service';
 import { Estacion } from '../../../modelos/usuario/estacion';
@@ -78,7 +77,7 @@ export class SecuencialComponent implements OnInit {
     this.empresa = this.sesion.usuario.estacion.establecimiento.empresa;
     this.consultarTipoComprobante();
     this.consultarEstablecimientos();
-    this.consultar();
+    this.consultarPorEmpresa();
   }
 
   consultarTipoComprobante(){
@@ -125,7 +124,7 @@ export class SecuencialComponent implements OnInit {
     this.secuencialService.crear(this.secuencial).subscribe({
       next: res => {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
-        this.consultar();
+        this.consultarPorEmpresa();
         this.nuevo(null);
       },
       error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
@@ -141,7 +140,7 @@ export class SecuencialComponent implements OnInit {
       next: res => {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
         this.secuencial=res.resultado as Secuencial;
-        this.consultar();
+        this.consultarPorEmpresa();
         this.nuevo(null);
       },
       error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
@@ -154,7 +153,7 @@ export class SecuencialComponent implements OnInit {
     this.secuencialService.activar(this.secuencial).subscribe({
       next: res => {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
-        this.consultar();
+        this.consultarPorEmpresa();
         this.nuevo(null);
       },
       error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
@@ -167,15 +166,15 @@ export class SecuencialComponent implements OnInit {
     this.secuencialService.inactivar(this.secuencial).subscribe({
       next: res => {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
-        this.consultar();
+        this.consultarPorEmpresa();
         this.nuevo(null);
       },
       error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     });
   }
 
-  consultar() {
-    this.secuencialService.consultar().subscribe({
+  consultarPorEmpresa() {
+    this.secuencialService.consultarPorEmpresa(this.empresa.id).subscribe({
       next: res => {
         this.secuenciales = res.resultado as Secuencial[]
         this.llenarTabla(this.secuenciales);
