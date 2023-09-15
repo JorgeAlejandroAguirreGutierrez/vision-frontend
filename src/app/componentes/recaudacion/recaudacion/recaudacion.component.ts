@@ -282,7 +282,8 @@ export class RecaudacionComponent implements OnInit, OnChanges {
       next: res => {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
         this.factura = res.resultado as Factura;
-        this.spinnerService.hide();  
+        this.spinnerService.hide();
+        this.crearFacturaElectronica(null);  
       },
       error: err => {
         Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
@@ -298,7 +299,6 @@ export class RecaudacionComponent implements OnInit, OnChanges {
     this.facturaElectronicaService.enviar(this.factura.id).subscribe({
       next: res => {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
-        //this.factura = res.resultado as Factura;
         this.llamarNuevo.emit();
         this.stepper.previous();
         this.spinnerService.hide();  
