@@ -20,8 +20,8 @@ import { PaqueteService } from 'src/app/servicios/usuario/paquete.service';
 
 export class PaqueteComponent implements OnInit {
 
-  si: string = valores.si;
-  no: string = valores.no;
+  mensual: string = valores.mensual;
+  anual: string = valores.anual;
   estadoActivo: string = valores.estadoActivo;
   estadoInactivo: string = valores.estadoInactivo;
 
@@ -35,12 +35,12 @@ export class PaqueteComponent implements OnInit {
   columnas: any[] = [
     { nombreColumna: 'codigo', cabecera: 'Código', celda: (row: Paquete) => `${row.codigo}` },
     { nombreColumna: 'nombre', cabecera: 'Nombre', celda: (row: Paquete) => `${row.nombre}` },
-    { nombreColumna: 'maximo', cabecera: 'Maximo', celda: (row: Paquete) => `${row.maximo}` },
-    { nombreColumna: 'valorTotal', cabecera: 'Valor Total', celda: (row: Paquete) => `${row.valorTotal}` },
-    { nombreColumna: 'valorAnual', cabecera: 'Valor Anual', celda: (row: Paquete) => `${row.valorAnual}` },
-    { nombreColumna: 'valorMaximo', cabecera: 'Valor Maximo', celda: (row: Paquete) => `${row.valorMaximo}` },
-    { nombreColumna: 'valorPuestaInicial', cabecera: 'Valor P/Inicial', celda: (row: Paquete) => `${row.valorPuestaInicial}` },
-    { nombreColumna: 'comision', cabecera: 'Comision', celda: (row: Paquete) => `${row.comision}` }, 
+    { nombreColumna: 'maximo', cabecera: 'Maximo Comp', celda: (row: Paquete) => `${row.maximo}` },
+    { nombreColumna: 'valorTotal', cabecera: 'Valor Total', celda: (row: Paquete) => `$${row.valorTotal}` },
+    { nombreColumna: 'valorAnual', cabecera: 'Valor Anual', celda: (row: Paquete) => `$${row.valorAnual}` },
+    { nombreColumna: 'valorMaximo', cabecera: 'Valor Maximo', celda: (row: Paquete) => `$${row.valorMaximo}` },
+    { nombreColumna: 'valorPuestaInicial', cabecera: 'Valor P/Inicial', celda: (row: Paquete) => `$${row.valorPuestaInicial}` },
+    { nombreColumna: 'comision', cabecera: 'Comision', celda: (row: Paquete) => `$${row.comision}` }, 
     { nombreColumna: 'Tipo', cabecera: 'Tipo', celda: (row: Paquete) => `${row.tipo}` },   
     { nombreColumna: 'estado', cabecera: 'Estado', celda: (row: Paquete) => `${row.estado}` }
   ];
