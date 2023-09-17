@@ -145,7 +145,7 @@ export const urn =
     empresa: "/empresa",
     parametro: "/parametro",
     usuario: "/usuario",
-    estacionUsuario: "estacionUsuario",
+    paquete: "/paquete",
     perfil: "/perfil",
     consultarPorPerfil: "/consultarPorPerfil",
     permiso: "/permiso",

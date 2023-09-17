@@ -1,0 +1,206 @@
+<nav class="navbar-light nav-fijo">
+    <ul class="navbar-nav">
+        <li class="nav-item" *ngIf="paquete.id == 0">
+            <a class="nav-link" title="Guardar" role="button" (click)="crear($event)">
+                <mat-icon>save</mat-icon>
+            </a>
+        </li>
+        <li class="nav-item" *ngIf="paquete.id != 0">
+            <a class="nav-link" title="Actualizar" role="button" (click)="actualizar($event)">
+                <mat-icon>update</mat-icon>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" title="Nuevo" role="button" (click)="nuevo($event)">
+                <mat-icon>file_copy</mat-icon>
+            </a>
+        </li>
+        <ng-container *ngIf="paquete.id != 0">
+            <li class="nav-item" *ngIf="paquete.estado != estadoActivo">
+                <a class="nav-link" title="Activar" role="button" (click)="activar($event)">
+                    <mat-icon>assignment_turned_in</mat-icon>
+                </a>
+            </li>
+            <li class="nav-item" *ngIf="paquete.estado != estadoInactivo">
+                <a class="nav-link" title="Inactivar" role="button" (click)="inactivar($event)">
+                    <mat-icon>delete_forever</mat-icon>
+                </a>
+            </li>
+        </ng-container>
+    </ul>
+</nav>
+<div class="contenedor">
+    <mat-accordion class="headers-align">
+        <mat-expansion-panel (opened)="abrirPanelNuevo = true" (closed)="abrirPanelNuevo = false"
+            [expanded]="abrirPanelNuevo">
+            <mat-expansion-panel-header>
+                <mat-panel-title>
+                    <i><u>PAQUETE</u></i>
+                </mat-panel-title>
+                <mat-panel-description>
+                    {{abrirPanelNuevo ? 'Ocultar crear paquete' : 'Crear nuevo paquete'}}
+                    <mat-icon>playlist_add</mat-icon>
+                </mat-panel-description>
+            </mat-expansion-panel-header>
+            <mat-divider></mat-divider>
+            <div class="form-group form-row">
+                <div class="form-row col-10">
+                    <div class="col-2">
+                        <mat-form-field appearance="standard">
+                            <mat-label>Código</mat-label>
+                            <input matInput type="text" [(ngModel)]="paquete.codigo" class="form-control-sm"
+                                [disabled]="true">
+                        </mat-form-field>
+                    </div>
+                    <div class="col-2">
+                        <mat-form-field appearance="standard">
+                            <mat-label>Nombre</mat-label>
+                            <input matInput type="text" [(ngModel)]="paquete.nombre"
+                                oninput="this.value = this.value.toUpperCase()" class="form-control-sm">
+                        </mat-form-field>
+                    </div>
+                    <div class="col-2">
+                        <mat-form-field appearance="standard">
+                            <mat-label>Minimo de Comprobantes</mat-label>
+                            <input matInput type="text" [(ngModel)]="paquete.minimo"
+                                class="form-control-sm" disabled>
+                        </mat-form-field>
+                    </div>
+                    <div class="col-2">
+                        <mat-form-field appearance="standard">
+                            <mat-label>Maximo de Comprobantes</mat-label>
+                            <input matInput type="text" [(ngModel)]="paquete.maximo" class="form-control-sm">
+                        </mat-form-field>
+                    </div>
+                    <div class="col-2">
+                        <mat-form-field appearance="standard">
+                            <mat-label>Valor Total</mat-label>
+                            <input matInput type="text" [(ngModel)]="paquete.valorTotal" class="form-control-sm">
+                        </mat-form-field>
+                    </div>
+                    <div class="col-2">
+                        <mat-form-field appearance="standard">
+                            <mat-label>Valor Anual</mat-label>
+                            <input matInput type="text" [(ngModel)]="paquete.valorAnual" class="form-control-sm">
+                        </mat-form-field>
+                    </div>
+                    <div class="col-2">
+                        <mat-form-field appearance="standard">
+                            <mat-label>Valor Minimo</mat-label>
+                            <input matInput type="text" [(ngModel)]="paquete.valorMinimo" class="form-control-sm">
+                        </mat-form-field>
+                    </div>
+                    <div class="col-2">
+                        <mat-form-field appearance="standard">
+                            <mat-label>Valor Maximo</mat-label>
+                            <input matInput type="text" [(ngModel)]="paquete.valorMaximo" class="form-control-sm">
+                        </mat-form-field>
+                    </div>
+                    <div class="col-2">
+                        <mat-form-field appearance="standard">
+                            <mat-label>Valor Puesta Inicial</mat-label>
+                            <input matInput type="text" [(ngModel)]="paquete.valorPuestaInicial" class="form-control-sm">
+                        </mat-form-field>
+                    </div>
+                    <div class="col-2">
+                        <mat-form-field appearance="standard">
+                            <mat-label>Comision</mat-label>
+                            <input matInput type="text" [(ngModel)]="paquete.comision" class="form-control-sm">
+                        </mat-form-field>
+                    </div>
+                    <div class="col-2">
+                        <mat-form-field appearance="standard">
+                            <mat-label>Cantidad de Usuarios para Recaudacion</mat-label>
+                            <input matInput type="text" [(ngModel)]="paquete.cantidadUsuarioRecaudacion" class="form-control-sm">
+                        </mat-form-field>
+                    </div>
+                    <div class="col-2">
+                        <mat-form-field appearance="standard">
+                            <mat-label>Cantidad de Usuarios para Gerente</mat-label>
+                            <input matInput type="text" [(ngModel)]="paquete.cantidadUsuarioGerente" class="form-control-sm">
+                        </mat-form-field>
+                    </div>
+                    <div class="col-2">
+                        <mat-form-field appearance="standard">
+                            <mat-label>Cantidad de Usuarios para Administrador</mat-label>
+                            <input matInput type="text" [(ngModel)]="paquete.cantidadUsuarioAdministrador" class="form-control-sm">
+                        </mat-form-field>
+                    </div>
+                    <div class="col-2">
+                        <mat-form-field appearance="standard">
+                            <mat-label>Descripcion Promocion</mat-label>
+                            <input matInput type="text" [(ngModel)]="paquete.descripcionPromocion"
+                                oninput="this.value = this.value.toUpperCase()" class="form-control-sm">
+                        </mat-form-field>
+                    </div>
+                    <div class="col-2">
+                        <mat-form-field appearance="standard">
+                            <mat-label>Valor Promocion</mat-label>
+                            <input matInput type="text" [(ngModel)]="paquete.valorPromocion" class="form-control-sm">
+                        </mat-form-field>
+                    </div>
+                    <div class="col-2">
+                        <mat-form-field appearance="standard">
+                            <mat-label>Tipo</mat-label>
+                            <input matInput type="text" [(ngModel)]="paquete.tipo"
+                                oninput="this.value = this.value.toUpperCase()" class="form-control-sm">
+                        </mat-form-field>
+                    </div>
+                    <div class="col-2">
+                        <mat-form-field appearance="standard">
+                            <mat-label>Estado</mat-label>
+                            <input matInput type="text" [(ngModel)]="paquete.estado"
+                                oninput="this.value = this.value.toUpperCase()" class="form-control-sm">
+                        </mat-form-field>
+                    </div>
+                </div>
+            </div>
+        </mat-expansion-panel>
+    </mat-accordion>
+    <mat-accordion class="headers-align">
+        <mat-expansion-panel (opened)="abrirPanelAdmin = true" (closed)="abrirPanelAdmin = false"
+            [expanded]="abrirPanelAdmin">
+            <mat-expansion-panel-header>
+                <mat-panel-title>
+                    <i><u>GESTIONAR PAQUETES</u></i>
+                </mat-panel-title>
+                <mat-panel-description>
+                    {{abrirPanelAdmin ? 'Ocultar Paquetes' : 'Administrar paquetes existentes'}}
+                    <mat-icon>playlist_add_check</mat-icon>
+                </mat-panel-description>
+            </mat-expansion-panel-header>
+            <mat-divider></mat-divider>
+            <mat-form-field appearance="standard">
+                <mat-label>Buscar paquete</mat-label>
+                <input matInput oninput="this.value = this.value.toUpperCase()" (keyup)="filtro($event)" #inputFiltro>
+                <button mat-button *ngIf="inputFiltro.value" matSuffix mat-icon-button (click)="borrarFiltro()">
+                    <mat-icon>close</mat-icon>
+                </button>
+            </mat-form-field>
+            <div class="mat-elevation-z8">
+                <table mat-table [dataSource]="dataSource" matSort>
+                    <!-- Columnas Dinamicas -->
+                    <ng-container *ngFor="let columna of columnas" [matColumnDef]="columna.nombreColumna">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> {{ columna.cabecera }} </th>
+                        <td mat-cell *matCellDef="let row"> {{ columna.celda(row) }} </td>
+                    </ng-container>
+                    <tr mat-header-row *matHeaderRowDef="cabecera"></tr>
+                    <tr mat-row (click)="seleccion(row)" [class.selected-row]="clickedRows.has(row)"
+                        *matRowDef="let row; columns: cabecera;"></tr>
+                    <tr class="mat-row" *matNoDataRow>
+                        <td class="mat-cell" colspan="6">No hay datos que coincidan con el paquete:
+                            "{{inputFiltro.value}}"
+                        </td>
+                    </tr>
+                </table>
+                <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" showFirstLastButtons></mat-paginator>
+            </div>
+            <div class="azul" *ngIf="!clickedRows.size">
+                Seleccione una fila para editar
+            </div>
+            <div class="azul" *ngFor="let clickedRow of clickedRows">
+                Código: {{clickedRow.codigo}} seleccionado
+            </div>
+        </mat-expansion-panel>
+    </mat-accordion>
+</div>
