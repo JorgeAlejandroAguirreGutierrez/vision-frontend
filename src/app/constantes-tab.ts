@@ -82,6 +82,7 @@ export const tabs = {
     tab_estacion: "Estación",
     tab_perfil: "Pefil",
     tab_permiso: "Permiso",
+    tab_paquete: "Paquete",
 
     // Configuración
     tab_ubicacion: "Ubicacion",
@@ -174,9 +175,8 @@ export const items = {
     item_establecimiento: "Establecimientos",
     item_estacion: "Estaciones",
     item_perfil: "Perfiles",
-
-    item_estacion_usuario: "Estación Usuario",
     item_permiso: "Permisos",
+    item_paquete: "Paquetes",
 
     //CONFIGURACION
     item_ubicacion: "Ubicación",
@@ -285,6 +285,7 @@ export const icos = {
     ico_estacion: 'fa-solid fa-house-laptop',
     ico_perfil: 'fa-regular fa-id-card',
     ico_permiso: 'fa-solid fa-user-check',
+    ico_paquete: 'fa-solid fa-truck-fast',
 
     // Configuración
     ico_ubicacion: 'fa-solid fa-map-location-dot',

@@ -44,12 +44,11 @@
             </mat-expansion-panel-header>
             <mat-divider></mat-divider>
             <div class="form-group form-row">
-                <div class="form-row col-10">
+                <div class="form-row col-12">
                     <div class="col-2">
                         <mat-form-field appearance="standard">
                             <mat-label>Código</mat-label>
-                            <input matInput type="text" [(ngModel)]="paquete.codigo" class="form-control-sm"
-                                [disabled]="true">
+                            <input matInput type="text" [(ngModel)]="paquete.codigo" class="form-control-sm" [disabled]="true">
                         </mat-form-field>
                     </div>
                     <div class="col-2">
@@ -62,8 +61,7 @@
                     <div class="col-2">
                         <mat-form-field appearance="standard">
                             <mat-label>Minimo de Comprobantes</mat-label>
-                            <input matInput type="text" [(ngModel)]="paquete.minimo"
-                                class="form-control-sm" disabled>
+                            <input matInput type="text" [(ngModel)]="paquete.minimo" class="form-control-sm">
                         </mat-form-field>
                     </div>
                     <div class="col-2">
@@ -142,8 +140,10 @@
                     <div class="col-2">
                         <mat-form-field appearance="standard">
                             <mat-label>Tipo</mat-label>
-                            <input matInput type="text" [(ngModel)]="paquete.tipo"
-                                oninput="this.value = this.value.toUpperCase()" class="form-control-sm">
+                            <mat-select [(ngModel)]="paquete.tipo" class="form-control-sm">
+                                <mat-option [value]="mensual">{{mensual}}</mat-option>
+                                <mat-option [value]="anual">{{anual}}</mat-option>
+                            </mat-select>
                         </mat-form-field>
                     </div>
                     <div class="col-2">

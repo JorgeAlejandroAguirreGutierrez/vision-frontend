@@ -245,6 +245,7 @@ export const valores = {
     clienteDireccion: "CLIENTE DIRECCION",
     nuevaDireccion: "NUEVA DIRECCION",
     mensual: "MENSUAL",
+    anual: "ANUAL",
     etiquetaCasa: "CASA",
     etiquetaTrabajo: "TRABAJO",
     etiquetaEmpresa: "EMPRESA",

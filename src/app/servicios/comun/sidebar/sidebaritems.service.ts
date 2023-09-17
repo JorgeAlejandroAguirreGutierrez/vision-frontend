@@ -54,7 +54,6 @@ import { ReporteContabilidadComponent } from '../../../componentes/reporte/conta
 import { ReporteTalentoHumanoComponent } from '../../../componentes/reporte/talento-humano/reporte-talento-humano/reporte-talento-humano.component';
 import { ReporteFinancieroComponent } from '../../../componentes/reporte/financiero/reporte-financiero/reporte-financiero.component';
 import { ReporteImportacionComponent } from '../../../componentes/reporte/importacion/reporte-importacion/reporte-importacion.component';
-
 //ACCESOS
 import { UsuarioComponent } from '../../../componentes/usuario/usuario/usuario.component';
 import { EmpresaComponent } from '../../../componentes/usuario/empresa/empresa.component';
@@ -62,6 +61,7 @@ import { EstablecimientoComponent } from '../../../componentes/usuario/estableci
 import { EstacionComponent } from '../../../componentes/usuario/estacion/estacion.component';
 import { PerfilComponent } from '../../../componentes/usuario/perfil/perfil.component';
 import { PermisoComponent } from '../../../componentes/usuario/permiso/permiso.component';
+import { PaqueteComponent } from '../../../componentes/usuario/paquete/paquete.component';
 //CONFIGURACIONES
 import { UbicacionComponent } from '../../../componentes/configuracion/ubicacion/ubicacion.component';
 import { EstadoCivilComponent } from '../../../componentes/configuracion/estado-civil/estado-civil.component';
@@ -194,6 +194,7 @@ export class SidebarItemsService {
       this.llenarOpciones(EstacionComponent, tabs.tab_estacion, items.item_estacion, icos.ico_estacion);
       this.llenarOpciones(PerfilComponent, tabs.tab_perfil, items.item_perfil, icos.ico_perfil);
       this.llenarOpciones(PermisoComponent, tabs.tab_permiso, items.item_permiso, icos.ico_permiso);
+      this.llenarOpciones(PaqueteComponent, tabs.tab_paquete, items.item_paquete, icos.ico_paquete);
     }
 
     if (tabNombre == modulos.modulo_configuracion) {
