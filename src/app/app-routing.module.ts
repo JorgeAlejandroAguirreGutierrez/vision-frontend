@@ -102,6 +102,7 @@ import { EstablecimientoComponent, DialogoMapaEstablecimientoComponent } from '.
 import { EstacionComponent } from './componentes/usuario/estacion/estacion.component';
 import { PerfilComponent } from './componentes/usuario/perfil/perfil.component';
 import { PermisoComponent } from './componentes/usuario/permiso/permiso.component';
+import { PaqueteComponent } from './componentes/usuario/paquete/paquete.component';
 
 //Módulo de Configuraciones
 import { UbicacionComponent } from './componentes/configuracion/ubicacion/ubicacion.component';
@@ -240,6 +241,7 @@ export const RoutingComponents = [
   EstacionComponent,
   PerfilComponent,
   PermisoComponent,
+  PaqueteComponent,
   //Configuración
   TipoRetencionComponent,
   UbicacionComponent,
