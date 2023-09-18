@@ -65,6 +65,15 @@ export class PaqueteService {
     );
   }
 
+  calcular(paquete: Paquete): Observable<Respuesta> {
+    return this.http.post(environment.host + urn.ruta + urn.paquete + urn.calcular, paquete, options).pipe(
+      map(response => response as Respuesta),
+      catchError(err => {
+        return throwError(()=>err);
+      })
+    );
+  }
+
   activar(paquete: Paquete): Observable<Respuesta> {
     return this.http.patch(environment.host + urn.ruta + urn.paquete + urn.activar, paquete, options).pipe(
       map(response => response as Respuesta),

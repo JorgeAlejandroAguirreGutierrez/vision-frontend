@@ -51,47 +51,47 @@
                             <input matInput type="text" [(ngModel)]="paquete.codigo" class="form-control-sm" [disabled]="true">
                         </mat-form-field>
                     </div>
-                    <div class="col-2">
+                    <div class="col-4">
                         <mat-form-field appearance="standard">
                             <mat-label>Nombre</mat-label>
-                            <input matInput type="text" [(ngModel)]="paquete.nombre"
+                            <input matInput type="text" [(ngModel)]="paquete.nombre" (change)="calcular()"
                                 oninput="this.value = this.value.toUpperCase()" class="form-control-sm">
                         </mat-form-field>
                     </div>
                     <div class="col-2">
                         <mat-form-field appearance="standard">
                             <mat-label>Minimo de Comprobantes</mat-label>
-                            <input matInput type="text" [(ngModel)]="paquete.minimo" class="form-control-sm">
+                            <input matInput type="text" [(ngModel)]="paquete.minimoComprobantes" (change)="calcular()" class="form-control-sm">
                         </mat-form-field>
                     </div>
                     <div class="col-2">
                         <mat-form-field appearance="standard">
                             <mat-label>Maximo de Comprobantes</mat-label>
-                            <input matInput type="text" [(ngModel)]="paquete.maximo" class="form-control-sm">
+                            <input matInput type="text" [(ngModel)]="paquete.maximoComprobantes" (change)="calcular()" class="form-control-sm">
                         </mat-form-field>
                     </div>
                     <div class="col-2">
                         <mat-form-field appearance="standard">
                             <mat-label>Valor Total</mat-label>
-                            <input matInput type="text" [(ngModel)]="paquete.valorTotal" class="form-control-sm">
+                            <input matInput type="text" [(ngModel)]="paquete.valorTotal" (change)="calcular()" class="form-control-sm">
                         </mat-form-field>
                     </div>
                     <div class="col-2">
                         <mat-form-field appearance="standard">
                             <mat-label>Valor Anual</mat-label>
-                            <input matInput type="text" [(ngModel)]="paquete.valorAnual" class="form-control-sm">
+                            <input matInput type="text" [(ngModel)]="paquete.valorAnual" class="form-control-sm" [disabled]="true">
                         </mat-form-field>
                     </div>
                     <div class="col-2">
                         <mat-form-field appearance="standard">
                             <mat-label>Valor Minimo</mat-label>
-                            <input matInput type="text" [(ngModel)]="paquete.valorMinimo" class="form-control-sm">
+                            <input matInput type="text" [(ngModel)]="paquete.valorMinimo" class="form-control-sm" [disabled]="true">
                         </mat-form-field>
                     </div>
                     <div class="col-2">
                         <mat-form-field appearance="standard">
                             <mat-label>Valor Maximo</mat-label>
-                            <input matInput type="text" [(ngModel)]="paquete.valorMaximo" class="form-control-sm">
+                            <input matInput type="text" [(ngModel)]="paquete.valorMaximo" class="form-control-sm" [disabled]="true">
                         </mat-form-field>
                     </div>
                     <div class="col-2">
@@ -102,8 +102,14 @@
                     </div>
                     <div class="col-2">
                         <mat-form-field appearance="standard">
+                            <mat-label>Porcentaje Comision</mat-label>
+                            <input matInput type="text" [(ngModel)]="paquete.porcentajeComision" (change)="calcular()" class="form-control-sm">
+                        </mat-form-field>
+                    </div>
+                    <div class="col-2">
+                        <mat-form-field appearance="standard">
                             <mat-label>Comision</mat-label>
-                            <input matInput type="text" [(ngModel)]="paquete.comision" class="form-control-sm">
+                            <input matInput type="text" [(ngModel)]="paquete.comision" class="form-control-sm" [disabled]="true">
                         </mat-form-field>
                     </div>
                     <div class="col-2">
@@ -124,20 +130,7 @@
                             <input matInput type="text" [(ngModel)]="paquete.cantidadUsuarioAdministrador" class="form-control-sm">
                         </mat-form-field>
                     </div>
-                    <div class="col-2">
-                        <mat-form-field appearance="standard">
-                            <mat-label>Descripcion Promocion</mat-label>
-                            <input matInput type="text" [(ngModel)]="paquete.descripcionPromocion"
-                                oninput="this.value = this.value.toUpperCase()" class="form-control-sm">
-                        </mat-form-field>
-                    </div>
-                    <div class="col-2">
-                        <mat-form-field appearance="standard">
-                            <mat-label>Valor Promocion</mat-label>
-                            <input matInput type="text" [(ngModel)]="paquete.valorPromocion" class="form-control-sm">
-                        </mat-form-field>
-                    </div>
-                    <div class="col-2">
+                    <div class="col-3">
                         <mat-form-field appearance="standard">
                             <mat-label>Tipo</mat-label>
                             <mat-select [(ngModel)]="paquete.tipo" class="form-control-sm">
@@ -146,11 +139,10 @@
                             </mat-select>
                         </mat-form-field>
                     </div>
-                    <div class="col-2">
+                    <div class="col-3">
                         <mat-form-field appearance="standard">
                             <mat-label>Estado</mat-label>
-                            <input matInput type="text" [(ngModel)]="paquete.estado"
-                                oninput="this.value = this.value.toUpperCase()" class="form-control-sm">
+                            <input matInput type="text" [(ngModel)]="paquete.estado" oninput="this.value = this.value.toUpperCase()" class="form-control-sm">
                         </mat-form-field>
                     </div>
                 </div>

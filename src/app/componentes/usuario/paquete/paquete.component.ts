@@ -10,6 +10,7 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Paquete } from 'src/app/modelos/usuario/paquete';
 import { PaqueteService } from 'src/app/servicios/usuario/paquete.service';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 
 @Component({
@@ -35,7 +36,7 @@ export class PaqueteComponent implements OnInit {
   columnas: any[] = [
     { nombreColumna: 'codigo', cabecera: 'Código', celda: (row: Paquete) => `${row.codigo}` },
     { nombreColumna: 'nombre', cabecera: 'Nombre', celda: (row: Paquete) => `${row.nombre}` },
-    { nombreColumna: 'maximo', cabecera: 'Maximo Comp', celda: (row: Paquete) => `${row.maximo}` },
+    { nombreColumna: 'maximo', cabecera: 'Maximo Comp', celda: (row: Paquete) => `${row.maximoComprobantes}` },
     { nombreColumna: 'valorTotal', cabecera: 'Valor Total', celda: (row: Paquete) => `$${row.valorTotal}` },
     { nombreColumna: 'valorAnual', cabecera: 'Valor Anual', celda: (row: Paquete) => `$${row.valorAnual}` },
     { nombreColumna: 'valorMaximo', cabecera: 'Valor Maximo', celda: (row: Paquete) => `$${row.valorMaximo}` },
@@ -52,7 +53,7 @@ export class PaqueteComponent implements OnInit {
   @ViewChild(MatSort) sort: MatSort;
   @ViewChild("inputFiltro") inputFiltro: ElementRef;
 
-  constructor(private renderer: Renderer2, private router: Router,
+  constructor(private renderer: Renderer2, private router: Router, private spinnerService: NgxSpinnerService,
     private sesionService: SesionService, private paqueteService: PaqueteService) { }
 
   ngOnInit() {
@@ -104,6 +105,35 @@ export class PaqueteComponent implements OnInit {
         this.nuevo(null);
       },
       error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+    });
+  }
+
+  calcular(){
+    if (this.paquete.nombre == valores.vacio) {
+      return;
+    }
+    if (this.paquete.minimoComprobantes <= valores.cero) {
+      return;
+    }
+    if (this.paquete.maximoComprobantes <= valores.cero) {
+      return;
+    }
+    if (this.paquete.valorTotal <= valores.cero) {
+      return;
+    }
+    if (this.paquete.porcentajeComision <= valores.cero) {
+      return;
+    }
+    this.spinnerService.show();
+    this.paqueteService.calcular(this.paquete).subscribe({
+      next: res => {
+        this.paquete = res.resultado as Paquete;
+        this.spinnerService.hide();
+      },
+      error: err => {
+        Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+        this.spinnerService.hide();
+      }
     });
   }
 
@@ -179,19 +209,19 @@ export class PaqueteComponent implements OnInit {
       Swal.fire({ icon: error_swal, title: error, text: mensajes.error_falta_datos });
       return false;
     }
-    if (this.paquete.minimo == valores.cero) {
+    if (this.paquete.minimoComprobantes == valores.cero) {
       Swal.fire({ icon: error_swal, title: error, text: mensajes.error_falta_datos });
       return false;
     }
-    if (this.paquete.maximo == valores.cero) {
+    if (this.paquete.maximoComprobantes == valores.cero) {
       Swal.fire({ icon: error_swal, title: error, text: mensajes.error_falta_datos });
       return false;
     }
-    if (this.paquete.valorMinimo == valores.cero) {
+    if (this.paquete.valorTotal == valores.cero) {
       Swal.fire({ icon: error_swal, title: error, text: mensajes.error_falta_datos });
       return false;
     }
-    if (this.paquete.valorMaximo == valores.cero) {
+    if (this.paquete.porcentajeComision == valores.cero) {
       Swal.fire({ icon: error_swal, title: error, text: mensajes.error_falta_datos });
       return false;
     }
