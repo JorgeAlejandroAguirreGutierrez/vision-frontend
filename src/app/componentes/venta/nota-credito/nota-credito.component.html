@@ -22,17 +22,17 @@
                 </a>
             </li>
             <li class="nav-item" *ngIf="notaCredito.id != 0 && notaCredito.factura.estado != estadoEmitida && notaCredito.factura.estado != estadoAnulada && notaCredito.factura.procesoSRI != procesoSRIAnulada && notaCredito.factura.procesoSRI != procesoSRIPendiente
-            && notaCredito.estado != estadoEmitida && notaCredito.estado != estadoAnulada && notaCredito.procesoSRI != procesoSRIPendiente && notaCredito.procesoSRI != procesoSRIAnulada">
+            && notaCredito.estado != estadoAnulada && notaCredito.procesoSRI != procesoSRIPendiente && notaCredito.procesoSRI != procesoSRIAnulada">
                 <a class="nav-link" title="Crear Nota Credito Electronica" href="#" role="button" (click)="crearNotaCreditoElectronica($event)">
                     <mat-icon>point_of_sale</mat-icon>
                 </a>
             </li>
-            <li class="nav-item" *ngIf="notaCredito.id != 0 && notaCredito.estado != estadoEmitida && notaCredito.estado != estadoAnulada && notaCredito.procesoSRI != procesoSRIAnulada">
+            <li class="nav-item" *ngIf="notaCredito.id != 0 && notaCredito.estado != estadoAnulada && notaCredito.procesoSRI != procesoSRIAnulada">
                 <a class="nav-link" title="Obtener PDF" href="#" role="button" (click)="obtenerPDF($event)">
                     <mat-icon>picture_as_pdf</mat-icon>
                 </a>
             </li>
-            <li class="nav-item" *ngIf="notaCredito.id != 0 && notaCredito.estado != estadoEmitida && notaCredito.estado != estadoAnulada && notaCredito.procesoSRI != procesoSRIAnulada && notaCredito.procesoSRI != procesoSRIPendiente">
+            <li class="nav-item" *ngIf="notaCredito.id != 0 && notaCredito.estado != estadoAnulada && notaCredito.procesoSRI != procesoSRIAnulada && notaCredito.procesoSRI != procesoSRIPendiente">
                 <a class="nav-link" title="Enviar PDF Y XML" href="#" role="button" (click)="enviarPDFYXML($event)">
                     <mat-icon>forward_to_inbox</mat-icon>
                 </a>
