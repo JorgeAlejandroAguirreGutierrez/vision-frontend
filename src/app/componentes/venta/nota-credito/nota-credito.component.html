@@ -22,7 +22,7 @@
                 </a>
             </li>
             <li class="nav-item" *ngIf="notaCredito.id != 0 && notaCredito.factura.estado != estadoEmitida && notaCredito.factura.estado != estadoAnulada && notaCredito.factura.procesoSRI != procesoSRIAnulada && notaCredito.factura.procesoSRI != procesoSRIPendiente
-            && notaCredito.estado != estadoAnulada && notaCredito.procesoSRI != procesoSRIPendiente && notaCredito.procesoSRI != procesoSRIAnulada">
+            && notaCredito.estado != estadoAnulada && notaCredito.procesoSRI != procesoSRIAutorizada && notaCredito.procesoSRI != procesoSRIAnulada">
                 <a class="nav-link" title="Crear Nota Credito Electronica" href="#" role="button" (click)="crearNotaCreditoElectronica($event)">
                     <mat-icon>point_of_sale</mat-icon>
                 </a>
