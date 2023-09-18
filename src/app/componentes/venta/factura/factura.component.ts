@@ -238,6 +238,7 @@ export class FacturaComponent implements OnInit {
     this.controlRazonSocialCliente.patchValue(valores.vacio);
     this.dataSourceLinea = new MatTableDataSource<FacturaLinea>([]);
     this.clickedRowsFactura.clear();
+    this.consultar();
     this.nuevaLinea();
   }
 
@@ -273,7 +274,6 @@ export class FacturaComponent implements OnInit {
       next: res => {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
         this.factura = res.resultado as Factura;
-        this.consultar();
         this.nuevo(null);
         this.spinnerService.hide();  
       },
