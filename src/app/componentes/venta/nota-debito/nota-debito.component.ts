@@ -192,6 +192,7 @@ export class NotaDebitoComponent implements OnInit {
     this.controlRazonSocialCliente.patchValue(valores.vacio);
     this.dataSourceLinea = new MatTableDataSource<NotaDebitoLinea>([]);
     this.clickedRows.clear();
+    this.consultar();
     this.nuevaLinea();
   }
 
