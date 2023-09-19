@@ -62,6 +62,7 @@ import { EstacionComponent } from '../../../componentes/usuario/estacion/estacio
 import { PerfilComponent } from '../../../componentes/usuario/perfil/perfil.component';
 import { PermisoComponent } from '../../../componentes/usuario/permiso/permiso.component';
 import { PaqueteComponent } from '../../../componentes/usuario/paquete/paquete.component';
+import { SuscripcionComponent } from '../../../componentes/usuario/suscripcion/suscripcion.component';
 //CONFIGURACIONES
 import { UbicacionComponent } from '../../../componentes/configuracion/ubicacion/ubicacion.component';
 import { EstadoCivilComponent } from '../../../componentes/configuracion/estado-civil/estado-civil.component';
@@ -195,6 +196,7 @@ export class SidebarItemsService {
       this.llenarOpciones(PerfilComponent, tabs.tab_perfil, items.item_perfil, icos.ico_perfil);
       this.llenarOpciones(PermisoComponent, tabs.tab_permiso, items.item_permiso, icos.ico_permiso);
       this.llenarOpciones(PaqueteComponent, tabs.tab_paquete, items.item_paquete, icos.ico_paquete);
+      this.llenarOpciones(SuscripcionComponent, tabs.tab_suscripcion, items.item_suscripcion, icos.ico_suscripcion);
     }
 
     if (tabNombre == modulos.modulo_configuracion) {

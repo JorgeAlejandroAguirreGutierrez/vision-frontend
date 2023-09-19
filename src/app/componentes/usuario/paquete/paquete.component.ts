@@ -42,7 +42,7 @@ export class PaqueteComponent implements OnInit {
     { nombreColumna: 'valorMaximo', cabecera: 'Valor Maximo', celda: (row: Paquete) => `$${row.valorMaximo}` },
     { nombreColumna: 'valorPuestaInicial', cabecera: 'Valor P/Inicial', celda: (row: Paquete) => `$${row.valorPuestaInicial}` },
     { nombreColumna: 'comision', cabecera: 'Comision', celda: (row: Paquete) => `$${row.comision}` }, 
-    { nombreColumna: 'Tipo', cabecera: 'Tipo', celda: (row: Paquete) => `${row.tipo}` },   
+    { nombreColumna: 'tipo', cabecera: 'Tipo', celda: (row: Paquete) => `${row.tipo}` },   
     { nombreColumna: 'estado', cabecera: 'Estado', celda: (row: Paquete) => `${row.estado}` }
   ];
   cabecera: string[] = this.columnas.map(titulo => titulo.nombreColumna);
@@ -81,14 +81,19 @@ export class PaqueteComponent implements OnInit {
       event.preventDefault();
     if (!this.validarFormulario())
       return;
+    this.spinnerService.show();
     this.paqueteService.crear(this.paquete).subscribe({
       next: res => {
+        this.spinnerService.hide();
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
         this.paquete = res.resultado as Paquete;
         this.consultar();
         this.nuevo(null);
       },
-      error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+      error: err => {
+        this.spinnerService.hide();
+        Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+      }
     });
   }
 
@@ -97,14 +102,19 @@ export class PaqueteComponent implements OnInit {
       event.preventDefault();
     if (!this.validarFormulario())
       return;
+    this.spinnerService.show();
     this.paqueteService.actualizar(this.paquete).subscribe({
       next: res => {
+        this.spinnerService.hide();
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
         this.paquete = res.resultado as Paquete;
         this.consultar();
         this.nuevo(null);
       },
-      error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+      error: err => {
+        this.spinnerService.hide();
+        Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+      }
     });
   }
 
@@ -127,12 +137,12 @@ export class PaqueteComponent implements OnInit {
     this.spinnerService.show();
     this.paqueteService.calcular(this.paquete).subscribe({
       next: res => {
-        this.paquete = res.resultado as Paquete;
         this.spinnerService.hide();
+        this.paquete = res.resultado as Paquete;
       },
       error: err => {
-        Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
         this.spinnerService.hide();
+        Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
       }
     });
   }
