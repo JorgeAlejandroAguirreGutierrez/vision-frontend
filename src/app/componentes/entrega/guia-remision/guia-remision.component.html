@@ -145,14 +145,14 @@
                         <mat-form-field appearance="standard">
                             <mat-label>Estab.</mat-label>
                             <input matInput type="text" class="form-control-sm"
-                                [(ngModel)]="sesion.usuario.estacion.establecimiento.codigoSRI" [disabled]="true">
+                                [(ngModel)]="guiaRemision.establecimiento" [disabled]="true">
                         </mat-form-field>
                     </div>
                     <div class="col-4">
                         <mat-form-field appearance="standard">
                             <mat-label>Punto V.</mat-label>
                             <input matInput type="text" class="form-control-sm"
-                                [(ngModel)]="sesion.usuario.estacion.codigoSRI" [disabled]="true">
+                                [(ngModel)]="guiaRemision.puntoVenta" [disabled]="true">
                         </mat-form-field>
                     </div>
                     <div class="col-4">
@@ -165,7 +165,7 @@
                     <div class="col-6">
                         <mat-form-field appearance="standard">
                             <mat-label>Usuario</mat-label>
-                            <input matInput type="text" class="form-control-sm" [(ngModel)]="sesion.usuario.nombre"
+                            <input matInput type="text" class="form-control-sm" [(ngModel)]="guiaRemision.usuario.apodo"
                                 [disabled]="true">
                         </mat-form-field>
                     </div>

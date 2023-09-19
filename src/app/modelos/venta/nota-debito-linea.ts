@@ -28,6 +28,7 @@ export class NotaDebitoLinea {
   constructor() {
     this.id = valores.cero;
     this.posicion = valores.cero;
+    this.nombreProducto = valores.vacio;
     this.entregado = valores.no;
     this.cantidad = valores.uno;
     this.valorDescuentoLinea = valores.cero;
