@@ -146,6 +146,7 @@ export const urn =
     parametro: "/parametro",
     usuario: "/usuario",
     paquete: "/paquete",
+    suscripcion: "/suscripcion",
     perfil: "/perfil",
     consultarPorPerfil: "/consultarPorPerfil",
     permiso: "/permiso",

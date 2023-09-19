@@ -103,6 +103,7 @@ import { EstacionComponent } from './componentes/usuario/estacion/estacion.compo
 import { PerfilComponent } from './componentes/usuario/perfil/perfil.component';
 import { PermisoComponent } from './componentes/usuario/permiso/permiso.component';
 import { PaqueteComponent } from './componentes/usuario/paquete/paquete.component';
+import { SuscripcionComponent } from './componentes/usuario/suscripcion/suscripcion.component';
 
 //Módulo de Configuraciones
 import { UbicacionComponent } from './componentes/configuracion/ubicacion/ubicacion.component';
@@ -242,6 +243,7 @@ export const RoutingComponents = [
   PerfilComponent,
   PermisoComponent,
   PaqueteComponent,
+  SuscripcionComponent,
   //Configuración
   TipoRetencionComponent,
   UbicacionComponent,
