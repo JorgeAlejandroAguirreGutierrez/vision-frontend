@@ -20,7 +20,7 @@
                         </a>
                     </li>
                     <li class="nav-item" *ngIf="notaDebito.id != 0 && notaDebito.estado != estadoAnulada">
-                        <a class="nav-link" title="Activar" role="button" (click)="anular($event)">
+                        <a class="nav-link" title="Anular" role="button" (click)="anular($event)">
                             <mat-icon>delete_forever</mat-icon>
                         </a>
                     </li>
@@ -38,7 +38,7 @@
                     </li>
                     <li class="nav-item" *ngIf="notaDebito.id != 0 && notaDebito.estado != estadoEmitida && notaDebito.estado != estadoAnulada && notaDebito.procesoSRI != procesoSRIPendiente && notaDebito.procesoSRI != procesoSRIAnulada">
                         <a class="nav-link" title="Enviar PDF Y XML" href="#" role="button" (click)="enviarPDFYXML($event)">
-                            <mat-icon>picture_as_pdf</mat-icon>
+                            <mat-icon>forward_to_inbox</mat-icon>
                         </a>
                     </li>
                     <li class="nav-item" *ngIf="notaDebito.id != 0">
