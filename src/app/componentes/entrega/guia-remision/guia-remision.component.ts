@@ -119,6 +119,8 @@ export class GuiaRemisionComponent implements OnInit {
   ngOnInit() {
     this.sesion = validarSesion(this.sesionService, this.router);
     this.empresa = this.sesion.usuario.estacion.establecimiento.empresa;
+    this.guiaRemision.establecimiento = this.sesion.usuario.estacion.establecimiento.codigoSRI;
+    this.guiaRemision.puntoVenta = this.sesion.usuario.estacion.codigoSRI;
     this.consultar();
     this.consultarClientePorEmpresaYEstado();
     this.consultarTransportistas();

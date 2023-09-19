@@ -157,6 +157,7 @@ export class FacturaComponent implements OnInit {
   ngOnInit() {
     this.sesion = validarSesion(this.sesionService, this.router);
     this.empresa = this.sesion.usuario.estacion.establecimiento.empresa;
+    this.factura.usuario = this.sesion.usuario;
     this.factura.establecimiento = this.sesion.usuario.estacion.establecimiento.codigoSRI;
     this.factura.puntoVenta = this.sesion.usuario.estacion.codigoSRI;
     this.factura.fecha = this.hoy;
@@ -232,6 +233,7 @@ export class FacturaComponent implements OnInit {
     this.factura = new Factura();
     this.hoy = new Date();
     this.factura.fecha = this.hoy;
+    this.factura.usuario = this.sesion.usuario;
     this.factura.establecimiento = this.sesion.usuario.estacion.establecimiento.codigoSRI;
     this.factura.puntoVenta = this.sesion.usuario.estacion.codigoSRI;
     this.controlIdentificacionCliente.patchValue(valores.vacio);

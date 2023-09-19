@@ -45,6 +45,7 @@ export class NotaDebitoComponent implements OnInit {
 
   @ViewChild('stepper') stepper: MatStepper;
   hoy = new Date();
+  fechaMinima: Date = new Date();
 
   isLinear = false;
   isEditable = true;
@@ -166,11 +167,13 @@ export class NotaDebitoComponent implements OnInit {
   ngOnInit() {
     this.sesion = validarSesion(this.sesionService, this.router);
     this.empresa = this.sesion.usuario.estacion.establecimiento.empresa;
+    this.notaDebito.usuario = this.sesion.usuario;
+    this.notaDebito.establecimiento = this.sesion.usuario.estacion.establecimiento.codigoSRI;
+    this.notaDebito.puntoVenta = this.sesion.usuario.estacion.codigoSRI;
     this.consultar();
     this.consultarClientes();
     this.consultarProductos();
     this.consultarImpuestos();
-    this.consultarCategoriasProductos();
     this.consultarBodegas();
     this.inicializarSteeper();
     this.inicializarFiltros();
@@ -182,6 +185,7 @@ export class NotaDebitoComponent implements OnInit {
     this.notaDebito = new NotaDebito();
     this.hoy = new Date();
     this.notaDebito.fecha = this.hoy;
+    this.notaDebito.usuario = this.sesion.usuario;
     this.notaDebito.establecimiento = this.sesion.usuario.estacion.establecimiento.codigoSRI;
     this.notaDebito.puntoVenta = this.sesion.usuario.estacion.codigoSRI;
     this.controlIdentificacionCliente.patchValue(valores.vacio);
@@ -310,17 +314,6 @@ export class NotaDebitoComponent implements OnInit {
     );
   }
 
-  consultarCategoriasProductos(){
-    this.categoriaProductoService.consultar().subscribe(
-      res => {
-        this.categoriasProductos = res.resultado as CategoriaProducto[]
-      },
-      err => {
-        Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
-      } 
-    );
-  }
-
   consultarProductos(){
     this.productoService.consultarPorCategoriaProductoYEmpresaYEstado(valores.servicio, this.empresa.id, valores.estadoActivo).subscribe(
       res => {
@@ -335,7 +328,7 @@ export class NotaDebitoComponent implements OnInit {
   seleccionarProducto() {
     this.notaDebitoLinea.producto = this.controlProducto.value;
     this.notaDebitoLinea.impuesto = this.notaDebitoLinea.producto.impuesto;
-    if(this.notaDebitoLinea.producto.id == valores.cero || this.notaDebito.factura.cliente.id == valores.cero){
+    if(this.notaDebitoLinea.producto.id == valores.cero || this.notaDebito.factura.id == valores.cero){
       Swal.fire({ icon: error_swal, title: error, text: mensajes.error_factura })
       return;
     }
@@ -433,6 +426,9 @@ export class NotaDebitoComponent implements OnInit {
     this.notaDebitoService.obtenerPorFactura(facturaId).subscribe(
       res => {
         this.notaDebito = res.resultado as NotaDebito;
+        this.notaDebito.usuario = this.sesion.usuario;
+        this.notaDebito.establecimiento = this.sesion.usuario.estacion.establecimiento.codigoSRI;
+        this.notaDebito.puntoVenta = this.sesion.usuario.estacion.codigoSRI;
         this.construir();
         this.spinnerService.hide();
       },
@@ -462,7 +458,11 @@ export class NotaDebitoComponent implements OnInit {
     this.spinnerService.show();  
     this.notaDebito.usuario = this.sesion.usuario;
     this.notaDebito.empresa = this.empresa;
-    this.notaDebitoLinea.nombreProducto = this.controlProducto.getRawValue();
+    if(this.controlProducto.getRawValue() instanceof Object){
+      this.notaDebitoLinea.nombreProducto = this.controlProducto.value.nombre;      
+    } else {
+      this.notaDebitoLinea.nombreProducto = this.controlProducto.getRawValue();
+    }
     this.notaDebito.notaDebitoLineas.push(this.notaDebitoLinea);
     this.notaDebitoService.calcular(this.notaDebito).subscribe({
       next: res => {
@@ -483,7 +483,11 @@ export class NotaDebitoComponent implements OnInit {
       return;
     this.spinnerService.show();  
     this.notaDebito.usuario = this.sesion.usuario;
-    this.notaDebitoLinea.nombreProducto = this.controlProducto.getRawValue();
+    if(this.controlProducto.getRawValue() instanceof Object){
+      this.notaDebitoLinea.nombreProducto = this.controlProducto.value.nombre;      
+    } else {
+      this.notaDebitoLinea.nombreProducto = this.controlProducto.getRawValue();
+    }
     this.notaDebito.notaDebitoLineas[this.indiceLinea] = this.notaDebitoLinea;
     this.llenarPosicion(this.notaDebito);
     this.verIconoEditarLinea = false;
@@ -602,11 +606,6 @@ export class NotaDebitoComponent implements OnInit {
     });
   }
 
-  limpiarLinea(){
-    this.notaDebitoLinea = new NotaDebitoLinea();
-    this.controlProducto.patchValue(valores.vacio);
-  }
-
   llenarTablaLinea(notaDebitoLineas: NotaDebitoLinea[]) {
     this.dataSourceLinea = new MatTableDataSource(notaDebitoLineas);
     this.dataSourceLinea.filterPredicate = (data: NotaDebitoLinea, filter: string): boolean =>
@@ -649,17 +648,10 @@ export class NotaDebitoComponent implements OnInit {
   }
 
   calcularLinea(){
-    this.spinnerService.show();
-    if (this.notaDebitoLinea.cantidad == valores.cero){
+    if (!this.validarFormularioLinea())
       return;
-    }
-    if (this.notaDebitoLinea.precio.id == valores.cero){
-      return;
-    }
-    if (this.notaDebitoLinea.impuesto.id == valores.cero){
-      return;
-    }
     this.notaDebitoLinea.precioUnitario = Number((this.precioVentaPublicoManual * 100 / (100 + this.notaDebitoLinea.impuesto.porcentaje)).toFixed(4));
+    this.spinnerService.show();
     this.notaDebitoService.calcularLinea(this.notaDebitoLinea).subscribe(
       res => {
         this.spinnerService.hide();

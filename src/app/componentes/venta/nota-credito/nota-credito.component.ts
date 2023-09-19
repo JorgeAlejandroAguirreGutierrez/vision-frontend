@@ -122,7 +122,8 @@ export class NotaCreditoComponent implements OnInit {
   ngOnInit() {
     this.sesion = validarSesion(this.sesionService, this.router);
     this.empresa = this.sesion.usuario.estacion.establecimiento.empresa;
-    this.fechaMinima = new Date(this.fechaMinima.setDate(this.hoy.getDate() - 3))
+    this.fechaMinima = new Date(this.fechaMinima.setDate(this.hoy.getDate() - 3));
+    this.notaCredito.usuario = this.sesion.usuario;
     this.notaCredito.establecimiento = this.sesion.usuario.estacion.establecimiento.codigoSRI;
     this.notaCredito.puntoVenta = this.sesion.usuario.estacion.codigoSRI;
     this.notaCredito.fecha = this.hoy;
@@ -201,6 +202,7 @@ export class NotaCreditoComponent implements OnInit {
     this.notaCredito = new NotaCredito();
     this.hoy = new Date();
     this.notaCredito.fecha = this.hoy;
+    this.notaCredito.usuario = this.sesion.usuario;
     this.notaCredito.establecimiento = this.sesion.usuario.estacion.establecimiento.codigoSRI;
     this.notaCredito.puntoVenta = this.sesion.usuario.estacion.codigoSRI;
     this.controlIdentificacionCliente.patchValue(valores.vacio);
@@ -418,6 +420,7 @@ export class NotaCreditoComponent implements OnInit {
     this.notaCreditoService.obtenerPorFactura(facturaId).subscribe(
       res => {
         this.notaCredito = res.resultado as NotaCredito;
+        this.notaCredito.usuario = this.sesion.usuario;
         this.notaCredito.establecimiento = this.sesion.usuario.estacion.establecimiento.codigoSRI;
         this.notaCredito.puntoVenta = this.sesion.usuario.estacion.codigoSRI;
         this.construir();
