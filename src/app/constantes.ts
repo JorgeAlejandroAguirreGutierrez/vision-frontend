@@ -158,6 +158,7 @@ export const urn =
     obtenerPorApodoYEstado: "/obtenerPorApodoYEstado",
     subirCertificado: "/subirCertificado",
     subirLogo: "/subirLogo",
+    obtenerUltimoPorEmpresa: "/obtenerUltimoPorEmpresa",
 
     //Ventas
     factura: "/factura",
