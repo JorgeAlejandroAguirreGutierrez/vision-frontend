@@ -1,4 +1,5 @@
 import { valores } from "../../constantes";
+import { Banco } from "../caja-banco/banco";
 import { Empresa } from "./empresa";
 import { Paquete } from "./paquete";
 
@@ -9,6 +10,9 @@ export class Suscripcion {
     fechaFinal: Date;
     paquete: Paquete;
     empresa: Empresa;
+    numeroTransaccion: string;
+    fechaTransaccion: Date;
+    banco: Banco;
     estado: string;
     
     constructor() {
@@ -18,6 +22,9 @@ export class Suscripcion {
         this.fechaFinal = null;
         this.paquete = new Paquete();
         this.empresa = null;
+        this.numeroTransaccion = valores.vacio;
+        this.fechaTransaccion = new Date();
+        this.banco = null;
         this.estado = valores.estadoActivo;
     }
 }

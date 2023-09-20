@@ -64,7 +64,7 @@
                     <div class="col-2">
                         <mat-form-field appearance="standard">
                             <mat-label>Paquete</mat-label>
-                            <mat-select [(ngModel)]="suscripcion.paquete" (selectionChange)="seleccionarPaquete()" [compareWith]="compareFn" class="form-control-sm">
+                            <mat-select [(ngModel)]="suscripcion.paquete" [compareWith]="compareFn" class="form-control-sm">
                                 <mat-option *ngFor="let paquete of paquetes; let i=index" [value]="paquete">
                                     {{paquete.nombre}}
                                 </mat-option>
@@ -85,21 +85,34 @@
                     </div>
                     <div class="col-2">
                         <mat-form-field appearance="standard">
-                            <mat-label>Fecha Inicial</mat-label>
-                            <input matInput type="text" [(ngModel)]="suscripcion.fechaInicial"
-                                oninput="this.value = this.value.toUpperCase()" class="form-control-sm">
+                            <mat-label>No. Transacc</mat-label>
+                            <input matInput type="text" [(ngModel)]="suscripcion.numeroTransaccion" class="form-control-sm">
+                        </mat-form-field>
+                    </div>
+                    <div class="col-1">
+                        <mat-form-field appearance="standard">
+                            <mat-label>Fecha Trans</mat-label>
+                            <input matInput #inputFecha="ngModel" [matDatepicker]="picker1" class="form-control-sm"
+                                [(ngModel)]="suscripcion.fechaTransaccion" required
+                                datePickerFormat="DD-MM-YYYY">
+                            <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                            <mat-datepicker #picker1></mat-datepicker>
                         </mat-form-field>
                     </div>
                     <div class="col-2">
                         <mat-form-field appearance="standard">
-                            <mat-label>Fecha Final</mat-label>
-                            <input matInput type="text" [(ngModel)]="suscripcion.fechaFinal" class="form-control-sm">
+                            <mat-label>Banco</mat-label>
+                            <mat-select [(ngModel)]="suscripcion.banco" [compareWith]="compareFn" class="form-control-sm">
+                                <mat-option *ngFor="let banco of bancos; let i=index" [value]="banco">
+                                    {{banco.razonSocial}}
+                                </mat-option>
+                            </mat-select>
                         </mat-form-field>
                     </div>
-                    <div class="col-2">
+                    <div class="col-1">
                         <mat-form-field appearance="standard">
                             <mat-label>Estado</mat-label>
-                            <input matInput type="text" [(ngModel)]="suscripcion.estado" oninput="this.value = this.value.toUpperCase()" class="form-control-sm">
+                            <input matInput type="text" [(ngModel)]="suscripcion.estado" oninput="this.value = this.value.toUpperCase()" [disabled]="true" class="form-control-sm">
                         </mat-form-field>
                     </div>
                 </div>

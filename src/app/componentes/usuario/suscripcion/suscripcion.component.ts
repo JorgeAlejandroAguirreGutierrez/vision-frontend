@@ -15,6 +15,9 @@ import { SuscripcionService } from 'src/app/servicios/usuario/suscripcion.servic
 import { PaqueteService } from 'src/app/servicios/usuario/paquete.service';
 import { Empresa } from 'src/app/modelos/usuario/empresa';
 import { EmpresaService } from 'src/app/servicios/usuario/empresa.service';
+import { BancoService } from 'src/app/servicios/caja-banco/banco.service';
+import { Banco } from 'src/app/modelos/caja-banco/banco';
+import { DatePipe } from '@angular/common';
 
 
 @Component({
@@ -36,15 +39,16 @@ export class SuscripcionComponent implements OnInit {
   empresas: Empresa[];
   suscripciones: Suscripcion[];
   paquetes: Paquete[];
+  bancos: Banco[];
 
   columnas: any[] = [
     { nombreColumna: 'codigo', cabecera: 'Código', celda: (row: Suscripcion) => `${row.codigo}` },
-    { nombreColumna: 'empresa', cabecera: 'Empresa', celda: (row: Suscripcion) => `${row.empresa}` },
+    { nombreColumna: 'empresa', cabecera: 'Empresa', celda: (row: Suscripcion) => `${row.empresa.razonSocial}` },
     { nombreColumna: 'paquete', cabecera: 'Paquete', celda: (row: Suscripcion) => `${row.paquete.nombre}` },
     { nombreColumna: 'maximoComprobantes', cabecera: 'Paquete', celda: (row: Suscripcion) => `${row.paquete.maximoComprobantes}` },
     { nombreColumna: 'valorTotal', cabecera: 'Valor Total', celda: (row: Suscripcion) => `$${row.paquete.valorTotal}` },
-    { nombreColumna: 'fechaInicial', cabecera: 'Fecha Inicial', celda: (row: Suscripcion) => `${row.fechaInicial}` },
-    { nombreColumna: 'fechaFinal', cabecera: 'Fecha Final', celda: (row: Suscripcion) => `${row.fechaFinal}` },
+    { nombreColumna: 'fechaInicial', cabecera: 'Fecha Inicial', celda: (row: Suscripcion) => `${this.datepipe.transform(row.fechaInicial, "dd-MM-yyyy")}` },
+    { nombreColumna: 'fechaFinal', cabecera: 'Fecha Final', celda: (row: Suscripcion) => `${this.datepipe.transform(row.fechaFinal, "dd-MM-yyyy")}` },
     { nombreColumna: 'estado', cabecera: 'Estado', celda: (row: Suscripcion) => `${row.estado}` }
   ];
   cabecera: string[] = this.columnas.map(titulo => titulo.nombreColumna);
@@ -55,13 +59,14 @@ export class SuscripcionComponent implements OnInit {
   @ViewChild(MatSort) sort: MatSort;
   @ViewChild("inputFiltro") inputFiltro: ElementRef;
 
-  constructor(private renderer: Renderer2, private router: Router, private spinnerService: NgxSpinnerService, private empresaService: EmpresaService,
-    private sesionService: SesionService, private suscripcionService: SuscripcionService, private paqueteService: PaqueteService) { }
+  constructor(private renderer: Renderer2, private router: Router, private spinnerService: NgxSpinnerService, private empresaService: EmpresaService, private datepipe: DatePipe,
+    private sesionService: SesionService, private suscripcionService: SuscripcionService, private paqueteService: PaqueteService, private bancoService: BancoService) { }
 
   ngOnInit() {
     this.sesion = validarSesion(this.sesionService, this.router);
     this.consultarEmpresas();
     this.consultarPaquetes();
+    this.consultarBancos();
   }
 
   @HostListener('window:keypress', ['$event'])
@@ -147,7 +152,22 @@ export class SuscripcionComponent implements OnInit {
   }
 
   seleccionarEmpresa(){
+    this.suscripcionService.consultarPorEmpresa(this.suscripcion.empresa.id).subscribe({
+      next: res => {
+        this.suscripciones = res.resultado as Suscripcion[];
+        this.llenarTabla(this.suscripciones);
+      },
+      error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+    });
 
+    this.suscripcionService.obtenerUltimoPorEmpresa(this.suscripcion.empresa.id).subscribe({
+      next: res => {
+        if(res.resultado != null){
+          this.suscripcion.paquete = res.resultado.paquete as Paquete;
+        }
+      },
+      error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+    });
   }
 
   consultarPaquetes(){
@@ -159,8 +179,13 @@ export class SuscripcionComponent implements OnInit {
     });
   }
 
-  seleccionarPaquete(){
-
+  consultarBancos(){
+    this.bancoService.consultarPorEstado(this.estadoActivo).subscribe({
+      next: res => {
+        this.bancos = res.resultado as Banco[];
+      },
+      error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+    });
   }
 
   consultar() {
