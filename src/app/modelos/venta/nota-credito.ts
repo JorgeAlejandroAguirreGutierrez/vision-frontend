@@ -19,7 +19,8 @@ export class NotaCredito {
     fechaAutorizacion: Date;
     estado: string;
     procesoSRI: string;
-    descuento: number;
+    valorDescuento: number;
+    porcentajeDescuento: number;
     subtotal: number;
     subtotalGravado: number;
     subtotalNoGravado: number;
@@ -43,7 +44,8 @@ export class NotaCredito {
         this.fecha = null;
         this.estado = valores.vacio;
         this.procesoSRI = valores.vacio;
-        this.descuento = valores.cero;
+        this.valorDescuento = valores.cero;
+        this.porcentajeDescuento = valores.cero;
         this.subtotal = valores.cero;
         this.subtotalGravado = valores.cero;
         this.subtotalNoGravado = valores.cero;

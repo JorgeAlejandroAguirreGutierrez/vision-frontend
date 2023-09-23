@@ -435,7 +435,8 @@ export class NotaCreditoComponent implements OnInit {
 
   seleccionarOperacion(){
     if (this.notaCredito.operacion == valores.devolucion) {
-      this.notaCredito.descuento = valores.cero;
+      this.notaCredito.valorDescuento = valores.cero;
+      this.notaCredito.porcentajeDescuento = valores.cero;
       this.deshabilitarDescuento = true;
       if (this.notaCredito.id == valores.cero){
         for (let i=0; i < this.notaCredito.notaCreditoLineas.length; i++){

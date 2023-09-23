@@ -87,7 +87,7 @@
                             </mat-autocomplete>
                         </mat-form-field>
                     </div>
-                    <div class="col-3">
+                    <div class="col-2">
                         <mat-form-field appearance="standard">
                             <mat-label>Fecha</mat-label>
                             <input matInput #inputFecha="ngModel" [matDatepicker]="picker" [(ngModel)]="notaCredito.fecha" 
@@ -113,7 +113,7 @@
                             </mat-autocomplete>
                         </mat-form-field>
                     </div>
-                    <div class="col-3">
+                    <div class="col-2">
                         <mat-form-field appearance="standard">
                             <mat-label>Operacion</mat-label>
                             <mat-select class="form-control-sm" [(ngModel)]="notaCredito.operacion"
@@ -126,7 +126,14 @@
                     <div class="col-2">
                         <mat-form-field appearance="standard">
                             <mat-label>V. Descuento</mat-label>
-                            <input matInput type="text" [(ngModel)]="notaCredito.descuento" class="form-control-sm"
+                            <input matInput type="text" [(ngModel)]="notaCredito.valorDescuento" class="form-control-sm"
+                                (change)="calcular()" [disabled]="deshabilitarDescuento">
+                        </mat-form-field>
+                    </div>
+                    <div class="col-2">
+                        <mat-form-field appearance="standard">
+                            <mat-label>V. Descuento</mat-label>
+                            <input matInput type="text" [(ngModel)]="notaCredito.porcentajeDescuento" class="form-control-sm"
                                 (change)="calcular()" [disabled]="deshabilitarDescuento">
                         </mat-form-field>
                     </div>
