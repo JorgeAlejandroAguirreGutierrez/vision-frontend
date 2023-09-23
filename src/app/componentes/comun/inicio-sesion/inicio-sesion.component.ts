@@ -136,10 +136,7 @@ export class InicioSesionComponent implements OnInit {
       next: res => {
         this.sesion.usuario = res.resultado as Usuario;
         this.usuario = this.sesion.usuario;
-        this.multiEmpresa=this.sesion.usuario.perfil.multiempresa == valores.si? true: false;
-        if (this.multiEmpresa){
-          this.sesion.usuario.estacion.establecimiento.empresa.id = 1; //Iniciar combo empresa
-        }
+        this.multiEmpresa = this.sesion.usuario.perfil.multiempresa == valores.si? true: false;
         if (this.sesion.usuario.cambiarContrasena == valores.si) {
           this.cambiarContrasena = true;
         }
