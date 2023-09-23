@@ -89,14 +89,19 @@ export class SuscripcionComponent implements OnInit {
       event.preventDefault();
     if (!this.validarFormulario())
       return;
+    this.spinnerService.show();
     this.suscripcionService.crear(this.suscripcion).subscribe({
       next: res => {
+        this.spinnerService.hide();
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
         this.suscripcion = res.resultado as Suscripcion;
         this.consultar();
         this.nuevo(null);
       },
-      error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+      error: err => {
+        this.spinnerService.hide();
+        Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+      }
     });
   }
 
@@ -105,14 +110,19 @@ export class SuscripcionComponent implements OnInit {
       event.preventDefault();
     if (!this.validarFormulario())
       return;
+    this.spinnerService.show();
     this.suscripcionService.actualizar(this.suscripcion).subscribe({
       next: res => {
+        this.spinnerService.hide();
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
         this.suscripcion = res.resultado as Suscripcion;
         this.consultar();
         this.nuevo(null);
       },
-      error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+      error: err => {
+        this.spinnerService.hide();
+        Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+      }
     });
   }
 
@@ -235,6 +245,14 @@ export class SuscripcionComponent implements OnInit {
       return false;
     }
     if (this.suscripcion.paquete.id == valores.cero) {
+      Swal.fire({ icon: error_swal, title: error, text: mensajes.error_falta_datos });
+      return false;
+    }
+    if (this.suscripcion.numeroTransaccion == valores.vacio) {
+      Swal.fire({ icon: error_swal, title: error, text: mensajes.error_falta_datos });
+      return false;
+    }
+    if (this.suscripcion.banco.id == valores.cero) {
       Swal.fire({ icon: error_swal, title: error, text: mensajes.error_falta_datos });
       return false;
     }
