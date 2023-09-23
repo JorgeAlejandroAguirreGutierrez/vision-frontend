@@ -18,6 +18,8 @@ import { EmpresaService } from 'src/app/servicios/usuario/empresa.service';
 import { BancoService } from 'src/app/servicios/caja-banco/banco.service';
 import { Banco } from 'src/app/modelos/caja-banco/banco';
 import { DatePipe } from '@angular/common';
+import { Observable, map, startWith } from 'rxjs';
+import { UntypedFormControl } from '@angular/forms';
 
 
 @Component({
@@ -35,11 +37,14 @@ export class SuscripcionComponent implements OnInit {
   abrirPanelAdmin: boolean = true;
 
   sesion: Sesion = null;
+  empresa: Empresa = null;
   suscripcion: Suscripcion = new Suscripcion();
   empresas: Empresa[];
   suscripciones: Suscripcion[];
   paquetes: Paquete[];
-  bancos: Banco[];
+  bancos: Banco[] = [];
+  controlBanco = new UntypedFormControl();
+  filtroBancos: Observable<Banco[]> = new Observable<Banco[]>();
 
   columnas: any[] = [
     { nombreColumna: 'codigo', cabecera: 'Código', celda: (row: Suscripcion) => `${row.codigo}` },
@@ -64,9 +69,11 @@ export class SuscripcionComponent implements OnInit {
 
   ngOnInit() {
     this.sesion = validarSesion(this.sesionService, this.router);
-    this.consultarEmpresas();
+    this.empresa = this.sesion.usuario.estacion.establecimiento.empresa;
+    this.consultar();
     this.consultarPaquetes();
     this.consultarBancos();
+    this.inicializarFiltros();
   }
 
   @HostListener('window:keypress', ['$event'])
@@ -152,29 +159,11 @@ export class SuscripcionComponent implements OnInit {
     });
   }
 
-  consultarEmpresas(){
-    this.empresaService.consultarPorEstado(this.estadoActivo).subscribe({
-      next: res => {
-        this.empresas = res.resultado as Empresa[];
-      },
-      error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
-    });
-  }
-
-  seleccionarEmpresa(){
-    this.suscripcionService.consultarPorEmpresa(this.suscripcion.empresa.id).subscribe({
+  consultar(){
+    this.suscripcionService.consultarPorEmpresa(this.empresa.id).subscribe({
       next: res => {
         this.suscripciones = res.resultado as Suscripcion[];
         this.llenarTabla(this.suscripciones);
-      },
-      error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
-    });
-
-    this.suscripcionService.obtenerUltimoPorEmpresa(this.suscripcion.empresa.id).subscribe({
-      next: res => {
-        if(res.resultado != null){
-          this.suscripcion.paquete = res.resultado.paquete as Paquete;
-        }
       },
       error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     });
@@ -198,16 +187,6 @@ export class SuscripcionComponent implements OnInit {
     });
   }
 
-  consultar() {
-    this.suscripcionService.consultar().subscribe({
-      next: res => {
-        this.suscripciones = res.resultado as Suscripcion[];
-        this.llenarTabla(this.suscripciones);
-      },
-      error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
-    });
-  }
-
   llenarTabla(suscripciones: Suscripcion[]) {
     this.dataSource = new MatTableDataSource(suscripciones);
     this.dataSource.filterPredicate = (data: Suscripcion, filter: string): boolean =>
@@ -225,6 +204,25 @@ export class SuscripcionComponent implements OnInit {
     } else {
       this.nuevo(null);
     }
+  }
+  
+  inicializarFiltros(){
+    this.filtroBancos = this.controlBanco.valueChanges
+      .pipe(
+        startWith(valores.vacio),
+        map(value => typeof value === 'string' || value == null ? value : value.id),
+        map(banco => typeof banco === 'string' ? this.filtroBanco(banco) : this.bancos.slice())
+      );
+  }
+  private filtroBanco(value: string): Banco[] {
+    if (this.bancos.length > valores.cero) {
+      const filterValue = value.toUpperCase();
+      return this.bancos.filter(banco => banco.abreviatura.toUpperCase().includes(filterValue));
+    }
+    return [];
+  }
+  verBanco(banco: Banco): string {
+    return banco && banco.abreviatura ? banco.abreviatura : valores.vacio;
   }
 
   filtro(event: Event) {
