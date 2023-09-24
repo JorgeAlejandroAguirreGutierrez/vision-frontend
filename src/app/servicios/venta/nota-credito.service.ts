@@ -93,8 +93,8 @@ export class NotaCreditoService {
     );
   }
 
-  calcularLinea(notaCreditoLinea: NotaCreditoLinea): Observable<Respuesta> {
-    return this.http.post(environment.host + urn.ruta + urn.notaCredito + urn.calcularLinea, notaCreditoLinea, options).pipe(
+  calcularOperacion(notaCredito: NotaCredito): Observable<Respuesta> {
+    return this.http.post(environment.host + urn.ruta + urn.notaCredito + urn.calcularOperacion, notaCredito, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(err);

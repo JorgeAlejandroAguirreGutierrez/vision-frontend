@@ -435,24 +435,27 @@ export class NotaCreditoComponent implements OnInit {
 
   seleccionarOperacion(){
     if (this.notaCredito.operacion == valores.devolucion) {
-      this.notaCredito.valorDescuento = valores.cero;
-      this.notaCredito.porcentajeDescuento = valores.cero;
       this.deshabilitarDescuento = true;
-      if (this.notaCredito.id == valores.cero){
-        for (let i=0; i < this.notaCredito.notaCreditoLineas.length; i++){
-          this.notaCredito.notaCreditoLineas[i].cantidad = valores.cero;
-        }
-      }
     }
     if (this.notaCredito.operacion == valores.descuento) {
       this.deshabilitarDescuento = false;
-      if (this.notaCredito.id == valores.cero){
-        for (let i=0; i < this.notaCredito.notaCreditoLineas.length; i++){
-          this.notaCredito.notaCreditoLineas[i].cantidad = this.notaCredito.notaCreditoLineas[i].cantidadVenta;
-        }
-      }
     }
-    this.calcular();
+    this.calcularOperacion();
+  }
+
+  calcularOperacion(){
+    this.spinnerService.show();
+    this.notaCreditoService.calcularOperacion(this.notaCredito).subscribe({
+      next: res => {
+        this.spinnerService.hide();
+        this.notaCredito = res.resultado as NotaCredito;
+        this.construir();
+      },
+      error: err => {
+        Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+        this.spinnerService.hide();
+      }
+    });
   }
 
   calcular(){

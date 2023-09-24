@@ -169,6 +169,7 @@ export const urn =
     calcular: "/calcular",
     calcularLinea: "/calcularLinea",
     calcularTotales: "/calcularTotales",
+    calcularOperacion: "/calcularOperacion",
     notaCredito: "/notaCredito",
     notaDebito: "/notaDebito",
     obtenerPorFactura: "/obtenerPorFactura",
