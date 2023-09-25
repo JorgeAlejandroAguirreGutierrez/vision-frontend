@@ -247,12 +247,11 @@
                                     <div class="col-8">
                                         <mat-form-field appearance="standard">
                                             <mat-label>Producto</mat-label>
-                                            <input matInput type="text" #inputProducto [value]="facturaLinea.nombreProducto" class="form-control-sm" placeholder="Producto"
+                                            <input matInput type="text" #inputProducto #trigger="matAutocompleteTrigger" [value]="facturaLinea.nombreProducto" class="form-control-sm" placeholder="Producto"
                                                 [formControl]="controlProducto" [matAutocomplete]="producto"
                                                 oninput="this.value = this.value.toUpperCase()">
                                             <mat-autocomplete #producto="matAutocomplete" [displayWith]="verProducto"
-                                                (optionSelected)="seleccionarProducto()"
-                                                (opened)="consultarProductos()">
+                                                (optionSelected)="seleccionarProducto()" (opened)="consultarProductos()">
                                                 <mat-option *ngFor="let producto of filtroProductos | async"
                                                     [value]="producto">
                                                     {{producto.nombre}}
@@ -356,7 +355,7 @@
                                     </div>
                                     <div class="col-1 iconos centrar">
                                         <button mat-icon-button mat-button *ngIf="!verIconoEditarLinea"
-                                            (focus)="crearLinea(); inputProducto.focus()">
+                                            (focus)="crearLinea(); inputProducto.focus(); trigger.closePanel();">
                                             <mat-icon>add_shopping_cart</mat-icon>
                                         </button>
                                         <button mat-icon-button *ngIf="verIconoEditarLinea"
