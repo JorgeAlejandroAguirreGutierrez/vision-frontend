@@ -22,7 +22,7 @@ export class Suscripcion {
         this.fechaInicial = null;
         this.fechaFinal = null;
         this.paquete = new Paquete();
-        this.empresa = null;
+        this.empresa = new Empresa();
         this.numeroTransaccion = valores.vacio;
         this.fechaTransaccion = new Date();
         this.banco = null;

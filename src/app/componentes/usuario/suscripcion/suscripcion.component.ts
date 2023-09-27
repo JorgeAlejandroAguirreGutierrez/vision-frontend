@@ -71,6 +71,7 @@ export class SuscripcionComponent implements OnInit {
   ngOnInit() {
     this.sesion = validarSesion(this.sesionService, this.router);
     this.empresa = this.sesion.usuario.estacion.establecimiento.empresa;
+    this.suscripcion.empresa = this.empresa;
     this.consultar();
     this.consultarPaquetes();
     this.consultarBancos();
@@ -97,7 +98,6 @@ export class SuscripcionComponent implements OnInit {
       event.preventDefault();
     if (!this.validarFormulario())
       return;
-    this.suscripcion.empresa = this.empresa;
     this.spinnerService.show();
     this.suscripcionService.crear(this.suscripcion).subscribe({
       next: res => {
@@ -240,6 +240,10 @@ export class SuscripcionComponent implements OnInit {
   }
 
   validarFormulario(): boolean {
+    if (this.suscripcion.empresa.id == valores.cero) {
+      Swal.fire({ icon: error_swal, title: error, text: mensajes.error_falta_datos });
+      return false;
+    }
     if (this.suscripcion.paquete.id == valores.cero) {
       Swal.fire({ icon: error_swal, title: error, text: mensajes.error_falta_datos });
       return false;
