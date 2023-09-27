@@ -120,7 +120,7 @@
                             <mat-label>Banco</mat-label>
                             <input matInput type="text" class="form-control-sm" [formControl]="controlBanco"
                                 [matAutocomplete]="banco" oninput="this.value = this.value.toUpperCase()">
-                            <mat-autocomplete #banco="matAutocomplete" [displayWith]="verBanco">
+                            <mat-autocomplete #banco="matAutocomplete" (optionSelected)="seleccionarBanco()" [displayWith]="verBanco">
                                 <mat-option *ngFor="let banco of filtroBancos | async" [value]="banco">
                                     {{banco.abreviatura}}
                                 </mat-option>
