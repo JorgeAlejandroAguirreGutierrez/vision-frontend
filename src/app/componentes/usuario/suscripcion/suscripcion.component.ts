@@ -50,6 +50,7 @@ export class SuscripcionComponent implements OnInit {
     { nombreColumna: 'codigo', cabecera: 'Código', celda: (row: Suscripcion) => `${row.codigo}` },
     { nombreColumna: 'empresa', cabecera: 'Empresa', celda: (row: Suscripcion) => `${row.empresa.razonSocial}` },
     { nombreColumna: 'paquete', cabecera: 'Paquete', celda: (row: Suscripcion) => `${row.paquete.nombre}` },
+    { nombreColumna: 'conteo', cabecera: 'Conteo', celda: (row: Suscripcion) => `${row.conteoComprobantes}` },
     { nombreColumna: 'maximoComprobantes', cabecera: 'Paquete', celda: (row: Suscripcion) => `${row.paquete.maximoComprobantes}` },
     { nombreColumna: 'valorTotal', cabecera: 'Valor Total', celda: (row: Suscripcion) => `$${row.paquete.valorTotal}` },
     { nombreColumna: 'fechaInicial', cabecera: 'Fecha Inicial', celda: (row: Suscripcion) => `${this.datepipe.transform(row.fechaInicial, "dd-MM-yyyy")}` },
@@ -64,7 +65,7 @@ export class SuscripcionComponent implements OnInit {
   @ViewChild(MatSort) sort: MatSort;
   @ViewChild("inputFiltro") inputFiltro: ElementRef;
 
-  constructor(private renderer: Renderer2, private router: Router, private spinnerService: NgxSpinnerService, private empresaService: EmpresaService, private datepipe: DatePipe,
+  constructor(private renderer: Renderer2, private router: Router, private spinnerService: NgxSpinnerService, private datepipe: DatePipe,
     private sesionService: SesionService, private suscripcionService: SuscripcionService, private paqueteService: PaqueteService, private bancoService: BancoService) { }
 
   ngOnInit() {
@@ -96,6 +97,7 @@ export class SuscripcionComponent implements OnInit {
       event.preventDefault();
     if (!this.validarFormulario())
       return;
+    this.suscripcion.empresa = this.empresa;
     this.spinnerService.show();
     this.suscripcionService.crear(this.suscripcion).subscribe({
       next: res => {
@@ -238,10 +240,6 @@ export class SuscripcionComponent implements OnInit {
   }
 
   validarFormulario(): boolean {
-    if (this.suscripcion.empresa.id == valores.cero) {
-      Swal.fire({ icon: error_swal, title: error, text: mensajes.error_falta_datos });
-      return false;
-    }
     if (this.suscripcion.paquete.id == valores.cero) {
       Swal.fire({ icon: error_swal, title: error, text: mensajes.error_falta_datos });
       return false;

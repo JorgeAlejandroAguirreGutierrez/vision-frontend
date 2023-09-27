@@ -8,6 +8,7 @@ export class Suscripcion {
     codigo: string;
     fechaInicial: Date;
     fechaFinal: Date;
+    conteoComprobantes: number;
     paquete: Paquete;
     empresa: Empresa;
     numeroTransaccion: string;
