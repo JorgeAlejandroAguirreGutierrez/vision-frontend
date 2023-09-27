@@ -93,6 +93,12 @@ export class SuscripcionComponent implements OnInit {
     this.clickedRows.clear();
   }
 
+  construir() {
+    this.controlBanco.setValue(this.suscripcion.banco);
+    let fechaTransaccion = new Date(this.suscripcion.fechaTransaccion);
+    this.suscripcion.fechaTransaccion = fechaTransaccion;
+  } 
+
   seleccionarBanco(){
     this.suscripcion.banco = this.controlBanco.value;
   }
@@ -207,6 +213,7 @@ export class SuscripcionComponent implements OnInit {
       this.clickedRows.clear();
       this.clickedRows.add(suscripcion);
       this.suscripcion = { ...suscripcion };
+      this.construir();
     } else {
       this.nuevo(null);
     }
