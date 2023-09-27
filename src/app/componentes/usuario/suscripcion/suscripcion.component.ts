@@ -93,6 +93,10 @@ export class SuscripcionComponent implements OnInit {
     this.clickedRows.clear();
   }
 
+  seleccionarBanco(){
+    this.suscripcion.banco = this.controlBanco.value;
+  }
+
   crear(event) {
     if (event != null)
       event.preventDefault();
