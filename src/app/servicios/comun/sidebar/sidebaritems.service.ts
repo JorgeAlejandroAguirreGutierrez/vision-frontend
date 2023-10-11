@@ -72,6 +72,7 @@ import { RegimenComponent } from '../../../componentes/configuracion/regimen/reg
 import { ImportarComponent } from '../../../componentes/configuracion/importar/importar.component';
 import { ExportarComponent } from '../../../componentes/configuracion/exportar/exportar.component';
 import { TipoRetencionComponent } from '../../../componentes/configuracion/tipo-retencion/tipo-retencion.component';
+import { SincronizacionComponent } from '../../../componentes/configuracion/sincronizacion/sincronizacion.component';
 //INDICADORES
 import { DashboardComponent } from '../../../componentes/indicador/dashboard/dashboard.component';
 
@@ -206,6 +207,7 @@ export class SidebarItemsService {
       this.llenarOpciones(SecuencialComponent, tabs.tab_secuencial, items.item_secuencial, icos.ico_secuencial);
       this.llenarOpciones(TipoRetencionComponent, tabs.tab_tipo_retencion, items.item_tipo_retencion, icos.ico_tipo_retencion);
       this.llenarOpciones(RegimenComponent, tabs.tab_regimen, items.item_regimen, icos.ico_regimen);
+      this.llenarOpciones(SincronizacionComponent, tabs.tab_sincronizacion, items.item_sincronizacion, icos.ico_regimen);
       this.llenarOpciones(ImportarComponent, tabs.tab_importacion, items.item_importacion, icos.ico_importacion);
       this.llenarOpciones(ExportarComponent, tabs.tab_exportacion, items.item_exportacion, icos.ico_exportacion);
     }

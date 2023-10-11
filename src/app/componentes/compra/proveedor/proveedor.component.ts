@@ -417,7 +417,7 @@ export class ProveedorComponent implements OnInit {
 
   //VALIDACIONES DE CAMPOS
   validarIdentificacion() {
-    this.proveedorService.validarIdentificacionPorEmpresa(this.empresa.id, this.proveedor.identificacion).subscribe({
+    this.proveedorService.validarIdentificacionPorEmpresa(this.proveedor.identificacion, this.empresa.id).subscribe({
       next: (res) => {
         this.proveedor = res.resultado as Proveedor;
         if (this.proveedor.ubicacion.id != valores.cero){

@@ -7,6 +7,7 @@ export class FacturaCompraLinea {
     id: number;
     codigo: string;
     posicion: number;
+    nombreProducto: string;
     cantidad: number;
     costoUnitario: number;
     costoDistribuido: number;
@@ -29,6 +30,7 @@ export class FacturaCompraLinea {
     constructor() {
         this.id = valores.cero;
         this.posicion = valores.cero;
+        this.nombreProducto = valores.vacio;
         this.codigo = valores.vacio;
         this.cantidad = valores.uno;
         this.costoUnitario = valores.cero;

@@ -104,6 +104,7 @@ export const urn =
     tipoRetencion: "/tipoRetencion",
     ubicacion: "/ubicacion",
     importar: "/importar",
+    sincronizacion: "/sincronizacion",
 
     //Contabilidad
     cuentaContable: "/cuentaContable",
@@ -213,6 +214,8 @@ export const valores = {
     //ESTADOS
     estadoActivo: "ACTIVO",
     estadoInactivo: "INACTIVO",
+    estadoPendiente: "PENDIENTE",
+    estadoProcesado: "PROCESADO",
     //ESTADOS VENTAS
     estadoEmitida: "EMITIDA",
     estadoRecaudada: "RECAUDADA",
@@ -258,7 +261,23 @@ export const valores = {
     descuento: "DESCUENTO",
     conjunta: "CONJUNTA",
     avatares: "avatares/",
-    logos: "logos/"
+    logos: "logos/",
+    mes01: "01",
+    mes02: "02",
+    mes03: "03",
+    mes04: "04",
+    mes05: "05",
+    mes06: "06",
+    mes07: "07",
+    mes08: "08",
+    mes09: "09",
+    mes10: "10",
+    mes11: "11",
+    mes12: "12",
+    anio2022: "2022",
+    anio2023: "2023",
+    recibidas: "RECIBIDAS",
+    emitidas: "EMITIDAS"
 }
 
 export const tipoMedidas = ["PESO", "VOLUMEN", "UNIDAD"]
