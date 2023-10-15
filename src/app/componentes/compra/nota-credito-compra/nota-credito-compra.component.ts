@@ -147,7 +147,8 @@ export class NotaCreditoCompraComponent implements OnInit {
       event.preventDefault();
     if (!this.validarFormulario())
       return; 
-    this.spinnerService.show();   
+    this.spinnerService.show();
+    this.notaCreditoCompra.numeroComprobante = this.notaCreditoCompra.establecimiento + valores.guion + this.notaCreditoCompra.puntoVenta + valores.guion + this.notaCreditoCompra.secuencial;
     this.notaCreditoCompra.usuario = this.sesion.usuario;
     this.notaCreditoCompra.empresa = this.empresa;
     this.notaCreditoCompraService.crear(this.notaCreditoCompra).subscribe({
@@ -378,17 +379,17 @@ export class NotaCreditoCompraComponent implements OnInit {
   seleccionarFacturaCompra() {
     this.spinnerService.show();
     let facturaCompraId = this.controlFacturaCompra.value.id;
-    this.notaCreditoCompraService.obtenerPorFacturaCompra(facturaCompraId).subscribe(
-      res => {
+    this.notaCreditoCompraService.obtenerPorFacturaCompra(facturaCompraId).subscribe({
+      next: res => {
         this.notaCreditoCompra = res.resultado as NotaCreditoCompra;
         this.construir();
         this.spinnerService.hide();
       },
-      err => {
+      error: err => {
         Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
         this.spinnerService.hide();
       }
-    );
+    });
   }
 
   llenarTablaNotaCreditoCompraLineas(notasCreditoComprasLineas: NotaCreditoCompraLinea[]) {
@@ -463,6 +464,13 @@ export class NotaCreditoCompraComponent implements OnInit {
   validarFormulario(): boolean {
     if (this.notaCreditoCompra.fecha == null ){ //|| this.notaCreditoCompra.fecha > this.hoy
       Swal.fire({ icon: error_swal, title: error, text: mensajes.error_falta_datos });
+      return false;
+    }
+    //let fechaCompra: Date = new Date(this.datepipe.transform(this.notaCreditoCompra.facturaCompra.fecha, "yyyy-MM-dd"));
+    //console.log(fechaCompra);
+    //console.log(this.notaCreditoCompra.fecha);
+    if (this.notaCreditoCompra.fecha < this.notaCreditoCompra.facturaCompra.fecha) {
+      Swal.fire({ icon: error_swal, title: error, text: mensajes.error_fecha });
       return false;
     }
     if (this.notaCreditoCompra.facturaCompra.id == valores.cero){

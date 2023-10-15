@@ -100,9 +100,16 @@
                             </mat-select>
                         </mat-form-field>
                     </div>
-                    <div class="col-2">
+                    <div class="col-1">
                         <mat-form-field appearance="standard">
-                            <mat-label>V. Descuento</mat-label>
+                            <mat-label>SubT No G</mat-label>
+                            <input matInput type="text" [(ngModel)]="notaCreditoCompra.descuento" class="form-control-sm"
+                                (change)="calcular()" [disabled]="deshabilitarDescuento">
+                        </mat-form-field>
+                    </div>
+                    <div class="col-1">
+                        <mat-form-field appearance="standard">
+                            <mat-label>SubT Grab</mat-label>
                             <input matInput type="text" [(ngModel)]="notaCreditoCompra.descuento" class="form-control-sm"
                                 (change)="calcular()" [disabled]="deshabilitarDescuento">
                         </mat-form-field>
@@ -112,7 +119,7 @@
                     <div class="col-3">
                         <mat-form-field appearance="standard">
                             <mat-label>Estab.</mat-label>
-                            <input matInput type="text" class="form-control-sm"
+                            <input matInput type="text" class="form-control-sm" [disabled]="notaCreditoCompra.id != 0"
                                 [(ngModel)]="notaCreditoCompra.establecimiento"
                                 (blur)="rellenarNumeroEstablecimiento()" (change)="validarNumeroEstablecimiento()">
                         </mat-form-field>
@@ -120,7 +127,7 @@
                     <div class="col-3">
                         <mat-form-field appearance="standard">
                             <mat-label>Punto V.</mat-label>
-                            <input matInput type="text" class="form-control-sm"
+                            <input matInput type="text" class="form-control-sm" [disabled]="notaCreditoCompra.id != 0"
                                 [(ngModel)]="notaCreditoCompra.puntoVenta"
                                 (blur)="rellenarNumeroPuntoVenta()" (change)="validarNumeroPuntoVenta()">
                         </mat-form-field>
@@ -128,7 +135,7 @@
                     <div class="col-6">
                         <mat-form-field appearance="standard">
                             <mat-label>Secuencial</mat-label>
-                            <input matInput type="text" class="form-control-sm"
+                            <input matInput type="text" class="form-control-sm" [disabled]="notaCreditoCompra.id != 0"
                                 [(ngModel)]="notaCreditoCompra.secuencial"
                                 (blur)="rellenarNumeroSecuencial()" (change)="validarNumeroSecuencial()">
                         </mat-form-field>
