@@ -51,6 +51,7 @@
  import {BidiModule} from '@angular/cdk/bidi';
  import {PlatformModule} from '@angular/cdk/platform';
  import {ObserversModule} from '@angular/cdk/observers';
+ import { MatMomentDateModule } from "@angular/material-moment-adapter";
 
 /**
  * NgModule that includes all Material modules that are required to serve the demo-app.
@@ -105,7 +106,8 @@
     MatFormFieldModule,
     BidiModule,
     PlatformModule,
-    ObserversModule
+    ObserversModule,
+    MatMomentDateModule
   ]
 })
 export class MaterialModule {}

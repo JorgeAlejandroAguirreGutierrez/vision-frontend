@@ -91,6 +91,7 @@ export const urn =
     consultarPorCategoriaProductoYEmpresaYEstado: "/consultarPorCategoriaProductoYEmpresaYEstado",
     consultarPorCategoriaProductoYProveedorYEmpresaYEstado: "/consultarPorCategoriaProductoYProveedorYEmpresaYEstado",
     pagar: "/pagar",
+    crearRecibidas: "/crearRecibidas",
     
     //Configuración
     estadoCivil: "/estadoCivil",
@@ -105,6 +106,7 @@ export const urn =
     ubicacion: "/ubicacion",
     importar: "/importar",
     sincronizacion: "/sincronizacion",
+    procesar: "/procesar",
 
     //Contabilidad
     cuentaContable: "/cuentaContable",

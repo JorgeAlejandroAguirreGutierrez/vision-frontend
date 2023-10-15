@@ -58,26 +58,8 @@ export class SincronizacionService {
     );
   }
 
-  activar(sincronizacion: Sincronizacion): Observable<Respuesta> {
-    return this.http.patch(environment.host + urn.ruta + urn.sincronizacion + urn.activar, sincronizacion, options).pipe(
-      map(response => response as Respuesta),
-      catchError(err => {
-        return throwError(()=>err);
-      })
-    );
-  }
-
-  inactivar(sincronizacion: Sincronizacion): Observable<Respuesta> {
-    return this.http.patch(environment.host + urn.ruta + urn.sincronizacion + urn.inactivar, sincronizacion, options).pipe(
-      map(response => response as Respuesta),
-      catchError(err => {
-        return throwError(()=>err);
-      })
-    );
-  }
-
-  buscar(sincronizacion: Sincronizacion): Observable<Respuesta> {
-    return this.http.post(environment.host + urn.ruta + urn.sincronizacion + urn.buscar, sincronizacion, options).pipe(
+  procesar(sincronizacionId: number): Observable<Respuesta> {
+    return this.http.get<Respuesta>(environment.host + urn.ruta + urn.sincronizacion + urn.procesar + urn.slash + sincronizacionId, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);

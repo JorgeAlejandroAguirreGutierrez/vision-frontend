@@ -15,6 +15,11 @@
                 <mat-icon>file_copy</mat-icon>
             </a>
         </li>
+        <li class="nav-item" *ngIf="sincronizacion.id != 0 && sincronizacion.estado == estadoPendiente">
+            <a class="nav-link" title="Actualizar" role="button" (click)="procesar($event)">
+                <mat-icon>arrow_forward</mat-icon>
+            </a>
+        </li>
     </ul>
 </nav>
 <div class="contenedor">
@@ -136,4 +141,7 @@
             </div>
         </mat-expansion-panel>
     </mat-accordion>
+    <ngx-spinner size="medium" type="line-spin-fade-rotating" [fullScreen]="true" [zIndex]="1000">
+        <p style="font-size: 20px; color: white">Cargando...</p>
+    </ngx-spinner>
 </div>

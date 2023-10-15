@@ -80,7 +80,7 @@ export class FacturaCompraComponent implements OnInit {
     { nombreColumna: 'codigo', cabecera: 'Código', celda: (row: FacturaCompra) => `${row.codigo}`},
     { nombreColumna: 'fecha', cabecera: 'Fecha', celda: (row: FacturaCompra) => `${this.datepipe.transform(row.fecha, "dd-MM-yyyy")}`},
     { nombreColumna: 'factura', cabecera: 'Factura', celda: (row: FacturaCompra) => `${row.numeroComprobante}`},
-    { nombreColumna: 'proveedor', cabecera: 'Proveedor', celda: (row: FacturaCompra) => row.proveedor != null ? `${row.proveedor.nombreComercial}`: valores.vacio },
+    { nombreColumna: 'proveedor', cabecera: 'Proveedor', celda: (row: FacturaCompra) => row.proveedor != null ? `${row.proveedor.razonSocial}`: valores.vacio },
     { nombreColumna: 'subtotal', cabecera: 'Subtotal', celda: (row: FacturaCompra) => `$${row.subtotal}`},
     { nombreColumna: 'descuento', cabecera: 'Desc.', celda: (row: FacturaCompra) => `$${row.descuento}`},
     { nombreColumna: 'impuesto', cabecera: 'IVA', celda: (row: FacturaCompra) => `$${row.importeIvaTotal}`},
@@ -262,7 +262,7 @@ export class FacturaCompraComponent implements OnInit {
     this.dataSourceFacturaCompra.filterPredicate = (data: FacturaCompra, filter: string): boolean =>
       this.datepipe.transform(data.fecha, valores.fechaCorta).includes(filter) || data.numeroComprobante.includes(filter) || 
       data.proveedor.nombreComercial.includes(filter) || data.estado.includes(filter);
-      this.dataSourceFacturaCompra.paginator = this.paginatorFacturaCompra;
+    this.dataSourceFacturaCompra.paginator = this.paginatorFacturaCompra;
     this.dataSourceFacturaCompra.sort = this.sort;
   }
 

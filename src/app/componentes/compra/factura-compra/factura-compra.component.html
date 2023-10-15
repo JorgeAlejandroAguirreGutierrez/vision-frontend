@@ -231,7 +231,7 @@
                             </div>
                             <div class="col-1 iconos centrar">
                                 <button mat-icon-button mat-button *ngIf="!verIconoEditarLinea"
-                                    (click)="crearLinea()">
+                                    (focus)="crearLinea(); inputProducto.focus(); trigger.closePanel();">
                                     <mat-icon>add_shopping_cart</mat-icon>
                                 </button>
                                 <button mat-icon-button *ngIf="verIconoEditarLinea"
