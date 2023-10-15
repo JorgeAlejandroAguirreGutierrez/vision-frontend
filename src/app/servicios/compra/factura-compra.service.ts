@@ -126,4 +126,13 @@ export class FacturaCompraService {
       })
     );
   }
+
+  crearRecibidas(facturasCompras: FacturaCompra[]): Observable<Respuesta> {
+    return this.http.post(environment.host + urn.ruta + urn.facturaCompra + urn.crearRecibidas, facturasCompras, options).pipe(
+      map(response => response as Respuesta),
+      catchError(err => {
+        return throwError(()=>err);
+      })
+    );
+  }
 }

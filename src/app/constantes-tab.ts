@@ -92,6 +92,7 @@ export const tabs = {
     tab_secuencial: "Secuencial",
     tab_tipo_retencion: "Tipo Retencion",
     tab_regimen: "Regimen",
+    tab_sincronizacion: "Sincronizacion",
     tab_exportacion: "Exportacion",
     tab_importacion: "Importacion",
 
@@ -187,6 +188,7 @@ export const items = {
     item_secuencial: "Secuenciales",
     item_tipo_retencion: "Tipos de Retención",
     item_regimen: "Régimen",
+    item_sincronizacion: "Sincronizacion",
     item_importacion: "Importaciones",
     item_exportacion: "Exportaciones",
 
@@ -297,6 +299,7 @@ export const icos = {
     ico_secuencial: 'fa-solid fa-list-ol',
     ico_tipo_retencion: 'fa-regular fa-handshake',
     ico_regimen: 'fa-solid fa-fax',
+    ico_sincronizacion: 'fa-solid fa-reload',
     ico_exportacion: 'fa-solid fa-file-export',
     ico_importacion: 'fa-solid fa-file-import',
 

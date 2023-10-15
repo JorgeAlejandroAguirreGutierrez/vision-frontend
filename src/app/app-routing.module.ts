@@ -107,6 +107,7 @@ import { SuscripcionComponent } from './componentes/usuario/suscripcion/suscripc
 
 //Módulo de Configuraciones
 import { UbicacionComponent } from './componentes/configuracion/ubicacion/ubicacion.component';
+import { SincronizacionComponent, DialogoSincronizacionComponent } from './componentes/configuracion/sincronizacion/sincronizacion.component';
 
 // Modulo de Indicadores
 import { DashboardComponent } from './componentes/indicador/dashboard/dashboard.component';
@@ -233,7 +234,6 @@ export const RoutingComponents = [
   ReporteTalentoHumanoComponent,
   ReporteFinancieroComponent,
   ReporteImportacionComponent,
-
   //Usuarios
   UsuarioComponent,
   EmpresaComponent,
@@ -250,6 +250,8 @@ export const RoutingComponents = [
   EstadoCivilComponent,
   RegimenComponent,
   SecuencialComponent,
+  SincronizacionComponent,
+  DialogoSincronizacionComponent,
   //Indicadores
   DashboardComponent,
   //otros

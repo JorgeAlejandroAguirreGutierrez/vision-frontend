@@ -688,21 +688,21 @@ export class ClienteComponent implements OnInit {
       this.deshabilitarDinardap = false;
       if (this.cliente.id == 0) {
         if (this.cliente.genero.id == 0){
-          this.cliente.genero = this.generos[0];
+          this.cliente.genero = this.generos[this.generos.length - 1];
         }
         if (this.cliente.estadoCivil.id == 0){
-          this.cliente.estadoCivil = this.estadosCiviles[0];
+          this.cliente.estadoCivil = this.estadosCiviles[this.estadosCiviles.length - 1];
         }
-        this.cliente.origenIngreso = this.origenesIngresos[0];
-        this.cliente.calificacionCliente = this.calificacionesClientes[0];
+        this.cliente.origenIngreso = this.origenesIngresos[this.origenesIngresos.length - 1];
+        this.cliente.calificacionCliente = this.calificacionesClientes[this.calificacionesClientes.length - 1];
       }
     }
   }
 
   inicializarOpciones(){
-    this.cliente.segmento = this.segmentos[valores.cero];
-    this.cliente.grupoCliente = this.gruposClientes[valores.cero];
-    this.cliente.formaPago = this.formasPagos[valores.cero];
+    this.cliente.segmento = this.segmentos[this.segmentos.length - 1];
+    this.cliente.grupoCliente = this.gruposClientes[this.gruposClientes.length - 1];
+    this.cliente.formaPago = this.formasPagos[this.formasPagos.length - 1];
     this.cliente.etiqueta = valores.etiquetaCasa;
   }
 

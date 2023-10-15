@@ -1,0 +1,147 @@
+<nav class="navbar-light nav-fijo">
+    <ul class="navbar-nav">
+        <li class="nav-item" *ngIf="sincronizacion.id == 0">
+            <a class="nav-link" title="Guardar" role="button" (click)="crear($event)">
+                <mat-icon>save</mat-icon>
+            </a>
+        </li>
+        <li class="nav-item" *ngIf="sincronizacion.id != 0">
+            <a class="nav-link" title="Actualizar" role="button" (click)="actualizar($event)">
+                <mat-icon>update</mat-icon>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" title="Nuevo" role="button" (click)="nuevo($event)">
+                <mat-icon>file_copy</mat-icon>
+            </a>
+        </li>
+        <li class="nav-item" *ngIf="sincronizacion.id != 0 && sincronizacion.estado == estadoPendiente">
+            <a class="nav-link" title="Actualizar" role="button" (click)="procesar($event)">
+                <mat-icon>arrow_forward</mat-icon>
+            </a>
+        </li>
+    </ul>
+</nav>
+<div class="contenedor">
+    <mat-accordion class="headers-align">
+        <mat-expansion-panel (opened)="abrirPanelNuevo = true" (closed)="abrirPanelNuevo = false"
+            [expanded]="abrirPanelNuevo">
+            <mat-expansion-panel-header>
+                <mat-panel-title>
+                    <i><u>SINCRONIZACION</u></i>
+                </mat-panel-title>
+                <mat-panel-description>
+                    {{abrirPanelNuevo ? 'Ocultar crear estado civil' : 'Crear nueva Sincronizacion'}}
+                    <mat-icon>playlist_add</mat-icon>
+                </mat-panel-description>
+            </mat-expansion-panel-header>
+            <mat-divider></mat-divider>
+            <div class="form-group form-row">
+                <div class="col-3">
+                    <mat-form-field appearance="standard">
+                        <mat-label>Código</mat-label>
+                        <input matInput type="text" [(ngModel)]="sincronizacion.codigo" class="form-control-sm"
+                            [disabled]="true">
+                    </mat-form-field>
+                </div>
+                <div class="col-3">
+                    <mat-form-field appearance="standard">
+                        <mat-label>Tipo</mat-label>
+                        <mat-select [(ngModel)]="sincronizacion.tipo" class="form-control-sm">
+                            <mat-option [value]="recibidas">{{recibidas}}</mat-option>
+                            <mat-option [value]="emitidas">{{emitidas}}</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+                <div class="col-2">
+                    <mat-form-field appearance="standard">
+                        <mat-label>Mes</mat-label>
+                        <mat-select [(ngModel)]="sincronizacion.mes" class="form-control-sm">
+                            <mat-option [value]="mes01">{{mes01}}</mat-option>
+                            <mat-option [value]="mes02">{{mes02}}</mat-option>
+                            <mat-option [value]="mes03">{{mes03}}</mat-option>
+                            <mat-option [value]="mes04">{{mes04}}</mat-option>
+                            <mat-option [value]="mes05">{{mes05}}</mat-option>
+                            <mat-option [value]="mes06">{{mes06}}</mat-option>
+                            <mat-option [value]="mes07">{{mes07}}</mat-option>
+                            <mat-option [value]="mes08">{{mes08}}</mat-option>
+                            <mat-option [value]="mes09">{{mes09}}</mat-option>
+                            <mat-option [value]="mes10">{{mes10}}</mat-option>
+                            <mat-option [value]="mes11">{{mes11}}</mat-option>
+                            <mat-option [value]="mes12">{{mes12}}</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+                <div class="col-2">
+                    <mat-form-field appearance="standard">
+                        <mat-label>Año</mat-label>
+                        <mat-select [(ngModel)]="sincronizacion.anio" class="form-control-sm">
+                            <mat-option [value]="anio2022">{{anio2022}}</mat-option>
+                            <mat-option [value]="anio2023">{{anio2023}}</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+                <div class="col-2">
+                    <mat-form-field appearance="standard">
+                        <mat-label>Estado</mat-label>
+                        <mat-select [(ngModel)]="sincronizacion.estado" [disabled]="true" class="form-control-sm">
+                            <mat-option [value]="estadoPendiente">{{estadoPendiente}}</mat-option>
+                            <mat-option [value]="estadoProcesado">{{estadoPendiente}}</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+            </div>
+        </mat-expansion-panel>
+    </mat-accordion>    
+    <mat-accordion class="headers-align">
+        <mat-expansion-panel (opened)="abrirPanelAdmin = true" (closed)="abrirPanelAdmin = false"
+            [expanded]="abrirPanelAdmin">
+            <mat-expansion-panel-header>
+                <mat-panel-title>
+                    <i><u>GESTIONAR SINCRONIZACIONES</u></i>
+                </mat-panel-title>
+                <mat-panel-description>
+                    {{abrirPanelAdmin ? 'Ocultar administrador de sincronizaciones' : 'Administrar sincronizacion existente'}}
+                    <mat-icon>playlist_add_check</mat-icon>
+                </mat-panel-description>
+            </mat-expansion-panel-header>
+            <mat-divider></mat-divider>
+            <mat-form-field appearance="standard">
+                <mat-label>Buscar Sincronizacion</mat-label>
+                <input matInput oninput="this.value = this.value.toUpperCase()" (keyup)="filtro($event)" #inputFiltro>
+                <button mat-button *ngIf="inputFiltro.value" matSuffix mat-icon-button
+                    (click)="borrarFiltro()">
+                    <mat-icon>close</mat-icon>
+                </button>
+            </mat-form-field>
+            <div class="mat-elevation-z8">
+                <table mat-table [dataSource]="dataSource" matSort>
+                    <!-- Columnas Dinamicas -->
+                    <ng-container *ngFor="let columna of columnas" [matColumnDef]="columna.nombreColumna">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> {{ columna.cabecera }} </th>
+                        <td mat-cell *matCellDef="let row"> {{ columna.celda(row) }} </td>
+                    </ng-container>
+                    <tr mat-header-row *matHeaderRowDef="cabecera"></tr>
+                    <tr mat-row (click)="seleccion(row)" [class.selected-row]="clickedRows.has(row)"
+                        *matRowDef="let row; columns: cabecera;"></tr>
+                    <!-- Row shown when there is no matching data. -->
+                    <tr class="mat-row" *matNoDataRow>
+                        <td class="mat-cell" colspan="6">No hay datos que coincidan con una sincronizacion: 
+                            "{{inputFiltro.value}}" 
+                        </td>
+                    </tr>
+                </table>
+                <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" showFirstLastButtons></mat-paginator>
+            </div>
+            <div class="azul" *ngIf="!clickedRows.size">
+                Seleccione una fila para editar
+            </div>
+            <div class="azul" *ngFor="let clickedRow of clickedRows">
+                Id: {{clickedRow.id}} seleccionado
+            </div>
+        </mat-expansion-panel>
+    </mat-accordion>
+    <ngx-spinner size="medium" type="line-spin-fade-rotating" [fullScreen]="true" [zIndex]="1000">
+        <p style="font-size: 20px; color: white">Cargando...</p>
+    </ngx-spinner>
+</div>
