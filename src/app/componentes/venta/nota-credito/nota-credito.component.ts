@@ -335,13 +335,8 @@ export class NotaCreditoComponent implements OnInit {
     this.controlIdentificacionCliente.patchValue(this.notaCredito.factura.cliente);
     this.controlRazonSocialCliente.patchValue(this.notaCredito.factura.cliente);
     this.controlFactura.patchValue(this.notaCredito.factura);
-    if(this.notaCredito.id != valores.cero){
-      let fecha = new Date(this.notaCredito.fecha);
-      this.notaCredito.fecha = fecha;
-    }
-    if(this.notaCredito.id == valores.cero){
-      this.notaCredito.fecha = this.hoy;
-    }
+    let fecha = new Date(this.notaCredito.fecha);
+    this.notaCredito.fecha = fecha;
     this.dataSourceLinea = new MatTableDataSource(this.notaCredito.notaCreditoLineas);
     this.dataSourceLinea.filterPredicate = (data: NotaCreditoLinea, filter: string): boolean =>
       data.producto.nombre.includes(filter) || data.producto.medida.abreviatura.includes(filter) || 
