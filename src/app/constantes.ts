@@ -65,6 +65,7 @@ export const urn =
     facturaCompraLinea: "/facturaCompraLinea",
     notaCreditoCompra: "/notaCreditoCompra",
     notaDebitoCompra: "/notaDebitoCompra",
+    gastoPersonal: "/gastoPersonal",
     obtenerPorFacturaCompra: "/obtenerPorFacturaCompra",
     proveedor: "/proveedor",
     grupoProveedor: "/grupoProveedor",
@@ -216,8 +217,6 @@ export const valores = {
     //ESTADOS
     estadoActivo: "ACTIVO",
     estadoInactivo: "INACTIVO",
-    estadoPendiente: "PENDIENTE",
-    estadoProcesado: "PROCESADO",
     //ESTADOS VENTAS
     estadoEmitida: "EMITIDA",
     estadoRecaudada: "RECAUDADA",

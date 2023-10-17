@@ -10,6 +10,9 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 // Formato de Fecha
 import { DatePickerFormatDirective } from "./componentes/comun/formato/date-picker-format.directive";
 
+//Formato Decimales
+import { FormatoDecimalDirective } from "./componentes/comun/formato/FormatoDecimal.directive";
+
 // Componentes de Angular Material
 import { MaterialModule } from './modelos/comun/material-module';
 
@@ -37,6 +40,7 @@ import { RoutingComponents } from './app-routing.module';
         TabContentComponent,
         ContentContainerDirective,
         DatePickerFormatDirective,
+        FormatoDecimalDirective,
         RoutingComponents
     ],
     imports: [

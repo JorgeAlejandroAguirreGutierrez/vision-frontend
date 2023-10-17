@@ -34,6 +34,7 @@ import { FacturaCompraComponent } from './componentes/compra/factura-compra/fact
 import { GrupoProveedorComponent, DialogoGrupoProveedorCuentaContableComponent } from './componentes/compra/grupo-proveedor/grupo-proveedor.component';
 import { NotaCreditoCompraComponent } from './componentes/compra/nota-credito-compra/nota-credito-compra.component';
 import { NotaDebitoCompraComponent } from './componentes/compra/nota-debito-compra/nota-debito-compra.component';
+import { GastoPersonalComponent } from './componentes/compra/gasto-personal/gasto-personal.component';
 
 // Módulo de Ventas
 import { FacturaComponent } from './componentes/venta/factura/factura.component';
@@ -211,6 +212,7 @@ export const RoutingComponents = [
   DialogoGrupoProveedorCuentaContableComponent,
   NotaCreditoCompraComponent,
   NotaDebitoCompraComponent,
+  GastoPersonalComponent,
   // Contabilidad
   ContabilizacionComponent,
   CuentaContableComponent,
