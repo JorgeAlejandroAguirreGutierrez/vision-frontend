@@ -119,7 +119,7 @@
                     <div class="col-3">
                         <mat-form-field appearance="standard">
                             <mat-label>Estab.</mat-label>
-                            <input matInput type="text" class="form-control-sm" [disabled]="notaCreditoCompra.id != 0"
+                            <input matInput type="text" class="form-control-sm" [disabled]="notaCreditoCompra.id != 0" maxlength="3"
                                 [(ngModel)]="notaCreditoCompra.establecimiento"
                                 (blur)="rellenarNumeroEstablecimiento()" (change)="validarNumeroEstablecimiento()">
                         </mat-form-field>
@@ -127,7 +127,7 @@
                     <div class="col-3">
                         <mat-form-field appearance="standard">
                             <mat-label>Punto V.</mat-label>
-                            <input matInput type="text" class="form-control-sm" [disabled]="notaCreditoCompra.id != 0"
+                            <input matInput type="text" class="form-control-sm" [disabled]="notaCreditoCompra.id != 0" maxlength="3"
                                 [(ngModel)]="notaCreditoCompra.puntoVenta"
                                 (blur)="rellenarNumeroPuntoVenta()" (change)="validarNumeroPuntoVenta()">
                         </mat-form-field>
@@ -135,7 +135,7 @@
                     <div class="col-6">
                         <mat-form-field appearance="standard">
                             <mat-label>Secuencial</mat-label>
-                            <input matInput type="text" class="form-control-sm" [disabled]="notaCreditoCompra.id != 0"
+                            <input matInput type="text" class="form-control-sm" [disabled]="notaCreditoCompra.id != 0" maxlength="9"
                                 [(ngModel)]="notaCreditoCompra.secuencial"
                                 (blur)="rellenarNumeroSecuencial()" (change)="validarNumeroSecuencial()">
                         </mat-form-field>
