@@ -1,0 +1,318 @@
+<div class="contenedor">
+    <nav class="navbar-light nav-fijo">
+        <ul class="navbar-nav">
+            <li class="nav-item" *ngIf="gastoPersonal.id == 0">
+                <a class="nav-link" title="Guardar" role="button" (click)="crear($event)">
+                    <mat-icon>save</mat-icon>
+                </a>
+            </li>
+            <li class="nav-item" *ngIf="gastoPersonal.id != 0 && gastoPersonal.estado != estadoAnulada">
+                <a class="nav-link" title="Actualizar" role="button" (click)="actualizar($event)">
+                    <mat-icon>update</mat-icon>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" title="Nuevo" role="button" (click)="nuevo()">
+                    <mat-icon>file_copy</mat-icon>
+                </a>
+            </li>
+            <li class="nav-item" *ngIf="gastoPersonal.id != 0 && gastoPersonal.estado != estadoAnulada">
+                <a class="nav-link" title="Anular" role="button" (click)="anular($event)">
+                    <mat-icon>delete_forever</mat-icon>
+                </a>
+            </li>
+        </ul>
+    </nav>
+    <ng-template matStepLabel>Gasto Personal</ng-template>
+    <mat-divider></mat-divider>
+    <mat-accordion class="headers-align">
+        <mat-expansion-panel (opened)="abrirPanel = true" (closed)="abrirPanel = false"
+            [expanded]="abrirPanel">
+            <mat-expansion-panel-header>
+                <mat-panel-title>
+                    <i><u>DATOS PARA GASTO PERSONAL</u></i>
+                </mat-panel-title>
+                <mat-panel-description>
+                    {{abrirPanel ? 'Ocultar sección' : 'Información del proveedor'}}
+                    <mat-icon>account_circle</mat-icon>
+                </mat-panel-description>
+            </mat-expansion-panel-header>
+            <mat-divider></mat-divider>
+            <div class="form-group form-row">
+                <div class="form-row col-9">
+                    <div class="col-3">
+                        <mat-form-field appearance="standard">
+                            <mat-label>Ruc</mat-label>
+                            <input matInput type="text" class="form-control-sm" placeholder="Cédula/RUC"
+                                [formControl]="controlIdentificacionProveedor"
+                                [matAutocomplete]="identificacionProveedor">
+                            <mat-autocomplete #identificacionProveedor="matAutocomplete"
+                                [displayWith]="verIdentificacionProveedor"
+                                (optionSelected)="seleccionarIdentificacionProveedor()"
+                                (opened)="consultarProveedores()">
+                                <mat-option *ngFor="let proveedor of filtroIdentificacionProveedores | async"
+                                    [value]="proveedor">
+                                    {{proveedor.identificacion}}
+                                </mat-option>
+                            </mat-autocomplete>
+                        </mat-form-field>
+                    </div>
+                    <div class="col-9">
+                        <mat-form-field appearance="standard">
+                            <mat-label>Proveedor</mat-label>
+                            <input matInput type="text" class="form-control-sm" placeholder="Razon Social"
+                                [formControl]="controlRazonSocialProveedor" [matAutocomplete]="razonSocialproveedor"
+                                oninput="this.value = this.value.toUpperCase()">
+                            <mat-autocomplete #razonSocialproveedor="matAutocomplete"
+                                [displayWith]="verRazonSocialProveedor"
+                                (optionSelected)="seleccionarRazonSocialProveedor()" (opened)="consultarProveedores()">
+                                <mat-option *ngFor="let proveedor of filtroRazonSocialProveedores | async"
+                                    [value]="proveedor">
+                                    {{ proveedor.razonSocial }}
+                                </mat-option>
+                            </mat-autocomplete>
+                        </mat-form-field>
+                    </div>
+                    <div class="col-3">
+                        <mat-form-field appearance="standard">
+                            <mat-label>Fecha</mat-label>
+                            <input matInput #inputFecha="ngModel" [matDatepicker]="picker1" class="form-control-sm"
+                                [(ngModel)]="gastoPersonal.fecha" required [max]="hoy" datePickerFormat="DD-MM-YYYY">
+                            <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                            <mat-datepicker #picker1></mat-datepicker>
+                            <mat-error *ngIf="inputFecha.hasError('matDatepickerMax')">Debe ser menor al día de
+                                hoy</mat-error>
+                            <mat-error *ngIf="inputFecha.hasError('required')">Fecha requerida o no existe</mat-error>
+                        </mat-form-field>
+                    </div>
+                    <div class="col-9">
+                        <mat-form-field appearance="standard">
+                            <mat-label>Direccion</mat-label>
+                            <input matInput type="text" [(ngModel)]="gastoPersonal.proveedor.direccion"
+                                class="form-control-sm" [disabled]="true">
+                        </mat-form-field>
+                    </div>
+                </div>
+                <div class="form-row col-3 linea-vertical ml-1">
+                    <div class="col-3">
+                        <mat-form-field appearance="standard">
+                            <mat-label>Estab.</mat-label>
+                            <input matInput type="text" class="form-control-sm" [disabled]="gastoPersonal.id != 0"
+                                [(ngModel)]="gastoPersonal.establecimiento" (blur)="rellenarNumeroEstablecimiento()"
+                                (change)="validarNumeroEstablecimiento()">
+                        </mat-form-field>
+                    </div>
+                    <div class="col-3">
+                        <mat-form-field appearance="standard">
+                            <mat-label>Punto V.</mat-label>
+                            <input matInput type="text" class="form-control-sm" [disabled]="gastoPersonal.id!=0"
+                                [(ngModel)]="gastoPersonal.puntoVenta" (blur)="rellenarNumeroPuntoVenta()"
+                                (change)="validarNumeroPuntoVenta()">
+                        </mat-form-field>
+                    </div>
+                    <div class="col-6">
+                        <mat-form-field appearance="standard">
+                            <mat-label>Secuencial</mat-label>
+                            <input matInput type="text" class="form-control-sm" [disabled]="gastoPersonal.id!=0"
+                                [(ngModel)]="gastoPersonal.secuencial" (blur)="rellenarNumeroSecuencial()"
+                                (change)="validarNumeroSecuencial()">
+                        </mat-form-field>
+                    </div>
+                    <div class="col-5">
+                        <mat-form-field appearance="standard">
+                            <mat-label>Usuario</mat-label>
+                            <input matInput type="text" class="form-control-sm" [(ngModel)]="sesion.usuario.apodo"
+                                [disabled]="true">
+                        </mat-form-field>
+                    </div>
+                    <div class="col-7">
+                        <mat-form-field appearance="standard">
+                            <mat-label>Estado</mat-label>
+                            <input matInput type="text" class="form-control-sm" [(ngModel)]="gastoPersonal.estado"
+                                [disabled]="true">
+                        </mat-form-field>
+                    </div>
+                </div>
+            </div>
+        </mat-expansion-panel>
+        <mat-expansion-panel (opened)="abrirPanelLinea = true"
+            (closed)="abrirPanelLinea = false" [expanded]="abrirPanelLinea">
+            <mat-expansion-panel-header>
+                <mat-panel-title>
+                    <i><u>DETALLE GASTO PERSONAL</u></i>
+                </mat-panel-title>
+                <mat-panel-description>
+                    {{abrirPanelLinea ? 'Ocultar sección' : 'Productos de la factura'}}
+                    <mat-icon>playlist_add_check</mat-icon>
+                </mat-panel-description>
+            </mat-expansion-panel-header>
+            <mat-divider></mat-divider>
+            <div class="col-12">
+                <mat-form-field appearance="standard">
+                    <mat-label>Buscar producto</mat-label>
+                    <input matInput oninput="this.value = this.value.toUpperCase()" (keyup)="filtroLinea($event)"
+                        #inputFiltroLinea>
+                    <button mat-button *ngIf="inputFiltroLinea.value" matSuffix mat-icon-button
+                        (click)="borrarFiltroLinea()">
+                        <mat-icon>close</mat-icon>
+                    </button>
+                </mat-form-field>
+                <div class="mat-elevation-z8">
+                    <table mat-table [dataSource]="dataSourceLinea" matSort #matSortLinea="matSort">
+                        <!-- Columnas Dinamicas -->
+                        <ng-container *ngFor="let columna of columnasLinea" [matColumnDef]="columna.nombreColumna">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header> {{ columna.cabecera }} </th>
+                            <td mat-cell *matCellDef="let row; let i=index">
+                                <ng-container *ngIf="columna.nombreColumna!='acciones'">
+                                    {{ columna.celda(row) }}
+                                </ng-container>
+                                <ng-container *ngIf="columna.nombreColumna=='acciones'">
+                                    <button mat-icon-button color="warn" (click)="eliminarLinea(i)">
+                                        <i class="fa fa-times mat-icon"></i>
+                                    </button>
+                                </ng-container>
+                            </td>
+                        </ng-container>
+                        <tr mat-header-row *matHeaderRowDef="cabeceraLinea"></tr>
+                        <tr mat-row *matRowDef="let row; let i=index; columns: cabeceraLinea" [class.selected-row]="clickedRowsLinea.has(row)"></tr>
+                        <!-- Row shown when there is no matching data. -->
+                        <tr class="mat-row" *matNoDataRow>
+                            <td class="mat-cell" colspan="11">No hay productos agregados o filtrados
+                            </td>
+                        </tr>
+                    </table>
+                    <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" showFirstLastButtons
+                        #paginatorLinea></mat-paginator>
+                </div>
+                <div class="azul" *ngIf="!clickedRowsLinea.size">
+                    Seleccione una fila para editar
+                </div>
+                <div class="azul" *ngFor="let clickedRowLinea of clickedRowsLinea">
+                    Código: {{clickedRowLinea.cantidad}} seleccionado
+                </div>
+            </div>
+            <mat-divider></mat-divider>
+            <div class="form-group form-row">
+                <div class="col-12">
+                    <mat-form-field appearance="outline">
+                        <mat-label>Comentario</mat-label>
+                        <textarea matInput [(ngModel)]="gastoPersonal.comentario"
+                            placeholder="Referente a la factura..." class="form-control" rows="3"></textarea>
+                    </mat-form-field>
+                </div>
+            </div>
+            <div class="col-4">
+                <mat-card class="resultados">
+                    <div class="form-group form-row">
+                        <div class="col-7 negrita centrar-vertical-izq">
+                            <mat-label>Subtotal :</mat-label>
+                        </div>
+                        <div class="col-5">
+                            <mat-form-field appearance="standard">
+                                <input matInput type="text" [value]="formateaNumero(gastoPersonal.subtotal)"
+                                    class="form-control-sm" [disabled]="true">
+                            </mat-form-field>
+                        </div>
+                        <div class="col-7 negrita centrar-vertical-izq">
+                            <mat-label>Descuento :</mat-label>
+                        </div>
+                        <div class="col-5">
+                            <mat-form-field appearance="standard">
+                                <input matInput type="text" [value]="formateaNumero(gastoPersonal.descuento)"
+                                    class="form-control-sm" [disabled]="true">
+                            </mat-form-field>
+                        </div>
+                        <div class="col-7 negrita centrar-vertical-izq">
+                            <mat-label>Subtotal Gravado :</mat-label>
+                        </div>
+                        <div class="col-5">
+                            <mat-form-field appearance="standard">
+                                <input matInput type="text "
+                                    [value]="formateaNumero(gastoPersonal.subtotalGravadoConDescuento)"
+                                    class="form-control-sm " [disabled]="true">
+                            </mat-form-field>
+                        </div>
+                        <div class="col-7 negrita centrar-vertical-izq">
+                            <mat-label>Subtotal No Gravado :</mat-label>
+                        </div>
+                        <div class="col-5">
+                            <mat-form-field appearance="standard">
+                                <input matInput type="text "
+                                    [value]="formateaNumero(gastoPersonal.subtotalNoGravadoConDescuento)"
+                                    class="form-control-sm " [disabled]="true">
+                            </mat-form-field>
+                        </div>
+                        <div class="col-7 negrita centrar-vertical-izq">
+                            <mat-label>Importe IVA :</mat-label>
+                        </div>
+                        <div class="col-5">
+                            <mat-form-field appearance="standard">
+                                <input matInput type="text " [value]="formateaNumero(gastoPersonal.importeIvaTotal)"
+                                    class="form-control-sm " [disabled]="true">
+                            </mat-form-field>
+                        </div>
+                        <div class="col-7 negrita centrar-vertical-izq">
+                            <mat-label class="negrita">TOTAL :</mat-label>
+                        </div>
+                        <div class="col-5">
+                            <mat-form-field appearance="standard">
+                                <input matInput type="text " [value]="formateaNumero(gastoPersonal.total)"
+                                    class="form-control-sm" [disabled]="true">
+                            </mat-form-field>
+                        </div>
+                    </div>
+                </mat-card>
+            </div>
+        </mat-expansion-panel>
+    </mat-accordion>
+    <mat-accordion class="headers-align">
+        <mat-expansion-panel (opened)="abrirPanelAdmin = true" (closed)="abrirPanelAdmin = false" [expanded]="abrirPanelAdmin">
+            <mat-expansion-panel-header>
+                <mat-panel-title>
+                    <i><u>GESTIONAR GASTOS PERSONALES</u></i>
+                </mat-panel-title>
+                <mat-panel-description>
+                    {{abrirPanelAdmin ? 'Ocultar administrador de gastos personales' : 'Editar facturas de compras existentes'}}
+                    <mat-icon>group</mat-icon>
+                </mat-panel-description>
+            </mat-expansion-panel-header>
+            <mat-divider></mat-divider>
+            <mat-form-field appearance="standard">
+                <mat-label>Buscar gastos personales</mat-label>
+                <input matInput oninput="this.value = this.value.toUpperCase()" (keyup)="filtro($event)"
+                    placeholder="Ej. BA" #inputFiltro>
+                <button mat-button *ngIf="inputFiltro.value" matSuffix mat-icon-button
+                    (click)="borrarFiltro()">
+                    <mat-icon>close</mat-icon>
+                </button>
+            </mat-form-field>
+            <div class="mat-elevation-z8">
+                <table mat-table [dataSource]="dataSource" matSort #matSort="matSort">
+                    <!-- Columnas Dinamicas -->
+                    <ng-container *ngFor="let columna of columnas" [matColumnDef]="columna.nombreColumna">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> {{ columna.cabecera }} </th>
+                        <td mat-cell *matCellDef="let row"> {{ columna.celda(row) }} </td>
+                    </ng-container>
+                    <tr mat-header-row *matHeaderRowDef="cabecera"></tr>
+                    <tr mat-row (click)="seleccionar(row)" [class.selected-row]="clickedRows.has(row)"
+                        *matRowDef="let row; columns: cabecera;"></tr>
+                    <tr class="mat-row" *matNoDataRow>
+                        <td class="mat-cell" colspan="6">No hay datos que coincidan con la factura
+                            "{{inputFiltro.value}}"</td>
+                    </tr>
+                </table>
+                <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" showFirstLastButtons
+                    #paginator></mat-paginator>
+            </div>
+            <div class="azul" *ngIf="!clickedRows.size">
+                Seleccione una fila para editar
+            </div>
+            <div class="azul" *ngFor="let clickedRow of clickedRows">
+                Id: {{clickedRow.id}} seleccionado
+            </div>
+        </mat-expansion-panel>
+    </mat-accordion>
+    <ngx-spinner size="medium" type="line-spin-fade-rotating" [fullScreen]="true" [zIndex]="1000">
+        <p style="font-size: 20px; color: white">Cargando...</p>
+    </ngx-spinner>
+</div>

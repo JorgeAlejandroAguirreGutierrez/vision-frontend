@@ -15,8 +15,8 @@
                 <mat-icon>file_copy</mat-icon>
             </a>
         </li>
-        <li class="nav-item" *ngIf="sincronizacion.id != 0 && sincronizacion.estado == estadoPendiente">
-            <a class="nav-link" title="Actualizar" role="button" (click)="procesar($event)">
+        <li class="nav-item" *ngIf="sincronizacion.id != 0">
+            <a class="nav-link" title="Sincronizar" role="button" (click)="procesar($event)">
                 <mat-icon>arrow_forward</mat-icon>
             </a>
         </li>
@@ -85,8 +85,8 @@
                     <mat-form-field appearance="standard">
                         <mat-label>Estado</mat-label>
                         <mat-select [(ngModel)]="sincronizacion.estado" [disabled]="true" class="form-control-sm">
-                            <mat-option [value]="estadoPendiente">{{estadoPendiente}}</mat-option>
-                            <mat-option [value]="estadoProcesado">{{estadoPendiente}}</mat-option>
+                            <mat-option [value]="estadoActivo">{{estadoActivo}}</mat-option>
+                            <mat-option [value]="estadoInactivo">{{estadoInactivo}}</mat-option>
                         </mat-select>
                     </mat-form-field>
                 </div>

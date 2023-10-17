@@ -207,7 +207,7 @@ export class SidebarItemsService {
       this.llenarOpciones(SecuencialComponent, tabs.tab_secuencial, items.item_secuencial, icos.ico_secuencial);
       this.llenarOpciones(TipoRetencionComponent, tabs.tab_tipo_retencion, items.item_tipo_retencion, icos.ico_tipo_retencion);
       this.llenarOpciones(RegimenComponent, tabs.tab_regimen, items.item_regimen, icos.ico_regimen);
-      this.llenarOpciones(SincronizacionComponent, tabs.tab_sincronizacion, items.item_sincronizacion, icos.ico_regimen);
+      this.llenarOpciones(SincronizacionComponent, tabs.tab_sincronizacion, items.item_sincronizacion, icos.ico_sincronizacion);
       this.llenarOpciones(ImportarComponent, tabs.tab_importacion, items.item_importacion, icos.ico_importacion);
       this.llenarOpciones(ExportarComponent, tabs.tab_exportacion, items.item_exportacion, icos.ico_exportacion);
     }

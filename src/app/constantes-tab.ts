@@ -299,7 +299,7 @@ export const icos = {
     ico_secuencial: 'fa-solid fa-list-ol',
     ico_tipo_retencion: 'fa-regular fa-handshake',
     ico_regimen: 'fa-solid fa-fax',
-    ico_sincronizacion: 'fa-solid fa-reload',
+    ico_sincronizacion: 'fa-solid fa-rotate',
     ico_exportacion: 'fa-solid fa-file-export',
     ico_importacion: 'fa-solid fa-file-import',
 

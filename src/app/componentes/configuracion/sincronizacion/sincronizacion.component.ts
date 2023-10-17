@@ -23,8 +23,8 @@ import { NgxSpinnerService } from 'ngx-spinner';
 })
 export class SincronizacionComponent implements OnInit {
 
-  estadoPendiente: string = valores.estadoPendiente;
-  estadoProcesado: string = valores.estadoProcesado;
+  estadoActivo: string = valores.estadoActivo;
+  estadoInactivo: string = valores.estadoInactivo;
   recibidas: string = valores.recibidas;
   emitidas: string = valores.emitidas;
   mes01: string = valores.mes01;
