@@ -98,7 +98,7 @@
                         <mat-form-field appearance="standard">
                             <mat-label>Estab.</mat-label>
                             <input matInput type="text" class="form-control-sm"
-                                [(ngModel)]="notaDebitoCompra.establecimiento"
+                                [(ngModel)]="notaDebitoCompra.establecimiento" maxlength="3"
                                 (blur)="rellenarNumeroEstablecimiento()" (change)="validarNumeroEstablecimiento()">
                         </mat-form-field>
                     </div>
@@ -106,7 +106,7 @@
                         <mat-form-field appearance="standard">
                             <mat-label>Punto V.</mat-label>
                             <input matInput type="text" class="form-control-sm"
-                                [(ngModel)]="notaDebitoCompra.puntoVenta"
+                                [(ngModel)]="notaDebitoCompra.puntoVenta" maxlength="3"
                                 (blur)="rellenarNumeroPuntoVenta()" (change)="validarNumeroPuntoVenta()">
                         </mat-form-field>
                     </div>
@@ -114,7 +114,7 @@
                         <mat-form-field appearance="standard">
                             <mat-label>Secuencial</mat-label>
                             <input matInput type="text" class="form-control-sm"
-                                [(ngModel)]="notaDebitoCompra.secuencial"
+                                [(ngModel)]="notaDebitoCompra.secuencial" maxlength="9"
                                 (blur)="rellenarNumeroSecuencial()" (change)="validarNumeroSecuencial()">
                         </mat-form-field>
                     </div>
