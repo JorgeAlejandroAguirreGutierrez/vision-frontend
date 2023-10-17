@@ -397,13 +397,8 @@ export class FacturaComponent implements OnInit {
   construir() {
     this.controlIdentificacionCliente.patchValue(this.factura.cliente);
     this.controlRazonSocialCliente.patchValue(this.factura.cliente);
-    if(this.factura.id != valores.cero){
-      let fecha = new Date(this.factura.fecha);
-      this.factura.fecha = fecha;
-    }
-    if(this.factura.id == valores.cero){
-      this.factura.fecha = this.hoy;
-    }
+    let fecha = new Date(this.factura.fecha);
+    this.factura.fecha = fecha;
     this.llenarTablaLinea(this.factura.facturaLineas);
   }
 
