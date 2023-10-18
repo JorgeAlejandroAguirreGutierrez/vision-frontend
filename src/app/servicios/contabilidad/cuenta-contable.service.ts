@@ -6,7 +6,6 @@ import { HttpClient } from '@angular/common/http';
 import { map, catchError } from 'rxjs/operators';
 import { Observable, throwError, BehaviorSubject, lastValueFrom } from 'rxjs';
 import { environment } from '../../../environments/environment';
-import { Modelo } from '../../modelos/administracion/modelo';
 import { CuentaContable } from '../../modelos/contabilidad/cuenta-contable';
 
 @Injectable({
@@ -102,26 +101,4 @@ export class CuentaContableService {
       })
     );
   }
-
-  importar(archivo: File, modelo: Modelo): Observable<Respuesta> {
-    const formData: FormData = new FormData();
-    formData.append('archivo', archivo, archivo.name);
-    return this.http.post(environment.host + urn.ruta + urn.slash + modelo.endpoint + urn.importar, formData, optionsCargarArchivo).pipe(
-      map(response => response as Respuesta),
-      catchError(err => {
-        return throwError(()=>err);
-      })
-    );
-  }
-
-  exportar(modelo: Modelo): Observable<Respuesta> {
-    return this.http.get(environment.host + urn.ruta + urn.slash + modelo.endpoint + urn.importar, options).pipe(
-      map(response => response as Respuesta),
-      catchError(err => {
-        return throwError(()=>err);
-      })
-    );
-  }
-
-
 }

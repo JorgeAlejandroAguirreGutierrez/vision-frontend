@@ -26,8 +26,7 @@
     <ng-template matStepLabel>Gasto Personal</ng-template>
     <mat-divider></mat-divider>
     <mat-accordion class="headers-align">
-        <mat-expansion-panel (opened)="abrirPanel = true" (closed)="abrirPanel = false"
-            [expanded]="abrirPanel">
+        <mat-expansion-panel (opened)="abrirPanel = true" (closed)="abrirPanel = false" [expanded]="abrirPanel">
             <mat-expansion-panel-header>
                 <mat-panel-title>
                     <i><u>DATOS PARA GASTO PERSONAL</u></i>
@@ -97,24 +96,24 @@
                     <div class="col-3">
                         <mat-form-field appearance="standard">
                             <mat-label>Estab.</mat-label>
-                            <input matInput type="text" class="form-control-sm" [disabled]="gastoPersonal.id != 0" maxlength="3"
-                                [(ngModel)]="gastoPersonal.establecimiento" (blur)="rellenarNumeroEstablecimiento()"
-                                (change)="validarNumeroEstablecimiento()">
+                            <input matInput type="text" class="form-control-sm" [disabled]="gastoPersonal.id != 0"
+                                maxlength="3" [(ngModel)]="gastoPersonal.establecimiento"
+                                (blur)="rellenarNumeroEstablecimiento()" (change)="validarNumeroEstablecimiento()">
                         </mat-form-field>
                     </div>
                     <div class="col-3">
                         <mat-form-field appearance="standard">
                             <mat-label>Punto V.</mat-label>
-                            <input matInput type="text" class="form-control-sm" [disabled]="gastoPersonal.id!=0" maxlength="3"
-                                [(ngModel)]="gastoPersonal.puntoVenta" (blur)="rellenarNumeroPuntoVenta()"
+                            <input matInput type="text" class="form-control-sm" [disabled]="gastoPersonal.id!=0"
+                                maxlength="3" [(ngModel)]="gastoPersonal.puntoVenta" (blur)="rellenarNumeroPuntoVenta()"
                                 (change)="validarNumeroPuntoVenta()">
                         </mat-form-field>
                     </div>
                     <div class="col-6">
                         <mat-form-field appearance="standard">
                             <mat-label>Secuencial</mat-label>
-                            <input matInput type="text" class="form-control-sm" [disabled]="gastoPersonal.id!=0" maxlength="9"
-                                [(ngModel)]="gastoPersonal.secuencial" (blur)="rellenarNumeroSecuencial()"
+                            <input matInput type="text" class="form-control-sm" [disabled]="gastoPersonal.id!=0"
+                                maxlength="9" [(ngModel)]="gastoPersonal.secuencial" (blur)="rellenarNumeroSecuencial()"
                                 (change)="validarNumeroSecuencial()">
                         </mat-form-field>
                     </div>
@@ -135,8 +134,8 @@
                 </div>
             </div>
         </mat-expansion-panel>
-        <mat-expansion-panel (opened)="abrirPanelLinea = true"
-            (closed)="abrirPanelLinea = false" [expanded]="abrirPanelLinea">
+        <mat-expansion-panel (opened)="abrirPanelLinea = true" (closed)="abrirPanelLinea = false"
+            [expanded]="abrirPanelLinea">
             <mat-expansion-panel-header>
                 <mat-panel-title>
                     <i><u>DETALLE GASTO PERSONAL</u></i>
@@ -174,7 +173,8 @@
                             </td>
                         </ng-container>
                         <tr mat-header-row *matHeaderRowDef="cabeceraLinea"></tr>
-                        <tr mat-row *matRowDef="let row; let i=index; columns: cabeceraLinea" [class.selected-row]="clickedRowsLinea.has(row)"></tr>
+                        <tr mat-row *matRowDef="let row; let i=index; columns: cabeceraLinea"
+                            [class.selected-row]="clickedRowsLinea.has(row)"></tr>
                         <!-- Row shown when there is no matching data. -->
                         <tr class="mat-row" *matNoDataRow>
                             <td class="mat-cell" colspan="11">No hay productos agregados o filtrados
@@ -193,86 +193,88 @@
             </div>
             <mat-divider></mat-divider>
             <div class="form-group form-row">
-                <div class="col-12">
+                <div class="col-8">
                     <mat-form-field appearance="outline">
                         <mat-label>Comentario</mat-label>
                         <textarea matInput [(ngModel)]="gastoPersonal.comentario"
                             placeholder="Referente a la factura..." class="form-control" rows="3"></textarea>
                     </mat-form-field>
                 </div>
-            </div>
-            <div class="col-4">
-                <mat-card class="resultados">
-                    <div class="form-group form-row">
-                        <div class="col-7 negrita centrar-vertical-izq">
-                            <mat-label>Subtotal :</mat-label>
+                <div class="col-4">
+                    <mat-card class="resultados">
+                        <div class="form-group form-row">
+                            <div class="col-7 negrita centrar-vertical-izq">
+                                <mat-label>Subtotal :</mat-label>
+                            </div>
+                            <div class="col-5">
+                                <mat-form-field appearance="standard">
+                                    <input matInput type="text" [value]="formateaNumero(gastoPersonal.subtotal)"
+                                        class="form-control-sm" [disabled]="true">
+                                </mat-form-field>
+                            </div>
+                            <div class="col-7 negrita centrar-vertical-izq">
+                                <mat-label>Descuento :</mat-label>
+                            </div>
+                            <div class="col-5">
+                                <mat-form-field appearance="standard">
+                                    <input matInput type="text" [value]="formateaNumero(gastoPersonal.descuento)"
+                                        class="form-control-sm" [disabled]="true">
+                                </mat-form-field>
+                            </div>
+                            <div class="col-7 negrita centrar-vertical-izq">
+                                <mat-label>Subtotal Gravado :</mat-label>
+                            </div>
+                            <div class="col-5">
+                                <mat-form-field appearance="standard">
+                                    <input matInput type="text "
+                                        [value]="formateaNumero(gastoPersonal.subtotalGravadoConDescuento)"
+                                        class="form-control-sm " [disabled]="true">
+                                </mat-form-field>
+                            </div>
+                            <div class="col-7 negrita centrar-vertical-izq">
+                                <mat-label>Subtotal No Gravado :</mat-label>
+                            </div>
+                            <div class="col-5">
+                                <mat-form-field appearance="standard">
+                                    <input matInput type="text "
+                                        [value]="formateaNumero(gastoPersonal.subtotalNoGravadoConDescuento)"
+                                        class="form-control-sm " [disabled]="true">
+                                </mat-form-field>
+                            </div>
+                            <div class="col-7 negrita centrar-vertical-izq">
+                                <mat-label>Importe IVA :</mat-label>
+                            </div>
+                            <div class="col-5">
+                                <mat-form-field appearance="standard">
+                                    <input matInput type="text " [value]="formateaNumero(gastoPersonal.importeIvaTotal)"
+                                        class="form-control-sm " [disabled]="true">
+                                </mat-form-field>
+                            </div>
+                            <div class="col-7 negrita centrar-vertical-izq">
+                                <mat-label class="negrita">TOTAL :</mat-label>
+                            </div>
+                            <div class="col-5">
+                                <mat-form-field appearance="standard">
+                                    <input matInput type="text " [value]="formateaNumero(gastoPersonal.total)"
+                                        class="form-control-sm" [disabled]="true">
+                                </mat-form-field>
+                            </div>
                         </div>
-                        <div class="col-5">
-                            <mat-form-field appearance="standard">
-                                <input matInput type="text" [value]="formateaNumero(gastoPersonal.subtotal)"
-                                    class="form-control-sm" [disabled]="true">
-                            </mat-form-field>
-                        </div>
-                        <div class="col-7 negrita centrar-vertical-izq">
-                            <mat-label>Descuento :</mat-label>
-                        </div>
-                        <div class="col-5">
-                            <mat-form-field appearance="standard">
-                                <input matInput type="text" [value]="formateaNumero(gastoPersonal.descuento)"
-                                    class="form-control-sm" [disabled]="true">
-                            </mat-form-field>
-                        </div>
-                        <div class="col-7 negrita centrar-vertical-izq">
-                            <mat-label>Subtotal Gravado :</mat-label>
-                        </div>
-                        <div class="col-5">
-                            <mat-form-field appearance="standard">
-                                <input matInput type="text "
-                                    [value]="formateaNumero(gastoPersonal.subtotalGravadoConDescuento)"
-                                    class="form-control-sm " [disabled]="true">
-                            </mat-form-field>
-                        </div>
-                        <div class="col-7 negrita centrar-vertical-izq">
-                            <mat-label>Subtotal No Gravado :</mat-label>
-                        </div>
-                        <div class="col-5">
-                            <mat-form-field appearance="standard">
-                                <input matInput type="text "
-                                    [value]="formateaNumero(gastoPersonal.subtotalNoGravadoConDescuento)"
-                                    class="form-control-sm " [disabled]="true">
-                            </mat-form-field>
-                        </div>
-                        <div class="col-7 negrita centrar-vertical-izq">
-                            <mat-label>Importe IVA :</mat-label>
-                        </div>
-                        <div class="col-5">
-                            <mat-form-field appearance="standard">
-                                <input matInput type="text " [value]="formateaNumero(gastoPersonal.importeIvaTotal)"
-                                    class="form-control-sm " [disabled]="true">
-                            </mat-form-field>
-                        </div>
-                        <div class="col-7 negrita centrar-vertical-izq">
-                            <mat-label class="negrita">TOTAL :</mat-label>
-                        </div>
-                        <div class="col-5">
-                            <mat-form-field appearance="standard">
-                                <input matInput type="text " [value]="formateaNumero(gastoPersonal.total)"
-                                    class="form-control-sm" [disabled]="true">
-                            </mat-form-field>
-                        </div>
-                    </div>
-                </mat-card>
+                    </mat-card>
+                </div>
             </div>
         </mat-expansion-panel>
     </mat-accordion>
     <mat-accordion class="headers-align">
-        <mat-expansion-panel (opened)="abrirPanelAdmin = true" (closed)="abrirPanelAdmin = false" [expanded]="abrirPanelAdmin">
+        <mat-expansion-panel (opened)="abrirPanelAdmin = true" (closed)="abrirPanelAdmin = false"
+            [expanded]="abrirPanelAdmin">
             <mat-expansion-panel-header>
                 <mat-panel-title>
                     <i><u>GESTIONAR GASTOS PERSONALES</u></i>
                 </mat-panel-title>
                 <mat-panel-description>
-                    {{abrirPanelAdmin ? 'Ocultar administrador de gastos personales' : 'Editar facturas de compras existentes'}}
+                    {{abrirPanelAdmin ? 'Ocultar administrador de gastos personales' : 'Editar facturas de compras
+                    existentes'}}
                     <mat-icon>group</mat-icon>
                 </mat-panel-description>
             </mat-expansion-panel-header>
@@ -281,8 +283,7 @@
                 <mat-label>Buscar gastos personales</mat-label>
                 <input matInput oninput="this.value = this.value.toUpperCase()" (keyup)="filtro($event)"
                     placeholder="Ej. BA" #inputFiltro>
-                <button mat-button *ngIf="inputFiltro.value" matSuffix mat-icon-button
-                    (click)="borrarFiltro()">
+                <button mat-button *ngIf="inputFiltro.value" matSuffix mat-icon-button (click)="borrarFiltro()">
                     <mat-icon>close</mat-icon>
                 </button>
             </mat-form-field>
@@ -301,8 +302,7 @@
                             "{{inputFiltro.value}}"</td>
                     </tr>
                 </table>
-                <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" showFirstLastButtons
-                    #paginator></mat-paginator>
+                <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" showFirstLastButtons #paginator></mat-paginator>
             </div>
             <div class="azul" *ngIf="!clickedRows.size">
                 Seleccione una fila para editar

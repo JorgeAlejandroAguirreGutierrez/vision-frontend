@@ -19,6 +19,7 @@ export const tabs = {
     tab_factura_compra: "Factura Compra",
     tab_nota_credito_compra: "Nota Crédito",
     tab_nota_debito_compra: "Nota Débito",
+    tab_gasto_personal: "Gasto Personal",
 
     //Ventas
     tab_factura: "Factura",
@@ -124,6 +125,7 @@ export const items = {
     item_grupo_proveedor: "Grupos de Proveedores",
     item_nota_credito_compra: "Notas de Crédito Compra",
     item_nota_debito_compra: "Notas de Débito Compra",
+    item_gasto_personal: "Gastos Personales",
 
     //VENTAS
     item_factura: "Facturas",
@@ -234,6 +236,7 @@ export const icos = {
     ico_factura_compra: 'fa-solid fa-cart-arrow-down',
     ico_nota_credito_compra: 'fa-solid fa-reply',
     ico_nota_debito_compra: 'fa-solid fa-share',
+    ico_gasto_personal: 'fa-solid fa-comment-dollar',
 
     // Ventas
     ico_factura: 'fa-solid fa-receipt',
