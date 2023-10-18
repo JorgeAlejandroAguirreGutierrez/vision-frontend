@@ -69,12 +69,11 @@ import { EstadoCivilComponent } from '../../../componentes/configuracion/estado-
 import { ImpuestoComponent } from '../../../componentes/configuracion/impuesto/impuesto.component';
 import { SecuencialComponent } from '../../../componentes/configuracion/secuencial/secuencial.component';
 import { RegimenComponent } from '../../../componentes/configuracion/regimen/regimen.component';
-import { ImportarComponent } from '../../../componentes/configuracion/importar/importar.component';
-import { ExportarComponent } from '../../../componentes/configuracion/exportar/exportar.component';
 import { TipoRetencionComponent } from '../../../componentes/configuracion/tipo-retencion/tipo-retencion.component';
 import { SincronizacionComponent } from '../../../componentes/configuracion/sincronizacion/sincronizacion.component';
 //INDICADORES
 import { DashboardComponent } from '../../../componentes/indicador/dashboard/dashboard.component';
+import { GastoPersonalComponent } from 'src/app/componentes/compra/gasto-personal/gasto-personal.component';
 
 
 @Injectable({
@@ -116,6 +115,7 @@ export class SidebarItemsService {
       this.llenarOpciones(FacturaCompraComponent, tabs.tab_factura_compra, items.item_factura_compra, icos.ico_factura_compra);
       this.llenarOpciones(NotaCreditoCompraComponent, tabs.tab_nota_credito_compra, items.item_nota_credito_compra, icos.ico_nota_credito_compra);
       this.llenarOpciones(NotaDebitoCompraComponent, tabs.tab_nota_debito_compra, items.item_nota_debito_compra, icos.ico_nota_debito_compra);
+      this.llenarOpciones(GastoPersonalComponent, tabs.tab_gasto_personal, items.item_gasto_personal, icos.ico_gasto_personal);
     }
 
     if (tabNombre == modulos.modulo_ventas) {
@@ -208,8 +208,6 @@ export class SidebarItemsService {
       this.llenarOpciones(TipoRetencionComponent, tabs.tab_tipo_retencion, items.item_tipo_retencion, icos.ico_tipo_retencion);
       this.llenarOpciones(RegimenComponent, tabs.tab_regimen, items.item_regimen, icos.ico_regimen);
       this.llenarOpciones(SincronizacionComponent, tabs.tab_sincronizacion, items.item_sincronizacion, icos.ico_sincronizacion);
-      this.llenarOpciones(ImportarComponent, tabs.tab_importacion, items.item_importacion, icos.ico_importacion);
-      this.llenarOpciones(ExportarComponent, tabs.tab_exportacion, items.item_exportacion, icos.ico_exportacion);
     }
     
     if (tabNombre == modulos.modulo_indicadores) {

@@ -6,8 +6,6 @@ import { HeaderComponent } from './componentes/comun/header/header.component';
 import { FooterComponent } from './componentes/comun/footer/footer.component';
 import { NavbarComponent } from './componentes/comun/navbar/navbar.component';
 import { SidebarComponent } from './componentes/comun/sidebar/sidebar.component';
-import { ImportarComponent } from './componentes/configuracion/importar/importar.component';
-import { ExportarComponent } from './componentes/configuracion/exportar/exportar.component';
 
 // Componentes de Inicio
 import { InicioSesionComponent, CambioCredencialesComponent } from './componentes/comun/inicio-sesion/inicio-sesion.component';
@@ -152,8 +150,6 @@ export const RoutingComponents = [
   FooterComponent,
   NavbarComponent,
   SidebarComponent,
-  ImportarComponent,
-  ExportarComponent,
   // Inicio
   InicioSesionComponent,
   MainComponent,
