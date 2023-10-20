@@ -333,7 +333,8 @@ export class GastoPersonalComponent implements OnInit {
   }
 
   llenarTablaLinea(gastoPersonalLineas: GastoPersonalLinea[]) {
-    this.ordenarAsc(gastoPersonalLineas, 'posicion');
+    this.ordenarAsc(gastoPersonalLineas);
+    console.log(gastoPersonalLineas);
     this.dataSourceLinea = new MatTableDataSource(gastoPersonalLineas);
     this.dataSourceLinea.filterPredicate = (data: GastoPersonalLinea, filter: string): boolean =>
       data.nombreProducto.includes(filter) || String(data.cantidad).includes(filter) ||  String(data.totalLinea).includes(filter);
@@ -341,9 +342,15 @@ export class GastoPersonalComponent implements OnInit {
     this.dataSourceLinea.sort = this.sortLinea;
   }
 
-  ordenarAsc(arrayJson: any, pKey: any) {
+  ordenarAsc(arrayJson: any) {
     arrayJson.sort(function (a: any, b: any) {
-      return a[pKey] > b[pKey];
+      if(a.posicion > b.posicion) {
+        return 1;
+      } else if(a.posicion < b.posicion) {
+        return -1;
+      } else {
+        return 0;
+      }
     });
   }
 

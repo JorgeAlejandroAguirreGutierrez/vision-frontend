@@ -84,10 +84,17 @@
                             <mat-error *ngIf="inputFecha.hasError('required')">Fecha requerida o no existe</mat-error>
                         </mat-form-field>
                     </div>
-                    <div class="col-9">
+                    <div class="col-6">
                         <mat-form-field appearance="standard">
                             <mat-label>Direccion</mat-label>
                             <input matInput type="text" [(ngModel)]="gastoPersonal.proveedor.direccion"
+                                class="form-control-sm" [disabled]="true">
+                        </mat-form-field>
+                    </div>
+                    <div class="col-3">
+                        <mat-form-field appearance="standard">
+                            <mat-label>Tipo de Gasto</mat-label>
+                            <input matInput type="text" [(ngModel)]="gastoPersonal.tipoGasto.descripcion"
                                 class="form-control-sm" [disabled]="true">
                         </mat-form-field>
                     </div>
@@ -162,10 +169,10 @@
                         <ng-container *ngFor="let columna of columnasLinea" [matColumnDef]="columna.nombreColumna">
                             <th mat-header-cell *matHeaderCellDef mat-sort-header> {{ columna.cabecera }} </th>
                             <td mat-cell *matCellDef="let row; let i=index">
-                                <ng-container *ngIf="columna.nombreColumna!='acciones'">
+                                <ng-container *ngIf="columna.nombreColumna != 'acciones'">
                                     {{ columna.celda(row) }}
                                 </ng-container>
-                                <ng-container *ngIf="columna.nombreColumna=='acciones'">
+                                <ng-container *ngIf="columna.nombreColumna == 'acciones'">
                                     <button mat-icon-button color="warn" (click)="eliminarLinea(i)">
                                         <i class="fa fa-times mat-icon"></i>
                                     </button>
@@ -227,7 +234,7 @@
                             <div class="col-5">
                                 <mat-form-field appearance="standard">
                                     <input matInput type="text "
-                                        [value]="formateaNumero(gastoPersonal.subtotalGravadoConDescuento)"
+                                        [value]="formateaNumero(gastoPersonal.subtotalGravado)"
                                         class="form-control-sm " [disabled]="true">
                                 </mat-form-field>
                             </div>
@@ -237,7 +244,7 @@
                             <div class="col-5">
                                 <mat-form-field appearance="standard">
                                     <input matInput type="text "
-                                        [value]="formateaNumero(gastoPersonal.subtotalNoGravadoConDescuento)"
+                                        [value]="formateaNumero(gastoPersonal.subtotalNoGravado)"
                                         class="form-control-sm " [disabled]="true">
                                 </mat-form-field>
                             </div>

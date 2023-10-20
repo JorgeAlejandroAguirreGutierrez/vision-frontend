@@ -183,7 +183,7 @@
             </mat-expansion-panel-header>
             <mat-divider></mat-divider>
             <div class="form-group form-row" *ngIf="esBien">
-                <div class="col-8">
+                <div class="col-6">
                     <div class="centrar-titulo fondo">
                         <mat-label>INICIAR KARDEX</mat-label>
                     </div>
@@ -217,8 +217,7 @@
                             <div class="col-2">
                                 <mat-form-field appearance="standard">
                                     <mat-label>Costo Total</mat-label>
-                                    <input matInput type="text" appFormatoDecimal [(ngModel)]="costoTotalKardex" 
-                                    class="form-control-sm" [disabled]="true">
+                                    <input matInput type="text" appFormatoDecimal [(ngModel)]="costoTotalKardex" class="form-control-sm" [disabled]="true">
                                 </mat-form-field>
                             </div>
                             <div class="col-2 iconos">
@@ -230,14 +229,20 @@
                         </div>
                     </mat-card>
                 </div>
-                <div class="col-4">
+                <div class="col-6">
                     <div class="centrar-titulo col-12 fondo">
                         <mat-label>PROVEEDOR</mat-label>
                     </div>
                     <mat-divider></mat-divider>
                     <mat-card class="mat-elevation-z8">
                         <div class="form-group form-row">
-                            <div class="col-12">
+                            <div class="col-4">
+                                <mat-form-field appearance="standard">
+                                    <mat-label>Codigo Principal Proveedor</mat-label>
+                                    <input matInput type="text" [(ngModel)]="producto.codigoPrincipal" class="form-control-sm">
+                                </mat-form-field>
+                            </div>
+                            <div class="col-8">
                                 <mat-form-field appearance="standard">
                                     <mat-label>Proveedor</mat-label>
                                     <mat-select [(ngModel)]="producto.proveedor" [compareWith]="compareFn" class="form-control-sm">

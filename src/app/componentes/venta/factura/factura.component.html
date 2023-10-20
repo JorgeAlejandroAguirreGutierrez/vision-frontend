@@ -424,10 +424,10 @@
                                         <th mat-header-cell *matHeaderCellDef mat-sort-header> {{ columna.cabecera }}
                                         </th>
                                         <td mat-cell *matCellDef="let row; let i=index">
-                                            <ng-container *ngIf="columna.nombreColumna!='acciones'">
+                                            <ng-container *ngIf="columna.nombreColumna != 'acciones'">
                                                 {{ columna.celda(row) }}
                                             </ng-container>
-                                            <ng-container *ngIf="columna.nombreColumna=='acciones'">
+                                            <ng-container *ngIf="columna.nombreColumna == 'acciones'">
                                                 <button mat-icon-button color="warn" (click)="eliminarLinea(i)">
                                                     <i class="fa fa-times mat-icon"></i>
                                                 </button>

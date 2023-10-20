@@ -1,6 +1,5 @@
 import { Proveedor } from './proveedor';
 import { valores } from "../../constantes";
-import { TipoComprobante } from '../configuracion/tipo-comprobante';
 import { Empresa } from '../usuario/empresa';
 import { Usuario } from '../usuario/usuario';
 import { TipoGasto } from '../inventario/tipo-gasto';
@@ -19,8 +18,8 @@ export class GastoPersonal {
     descuento: number;
     subtotal: number;
     
-    subtotalGravadoConDescuento: number;
-    subtotalNoGravadoConDescuento: number;
+    subtotalGravado: number;
+    subtotalNoGravado: number;
     importeIvaTotal: number;
     total: number;
 
@@ -28,7 +27,6 @@ export class GastoPersonal {
     tipoGasto: TipoGasto;
     proveedor: Proveedor;
     usuario: Usuario;
-    tipoComprobante: TipoComprobante;
     empresa: Empresa;
     gastoPersonalLineas: GastoPersonalLinea[];
 
@@ -44,15 +42,13 @@ export class GastoPersonal {
 
         this.subtotal = valores.cero;
         this.descuento = valores.cero;
-        this.subtotalGravadoConDescuento = valores.cero;
-        this.subtotalNoGravadoConDescuento = valores.cero;
         this.importeIvaTotal = valores.cero;
         this.total = valores.cero;
 
         this.comentario = valores.vacio;
+        this.tipoGasto = new TipoGasto();
         this.proveedor = new Proveedor();
         this.usuario = new Usuario();
-        this.tipoComprobante = new TipoComprobante();
         this.gastoPersonalLineas = [];
     }
 }

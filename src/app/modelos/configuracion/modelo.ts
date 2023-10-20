@@ -1,4 +1,5 @@
 import { valores } from "../../constantes";
+import { TipoGasto } from "../inventario/tipo-gasto";
 import { ModeloDetalle } from "./modelo-detalle";
 import { ModeloImpuesto } from "./modelo-impuesto";
 
@@ -20,6 +21,9 @@ export class Modelo {
     modeloImpuestos: ModeloImpuesto[];
     modeloDetalles: ModeloDetalle[];
 
+    tipo: string;
+    tipoGasto: TipoGasto;
+
     constructor() {
         this.id = valores.cero;
         this.razonSocial = valores.vacio;
@@ -37,5 +41,8 @@ export class Modelo {
         this.importeTotal = valores.vacio;
         this.modeloImpuestos = [];
         this.modeloDetalles = [];
+
+        this.tipo = valores.vacio;
+        this.tipoGasto = new TipoGasto();
     }
 }
