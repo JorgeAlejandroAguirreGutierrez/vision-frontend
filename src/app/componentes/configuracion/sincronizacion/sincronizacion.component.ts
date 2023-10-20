@@ -238,7 +238,7 @@ export class DialogoSincronizacionComponent {
   opcionesGastoPersonal: boolean[] = [];
 
   columnas: any[] = [
-    { nombreColumna: 'fecha', cabecera: 'Fecha', celda: (row: Modelo) => `${this.datepipe.transform(row.fecha, "dd-MM-yyyy")}` },
+    { nombreColumna: 'fecha', cabecera: 'Fecha', celda: (row: Modelo) => `${row.fecha}` },
     { nombreColumna: 'numeroComprobante', cabecera: 'Numero de Comprobante', celda: (row: Modelo) => `${row.numeroComprobante}` },
     { nombreColumna: 'proveedor', cabecera: 'Proveedor', celda: (row: Modelo) => `${row.razonSocial}` },
     { nombreColumna: 'descuento', cabecera: 'Descuento', celda: (row: Modelo) => `$${row.totalDescuento}` },
