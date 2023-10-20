@@ -398,7 +398,7 @@ export class FacturaCompraComponent implements OnInit {
   }
 
   llenarTablaLinea(facturaCompraLineas: FacturaCompraLinea[]) {
-    this.ordenarAsc(facturaCompraLineas, 'posicion');
+    this.ordenarAsc(facturaCompraLineas);
     this.dataSourceLinea = new MatTableDataSource(facturaCompraLineas);
     this.dataSourceLinea.filterPredicate = (data: FacturaCompraLinea, filter: string): boolean =>
       data.producto.nombre.includes(filter) || data.producto.medida.abreviatura.includes(filter) || String(data.cantidad).includes(filter) || 
@@ -407,9 +407,15 @@ export class FacturaCompraComponent implements OnInit {
     this.dataSourceLinea.sort = this.sortLinea;
   }
 
-  ordenarAsc(arrayJson: any, pKey: any) {
+  ordenarAsc(arrayJson: any) {
     arrayJson.sort(function (a: any, b: any) {
-      return a[pKey] > b[pKey];
+      if(a.posicion > b.posicion) {
+        return 1;
+      } else if(a.posicion < b.posicion) {
+        return -1;
+      } else {
+        return 0;
+      }
     });
   }
 

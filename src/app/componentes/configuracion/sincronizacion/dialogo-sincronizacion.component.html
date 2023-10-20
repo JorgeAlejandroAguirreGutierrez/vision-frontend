@@ -14,21 +14,23 @@
       <ng-container *ngFor="let columna of columnas" [matColumnDef]="columna.nombreColumna">
         <th mat-header-cell *matHeaderCellDef mat-sort-header> {{ columna.cabecera }} </th>
         <td mat-cell *matCellDef="let row; let i=index">
-          <ng-container *ngIf="columna.nombreColumna != 'acciones'">
+          <ng-container *ngIf="columna.nombreColumna != 'factura_compra' && columna.nombreColumna != 'gasto_personal' && columna.nombreColumna != 'tipo_gasto'">
             {{ columna.celda(row) }}
           </ng-container>
-          <ng-container *ngIf="columna.nombreColumna == 'compra'">
+          <ng-container *ngIf="columna.nombreColumna == 'factura_compra'">
             <mat-checkbox [(ngModel)]="opcionesFacturaCompra[i]" (change)="seleccionarFacturaCompra($event.checked, i)"></mat-checkbox>
           </ng-container>
-          <ng-container *ngIf="columna.nombreColumna == 'gasto'">
+          <ng-container *ngIf="columna.nombreColumna == 'gasto_personal'">
             <mat-checkbox [(ngModel)]="opcionesGastoPersonal[i]" (change)="seleccionarGastoPersonal($event.checked, i)"></mat-checkbox>
           </ng-container>
           <ng-container *ngIf="columna.nombreColumna == 'tipo_gasto'">
-            <mat-select [(ngModel)]="opcionesTipoGasto[i]" [compareWith]="compareFn">
-              <mat-option *ngFor="let tipoGasto of tiposGastos" [value]="tipoGasto">
-                {{tipoGasto.descripcion}}
-              </mat-option>
-            </mat-select>
+            <mat-form-field appearance="standard">
+              <mat-select [(ngModel)]="modelos[i].tipoGasto" [disabled]="!opcionesGastoPersonal[i]" [compareWith]="compareFn">
+                <mat-option *ngFor="let tipoGasto of tiposGastos" [value]="tipoGasto">
+                  {{tipoGasto.descripcion}}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
           </ng-container>
         </td>
       </ng-container>

@@ -530,12 +530,25 @@ export class FacturaComponent implements OnInit {
   }
 
   llenarTablaLinea(facturaLineas: FacturaLinea[]) {
+    this.ordenarAsc(facturaLineas);
     this.dataSourceLinea = new MatTableDataSource(facturaLineas);
     this.dataSourceLinea.filterPredicate = (data: FacturaLinea, filter: string): boolean =>
       data.producto.nombre.includes(filter) || data.producto.medida.abreviatura.includes(filter) || String(data.cantidad).includes(filter) || 
       String(data.precioUnitario).includes(filter) || String(data.subtotalLinea).includes(filter) || data.entregado.includes(filter);
     this.dataSourceLinea.paginator = this.paginatorLinea;
     this.dataSourceLinea.sort = this.sortLinea;
+  }
+
+  ordenarAsc(arrayJson: any) {
+    arrayJson.sort(function (a: any, b: any) {
+      if(a.posicion > b.posicion) {
+        return 1;
+      } else if(a.posicion < b.posicion) {
+        return -1;
+      } else {
+        return 0;
+      }
+    });
   }
 
   seleccionarLinea(facturaLinea: FacturaLinea, i:number) {

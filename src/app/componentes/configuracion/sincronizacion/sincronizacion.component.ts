@@ -1,5 +1,5 @@
 import { Component, OnInit, HostListener, ViewChild, ElementRef, Renderer2, Inject, Input } from '@angular/core';
-import { valores, mensajes, validarSesion, exito, exito_swal, error, error_swal } from '../../../constantes';
+import { valores, tablas, mensajes, validarSesion, exito, exito_swal, error, error_swal } from '../../../constantes';
 import Swal from 'sweetalert2';
 import { Router } from '@angular/router';
 import { Sesion } from '../../../modelos/usuario/sesion';
@@ -54,7 +54,7 @@ export class SincronizacionComponent implements OnInit {
   empresa: Empresa = new Empresa();
   sincronizacion = new Sincronizacion();
   sincronizaciones: Sincronizacion[];
-  facturasCompras: FacturaCompra[] = [];
+  modelos: Modelo[] = [];
 
   columnas: any[] = [
     { nombreColumna: 'codigo', cabecera: 'Código', celda: (row: Sincronizacion) => `${row.codigo}` },
@@ -121,8 +121,8 @@ export class SincronizacionComponent implements OnInit {
     this.spinnerService.show();
     this.sincronizacionService.procesar(this.sincronizacion.id).subscribe({
       next: res => {
-        this.facturasCompras = res.resultado as FacturaCompra[];
-        this.dialogoSincronizaciones(this.facturasCompras);
+        this.modelos = res.resultado as Modelo[];
+        this.dialogoSincronizaciones(this.modelos);
         this.consultar();
         this.nuevo(null);
         this.spinnerService.hide();
@@ -211,10 +211,10 @@ export class SincronizacionComponent implements OnInit {
     return true;
   }
 
-  dialogoSincronizaciones(facturasCompras: FacturaCompra[]): void {
+  dialogoSincronizaciones(modelos: Modelo[]): void {
     const dialogRef = this.dialog.open(DialogoSincronizacionComponent, {
       width: '80%',
-      data: {facturasCompras: facturasCompras}
+      data: {modelos: modelos}
     });
 
     dialogRef.afterClosed().subscribe(result => {
@@ -232,25 +232,21 @@ export class SincronizacionComponent implements OnInit {
 export class DialogoSincronizacionComponent {
 
   modelos: Modelo[] = [];
-
-  modelosFacturasCompras: Modelo[] = [];
-  modelosGastosPersonales: Modelo[] = [];
-
+  modelosSeleccionados: Modelo[] = [];
   tiposGastos: TipoGasto[] = [];
-  tipoGasto: TipoGasto = new TipoGasto();
-
   opcionesFacturaCompra: boolean[] = [];
   opcionesGastoPersonal: boolean[] = [];
-  opcionesTipoGasto: TipoGasto[] = [];
 
   columnas: any[] = [
-    { nombreColumna: 'fecha', cabecera: 'Fecha', celda: (row: Modelo) => `${this.datepipe.transform(row.fecha, "dd-MM-yyyy")}` },
+    { nombreColumna: 'fecha', cabecera: 'Fecha', celda: (row: Modelo) => `${row.fecha}` },
     { nombreColumna: 'numeroComprobante', cabecera: 'Numero de Comprobante', celda: (row: Modelo) => `${row.numeroComprobante}` },
     { nombreColumna: 'proveedor', cabecera: 'Proveedor', celda: (row: Modelo) => `${row.razonSocial}` },
-    { nombreColumna: 'descuento', cabecera: 'Descuento', celda: (row: Modelo) => `${row.totalDescuento}` },
-    { nombreColumna: 'subtotal', cabecera: 'Subtotal', celda: (row: Modelo) => `${row.totalSinImpuestos}` },
-    { nombreColumna: 'total', cabecera: 'Total', celda: (row: Modelo) => `${row.importeTotal}` },
-    { nombreColumna: 'acciones', cabecera: 'Acciones' }
+    { nombreColumna: 'descuento', cabecera: 'Descuento', celda: (row: Modelo) => `$${row.totalDescuento}` },
+    { nombreColumna: 'subtotal', cabecera: 'Subtotal', celda: (row: Modelo) => `$${row.totalSinImpuestos}` },
+    { nombreColumna: 'total', cabecera: 'Total', celda: (row: Modelo) => `$${row.importeTotal}` },
+    { nombreColumna: 'factura_compra', cabecera: 'Compras' },
+    { nombreColumna: 'gasto_personal', cabecera: 'Gastos' },
+    { nombreColumna: 'tipo_gasto', cabecera: 'Tipo' }
   ];
   cabecera: string[] = this.columnas.map(titulo => titulo.nombreColumna);
   dataSource: MatTableDataSource<Modelo>;
@@ -259,12 +255,19 @@ export class DialogoSincronizacionComponent {
   @ViewChild(MatSort) sort: MatSort;
   @ViewChild("inputFiltro") inputFiltro: ElementRef;
 
-  constructor(public dialogRef: MatDialogRef<DialogoSincronizacionComponent>, private renderer: Renderer2, private facturaCompraService: FacturaCompraService,
-    private gastoPersonalService: GastoPersonalService, private tipoGastoService: TipoGastoService, private datepipe: DatePipe, @Inject(MAT_DIALOG_DATA) public data: {modelos: Modelo[]}) { 
+  constructor(public dialogRef: MatDialogRef<DialogoSincronizacionComponent>, private renderer: Renderer2, private sincronizacionService: SincronizacionService,
+    private tipoGastoService: TipoGastoService, private datepipe: DatePipe, @Inject(MAT_DIALOG_DATA) public data: {modelos: Modelo[]}) { 
     this.modelos = data.modelos;
-    this.llenarTabla(this.modelos);
     this.llenarOpciones();
+    this.llenarTabla(this.modelos);
     this.consultarTipoGasto();
+  }
+
+  llenarOpciones(){
+    for (let i = 0; i < this.modelos.length; i++) {
+      this.opcionesFacturaCompra.push(false);
+      this.opcionesGastoPersonal.push(false);
+    }
   }
   
   llenarTabla(modelos: Modelo[]) {
@@ -272,14 +275,6 @@ export class DialogoSincronizacionComponent {
     this.dataSource = new MatTableDataSource(modelos);
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
-  }
-
-  llenarOpciones(){
-    for (let i = 0; i < this.modelos.length; i++) {
-      this.opcionesFacturaCompra.push(false);
-      this.opcionesGastoPersonal.push(false);
-      this.opcionesTipoGasto.push(new TipoGasto());
-    }
   }
 
   onNoClick(): void {
@@ -295,52 +290,55 @@ export class DialogoSincronizacionComponent {
     });    
   }
 
-  guardar() {
-    /*if(this.modelosFacturasCompras.length > 0){
-      this.facturaCompraService.crearModelos(this.modelosFacturasCompras).subscribe({
-        next: res => {
-          Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
-        },
-        error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
-      });    
-    }
-    if(this.modelosGastosPersonales.length > 0){
-      this.gastoPersonalService.crearModelos(this.modelosGastosPersonales).subscribe({
-        next: res => {
-          Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
-        },
-        error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
-      });    
-    }*/
-    
-  }
-
   seleccionarFacturaCompra(evento: boolean, i: number) {
     if(evento == true){
-      this.modelosFacturasCompras.push(this.modelos[i]);
-      this.modelosGastosPersonales.splice(this.modelosGastosPersonales.indexOf(this.modelos[i]), 1);
-      this.opcionesFacturaCompra[i] = true;
+      this.modelos[i].tipo = tablas.facturaCompra;
+      this.modelos[i].tipoGasto = new TipoGasto();
+      this.modelosSeleccionados.push(this.modelos[i]);
       this.opcionesGastoPersonal[i] = false;
-      this.opcionesTipoGasto[i] = new TipoGasto();  
+      
     }
     if(evento == false){
-      this.modelosFacturasCompras.splice(this.modelosFacturasCompras.indexOf(this.modelos[i]), 1);
-      this.opcionesFacturaCompra[i] = false;
+      this.modelos[i].tipo = valores.vacio;
+      this.modelosSeleccionados.splice(this.modelosSeleccionados.indexOf(this.modelos[i]), 1);
     }
   }
 
   seleccionarGastoPersonal(evento: boolean, i: number) {
     if(evento == true){
-      this.modelosGastosPersonales.push(this.modelos[i]);
-      this.modelosFacturasCompras.splice(this.modelosFacturasCompras.indexOf(this.modelos[i]), 1);
+      this.modelos[i].tipo = tablas.gastoPersonal;
+      this.modelosSeleccionados.push(this.modelos[i]);
       this.opcionesFacturaCompra[i] = false;
-      this.opcionesGastoPersonal[i] = true;
-      this.opcionesTipoGasto[i] = new TipoGasto();  
     }
     if(evento == false){
-      this.modelosGastosPersonales.splice(this.modelosGastosPersonales.indexOf(this.modelos[i]), 1);
-      this.opcionesGastoPersonal[i] = false;
+      this.modelos[i].tipo = valores.vacio;
+      this.modelos[i].tipoGasto = new TipoGasto();
+      this.modelosSeleccionados.splice(this.modelosSeleccionados.indexOf(this.modelos[i]), 1);
     }
+  }
+
+  validar(){
+    for (let i = 0; i < this.modelosSeleccionados.length; i++) {
+      if(this.opcionesGastoPersonal[i] == true && this.modelosSeleccionados[i].tipoGasto.id == valores.cero){
+        Swal.fire({ icon: error_swal, title: error, text: mensajes.error_falta_datos });
+        return false;
+      }
+    }
+    return true;
+  }
+
+  guardar() {
+    if(!this.validar()){
+      return;
+    }
+    if(this.modelosSeleccionados.length > 0){
+      this.sincronizacionService.crearModelos(this.modelosSeleccionados).subscribe({
+        next: res => {
+          Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
+        },
+        error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+      });    
+    }    
   }
 
   ordenarAsc(arrayJson: any, pKey: any) {

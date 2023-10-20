@@ -7,6 +7,7 @@ import { Observable, throwError } from 'rxjs';
 import { Router } from '@angular/router';
 import { environment } from '../../../environments/environment';
 import { Sincronizacion } from 'src/app/modelos/configuracion/sincronizacion';
+import { Modelo } from 'src/app/modelos/configuracion/modelo';
 
 @Injectable({
   providedIn: 'root'
@@ -60,6 +61,15 @@ export class SincronizacionService {
 
   procesar(sincronizacionId: number): Observable<Respuesta> {
     return this.http.get<Respuesta>(environment.host + urn.ruta + urn.sincronizacion + urn.procesar + urn.slash + sincronizacionId, options).pipe(
+      map(response => response as Respuesta),
+      catchError(err => {
+        return throwError(()=>err);
+      })
+    );
+  }
+
+  crearModelos(modelos: Modelo[]): Observable<Respuesta> {
+    return this.http.post(environment.host + urn.ruta + urn.sincronizacion + urn.crearModelos, modelos, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);

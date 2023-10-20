@@ -12,6 +12,7 @@ import { Empresa } from '../usuario/empresa';
 export class Producto {
   id: number;
   codigo: string;
+  codigoPrincipal: string;
   nombre: string;
   consignacion: string;
   estado: string;

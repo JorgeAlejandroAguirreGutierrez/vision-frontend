@@ -108,6 +108,7 @@ export const urn =
     importar: "/importar",
     sincronizacion: "/sincronizacion",
     procesar: "/procesar",
+    crearModelos: "/crearModelos",
 
     //Contabilidad
     cuentaContable: "/cuentaContable",
@@ -417,7 +418,8 @@ export const tablas = {
     notaDebitoCompra: "nota_debito_compra",
     facturaVenta: "factura",
     notaCreditoVenta: "nota_credito_venta",
-    notaDebitoVenta: "nota_debito_venta"
+    notaDebitoVenta: "nota_debito_venta",
+    gastoPersonal: "gasto_personal"
 }   
 
 export const modulos = {
