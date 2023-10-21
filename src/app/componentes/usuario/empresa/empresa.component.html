@@ -138,14 +138,24 @@
                                 oninput="this.value = this.value.toUpperCase()" class="form-control-sm">
                         </mat-form-field>
                     </div>
+                    <div class="col-2">
+                        <mat-form-field appearance="standard">
+                            <mat-label>Contraseña del SRI</mat-label>
+                            <input matInput [type]="ocultarContrasenaSRI ? 'password' : 'text'" 
+                                [(ngModel)]="empresa.contrasenaSRI" class="form-control-sm">
+                            <button mat-icon-button matSuffix (click)="ocultarContrasenaSRI = !ocultarContrasenaSRI"
+                                [attr.aria-label]="'Ocultar password'" [attr.aria-pressed]="ocultarContrasenaSRI">
+                            <mat-icon>{{ocultarContrasenaSRI ? 'visibility_off' : 'visibility'}}</mat-icon>
+                        </button>
+                        </mat-form-field>
+                    </div>
                     <div class="col-2 centrar">
                         <button class="centrar botonAzul" type="button" mat-raised-button 
                             (click)="inputCertificado.click()">Certificado</button>
                         <input type="file" hidden (change)="capturarCertificado($event)" #inputCertificado>
-                        <!--span class="file-name">{{certificado?.name}}</span-->
                         <span class="file-name">{{empresa.certificado}}</span>
                     </div>
-                    <div class="col-4">
+                    <div class="col-2">
                         <mat-form-field appearance="standard">
                             <mat-label>Contraseña del Certificado</mat-label>
                             <input matInput [type]="ocultarContrasena ? 'password' : 'text'" 
