@@ -18,6 +18,7 @@ export class Empresa {
     tipoIdentificacion: TipoIdentificacion;
     certificado: string;
     contrasena: string;
+    contrasenaSRI: string;
     
     constructor() {
         this.id = valores.cero;
@@ -35,6 +36,7 @@ export class Empresa {
         this.estado = valores.estadoActivo;
         this.certificado = valores.vacio;
         this.contrasena = valores.vacio;
+        this.contrasenaSRI = valores.vacio;
         this.tipoIdentificacion = new TipoIdentificacion();
     }
 }
