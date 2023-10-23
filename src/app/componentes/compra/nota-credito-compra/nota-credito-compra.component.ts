@@ -83,7 +83,7 @@ export class NotaCreditoCompraComponent implements OnInit {
     { nombreColumna: 'cunitariocompra', cabecera: 'C.U. Comp', celda: (row: NotaCreditoCompraLinea) => `${row.costoUnitarioCompra}` },
     { nombreColumna: 'cantidad', cabecera: 'Cant NC', celda: (row: NotaCreditoCompraLinea) => `${row.cantidad}` },
     { nombreColumna: 'costounitario', cabecera: 'C.U NC', celda: (row: NotaCreditoCompraLinea) => `${row.costoUnitario}` },
-    { nombreColumna: 'impuesto', cabecera: 'IVA %', celda: (row: NotaCreditoCompraLinea) => `${row.impuesto.porcentaje} %` },
+    //{ nombreColumna: 'impuesto', cabecera: 'IVA %', celda: (row: NotaCreditoCompraLinea) => `${row.impuesto.porcentaje} %` },
     { nombreColumna: 'subtotal', cabecera: 'Subtotal', celda: (row: NotaCreditoCompraLinea) => `${row.subtotalLinea}` },
     { nombreColumna: 'importe', cabecera: 'Importe', celda: (row: NotaCreditoCompraLinea) => `${row.importeIvaLinea}` },
     { nombreColumna: 'totalLinea', cabecera: 'Total', celda: (row: NotaCreditoCompraLinea) => `${row.totalLinea}` },
@@ -403,7 +403,7 @@ export class NotaCreditoCompraComponent implements OnInit {
 
   seleccionarOperacion() {
     if (this.notaCreditoCompra.operacion == valores.devolucion) {
-      this.notaCreditoCompra.descuento = valores.cero;
+      this.notaCreditoCompra.descuentoGravado = valores.cero;
       this.deshabilitarDescuento = true;
       if (this.notaCreditoCompra.id == valores.cero){
         for (let i=0; i < this.notaCreditoCompra.notaCreditoCompraLineas.length; i++){

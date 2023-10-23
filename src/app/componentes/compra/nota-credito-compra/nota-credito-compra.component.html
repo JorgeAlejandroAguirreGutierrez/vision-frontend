@@ -103,14 +103,14 @@
                     <div class="col-1">
                         <mat-form-field appearance="standard">
                             <mat-label>SubT No G</mat-label>
-                            <input matInput type="text" [(ngModel)]="notaCreditoCompra.descuento" class="form-control-sm"
+                            <input matInput type="text" [(ngModel)]="notaCreditoCompra.descuentoNoGravado" class="form-control-sm"
                                 (change)="calcular()" [disabled]="deshabilitarDescuento">
                         </mat-form-field>
                     </div>
                     <div class="col-1">
                         <mat-form-field appearance="standard">
                             <mat-label>SubT Grab</mat-label>
-                            <input matInput type="text" [(ngModel)]="notaCreditoCompra.descuento" class="form-control-sm"
+                            <input matInput type="text" [(ngModel)]="notaCreditoCompra.descuentoGravado" class="form-control-sm"
                                 (change)="calcular()" [disabled]="deshabilitarDescuento">
                         </mat-form-field>
                     </div>

@@ -16,7 +16,8 @@ export class NotaCreditoCompra {
     fecha: Date;
     estado: string;
 
-    descuento: number;
+    descuentoGravado: number;
+    descuentoNoGravado: number;
     subtotal: number;
     subtotalGravado: number;
     subtotalNoGravado: number;
@@ -41,7 +42,8 @@ export class NotaCreditoCompra {
         this.fecha = new Date();
         this.estado = valores.vacio;
 
-        this.descuento = valores.cero;
+        this.descuentoGravado = valores.cero;
+        this.descuentoNoGravado = valores.cero;
         this.subtotal = valores.cero;
         this.subtotalGravado = valores.cero;
         this.subtotalNoGravado = valores.cero;
