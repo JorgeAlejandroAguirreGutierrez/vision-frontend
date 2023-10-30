@@ -34,7 +34,7 @@
                             <mat-icon>delete_forever</mat-icon>
                         </a>
                     </li>
-                    <li class="nav-item" *ngIf="factura.id != 0 && factura.estado != estadoAnulada && factura.estado != estadoCerrada && factura.estado != estadoEmitida && factura.procesoSRI != procesoSRIAutorizada">
+                    <li class="nav-item" *ngIf="factura.id != 0 && factura.estado != estadoAnulada && factura.estado != estadoCerrada && factura.estado != estadoEmitida && factura.procesoSRI != procesoSRIAutorizada && factura.tipoComprobante.abreviatura != facturaInterna">
                         <a class="nav-link" title="Crear Factura Electronica" href="#" role="button"
                             (click)="crearFacturaElectronica($event)">
                             <mat-icon>point_of_sale</mat-icon>
@@ -45,7 +45,7 @@
                             <mat-icon>picture_as_pdf</mat-icon>
                         </a>
                     </li>
-                    <li class="nav-item" *ngIf="factura.id != 0 && factura.estado != estadoEmitida && factura.estado != estadoAnulada && factura.procesoSRI != procesoSRIAnulada && factura.procesoSRI != procesoSRIPendiente">
+                    <li class="nav-item" *ngIf="factura.id != 0 && factura.estado != estadoEmitida && factura.estado != estadoAnulada && factura.procesoSRI != procesoSRIAnulada && factura.procesoSRI != procesoSRIPendiente && factura.tipoComprobante.abreviatura != facturaInterna">
                         <a class="nav-link" title="Enviar PDF Y XML" href="#" role="button"
                             (click)="enviarPDFYXML($event)">
                             <mat-icon>forward_to_inbox</mat-icon>
@@ -196,14 +196,23 @@
                                         disabled>
                                 </mat-form-field>
                             </div>
-                            <div class="col-5">
+                            <div class="col-6">
+                                <mat-form-field appearance="standard">
+                                    <mat-label>Tipo</mat-label>
+                                    <mat-select [(ngModel)]="factura.tipoComprobante" [compareWith]="compareFn" class="form-control-sm">
+                                        <mat-option [value]="tipoComprobanteFactura">{{tipoComprobanteFactura.abreviatura}}</mat-option>
+                                        <mat-option [value]="tipoComprobanteFacturaInterna">{{tipoComprobanteFacturaInterna.abreviatura}}</mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+                            <div class="col-3">
                                 <mat-form-field appearance="standard">
                                     <mat-label>Saldo Prep.</mat-label>
                                     <input matInput type="text" class="form-control-sm"
                                         [(ngModel)]="factura.cliente.montoFinanciamiento" disabled>
                                 </mat-form-field>
                             </div>
-                            <div class="col-7">
+                            <div class="col-3">
                                 <mat-form-field appearance="standard">
                                     <mat-label>Forma de pago</mat-label>
                                     <input matInput type="text" class="form-control-sm resaltar"

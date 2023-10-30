@@ -27,6 +27,7 @@ export const urn =
     nombre: "/nombre",
     consultarActivos: "/consultarActivos",
     obtenerPorAbreviatura: "/obtenerPorAbreviatura",
+    obtenerPorAbreviaturaYEstado: "/obtenerPorAbreviaturaYEstado",
     personalizado: "/personalizado",
     generar: "/generar",
     obtener: "/obtener",
@@ -279,7 +280,9 @@ export const valores = {
     anio2022: "2022",
     anio2023: "2023",
     recibidas: "RECIBIDAS",
-    emitidas: "EMITIDAS"
+    emitidas: "EMITIDAS",
+    facturaVenta: "FACTURA VENTA",
+    facturaInterna: "FACTURA INTERNA"
 }
 
 export const tipoMedidas = ["PESO", "VOLUMEN", "UNIDAD"]

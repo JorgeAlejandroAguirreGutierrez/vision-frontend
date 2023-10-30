@@ -36,6 +36,8 @@ import { MatStepper } from '@angular/material/stepper';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
+import { TipoComprobanteService } from 'src/app/servicios/configuracion/tipo-comprobante.service';
+import { TipoComprobante } from 'src/app/modelos/configuracion/tipo-comprobante';
 
 
 @Component({
@@ -49,6 +51,8 @@ export class FacturaComponent implements OnInit {
   si: string = valores.si;
   no: string = valores.no;
   
+  facturaVenta: string = valores.facturaVenta;
+  facturaInterna: string = valores.facturaInterna;
   estadoEmitida: string = valores.estadoEmitida;
   estadoRecaudada: string = valores.estadoRecaudada;
   estadoAnulada: string = valores.estadoAnulada;
@@ -79,6 +83,8 @@ export class FacturaComponent implements OnInit {
   factura: Factura = new Factura();
   facturaLinea: FacturaLinea = new FacturaLinea();
   kardex: Kardex = new Kardex();
+  tipoComprobanteFactura: TipoComprobante = new TipoComprobante();
+  tipoComprobanteFacturaInterna: TipoComprobante = new TipoComprobante();
 
   clientes: Cliente[] = [];
   productos: Producto[] = [];
@@ -149,7 +155,7 @@ export class FacturaComponent implements OnInit {
     }
 
   constructor(private renderer: Renderer2, private clienteService: ClienteService, private sesionService: SesionService,
-    private impuestoService: ImpuestoService, private router: Router, private datepipe: DatePipe, 
+    private impuestoService: ImpuestoService, private tipoComprobanteService: TipoComprobanteService, private router: Router, private datepipe: DatePipe, 
     private facturaService: FacturaService, private facturaElectronicaService: FacturaElectronicaService,
     private productoService: ProductoService, private bodegaService: BodegaService, private kardexService: KardexService,
     private tabService: TabService, private _formBuilder: UntypedFormBuilder, private spinnerService: NgxSpinnerService) { }
@@ -166,6 +172,8 @@ export class FacturaComponent implements OnInit {
     this.consultarProductos();
     this.consultarImpuestos();
     this.consultarBodegas();
+    this.obtenerTipoComprobanteFactura();
+    this.obtenerTipoComprobanteFacturaInterna();
     this.inicializarSteeper();
     this.inicializarFiltros();
   }
@@ -220,6 +228,29 @@ export class FacturaComponent implements OnInit {
       next: res => {
         this.bodegas = res.resultado as Bodega[]
         this.facturaLinea.bodega = this.bodegas[0];
+      },
+      error: err => {
+        Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+      }
+    });
+  }
+
+  obtenerTipoComprobanteFactura(){
+    this.tipoComprobanteService.obtenerPorAbreviaturaYEstado(valores.facturaVenta, valores.estadoActivo).subscribe({
+      next: res => {
+        this.tipoComprobanteFactura = res.resultado as TipoComprobante;
+        this.factura.tipoComprobante = this.tipoComprobanteFactura;
+      },
+      error: err => {
+        Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+      }
+    });
+  }
+
+  obtenerTipoComprobanteFacturaInterna(){
+    this.tipoComprobanteService.obtenerPorAbreviaturaYEstado(valores.facturaInterna, valores.estadoActivo).subscribe({
+      next: res => {
+        this.tipoComprobanteFacturaInterna = res.resultado as TipoComprobante;
       },
       error: err => {
         Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
@@ -631,6 +662,9 @@ export class FacturaComponent implements OnInit {
     if (this.facturaLinea.producto.categoriaProducto.abreviatura == valores.bien){
       this.facturaLinea.bodega = this.bodegas[valores.cero];
       this.obtenerUltimoKardex();
+    }
+    if(this.facturaLinea.producto.categoriaProducto.abreviatura == valores.servicio){
+      this.facturaLinea.bodega = null;
     }
     for (let precio of this.facturaLinea.producto.precios) {
       if (precio.segmento.id == this.factura.cliente.segmento.id) {
