@@ -32,6 +32,15 @@ export class TipoComprobanteService {
     );
   }
 
+  obtenerPorAbreviaturaYEstado(abreviatura: string, estado: string): Observable<Respuesta> {
+    return this.http.get<Respuesta>(environment.host + urn.ruta + urn.tipoComprobante + urn.obtenerPorAbreviaturaYEstado + urn.slash + abreviatura + urn.slash + estado, options).pipe(
+      map(response => response as Respuesta),
+      catchError(err => {
+        return throwError(()=>err);
+      })
+    );
+  }
+
   consultar(): Observable<Respuesta> {
     return this.http.get(environment.host + urn.ruta + urn.tipoComprobante, options).pipe(
       map(response => response as Respuesta),

@@ -280,7 +280,6 @@ export class RecaudacionComponent implements OnInit, OnChanges {
     this.spinnerService.show();
     this.facturaService.recaudar(this.factura).subscribe({
       next: res => {
-        Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
         this.factura = res.resultado as Factura;
         this.spinnerService.hide();
         this.crearFacturaElectronica(null);  
