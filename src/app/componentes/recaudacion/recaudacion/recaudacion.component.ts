@@ -282,7 +282,12 @@ export class RecaudacionComponent implements OnInit, OnChanges {
       next: res => {
         this.factura = res.resultado as Factura;
         this.spinnerService.hide();
-        this.crearFacturaElectronica(null);  
+        if(this.factura.tipoComprobante.abreviatura == valores.facturaVenta){
+          this.crearFacturaElectronica(null);
+        }
+        if(this.factura.tipoComprobante.abreviatura == valores.facturaInterna){
+          Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
+        }
       },
       error: err => {
         Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
