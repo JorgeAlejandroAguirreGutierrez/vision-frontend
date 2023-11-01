@@ -658,7 +658,10 @@ export class ClienteComponent implements OnInit {
     this.clienteService.validarIdentificacionPorEmpresa(this.empresa.id, this.cliente.identificacion).subscribe({
       next: (res) => {
         this.cliente = res.resultado as Cliente;
-        if (this.cliente.ubicacion.id != 0){
+        if(this.cliente.tipoContribuyente.id == valores.cero){
+          this.deshabilitarTipoContribuyente = false;
+        }
+        if (this.cliente.ubicacion.id != valores.cero){
           this.llenarUbicacion();
         }
         this.cliente.obligadoContabilidad = this.cliente.tipoContribuyente.obligadoContabilidad;
@@ -686,11 +689,11 @@ export class ClienteComponent implements OnInit {
       this.deshabilitarDinardap = true;
     } else {
       this.deshabilitarDinardap = false;
-      if (this.cliente.id == 0) {
-        if (this.cliente.genero.id == 0){
+      if (this.cliente.id == valores.cero) {
+        if (this.cliente.genero.id == valores.cero){
           this.cliente.genero = this.generos[this.generos.length - 1];
         }
-        if (this.cliente.estadoCivil.id == 0){
+        if (this.cliente.estadoCivil.id == valores.cero){
           this.cliente.estadoCivil = this.estadosCiviles[this.estadosCiviles.length - 1];
         }
         this.cliente.origenIngreso = this.origenesIngresos[this.origenesIngresos.length - 1];
