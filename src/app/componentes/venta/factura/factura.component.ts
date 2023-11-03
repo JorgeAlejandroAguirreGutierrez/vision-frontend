@@ -68,6 +68,7 @@ export class FacturaComponent implements OnInit {
   costoPromedio: number = valores.cero;
   precioVentaPublicoManual: number = valores.cero;
   indiceLinea: number;
+  deshabilitarFacturacionInterna = false;
 
   steeperLinear: boolean = false;
   steeperEditable: boolean = true;
@@ -174,8 +175,15 @@ export class FacturaComponent implements OnInit {
     this.consultarBodegas();
     this.obtenerTipoComprobanteFactura();
     this.obtenerTipoComprobanteFacturaInterna();
+    this.inicializarFacturacionInterna();
     this.inicializarSteeper();
     this.inicializarFiltros();
+  }
+
+  inicializarFacturacionInterna(){
+    if (this.empresa.facturacioInterna == valores.no){
+      this.deshabilitarFacturacionInterna = true;
+    }
   }
 
   consultarClientesInit(){
