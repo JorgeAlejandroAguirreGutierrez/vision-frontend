@@ -199,7 +199,7 @@
                             <div class="col-6">
                                 <mat-form-field appearance="standard">
                                     <mat-label>Tipo</mat-label>
-                                    <mat-select [(ngModel)]="factura.tipoComprobante" [compareWith]="compareFn" class="form-control-sm">
+                                    <mat-select [(ngModel)]="factura.tipoComprobante" [compareWith]="compareFn" [disabled]="deshabilitarFacturacionInterna" class="form-control-sm">
                                         <mat-option [value]="tipoComprobanteFactura">{{tipoComprobanteFactura.abreviatura}}</mat-option>
                                         <mat-option [value]="tipoComprobanteFacturaInterna">{{tipoComprobanteFacturaInterna.abreviatura}}</mat-option>
                                     </mat-select>
