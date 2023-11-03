@@ -181,7 +181,7 @@ export class FacturaComponent implements OnInit {
   }
 
   inicializarFacturacionInterna(){
-    if (this.empresa.facturacioInterna == valores.no){
+    if (this.empresa.facturacionInterna == valores.no){
       this.deshabilitarFacturacionInterna = true;
     }
   }
