@@ -46,7 +46,7 @@ export class SecuencialComponent implements OnInit {
   columnas: any[] = [
     { nombreColumna: 'codigo', cabecera: 'Código', celda: (row: Secuencial) => `${row.codigo}` },
     { nombreColumna: 'comprobante', cabecera: 'Comprobante', celda: (row: Secuencial) => `${row.tipoComprobante.abreviatura}` },
-    { nombreColumna: 'empresa', cabecera: 'Empresa', celda: (row: Secuencial) => `${row.estacion.establecimiento.empresa.nombreComercial}` },
+    { nombreColumna: 'empresa', cabecera: 'Empresa', celda: (row: Secuencial) => `${row.estacion.establecimiento.empresa.razonSocial}` },
     { nombreColumna: 'establecimiento', cabecera: 'Establecimiento', celda: (row: Secuencial) => `${row.estacion.establecimiento.codigoSRI}` },
     { nombreColumna: 'punto_venta', cabecera: 'Pto. Venta', celda: (row: Secuencial) => `${row.estacion.codigoSRI}` },
     { nombreColumna: 'siguiente', cabecera: '# Siguiente', celda: (row: Secuencial) => `${row.numeroSiguiente}` },
