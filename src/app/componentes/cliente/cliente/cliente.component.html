@@ -85,7 +85,7 @@
                 <div class="col-2">
                     <mat-form-field appearance="standard">
                         <mat-label>Contribuyente</mat-label>
-                        <mat-select [ngModel]="cliente.tipoContribuyente" [compareWith]="compareFn" [disabled]="deshabilitarTipoContribuyente" class="form-control-sm">
+                        <mat-select [(ngModel)]="cliente.tipoContribuyente" [compareWith]="compareFn" [disabled]="deshabilitarTipoContribuyente" class="form-control-sm">
                             <mat-option *ngFor="let tipoContribuyente of tiposContribuyentes" [value]="tipoContribuyente">
                                 {{tipoContribuyente.subtipo}}
                             </mat-option>
