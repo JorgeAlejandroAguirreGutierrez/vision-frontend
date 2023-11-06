@@ -275,6 +275,7 @@ export class FacturaComponent implements OnInit {
     this.factura.usuario = this.sesion.usuario;
     this.factura.establecimiento = this.sesion.usuario.estacion.establecimiento.codigoSRI;
     this.factura.puntoVenta = this.sesion.usuario.estacion.codigoSRI;
+    this.factura.tipoComprobante = this.tipoComprobanteFactura;
     this.controlIdentificacionCliente.patchValue(valores.vacio);
     this.controlRazonSocialCliente.patchValue(valores.vacio);
     this.dataSourceLinea = new MatTableDataSource<FacturaLinea>([]);
