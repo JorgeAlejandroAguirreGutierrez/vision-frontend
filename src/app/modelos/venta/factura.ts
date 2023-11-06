@@ -95,6 +95,7 @@ export class Factura {
 
     this.cliente = new Cliente();
     this.usuario = new Usuario();
+    this.tipoComprobante = new TipoComprobante();
     this.empresa = new Empresa();
     this.facturaLineas = [];
     
