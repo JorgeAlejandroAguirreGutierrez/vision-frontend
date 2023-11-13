@@ -299,8 +299,9 @@ export class RecaudacionComponent implements OnInit, OnChanges {
   crearFacturaElectronica(event) {
     if (event != null)
       event.preventDefault();
+    let facturaId = this.factura.id;
     this.spinnerService.show();  
-    this.facturaElectronicaService.enviar(this.factura.id).subscribe({
+    this.facturaElectronicaService.enviar(facturaId).subscribe({
       next: res => {
         this.llamarNuevo.emit();
         this.stepper.previous();
@@ -310,12 +311,12 @@ export class RecaudacionComponent implements OnInit, OnChanges {
           icon: exito_swal,
           title: exito,
           text: res.mensaje,
-          showCancelButton: false,
+          showCancelButton: true,
           confirmButtonText: "Imprimir Factura",
           denyButtonText: "Cancelar"
         }).then((result) => {
           if (result.isConfirmed) {
-            this.facturaElectronicaService.obtenerPDF(this.factura.id);
+            this.facturaElectronicaService.obtenerPDF(facturaId);
           }
         });
       },
