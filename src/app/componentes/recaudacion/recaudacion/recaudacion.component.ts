@@ -316,7 +316,7 @@ export class RecaudacionComponent implements OnInit, OnChanges {
           denyButtonText: "Cancelar"
         }).then((result) => {
           if (result.isConfirmed) {
-            this.facturaElectronicaService.obtenerPDF(facturaId);
+            this.facturaElectronicaService.imprimirPDF(facturaId);
           }
         });
       },

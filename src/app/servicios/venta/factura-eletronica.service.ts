@@ -64,4 +64,16 @@ export class FacturaElectronicaService {
       }
     });
   }
+
+  imprimirPDF(facturaId: number) {
+    this.http.get(environment.host + urn.ruta + urn.facturaElectronica + urn.obtenerPDF + urn.slash + facturaId, optionsGenerarArchivo)
+    .subscribe((blob: Blob) => {
+      let link = document.createElement("a");
+      if (link.download !== undefined) 
+      {
+          let url = URL.createObjectURL(blob);
+          window.open(url);
+      }
+    });
+  }
 }
