@@ -64,6 +64,9 @@ import { TablaPromoGrupComponent } from './componentes/inventario/promocion/tabl
 import { TablaComboComponent } from './componentes/inventario/promocion/tabla-combo/tabla-combo.component';
 import { TablaComponenteComponent } from './componentes/inventario/promocion/tabla-componente/tabla-componente.component';
 import { TipoRetencionComponent } from './componentes/configuracion/tipo-retencion/tipo-retencion.component';
+import { EquivalenciaMedidaComponent } from './componentes/inventario/equivalencia-medida/equivalencia-medida.component';
+import { ProductoProveedorComponent } from './componentes/inventario/producto-proveedor/producto-proveedor.component';
+import { TransferenciaBodegaComponent } from './componentes/inventario/transferencia-bodega/transferencia-bodega.component';
 
 //Modulo Caja Bancos
 import { CuentaPropiaComponent } from './componentes/caja-banco/cuenta-propia/cuenta-propia.component';
@@ -185,6 +188,9 @@ export const RoutingComponents = [
   TablaComboComponent,
   TablaComponenteComponent,
   FiltroSerie,
+  EquivalenciaMedidaComponent,
+  ProductoProveedorComponent,
+  TransferenciaBodegaComponent,
   // Entregas
   GuiaRemisionComponent,
   TransportistaComponent,

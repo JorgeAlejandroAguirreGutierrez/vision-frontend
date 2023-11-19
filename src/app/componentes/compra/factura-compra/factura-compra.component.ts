@@ -1,7 +1,7 @@
 import { Component, HostListener, OnInit, ViewChild, ElementRef, Renderer2 } from '@angular/core';
 import { UntypedFormControl } from '@angular/forms';
 import { valores, mensajes, tablas, validarSesion, exito, exito_swal, error, error_swal } from '../../../constantes';
-import { Router } from '@angular/router';
+import { Router } from '@angular/router'; 
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 import { NgxSpinnerService } from 'ngx-spinner';
@@ -152,14 +152,14 @@ export class FacturaCompraComponent implements OnInit {
     });
   }
   consultarProductos() {
-    this.productoService.consultarPorCategoriaProductoYEmpresaYEstado(valores.bien, this.empresa.id, valores.estadoActivo).subscribe(
-      res => {
+    this.productoService.consultarPorCategoriaProductoYEmpresaYEstado(valores.bien, this.empresa.id, valores.estadoActivo).subscribe({
+      next: res => {
         this.productos = res.resultado as Producto[]
       },
-      err => {
+      error: err => {
         Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
       } 
-    );
+    });
   }
   consultarImpuestos() {
     this.impuestoService.consultar().subscribe({

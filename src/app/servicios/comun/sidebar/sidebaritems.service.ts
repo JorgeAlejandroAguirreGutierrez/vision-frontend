@@ -32,8 +32,11 @@ import { GrupoProductoComponent } from '../../../componentes/inventario/grupo-pr
 import { ProductoComponent } from "../../../componentes/inventario/producto/producto.component";
 import { KardexComponent } from "../../../componentes/inventario/kardex/kardex.component";
 import { PromocionComponent } from "../../../componentes/inventario/promocion/promocion.component";
+import { ProductoProveedorComponent } from "../../../componentes/inventario/producto-proveedor/producto-proveedor.component";
 import { BodegaComponent } from "../../../componentes/inventario/bodega/bodega.component";
+import { TransferenciaBodegaComponent } from "../../../componentes/inventario/transferencia-bodega/transferencia-bodega.component";
 import { MedidaComponent } from '../../../componentes/inventario/medida/medida.component';
+import { EquivalenciaMedidaComponent } from "../../../componentes/inventario/equivalencia-medida/equivalencia-medida.component";
 //CAJA BANCOS
 import { CuentaPropiaComponent } from '../../../componentes/caja-banco/cuenta-propia/cuenta-propia.component';
 import { BancoComponent } from '../../../componentes/caja-banco/banco/banco.component';
@@ -133,8 +136,11 @@ export class SidebarItemsService {
       this.llenarOpciones(ProductoComponent,tabs.tab_producto, items.item_producto, icos.ico_producto);
       this.llenarOpciones(KardexComponent,tabs.tab_kardex, items.item_kardex, icos.ico_kardex);
       this.llenarOpciones(PromocionComponent,tabs.tab_promocion,items.item_promocion,icos.ico_promocion);
+      this.llenarOpciones(ProductoProveedorComponent,tabs.tab_proveedor_producto,items.item_proveedor_producto,icos.ico_proveedor_producto);
       this.llenarOpciones(BodegaComponent,tabs.tab_bodega, items.item_bodega, icos.ico_bodega);
+      this.llenarOpciones(TransferenciaBodegaComponent,tabs.tab_transferencia_bodega,items.item_transferencia_bodega,icos.ico_transferencia_bodega);
       this.llenarOpciones(MedidaComponent,tabs.tab_medida, items.item_medida, icos.ico_medida);
+      this.llenarOpciones(EquivalenciaMedidaComponent,tabs.tab_equivalencia_medida,items.item_equivalencia_medida,icos.ico_equivalencia_medida);
     }
 
     if (tabNombre == modulos.modulo_caja_bancos) {
