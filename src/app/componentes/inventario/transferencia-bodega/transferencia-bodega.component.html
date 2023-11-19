@@ -1,0 +1,170 @@
+<nav class="navbar-light nav-fijo">
+    <ul class="navbar-nav">
+        <ng-container *ngIf="abrirPanelAsignarBodega">
+            <li class="nav-item" *ngIf="!verActualizarProducto">
+                <a class="nav-link" title="Guardar" role="button" (click)="actualizarProducto($event)">
+                    <mat-icon>save</mat-icon>
+                </a>
+            </li>
+            <li class="nav-item" *ngIf="verActualizarProducto">
+                <a class="nav-link" title="Actualizar" role="button" (click)="actualizarProducto($event)">
+                    <mat-icon>update</mat-icon>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" title="Borrar" role="button" (click)="limpiar()">
+                    <mat-icon>file_copy</mat-icon>
+                </a>
+            </li>
+        </ng-container>
+    </ul>
+</nav>
+<div class="contenedor">
+    <div class="form-group form-row">
+        <div class="card col-12">
+            <div class="card-header">
+                &nbsp;&nbsp;&nbsp;<i><u>PRODUCTO</u></i>
+            </div>
+            <div class="card-body">
+                <div class="form-group form-row">
+                    <div class="col-12">
+                        <mat-form-field appearance="standard">
+                            <mat-label>Producto</mat-label>
+                            <input matInput type="text" class="form-control-sm" [formControl]="controlProducto"
+                                [matAutocomplete]="producto" #autocompleteProducto>
+                            <mat-autocomplete #producto="matAutocomplete" [displayWith]="verProducto"
+                                (optionSelected)="seleccionarProducto()">
+                                <mat-option *ngFor="let producto of filtroProductos | async" [value]="producto">
+                                    {{producto.nombre}}
+                                </mat-option>
+                            </mat-autocomplete>
+                            <button mat-button *ngIf="autocompleteProducto.value" matSuffix mat-icon-button
+                                (click)="autocompleteProducto.value=''">
+                                <mat-icon>close</mat-icon>
+                            </button>
+                        </mat-form-field>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <mat-accordion class="headers-align">
+        <mat-expansion-panel (opened)="abrirPanelAsignarBodega = true" (closed)="abrirPanelAsignarBodega = false"
+            [expanded]="abrirPanelAsignarBodega">
+            <mat-expansion-panel-header>
+                <mat-panel-title>
+                    <i><u>BODEGAS</u></i>
+                </mat-panel-title>
+                <mat-panel-description>
+                    {{abrirPanelAsignarBodega ? 'Ocultar asignar bodegas' : 'Ver transferencias a bodegas'}}
+                    <mat-icon>playlist_add</mat-icon>
+                </mat-panel-description>
+            </mat-expansion-panel-header>
+            <hr>
+            <div class="col-12">
+                <div class="centrar-titulo fondo">
+                    <mat-label>TRANSFERENCIAS A BODEGAS</mat-label>
+                </div>
+                <mat-divider></mat-divider>
+                <mat-card class="mat-elevation-z8 verBorde">
+                    <div class="form-group form-row">
+                        <div class="col-4">
+                            <mat-form-field appearance="standard">
+                                <mat-label>Bodega Origen</mat-label>
+                                <input matInput type="text" [(ngModel)]="productoBodega.bodega.nombre" disabled
+                                    class="form-control-sm">
+                            </mat-form-field>
+                        </div>
+                        <div class="col-1">
+                            <mat-form-field appearance="standard">
+                                <mat-label>Cant. Orig.</mat-label>
+                                <input matInput type="text" [(ngModel)]="productoBodega.cantidad" disabled
+                                    class="form-control-sm">
+                            </mat-form-field>
+                        </div>
+                        <div class="col-1"></div>
+                        <div class="col-4">
+                            <mat-form-field appearance="standard">
+                                <mat-label>Bodega Destino</mat-label>
+                                <input type="text" matInput aria-label="BodegaDestino" class="form-control-sm"
+                                    [formControl]="controlBodegaDestino" [matAutocomplete]="bodegaDestinoAuto">
+                                <mat-autocomplete autoActiveFirstOption #bodegaDestinoAuto="matAutocomplete"
+                                    [displayWith]="verBodegaDestino" (optionSelected)="seleccionarBodegaDestino()">
+                                    <mat-option *ngFor="let bodegaDestino of filtroBodegasDestino | async"
+                                        [value]="bodegaDestino">
+                                        {{bodegaDestino.nombre}}
+                                    </mat-option>
+                                </mat-autocomplete>
+                            </mat-form-field>
+                        </div>
+                        <div class="col-1">
+                            <mat-form-field appearance="standard">
+                                <mat-label>Cant. Dest.</mat-label>
+                                <input matInput type="text" [(ngModel)]="cantidadBodegaDestino"
+                                    [disabled]="deshabilitarBodegaDestino" class="form-control-sm">
+                            </mat-form-field>
+                        </div>
+                        <div class="col-1 iconos">
+                            <button mat-icon-button mat-button [disabled]="deshabilitarBodegaDestino"
+                                (click)="agregarProductoBodega()">
+                                <mat-icon>add</mat-icon>
+                            </button>
+                            <!--mat-mini-fab -->
+                        </div>
+                    </div>
+                </mat-card>
+                <mat-divider></mat-divider>
+                <div class="form-row col-12">
+                    <mat-form-field appearance="standard">
+                        <mat-label>Buscar bodegas</mat-label>
+                        <input matInput [disabled]="deshabilitarFiltroBodega" (keyup)="filtroProductoBodega($event)"
+                            placeholder="Ej. BA" #inputFiltroProductoBodega>
+                        <button mat-button *ngIf="inputFiltroProductoBodega.value" matSuffix mat-icon-button
+                            (click)="borrarFiltroProductoBodega()">
+                            <mat-icon>close</mat-icon>
+                        </button>
+                    </mat-form-field>
+                    <div class="mat-elevation-z8 col-12">
+                        <table mat-table [dataSource]="dataSourceProductoBodega" matSort>
+                            <!-- Columnas Dinamicas -->
+                            <ng-container *ngFor="let columna of columnasProductoBodega"
+                                [matColumnDef]="columna.nombreColumna">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header> {{ columna.cabecera }} </th>
+                                <ng-container *ngIf="columna.nombreColumna != 'acciones'">
+                                    <td mat-cell *matCellDef="let row"> {{ columna.celda(row) }} </td>
+                                </ng-container>
+                                <ng-container *ngIf="columna.nombreColumna == 'acciones'">
+                                    <td mat-cell *matCellDef="let i=index">
+                                        <button mat-icon-button color="warn" aria-label="Eliminar" focusable="false"
+                                            (click)="eliminarBodega(i)">
+                                            <i class="fa fa-times mat-icon"></i>
+                                        </button>
+                                    </td>
+                                    <td mat-footer-cell *matFooterCellDef></td>
+                                </ng-container>
+                            </ng-container>
+                            <tr mat-header-row *matHeaderRowDef="cabeceraProductoBodega"></tr>
+                            <tr mat-row (click)="seleccionProductoBodega(row)"
+                                [class.selected-row]="clickedRowsProductoBodega.has(row)"
+                                *matRowDef="let row; columns: cabeceraProductoBodega;"></tr>
+
+                            <!-- Row shown when there is no matching data. -->
+                            <tr class="mat-row" *matNoDataRow>
+                                <td class="mat-cell" colspan="4">No hay datos que coincidan con la bodega
+                                    "{{inputFiltroProductoBodega.value}}"
+                                </td>
+                            </tr>
+                        </table>
+                        <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
+                    </div>
+                    <div class="azul" *ngIf="!clickedRowsProductoBodega.size">
+                        Seleccione una fila para editar
+                    </div>
+                    <div class="azul" *ngFor="let clickedRowBodega of clickedRowsProductoBodega">
+                        Id: {{clickedRowBodega.id}} seleccionado
+                    </div>
+                </div>
+            </div>
+        </mat-expansion-panel>
+    </mat-accordion>
+</div>

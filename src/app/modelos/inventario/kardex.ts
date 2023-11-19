@@ -17,6 +17,7 @@ export class Kardex {
     haber: number;
     costoPromedio: number;
     costoTotal: number;
+    estado: string;
     tipoComprobante: TipoComprobante;
     tipoOperacion: TipoOperacion;
     bodega: Bodega;
@@ -30,10 +31,11 @@ export class Kardex {
         this.entrada = valores.cero;
         this.salida = valores.cero;
         this.saldo = valores.cero;
-        this.costoPromedio = valores.cero;
-        this.costoTotal =valores.cero;
         this.debe = valores.cero;
         this.haber = valores.cero;
+        this.costoPromedio = valores.cero;
+        this.costoTotal = valores.cero;
+        this.estado = valores.estadoActivo;
         this.tipoComprobante = new TipoComprobante();
         this.tipoOperacion = new TipoOperacion();
         this.bodega = new Bodega();

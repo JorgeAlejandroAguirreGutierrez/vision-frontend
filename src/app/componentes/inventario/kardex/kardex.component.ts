@@ -116,7 +116,7 @@ export class KardexComponent implements OnInit {
   }
 
   consultarKardex(productoId: number){
-    this.kardexService.consultarPorProducto(productoId).subscribe({
+    this.kardexService.consultarPorProductoYEstado(productoId, valores.estadoActivo).subscribe({
       next: res => {
         this.kardexs = res.resultado as Kardex[];
         this.llenarTablaKardex(this.kardexs);

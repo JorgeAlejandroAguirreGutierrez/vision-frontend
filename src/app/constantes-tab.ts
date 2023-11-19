@@ -38,7 +38,7 @@ export const tabs = {
     tab_producto: "Producto",
     tab_kardex: "Kardex",
     tab_promocion: "Promocion",
-    tab_proveedor_producto: "Proveedor Producto",
+    tab_proveedor_producto: "Producto Proveedor",
     tab_transferencia_bodega: "Transferencia Bodega",
     tab_bodega: "Bodegas",
     tab_medida: "Medida",
@@ -144,11 +144,11 @@ export const items = {
     item_producto: "Productos",
     item_kardex: "Kardex",
     item_promocion: "Promociones",
-    item_proveedor_producto: "Proveedores de productos",
-    item_transferencia_bodega: "Transferencias de Bodega",
+    item_proveedor_producto: "Producto Proveedor",
     item_bodega: "Bodegas",
+    item_transferencia_bodega: "Transferencia Bodega",
     item_medida: "Medidas",
-    item_equivalencia_medida: "Equivalencia de Medidas",
+    item_equivalencia_medida: "Equivalencia Medida",
 
     //CAJA BANCOS
     item_cuenta_propia: "Cuentas Propias",
