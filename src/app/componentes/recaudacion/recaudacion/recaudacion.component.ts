@@ -299,13 +299,26 @@ export class RecaudacionComponent implements OnInit, OnChanges {
   crearFacturaElectronica(event) {
     if (event != null)
       event.preventDefault();
+    let facturaId = this.factura.id;
     this.spinnerService.show();  
-    this.facturaElectronicaService.enviar(this.factura.id).subscribe({
+    this.facturaElectronicaService.enviar(facturaId).subscribe({
       next: res => {
-        Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
         this.llamarNuevo.emit();
         this.stepper.previous();
-        this.spinnerService.hide();  
+        this.spinnerService.hide(); 
+        Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
+        Swal.fire({
+          icon: exito_swal,
+          title: exito,
+          text: res.mensaje,
+          showCancelButton: true,
+          confirmButtonText: "Imprimir Factura",
+          denyButtonText: "Cancelar"
+        }).then((result) => {
+          if (result.isConfirmed) {
+            this.facturaElectronicaService.imprimirPDF(facturaId);
+          }
+        });
       },
       error: err => {
         Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })

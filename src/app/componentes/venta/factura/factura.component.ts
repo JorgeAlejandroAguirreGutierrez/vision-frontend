@@ -68,6 +68,7 @@ export class FacturaComponent implements OnInit {
   costoPromedio: number = valores.cero;
   precioVentaPublicoManual: number = valores.cero;
   indiceLinea: number;
+  deshabilitarFacturacionInterna = false;
 
   steeperLinear: boolean = false;
   steeperEditable: boolean = true;
@@ -174,8 +175,15 @@ export class FacturaComponent implements OnInit {
     this.consultarBodegas();
     this.obtenerTipoComprobanteFactura();
     this.obtenerTipoComprobanteFacturaInterna();
+    this.inicializarFacturacionInterna();
     this.inicializarSteeper();
     this.inicializarFiltros();
+  }
+
+  inicializarFacturacionInterna(){
+    if (this.empresa.facturacionInterna == valores.no){
+      this.deshabilitarFacturacionInterna = true;
+    }
   }
 
   consultarClientesInit(){
@@ -267,6 +275,7 @@ export class FacturaComponent implements OnInit {
     this.factura.usuario = this.sesion.usuario;
     this.factura.establecimiento = this.sesion.usuario.estacion.establecimiento.codigoSRI;
     this.factura.puntoVenta = this.sesion.usuario.estacion.codigoSRI;
+    this.factura.tipoComprobante = this.tipoComprobanteFactura;
     this.controlIdentificacionCliente.patchValue(valores.vacio);
     this.controlRazonSocialCliente.patchValue(valores.vacio);
     this.dataSourceLinea = new MatTableDataSource<FacturaLinea>([]);
