@@ -18,12 +18,12 @@
             </li>
             <li class="nav-item" *ngIf="facturaCompra.id != 0 && facturaCompra.estado != estadoAnulada">
                 <a class="nav-link" title="Anular" role="button" (click)="anular($event)">
-                    <mat-icon>delete_forever</mat-icon>
+                    <mat-icon>disabled_by_default</mat-icon>
                 </a>
             </li>
             <li class="nav-item" *ngIf="facturaCompra.id !=0 && facturaCompra.estado != estadoPagada && facturaCompra.estado != estadoAnulada">
                 <a class="nav-link" title="Pagar" role="button" (click)="pagar($event)">
-                    <mat-icon>attach_money</mat-icon>
+                    <mat-icon>price_change</mat-icon>
                 </a>
             </li>
         </ul>
