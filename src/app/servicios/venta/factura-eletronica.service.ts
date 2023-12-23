@@ -20,24 +20,6 @@ export class FacturaElectronicaService {
         return throwError(() => err);
       }));
   }
-  
-  obtenerPDF(facturaId: number) {
-    this.http.get(environment.host + urn.ruta + urn.facturaElectronica + urn.obtenerPDF + urn.slash + facturaId, optionsGenerarArchivo)
-    .subscribe((blob: Blob) => {
-      const fileName = "factura.pdf";
-      let link = document.createElement("a");
-      if (link.download !== undefined) 
-      {
-          let url = URL.createObjectURL(blob);
-          link.setAttribute("href", url);
-          link.setAttribute("download", fileName);
-          link.style.visibility = 'hidden';
-          document.body.appendChild(link);
-          link.click();
-          document.body.removeChild(link);
-      }
-    });
-  }
 
   enviarPDFYXML(facturaId: number): Observable<Respuesta> {
     return this.http.get(environment.host + urn.ruta + urn.facturaElectronica + urn.enviarPDFYXML + urn.slash + facturaId, options).pipe(
@@ -47,20 +29,14 @@ export class FacturaElectronicaService {
       }));
   }
 
-  obtenerTicket(facturaId: number) {
+  imprimirTicket(facturaId: number) {
     this.http.get(environment.host + urn.ruta + urn.facturaElectronica + urn.obtenerTicket + urn.slash + facturaId, optionsGenerarArchivo)
     .subscribe((blob: Blob) => {
-      const fileName = "ticket.pdf";
       let link = document.createElement("a");
       if (link.download !== undefined) 
       {
           let url = URL.createObjectURL(blob);
-          link.setAttribute("href", url);
-          link.setAttribute("download", fileName);
-          link.style.visibility = 'hidden';
-          document.body.appendChild(link);
-          link.click();
-          document.body.removeChild(link);
+          window.open(url);
       }
     });
   }

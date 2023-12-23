@@ -326,10 +326,10 @@ export class FacturaComponent implements OnInit {
     });
   }
 
-  obtenerPDF(event){
+  imprimirPDF(event){
     if (event != null)
       event.preventDefault();
-    this.facturaElectronicaService.obtenerPDF(this.factura.id);
+    this.facturaElectronicaService.imprimirPDF(this.factura.id);
   }
   
   enviarPDFYXML(event){
@@ -348,10 +348,10 @@ export class FacturaComponent implements OnInit {
     });
   }
 
-  obtenerTicket(event){
+  imprimirTicket(event){
     if (event != null)
       event.preventDefault();
-    this.facturaElectronicaService.obtenerTicket(this.factura.id);
+    this.facturaElectronicaService.imprimirTicket(this.factura.id);
   }
 
   actualizar(event) {

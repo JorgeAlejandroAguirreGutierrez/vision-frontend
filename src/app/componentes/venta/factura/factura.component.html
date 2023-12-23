@@ -29,11 +29,6 @@
                             <mat-icon>shopping_basket</mat-icon>
                         </a>
                     </li>
-                    <li class="nav-item" *ngIf="factura.id != 0 && factura.estado != estadoAnulada && factura.estado != estadoCerrada && factura.procesoSRI != procesoSRIAnulada">
-                        <a class="nav-link" title="Anular" role="button" (click)="anular($event)">
-                            <mat-icon>disabled_by_default</mat-icon>
-                        </a>
-                    </li>
                     <li class="nav-item" *ngIf="factura.id != 0 && factura.estado != estadoAnulada && factura.estado != estadoCerrada && factura.estado != estadoEmitida && factura.procesoSRI != procesoSRIAutorizada && factura.tipoComprobante.abreviatura != facturaInterna">
                         <a class="nav-link" title="Crear Factura Electronica" href="#" role="button"
                             (click)="crearFacturaElectronica($event)">
@@ -41,7 +36,7 @@
                         </a>
                     </li>
                     <li class="nav-item" *ngIf="factura.id != 0  && factura.estado != estadoEmitida && factura.estado != estadoAnulada && factura.procesoSRI != procesoSRIAnulada">
-                        <a class="nav-link" title="Obtener PDF" href="#" role="button" (click)="obtenerPDF($event)">
+                        <a class="nav-link" title="Imprimir PDF" href="#" role="button" (click)="imprimirPDF($event)">
                             <mat-icon>picture_as_pdf</mat-icon>
                         </a>
                     </li>
@@ -52,8 +47,13 @@
                         </a>
                     </li>
                     <li class="nav-item" *ngIf="factura.id != 0  && factura.estado != estadoEmitida && factura.estado != estadoAnulada && factura.procesoSRI != procesoSRIAnulada">
-                        <a class="nav-link" title="Obtener TICKET" href="#" role="button" (click)="obtenerTicket($event)">
+                        <a class="nav-link" title="Obtener TICKET" href="#" role="button" (click)="imprimirTicket($event)">
                             <mat-icon>format_align_justify</mat-icon>
+                        </a>
+                    </li>
+                    <li class="nav-item" *ngIf="factura.id != 0 && factura.estado != estadoAnulada && factura.estado != estadoCerrada && factura.procesoSRI != procesoSRIAnulada">
+                        <a class="nav-link" title="Anular" role="button" (click)="anular($event)">
+                            <mat-icon>disabled_by_default</mat-icon>
                         </a>
                     </li>
                     <li class="nav-item" *ngIf="factura.id != 0">
@@ -629,7 +629,17 @@
                             <ng-container *ngFor="let columna of columnasFactura"
                                 [matColumnDef]="columna.nombreColumna">
                                 <th mat-header-cell *matHeaderCellDef mat-sort-header> {{ columna.cabecera }} </th>
-                                <td mat-cell *matCellDef="let row"> {{ columna.celda(row) }} </td>
+                                <td mat-cell *matCellDef="let row; let i=index">
+                                    <ng-container *ngIf="columna.nombreColumna == 'procesoSRI' && columna.celda(row) == 'PENDIENTE'" class="alert alert-warning" role="alert">
+                                        {{ columna.celda(row) }}
+                                    </ng-container> 
+                                    <ng-container *ngIf="columna.nombreColumna == 'procesoSRI' && columna.celda(row) != 'PENDIENTE'">
+                                        {{ columna.celda(row) }}
+                                    </ng-container> 
+                                    <ng-container *ngIf="columna.nombreColumna != 'procesoSRI'">
+                                        {{ columna.celda(row) }}
+                                    </ng-container> 
+                                </td>
                             </ng-container>
                             <tr mat-header-row *matHeaderRowDef="cabeceraFactura"></tr>
                             <tr mat-row (click)="seleccionar(row)" [class.selected-row]="clickedRowsFactura.has(row)"
