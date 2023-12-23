@@ -327,10 +327,10 @@ export class RecaudacionComponent implements OnInit, OnChanges {
     });
   }
 
-  obtenerPDF(event){
+  imprimirPDF(event){
     if (event != null)
       event.preventDefault();
-    this.facturaElectronicaService.obtenerPDF(this.factura.id);
+    this.facturaElectronicaService.imprimirPDF(this.factura.id);
   }
   
   enviarPDFYXML(event){
