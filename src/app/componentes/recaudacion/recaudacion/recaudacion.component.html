@@ -65,7 +65,7 @@
             </li>
             <li class="nav-item"
                 *ngIf="factura.id != 0 && factura.estado != estadoEmitida && factura.estado != estadoAnulada && factura.procesoSRI != procesoSRIAnulada">
-                <a class="nav-link" title="Obtener PDF" href="#" role="button" (click)="obtenerPDF($event)">
+                <a class="nav-link" title="Imprimir PDF" href="#" role="button" (click)="imprimirPDF($event)">
                     <mat-icon>picture_as_pdf</mat-icon>
                 </a>
             </li>

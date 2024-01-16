@@ -390,7 +390,9 @@ export class ClienteComponent implements OnInit {
       event.preventDefault();
     if (!this.validarFormularioCliente())
       return;   
-    this.agregarTelefonoCorreo();
+    if(!this.agregarTelefonoCelularCorreo()){
+      return;
+    }
     this.validarDependiente();
     this.cliente.empresa = this.empresa;
     console.log(this.cliente);
@@ -404,19 +406,40 @@ export class ClienteComponent implements OnInit {
     });
   }
 
-  agregarTelefonoCorreo() {
-    if (this.telefono.numero != valores.vacio)
+  agregarTelefonoCelularCorreo() {
+    if (this.telefono.numero != valores.vacio){
+      let digito = this.telefono.numero.substring(0, 1);
+      if (this.telefono.numero.length != 11 || digito != "0") {
+        Swal.fire({ icon: error_swal, title: error, text: mensajes.error_telefono_invalido });
+        return false;
+      }
       this.cliente.telefonos.push(this.telefono);
-    if (this.celular.numero != valores.vacio)
+    }
+    if (this.celular.numero != valores.vacio){
+      let digito = this.celular.numero.substring(0, 2);
+      if (this.celular.numero.length != 12 || digito != "09") {
+        Swal.fire({ icon: error_swal, title: error, text: mensajes.error_celular_invalido });
+        return false;
+      }
       this.cliente.celulares.push(this.celular);
-    if (this.correo.email != valores.vacio)
+    }
+      
+    if (this.correo.email != valores.vacio){
+      const expression: RegExp = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i;
+      let validacion = expression.test(this.correo.email);
+      if (!validacion) {
+        Swal.fire({ icon: error_swal, title: error, text: mensajes.error_correo_invalido });
+        return false;
+      }
       this.cliente.correos.push(this.correo);
+    }
+    return true;
   }
 
   actualizar(event: any) {
     if (event != null)
       event.preventDefault();
-    this.agregarTelefonoCorreo();
+    this.agregarTelefonoCelularCorreo();
     this.validarDependiente();
     this.clienteService.actualizar(this.cliente).subscribe({
       next: res => {
@@ -656,7 +679,7 @@ export class ClienteComponent implements OnInit {
 
   //VALIDACIONES DE CAMPOS
   validarIdentificacion() {
-    this.clienteService.validarIdentificacionPorEmpresa(this.empresa.id, this.cliente.identificacion).subscribe({
+    this.clienteService.validarIdentificacionPorEmpresa(this.cliente.identificacion, this.empresa.id).subscribe({
       next: (res) => {
         this.cliente = res.resultado as Cliente;
         if(this.cliente.tipoContribuyente.id == valores.cero){

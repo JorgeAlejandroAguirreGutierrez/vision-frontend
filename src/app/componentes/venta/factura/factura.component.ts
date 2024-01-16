@@ -326,10 +326,10 @@ export class FacturaComponent implements OnInit {
     });
   }
 
-  obtenerPDF(event){
+  imprimirPDF(event){
     if (event != null)
       event.preventDefault();
-    this.facturaElectronicaService.obtenerPDF(this.factura.id);
+    this.facturaElectronicaService.imprimirPDF(this.factura.id);
   }
   
   enviarPDFYXML(event){
@@ -348,10 +348,10 @@ export class FacturaComponent implements OnInit {
     });
   }
 
-  obtenerTicket(event){
+  imprimirTicket(event){
     if (event != null)
       event.preventDefault();
-    this.facturaElectronicaService.obtenerTicket(this.factura.id);
+    this.facturaElectronicaService.imprimirTicket(this.factura.id);
   }
 
   actualizar(event) {
@@ -383,13 +383,23 @@ export class FacturaComponent implements OnInit {
   anular(event) {
     if (event != null)
       event.preventDefault();
-    this.facturaService.anular(this.factura).subscribe({
-      next: res => {
-        Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
-        this.consultar();
-      },
-      error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
-    });
+    Swal.fire({
+      title: 'Advertencia',
+      text: "Se anulara la factura",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Ok'
+      }).then((result) => {
+          if (result.value) {
+            this.facturaService.anular(this.factura).subscribe({
+              next: res => {
+                Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
+                this.consultar();
+              },
+              error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+            });
+          }
+      });
   }
 
   consultar() {

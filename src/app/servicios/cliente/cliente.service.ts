@@ -110,8 +110,8 @@ export class ClienteService {
     );
   }
 
-  validarIdentificacionPorEmpresa(empresaId: number, identificacion: string): Observable<Respuesta> {
-    return this.http.get(environment.host + urn.ruta + urn.cliente + urn.validarIdentificacionPorEmpresa + urn.slash + empresaId + urn.slash + identificacion, options).pipe(
+  validarIdentificacionPorEmpresa(identificacion: string, empresaId: number): Observable<Respuesta> {
+    return this.http.get(environment.host + urn.ruta + urn.cliente + urn.validarIdentificacionPorEmpresa + urn.slash + identificacion + urn.slash + empresaId, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);
