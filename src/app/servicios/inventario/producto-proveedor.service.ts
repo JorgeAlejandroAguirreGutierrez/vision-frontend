@@ -23,6 +23,15 @@ export class ProductoProveedorService {
     );
   }
 
+  crearProductoProveedores(productoProveedores: ProductoProveedor[]): Observable<Respuesta> {
+    return this.http.post(environment.host + urn.ruta + urn.productoProveedor + urn.crearProductoProveedores, productoProveedores, options).pipe(
+      map(response => response as Respuesta),
+      catchError(err => {
+        return throwError(()=>err);
+      })
+    );
+  }
+
   obtener(productoProveedor: ProductoProveedor): Observable<Respuesta> {
     return this.http.get<Respuesta>(environment.host + urn.ruta + urn.productoProveedor + urn.slash + productoProveedor.id, options).pipe(
       map(response => response as Respuesta),

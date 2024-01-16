@@ -42,7 +42,7 @@
             </mat-expansion-panel-header>
             <hr>
             <div class="form-group form-row">
-                <div class="col-3">
+                <div class="col-2">
                     <mat-form-field appearance="standard">
                         <mat-label>Código</mat-label>
                         <input matInput type="text" [(ngModel)]="equivalenciaMedida.codigo"
@@ -51,12 +51,12 @@
                 </div>
                 <div class="col-3">
                     <mat-form-field appearance="standard">
-                        <mat-label>Medida Kardex</mat-label>
+                        <mat-label>Medida Inicial</mat-label>
                         <input matInput type="text" [(ngModel)]="equivalenciaMedida.medidaIni.descripcion"
                             oninput="this.value = this.value.toUpperCase()" class="form-control-sm">
                     </mat-form-field>
                 </div>
-                <div class="col-3">
+                <div class="col-2">
                     <mat-form-field appearance="standard">
                         <mat-label>V. Equivalencia</mat-label>
                         <input matInput type="text" [(ngModel)]="equivalenciaMedida.equivalencia"
@@ -65,15 +65,24 @@
                 </div>
                 <div class="col-3">
                     <mat-form-field appearance="standard">
-                        <mat-label>Medida Venta</mat-label>
-                        <input matInput type="text" [(ngModel)]="equivalenciaMedida.medidaEqui.descripcion"
+                        <mat-label>Medida Equiv.</mat-label>
+                        <input matInput type="text" [(ngModel)]="equivalenciaMedida.medidaFin.descripcion"
                             oninput="this.value = this.value.toUpperCase()" class="form-control-sm">
+                    </mat-form-field>
+                </div>
+                <div class="col-2">
+                    <mat-form-field appearance="standard">
+                        <mat-label>Estado</mat-label>
+                        <input matInput type="text" [(ngModel)]="equivalenciaMedida.estado"
+                            class="form-control-sm" disabled>
                     </mat-form-field>
                 </div>
             </div>
         </mat-expansion-panel>
+    </mat-accordion>
+    <mat-accordion class="headers-align">    
         <mat-expansion-panel (opened)="abrirPanelAdmin = true"
-            (closed)="abrirPanelAdmin = false">
+            (closed)="abrirPanelAdmin = false" [expanded]="abrirPanelAdmin">
             <mat-expansion-panel-header>
                 <mat-panel-title>
                     <i><u>GESTIONAR EQUIVALENCIAS</u></i>

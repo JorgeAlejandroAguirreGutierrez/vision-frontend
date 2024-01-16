@@ -127,6 +127,7 @@ export const urn =
     medidaPrecio: "/medidaPrecio",
     precio: "/precio",
     tipoGasto: "/tipoGasto",
+    crearProductoProveedores: "/crearProductoProveedores",
     obtenerUltimoPorProductoYBodega: "/obtenerUltimoPorProductoYBodega",
     obtenerUltimoPorProductoYBodegaYTablaTipoComprobante: "/obtenerUltimoPorProductoYBodegaYTablaTipoComprobante",
     consultarPorProductoYEstado: "/consultarPorProductoYEstado",
@@ -147,7 +148,7 @@ export const urn =
     obtenerGrupoProducto: "/obtenerGrupoProducto",
     categoriaProducto: "/categoriaProducto",
     buscarMedidasEquivalentes: "/buscarMedidasEquivalentes",
-    equivalenciaMedida: "/tablaEquivalenciaMedida",
+    equivalenciaMedida: "/equivalenciaMedida",
     obtenerMedidasEquivalentes: "/obtenerMedidasEquivalentes",
 
     //Accesos

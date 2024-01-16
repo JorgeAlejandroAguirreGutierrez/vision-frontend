@@ -60,7 +60,7 @@ export class ProductoProveedorComponent implements OnInit {
   filtroProveedores: Observable<Proveedor[]> = new Observable<Proveedor[]>();
 
   columnasProductoProveedor: any[] = [
-    { nombreColumna: 'codigo_propio', cabecera: 'Código propio', celda: (row: ProductoProveedor) => `${row.proveedor.codigo}`},
+    { nombreColumna: 'codigo_propio', cabecera: 'Código propio', celda: (row: ProductoProveedor) => `${row.producto.codigo}`},
     { nombreColumna: 'proveedor', cabecera: 'Proveedor', celda: (row: ProductoProveedor) => `${row.proveedor.razonSocial}`},
     { nombreColumna: 'codigo_proveedor', cabecera: 'Código proveedor', celda: (row: ProductoProveedor) => `${row.codigoEquivalente}`},
     { nombreColumna: 'estado', cabecera: 'Estado', celda: (row: ProductoProveedor) => `${row.estado}`},
@@ -127,7 +127,8 @@ export class ProductoProveedorComponent implements OnInit {
       event.preventDefault();
     if (!this.validarFormulario())
       return;
-    this.productoProveedorService.crear(this.productoProveedor).subscribe({
+    console.log(this.productoProveedores);
+    this.productoProveedorService.crearProductoProveedores(this.productoProveedores).subscribe({
       next: (res) => {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
         this.nuevo();
@@ -151,7 +152,7 @@ export class ProductoProveedorComponent implements OnInit {
     this.productoProveedorService.consultarPorProductoYEstado(this.producto.id, valores.estadoActivo).subscribe({
       next: res => {
         this.productoProveedores = res.resultado as ProductoProveedor[];
-        console.log(this.productoProveedores);
+        //console.log(this.productoProveedores);
         if (this.productoProveedores.length > 0) {
           this.llenarTablaProductoProveedor(this.productoProveedores);
         }
@@ -174,9 +175,7 @@ export class ProductoProveedorComponent implements OnInit {
   }
 
   agregarProductoProveedor(){
-    let existe: boolean;
-    existe = this.existeProductoProveedor();
-    if (existe) {
+    if (this.existeProductoProveedor()) {
       Swal.fire(error, mensajes.error_producto_proveedor, error_swal);
       return;
     }
@@ -235,11 +234,14 @@ export class ProductoProveedorComponent implements OnInit {
   }
 
   eliminarProductoProveedor(index: number){
-
+    //let index = this.cliente.dependientes.indexOf(dependienteSeleccionado);
+    //this.productoProveedores.splice(index, 1);
+    this.productoProveedores[index].estado = valores.estadoInactivo;
+    this.llenarTablaProductoProveedor(this.productoProveedores);
+    this.verActualizarProveedor = true;
   }
 
   construirProductoProveedor(productoProveedorSeleccionado: ProductoProveedor) {
-    //this.productoProveedorService.currentMessage.subscribe(message => productoProveedorId = message);
     if (productoProveedorSeleccionado.proveedor.id != 0) {
       this.clickedRowsProductoProveedor.add(productoProveedorSeleccionado);
       this.productoProveedor = productoProveedorSeleccionado;
@@ -249,7 +251,6 @@ export class ProductoProveedorComponent implements OnInit {
       this.controlProveedor.disable();
       this.codigoEquivalente = this.productoProveedor.codigoEquivalente;
       this.deshabilitarEditarProveedor = true;
-      //this.actualizar_precios();
     }
   }
 

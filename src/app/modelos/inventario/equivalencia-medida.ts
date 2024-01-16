@@ -4,7 +4,7 @@ export class EquivalenciaMedida {
     id: number;
     codigo: string;
     medidaIni: Medida;
-    medidaEqui: Medida;
+    medidaFin: Medida;
     equivalencia: number;
     estado: string;
 
@@ -12,7 +12,7 @@ export class EquivalenciaMedida {
         this.id = valores.cero;
         this.codigo = valores.vacio;
         this.medidaIni = new Medida();
-        this.medidaEqui = new Medida();
+        this.medidaFin = new Medida();
         this.equivalencia = valores.cero;
         this.estado = valores.estadoActivo;
     }

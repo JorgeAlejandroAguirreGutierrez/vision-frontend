@@ -34,7 +34,7 @@ export class EquivalenciaMedidaComponent implements OnInit {
     { nombreColumna: 'codigo', cabecera: 'Código', celda: (row: EquivalenciaMedida) => `${row.codigo}`},
     { nombreColumna: 'medidaIni', cabecera: 'Medida Ini', celda: (row: EquivalenciaMedida) => `${row.medidaIni.descripcion}`},
     { nombreColumna: 'equivalencia', cabecera: 'Valor Equiv', celda: (row: EquivalenciaMedida) => `${row.equivalencia}`},
-    { nombreColumna: 'medidaFin', cabecera: 'Medida Equiv', celda: (row: EquivalenciaMedida) => `${row.medidaEqui.descripcion}`},
+    { nombreColumna: 'medidaFin', cabecera: 'Medida Equiv', celda: (row: EquivalenciaMedida) => `${row.medidaFin.descripcion}`},
     { nombreColumna: 'estado', cabecera: 'Estado', celda: (row: EquivalenciaMedida) => `${row.estado ? row.estado : ''}`}
   ];
 
@@ -138,7 +138,7 @@ export class EquivalenciaMedidaComponent implements OnInit {
     this.dataSource = new MatTableDataSource(equivalenciasMedidas);
     this.dataSource.filterPredicate = (data: EquivalenciaMedida, filter: string): boolean =>
     data.codigo.includes(filter) || data.medidaIni.descripcion.includes(filter) || String(data.equivalencia).includes(filter) ||
-    data.medidaEqui.descripcion.includes(filter) || data.estado.includes(filter);
+    data.medidaFin.descripcion.includes(filter) || data.estado.includes(filter);
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
   }
