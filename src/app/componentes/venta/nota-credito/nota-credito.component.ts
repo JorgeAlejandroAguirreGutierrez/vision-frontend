@@ -197,8 +197,6 @@ export class NotaCreditoComponent implements OnInit {
   nuevo(event){
     if (event!=null)
       event.preventDefault();
-      if (event!=null)
-      event.preventDefault();
     this.notaCredito = new NotaCredito();
     this.hoy = new Date();
     this.notaCredito.fecha = this.hoy;
