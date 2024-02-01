@@ -501,7 +501,7 @@ export class NotaCreditoComponent implements OnInit {
 
   //VALIDACIONES
   validarFormulario(): boolean {
-    if (this.notaCredito.fecha == null || this.notaCredito.fecha > this.hoy){
+    if (this.notaCredito.fecha == null){
       Swal.fire({ icon: error_swal, title: error, text: mensajes.error_fecha });
       return false;
     }
