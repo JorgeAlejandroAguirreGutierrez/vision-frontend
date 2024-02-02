@@ -27,8 +27,8 @@
                     <mat-icon>point_of_sale</mat-icon>
                 </a>
             </li>
-            <li class="nav-item" *ngIf="notaCredito.id != 0 && notaCredito.estado != estadoAnulada && notaCredito.procesoSRI != procesoSRIAnulada">
-                <a class="nav-link" title="Obtener PDF" href="#" role="button" (click)="obtenerPDF($event)">
+            <li class="nav-item" *ngIf="notaCredito.id != 0  && notaCredito.estado != estadoEmitida && notaCredito.estado != estadoAnulada && notaCredito.procesoSRI != procesoSRIAnulada">
+                <a class="nav-link" title="Imprimir PDF" href="#" role="button" (click)="imprimirPDF($event)">
                     <mat-icon>picture_as_pdf</mat-icon>
                 </a>
             </li>

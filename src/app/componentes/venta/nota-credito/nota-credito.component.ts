@@ -473,10 +473,10 @@ export class NotaCreditoComponent implements OnInit {
     this.calcular();   
   }
 
-  obtenerPDF(event){
+  imprimirPDF(event){
     if (event != null)
       event.preventDefault();
-    this.notaCreditoElectronicaService.obtenerPDF(this.notaCredito.id);
+    this.notaCreditoElectronicaService.imprimirPDF(this.notaCredito.id);
   }
   
   enviarPDFYXML(event){
