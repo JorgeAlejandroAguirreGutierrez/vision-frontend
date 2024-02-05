@@ -22,7 +22,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Observable, map, startWith } from 'rxjs';
-import { UntypedFormControl } from '@angular/forms';
+import { FormControl, UntypedFormControl } from '@angular/forms';
 
 @Component({
   selector: 'app-nota-credito',
@@ -205,6 +205,7 @@ export class NotaCreditoComponent implements OnInit {
     this.notaCredito.puntoVenta = this.sesion.usuario.estacion.codigoSRI;
     this.controlIdentificacionCliente.patchValue(valores.vacio);
     this.controlRazonSocialCliente.patchValue(valores.vacio);
+    this.controlFactura.setValue(valores.vacio);
     this.dataSourceLinea = new MatTableDataSource<NotaCreditoLinea>([]);
     this.clickedRows.clear();
   }
