@@ -299,6 +299,7 @@ export class ClienteComponent implements OnInit {
     this.plazoCreditoService.consultarPorEmpresaYEstado(this.empresa.id, valores.estadoActivo).subscribe({
       next: res => {
         this.plazosCreditos = res.resultado as PlazoCredito[]
+        this.cliente.plazoCredito = this.plazosCreditos[valores.cero];
       },
       error: err => {
         Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje });
