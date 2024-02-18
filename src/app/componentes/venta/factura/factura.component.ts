@@ -191,7 +191,6 @@ export class FacturaComponent implements OnInit {
       next: res => {
         this.clientes = res.resultado as Cliente[];
         this.factura.cliente = this.clientes.find(cliente => cliente.identificacion.includes(otras.identificacion_consumidor_final));
-        console.log(this.factura.cliente);
         this.controlIdentificacionCliente.patchValue(this.factura.cliente);
         this.controlRazonSocialCliente.patchValue(this.factura.cliente);
       },
@@ -637,7 +636,6 @@ export class FacturaComponent implements OnInit {
 
   calcularPVP() {
     this.precioVentaPublicoManual = Number((Number(this.facturaLinea.precioUnitario) + Number(this.facturaLinea.precioUnitario * this.facturaLinea.impuesto.porcentaje / 100)).toFixed(4));
-    console.log(this.precioVentaPublicoManual );
     this.calcularLinea();
   }
 

@@ -334,7 +334,6 @@ export class GastoPersonalComponent implements OnInit {
 
   llenarTablaLinea(gastoPersonalLineas: GastoPersonalLinea[]) {
     this.ordenarAsc(gastoPersonalLineas);
-    console.log(gastoPersonalLineas);
     this.dataSourceLinea = new MatTableDataSource(gastoPersonalLineas);
     this.dataSourceLinea.filterPredicate = (data: GastoPersonalLinea, filter: string): boolean =>
       data.nombreProducto.includes(filter) || String(data.cantidad).includes(filter) ||  String(data.totalLinea).includes(filter);
