@@ -298,7 +298,6 @@ export class ProductoComponent implements OnInit {
   }
 
   llenarKardex(){
-    console.log('HOLA MUNDO');
     this.deshabilitarIniciarKardex = true;
     this.saldoInicialKardex = this.producto.kardexs[0].saldo;
     this.costoUnitarioKardex = this.producto.kardexs[0].costoPromedio;

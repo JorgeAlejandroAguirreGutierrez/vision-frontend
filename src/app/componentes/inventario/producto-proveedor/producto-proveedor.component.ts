@@ -151,7 +151,6 @@ export class ProductoProveedorComponent implements OnInit {
     this.productoProveedorService.consultarPorProductoYEstado(this.producto.id, valores.estadoActivo).subscribe({
       next: res => {
         this.productoProveedores = res.resultado as ProductoProveedor[];
-        console.log(this.productoProveedores);
         if (this.productoProveedores.length > 0) {
           this.llenarTablaProductoProveedor(this.productoProveedores);
         }

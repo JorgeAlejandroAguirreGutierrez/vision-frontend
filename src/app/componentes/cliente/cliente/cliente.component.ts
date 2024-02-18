@@ -396,7 +396,6 @@ export class ClienteComponent implements OnInit {
     }
     this.validarDependiente();
     this.cliente.empresa = this.empresa;
-    console.log(this.cliente);
     this.clienteService.crear(this.cliente).subscribe({
       next: res => {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });

@@ -127,7 +127,6 @@ export class EquivalenciaMedidaComponent implements OnInit {
     this.equivalenciaMedidaService.consultar().subscribe({
       next: res => {
         this.equivalenciasMedidas = res.resultado as EquivalenciaMedida[];
-        console.log(this.equivalenciasMedidas);
         this.llenarTabla(this.equivalenciasMedidas);
       },
       error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })

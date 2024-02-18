@@ -305,7 +305,6 @@ export class NotaCreditoCompraComponent implements OnInit {
         this.facturaCompraService.consultarPorProveedorYEmpresaYEstadoDiferente(this.notaCreditoCompra.facturaCompra.proveedor.id, this.empresa.id, valores.estadoAnulada).subscribe(
           res => {
             this.facturasCompras = res.resultado as FacturaCompra[];
-            console.log(this.facturasCompras);
             this.spinnerService.hide();
           },
           err => {
@@ -466,9 +465,6 @@ export class NotaCreditoCompraComponent implements OnInit {
       Swal.fire({ icon: error_swal, title: error, text: mensajes.error_falta_datos });
       return false;
     }
-    //let fechaCompra: Date = new Date(this.datepipe.transform(this.notaCreditoCompra.facturaCompra.fecha, "yyyy-MM-dd"));
-    //console.log(fechaCompra);
-    //console.log(this.notaCreditoCompra.fecha);
     if (this.notaCreditoCompra.fecha < this.notaCreditoCompra.facturaCompra.fecha) {
       Swal.fire({ icon: error_swal, title: error, text: mensajes.error_fecha });
       return false;
