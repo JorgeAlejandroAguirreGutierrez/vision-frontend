@@ -220,10 +220,9 @@ export class NotaCreditoComponent implements OnInit {
     this.notaCredito.empresa = this.empresa;
     this.notaCreditoService.crear(this.notaCredito).subscribe(
       res => {
-        Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
-        this.consultar();
-        this.nuevo(null);
+        this.notaCredito = res.resultado as NotaCredito;
         this.spinnerService.hide();
+        this.crearNotaCreditoElectronica(null);
       },
       err => {
         Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
