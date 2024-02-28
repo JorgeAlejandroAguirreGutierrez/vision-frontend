@@ -15,16 +15,16 @@
                         <mat-icon class="azul">home</mat-icon>
                         <span class="azul m-l-5">Cierre de Caja</span>
                     </a>
-                    <a mat-list-item (click)="verReporte('OTRO')">
-                        <mat-icon class="azul">videocam</mat-icon>
-                        <span class="azul m-l-5">Otro</span>
+                    <a mat-list-item (click)="verReporte('EXISTENCIA')">
+                        <mat-icon class="azul">home</mat-icon>
+                        <span class="azul m-l-5">Existencias</span>
                     </a>
                 </mat-nav-list>
             </mat-sidenav>
 
             <mat-sidenav-content>
                 <app-kardex-mercaderia *ngIf="verKardexMercaderia"></app-kardex-mercaderia>
-                <app-caja *ngIf="verCierreCaja"></app-caja>
+                <app-existencia *ngIf="verExistencia"></app-existencia>
             </mat-sidenav-content>
         </mat-sidenav-container>
     </div>
