@@ -205,7 +205,8 @@ export const urn =
     //REPORTES
     reporteVenta: "/reporteVenta",
     reporteKardex: "/reporteKardex",
-    reporteCaja: "/reporteCaja"
+    reporteCaja: "/reporteCaja",
+    reporteExistencia: "/reporteExistencia"
 }
 
 export const valores = {
