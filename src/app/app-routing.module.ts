@@ -87,6 +87,7 @@ import { DetalleVentasComponent } from './componentes/reporte/venta/detalle-vent
 import { CajaComponent } from './componentes/reporte/venta/caja/caja.component';
 import { ReporteInventarioComponent } from './componentes/reporte/inventario/reporte-inventario/reporte-inventario.component';
 import { KardexMercaderiaComponent } from './componentes/reporte/inventario/kardex-mercaderia/kardex-mercaderia.component';
+import { ExistenciaComponent } from './componentes/reporte/inventario/existencia/existencia.component';
 import { ReporteCajaBancoComponent } from './componentes/reporte/caja-banco/reporte-caja-banco/reporte-caja-banco.component';
 import { ReporteCuentaCobrarComponent } from './componentes/reporte/cuenta-cobrar/reporte-cuenta-cobrar/reporte-cuenta-cobrar.component';
 import { ReporteCuentaPagarComponent } from './componentes/reporte/cuenta-pagar/reporte-cuenta-pagar/reporte-cuenta-pagar.component';
@@ -229,6 +230,7 @@ export const RoutingComponents = [
   CajaComponent,
   ReporteInventarioComponent,
   KardexMercaderiaComponent,
+  ExistenciaComponent,
   ReporteCajaBancoComponent,
   ReporteCuentaCobrarComponent,
   ReporteCuentaPagarComponent,

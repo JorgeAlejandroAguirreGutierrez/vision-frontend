@@ -1,0 +1,109 @@
+<nav class="navbar-light nav-fijo">
+    <ul class="navbar-nav">
+        <li class="nav-item">
+            <a class="nav-link" title="pdf" role="button" (click)="pdf($event)">
+                <mat-icon>picture_as_pdf</mat-icon>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" title="excel" role="button" (click)="excel($event)">
+                <mat-icon>cloud_download</mat-icon>
+            </a>
+        </li>
+    </ul>
+</nav>
+<div>
+    <mat-accordion class="headers-align">
+        <mat-expansion-panel (opened)="abrirPanelPeriodo = true" (closed)="abrirPanelPeriodo = false"
+            [expanded]="abrirPanelPeriodo">
+            <mat-expansion-panel-header>
+                <mat-panel-title>
+                    <i><u>PERÍODO</u></i>
+                </mat-panel-title>
+                <mat-panel-description>
+                    {{abrirPanelPeriodo ? 'Ocultar detalle de ventas' : 'Ver detalle de ventas'}}
+                    <mat-icon>local_activity</mat-icon>
+                </mat-panel-description>
+            </mat-expansion-panel-header>
+            <mat-divider></mat-divider>
+            <div class="form-group form-row">
+                <div class="col-12">
+                    <button mat-raised-button color="primary" (click)="obtener()">Generar Reporte</button>
+                </div>
+            </div>
+        </mat-expansion-panel>
+    </mat-accordion>
+    <mat-accordion class="headers-align">
+        <mat-expansion-panel (opened)="abrirPanelDetalle = true" (closed)="abrirPanelDetalle = false"
+            [expanded]="abrirPanelDetalle">
+            <mat-expansion-panel-header>
+                <mat-panel-title>
+                    <i><u>DETALLE DE VENTAS</u></i>
+                </mat-panel-title>
+                <mat-panel-description>
+                    {{abrirPanelDetalle ? 'Ocultar detalle de ventas' : 'Ver detalle de ventas'}}
+                    <mat-icon>playlist_add_check</mat-icon>
+                </mat-panel-description>
+            </mat-expansion-panel-header>
+            <mat-divider></mat-divider>
+            <div class="form-group form-row">
+                <div class="col-12">
+                    <div class="row">
+                        <h2>{{reporteExistencia.nombreComercial}}</h2>
+                    </div>
+                    <div class="row">
+                        <h3>{{reporteExistencia.nombreReporte}}</h3>
+                    </div>
+                    <div>
+                        <b>USUARIO :</b> {{reporteExistencia.usuario}}<br>
+                        <b>CARGO :</b> {{reporteExistencia.perfil}}<br>
+                        <b>FECHA :</b> {{reporteExistencia.fecha}}<br>
+                    </div>
+                    <mat-divider></mat-divider>
+                </div>
+                <div class="col-12">
+                    <mat-form-field appearance="standard">
+                        <mat-label>Buscar detalle</mat-label>
+                        <input matInput oninput="this.value = this.value.toUpperCase()" (keyup)="filtro($event)"
+                            #inputFiltro>
+                        <button mat-button *ngIf="inputFiltro.value" matSuffix mat-icon-button (click)="borrarFiltro()">
+                            <mat-icon>close</mat-icon>
+                        </button>
+                    </mat-form-field>
+                    <div class="mat-elevation-z8">
+                        <table mat-table [dataSource]="dataSource" matSort>
+                            <ng-container *ngFor="let columna of columnas" [matColumnDef]="columna.nombreColumna">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header> {{ columna.cabecera }}</th>
+                                <td mat-cell *matCellDef="let row"> {{ columna.celda(row) }} </td>
+                            </ng-container>
+                            <tr mat-header-row *matHeaderRowDef="cabecera"></tr>
+                            <tr mat-row (click)="seleccion(row)" [class.selected-row]="clickedRows.has(row)"
+                                *matRowDef="let row; columns: cabecera;"></tr>
+                            <tr mat-footer-row *matFooterRowDef="cabecera"></tr>
+                            <tr class="mat-row" *matNoDataRow>
+                                <td class="mat-cell" colspan="6">No hay datos que coincidan con el detalle de
+                                    ventas: "{{inputFiltro.value}}"
+                                </td>
+                            </tr>
+                        </table>
+                        <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" showFirstLastButtons></mat-paginator>
+                    </div>
+                </div>
+                <div class="form-group form-row">
+                    <div class="col-6 centrar">
+                        _______________________________<br>
+                        {{reporteExistencia.nombreRepresentanteLegal}}<br>
+                        <b>{{reporteExistencia.cargoRepresentanteLegal}}</b><br>
+                        <b>{{reporteExistencia.empresaRepresentanteLegal}}</b><br>
+                    </div>
+                    <div class="col-6 centrar">
+                        _______________________________<br>
+                        {{reporteExistencia.nombreUsuario}}<br>
+                        <b>{{reporteExistencia.cargoUsuario}}</b><br>
+                        <b>{{reporteExistencia.empresaUsuario}}</b><br>
+                    </div>
+                </div>
+            </div>
+        </mat-expansion-panel>
+    </mat-accordion>
+</div>
