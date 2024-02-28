@@ -8,7 +8,7 @@ import { Component, OnInit } from '@angular/core';
 export class ReporteInventarioComponent implements OnInit {
 
   verKardexMercaderia: boolean = true;
-  verCierreCaja: boolean = false;
+  verExistencia: boolean = false;
 
   constructor() {
   }
@@ -23,15 +23,15 @@ export class ReporteInventarioComponent implements OnInit {
       this.verKardexMercaderia = true;
       return;
     }
-    if (nombre == 'OTRO'){
-      this.verCierreCaja = true;
+    if (nombre == 'EXISTENCIA'){
+      this.verExistencia = true;
       return;
     }
   }
 
   iniciarVistaReporte(){
     this.verKardexMercaderia = false;
-    this.verCierreCaja = false;
+    this.verExistencia = false;
   }
 
 }
