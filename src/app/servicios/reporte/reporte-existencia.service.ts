@@ -13,8 +13,8 @@ export class ReporteExistenciaService {
 
   constructor(private http: HttpClient) { }
 
-  obtener(apodo: string, empresaId: number): Observable<Respuesta> {
-    return this.http.get<Respuesta>(environment.host + urn.ruta + urn.reporteExistencia + urn.obtener + urn.slash + apodo + urn.slash + empresaId, options).pipe(
+  obtener(apodo: string, fechaCorte: string, empresaId: number): Observable<Respuesta> {
+    return this.http.get<Respuesta>(environment.host + urn.ruta + urn.reporteExistencia + urn.obtener + urn.slash + apodo + urn.slash + fechaCorte + urn.slash + empresaId, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);
@@ -22,8 +22,8 @@ export class ReporteExistenciaService {
     );
   }
 
-  pdf(apodo: string, empresaId: number) {
-    this.http.get(environment.host + urn.ruta + urn.reporteExistencia + urn.pdf + urn.slash + apodo + urn.slash + empresaId, optionsGenerarArchivo)
+  pdf(apodo: string, fechaCorte: string, empresaId: number) {
+    this.http.get(environment.host + urn.ruta + urn.reporteExistencia + urn.pdf + urn.slash + apodo + urn.slash + fechaCorte + urn.slash  + empresaId, optionsGenerarArchivo)
     .subscribe((blob: Blob) => {
       let link = document.createElement("a");
       if (link.download !== undefined) 
@@ -34,10 +34,10 @@ export class ReporteExistenciaService {
     });
   }
 
-  excel(apodo: string, empresaId: number) {
-    this.http.get(environment.host + urn.ruta + urn.reporteVenta + urn.excel + urn.slash + apodo + urn.slash + empresaId, optionsGenerarArchivo)
+  excel(apodo: string, fechaCorte: string, empresaId: number) {
+    this.http.get(environment.host + urn.ruta + urn.reporteVenta + urn.excel + urn.slash + apodo + urn.slash + fechaCorte + urn.slash + empresaId, optionsGenerarArchivo)
     .subscribe((blob: Blob) => {
-      const fileName = "reporteVenta.xlsx";
+      const fileName = "reporteExistencia.xlsx";
       let link = document.createElement("a");
       if (link.download !== undefined) 
       {
