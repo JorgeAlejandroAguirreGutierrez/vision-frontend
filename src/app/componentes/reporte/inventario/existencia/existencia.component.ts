@@ -27,6 +27,7 @@ export class ExistenciaComponent implements OnInit {
 
   abrirPanelExistencia: boolean = true;
 
+  fechaCorte: Date = new Date();
   hoy = new Date();
   sesion: Sesion = null;
   empresa: Empresa = new Empresa();
@@ -59,7 +60,8 @@ export class ExistenciaComponent implements OnInit {
   }
   
   obtener(){
-    this.reporteExistenciaService.obtener(this.sesion.usuario.apodo, this.empresa.id).subscribe({
+    let fechaCorte = this.datepipe.transform(this.fechaCorte, "dd-MM-yyyy");
+    this.reporteExistenciaService.obtener(this.sesion.usuario.apodo, fechaCorte, this.empresa.id).subscribe({
       next: res => {
         this.reporteExistencia = res.resultado as ReporteExistencia;
         this.reporteExistencias.push(this.reporteExistencia);
@@ -81,13 +83,15 @@ export class ExistenciaComponent implements OnInit {
   pdf(event){
     if (event != null)
       event.preventDefault();
-    this.reporteExistenciaService.pdf(this.sesion.usuario.apodo, this.empresa.id);
+    let fechaCorte = this.datepipe.transform(this.fechaCorte, "dd-MM-yyyy");
+    this.reporteExistenciaService.pdf(this.sesion.usuario.apodo, fechaCorte, this.empresa.id);
   }
 
   excel(event){
     if (event != null)
       event.preventDefault();
-    this.reporteExistenciaService.excel(this.sesion.usuario.apodo, this.empresa.id);
+    let fechaCorte = this.datepipe.transform(this.fechaCorte, "dd-MM-yyyy");
+    this.reporteExistenciaService.excel(this.sesion.usuario.apodo, fechaCorte, this.empresa.id);
   }
   
   seleccion(reporteExistenciaLinea: ReporteExistenciaLinea) {
