@@ -25,9 +25,7 @@ import { MatTableDataSource } from '@angular/material/table';
 })
 export class ExistenciaComponent implements OnInit {
 
-  abrirPanelPeriodo: boolean = true;
-  abrirPanelDetalle: boolean = true;
-  abrirPanelResumen: boolean = true;
+  abrirPanelExistencia: boolean = true;
 
   hoy = new Date();
   sesion: Sesion = null;
