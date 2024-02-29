@@ -40,7 +40,7 @@ export class ExistenciaComponent implements OnInit {
     { nombreColumna: 'nombre', cabecera: 'Nombre', celda: (row: ReporteExistenciaLinea) => `${row.nombre}` },
     { nombreColumna: 'iva', cabecera: 'IVA', celda: (row: ReporteExistenciaLinea) => `${row.iva}` },
     { nombreColumna: 'existencia', cabecera: 'Existencia', celda: (row: ReporteExistenciaLinea) => `${row.existencia}` },
-    { nombreColumna: 'costoTotal', cabecera: 'Costo Total', celda: (row: ReporteExistenciaLinea) => `${row.costoTotal}` },
+    { nombreColumna: 'costoTotal', cabecera: 'Costo Total', celda: (row: ReporteExistenciaLinea) => `$${row.costoTotal}` },
   ];
   cabecera: string[] = this.columnas.map(titulo => titulo.nombreColumna);
   dataSource: MatTableDataSource<ReporteExistenciaLinea>;
