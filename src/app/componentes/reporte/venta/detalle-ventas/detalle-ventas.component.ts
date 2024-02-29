@@ -39,8 +39,6 @@ export class DetalleVentasComponent implements OnInit {
 
   reporteVentas: ReporteVenta[] = [];
   reporteVentaLineas: ReporteVentaLinea[] = [];
-
-  //subtotal0 = new BehaviorSubject(this.reporteVenta.total0);
   
   columnas: any[] = [
     { nombreColumna: 'fecha', cabecera: 'Fecha', pie: 'Total :',celda: (row: ReporteVentaLinea) => `${row.fecha}` },

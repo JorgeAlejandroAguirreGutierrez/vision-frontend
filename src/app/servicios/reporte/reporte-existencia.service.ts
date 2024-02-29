@@ -14,7 +14,7 @@ export class ReporteExistenciaService {
   constructor(private http: HttpClient) { }
 
   obtener(apodo: string, empresaId: number): Observable<Respuesta> {
-    return this.http.get<Respuesta>(environment.host + urn.ruta + urn.reporteVenta + urn.obtener + urn.slash + apodo + urn.slash + empresaId, options).pipe(
+    return this.http.get<Respuesta>(environment.host + urn.ruta + urn.reporteExistencia + urn.obtener + urn.slash + apodo + urn.slash + empresaId, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);
@@ -23,7 +23,7 @@ export class ReporteExistenciaService {
   }
 
   pdf(apodo: string, empresaId: number) {
-    this.http.get(environment.host + urn.ruta + urn.reporteVenta + urn.pdf + urn.slash + apodo + urn.slash + empresaId, optionsGenerarArchivo)
+    this.http.get(environment.host + urn.ruta + urn.reporteExistencia + urn.pdf + urn.slash + apodo + urn.slash + empresaId, optionsGenerarArchivo)
     .subscribe((blob: Blob) => {
       const fileName = "reporteExistencia.pdf";
       let link = document.createElement("a");
