@@ -6,6 +6,7 @@ export class ReporteExistencia {
     nombreComercial: string;
     nombreReporte: string;
     fecha: string;
+    fechaCorte: string;
     usuario: string;
     perfil: string;
     empresa: string;
