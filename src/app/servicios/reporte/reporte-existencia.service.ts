@@ -35,7 +35,7 @@ export class ReporteExistenciaService {
   }
 
   excel(apodo: string, fechaCorte: string, empresaId: number) {
-    this.http.get(environment.host + urn.ruta + urn.reporteVenta + urn.excel + urn.slash + apodo + urn.slash + fechaCorte + urn.slash + empresaId, optionsGenerarArchivo)
+    this.http.get(environment.host + urn.ruta + urn.reporteExistencia + urn.excel + urn.slash + apodo + urn.slash + fechaCorte + urn.slash + empresaId, optionsGenerarArchivo)
     .subscribe((blob: Blob) => {
       const fileName = "reporteExistencia.xlsx";
       let link = document.createElement("a");
