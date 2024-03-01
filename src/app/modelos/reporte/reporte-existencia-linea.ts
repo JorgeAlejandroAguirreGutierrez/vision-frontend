@@ -4,5 +4,6 @@ export class ReporteExistenciaLinea {
     nombre: string;
     iva: string;
     existencia: string;
+    costoUnitario: string;
     costoTotal: string;
 }
