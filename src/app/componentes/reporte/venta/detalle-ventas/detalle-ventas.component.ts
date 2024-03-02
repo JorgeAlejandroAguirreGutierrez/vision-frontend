@@ -126,12 +126,16 @@ export class DetalleVentasComponent implements OnInit {
   }
 
   pdf(event){
+    if (event != null)
+      event.preventDefault();
     let fechaInicio = this.datepipe.transform(this.fechaInicio, "dd-MM-yyyy");
     let fechaFinal = this.datepipe.transform(this.fechaFinal, "dd-MM-yyyy");
     this.reporteVentaService.pdf(this.sesion.usuario.apodo, fechaInicio, fechaFinal, this.empresa.id);
   }
 
   excel(event){
+    if (event != null)
+      event.preventDefault();
     let fechaInicio = this.datepipe.transform(this.fechaInicio, "dd-MM-yyyy");
     let fechaFinal = this.datepipe.transform(this.fechaFinal, "dd-MM-yyyy");
     this.reporteVentaService.excel(this.sesion.usuario.apodo, fechaInicio, fechaFinal, this.empresa.id);
@@ -141,7 +145,6 @@ export class DetalleVentasComponent implements OnInit {
     if (!this.clickedRows.has(reporteVentaLinea)){
       this.clickedRows.clear();
       this.clickedRows.add(reporteVentaLinea);
-      //this.calificacionCliente = { ... calificacionCliente};
     } else {
       this.clickedRows.clear();
     }
@@ -154,13 +157,13 @@ export class DetalleVentasComponent implements OnInit {
       this.dataSource.paginator.firstPage();
     }
   }
+
   borrarFiltro() {
     this.renderer.setProperty(this.inputFiltro.nativeElement, 'value', valores.vacio);
     this.dataSource.filter = valores.vacio;
   }
 
   calcularSubtotal0() {
-    //return this.reporteVenta.reporteVentaLineas.map(t => Number(t.subtotal0)).reduce((acc, value) => acc + value, 0);
     return this.reporteVenta.total0;
   }
 }
