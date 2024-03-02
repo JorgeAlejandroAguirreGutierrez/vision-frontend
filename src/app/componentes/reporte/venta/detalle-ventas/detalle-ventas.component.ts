@@ -41,7 +41,7 @@ export class DetalleVentasComponent implements OnInit {
   reporteVentaLineas: ReporteVentaLinea[] = [];
   
   columnas: any[] = [
-    { nombreColumna: 'fecha', cabecera: 'Fecha', pie: 'Total :',celda: (row: ReporteVentaLinea) => `${row.fecha}` },
+    { nombreColumna: 'fecha', cabecera: 'Fecha', celda: (row: ReporteVentaLinea) => `${row.fecha}` },
     { nombreColumna: 'hora', cabecera: 'Hora', celda: (row: ReporteVentaLinea) => `${row.hora}` },
     { nombreColumna: 'documento', cabecera: 'Doc', celda: (row: ReporteVentaLinea) => `${row.documento}` },
     { nombreColumna: 'establecimiento', cabecera: 'Estab', celda: (row: ReporteVentaLinea) => `${row.establecimiento}` },
@@ -53,8 +53,7 @@ export class DetalleVentasComponent implements OnInit {
     { nombreColumna: 'tipoVenta', cabecera: 'TipoVenta', celda: (row: ReporteVentaLinea) => `${row.tipoVenta}` },
     { nombreColumna: 'subtotal0', cabecera: 'Subt. 0', celda: (row: ReporteVentaLinea) => `${row.subtotal0}` },
     { nombreColumna: 'subtotal12', cabecera: 'Subt. 12', pie: 0, celda: (row: ReporteVentaLinea) => `${row.subtotal12}` },
-    { nombreColumna: 'iva', cabecera: 'Iva', celda: (row: ReporteVentaLinea) => `${row.iva}` },
-    { nombreColumna: 'total', cabecera: 'Total', celda: (row: ReporteVentaLinea) => `${row.total}` }
+    { nombreColumna: 'iva', cabecera: 'Iva', celda: (row: ReporteVentaLinea) => `${row.iva}` }
   ];
   cabecera: string[] = this.columnas.map(titulo => titulo.nombreColumna);
   dataSource: MatTableDataSource<ReporteVentaLinea>;
