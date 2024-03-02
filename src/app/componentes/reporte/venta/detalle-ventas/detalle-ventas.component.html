@@ -100,7 +100,6 @@
                             <tr mat-header-row *matHeaderRowDef="cabecera"></tr>
                             <tr mat-row (click)="seleccion(row)" [class.selected-row]="clickedRows.has(row)"
                                 *matRowDef="let row; columns: cabecera;"></tr>
-                            <tr mat-footer-row *matFooterRowDef="cabecera"></tr>
                             <tr class="mat-row" *matNoDataRow>
                                 <td class="mat-cell" colspan="6">No hay datos que coincidan con el detalle de
                                     ventas: "{{inputFiltro.value}}"
