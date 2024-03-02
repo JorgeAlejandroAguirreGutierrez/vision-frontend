@@ -41,7 +41,7 @@ export class DetalleVentasComponent implements OnInit {
   reporteVentaLineas: ReporteVentaLinea[] = [];
   
   columnas: any[] = [
-    { nombreColumna: 'fecha', cabecera: 'Fecha', pie: 'Total :',celda: (row: ReporteVentaLinea) => `${row.fecha}` },
+    { nombreColumna: 'fecha', cabecera: 'Fecha', celda: (row: ReporteVentaLinea) => `${row.fecha}` },
     { nombreColumna: 'hora', cabecera: 'Hora', celda: (row: ReporteVentaLinea) => `${row.hora}` },
     { nombreColumna: 'documento', cabecera: 'Doc', celda: (row: ReporteVentaLinea) => `${row.documento}` },
     { nombreColumna: 'establecimiento', cabecera: 'Estab', celda: (row: ReporteVentaLinea) => `${row.establecimiento}` },
@@ -53,8 +53,7 @@ export class DetalleVentasComponent implements OnInit {
     { nombreColumna: 'tipoVenta', cabecera: 'TipoVenta', celda: (row: ReporteVentaLinea) => `${row.tipoVenta}` },
     { nombreColumna: 'subtotal0', cabecera: 'Subt. 0', celda: (row: ReporteVentaLinea) => `${row.subtotal0}` },
     { nombreColumna: 'subtotal12', cabecera: 'Subt. 12', pie: 0, celda: (row: ReporteVentaLinea) => `${row.subtotal12}` },
-    { nombreColumna: 'iva', cabecera: 'Iva', celda: (row: ReporteVentaLinea) => `${row.iva}` },
-    { nombreColumna: 'total', cabecera: 'Total', celda: (row: ReporteVentaLinea) => `${row.total}` }
+    { nombreColumna: 'iva', cabecera: 'Iva', celda: (row: ReporteVentaLinea) => `${row.iva}` }
   ];
   cabecera: string[] = this.columnas.map(titulo => titulo.nombreColumna);
   dataSource: MatTableDataSource<ReporteVentaLinea>;
@@ -127,12 +126,16 @@ export class DetalleVentasComponent implements OnInit {
   }
 
   pdf(event){
+    if (event != null)
+      event.preventDefault();
     let fechaInicio = this.datepipe.transform(this.fechaInicio, "dd-MM-yyyy");
     let fechaFinal = this.datepipe.transform(this.fechaFinal, "dd-MM-yyyy");
     this.reporteVentaService.pdf(this.sesion.usuario.apodo, fechaInicio, fechaFinal, this.empresa.id);
   }
 
   excel(event){
+    if (event != null)
+      event.preventDefault();
     let fechaInicio = this.datepipe.transform(this.fechaInicio, "dd-MM-yyyy");
     let fechaFinal = this.datepipe.transform(this.fechaFinal, "dd-MM-yyyy");
     this.reporteVentaService.excel(this.sesion.usuario.apodo, fechaInicio, fechaFinal, this.empresa.id);
@@ -142,7 +145,6 @@ export class DetalleVentasComponent implements OnInit {
     if (!this.clickedRows.has(reporteVentaLinea)){
       this.clickedRows.clear();
       this.clickedRows.add(reporteVentaLinea);
-      //this.calificacionCliente = { ... calificacionCliente};
     } else {
       this.clickedRows.clear();
     }
@@ -155,13 +157,13 @@ export class DetalleVentasComponent implements OnInit {
       this.dataSource.paginator.firstPage();
     }
   }
+
   borrarFiltro() {
     this.renderer.setProperty(this.inputFiltro.nativeElement, 'value', valores.vacio);
     this.dataSource.filter = valores.vacio;
   }
 
   calcularSubtotal0() {
-    //return this.reporteVenta.reporteVentaLineas.map(t => Number(t.subtotal0)).reduce((acc, value) => acc + value, 0);
     return this.reporteVenta.total0;
   }
 }
