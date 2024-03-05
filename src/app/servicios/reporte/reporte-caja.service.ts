@@ -25,17 +25,11 @@ export class ReporteCajaService {
   pdf(apodo: string, fechaInicio: string, fechaFinal: string, empresaId: number) {
     this.http.get(environment.host + urn.ruta + urn.reporteCaja + urn.pdf + urn.slash + apodo + urn.slash + fechaInicio + urn.slash + fechaFinal + urn.slash + empresaId, optionsGenerarArchivo)
     .subscribe((blob: Blob) => {
-      const fileName = "reporteCaja.pdf";
       let link = document.createElement("a");
       if (link.download !== undefined) 
       {
           let url = URL.createObjectURL(blob);
-          link.setAttribute("href", url);
-          link.setAttribute("download", fileName);
-          link.style.visibility = 'hidden';
-          document.body.appendChild(link);
-          link.click();
-          document.body.removeChild(link);
+          window.open(url);
       }
     });
   }
