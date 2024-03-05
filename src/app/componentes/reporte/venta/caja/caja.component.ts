@@ -29,8 +29,7 @@ export class CajaComponent implements OnInit {
   empresa: Empresa = null;
   reporteCaja = new ReporteCaja();
 
-  constructor(private reporteCajaService: ReporteCajaService, private sesionService: SesionService, private datepipe: DatePipe, private router: Router, 
-      ) { }
+  constructor(private reporteCajaService: ReporteCajaService, private sesionService: SesionService, private datepipe: DatePipe, private router: Router) { }
 
   ngOnInit(): void {
     this.sesion = validarSesion(this.sesionService, this.router);
@@ -49,12 +48,16 @@ export class CajaComponent implements OnInit {
   }
 
   pdf(event){
+    if (event != null)
+      event.preventDefault();
     let fechaInicio = this.datepipe.transform(this.fechaInicio, "dd-MM-yyyy");
     let fechaFinal = this.datepipe.transform(this.fechaFinal, "dd-MM-yyyy");
     this.reporteCajaService.pdf(this.sesion.usuario.apodo, fechaInicio, fechaFinal, this.empresa.id);
   }
 
   excel(event){
+    if (event != null)
+      event.preventDefault();
     let fechaInicio = this.datepipe.transform(this.fechaInicio, "dd-MM-yyyy");
     let fechaFinal = this.datepipe.transform(this.fechaFinal, "dd-MM-yyyy");
     this.reporteCajaService.excel(this.sesion.usuario.apodo, fechaInicio, fechaFinal, this.empresa.id);
