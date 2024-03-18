@@ -449,10 +449,10 @@ export class GuiaRemisionComponent implements OnInit {
     return factura && factura.numeroComprobante ? factura.numeroComprobante : valores.vacio;
   }
 
-  obtenerPDF(event){
+  imprimirPDF(event){
     if (event != null)
       event.preventDefault();
-    this.guiaRemisionElectronicaService.obtenerPDF(this.guiaRemision.id);
+    this.guiaRemisionElectronicaService.imprimirPDF(this.guiaRemision.id);
   }
   
   enviarPDFYXML(event){

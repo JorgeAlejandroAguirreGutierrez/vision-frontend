@@ -58,7 +58,17 @@
                             oninput="this.value = this.value.toUpperCase()" class="form-control-sm">
                     </mat-form-field>
                 </div>
-                <div class="col-4">
+                <div class="col-2">
+                    <mat-form-field appearance="standard">
+                        <mat-label>Documento</mat-label>
+                        <mat-select [(ngModel)]="transportista.tipoIdentificacion" [compareWith]="compareFn" class="form-control-sm">
+                            <mat-option *ngFor="let tipoIdentificacion of tiposIdentificaciones" [value]="tipoIdentificacion">
+                                {{tipoIdentificacion.descripcion}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+                <div class="col-2">
                     <mat-form-field appearance="standard">
                         <mat-label>Identificación</mat-label>
                         <input matInput type="text" [(ngModel)]="transportista.identificacion"

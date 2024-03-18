@@ -74,6 +74,7 @@ export class VehiculoComponent implements OnInit {
   crear(event) {
     if (event!=null)
       event.preventDefault();
+    this.vehiculo.empresa = this.empresa;
     this.vehiculoService.crear(this.vehiculo).subscribe(
       res => {
         Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
@@ -129,13 +130,13 @@ export class VehiculoComponent implements OnInit {
     this.vehiculoService.consultarPorEmpresa(this.empresa.id).subscribe({
       next: res => {
         this.vehiculos = res.resultado as Vehiculo[]
-        this.llenarTablaVehiculoTransporte(this.vehiculos);
+        this.llenarTablaVehiculo(this.vehiculos);
       },
       error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     });
   }
 
-  llenarTablaVehiculoTransporte(vehiculos: Vehiculo[]){
+  llenarTablaVehiculo(vehiculos: Vehiculo[]){
     this.dataSource = new MatTableDataSource(vehiculos);
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;

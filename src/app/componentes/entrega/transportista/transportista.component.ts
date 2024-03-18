@@ -14,6 +14,8 @@ import { VehiculoService } from '../../../servicios/entrega/vehiculo.service';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
+import { TipoIdentificacion } from 'src/app/modelos/configuracion/tipo-identificacion';
+import { TipoIdentificacionService } from 'src/app/servicios/configuracion/tipo-identificacion.service';
 
 @Component({
   selector: 'app-transportista',
@@ -32,6 +34,7 @@ export class TransportistaComponent implements OnInit {
   empresa: Empresa = new Empresa();
   transportista = new Transportista();
   transportistas: Transportista[];
+  tiposIdentificaciones: TipoIdentificacion[];
   vehiculos: Vehiculo[];
 
   columnas: any[] = [
@@ -47,13 +50,14 @@ export class TransportistaComponent implements OnInit {
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
-  constructor(private transportistaService: TransportistaService, private vehiculoService: VehiculoService,
+  constructor(private transportistaService: TransportistaService, private vehiculoService: VehiculoService, private tipoIdentificacionService: TipoIdentificacionService,
     private sesionService: SesionService,private router: Router) { }
 
   ngOnInit() {
     this.sesion = validarSesion(this.sesionService, this.router);
     this.empresa = this.sesion.usuario.estacion.establecimiento.empresa;
     this.consultar();
+    this.consultarTipoIdentificacion();
     this.consultarVehiculos();
   }
   
@@ -156,6 +160,18 @@ export class TransportistaComponent implements OnInit {
     if (this.dataSource.paginator) {
       this.dataSource.paginator.firstPage();
     }
+  }
+
+  consultarTipoIdentificacion(){
+    this.tipoIdentificacionService.consultar().subscribe({
+      next: (res) => {
+        this.tiposIdentificaciones = res.resultado as TipoIdentificacion[];
+        this.transportista.tipoIdentificacion = this.tiposIdentificaciones[0];
+      },
+      error: (err) => {
+        Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje });
+      }
+    });
   }
 
   consultarVehiculos(){

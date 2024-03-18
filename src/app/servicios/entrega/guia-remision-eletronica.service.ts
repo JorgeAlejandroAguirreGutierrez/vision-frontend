@@ -21,20 +21,14 @@ export class GuiaRemisionElectronicaService {
       }));
   }
 
-  obtenerPDF(guiaRemisionId: number) {
+  imprimirPDF(guiaRemisionId: number) {
     this.http.get(environment.host + urn.ruta + urn.guiaRemisionElectronica + urn.obtenerPDF + urn.slash + guiaRemisionId, optionsGenerarArchivo)
     .subscribe((blob: Blob) => {
-      const fileName = "guiaRemision.pdf";
       let link = document.createElement("a");
       if (link.download !== undefined) 
       {
           let url = URL.createObjectURL(blob);
-          link.setAttribute("href", url);
-          link.setAttribute("download", fileName);
-          link.style.visibility = 'hidden';
-          document.body.appendChild(link);
-          link.click();
-          document.body.removeChild(link);
+          window.open(url);
       }
     });
   }

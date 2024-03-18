@@ -23,18 +23,18 @@
                 </a>
             </li>
             <li class="nav-item"
-                *ngIf="guiaRemision.id != 0 && guiaRemision.estado != estadoAnulada && guiaRemision.estado != estadoEmitida && guiaRemision.procesoSRI != procesoSRIAutorizada && guiaRemision.procesoSRI != procesoSRIAnulada">
+                *ngIf="guiaRemision.id != 0 && guiaRemision.estado != estadoAnulada && guiaRemision.procesoSRI != procesoSRIAutorizada && guiaRemision.procesoSRI != procesoSRIAnulada">
                 <a class="nav-link" title="Crear Guia Remision Electronica" href="#" role="button"
                     (click)="crearGuiaRemisionElectronica($event)">
                     <mat-icon>point_of_sale</mat-icon>
                 </a>
             </li>
-            <li class="nav-item" *ngIf="guiaRemision.id != 0 && guiaRemision.estado != estadoEmitida && guiaRemision.estado != estadoAnulada && guiaRemision.procesoSRI != procesoSRIAutorizada && guiaRemision.procesoSRI != procesoSRIAnulada">
-                <a class="nav-link" title="Obtener PDF" href="#" role="button" (click)="obtenerPDF($event)">
+            <li class="nav-item" *ngIf="guiaRemision.id != 0 && guiaRemision.estado != estadoAnulada && guiaRemision.procesoSRI != procesoSRIAnulada">
+                <a class="nav-link" title="Obtener PDF" href="#" role="button" (click)="imprimirPDF($event)">
                     <mat-icon>picture_as_pdf</mat-icon>
                 </a>
             </li>
-            <li class="nav-item" *ngIf="guiaRemision.id != 0 && guiaRemision.estado != estadoEmitida && guiaRemision.estado != estadoAnulada && guiaRemision.procesoSRI != procesoSRIPendiente && guiaRemision.procesoSRI != procesoSRIAnulada">
+            <li class="nav-item" *ngIf="guiaRemision.id != 0 && guiaRemision.estado != estadoAnulada && guiaRemision.procesoSRI != procesoSRIPendiente && guiaRemision.procesoSRI != procesoSRIAnulada">
                 <a class="nav-link" title="Enviar PDF Y XML" href="#" role="button" (click)="enviarPDFYXML($event)">
                     <mat-icon>forward_to_inbox</mat-icon>
                 </a>
