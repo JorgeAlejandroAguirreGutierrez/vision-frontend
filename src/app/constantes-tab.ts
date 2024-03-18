@@ -31,7 +31,7 @@ export const tabs = {
     tab_guia_remision: "Guia Remision",
     tab_cierre_caja: "Cierre Caja",
     tab_transportista: "Transportistas",
-    tab_vehiculo_transporte: "Vehiculos",
+    tab_vehiculo: "Vehiculos",
 
     // Inventarios
     tab_grupo_producto: "Grupo Producto",
@@ -137,7 +137,7 @@ export const items = {
     item_guia_remision: "Guias de Remision",
     item_cierre_caja: "Cierre de Caja",
     item_transportista: "Transportistas",
-    item_vehiculo_transporte: "Vehiculos Transportes",
+    item_vehiculo: "Vehiculos",
 
     //INVENTARIOS
     item_grupo_producto: "Grupos de Productos",
@@ -248,7 +248,7 @@ export const icos = {
     ico_guia_remision: 'fa-solid fa-clipboard',
     ico_cierre_caja: 'fa-solid fa-file-invoice-dollar',
     ico_transportista: 'fa-regular fa-id-card',
-    ico_vehiculo_transporte: 'fa-solid fa-truck-front',
+    ico_vehiculo: 'fa-solid fa-truck-front',
 
     // Inventarios
     ico_grupo_producto: 'fa-regular fa-object-group',

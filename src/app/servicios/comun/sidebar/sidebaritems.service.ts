@@ -93,7 +93,7 @@ export class SidebarItemsService {
   llenarOpciones(Componente: Type<any>, tabTitulo: string, itemNombre: string, icoItem: string) {
     // Validar si tiene permisos para ver la opcion en el sidebar
     this.permisos.forEach(permiso => {
-      if (permiso.menuOpcion.opcion == itemNombre.toUpperCase() && permiso.menuOpcion.menu==valores.si && permiso.estado==valores.estadoActivo){
+      if (permiso.menuOpcion.opcion == itemNombre.toUpperCase() && permiso.menuOpcion.menu==valores.si && permiso.estado == valores.estadoActivo){
         this.opciones.push(new SidebarItem(Componente, tabTitulo, itemNombre, icoItem));
       }
     });
@@ -128,7 +128,7 @@ export class SidebarItemsService {
       this.llenarOpciones(GuiaRemisionComponent, tabs.tab_guia_remision, items.item_guia_remision, icos.ico_guia_remision);
       this.llenarOpciones(CierreCajaComponent, tabs.tab_cierre_caja, items.item_cierre_caja, icos.ico_cierre_caja);
       this.llenarOpciones(TransportistaComponent, tabs.tab_transportista, items.item_transportista, icos.ico_transportista);
-      this.llenarOpciones(VehiculoComponent, tabs.tab_vehiculo_transporte, items.item_vehiculo_transporte, icos.ico_vehiculo_transporte);
+      this.llenarOpciones(VehiculoComponent, tabs.tab_vehiculo, items.item_vehiculo, icos.ico_vehiculo);
     }
 
     if (tabNombre == modulos.modulo_inventarios) {

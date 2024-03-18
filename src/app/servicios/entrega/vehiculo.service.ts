@@ -59,8 +59,8 @@ export class VehiculoService {
     );
   }
 
-  obtener(vehiculoTransporteId: number): Observable<Respuesta> {
-    return this.http.get(environment.host + urn.ruta + urn.vehiculo + urn.slash + vehiculoTransporteId, options).pipe(
+  obtener(vehiculoId: number): Observable<Respuesta> {
+    return this.http.get(environment.host + urn.ruta + urn.vehiculo + urn.slash + vehiculoId, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);
