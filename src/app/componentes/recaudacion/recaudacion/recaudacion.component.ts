@@ -316,7 +316,12 @@ export class RecaudacionComponent implements OnInit, OnChanges {
           denyButtonText: "Cancelar"
         }).then((result) => {
           if (result.isConfirmed) {
-            this.facturaElectronicaService.imprimirPDF(facturaId);
+            if(this.factura.empresa.identificacion == valores.clientePersonalizado1){
+              this.facturaElectronicaService.imprimirTicket(facturaId);
+            } else {
+              this.facturaElectronicaService.imprimirPDF(facturaId);
+            }
+            
           }
         });
       },
