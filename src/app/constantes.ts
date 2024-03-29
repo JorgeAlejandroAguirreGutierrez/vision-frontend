@@ -287,7 +287,7 @@ export const valores = {
     emitidas: "EMITIDAS",
     facturaVenta: "FACTURA VENTA",
     facturaInterna: "FACTURA INTERNA",
-    clientePersonalizado1: "1712826245001"
+    clientePersonalizado1: '1712826245001'
 }
 
 export const tipoMedidas = ["PESO", "VOLUMEN", "UNIDAD"]
