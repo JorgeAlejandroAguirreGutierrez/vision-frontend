@@ -394,7 +394,7 @@ export class ProductoComponent implements OnInit {
 
   inicializarOpciones(){
     this.producto.medida = this.medidas[0];
-    this.producto.impuesto = this.impuestos.find(iva => iva.codigoSRI.includes('2'));
+    this.producto.impuesto = this.impuestos.find(iva => iva.codigoSRI.includes('4'));
     this.producto.tipoGasto = this.tiposGastos[0];
     this.producto.consignacion = valores.no;
   }
