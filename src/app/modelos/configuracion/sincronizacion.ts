@@ -1,6 +1,6 @@
 import { valores } from "../../constantes";
-import { Empresa } from "../usuario/empresa";
-import { Usuario } from "../usuario/usuario";
+import { Empresa } from "../acceso/empresa";
+import { Usuario } from "../acceso/usuario";
 export class Sincronizacion {
     id: number;
     codigo: string;

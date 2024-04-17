@@ -6,9 +6,9 @@ import { Observable } from 'rxjs';
 import { startWith, map } from 'rxjs/operators';
 import Swal from 'sweetalert2';
 
-import { Sesion } from 'src/app/modelos/usuario/sesion';
-import { SesionService } from 'src/app/servicios/usuario/sesion.service';
-import { Empresa } from '../../../modelos/usuario/empresa';
+import { Sesion } from 'src/app/modelos/acceso/sesion';
+import { SesionService } from 'src/app/servicios/acceso/sesion.service';
+import { Empresa } from '../../../modelos/acceso/empresa';
 import { Producto } from '../../../modelos/inventario/producto';
 import { ProductoService } from '../../../servicios/inventario/producto.service';
 import { Proveedor } from '../../../modelos/compra/proveedor';

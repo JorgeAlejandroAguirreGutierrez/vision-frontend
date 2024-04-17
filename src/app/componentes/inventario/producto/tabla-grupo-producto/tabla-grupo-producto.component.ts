@@ -6,12 +6,12 @@ import { ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { SesionService } from '../../../../servicios/usuario/sesion.service';
-import { Sesion } from '../../../../modelos/usuario/sesion';
+import { SesionService } from '../../../../servicios/acceso/sesion.service';
+import { Sesion } from '../../../../modelos/acceso/sesion';
 import { GrupoProducto } from 'src/app/modelos/inventario/grupo-producto';
 import { GrupoProductoService } from 'src/app/servicios/inventario/grupo-producto.service';
 import { CuentaContable } from 'src/app/modelos/contabilidad/cuenta-contable';
-import { Empresa } from 'src/app/modelos/usuario/empresa';
+import { Empresa } from 'src/app/modelos/acceso/empresa';
 
 
 @Component({

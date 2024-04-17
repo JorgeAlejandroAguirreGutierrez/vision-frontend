@@ -1,6 +1,6 @@
 import { valores } from "../../constantes";
 import { Banco } from './banco';
-import { Empresa } from "../usuario/empresa";
+import { Empresa } from "../acceso/empresa";
 
 
 export class CuentaPropia {

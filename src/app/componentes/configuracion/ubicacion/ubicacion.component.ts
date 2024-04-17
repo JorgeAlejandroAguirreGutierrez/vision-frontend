@@ -3,8 +3,8 @@ import Swal from 'sweetalert2';
 import { valores, validarSesion, mensajes, exito, exito_swal, error, error_swal } from '../../../constantes';
 import { Router } from '@angular/router';
 
-import { Sesion } from '../../../modelos/usuario/sesion';
-import { SesionService } from '../../../servicios/usuario/sesion.service';
+import { Sesion } from '../../../modelos/acceso/sesion';
+import { SesionService } from '../../../servicios/acceso/sesion.service';
 import { UbicacionService } from '../../../servicios/configuracion/ubicacion.service';
 import { Ubicacion } from '../../../modelos/configuracion/ubicacion';
 

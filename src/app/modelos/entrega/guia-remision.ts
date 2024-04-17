@@ -3,8 +3,8 @@ import { Factura } from '../venta/factura';
 import { valores } from "../../constantes";
 import { Vehiculo } from './vehiculo';
 import { TipoComprobante } from '../configuracion/tipo-comprobante';
-import { Empresa } from '../usuario/empresa';
-import { Usuario } from '../usuario/usuario';
+import { Empresa } from '../acceso/empresa';
+import { Usuario } from '../acceso/usuario';
 
 export class GuiaRemision {
     id: number;

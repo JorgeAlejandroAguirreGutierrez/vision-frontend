@@ -2,9 +2,9 @@ import { Component, HostListener, OnInit, ViewChild, ElementRef, Renderer2 } fro
 import Swal from 'sweetalert2';
 import { valores, validarSesion, mensajes, exito, exito_swal, error, error_swal } from '../../../constantes';
 
-import { SesionService } from '../../../servicios/usuario/sesion.service';
+import { SesionService } from '../../../servicios/acceso/sesion.service';
 import { Router } from '@angular/router';
-import { Sesion } from '../../../modelos/usuario/sesion';
+import { Sesion } from '../../../modelos/acceso/sesion';
 import { Impuesto } from '../../../modelos/inventario/impuesto';
 import { ImpuestoService } from '../../../servicios/inventario/impuesto.service';
 

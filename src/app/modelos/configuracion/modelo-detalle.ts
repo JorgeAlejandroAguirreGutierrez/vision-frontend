@@ -2,8 +2,8 @@ import { Proveedor } from '../compra/proveedor';
 import { FacturaCompraLinea } from '../compra/factura-compra-linea';
 import { valores } from "../../constantes";
 import { TipoComprobante } from './tipo-comprobante';
-import { Empresa } from '../usuario/empresa';
-import { Usuario } from '../usuario/usuario';
+import { Empresa } from '../acceso/empresa';
+import { Usuario } from '../acceso/usuario';
 
 export class ModeloDetalle {
     id: number;

@@ -2,8 +2,8 @@ import { Injectable, Type } from '@angular/core';
 import { tabs, items, icos } from '../../../constantes-tab';
 import { modulos, valores } from '../../../constantes';
 import { SidebarItem } from "../../../modelos/comun/sidebar-item.model";
-import { Sesion } from '../../../modelos/usuario/sesion';
-import { Permiso } from '../../../modelos/usuario/permiso';
+import { Sesion } from '../../../modelos/acceso/sesion';
+import { Permiso } from '../../../modelos/acceso/permiso';
 //CLIENTES
 import { ClienteComponent } from "../../../componentes/cliente/cliente/cliente.component";
 import { GrupoClienteComponent } from '../../../componentes/cliente/grupo-cliente/grupo-cliente.component';
@@ -58,14 +58,14 @@ import { ReporteTalentoHumanoComponent } from '../../../componentes/reporte/tale
 import { ReporteFinancieroComponent } from '../../../componentes/reporte/financiero/reporte-financiero/reporte-financiero.component';
 import { ReporteImportacionComponent } from '../../../componentes/reporte/importacion/reporte-importacion/reporte-importacion.component';
 //ACCESOS
-import { UsuarioComponent } from '../../../componentes/usuario/usuario/usuario.component';
-import { EmpresaComponent } from '../../../componentes/usuario/empresa/empresa.component';
-import { EstablecimientoComponent } from '../../../componentes/usuario/establecimiento/establecimiento.component';
-import { EstacionComponent } from '../../../componentes/usuario/estacion/estacion.component';
-import { PerfilComponent } from '../../../componentes/usuario/perfil/perfil.component';
-import { PermisoComponent } from '../../../componentes/usuario/permiso/permiso.component';
-import { PaqueteComponent } from '../../../componentes/usuario/paquete/paquete.component';
-import { SuscripcionComponent } from '../../../componentes/usuario/suscripcion/suscripcion.component';
+import { UsuarioComponent } from '../../../componentes/acceso/usuario/usuario.component';
+import { EmpresaComponent } from '../../../componentes/acceso/empresa/empresa.component';
+import { EstablecimientoComponent } from '../../../componentes/acceso/establecimiento/establecimiento.component';
+import { EstacionComponent } from '../../../componentes/acceso/estacion/estacion.component';
+import { PerfilComponent } from '../../../componentes/acceso/perfil/perfil.component';
+import { PermisoComponent } from '../../../componentes/acceso/permiso/permiso.component';
+import { PaqueteComponent } from '../../../componentes/acceso/paquete/paquete.component';
+import { SuscripcionComponent } from '../../../componentes/acceso/suscripcion/suscripcion.component';
 //CONFIGURACIONES
 import { UbicacionComponent } from '../../../componentes/configuracion/ubicacion/ubicacion.component';
 import { EstadoCivilComponent } from '../../../componentes/configuracion/estado-civil/estado-civil.component';
@@ -77,6 +77,7 @@ import { SincronizacionComponent } from '../../../componentes/configuracion/sinc
 //INDICADORES
 import { DashboardComponent } from '../../../componentes/indicador/dashboard/dashboard.component';
 import { GastoPersonalComponent } from 'src/app/componentes/compra/gasto-personal/gasto-personal.component';
+import { NuevoComponent } from 'src/app/componentes/acceso/nuevo/nuevo.component';
 
 
 @Injectable({
@@ -93,7 +94,7 @@ export class SidebarItemsService {
   llenarOpciones(Componente: Type<any>, tabTitulo: string, itemNombre: string, icoItem: string) {
     // Validar si tiene permisos para ver la opcion en el sidebar
     this.permisos.forEach(permiso => {
-      if (permiso.menuOpcion.opcion == itemNombre.toUpperCase() && permiso.menuOpcion.menu==valores.si && permiso.estado == valores.estadoActivo){
+      if (permiso.menuOpcion.opcion == itemNombre.toUpperCase() && permiso.menuOpcion.menu == valores.si && permiso.estado == valores.estadoActivo){
         this.opciones.push(new SidebarItem(Componente, tabTitulo, itemNombre, icoItem));
       }
     });
@@ -204,6 +205,7 @@ export class SidebarItemsService {
       this.llenarOpciones(PermisoComponent, tabs.tab_permiso, items.item_permiso, icos.ico_permiso);
       this.llenarOpciones(PaqueteComponent, tabs.tab_paquete, items.item_paquete, icos.ico_paquete);
       this.llenarOpciones(SuscripcionComponent, tabs.tab_suscripcion, items.item_suscripcion, icos.ico_suscripcion);
+      this.llenarOpciones(NuevoComponent, tabs.tab_nuevo, items.item_nuevo, icos.ico_nuevo);
     }
 
     if (tabNombre == modulos.modulo_configuracion) {

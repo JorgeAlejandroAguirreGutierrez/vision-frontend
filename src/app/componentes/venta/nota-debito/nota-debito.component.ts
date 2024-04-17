@@ -8,9 +8,9 @@ import Swal from 'sweetalert2';
 
 import { DatePipe } from '@angular/common';
 
-import { SesionService } from '../../../servicios/usuario/sesion.service';
-import { Sesion } from '../../../modelos/usuario/sesion';
-import { Empresa } from '../../../modelos/usuario/empresa';
+import { SesionService } from '../../../servicios/acceso/sesion.service';
+import { Sesion } from '../../../modelos/acceso/sesion';
+import { Empresa } from '../../../modelos/acceso/empresa';
 import { Cliente } from '../../../modelos/cliente/cliente';
 import { ClienteService } from '../../../servicios/cliente/cliente.service';
 import { Factura } from '../../../modelos/venta/factura';

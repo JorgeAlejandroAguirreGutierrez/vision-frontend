@@ -3,15 +3,15 @@ import { valores, validarSesion, mensajes, exito, exito_swal, error, error_swal 
 import { Router } from '@angular/router';
 import Swal from 'sweetalert2';
 
-import { Sesion } from '../../../modelos/usuario/sesion';
-import { SesionService } from '../../../servicios/usuario/sesion.service';
+import { Sesion } from '../../../modelos/acceso/sesion';
+import { SesionService } from '../../../servicios/acceso/sesion.service';
 import { TipoComprobante } from '../../../modelos/configuracion/tipo-comprobante';
 import { TipoComprobanteService } from '../../../servicios/configuracion/tipo-comprobante.service';
-import { Empresa } from '../../../modelos/usuario/empresa';
-import { Establecimiento } from '../../../modelos/usuario/establecimiento';
-import { EstablecimientoService } from '../../../servicios/usuario/establecimiento.service';
-import { Estacion } from '../../../modelos/usuario/estacion';
-import { EstacionService } from '../../../servicios/usuario/estacion.service';
+import { Empresa } from '../../../modelos/acceso/empresa';
+import { Establecimiento } from '../../../modelos/acceso/establecimiento';
+import { EstablecimientoService } from '../../../servicios/acceso/establecimiento.service';
+import { Estacion } from '../../../modelos/acceso/estacion';
+import { EstacionService } from '../../../servicios/acceso/estacion.service';
 import { Secuencial } from '../../../modelos/configuracion/secuencial';
 import { SecuencialService } from '../../../servicios/configuracion/secuencial.service';
 

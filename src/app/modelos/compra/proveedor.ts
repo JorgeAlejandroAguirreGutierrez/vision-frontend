@@ -9,7 +9,7 @@ import { FormaPago } from '../cliente/forma-pago';
 import { PlazoCredito } from '../cliente/plazo-credito';
 import { RetencionCliente } from '../cliente/retencion-cliente';
 import { valores } from "../../constantes";
-import { Empresa } from '../usuario/empresa';
+import { Empresa } from '../acceso/empresa';
 
 
 export class Proveedor {

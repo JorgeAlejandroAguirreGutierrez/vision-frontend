@@ -1,7 +1,7 @@
 import { AfectacionContable } from "./afectacion-contable";
 import { CuentaContable } from "./cuenta-contable"
 import { valores } from "../../constantes";
-import { Empresa } from "../usuario/empresa";
+import { Empresa } from "../acceso/empresa";
 
 export class MovimientoContable {
     id:number;

@@ -1,7 +1,7 @@
 import { HttpHeaders } from '@angular/common/http';
 import { Router } from '@angular/router';
-import { Sesion } from './modelos/usuario/sesion';
-import { SesionService } from './servicios/usuario/sesion.service';
+import { Sesion } from './modelos/acceso/sesion';
+import { SesionService } from './servicios/acceso/sesion.service';
 
 export const urn =
 {
@@ -168,6 +168,8 @@ export const urn =
     subirCertificado: "/subirCertificado",
     subirLogo: "/subirLogo",
     obtenerUltimoPorEmpresa: "/obtenerUltimoPorEmpresa",
+    nuevo: "/nuevo",
+    ejecutar: "/ejecutar",
 
     //Ventas
     factura: "/factura",
@@ -244,6 +246,8 @@ export const valores = {
     sinGuia: "SIN GUIA",
     si: "SI",
     no: "NO",
+    masculino: "MASCULINO",
+    femenino: "FEMENINO",
     ahorros: "AHORROS",
     corriente: "CORRIENTE",
     chequeALaVista: "A LA VISTA",

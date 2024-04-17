@@ -3,12 +3,12 @@ import { valores, mensajes, validarSesion, exito_swal, error_swal, exito, error 
 import { Component, OnInit, Input } from '@angular/core';
 
 import { Router } from '@angular/router';
-import { Sesion } from '../../../modelos/usuario/sesion';
-import { SesionService } from '../../../servicios/usuario/sesion.service';
-import { Usuario } from '../../../modelos/usuario/usuario';
-import { UsuarioService } from '../../../servicios/usuario/usuario.service';
-import { EmpresaService } from '../../../servicios/usuario/empresa.service';
-import { Empresa } from '../../../modelos/usuario/empresa';
+import { Sesion } from '../../../modelos/acceso/sesion';
+import { SesionService } from '../../../servicios/acceso/sesion.service';
+import { Usuario } from '../../../modelos/acceso/usuario';
+import { UsuarioService } from '../../../servicios/acceso/usuario.service';
+import { EmpresaService } from '../../../servicios/acceso/empresa.service';
+import { Empresa } from '../../../modelos/acceso/empresa';
 import { environment } from 'src/environments/environment';
 
 @Component({

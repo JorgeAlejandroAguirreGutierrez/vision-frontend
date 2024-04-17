@@ -7,9 +7,9 @@ import { DatePipe } from '@angular/common';
 import { DateAdapter, MAT_DATE_FORMATS } from '@angular/material/core';
 import { AppDateAdapter, APP_DATE_FORMATS } from '../../comun/formato/format-date-picker';
 
-import { Sesion } from 'src/app/modelos/usuario/sesion';
-import { SesionService } from 'src/app/servicios/usuario/sesion.service';
-import { Empresa } from 'src/app/modelos/usuario/empresa';
+import { Sesion } from 'src/app/modelos/acceso/sesion';
+import { SesionService } from 'src/app/servicios/acceso/sesion.service';
+import { Empresa } from 'src/app/modelos/acceso/empresa';
 import { CierreCaja } from 'src/app/modelos/venta/cierre-caja';
 import { CierreCajaService } from '../../../servicios/venta/cierre-caja.service'
 import { ReporteCaja } from 'src/app/modelos/reporte/reporte-caja';

@@ -9,9 +9,9 @@ import { ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { SesionService } from '../../../../servicios/usuario/sesion.service';
-import { Sesion } from '../../../../modelos/usuario/sesion';
-import { Empresa } from 'src/app/modelos/usuario/empresa';
+import { SesionService } from '../../../../servicios/acceso/sesion.service';
+import { Sesion } from '../../../../modelos/acceso/sesion';
+import { Empresa } from 'src/app/modelos/acceso/empresa';
 
 
 @Component({

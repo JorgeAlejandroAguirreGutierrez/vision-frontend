@@ -10,11 +10,11 @@ import { NgxSpinnerService } from 'ngx-spinner';
 import { Observable } from 'rxjs';
 import Swal from 'sweetalert2';
 
-import { Sesion } from '../../../modelos/usuario/sesion';
-import { SesionService } from '../../../servicios/usuario/sesion.service';
+import { Sesion } from '../../../modelos/acceso/sesion';
+import { SesionService } from '../../../servicios/acceso/sesion.service';
 import { Parametro } from '../../../modelos/configuracion/parametro';
 import { ParametroService } from '../../../servicios/configuracion/parametro.service';
-import { Empresa } from '../../../modelos/usuario/empresa';
+import { Empresa } from '../../../modelos/acceso/empresa';
 import { FormaPago } from '../../../modelos/cliente/forma-pago';
 import { FormaPagoService } from '../../../servicios/cliente/forma-pago.service';
 import { Banco } from '../../../modelos/caja-banco/banco';

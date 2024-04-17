@@ -2,8 +2,8 @@ import { Component, OnInit, HostListener } from '@angular/core';
 import Swal from 'sweetalert2';
 import { valores, validarSesion, exito, exito_swal, error, error_swal } from '../../../constantes';
 
-import { Sesion } from '../../../modelos/usuario/sesion';
-import { SesionService } from '../../../servicios/usuario/sesion.service';
+import { Sesion } from '../../../modelos/acceso/sesion';
+import { SesionService } from '../../../servicios/acceso/sesion.service';
 import { MovimientoContable } from '../../../modelos/contabilidad/movimiento-contable';
 import { MovimientoContableService } from '../../../servicios/contabilidad/movimiento-contable.service';
 import { TablaMovimientoContableComponent } from '../../../componentes/contabilidad/movimiento-contable/tabla-movimiento-contable/tabla-movimiento-contable.component';
@@ -15,7 +15,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
 import { AfectacionContableService } from 'src/app/servicios/contabilidad/afectacion-contable.service';
 import { AfectacionContable } from 'src/app/modelos/contabilidad/afectacion-contable';
-import { Empresa } from 'src/app/modelos/usuario/empresa';
+import { Empresa } from 'src/app/modelos/acceso/empresa';
 
 
 @Component({
