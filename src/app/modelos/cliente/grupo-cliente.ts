@@ -1,6 +1,6 @@
 import { CuentaContable } from "../contabilidad/cuenta-contable";
 import { valores } from "../../constantes";
-import { Empresa } from "../usuario/empresa";
+import { Empresa } from "../acceso/empresa";
 export class GrupoCliente {
     id: number;
     codigo:string;

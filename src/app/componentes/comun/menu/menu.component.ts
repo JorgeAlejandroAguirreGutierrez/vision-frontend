@@ -6,8 +6,8 @@ import { Router } from '@angular/router';
 import { TabService } from "../../../servicios/comun/tab/tab.service";
 import { FooterComponent } from "../footer/footer.component";
 
-import { Sesion } from '../../../modelos/usuario/sesion';
-import { SesionService } from '../../../servicios/usuario/sesion.service';
+import { Sesion } from '../../../modelos/acceso/sesion';
+import { SesionService } from '../../../servicios/acceso/sesion.service';
 
 @Component({
   selector: 'app-menu',

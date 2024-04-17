@@ -8,8 +8,8 @@ import { NDTransferencia } from '../recaudacion/nd-transferencia';
 import { NDTarjetaDebito } from '../recaudacion/nd-tarjeta-debito';
 import { NDTarjetaCredito } from '../recaudacion/nd-tarjeta-credito';
 import { NDCredito } from '../recaudacion/nd-credito';
-import { Empresa } from '../usuario/empresa';
-import { Usuario } from '../usuario/usuario';
+import { Empresa } from '../acceso/empresa';
+import { Usuario } from '../acceso/usuario';
 
 export class NotaDebito {
     id: number;

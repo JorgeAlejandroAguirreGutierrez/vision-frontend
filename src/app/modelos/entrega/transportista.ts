@@ -1,6 +1,6 @@
 import { valores } from "../../constantes";
 import { TipoIdentificacion } from '../configuracion/tipo-identificacion';
-import { Empresa } from '../usuario/empresa';
+import { Empresa } from '../acceso/empresa';
 export class Transportista {
     id: number;
     codigo: string;

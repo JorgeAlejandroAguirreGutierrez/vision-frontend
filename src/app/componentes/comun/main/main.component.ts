@@ -5,8 +5,8 @@ import { SidebarItemsService } from '../../../servicios/comun/sidebar/sidebarite
 import { Tab } from "../../../modelos/comun/tab.model";
 import { MenuComponent } from '../menu/menu.component';
 import { SidebarItem } from "../../../modelos/comun/sidebar-item.model";
-import { Sesion } from '../../../modelos/usuario/sesion';
-import { SesionService } from '../../../servicios/usuario/sesion.service';
+import { Sesion } from '../../../modelos/acceso/sesion';
+import { SesionService } from '../../../servicios/acceso/sesion.service';
 import { validarSesion } from '../../../constantes';
 import { Router } from '@angular/router';
 

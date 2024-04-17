@@ -4,9 +4,9 @@ import { Router } from '@angular/router';
 import { DatePipe } from '@angular/common';
 import Swal from 'sweetalert2';
 
-import { Sesion } from 'src/app/modelos/usuario/sesion';
-import { SesionService } from 'src/app/servicios/usuario/sesion.service';
-import { Empresa } from 'src/app/modelos/usuario/empresa';
+import { Sesion } from 'src/app/modelos/acceso/sesion';
+import { SesionService } from 'src/app/servicios/acceso/sesion.service';
+import { Empresa } from 'src/app/modelos/acceso/empresa';
 import { ReporteCaja } from 'src/app/modelos/reporte/reporte-caja';
 import { ReporteCajaService } from 'src/app/servicios/reporte/reporte-caja.service';
 

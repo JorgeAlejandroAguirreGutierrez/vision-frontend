@@ -9,8 +9,8 @@ import { ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { Sesion } from 'src/app/modelos/usuario/sesion';
-import { SesionService } from 'src/app/servicios/usuario/sesion.service';
+import { Sesion } from 'src/app/modelos/acceso/sesion';
+import { SesionService } from 'src/app/servicios/acceso/sesion.service';
 import { Router } from '@angular/router';
 
 @Component({

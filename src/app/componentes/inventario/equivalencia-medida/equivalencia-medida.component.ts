@@ -5,8 +5,8 @@ import { EquivalenciaMedidaService } from '../../../servicios/inventario/equival
 import { MedidaService } from '../../../servicios/inventario/medida.service';
 import { validarSesion, exito, exito_swal, error, error_swal } from '../../../constantes';
 import { Router } from '@angular/router';
-import { Sesion } from '../../../modelos/usuario/sesion';
-import { SesionService } from '../../../servicios/usuario/sesion.service';
+import { Sesion } from '../../../modelos/acceso/sesion';
+import { SesionService } from '../../../servicios/acceso/sesion.service';
 
 import { ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';

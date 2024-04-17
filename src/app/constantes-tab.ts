@@ -85,6 +85,7 @@ export const tabs = {
     tab_permiso: "Permiso",
     tab_paquete: "Paquete",
     tab_suscripcion: "Suscripcion",
+    tab_nuevo: "Nuevo",
 
     // Configuración
     tab_ubicacion: "Ubicacion",
@@ -182,6 +183,7 @@ export const items = {
     item_permiso: "Permisos",
     item_paquete: "Paquetes",
     item_suscripcion: "Suscripciones",
+    item_nuevo: "Nuevos",
 
     //CONFIGURACION
     item_ubicacion: "Ubicación",
@@ -294,6 +296,7 @@ export const icos = {
     ico_permiso: 'fa-solid fa-user-check',
     ico_paquete: 'fa-solid fa-truck-fast',
     ico_suscripcion: 'fa-solid fa-cart-shopping',
+    ico_nuevo: 'fa-solid fa-cart-shopping',
 
     // Configuración
     ico_ubicacion: 'fa-solid fa-map-location-dot',

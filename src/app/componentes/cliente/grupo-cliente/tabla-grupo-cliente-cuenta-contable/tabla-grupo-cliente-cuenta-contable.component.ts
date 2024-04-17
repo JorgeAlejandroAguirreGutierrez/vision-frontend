@@ -3,9 +3,9 @@ import { valores, validarSesion, error, error_swal } from '../../../../constante
 import { Router } from '@angular/router';
 import Swal from 'sweetalert2';
 
-import { Sesion } from 'src/app/modelos/usuario/sesion';
-import { SesionService } from 'src/app/servicios/usuario/sesion.service';
-import { Empresa } from '../../../../modelos/usuario/empresa';
+import { Sesion } from 'src/app/modelos/acceso/sesion';
+import { SesionService } from 'src/app/servicios/acceso/sesion.service';
+import { Empresa } from '../../../../modelos/acceso/empresa';
 import { CuentaContable } from '../../../../modelos/contabilidad/cuenta-contable';
 import { CuentaContableService } from '../../../../servicios/contabilidad/cuenta-contable.service';
 

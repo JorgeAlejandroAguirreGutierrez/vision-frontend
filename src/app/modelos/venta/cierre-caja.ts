@@ -1,5 +1,5 @@
-import { Empresa } from '../usuario/empresa';
-import { Sesion } from '../usuario/sesion';
+import { Empresa } from '../acceso/empresa';
+import { Sesion } from '../acceso/sesion';
 import { valores } from "../../constantes";
 
 export class CierreCaja {

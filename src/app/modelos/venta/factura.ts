@@ -7,9 +7,9 @@ import { Transferencia } from '../recaudacion/transferencia';
 import { TarjetaDebito } from '../recaudacion/tarjeta-debito';
 import { TarjetaCredito } from '../recaudacion/tarjeta-credito';
 import { Credito } from '../recaudacion/credito';
-import { Empresa } from '../usuario/empresa';
+import { Empresa } from '../acceso/empresa';
 import { TipoComprobante } from '../configuracion/tipo-comprobante';
-import { Usuario } from '../usuario/usuario';
+import { Usuario } from '../acceso/usuario';
 
 export class Factura {
   id: number;

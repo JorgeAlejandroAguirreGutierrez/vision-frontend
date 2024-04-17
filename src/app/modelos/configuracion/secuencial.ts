@@ -1,5 +1,5 @@
 import { valores } from "../../constantes";
-import { Estacion } from "../usuario/estacion";
+import { Estacion } from "../acceso/estacion";
 import { TipoComprobante } from "./tipo-comprobante";
 
 export class Secuencial {

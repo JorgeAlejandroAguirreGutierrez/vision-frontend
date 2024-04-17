@@ -9,9 +9,9 @@ import Swal from 'sweetalert2';
 
 import { DatePipe } from '@angular/common';
 
-import { Sesion } from '../../../modelos/usuario/sesion';
-import { SesionService } from '../../../servicios/usuario/sesion.service';
-import { Empresa } from '../../../modelos/usuario/empresa';
+import { Sesion } from '../../../modelos/acceso/sesion';
+import { SesionService } from '../../../servicios/acceso/sesion.service';
+import { Empresa } from '../../../modelos/acceso/empresa';
 import { FacturaCompra } from 'src/app/modelos/compra/factura-compra';
 import { FacturaCompraService } from 'src/app/servicios/compra/factura-compra.service';
 import { FacturaCompraLinea } from 'src/app/modelos/compra/factura-compra-linea';

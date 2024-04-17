@@ -4,9 +4,9 @@ import { valores, mensajes, validarSesion, exito, exito_swal, error, error_swal 
 import { Router } from '@angular/router';
 import Swal from 'sweetalert2';
 
-import { Sesion } from '../../../modelos/usuario/sesion';
-import { SesionService } from '../../../servicios/usuario/sesion.service';
-import { Empresa } from '../../../modelos/usuario/empresa';
+import { Sesion } from '../../../modelos/acceso/sesion';
+import { SesionService } from '../../../servicios/acceso/sesion.service';
+import { Empresa } from '../../../modelos/acceso/empresa';
 import { GrupoCliente } from '../../../modelos/cliente/grupo-cliente';
 import { GrupoClienteService } from '../../../servicios/cliente/grupo-cliente.service';
 import { CuentaContable } from '../../../modelos/contabilidad/cuenta-contable';

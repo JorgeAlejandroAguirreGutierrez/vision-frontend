@@ -1,7 +1,7 @@
 'use strict';
 import {HttpHeaders} from '@angular/common/http';
-import { Sesion } from './modelos/usuario/sesion';
-import { SesionService } from './servicios/usuario/sesion.service';
+import { Sesion } from './modelos/acceso/sesion';
+import { SesionService } from './servicios/acceso/sesion.service';
 import * as constantes from './constantes';
 import { Router } from '@angular/router';
 

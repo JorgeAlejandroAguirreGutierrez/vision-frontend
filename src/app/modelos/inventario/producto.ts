@@ -8,7 +8,7 @@ import { valores } from "../../constantes";
 import { Medida } from './medida';
 import { Proveedor } from '../compra/proveedor';
 import { Bodega } from './bodega';
-import { Empresa } from '../usuario/empresa';
+import { Empresa } from '../acceso/empresa';
 export class Producto {
   id: number;
   codigo: string;

@@ -3,9 +3,9 @@ import { validarSesion, mensajes, exito, exito_swal, error, error_swal, valores 
 import Swal from 'sweetalert2';
 
 import { Router } from '@angular/router';
-import { Sesion } from '../../../modelos/usuario/sesion';
-import { SesionService } from '../../../servicios/usuario/sesion.service';
-import { Empresa } from '../../../modelos/usuario/empresa';
+import { Sesion } from '../../../modelos/acceso/sesion';
+import { SesionService } from '../../../servicios/acceso/sesion.service';
+import { Empresa } from '../../../modelos/acceso/empresa';
 import { BodegaService } from '../../../servicios/inventario/bodega.service';
 import { Bodega } from '../../../modelos/inventario/bodega';
 

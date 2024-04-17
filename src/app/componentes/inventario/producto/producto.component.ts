@@ -6,9 +6,9 @@ import Swal from 'sweetalert2';
 import { valores, mensajes, otras, validarSesion, exito, exito_swal, error, error_swal, warning, warning_swal, si_seguro } from '../../../constantes';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
-import { Sesion } from '../../../modelos/usuario/sesion';
-import { SesionService } from '../../../servicios/usuario/sesion.service';
-import { Empresa } from '../../../modelos/usuario/empresa';
+import { Sesion } from '../../../modelos/acceso/sesion';
+import { SesionService } from '../../../servicios/acceso/sesion.service';
+import { Empresa } from '../../../modelos/acceso/empresa';
 import { GrupoProducto } from '../../../modelos/inventario/grupo-producto';
 import { Producto } from '../../../modelos/inventario/producto';
 import { TipoGasto } from '../../../modelos/inventario/tipo-gasto';

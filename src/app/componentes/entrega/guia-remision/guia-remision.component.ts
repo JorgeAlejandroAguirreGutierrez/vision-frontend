@@ -7,9 +7,9 @@ import { Router } from '@angular/router';
 import { map, Observable, startWith } from 'rxjs';
 import Swal from 'sweetalert2';
 
-import { Sesion } from '../../../modelos/usuario/sesion';
-import { SesionService } from '../../../servicios/usuario/sesion.service';
-import { Empresa } from '../../../modelos/usuario/empresa';
+import { Sesion } from '../../../modelos/acceso/sesion';
+import { SesionService } from '../../../servicios/acceso/sesion.service';
+import { Empresa } from '../../../modelos/acceso/empresa';
 import { GuiaRemision } from '../../../modelos/entrega/guia-remision';
 import { GuiaRemisionService } from '../../../servicios/entrega/guia-remision.service';
 import { Factura } from '../../../modelos/venta/factura';

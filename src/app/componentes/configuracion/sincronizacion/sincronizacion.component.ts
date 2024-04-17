@@ -2,14 +2,14 @@ import { Component, OnInit, HostListener, ViewChild, ElementRef, Renderer2, Inje
 import { valores, tablas, mensajes, validarSesion, exito, exito_swal, error, error_swal } from '../../../constantes';
 import Swal from 'sweetalert2';
 import { Router } from '@angular/router';
-import { Sesion } from '../../../modelos/usuario/sesion';
-import { SesionService } from '../../../servicios/usuario/sesion.service';
+import { Sesion } from '../../../modelos/acceso/sesion';
+import { SesionService } from '../../../servicios/acceso/sesion.service';
 import { MatSort } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { Sincronizacion } from 'src/app/modelos/configuracion/sincronizacion';
 import { SincronizacionService } from 'src/app/servicios/configuracion/sincronizacion.service';
-import { Empresa } from 'src/app/modelos/usuario/empresa';
+import { Empresa } from 'src/app/modelos/acceso/empresa';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { FacturaCompra } from 'src/app/modelos/compra/factura-compra';
 import { DatePipe } from '@angular/common';

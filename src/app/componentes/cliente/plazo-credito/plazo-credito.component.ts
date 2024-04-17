@@ -3,8 +3,8 @@ import { valores, mensajes, validarSesion, exito, exito_swal, error, error_swal 
 import { Router } from '@angular/router';
 import Swal from 'sweetalert2';
 
-import { Sesion } from '../../../modelos/usuario/sesion';
-import { SesionService } from '../../../servicios/usuario/sesion.service';
+import { Sesion } from '../../../modelos/acceso/sesion';
+import { SesionService } from '../../../servicios/acceso/sesion.service';
 import { PlazoCreditoService } from '../../../servicios/cliente/plazo-credito.service';
 import { PlazoCredito } from '../../../modelos/cliente/plazo-credito';
 
@@ -12,7 +12,7 @@ import { ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { Empresa } from 'src/app/modelos/usuario/empresa';
+import { Empresa } from 'src/app/modelos/acceso/empresa';
 
 @Component({
   selector: 'app-plazo-credito',

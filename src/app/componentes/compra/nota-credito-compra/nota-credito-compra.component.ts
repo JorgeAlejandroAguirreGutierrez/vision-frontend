@@ -6,9 +6,9 @@ import Swal from 'sweetalert2';
 
 import { DatePipe } from '@angular/common';
 
-import { Sesion } from '../../../modelos/usuario/sesion';
-import { SesionService } from '../../../servicios/usuario/sesion.service';
-import { Empresa } from '../../../modelos/usuario/empresa';
+import { Sesion } from '../../../modelos/acceso/sesion';
+import { SesionService } from '../../../servicios/acceso/sesion.service';
+import { Empresa } from '../../../modelos/acceso/empresa';
 import { Proveedor } from '../../../modelos/compra/proveedor';
 import { ProveedorService } from '../../../servicios/compra/proveedor.service';
 import { NotaCreditoCompra } from '../../../modelos/compra/nota-credito-compra';

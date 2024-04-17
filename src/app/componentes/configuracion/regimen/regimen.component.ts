@@ -3,8 +3,8 @@ import { valores, validarSesion, exito, exito_swal, error, error_swal } from '..
 import Swal from 'sweetalert2';
 
 import { Router } from '@angular/router';
-import { Sesion } from '../../../modelos/usuario/sesion';
-import { SesionService } from '../../../servicios/usuario/sesion.service';
+import { Sesion } from '../../../modelos/acceso/sesion';
+import { SesionService } from '../../../servicios/acceso/sesion.service';
 import { RegimenService } from '../../../servicios/configuracion/regimen.service';
 import { Regimen } from '../../../modelos/configuracion/regimen';
 

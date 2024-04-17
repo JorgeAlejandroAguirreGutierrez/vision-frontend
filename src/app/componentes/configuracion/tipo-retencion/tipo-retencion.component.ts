@@ -1,8 +1,8 @@
 import { Component, OnInit, ViewChild, HostListener } from '@angular/core';
 import Swal from 'sweetalert2';
 import { valores, validarSesion, exito, exito_swal, error, error_swal } from '../../../constantes';
-import { SesionService } from 'src/app/servicios/usuario/sesion.service';
-import { Sesion } from 'src/app/modelos/usuario/sesion';
+import { SesionService } from 'src/app/servicios/acceso/sesion.service';
+import { Sesion } from 'src/app/modelos/acceso/sesion';
 import { Router } from '@angular/router';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';

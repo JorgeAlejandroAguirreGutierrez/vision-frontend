@@ -9,15 +9,15 @@ import Swal from 'sweetalert2';
 
 import { Parametro } from '../../../modelos/configuracion/parametro';
 import { ParametroService } from '../../../servicios/configuracion/parametro.service';
-import { Sesion } from '../../../modelos/usuario/sesion';
-import { SesionService } from '../../../servicios/usuario/sesion.service';
+import { Sesion } from '../../../modelos/acceso/sesion';
+import { SesionService } from '../../../servicios/acceso/sesion.service';
 import { md5 } from '../../../servicios/administracion/md5.service';
 
-import { Usuario } from '../../../modelos/usuario/usuario';
-import { UsuarioService } from '../../../servicios/usuario/usuario.service';
-import { Empresa } from '../../../modelos/usuario/empresa';
-import { EmpresaService } from '../../../servicios/usuario/empresa.service';
-import { Estacion } from '../../../modelos/usuario/estacion';
+import { Usuario } from '../../../modelos/acceso/usuario';
+import { UsuarioService } from '../../../servicios/acceso/usuario.service';
+import { Empresa } from '../../../modelos/acceso/empresa';
+import { EmpresaService } from '../../../servicios/acceso/empresa.service';
+import { Estacion } from '../../../modelos/acceso/estacion';
 
 
 @Component({

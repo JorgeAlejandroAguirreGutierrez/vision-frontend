@@ -2,8 +2,8 @@ import { valores } from "../../constantes";
 import { TipoComprobante } from '../configuracion/tipo-comprobante';
 import { NotaCreditoLinea } from './nota-credito-linea';
 import { Factura } from './factura';
-import { Empresa } from '../usuario/empresa';
-import { Usuario } from '../usuario/usuario';
+import { Empresa } from '../acceso/empresa';
+import { Usuario } from '../acceso/usuario';
 
 export class NotaCredito {
     id: number;

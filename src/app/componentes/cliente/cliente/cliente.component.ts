@@ -5,9 +5,9 @@ import { Router } from '@angular/router';
 import Swal from 'sweetalert2';
 import { valores, mensajes, otras, validarSesion, exito, exito_swal, error, error_swal } from '../../../constantes';
 
-import { Sesion } from '../../../modelos/usuario/sesion';
-import { SesionService } from '../../../servicios/usuario/sesion.service';
-import { Empresa } from '../../../modelos/usuario/empresa';
+import { Sesion } from '../../../modelos/acceso/sesion';
+import { SesionService } from '../../../servicios/acceso/sesion.service';
+import { Empresa } from '../../../modelos/acceso/empresa';
 import { Cliente } from '../../../modelos/cliente/cliente';
 import { ClienteService } from '../../../servicios/cliente/cliente.service';
 import { TipoContribuyente } from '../../../modelos/cliente/tipo-contribuyente';

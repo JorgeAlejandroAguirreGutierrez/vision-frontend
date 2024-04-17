@@ -15,7 +15,7 @@ import { PlazoCredito } from './plazo-credito';
 import { Ubicacion } from '../configuracion/ubicacion';
 import { TipoIdentificacion } from '../configuracion/tipo-identificacion';
 import { valores } from "../../constantes";
-import { Empresa } from '../usuario/empresa';
+import { Empresa } from '../acceso/empresa';
 
 export class Cliente {
    id:number;

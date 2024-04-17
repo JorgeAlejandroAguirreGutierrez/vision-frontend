@@ -99,14 +99,16 @@ import { ReporteFinancieroComponent } from './componentes/reporte/financiero/rep
 import { ReporteImportacionComponent } from './componentes/reporte/importacion/reporte-importacion/reporte-importacion.component';
 
 // Módulo de Accesos
-import { UsuarioComponent } from './componentes/usuario/usuario/usuario.component';
-import { EmpresaComponent } from './componentes/usuario/empresa/empresa.component';
-import { EstablecimientoComponent, DialogoMapaEstablecimientoComponent } from './componentes/usuario/establecimiento/establecimiento.component';
-import { EstacionComponent } from './componentes/usuario/estacion/estacion.component';
-import { PerfilComponent } from './componentes/usuario/perfil/perfil.component';
-import { PermisoComponent } from './componentes/usuario/permiso/permiso.component';
-import { PaqueteComponent } from './componentes/usuario/paquete/paquete.component';
-import { SuscripcionComponent } from './componentes/usuario/suscripcion/suscripcion.component';
+import { UsuarioComponent } from './componentes/acceso/usuario/usuario.component';
+import { EmpresaComponent } from './componentes/acceso/empresa/empresa.component';
+import { EstablecimientoComponent, DialogoMapaEstablecimientoComponent } from './componentes/acceso/establecimiento/establecimiento.component';
+import { EstacionComponent } from './componentes/acceso/estacion/estacion.component';
+import { PerfilComponent } from './componentes/acceso/perfil/perfil.component';
+import { PermisoComponent } from './componentes/acceso/permiso/permiso.component';
+import { PaqueteComponent } from './componentes/acceso/paquete/paquete.component';
+import { SuscripcionComponent } from './componentes/acceso/suscripcion/suscripcion.component';
+
+import { NuevoComponent } from './componentes/acceso/nuevo/nuevo.component';
 
 //Módulo de Configuraciones
 import { UbicacionComponent } from './componentes/configuracion/ubicacion/ubicacion.component';
@@ -240,7 +242,7 @@ export const RoutingComponents = [
   ReporteTalentoHumanoComponent,
   ReporteFinancieroComponent,
   ReporteImportacionComponent,
-  //Usuarios
+  //Accesos
   UsuarioComponent,
   EmpresaComponent,
   EstablecimientoComponent,
@@ -250,6 +252,7 @@ export const RoutingComponents = [
   PermisoComponent,
   PaqueteComponent,
   SuscripcionComponent,
+  NuevoComponent,
   //Configuración
   TipoRetencionComponent,
   UbicacionComponent,

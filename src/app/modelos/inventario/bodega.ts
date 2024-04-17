@@ -1,5 +1,5 @@
 import { valores } from "../../constantes";
-import { Empresa } from "../usuario/empresa";
+import { Empresa } from "../acceso/empresa";
 export class Bodega {
     id: number;
     codigo: string;

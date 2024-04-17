@@ -1,7 +1,7 @@
 import { CuentaContable } from "../../modelos/contabilidad/cuenta-contable";
 import { CategoriaProducto } from "./categoria-producto";
 import { valores } from "../../constantes";
-import { Empresa } from "../usuario/empresa";
+import { Empresa } from "../acceso/empresa";
 
 export class GrupoProducto {
     id: number;
