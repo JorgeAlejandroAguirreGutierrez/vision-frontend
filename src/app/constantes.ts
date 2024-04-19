@@ -110,6 +110,7 @@ export const urn =
     sincronizacion: "/sincronizacion",
     procesar: "/procesar",
     crearModelos: "/crearModelos",
+    cargarArchivo:"/cargarArchivo",
 
     //Contabilidad
     cuentaContable: "/cuentaContable",

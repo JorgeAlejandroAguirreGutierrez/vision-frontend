@@ -56,6 +56,9 @@ export class SincronizacionComponent implements OnInit {
   sincronizaciones: Sincronizacion[];
   modelos: Modelo[] = [];
 
+  archivo = null;
+  nombreArchivo = valores.vacio;
+
   columnas: any[] = [
     { nombreColumna: 'codigo', cabecera: 'Código', celda: (row: Sincronizacion) => `${row.codigo}` },
     { nombreColumna: 'tipo', cabecera: 'Tipo', celda: (row: Sincronizacion) => `${row.tipo}` },
@@ -92,6 +95,8 @@ export class SincronizacionComponent implements OnInit {
     if (event!=null)
       event.preventDefault();
     this.sincronizacion = new Sincronizacion();
+    this.archivo = null;
+    this.nombreArchivo = valores.vacio;
     this.clickedRows.clear();
   }
 
@@ -104,8 +109,8 @@ export class SincronizacionComponent implements OnInit {
     this.sincronizacion.empresa = this.empresa;
     this.sincronizacionService.crear(this.sincronizacion).subscribe({
       next: res => {
-        Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
         this.sincronizacion = res.resultado as Sincronizacion;
+        this.cargarArchivo();
         this.consultar();
         this.nuevo(null);
       },
@@ -141,8 +146,8 @@ export class SincronizacionComponent implements OnInit {
       return;
     this.sincronizacionService.actualizar(this.sincronizacion).subscribe({
       next: res => {
-        Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
         this.sincronizacion = res.resultado as Sincronizacion;
+        this.cargarArchivo();
         this.consultar();
         this.nuevo(null);
       },
@@ -158,6 +163,24 @@ export class SincronizacionComponent implements OnInit {
       },
       error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
     });
+  }
+
+  capturarArchivo(event: any): any {
+    this.archivo = event.target.files[0];
+    this.nombreArchivo = this.archivo.name;
+  }
+
+  cargarArchivo(): any {
+    if (this.archivo != null) {
+      this.sincronizacionService.cargarArchivo(this.sincronizacion.id, this.archivo).subscribe({
+        next: (res) => {
+          Swal.fire({ icon: exito_swal, title: exito, text: res.mensaje });
+        },
+        error: (err) => {
+          Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje });
+        }
+      });
+    }
   }
 
   llenarTabla(sincronizaciones: Sincronizacion[]) {

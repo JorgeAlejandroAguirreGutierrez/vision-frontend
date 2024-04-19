@@ -296,7 +296,7 @@ export const icos = {
     ico_permiso: 'fa-solid fa-user-check',
     ico_paquete: 'fa-solid fa-truck-fast',
     ico_suscripcion: 'fa-solid fa-cart-shopping',
-    ico_nuevo: 'fa-solid fa-cart-shopping',
+    ico_nuevo: 'fa-solid fa-plus-circle',
 
     // Configuración
     ico_ubicacion: 'fa-solid fa-map-location-dot',
