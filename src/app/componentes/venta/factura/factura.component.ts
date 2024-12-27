@@ -33,7 +33,7 @@ import { Kardex } from '../../../modelos/inventario/kardex';
 import { KardexService } from '../../../servicios/inventario/kardex.service';
 
 import { MatStepper } from '@angular/material/stepper';
-import { MatPaginator } from '@angular/material/paginator';
+import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { TipoComprobanteService } from 'src/app/servicios/configuracion/tipo-comprobante.service';
@@ -47,6 +47,11 @@ import { TipoComprobante } from 'src/app/modelos/configuracion/tipo-comprobante'
 })
 
 export class FacturaComponent implements OnInit {
+
+  totalItems: number = 0;
+  pageSize: number = 5;
+  pageIndex: number = 0;
+  filtro: string = valores.vacio;
 
   si: string = valores.si;
   no: string = valores.no;
@@ -153,6 +158,8 @@ export class FacturaComponent implements OnInit {
         this.nuevo(null);
       if (($event.shiftKey || $event.metaKey) && $event.key == "A") // SHIFT + A
         this.crearLinea();
+      if ($event.key == "Enter")
+        this.filtroFactura(null);
     }
 
   constructor(private renderer: Renderer2, private clienteService: ClienteService, private sesionService: SesionService,
@@ -403,10 +410,13 @@ export class FacturaComponent implements OnInit {
   }
 
   consultar() {
-    this.facturaService.consultarPorEmpresa(this.empresa.id).subscribe({
+    this.spinnerService.show();
+    this.facturaService.consultarPorEmpresa(this.empresa.id, this.pageIndex, this.pageSize).subscribe({
       next: res => {
         this.facturas = res.resultado as Factura[];
+        this.totalItems = res.resultado.totalElements;
         this.llenarTablaFactura(this.facturas);
+        this.spinnerService.hide();
       },
       error: err => {
         Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
@@ -414,13 +424,20 @@ export class FacturaComponent implements OnInit {
     });
   }
 
+  cambiarPagina(event: PageEvent) {
+      this.pageIndex = event.pageIndex;
+      this.pageSize = event.pageSize;
+      this.consultar();
+    }
+  
+
   llenarTablaFactura(facturas: Factura[]) {
     this.dataSourceFactura = new MatTableDataSource(facturas);
     this.dataSourceFactura.filterPredicate = (data: Factura, filter: string): boolean =>
       this.datepipe.transform(data.fecha, "dd-MM-yyyy").includes(filter) || data.numeroComprobante.includes(filter) || data.secuencial.includes(filter) || 
       data.cliente.razonSocial.includes(filter) || data.estado.includes(filter) || data.procesoSRI.includes(filter);
-    this.dataSourceFactura.paginator = this.paginator;
-    this.dataSourceFactura.sort = this.sort;
+    //this.dataSourceFactura.paginator = this.paginator;
+    //this.dataSourceFactura.sort = this.sort;
   }
 
   seleccionar(factura: any) {
@@ -453,12 +470,25 @@ export class FacturaComponent implements OnInit {
   }
 
   filtroFactura(event: Event) {
-    const filterValue = (event.target as HTMLInputElement).value;
-    this.dataSourceFactura.filter = filterValue.trim().toUpperCase();
-    if (this.dataSourceFactura.paginator) {
-      this.dataSourceFactura.paginator.firstPage();
+      if (event != null)
+        event.preventDefault();
+      if (this.filtro != valores.vacio) {
+        this.spinnerService.show();
+        this.facturaService.consultarFiltroPorEmpresa(this.filtro, this.empresa.id, this.pageIndex, this.pageSize).subscribe({
+          next: res => {
+            this.facturas = res.resultado.content as Factura[];
+            this.totalItems = res.resultado.totalElements;
+            this.llenarTablaFactura(this.facturas);
+            this.spinnerService.hide();
+          },
+          error: err => Swal.fire({ icon: error_swal, title: error, text: err.error.codigo, footer: err.error.mensaje })
+        });
+      } else {
+        this.consultar();
+      }
+  
     }
-  }
+
   borrarFiltroFactura() {
     this.renderer.setProperty(this.inputFiltro.nativeElement, 'value', '');
     this.dataSourceFactura.filter = '';
