@@ -58,8 +58,8 @@ export class ClienteComponent implements OnInit {
   totalItems: number = 0;
   pageSize: number = 5;
   pageIndex: number = 0;
-
   filtro: string = valores.vacio;
+
   activo: string = valores.estadoActivo;
   inactivo: string = valores.estadoInactivo;
   suspendido: string = valores.suspendido;
@@ -499,7 +499,6 @@ export class ClienteComponent implements OnInit {
       next: res => {
         this.clientes = res.resultado.content as Cliente[];
         this.totalItems = res.resultado.totalElements;
-        console.log(this.totalItems);
         this.llenarTablaCliente(this.clientes);
         this.spinnerService.hide();
       },
@@ -510,7 +509,6 @@ export class ClienteComponent implements OnInit {
   cambiarPagina(event: PageEvent) {
     this.pageIndex = event.pageIndex;
     this.pageSize = event.pageSize;
-
     this.consultar();
   }
 
@@ -575,7 +573,6 @@ export class ClienteComponent implements OnInit {
         next: res => {
           this.clientes = res.resultado.content as Cliente[];
           this.totalItems = res.resultado.totalElements;
-          console.log(this.totalItems);
           this.llenarTablaCliente(this.clientes);
           this.spinnerService.hide();
         },
