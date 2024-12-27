@@ -413,7 +413,7 @@ export class FacturaComponent implements OnInit {
     this.spinnerService.show();
     this.facturaService.consultarPorEmpresa(this.empresa.id, this.pageIndex, this.pageSize).subscribe({
       next: res => {
-        this.facturas = res.resultado as Factura[];
+        this.facturas = res.resultado.content as Factura[];
         this.totalItems = res.resultado.totalElements;
         this.llenarTablaFactura(this.facturas);
         this.spinnerService.hide();
