@@ -43,8 +43,16 @@ export class ClienteService {
     );
   }
 
-  consultarPorEmpresa(empresaId: number): Observable<Respuesta> {
-    return this.http.get(environment.host + urn.ruta + urn.cliente + urn.consultarPorEmpresa + urn.slash + empresaId, options).pipe(
+  consultarPorEmpresa(empresaId: number, pag: number, cant: number): Observable<Respuesta> {
+    return this.http.get(environment.host + urn.ruta + urn.cliente + urn.consultarPorEmpresa + urn.slash + empresaId + urn.slash + pag + urn.slash + cant, options).pipe(
+      map(response => response as Respuesta),
+      catchError(err => {
+        return throwError(()=>err);
+      }));
+  }
+
+  consultarFiltroPorEmpresa(filtro: string, empresaId: number, pag: number, cant: number): Observable<Respuesta> {
+    return this.http.get(environment.host + urn.ruta + urn.cliente + urn.consultarFiltroPorEmpresa + urn.slash + filtro + urn.slash + empresaId + urn.slash + pag + urn.slash + cant, options).pipe(
       map(response => response as Respuesta),
       catchError(err => {
         return throwError(()=>err);

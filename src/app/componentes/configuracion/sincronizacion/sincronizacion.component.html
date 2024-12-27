@@ -37,14 +37,14 @@
             </mat-expansion-panel-header>
             <mat-divider></mat-divider>
             <div class="form-group form-row">
-                <div class="col-3">
+                <div class="col-2">
                     <mat-form-field appearance="standard">
                         <mat-label>Código</mat-label>
                         <input matInput type="text" [(ngModel)]="sincronizacion.codigo" class="form-control-sm"
                             [disabled]="true">
                     </mat-form-field>
                 </div>
-                <div class="col-3">
+                <div class="col-2">
                     <mat-form-field appearance="standard">
                         <mat-label>Tipo</mat-label>
                         <mat-select [(ngModel)]="sincronizacion.tipo" class="form-control-sm">
@@ -76,10 +76,17 @@
                     <mat-form-field appearance="standard">
                         <mat-label>Año</mat-label>
                         <mat-select [(ngModel)]="sincronizacion.anio" class="form-control-sm">
-                            <mat-option [value]="anio2022">{{anio2022}}</mat-option>
+                            <mat-option [value]="anio2024">{{anio2024}}</mat-option>
                             <mat-option [value]="anio2023">{{anio2023}}</mat-option>
+                            <mat-option [value]="anio2022">{{anio2022}}</mat-option>
                         </mat-select>
                     </mat-form-field>
+                </div>
+                <div class="col-2 centrar">
+                    <button class="centrar botonAzul" type="button" mat-raised-button 
+                        (click)="inputArchivo.click()">Archivo TXT</button>
+                    <input type="file" hidden (change)="capturarArchivo($event)" #inputArchivo>
+                    <span class="file-name">{{nombreArchivo}}</span>
                 </div>
                 <div class="col-2">
                     <mat-form-field appearance="standard">

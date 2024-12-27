@@ -7,6 +7,7 @@ export class Sincronizacion {
     tipo: string;
     mes: string;
     anio: string;
+    clavesAccesos: string;
     estado: string;
     usuario: Usuario;
     empresa: Empresa;

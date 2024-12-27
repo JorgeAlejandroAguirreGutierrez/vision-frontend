@@ -74,6 +74,7 @@ export const urn =
     consultarPorUsuario: "/consultarPorUsuario",
     consultarPorProceso: "/consultarPorProceso",
     consultarPorEmpresa: "/consultarPorEmpresa",
+    consultarFiltroPorEmpresa: "/consultarFiltroPorEmpresa",
     consultarPorEstado: "/consultarPorEstado",
     consultarPorEmpresaYEstado: "/consultarPorEmpresaYEstado",
     consultarPorProveedorYEmpresaYEstado: "/consultarPorProveedorYEmpresaYEstado",
@@ -110,6 +111,7 @@ export const urn =
     sincronizacion: "/sincronizacion",
     procesar: "/procesar",
     crearModelos: "/crearModelos",
+    cargarArchivo:"/cargarArchivo",
 
     //Contabilidad
     cuentaContable: "/cuentaContable",
@@ -287,6 +289,7 @@ export const valores = {
     mes12: "12",
     anio2022: "2022",
     anio2023: "2023",
+    anio2024: "2024",
     recibidas: "RECIBIDAS",
     emitidas: "EMITIDAS",
     facturaVenta: "FACTURA VENTA",
