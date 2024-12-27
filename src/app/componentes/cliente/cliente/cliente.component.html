@@ -869,7 +869,7 @@
             <mat-divider></mat-divider>
             <mat-form-field appearance="standard">
                 <mat-label>Buscar clientes</mat-label>
-                <input matInput oninput="this.value = this.value.toUpperCase()" (keyup)="filtroCliente($event)" 
+                <input matInput oninput="this.value = this.value.toUpperCase()" [(ngModel)]="filtro"  
                     placeholder="Ej. BA" #inputFiltro>
                 <button mat-button *ngIf="inputFiltro.value" matSuffix mat-icon-button
                     (click)="borrarFiltroCliente()">
@@ -894,7 +894,7 @@
                         </td>
                     </tr>
                 </table>
-                <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" showFirstLastButtons 
+                <mat-paginator [length]="totalItems" [pageSize]="pageSize" [pageSizeOptions]="[5, 10, 25, 100]" (page)="cambiarPagina($event)" showFirstLastButtons 
                     #MatPaginator1="matPaginator"></mat-paginator>
             </div>
             <div class="azul" *ngIf="!clickedRows.size">
@@ -905,4 +905,7 @@
             </div>
         </mat-expansion-panel>
     </mat-accordion>
+    <ngx-spinner size="medium" type="line-spin-fade-rotating" [fullScreen] = "true" [zIndex]="1000">
+        <p style="font-size: 20px; color: white">Cargando...</p>
+    </ngx-spinner>
 </div>

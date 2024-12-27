@@ -46,6 +46,7 @@ export class SincronizacionComponent implements OnInit {
   mes12: string = valores.mes12;
   anio2022: string = valores.anio2022;
   anio2023: string = valores.anio2023;
+  anio2024: string = valores.anio2024;
 
   abrirPanelNuevo = true;
   abrirPanelAdmin = true;
